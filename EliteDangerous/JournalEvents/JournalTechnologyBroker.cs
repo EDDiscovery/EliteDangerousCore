@@ -79,25 +79,33 @@ namespace EliteDangerousCore.JournalEvents
             public int Count;
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {
-            info = BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), BrokerType);
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Build("Type: ".T(EDCTx.JournalEntry_Type), BrokerType);
 
             if (ItemsUnlocked != null)
             {
                 foreach (Unlocked u in ItemsUnlocked)
-                    info = info.AppendPrePad(u.Name_Localised, ", ");
+                    sb.AppendPrePad(u.Name_Localised, ", ");
             }
 
-            detailed = "";
+            return sb.ToString();
+        }
+
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
             if (CommodityList != null)
                 foreach (Commodities c in CommodityList)
-                    detailed = detailed.AppendPrePad(c.FriendlyName + ": " + c.Count.ToString(), ", "); 
+                    sb.AppendPrePad(c.FriendlyName + ": " + c.Count.ToString(), ", ");
 
             if (MaterialList != null)
                 foreach (Materials m in MaterialList)
-                    detailed = detailed.AppendPrePad(m.FriendlyName + ": " + m.Count.ToString(), ", ");
+                    sb.AppendPrePad(m.FriendlyName + ": " + m.Count.ToString(), ", ");
+
+            return sb.Length>0 ? sb.ToString() : null;
         }
     }
 }

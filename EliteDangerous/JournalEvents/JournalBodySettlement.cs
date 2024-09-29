@@ -43,10 +43,10 @@ namespace EliteDangerousCore.JournalEvents
             return sn;
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+
+        public override string GetInfo()
         {
-            info = "In ".T(EDCTx.JournalApproachBody_In) + StarSystem;
-            detailed = "";
+            return "In ".T(EDCTx.JournalApproachBody_In) + StarSystem;
         }
     }
 
@@ -75,10 +75,9 @@ namespace EliteDangerousCore.JournalEvents
             return sn;
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = "In ".T(EDCTx.JournalLeaveBody_In) + StarSystem;
-            detailed = "";
+            return "In ".T(EDCTx.JournalLeaveBody_In) + StarSystem;
         }
     }
 
@@ -144,14 +143,18 @@ namespace EliteDangerousCore.JournalEvents
         public string BodyDesignation { get; set; }
         public string StarSystem { get; set; }      // filled in by StarScan::AddApproachSettlement
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = Name_Localised + " (" + BodyName + ")";
+            string info = Name_Localised + " (" + BodyName + ")";
 
             if (Latitude != null && Longitude != null)
                 info += " " + JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
+            return info;
+        }
 
-            detailed = "";
+        public override string GetDetailed()
+        {
+            string detailed = "";
 
             if (StationGovernment != GovernmentDefinitions.Government.Unknown)      // update 17
             {
@@ -178,6 +181,7 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
+            return detailed;
         }
 
     }

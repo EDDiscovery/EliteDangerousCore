@@ -34,10 +34,9 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, System, -Cost);
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {
-            info = BaseUtils.FieldBuilder.Build("System: ".T(EDCTx.JournalEntry_System), System, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("System: ".T(EDCTx.JournalEntry_System), System, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
         }
     }
 
@@ -76,23 +75,37 @@ namespace EliteDangerousCore.JournalEvents
                 stats.CartographicSold(system, stationfaction, TotalEarnings);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), BaseValue, "Bonus: ; cr;N0".T(EDCTx.JournalEntry_Bonus), Bonus,
+            return BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), BaseValue, "Bonus: ; cr;N0".T(EDCTx.JournalEntry_Bonus), Bonus,
                                 "Total: ; cr;N0".T(EDCTx.JournalSellExplorationData_Total), TotalEarnings);
-            detailed = "";
+        }
+
+
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
             if (Systems != null && Systems.Length != 0)
             {
-                detailed += "Scanned: ".T(EDCTx.JournalEntry_Scanned);
+                sb.Append( "Scanned: ".T(EDCTx.JournalEntry_Scanned));
                 foreach (string s in Systems)
-                    detailed += s + " ";
+                {
+                    sb.Append(s);
+                    sb.Append(' ');
+                }
             }
             if (Discovered != null && Discovered.Length != 0)
             {
-                detailed += System.Environment.NewLine + "Discovered: ".T(EDCTx.JournalEntry_Discovered);
+                sb.Append(System.Environment.NewLine);
+                sb.Append("Discovered: ".T(EDCTx.JournalEntry_Discovered));
                 foreach (string s in Discovered)
-                    detailed += s + " ";
+                {
+                    sb.Append(s);
+                    sb.Append(' ');
+                }
             }
+
+            return sb.ToString();
         }
 
     }
@@ -141,16 +154,28 @@ namespace EliteDangerousCore.JournalEvents
                 stats.CartographicSold(system,stationfaction, TotalEarnings);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), BaseValue, "Bonus: ; cr;N0".T(EDCTx.JournalEntry_Bonus), Bonus,
+            return BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), BaseValue, "Bonus: ; cr;N0".T(EDCTx.JournalEntry_Bonus), Bonus,
                                 "Total: ; cr;N0".T(EDCTx.JournalMultiSellExplorationData_Total), TotalEarnings);
-            detailed = "";
+        }
+
+        public override string GetDetailed()
+        {
             if (Systems != null)
             {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
                 foreach (var s in Systems)
-                    detailed += s.SystemName + " (" + s.NumBodies.ToString() + ") ";
+                {
+                    sb.Append(s.SystemName);
+                    sb.Append(" (");
+                    sb.Append(s.NumBodies.ToString());
+                    sb.Append(") ");
+                }
+                return sb.ToString();
             }
+            else
+                return null;
         }
     }
 
@@ -187,21 +212,28 @@ namespace EliteDangerousCore.JournalEvents
         public long MarketID;
         public long TotalValue;
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Count: ".T(EDCTx.JournalEntry_Count), Bios?.Length ?? 0, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), TotalValue);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Count: ".T(EDCTx.JournalEntry_Count), Bios?.Length ?? 0, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), TotalValue);
+        }
+
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
             if (Bios != null)
             {
                 foreach (var b in Bios)
-                {                    
-                    detailed = detailed.AppendPrePad(string.Format("{0}, {1}{2}: {3}", 
-                                b.Genus_Localised, b.Species_Localised_Short, b.Variant_Localised != null ? (", " + b.Variant_Localised_Short) : null, 
+                {
+                    sb.AppendPrePad(string.Format("{0}, {1}{2}: {3}",
+                                b.Genus_Localised, b.Species_Localised_Short, b.Variant_Localised != null ? (", " + b.Variant_Localised_Short) : null,
                                 (b.Value + b.Bonus).ToString("N0")), Environment.NewLine);
                 }
             }
+
+            return sb.ToString();
         }
 
+        
         public void Ledger(Ledger mcl)
         {
             if (TotalValue != 0)
@@ -215,11 +247,5 @@ namespace EliteDangerousCore.JournalEvents
             if (stationfaction.HasChars())
                 stats.OrganicDataSold(system, stationfaction, TotalValue);
         }
-
-
-
     }
-
-
-
 }

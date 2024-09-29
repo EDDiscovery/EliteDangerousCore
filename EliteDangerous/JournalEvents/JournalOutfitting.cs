@@ -80,22 +80,28 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID { get; set; }
         public bool? Horizons { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {
-            info = "";
-            detailed = "";
+            return YardInfo.Items != null ? (YardInfo.Items.Length.ToString() + " items available".T(EDCTx.JournalEntry_itemsavailable)) : "";
+        }
 
+        public override string GetDetailed()
+        {
             if (YardInfo.Items != null)
             {
-                info = YardInfo.Items.Length.ToString() + " items available".T(EDCTx.JournalEntry_itemsavailable);
-                int itemno = 0;
-                foreach (Outfitting.OutfittingItem m in YardInfo.Items)
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                foreach (Outfitting.OutfittingItem m in YardInfo.Items.OrderBy(x=>x.TranslatedModuleName))
                 {
-                    detailed = detailed.AppendPrePad(m.TranslatedModuleName + ":" + m.BuyPrice.ToString("N0"), (itemno % 3 < 2) ? ", " : System.Environment.NewLine);
-                    itemno++;
+                    sb.Append(m.TranslatedModuleName);
+                    sb.Append(":");
+                    sb.Append(m.BuyPrice.ToString("N0"));
+                    sb.AppendCR();
                 }
+                return sb.ToString();
             }
-                
+            else
+                return null;
         }
+
     }
 }

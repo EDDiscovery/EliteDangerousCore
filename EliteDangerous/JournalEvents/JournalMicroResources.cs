@@ -66,18 +66,13 @@ namespace EliteDangerousCore.JournalEvents
                 m.Normalise(cat);
         }
 
-        static public string List(MicroResource[] mat)
+        static public void List(StringBuilder sb, MicroResource[] mat)
         {
-            StringBuilder sb = new StringBuilder(64);
-            int count = 0;
-
             foreach (MicroResource m in mat.EmptyIfNull())
             {
-                if (count++ > 0 )
-                    sb.Append(Environment.NewLine);
                 sb.Append(BaseUtils.FieldBuilder.Build(" ", m.GetFriendlyName(), "; items".T(EDCTx.JournalEntry_items), m.Count));
+                sb.AppendCR();
             }
-            return sb.ToString();
         }
     }
 
@@ -167,23 +162,19 @@ namespace EliteDangerousCore.JournalEvents
         public MicroResource[] Consumables { get; set; }
         public MicroResource[] Data { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = "";
-            detailed = "";
+            string info = "";
 
             if (Items != null && Items.Length > 0)
             {
                 if (Items.Length > 10)
-                    info = BaseUtils.FieldBuilder.Build("Items".T(EDCTx.JournalMicroResources_Items) + ": ", Items.Length);
-
-                detailed = "Items".T(EDCTx.JournalMicroResources_Items) + ": " + Environment.NewLine + MicroResource.List(Items) + Environment.NewLine;
+                   info += BaseUtils.FieldBuilder.Build("Items".T(EDCTx.JournalMicroResources_Items) + ": ", Items.Length);
             }
 
             if (Components != null && Components.Length > 0)
             {
                 info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Components".T(EDCTx.JournalMicroResources_Components) + ": ", Components.Length), "; ");
-                detailed += "Components".T(EDCTx.JournalMicroResources_Components) + ": " + Environment.NewLine + MicroResource.List(Components) + Environment.NewLine;
             }
 
             if (Consumables != null && Consumables.Length > 0)
@@ -192,16 +183,54 @@ namespace EliteDangerousCore.JournalEvents
                     info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Consumables".T(EDCTx.JournalMicroResources_Consumables) + ": ", Consumables.Length), "; ");
                 else
                     info = info.AppendPrePad(string.Join(", ", Consumables.Select(x => x.GetFriendlyName()).ToArray()), "; ");
-
-                detailed += "Consumables".T(EDCTx.JournalMicroResources_Consumables) + ": " + Environment.NewLine + MicroResource.List(Consumables) + Environment.NewLine;
             }
 
             if (Data != null && Data.Length > 0)
             {
                 info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Data".T(EDCTx.JournalMicroResources_Data) + ": ", Data.Length), "; ");
-                detailed += "Data".T(EDCTx.JournalMicroResources_Data) + ": " + Environment.NewLine + MicroResource.List(Data);
             }
+
+            return info;
         }
+
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            if (Items != null && Items.Length > 0)
+            {
+                sb.Append("Items".T(EDCTx.JournalMicroResources_Items));
+                sb.Append(": ");
+                sb.AppendCR();
+                MicroResource.List(sb, Items);
+            }
+
+            if (Components != null && Components.Length > 0)
+            {
+                sb.Append("Components".T(EDCTx.JournalMicroResources_Components));
+                sb.AppendCR();
+                MicroResource.List(sb, Components);
+            }
+
+            if (Consumables != null && Consumables.Length > 0)
+            {
+                sb.Append("Consumables".T(EDCTx.JournalMicroResources_Consumables));
+                sb.Append(": ");
+                sb.AppendCR();
+                MicroResource.List(sb, Consumables);
+            }
+
+            if (Data != null && Data.Length > 0)
+            {
+                sb.Append("Data".T(EDCTx.JournalMicroResources_Data));
+                sb.Append(": ");
+                sb.AppendCR();
+                MicroResource.List(sb, Data);
+            }
+
+            return sb.ToString();
+        }
+
     }
 
     #endregion
@@ -257,31 +286,34 @@ namespace EliteDangerousCore.JournalEvents
         public int TotalCount { get; set; }
         public long MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = "";
-            detailed = "";
-
             if (Items != null && Items.Length > 0)
             {
                 if (Items.Length == 1)
                 {
-                    info = BaseUtils.FieldBuilder.Build("", Items[0].GetFriendlyName(), "", Items[0].Count, "< buy price ; cr;N0".T(EDCTx.JournalEntry_buyprice), Price);
+                    return BaseUtils.FieldBuilder.Build("", Items[0].GetFriendlyName(), "", Items[0].Count, "< buy price ; cr;N0".T(EDCTx.JournalEntry_buyprice), Price);
                 }
                 else
                 {
-                    info += BaseUtils.FieldBuilder.Build("Items".T(EDCTx.JournalMicroResources_Items) + ":; ", TotalCount, "< buy price ; cr;N0".T(EDCTx.JournalEntry_buyprice), Price);
-                    detailed += MicroResource.List(Items);
+                    return BaseUtils.FieldBuilder.Build("Items".T(EDCTx.JournalMicroResources_Items) + ":; ", TotalCount, "< buy price ; cr;N0".T(EDCTx.JournalEntry_buyprice), Price);
                 }
             }
+            return "";
+        }
+
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            MicroResource.List(sb, Items);
+            return sb.ToString();
         }
 
         public void Ledger(Ledger mcl)
         {
             if ( Items != null )
             {
-                FillInformation(out string info, out string detailed);
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, info + (detailed.HasChars() ? Environment.NewLine + detailed : ""), -Price);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, GetInfo(), -Price);
             }
         }
 
@@ -318,31 +350,33 @@ namespace EliteDangerousCore.JournalEvents
         public long MarketID { get; set; }
         public int TotalCount { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = "";
-            detailed = "";
-
             if (Items != null && Items.Length > 0)
             {
                 if (Items.Length == 1)
                 {
-                    info = BaseUtils.FieldBuilder.Build("", Items[0].GetFriendlyName(), "", Items[0].Count, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
+                    return BaseUtils.FieldBuilder.Build("", Items[0].GetFriendlyName(), "", Items[0].Count, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
                 }
                 else
                 {
-                    info += BaseUtils.FieldBuilder.Build("Items".T(EDCTx.JournalMicroResources_Items) + ":; ", TotalCount, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
-                    detailed += MicroResource.List(Items);
+                    return BaseUtils.FieldBuilder.Build("Items".T(EDCTx.JournalMicroResources_Items) + ":; ", TotalCount, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
                 }
             }
+            return "";
+        }
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            MicroResource.List(sb, Items);
+            return sb.ToString();
         }
 
         public void Ledger(Ledger mcl)
         {
             if (Items != null)
             {
-                FillInformation( out string info, out string detailed);
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, info + (detailed.HasChars() ? Environment.NewLine + detailed : ""), Price);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, GetInfo(), Price);
             }
         }
 
@@ -386,11 +420,17 @@ namespace EliteDangerousCore.JournalEvents
         public int Count { get; set; }
         public long MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             int? itemcount = Count > 1 ? Count : default(int?);
-            info = BaseUtils.FieldBuilder.Build("", Received_FriendlyName, "; items".T(EDCTx.JournalEntry_items), itemcount);
-            detailed = MicroResource.List(Offered);
+            return BaseUtils.FieldBuilder.Build("", Received_FriendlyName, "; items".T(EDCTx.JournalEntry_items), itemcount);
+        }
+
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            MicroResource.List(sb, Offered);
+            return sb.ToString();
         }
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry previous)       
@@ -485,16 +525,15 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool ThrowGrenade { get { return Removed != null && Added == null && Removed.Length == 1 && Removed[0].Name.Equals("amm_grenade_frag"); } }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = "";
-            detailed = "";
+            var sb = new System.Text.StringBuilder(256);
             if (Added != null)
             {
                 foreach (var i in Added)
                 {
                     int? c = i.Count > 1 ? i.Count : default(int?);
-                    info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("+ ", i.GetFriendlyName(), "<:", c), ", ");
+                    sb.AppendPrePad(BaseUtils.FieldBuilder.Build("+ ", i.GetFriendlyName(), "<:", c), ", ");
                 }
             }
             if (Removed != null)
@@ -502,10 +541,11 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (var i in Removed)
                 {
                     int? c = i.Count > 1 ? i.Count : default(int?);
-                    info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("- ", i.GetFriendlyName(), "<:", c), ", ");
+                    sb.AppendPrePad(BaseUtils.FieldBuilder.Build("- ", i.GetFriendlyName(), "<:", c), ", ");
 
                 }
             }
+            return sb.ToString();
         }
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)
@@ -553,12 +593,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool Stolen { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);     // may be null
             int? itemcount = Resource.Count > 1 ? Resource.Count : default(int?);
-            info = BaseUtils.FieldBuilder.Build("", Resource.GetFriendlyName(), "< (;)", mcd?.TranslatedCategory, "< ; items".T(EDCTx.JournalEntry_MatC), itemcount, ";Stolen".T(EDCTx.JournalEntry_Stolen), Stolen);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", Resource.GetFriendlyName(), "< (;)", mcd?.TranslatedCategory, "< ; items".T(EDCTx.JournalEntry_MatC), itemcount, ";Stolen".T(EDCTx.JournalEntry_Stolen), Stolen);
         }
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)    // no action, BPC does the work, but mark as MR
@@ -587,12 +626,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public MicroResource Resource { get; set; } = new MicroResource();
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);     // may be null
             int? itemcount = Resource.Count > 1 ? Resource.Count : default(int?);
-            info = BaseUtils.FieldBuilder.Build("", Resource.GetFriendlyName(), "< (;)", mcd?.TranslatedCategory, "< ; items".T(EDCTx.JournalEntry_MatC), itemcount);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", Resource.GetFriendlyName(), "< (;)", mcd?.TranslatedCategory, "< ; items".T(EDCTx.JournalEntry_MatC), itemcount);
         }
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)    // no action, BPC does the work, but mark as MR
@@ -622,10 +660,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public MicroResource Resource { get; set; } = new MicroResource();
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = Resource.GetFriendlyName();
-            detailed = "";
+            return Resource.GetFriendlyName();
         }
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)    // no action, BPC does the work, but mark as MR

@@ -21,29 +21,28 @@ namespace EliteDangerousCore.JournalEvents
     public partial class JournalScan
     {
         // show material counts at the historic point and current.  Has trailing LF if text present.
-        public string DisplayMaterials(int indent = 0, List<MaterialCommodityMicroResource> historicmatlist = null, List<MaterialCommodityMicroResource> currentmatlist = null)
+        public void DisplayMaterials(StringBuilder sb, int indent = 0, List<MaterialCommodityMicroResource> historicmatlist = null, List<MaterialCommodityMicroResource> currentmatlist = null)
         {
-            StringBuilder scanText = new StringBuilder();
-
             if (HasMaterials)
             {
                 string indents = new string(' ', indent);
 
-                scanText.Append("Materials:\n".T(EDCTx.JournalScan_Materials));
+                sb.Append("Materials:".T(EDCTx.JournalScan_Materials));
+                sb.AppendSPC();
+
+                int index = 0;
                 foreach (KeyValuePair<string, double> mat in Materials)
                 {
-                    scanText.Append(indents + DisplayMaterial(mat.Key, mat.Value, historicmatlist, currentmatlist));
+                    if (index++ > 0)
+                        sb.Append(indents);
+                    DisplayMaterial(sb,mat.Key, mat.Value, historicmatlist, currentmatlist);
                 }
             }
-
-            return scanText.ToNullSafeString();
         }
-
-        public string DisplayMaterial(string fdname, double percent, List<MaterialCommodityMicroResource> historicmatlist = null,
-                                                                      List<MaterialCommodityMicroResource> currentmatlist = null)  // has trailing LF
+        // has trailing LF
+        public void DisplayMaterial(StringBuilder sb, string fdname, double percent, List<MaterialCommodityMicroResource> historicmatlist = null,
+                                                                      List<MaterialCommodityMicroResource> currentmatlist = null)  
         {
-            StringBuilder scanText = new StringBuilder();
-
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
 
             if (mc != null && (historicmatlist != null || currentmatlist != null))
@@ -59,42 +58,48 @@ namespace EliteDangerousCore.JournalEvents
                 if (current != null && (historic == null || historic.Count != current.Count))
                     matinfo += " Cur " + current.Count.ToString();
 
-                scanText.AppendFormat("{0} ({1}) {2} {3}% {4}\n", mc.TranslatedName, mc.Shortname, mc.TranslatedType, percent.ToString("N1"), matinfo);
+                sb.AppendFormat("{0}: ({1}) {2} {3}% {4}", mc.TranslatedName, mc.Shortname, mc.TranslatedType, percent.ToString("N1"), matinfo);
             }
             else
-                scanText.AppendFormat("{0} {1}%\n", System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(fdname.ToLowerInvariant()),
+                sb.AppendFormat("{0}: {1}%", System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(fdname.ToLowerInvariant()),
                                                             percent.ToString("N1"));
-
-            return scanText.ToNullSafeString();
+            sb.AppendCR();
         }
 
-        private string DisplayAtmosphere(int indent = 0)     // has trailing LF
+        private void DisplayAtmosphere(StringBuilder sb, int indent = 0)     // has trailing LF
         {
-            StringBuilder scanText = new StringBuilder();
             string indents = new string(' ', indent);
 
-            scanText.Append("Atmospheric Composition:\n".T(EDCTx.JournalScan_AtmosphericComposition));
+            sb.Append("Atmospheric Composition:".T(EDCTx.JournalScan_AtmosphericComposition));
+            sb.AppendSPC();
+            int index = 0;
             foreach (KeyValuePair<string, double> comp in AtmosphereComposition)
             {
-                scanText.AppendFormat(indents + "{0} - {1}%\n", comp.Key, comp.Value.ToString("N2"));
-            }
+                if (index++ > 0)
+                    sb.Append(indents);
 
-            return scanText.ToNullSafeString();
+                sb.AppendFormat("{0}: {1}%", comp.Key, comp.Value.ToString("N2"));
+                sb.AppendCR();
+            }
         }
 
-        private string DisplayComposition(int indent = 0)   // has trailing LF
+        private void DisplayComposition(StringBuilder sb, int indent = 0)   // has trailing LF
         {
-            StringBuilder scanText = new StringBuilder();
             string indents = new string(' ', indent);
 
-            scanText.Append("Planetary Composition:\n".T(EDCTx.JournalScan_PlanetaryComposition));
+            sb.Append("Planetary Composition:".T(EDCTx.JournalScan_PlanetaryComposition));
+            sb.AppendSPC();
+            int index = 0;
             foreach (KeyValuePair<string, double> comp in PlanetComposition)
             {
                 if (comp.Value > 0)
-                    scanText.AppendFormat(indents + "{0} - {1}%\n", comp.Key, comp.Value.ToString("N2"));
+                {
+                    if (index++ > 0)
+                        sb.Append(indents);
+                    sb.AppendFormat("{0}: {1}%", comp.Key, comp.Value.ToString("N2"));
+                    sb.AppendCR();
+                }
             }
-
-            return scanText.ToNullSafeString();
         }
 
 

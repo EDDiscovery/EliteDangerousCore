@@ -38,29 +38,33 @@ namespace EliteDangerousCore.JournalEvents
         public MissionItem[] FailedMissions { get; set; }
         public MissionItem[] CompletedMissions { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Active: ".T(EDCTx.JournalEntry_Active), ActiveMissions?.Length, "Failed: ".T(EDCTx.JournalEntry_Failed), FailedMissions?.Length, "Completed: ".T(EDCTx.JournalEntry_Completed), CompletedMissions?.Length);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Active: ".T(EDCTx.JournalEntry_Active), ActiveMissions?.Length, "Failed: ".T(EDCTx.JournalEntry_Failed), FailedMissions?.Length, "Completed: ".T(EDCTx.JournalEntry_Completed), CompletedMissions?.Length);
+        }
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
             if (ActiveMissions != null && ActiveMissions.Length>0)
             {
-                detailed = detailed.AppendPrePad("Active: ".T(EDCTx.JournalEntry_Active), Environment.NewLine);
+                sb.AppendPrePad("Active: ".T(EDCTx.JournalEntry_Active), Environment.NewLine);
                 foreach (var x in ActiveMissions)
-                    detailed = detailed.AppendPrePad("    " + x.Format(), Environment.NewLine);
+                    sb.AppendPrePad("    " + x.Format(), Environment.NewLine);
             }
             if (FailedMissions != null && FailedMissions.Length>0)
             {
-                detailed = detailed.AppendPrePad("Failed: ".T(EDCTx.JournalEntry_Failed), Environment.NewLine);
+                sb.AppendPrePad("Failed: ".T(EDCTx.JournalEntry_Failed), Environment.NewLine);
                 foreach (var x in FailedMissions)
-                    detailed = detailed.AppendPrePad("    " + x.Format(), Environment.NewLine);
+                    sb.AppendPrePad("    " + x.Format(), Environment.NewLine);
             }
             if (CompletedMissions != null && CompletedMissions.Length > 0)
             {
-                detailed = detailed.AppendPrePad("Completed: ".T(EDCTx.JournalEntry_Completed), Environment.NewLine);
+                sb.AppendPrePad("Completed: ".T(EDCTx.JournalEntry_Completed), Environment.NewLine);
                 foreach (var x in CompletedMissions)
-                    detailed = detailed.AppendPrePad("    " + x.Format(), Environment.NewLine);
+                    sb.AppendPrePad("    " + x.Format(), Environment.NewLine);
             }
 
+            return sb.ToString();
         }
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)
@@ -190,10 +194,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool? Wing { get; private set; }     // 3.02
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = MissionBasicInfo(true);
-            detailed = MissionDetailedInfo(true);
+            return MissionBasicInfo(true);
+        }
+
+        public override string GetDetailed()
+        {
+            return MissionDetailedInfo(true);
         }
 
         public string MissionBasicInfo(bool translate)          // MissionList::FullInfo uses this. Journal Entry info brief uses this
@@ -421,10 +429,10 @@ namespace EliteDangerousCore.JournalEvents
             mlist.Completed(this);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
 
-            info = BaseUtils.FieldBuilder.Build("", LocalisedName,
+            return BaseUtils.FieldBuilder.Build("", LocalisedName,
                                         "< from ".T(EDCTx.JournalEntry_from), Faction,
                                         "Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward,
                                         "Donation: ".T(EDCTx.JournalEntry_Donation), Donation,
@@ -432,17 +440,21 @@ namespace EliteDangerousCore.JournalEvents
                                         "Station: ".T(EDCTx.JournalEntry_Station), DestinationStation,
                                         "Settlement: ".T(EDCTx.JournalEntry_Settlement), DestinationSettlement
                                         );
+        }
 
-            detailed = BaseUtils.FieldBuilder.Build("Commodity: ".T(EDCTx.JournalEntry_Commodity), CommodityLocalised,
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            sb.Build( "Commodity: ".T(EDCTx.JournalEntry_Commodity), CommodityLocalised,
                                             "Count: ".T(EDCTx.JournalMissionAccepted_Count), Count,
                                             "Target: ".T(EDCTx.JournalEntry_Target), TargetLocalised,
                                             "Type: ".T(EDCTx.JournalEntry_Type), TargetTypeLocalised,
                                             "Target Faction: ".T(EDCTx.JournalEntry_TargetFaction), TargetFaction);
 
-            detailed = detailed.AppendPrePad(RewardInformation(true),Environment.NewLine);
+            sb.AppendPrePad(RewardInformation(true),Environment.NewLine);
 
-            detailed= detailed.ReplaceIfEndsWith(Environment.NewLine, "");
-
+            return sb.ToString().ReplaceIfEndsWith(Environment.NewLine, "");
         }
 
         public string RewardInformation(bool translate)          
@@ -641,10 +653,9 @@ namespace EliteDangerousCore.JournalEvents
         public ulong MissionId { get; set; }
         public long? Fine { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".T(EDCTx.JournalEntry_Fine), Fine);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".T(EDCTx.JournalEntry_Fine), Fine);
         }
 
         public void Ledger(Ledger mcl)
@@ -687,15 +698,13 @@ namespace EliteDangerousCore.JournalEvents
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public string FDName { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = info = BaseUtils.FieldBuilder.Build("Mission name: ".T(EDCTx.JournalEntry_Missionname), LocalisedName,
+            return BaseUtils.FieldBuilder.Build("Mission name: ".T(EDCTx.JournalEntry_Missionname), LocalisedName,
                                       "From: ".T(EDCTx.JournalMissionRedirected_From), OldDestinationSystem,
                                       "", OldDestinationStation,
                                       "To: ".T(EDCTx.JournalMissionRedirected_To), NewDestinationSystem,
                                       "", NewDestinationStation);
-
-            detailed = "";
         }
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)
@@ -725,10 +734,9 @@ namespace EliteDangerousCore.JournalEvents
         public long? Fine { get; set; }
 
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".T(EDCTx.JournalEntry_Fine), Fine);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".T(EDCTx.JournalEntry_Fine), Fine);
         }
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)

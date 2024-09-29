@@ -30,10 +30,9 @@ namespace EliteDangerousCore.JournalEvents
         public string Message { get; set; }
         public string MessageLocalised { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {            
-            info = MessageLocalised;
-            detailed = "";
+            return MessageLocalised;
         }
     }
 
@@ -51,10 +50,9 @@ namespace EliteDangerousCore.JournalEvents
         public long Reward { get; set; }
         public string VictimFaction { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward, "< from faction ".T(EDCTx.JournalEntry_fromfaction), PayeeFaction, "Against ".T(EDCTx.JournalEntry_Against), VictimFaction);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward, "< from faction ".T(EDCTx.JournalEntry_fromfaction), PayeeFaction, "Against ".T(EDCTx.JournalEntry_Against), VictimFaction);
         }
 
         public void UpdateStats(Stats stats, ISystem system, string stationfaction)
@@ -77,10 +75,9 @@ namespace EliteDangerousCore.JournalEvents
         public string FDType { get; set; }
         public string TypeLocalised { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = TypeLocalised;
-            detailed = "";
+            return TypeLocalised;
         }
     }
 

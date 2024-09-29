@@ -77,10 +77,9 @@ namespace EliteDangerousCore.JournalEvents
                 mcl.AddEvent(Id, EventTimeUTC, EventTypeID, JournalFieldNaming.GetForeignModuleName(ItemFD, ItemLocalised), -Cost);
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(ItemFD,ItemLocalised), "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost) , Cost );
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(ItemFD,ItemLocalised), "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost) , Cost );
         }
     }
 
@@ -100,10 +99,9 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "", -Cost);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
         }
     }
 
@@ -126,10 +124,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool FullyRepaired { get; set; }
         public float Health { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(ModuleFD, ModuleLocalised), "Health: ;%", (int)Health, ";Fully Repaired", FullyRepaired);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(ModuleFD, ModuleLocalised), "Health: ;%", (int)Health, ";Fully Repaired", FullyRepaired);
         }
     }
 
@@ -154,17 +151,19 @@ namespace EliteDangerousCore.JournalEvents
         public ShipSlots.Slot[] Slots { get; set; }            
         public string[] FriendlySlots { get; set; }     // English name
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = "";
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
             if (FriendlySlots != null)
             {
-                for( int i = 0; i < FriendlySlots.Length; i++)
+                for (int i = 0; i < FriendlySlots.Length; i++)
                 {
-                    info = info.AppendPrePad(ShipSlots.ToLocalisedLanguage(Slots[i]),", ");
+                    sb.AppendPrePad(ShipSlots.ToLocalisedLanguage(Slots[i]), ", ");
                 }
             }
-            detailed = "";
+
+            return sb.ToString();
         }
     }
 
@@ -173,12 +172,6 @@ namespace EliteDangerousCore.JournalEvents
     public class JournalSystemsShutdown : JournalEntry
     {
         public JournalSystemsShutdown(JObject evt) : base(evt, JournalTypeEnum.SystemsShutdown) { }
-
-        public override void FillInformation(out string info, out string detailed)
-        {
-            info = "";
-            detailed = "";
-        }
     }
 
 }

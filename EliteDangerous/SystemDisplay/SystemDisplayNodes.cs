@@ -24,17 +24,17 @@ namespace EliteDangerousCore
 {
     public partial class SystemDisplay
     {
-        private enum DrawLevel { TopLevelStar, PlanetLevel, MoonLevel };
+        public enum DrawLevel { TopLevelStar, PlanetLevel, MoonLevel };
 
         private Dictionary<Bitmap, float> imageintensities = new Dictionary<Bitmap, float>();       // cached
 
         // return right bottom of area used from curpos
 
-        private Point DrawNode(List<ExtPictureBox.ImageElement> pc,
+        public Point DrawNode(List<ExtPictureBox.ImageElement> pc,
                             StarScan.ScanNode sn,
                             List<MaterialCommodityMicroResource> historicmats,    // curmats may be null
                             List<MaterialCommodityMicroResource> curmats,    // curmats may be null
-                            Image notscanned,               // image if sn is not known
+                            Image notscanned,               // image if scan data is null
                             Point position,                 // position is normally left/middle, unless xiscentre is set.
                             bool xiscentre,                 // base x position as the centre, not the left
                             bool shiftrightifneeded,        // are we allowed to nerf the object right to allow for labels
@@ -51,7 +51,6 @@ namespace EliteDangerousCore
             //System.Diagnostics.Debug.WriteLine($"DrawNode {sn.OwnName} at {position} xiscentre {xiscentre} : size {size} type {drawtype}");
   //backwash = Color.FromArgb(128, 40, 40, 40); // debug
 
-            string tip;
             Point endpoint = position;
             imagepos = Rectangle.Empty;
             imagexcentre = 0;
@@ -62,8 +61,6 @@ namespace EliteDangerousCore
             {
                 if (sn.NodeType != StarScan.ScanNodeType.ring)       // not rings
                 {
-                    tip = sc.DisplayString(0, historicmats, curmats);
-
                     Bitmap nodeimage = (Bitmap)BaseUtils.Icons.IconSet.GetIcon(sc.GetStarPlanetTypeImageName());
 
                     string overlaytext = "";
@@ -329,7 +326,7 @@ namespace EliteDangerousCore
                     Point postoplot = xiscentre ? new Point(position.X - imagewidtharea/2 - iconwidtharea, position.Y) : position;
 
                     //System.Diagnostics.Debug.WriteLine("Body " + sc.BodyName + " plot at "  + postoplot + " " + bmp.Size + " " + (postoplot.X+imageleft) + "," + (postoplot.Y-bmp.Height/2+imagetop));
-                    endpoint = CreateImageAndLabel(pc, bmp, postoplot, bmp.Size, shiftrightifneeded, out imagepos, nodelabels, tip);
+                    endpoint = CreateImageAndLabel(pc, bmp, postoplot, bmp.Size, shiftrightifneeded, out imagepos, nodelabels, sc.DisplayString(historicmats,curmats));
 
                     int xshift = imagepos.X - postoplot.X;          // we may have shifted right if shiftrightifneeded is on, need to take account in imagexcentre
 
@@ -347,19 +344,22 @@ namespace EliteDangerousCore
             }
             else if (sn.NodeType == StarScan.ScanNodeType.belt)
             {
+                var tooltip = new System.Text.StringBuilder(256);
+
                 if (sn.BeltData != null)
-                    tip = sn.BeltData.RingInformation("");
+                    sn.BeltData.RingText(tooltip);
                 else
-                    tip = sn.OwnName + Environment.NewLine + Environment.NewLine + "No scan data available".T(EDCTx.ScanDisplayUserControl_NSD);
+                    tooltip.Append(sn.OwnName + Environment.NewLine + Environment.NewLine + "No scan data available".T(EDCTx.ScanDisplayUserControl_NSD));
 
                 if (sn.Children != null && sn.Children.Count != 0)
                 {
+                    tooltip.AppendCR();
                     foreach (StarScan.ScanNode snc in sn.Children.Values)
                     {
                         if (snc.ScanData != null)
                         {
-                            string sd = snc.ScanData.DisplayString() + "\n";
-                            tip += "\n" + sd;
+                            snc.ScanData.DisplaySummary(tooltip);
+                            tooltip.AppendCR();
                         }
                     }
                 }
@@ -368,31 +368,59 @@ namespace EliteDangerousCore
 
                 Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
 
-                endpoint = CreateImageAndLabel(pc, BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt"), postoplot, bmpsize, shiftrightifneeded, out imagepos, new string[] { sn.OwnName.AppendPrePad(appendlabeltext, Environment.NewLine) }, tip, false, backwash);
+                endpoint = CreateImageAndLabel(pc, BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt"), postoplot, bmpsize, shiftrightifneeded, out imagepos, new string[] { sn.OwnName.AppendPrePad(appendlabeltext, Environment.NewLine) }, 
+                                    tooltip.ToString(), false, backwash);
 
                 imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the belt is
             }
             else
             {
+                var tooltip = new System.Text.StringBuilder(256);
+
                 if (sn.NodeType == StarScan.ScanNodeType.barycentre)
                 {
-                    tip = string.Format("Barycentre of {0}".T(EDCTx.ScanDisplayUserControl_BC), sn.OwnName);
+                    tooltip.AppendFormat("Barycentre of {0}".T(EDCTx.ScanDisplayUserControl_BC), sn.OwnName);
                 }
                 else
                 {
-                    tip = sn.FullName + Environment.NewLine + Environment.NewLine + "No scan data available".T(EDCTx.ScanDisplayUserControl_NSD) + Environment.NewLine;
+                    tooltip.AppendLine(sn.FullName);
+                    tooltip.AppendLine("No scan data available".T(EDCTx.ScanDisplayUserControl_NSD));
+                    tooltip.AppendCR();
+
                     string addtext = "";
 
                     if (sn.SurfaceFeatures != null)
-                        addtext += string.Format("Surface features".T(EDCTx.ScanDisplayUserControl_SurfaceFeatures) + ":\n" + StarScan.SurfaceFeatureList(sn.SurfaceFeatures, 4, "\n") + "\n");
+                    {
+                        tooltip.AppendFormat("Surface features".T(EDCTx.ScanDisplayUserControl_SurfaceFeatures));
+                        tooltip.Append(":");
+                        StarScan.SurfaceFeatureList(tooltip, sn.SurfaceFeatures, 4, false, Environment.NewLine);
+                        tooltip.AppendCR();
+                    }
                     if (sn.Signals != null)
-                        addtext += string.Format("Signals".T(EDCTx.ScanDisplayUserControl_Signals) + ":\n" + JournalSAASignalsFound.SignalList(sn.Signals, 4, "\n") + "\n");
+                    {
+                        tooltip.AppendFormat("Signals".T(EDCTx.ScanDisplayUserControl_Signals));
+                        tooltip.Append(":");
+                        JournalSAASignalsFound.SignalList(tooltip, sn.Signals, 4, false, false, Environment.NewLine);
+                        tooltip.AppendCR();
+                    }
                     if (sn.Genuses != null)
-                        addtext += string.Format("Genuses".T(EDCTx.ScanDisplayUserControl_Genuses) + ":\n" + JournalSAASignalsFound.GenusList(sn.Genuses, 4, "\n") + "\n");
+                    {
+                        tooltip.AppendFormat("Genuses".T(EDCTx.ScanDisplayUserControl_Genuses));
+                        tooltip.Append(":");
+                        JournalSAASignalsFound.GenusList(tooltip, sn.Genuses, 4, false, false, Environment.NewLine);
+                        tooltip.AppendCR();
+                    }
                     if (sn.Organics != null)
-                        addtext += string.Format("Organics".T(EDCTx.ScanDisplayUserControl_Organics) + ":\n" + JournalScanOrganic.OrganicList(sn.Organics, 4, "\n") + "\n");
+                    {
+                        tooltip.AppendFormat("Organics".T(EDCTx.ScanDisplayUserControl_Organics));
+                        tooltip.Append(":");
+                        JournalScanOrganic.OrganicList(tooltip, sn.Organics, 4, false, Environment.NewLine);
+                        tooltip.AppendCR();
 
-                    tip = tip.AppendPrePad(addtext, Environment.NewLine);
+                    }
+
+                    tooltip.Append(addtext);
+                    tooltip.AppendCR();
                 }
 
                 string nodelabel = sn.CustomName ?? sn.OwnName;
@@ -400,7 +428,7 @@ namespace EliteDangerousCore
 
                 Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
 
-                endpoint = CreateImageAndLabel(pc, notscanned, postoplot, size, shiftrightifneeded, out imagepos, new string[] { nodelabel }, tip, false, backwash);
+                endpoint = CreateImageAndLabel(pc, notscanned, postoplot, size, shiftrightifneeded, out imagepos, new string[] { nodelabel }, tooltip.ToString(), false, backwash);
 
                 imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the not scanned thing is
             }

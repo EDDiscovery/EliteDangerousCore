@@ -127,19 +127,23 @@ namespace EliteDangerousCore
             }
         }
 
-        static public string SurfaceFeatureList(List<IBodyFeature> list, int indent = 0, string separ = null)        // default is environment.newline
+        // print list, with optional indent, and separ.  Separ is not placed on last entry
+        static public void SurfaceFeatureList(System.Text.StringBuilder sb, List<IBodyFeature> list, int indent, bool indentfirst, string separ = ", ")        // default is environment.newline
         {
-            var listsorted = list;
             string inds = new string(' ', indent);
-            string res = "";
 
-            foreach (var ibf in listsorted)
+            int index = 0;
+            foreach (var ibf in list)
             {
                 //System.Diagnostics.Debug.WriteLine($"{s.ScanType} {s.Genus_Localised} {s.Species_Localised}");
-                res = res.AppendPrePad(inds + $"{ EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(ibf.EventTimeUTC)} : {ibf.Name_Localised??ibf.Name} {ibf.Latitude:0.####}, {ibf.Longitude:0.####}", separ ?? System.Environment.NewLine);
-            }
+                if (indent > 0 && (index > 0 || indentfirst) )       // if indent, and its either not first or allowed to indent first
+                    sb.Append(inds);
 
-            return res;
+                sb.Append($"{ EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(ibf.EventTimeUTC)} : {ibf.Name_Localised ?? ibf.Name} {ibf.Latitude:0.####}, {ibf.Longitude:0.####}");
+
+                if (index++ < list.Count-1)     // if another to go, separ
+                    sb.Append(separ);
+            }
         }
 
         static public bool SurfaceFeatureListContainsSettlements(List<IBodyFeature> list)

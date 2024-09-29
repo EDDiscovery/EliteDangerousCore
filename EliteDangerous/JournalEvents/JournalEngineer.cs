@@ -23,7 +23,7 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.EngineerApply)]
     public class JournalEngineerApply : JournalEntry
     {
-        public JournalEngineerApply(JObject evt ) : base(evt, JournalTypeEnum.EngineerApply)
+        public JournalEngineerApply(JObject evt) : base(evt, JournalTypeEnum.EngineerApply)
         {
             Engineer = evt["Engineer"].Str();
             FDBlueprint = evt["Blueprint"].Str();
@@ -38,11 +38,9 @@ namespace EliteDangerousCore.JournalEvents
         public int Level { get; set; }
         public string Override { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo()
         {
-            
-            info = BaseUtils.FieldBuilder.Build("", Engineer, "Blueprint: ".T(EDCTx.JournalEntry_Blueprint), Blueprint, "Level: ".T(EDCTx.JournalEntry_Level), Level, "Override: ".T(EDCTx.JournalEntry_Override), Override);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", Engineer, "Blueprint: ".T(EDCTx.JournalEntry_Blueprint), Blueprint, "Level: ".T(EDCTx.JournalEntry_Level), Level, "Override: ".T(EDCTx.JournalEntry_Override), Override);
         }
     }
 
@@ -90,13 +88,13 @@ namespace EliteDangerousCore.JournalEvents
         public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
             if (Type.Equals("Materials"))
-                mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Raw, Material, -Quantity, 0);
+                mc.Change(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Raw, Material, -Quantity, 0);
         }
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
             if (Type.Equals("Commodity"))
-                mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Commodity, -Quantity, 0);
+                mc.Change(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Commodity, -Quantity, 0);
         }
 
         public void UpdateStats(Stats stats, ISystem system, string unusedstationfaction)
@@ -113,11 +111,10 @@ namespace EliteDangerousCore.JournalEvents
                 mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Engineer Contribution Credits", -Quantity);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", Engineer, "Type: ".T(EDCTx.JournalEntry_Type), Type, "Commodity: ".T(EDCTx.JournalEntry_Commodity), Commodity_Localised,
+            return BaseUtils.FieldBuilder.Build("", Engineer, "Type: ".T(EDCTx.JournalEntry_Type), Type, "Commodity: ".T(EDCTx.JournalEntry_Commodity), Commodity_Localised,
                     "Material: ".T(EDCTx.JournalEntry_Material), Material_Localised, "Quantity: ".T(EDCTx.JournalEntry_Quantity), Quantity, "TotalQuantity: ".T(EDCTx.JournalEntry_TotalQuantity), TotalQuantity);
-            detailed = "";
         }
     }
 
@@ -138,7 +135,7 @@ namespace EliteDangerousCore.JournalEvents
             Engineering = new EngineeringData(evt);
             if (!Engineering.IsValid)       // various frontier records across commanders show crap output
             {
-               // System.Diagnostics.Trace.WriteLine($"Bad Engineering line Craft {evt.ToString()}");
+                // System.Diagnostics.Trace.WriteLine($"Bad Engineering line Craft {evt.ToString()}");
                 Engineering = null;
             }
 
@@ -199,14 +196,14 @@ namespace EliteDangerousCore.JournalEvents
         public string Slot { get; set; }        // English name, not present in v1 of this version
         public ShipSlots.Slot SlotFD { get; set; }
         public string Module { get; set; }      // English module name, not present in V1 of this version
-        public string ModuleFD { get; set; }        
+        public string ModuleFD { get; set; }
 
         public EngineeringData Engineering { get; set; }        // may be null if engineering invalid, which some frontier modules have 
 
         public bool? IsPreview { get; set; }            // Only for legacy convert
 
-        public class Ingrediant     
-        {       
+        public class Ingrediant
+        {
             public string Name { get; set; }            // json, then english name
             public string Name_Localised { get; set; }  // localised, or Name
             public int Count { get; set; }              // count
@@ -233,27 +230,35 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            // engineering may be null due to frontier bad json, protect
-
-            info = BaseUtils.FieldBuilder.Build("In Slot: ".T(EDCTx.JournalEntry_InSlot), ShipSlots.ToLocalisedLanguage(SlotFD), 
-                "", JournalFieldNaming.GetForeignModuleName(ModuleFD,null), 
-                "By: ".T(EDCTx.JournalEntry_By), Engineering?.Engineer, 
-                "Blueprint: ".T(EDCTx.JournalEntry_Blueprint), Engineering?.FriendlyBlueprintName, 
+            return BaseUtils.FieldBuilder.Build("In Slot: ".T(EDCTx.JournalEntry_InSlot), ShipSlots.ToLocalisedLanguage(SlotFD),
+                "", JournalFieldNaming.GetForeignModuleName(ModuleFD, null),
+                "By: ".T(EDCTx.JournalEntry_By), Engineering?.Engineer,
+                "Blueprint: ".T(EDCTx.JournalEntry_Blueprint), Engineering?.FriendlyBlueprintName,
                 "Level: ".T(EDCTx.JournalEntry_Level), Engineering?.Level);
+        }
 
-            detailed = "";
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
             if (Ingredients != null)
             {
                 foreach (var i in Ingredients)        // may be commodities or materials
                 {
-                    detailed += BaseUtils.FieldBuilder.Build("", MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(i.NameFD), "", i.Count) + "; ";
+                    sb.Append(BaseUtils.FieldBuilder.Build("", MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(i.NameFD), "", i.Count) + "; ");
                 }
             }
 
             if (Engineering != null)
-                detailed = detailed.AppendPrePad( Engineering.ToString() , System.Environment.NewLine);
+            {
+                if (sb.Length > 0)
+                    sb.Append(System.Environment.NewLine);
+                sb.Append(Engineering.ToString());
+            }
+
+            return sb.ToString();
+
         }
     }
 
@@ -286,7 +291,7 @@ namespace EliteDangerousCore.JournalEvents
             public string Progress { get; set; }
             public int? RankProgress { get; set; }  // newish 3.x only when unlocked
 
-            public bool Valid { get { return Engineer.HasChars() && !Engineer.EqualsIIC("Unknown");  } }    // valid..
+            public bool Valid { get { return Engineer.HasChars() && !Engineer.EqualsIIC("Unknown"); } }    // valid..
         }
 
         public JournalEngineerProgress(JObject evt) : base(evt, JournalTypeEnum.EngineerProgress)
@@ -307,26 +312,28 @@ namespace EliteDangerousCore.JournalEvents
 
         public ProgressInformation[] Engineers { get; set; }      // may be NULL if not startup or pre 3.3
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            string enginfo = "";
-            foreach (var p in Engineers)
-            {
-                enginfo = enginfo.AppendPrePad(BaseUtils.FieldBuilder.Build("", p.Engineer, "", p.Progress, "Rank: ".T(EDCTx.JournalEngineerProgress_Rank), p.Rank, ";%",p.RankProgress), System.Environment.NewLine);
-            }
-
-            detailed = "";
-
             if (Engineers.Length == 1)
-                info = enginfo;
+                return BaseUtils.FieldBuilder.Build("", Engineers[0].Engineer, "", Engineers[0].Progress, "Rank: ".T(EDCTx.JournalEngineerProgress_Rank), Engineers[0].Rank, ";%", Engineers[0].RankProgress);
             else
-            {
-                info = BaseUtils.FieldBuilder.Build("Progress on ; Engineers".T(EDCTx.JournalEngineerProgress_Progresson), Engineers.Length);
-                detailed = enginfo;
-            }
+                return BaseUtils.FieldBuilder.Build("Progress on ; Engineers".T(EDCTx.JournalEngineerProgress_Progresson), Engineers.Length);
+
         }
 
-        public enum InviteState { UnknownEngineer, None, Invited , Unlocked};
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            foreach (var p in Engineers)
+            {
+                sb.BuildPrePad(System.Environment.NewLine, "", p.Engineer, "", p.Progress, "Rank: ".T(EDCTx.JournalEngineerProgress_Rank), p.Rank, ";%", p.RankProgress);
+            }
+
+            return sb.ToString();
+        }
+
+        public enum InviteState { UnknownEngineer, None, Invited, Unlocked };
         public InviteState Progress(string engineer)        // use in case text changed in frontier data
         {
             int found = Array.FindIndex(Engineers, x => x.Engineer.Equals(engineer, StringComparison.InvariantCultureIgnoreCase));
@@ -346,7 +353,7 @@ namespace EliteDangerousCore.JournalEvents
         public string[] ApplyProgress(string[] engineers)
         {
             string[] ret = new string[engineers.Length];
-            for(int i =0; i < engineers.Length; i++)
+            for (int i = 0; i < engineers.Length; i++)
             {
                 ret[i] = engineers[i];
 

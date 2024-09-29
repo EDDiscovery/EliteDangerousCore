@@ -32,8 +32,7 @@ namespace EliteDangerousCore.UIEvents
 
         public override string ToString()
         {
-            ShipTargeted.FillInformation(out string info, out string detailed);
-            return $"{info} {detailed}";
+            return $"{ShipTargeted.GetInfo()} {ShipTargeted.GetDetailed()}";
         }
     }
 }

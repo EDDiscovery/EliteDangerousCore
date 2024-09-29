@@ -83,11 +83,24 @@ namespace EliteDangerousCore
             public long? NextJumpSystemAddress { get; set; }
         };
 
-        // define one of these, either FillInformation or FillInformationExtended
-        public virtual void FillInformationExtended(FillInformationData fid, out string info, out string detailed) 
-        { System.Diagnostics.Debug.Assert(false, "Called but not defined"); info = detailed = null; }     // if entries return info =null, this is called
+        // these may or may not be overriden by class.  
 
-        public virtual void FillInformation(out string info, out string detailed) { info = detailed = null; }     // if entries return info =null, this is called
+        public virtual string GetInfo()         // if overridden, always return a string
+        {
+            return null;
+        }
+        public virtual string GetInfo(FillInformationData fid)  // if overridden, always return a string
+        {
+            return null;
+        }
+        public virtual string GetDetailed() // may return null if no more data available
+        {
+            return null;
+        }
+        public virtual string GetDetailed(FillInformationData fid) // may return null if no more data available
+        {
+            return null;
+        }
 
         // the long name of it, such as Approach Body. May be overridden, is translated
         public virtual string SummaryName(ISystem sys) { return TranslatedEventNames.ContainsKey(EventTypeID) ? TranslatedEventNames[EventTypeID] : EventTypeID.ToString(); }  // entry may be overridden for specialist output

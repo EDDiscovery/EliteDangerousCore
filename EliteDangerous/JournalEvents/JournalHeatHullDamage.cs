@@ -28,11 +28,6 @@ namespace EliteDangerousCore.JournalEvents
             ID = evt["ID"].IntNull();
         }
 
-        public override void FillInformation(out string info, out string detailed) 
-        {
-            info = "";
-            detailed = "";
-        }
     }
 
     [JournalEntryType(JournalTypeEnum.HeatWarning)]
@@ -42,11 +37,6 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public override void FillInformation(out string info, out string detailed)
-        {
-            info = "";
-            detailed = "";
-        }
     }
 
 
@@ -64,10 +54,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool? PlayerPilot { get; set; }      // 2.4+
         public bool? Fighter { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build(";%", (int)(Health * 100));
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build(";%", (int)(Health * 100));
         }
     }
 

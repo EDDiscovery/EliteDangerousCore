@@ -37,13 +37,12 @@ namespace EliteDangerousCore.JournalEvents
             return json["event"].Str("Unknown").SplitCapsWordFull();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             JObject jt = json.Clone().Object();
             jt.Remove("timestamp");
             jt.Remove("event");
-            info = (withdrawn ? "Obsolete Event:" : "Unknown Event:") + jt.ToStringLiteral();
-            detailed = "";
+            return (withdrawn ? "Obsolete Event:" : "Unknown Event:") + jt.ToStringLiteral();
         }
     }
 

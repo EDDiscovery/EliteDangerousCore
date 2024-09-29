@@ -75,12 +75,17 @@ namespace EliteDangerousCore.JournalEvents
             s.AddBarycentre(this,system);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("SMA:", SemiMajorAxisLSKM, "Period:;d;0.0", OrbitalPeriodDays, "ID:", BodyID);
-            detailed = BaseUtils.FieldBuilder.Build("e:;;0.000", Eccentricity, "OI:;;0.000", OrbitalInclination,
+            return BaseUtils.FieldBuilder.Build("SMA:", SemiMajorAxisLSKM, "Period:;d;0.0", OrbitalPeriodDays, "ID:", BodyID);
+        }
+
+        public override string GetDetailed()
+        {
+            return BaseUtils.FieldBuilder.Build("e:;;0.000", Eccentricity, "OI:;;0.000", OrbitalInclination,
                                                 "AN:;;0.000", AscendingNode, "MA:;;0.000", MeanAnomaly);
         }
+
     }
 
 }

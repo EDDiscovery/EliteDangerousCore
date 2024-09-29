@@ -117,9 +117,9 @@ namespace EliteDangerousCore.JournalEvents
             s.AddCodexEntryToSystem(this);
         }
 
-        public override void FillInformation(out string info, out string detailed)   
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalCodexEntry_At), System, ";", EDDBodyName, "ID", EDDBodyId, "in ".T(EDCTx.JournalCodexEntry_in), Region_Localised,
+            string info = BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalCodexEntry_At), System, ";", EDDBodyName, "ID", EDDBodyId, "in ".T(EDCTx.JournalCodexEntry_in), Region_Localised,
                                                 "", Name_Localised,
                                                 "", Category_Localised,
                                                 "", SubCategory_Localised,
@@ -127,12 +127,14 @@ namespace EliteDangerousCore.JournalEvents
                                                 ";Traits".T(EDCTx.JournalCodexEntry_Traits), NewTraitsDiscovered,
                                                 "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised
                                                 );
-            if ( Latitude.HasValue )
+            if (Latitude.HasValue)
                 info += ", " + JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
-            detailed = "";
+            return info;
+        }
 
-            if (Traits != null)
-                detailed = String.Join(",", Traits);
+        public override string GetDetailed()
+        {
+            return Traits != null ? String.Join(",", Traits) : null;
         }
 
         public string Info()

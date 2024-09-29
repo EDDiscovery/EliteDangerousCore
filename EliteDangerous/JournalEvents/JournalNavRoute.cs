@@ -90,11 +90,14 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            detailed = info = "";
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
             if (Route != null)
             {
+                sb.AppendFormat("{0} jumps: ".T(EDCTx.JournalNavRoute_Jumps), Route.Length - 1);
+
                 for (int i = 1; i < Route.Length; i++)
                 {
                     var r = Route[i];
@@ -103,17 +106,38 @@ namespace EliteDangerousCore.JournalEvents
                     if (Route.Length >= 18)       // 0.14 printed, 15 = .. , -2/-1 printed
                     {
                         if (i < 15 || i >= Route.Length - 2)
-                            info = info.AppendPrePad(n, ", ");
+                            sb.AppendPrePad(n, ", ");
                         else if (i == 15)
-                            info += ", .. ";
+                            sb.Append(", .. ");
                     }
                     else
-                        info = info.AppendPrePad(n, ", ");
-
-                    detailed = detailed.AppendPrePad(n + " @ " + r.StarPos.X.ToString("N1") + "," + r.StarPos.Y.ToString("N1") + "," + r.StarPos.Z.ToString("N1") + " " + r.StarClass, System.Environment.NewLine);
+                        sb.AppendPrePad(n, ", ");
                 }
-                info = string.Format("{0} jumps: ".T(EDCTx.JournalNavRoute_Jumps), Route.Length - 1) + info;
+
+                return sb.ToString();
             }
+            else
+                return null;
+        }
+
+
+        public override string GetDetailed()
+        {
+            if (Route != null)
+            {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+                for (int i = 1; i < Route.Length; i++)
+                {
+                    var r = Route[i];
+                    string n = r.StarSystem ?? r.SystemAddress.ToStringInvariant();     // star system has been seen to be empty
+                    sb.AppendPrePad(n + " @ " + r.StarPos.X.ToString("N1") + "," + r.StarPos.Y.ToString("N1") + "," + r.StarPos.Z.ToString("N1") + " " + r.StarClass, System.Environment.NewLine);
+                }
+                return sb.ToString();
+            }
+            else
+                return null;
+
         }
 
         public bool Equals(JournalNavRoute other)
@@ -155,11 +179,6 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalNavRouteClear(JObject evt) : base(evt, JournalTypeEnum.NavRouteClear)
         {
-        }
-
-        public override void FillInformation(out string info, out string detailed)
-        {
-            info = detailed = "";
         }
     }
 }

@@ -35,10 +35,9 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Amount.ToString("0.0") + "t", -Cost);
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {
-            info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost, "Fuel: ; tons;0.0".T(EDCTx.JournalEntry_Fuel), Amount);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost, "Fuel: ; tons;0.0".T(EDCTx.JournalEntry_Fuel), Amount);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -64,10 +63,9 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Amount.ToString("0.0") + "t", -Cost);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost, "Fuel: ; tons;0.0".T(EDCTx.JournalEntry_Fuel), Amount);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost, "Fuel: ; tons;0.0".T(EDCTx.JournalEntry_Fuel), Amount);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -88,10 +86,9 @@ namespace EliteDangerousCore.JournalEvents
         public double Scooped { get; set; }
         public double Total { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build(";t;0.0", Scooped, "Total: ;t;0.0".T(EDCTx.JournalFuelScoop_Total), Total);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build(";t;0.0", Scooped, "Total: ;t;0.0".T(EDCTx.JournalFuelScoop_Total), Total);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -112,10 +109,9 @@ namespace EliteDangerousCore.JournalEvents
         public double FuelMain { get; set; }
         public double FuelReservoir { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Main: ;t;0.0".T(EDCTx.JournalReservoirReplenished_Main), FuelMain, "Reservoir: ;t;0.0".T(EDCTx.JournalReservoirReplenished_Reservoir), FuelReservoir);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Main: ;t;0.0".T(EDCTx.JournalReservoirReplenished_Main), FuelMain, "Reservoir: ;t;0.0".T(EDCTx.JournalReservoirReplenished_Reservoir), FuelReservoir);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)

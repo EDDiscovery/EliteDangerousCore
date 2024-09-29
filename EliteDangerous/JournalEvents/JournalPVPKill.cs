@@ -30,10 +30,9 @@ namespace EliteDangerousCore.JournalEvents
         public string Victim { get; set; }
         public RankDefinitions.CombatRank CombatRank { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)  
+        public override string GetInfo()  
         {
-            info = BaseUtils.FieldBuilder.Build("",Victim, "Rank: ".T(EDCTx.JournalEntry_Rank) , RankDefinitions.FriendlyName(CombatRank));
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("",Victim, "Rank: ".T(EDCTx.JournalEntry_Rank) , RankDefinitions.FriendlyName(CombatRank));
         }
     }
 }

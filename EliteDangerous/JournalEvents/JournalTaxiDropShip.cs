@@ -32,10 +32,9 @@ namespace EliteDangerousCore.JournalEvents
         public string DestinationSystem { get; set; }
         public string DestinationLocation { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", DestinationSystem, "<: ", DestinationLocation );
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", DestinationSystem, "<: ", DestinationLocation );
         }
     }
 
@@ -46,11 +45,6 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public override void FillInformation(out string info, out string detailed)
-        {
-            info = "";
-            detailed = "";
-        }
     }
 
     [JournalEntryType(JournalTypeEnum.DropshipDeploy)]
@@ -73,10 +67,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool OnStation { get; set; }
         public bool OnPlanet { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", Body);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", Body);
         }
     }
 
@@ -94,11 +87,10 @@ namespace EliteDangerousCore.JournalEvents
         public string DestinationLocation { get; set; }
         public long Cost { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             long? cost = Cost > 0 ? Cost : default(long?);
-            info = BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), cost);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), cost);
         }
 
         public void Ledger(Ledger mcl)
@@ -118,11 +110,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public long Refund { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             long? refund = Refund > 0 ? Refund : default(long?);
-            info = BaseUtils.FieldBuilder.Build("", refund);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", refund);
         }
 
         public void Ledger(Ledger mcl)

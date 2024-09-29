@@ -97,38 +97,39 @@ namespace EliteDangerousCore.JournalEvents
             mc.Clear(MicroResource.BackPack, MaterialCommodityMicroResourceType.CatType.Component, MaterialCommodityMicroResourceType.CatType.Data, MaterialCommodityMicroResourceType.CatType.Consumable, MaterialCommodityMicroResourceType.CatType.Item );      // clear all count zero of commodities
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {
-            info = "";
             if (Killers != null)
             {
+                var sb = new System.Text.StringBuilder(256);
+                sb.Append("Killed by ".T(EDCTx.JournalEntry_Killedby));
+
                 foreach (Killer k in Killers)
                 {
-                    string kstr="";
-                   
+                    string kstr = "";
+
                     if (ItemData.IsSuit(k.Ship))
                     {
                         string type = k.Ship.ContainsIIC("Citizen") ? k.FriendlyShip.Replace("Suit ", "") : k.FriendlyShip.Replace("Suit", "Trooper");
                         kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", type);
                     }
-                    else if ( ItemData.IsShip(k.Ship))
+                    else if (ItemData.IsShip(k.Ship))
                     {
                         kstr = string.Format("{0} in ship type {1} rank {2}".T(EDCTx.JournalEntry_Died), k.Name_Localised, k.FriendlyShip, k.Rank ?? "?");
                     }
-                    else if ( k.FriendlyShip.HasChars() )
+                    else if (k.FriendlyShip.HasChars())
                     {
                         kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", k.FriendlyShip, "Rank: ".T(EDCTx.JournalEntry_Rank), k.Rank);
                     }
                     else
                         kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "Rank: ".T(EDCTx.JournalEntry_Rank), k.Rank);
 
-                    info = info.AppendPrePad(kstr, ", ");
+                    sb.AppendPrePad(kstr, ", ");
                 }
-
-                info = "Killed by ".T(EDCTx.JournalEntry_Killedby) + info;
+                return sb.ToString();
             }
-
-            detailed = "";
+            else
+                return null;
         }
 
     }
@@ -141,10 +142,9 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = "Boom!".T(EDCTx.JournalEntry_Boom);
-            detailed = "";
+            return "Boom!".T(EDCTx.JournalEntry_Boom);
         }
     }
 
@@ -177,10 +177,9 @@ namespace EliteDangerousCore.JournalEvents
             shp.Resurrect(Option.Equals("free", System.StringComparison.InvariantCultureIgnoreCase));    // if free, we did not rebuy the ship
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Option: ".T(EDCTx.JournalEntry_Option), Option, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost, ";Bankrupt".T(EDCTx.JournalEntry_Bankrupt), Bankrupt);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Option: ".T(EDCTx.JournalEntry_Option), Option, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost, ";Bankrupt".T(EDCTx.JournalEntry_Bankrupt), Bankrupt);
         }
     }
 

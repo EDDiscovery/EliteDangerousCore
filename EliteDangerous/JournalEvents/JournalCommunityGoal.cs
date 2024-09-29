@@ -115,17 +115,26 @@ namespace EliteDangerousCore.JournalEvents
         public List<CommunityGoal> CommunityGoals;
         public string CommunityGoalList;
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo()
         {
-            info = CommunityGoalList;
-            detailed = "";
-            if ( CommunityGoals!=null )
+            return CommunityGoalList;
+        }
+
+        public override string GetDetailed()
+        {
+            if (CommunityGoals != null)
             {
-                foreach( CommunityGoal g in CommunityGoals)
+                var sb = new System.Text.StringBuilder(256);
+
+                foreach (CommunityGoal g in CommunityGoals)
                 {
-                    detailed = detailed.AppendPrePad(g.ToString(), Environment.NewLine + Environment.NewLine);
+                    sb.AppendPrePad(g.ToString(), Environment.NewLine + Environment.NewLine);
                 }
+
+                return sb.ToString();
             }
+            else
+                return null;
         }
     }
 
@@ -144,10 +153,9 @@ namespace EliteDangerousCore.JournalEvents
         public string Name { get; set; }
         public string System { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".T(EDCTx.JournalEntry_CGS), System);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".T(EDCTx.JournalEntry_CGS), System);
         }
     }
 
@@ -164,11 +172,9 @@ namespace EliteDangerousCore.JournalEvents
         public string Name { get; set; }
         public string System { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-
-            info = BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".T(EDCTx.JournalEntry_CGS), System);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".T(EDCTx.JournalEntry_CGS), System);
         }
     }
 
@@ -192,10 +198,9 @@ namespace EliteDangerousCore.JournalEvents
             mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name + " " + System, Reward);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".T(EDCTx.JournalEntry_CGS), System, "Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".T(EDCTx.JournalEntry_CGS), System, "Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward);
         }
     }
 

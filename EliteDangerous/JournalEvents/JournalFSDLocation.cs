@@ -281,40 +281,45 @@ namespace EliteDangerousCore.JournalEvents
 
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo()
         {
-            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop); // because of translation
-
             if (Docked)
             {
-                info = BaseUtils.FieldBuilder.Build("Type ".T(EDCTx.JournalLocOrJump_Type), StationDefinitions.ToLocalisedLanguage(FDStationType), 
+                return BaseUtils.FieldBuilder.Build("Type ".T(EDCTx.JournalLocOrJump_Type), StationDefinitions.ToLocalisedLanguage(FDStationType),
                             "< in system ".T(EDCTx.JournalLocOrJump_insystem), StarSystem);
+            }
+            else if (Latitude.HasValue && Longitude.HasValue)
+            {
+                return "At " + JournalFieldNaming.RLat(Latitude.Value) + " " + JournalFieldNaming.RLong(Longitude.Value);
+            }
+            else
+            {
+                return "Near: ".T(EDCTx.JournalEntry_Near) + " " + BodyType + " " + Body;     // remove JournalLocOrJump_Inspacenear
+            }
+        }
 
-                detailed = BaseUtils.FieldBuilder.Build("<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted, 
+        public override string GetDetailed()
+        {
+            if (Docked)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Build("<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted,
                             "Faction: ".T(EDCTx.JournalLocOrJump_Faction), StationFaction,
                             "State: ".T(EDCTx.JournalLocOrJump_State), StationFactionStateTranslated,
-                            "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance), 
-                            "Economy: ".T(EDCTx.JournalLocOrJump_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy), 
-                            "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(Government), 
+                            "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance),
+                            "Economy: ".T(EDCTx.JournalLocOrJump_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),
+                            "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(Government),
                             "Security: ".T(EDCTx.JournalLocOrJump_Security), SecurityDefinitions.ToLocalisedLanguage(Security));
 
                 if (Factions != null)
                 {
-                    StringBuilder sb = new StringBuilder();
+                    sb.AppendCR();
                     FillFactionConflictThargoidInfo(sb);
-                    detailed += sb.ToString();
                 }
+                return sb.ToString();
             }
-            else if (Latitude.HasValue && Longitude.HasValue)
-            {
-                info = "At " + JournalFieldNaming.RLat(Latitude.Value) + " " + JournalFieldNaming.RLong(Longitude.Value);
-                detailed = "";
-            }
-            else 
-            {
-                info = "Near: ".T(EDCTx.JournalEntry_Near) + " " + BodyType + " " + Body;     // remove JournalLocOrJump_Inspacenear
-                detailed = "";
-            }
+            else
+                return null;
         }
 
         public void AddStarScan(StarScan s, ISystem system)
@@ -386,21 +391,24 @@ namespace EliteDangerousCore.JournalEvents
             s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop); // because of translation
-
-            info = BaseUtils.FieldBuilder.Build("Type ".T(EDCTx.JournalLocOrJump_Type), StationDefinitions.ToLocalisedLanguage(FDStationType), 
+            return BaseUtils.FieldBuilder.Build("Type ".T(EDCTx.JournalLocOrJump_Type), StationDefinitions.ToLocalisedLanguage(FDStationType),
                                                     "< in system ".T(EDCTx.JournalLocOrJump_insystem), StarSystem);
+        }
 
-            detailed = BaseUtils.FieldBuilder.Build("<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted);
+        public override string GetDetailed()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Build("<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted);
 
             if (Factions != null)
             {
-                StringBuilder sb = new StringBuilder();
+                sb.AppendCR(); 
                 FillFactionConflictThargoidInfo(sb);
-                detailed += sb.ToString();
             }
+
+            return sb.ToString();
         }
 
         public void UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -461,20 +469,19 @@ namespace EliteDangerousCore.JournalEvents
             s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop); // because of translation
-
             double? tempdist = JumpDist > 0 ? JumpDist : default(double?);
             double? tempused = FuelUsed > 0 ? FuelUsed : default(double?);
             double? templevel = FuelLevel > 0 ? FuelLevel : default(double?);
 
-            info = BaseUtils.FieldBuilder.Build(
-                    "; ly;N2".T(EDCTx.JournalFSDJump_Distance), tempdist, "Fuel used: ; t;N2".T(EDCTx.JournalFSDJump_FuelUsed), tempused, "Fuel left: ; t;N2".T(EDCTx.JournalFSDJump_FuelLeft), templevel);
+            var sb = new System.Text.StringBuilder(256);
+
+            sb.Build("; ly;N2".T(EDCTx.JournalFSDJump_Distance), tempdist, "Fuel used: ; t;N2".T(EDCTx.JournalFSDJump_FuelUsed), tempused, "Fuel left: ; t;N2".T(EDCTx.JournalFSDJump_FuelLeft), templevel);
 
             if (Faction.HasChars() || Allegiance != AllegianceDefinitions.Allegiance.Unknown || Economy != EconomyDefinitions.Economy.Unknown)
             {
-                info += ", " + BaseUtils.FieldBuilder.Build(
+                sb.BuildPrePad(", ", 
                     "Faction: ".T(EDCTx.JournalLocOrJump_Faction), Faction, "<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted,
                     "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(FactionState),
                     "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
@@ -482,15 +489,19 @@ namespace EliteDangerousCore.JournalEvents
                     "Population: ".T(EDCTx.JournalLocOrJump_Population), Population);
             }
 
-            detailed = "";
+            return sb.ToString();
+        }
 
+        public override string GetDetailed()
+        {
             if (Factions != null)
             {
                 StringBuilder sb = new StringBuilder();
                 FillFactionConflictThargoidInfo(sb);
-                detailed = sb.ToString();
+                return sb.ToString();
             }
-            
+            else
+                return null;
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -567,10 +578,9 @@ namespace EliteDangerousCore.JournalEvents
         public int? RemainingJumpsInRoute { get; set; }
         public string FriendlyStarClass { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", StarSystem,"",StarClass,"Remaining Jumps".T(EDCTx.JournalEntry_RemainingJumps), RemainingJumpsInRoute);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", StarSystem,"",StarClass,"Remaining Jumps".T(EDCTx.JournalEntry_RemainingJumps), RemainingJumpsInRoute);
         }
     }
 
@@ -602,15 +612,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys) { return "Charging FSD".T(EDCTx.JournalStartJump_ChargingFSD); }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             if (IsHyperspace)
-                info = "Hyperspace".T(EDCTx.JournalEntry_Hyperspace) + BaseUtils.FieldBuilder.Build("< to ".T(EDCTx.JournalEntry_to), StarSystem, "", FriendlyStarClass);
+                return "Hyperspace".T(EDCTx.JournalEntry_Hyperspace) + BaseUtils.FieldBuilder.Build("< to ".T(EDCTx.JournalEntry_to), StarSystem, "", FriendlyStarClass);
             else
-                info = "Supercruise".T(EDCTx.JournalEntry_Supercruise);
-
-            detailed = "";
+                return "Supercruise".T(EDCTx.JournalEntry_Supercruise);
         }
+
         public void AddStarScan(StarScan s, ISystem system)
         {
             if ( IsHyperspace )

@@ -32,12 +32,6 @@ namespace EliteDangerousCore.JournalEvents
         {
             shp.DockFighter();
         }
-
-        public override void FillInformation(out string info, out string detailed) 
-        {
-            info = "";
-            detailed = "";
-        }
     }
 
 
@@ -56,11 +50,6 @@ namespace EliteDangerousCore.JournalEvents
             shp.FighterDestroyed();
         }
 
-        public override void FillInformation(out string info, out string detailed)
-        {
-            info = "";
-            detailed = "";
-        }
     }
 
     [JournalEntryType(JournalTypeEnum.FighterRebuilt)]
@@ -75,10 +64,9 @@ namespace EliteDangerousCore.JournalEvents
         public string Loadout { get; set; }
         public int? ID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", Loadout);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", Loadout);
         }
     }
 
@@ -101,10 +89,9 @@ namespace EliteDangerousCore.JournalEvents
             shp.LaunchFighter(PlayerControlled);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Loadout: ".T(EDCTx.JournalEntry_Loadout), Loadout, "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Loadout: ".T(EDCTx.JournalEntry_Loadout), Loadout, "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled);
         }
     }
 

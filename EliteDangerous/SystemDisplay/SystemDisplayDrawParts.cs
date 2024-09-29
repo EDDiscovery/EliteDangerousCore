@@ -32,12 +32,11 @@ namespace EliteDangerousCore
             Point maximum = matpos;
             int noperline = 0;
 
-            string matclicktext = sn.DisplayMaterials(2, historicmats, curmats);
+            var matclicktext = new System.Text.StringBuilder(256);
+            sn.DisplayMaterials(matclicktext, 2, historicmats, curmats);
 
             foreach (KeyValuePair<string, double> sd in sn.Materials)
             {
-                string tooltip = sn.DisplayMaterial(sd.Key, sd.Value, historicmats, curmats);
-
                 Color fillc = Color.Yellow;
                 string abv = sd.Key.Substring(0, 1);
 
@@ -72,8 +71,11 @@ namespace EliteDangerousCore
 
                 BaseUtils.BitMapHelpers.DrawTextCentreIntoBitmap(ref mat, abv, Font, fillc.GetBrightness() > 0.4f ? Color.Black : Color.White);
 
+                var tooltip = new System.Text.StringBuilder(256);
+                sn.DisplayMaterial(tooltip, sd.Key, sd.Value, historicmats, curmats);
+
                 ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(
-                                new Rectangle(matpos.X, matpos.Y, matsize.Width, matsize.Height), mat, tooltip + "\n\n" + "All " + matclicktext, tooltip);
+                                new Rectangle(matpos.X, matpos.Y, matsize.Width, matsize.Height), mat, tooltip + "\n\n" + "All " + matclicktext.ToString(), tooltip.ToString());
 
                 pc.Add(ie);
 
@@ -167,16 +169,13 @@ namespace EliteDangerousCore
 
             string tip = "";
 
-            var notexpired = signallist.Where(x => !x.TimeRemaining.HasValue || x.ExpiryUTC >= DateTime.UtcNow).ToList();
-            notexpired.Sort(delegate (JournalFSSSignalDiscovered.FSSSignal l, JournalFSSSignalDiscovered.FSSSignal r) { return l.ClassOfSignal.CompareTo(r.ClassOfSignal); });
+            var notexpired = FSSSignal.NotExpiredSorted(signallist);
             foreach (var sig in notexpired)
                 tip = tip.AppendPrePad(sig.ToString(true), Environment.NewLine);
 
-            var expired = signallist.Where(x => x.TimeRemaining.HasValue && x.ExpiryUTC < DateTime.UtcNow).ToList();
-
+            var expired = FSSSignal.ExpiredSorted(signallist);
             if (expired.Count > 0)
             {
-                expired.Sort(delegate (JournalFSSSignalDiscovered.FSSSignal l, JournalFSSSignalDiscovered.FSSSignal r) { return r.ExpiryUTC.CompareTo(l.ExpiryUTC); });
                 tip = tip.AppendPrePad("Expired:".T(EDCTx.UserControlScan_Expired), Environment.NewLine + Environment.NewLine);
                 foreach (var sig in expired)
                     tip = tip.AppendPrePad(sig.ToString(true), Environment.NewLine);

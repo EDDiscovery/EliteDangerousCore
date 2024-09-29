@@ -28,10 +28,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Name { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {
-            info = Name;
-            detailed = "";
+            return Name;
         }
     }
 
@@ -41,12 +40,6 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalWingLeave(JObject evt) : base(evt, JournalTypeEnum.WingLeave)
         {
-        }
-
-        public override void FillInformation(out string info, out string detailed)
-        {
-            info = "";
-            detailed = "";
         }
 
     }
@@ -61,17 +54,16 @@ namespace EliteDangerousCore.JournalEvents
 
         public string[] Others { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = "";
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
             if (Others != null)
+            {
                 foreach (string s in Others)
-                {
-                    if (info.Length > 0)
-                        info += ", ";
-                    info += s;
-                }
-            detailed = "";
+                    sb.AppendPrePad(s, ", ");
+            }
+
+            return sb.ToString();
         }
     }
 
@@ -85,10 +77,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Name { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = Name;
-            detailed = "";
+            return Name;
         }
     }
 

@@ -32,10 +32,9 @@ namespace EliteDangerousCore.JournalEvents
         public string ScanType { get; set; }        // Friendly, not FDEV
         public string FDScanType { get; set; }        // fdname
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo()
         {
-            info = ScanType;
-            detailed = "";
+            return ScanType;
         }
     }
 
@@ -59,7 +58,7 @@ namespace EliteDangerousCore.JournalEvents
             PilotName_Localised = JournalFieldNaming.CheckLocalisation(evt["PilotName_Localised"].Str(), PilotName);
 
             PilotRank = evt["PilotRank"].StrNull();
-            if ( PilotRank!=null)
+            if (PilotRank != null)
                 PilotCombatRank = RankDefinitions.CombatRankToEnum(PilotRank);
 
             ShieldHealth = evt["ShieldHealth"].DoubleNull();
@@ -92,7 +91,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Power { get; set; }               // 3 null
 
         public List<JournalShipTargeted> MergedEntries { get; set; }    // if verbose.. doing it this way does not break action packs as the variables are maintained
-                                                                    // This is second, third merge etc.  First one is in above variables
+                                                                        // This is second, third merge etc.  First one is in above variables
 
         public void Add(JournalShipTargeted next)
         {
@@ -101,18 +100,26 @@ namespace EliteDangerousCore.JournalEvents
             MergedEntries.Add(next);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            detailed = "";
             if (MergedEntries == null)
-                info = ToString();
+                return ToString();
             else
             {
-                info = (MergedEntries.Count() + 1).ToString() + " Target Events".T(EDCTx.JournalShipTargeted_MC);
-                for (int i = MergedEntries.Count - 1; i >= 0; i--)
-                    detailed = detailed.AppendPrePad(MergedEntries[i].ToString(), System.Environment.NewLine);
-                detailed = detailed.AppendPrePad(ToString(), System.Environment.NewLine);   // ours is the last one
+                return (MergedEntries.Count() + 1).ToString() + " Target Events".T(EDCTx.JournalShipTargeted_MC);
             }
+        }
+
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            if (MergedEntries != null)
+            {
+                for (int i = MergedEntries.Count - 1; i >= 0; i--)
+                    sb.AppendPrePad(MergedEntries[i].ToString(), System.Environment.NewLine);
+            }
+            sb.AppendPrePad(ToString(), System.Environment.NewLine);   // ours is the last one
+            return sb.ToString();
         }
 
         public override string ToString()
@@ -126,23 +133,23 @@ namespace EliteDangerousCore.JournalEvents
                 }
                 else if (ScanStage.Value == 0)
                 {
-                    info = BaseUtils.FieldBuilder.Build("", Ship_Localised);
+                    return BaseUtils.FieldBuilder.Build("", Ship_Localised);
                 }
                 else if (ScanStage.Value == 1)
                 {
-                    info = BaseUtils.FieldBuilder.Build("", PilotName_Localised, "Rank: ".T(EDCTx.JournalEntry_Rank), PilotRank, "< in ".T(EDCTx.JournalShipTargeted_in), Ship_Localised);
+                    return BaseUtils.FieldBuilder.Build("", PilotName_Localised, "Rank: ".T(EDCTx.JournalEntry_Rank), PilotRank, "< in ".T(EDCTx.JournalShipTargeted_in), Ship_Localised);
                 }
                 else if (ScanStage.Value == 2)
                 {
-                    info = BaseUtils.FieldBuilder.Build(
+                    return BaseUtils.FieldBuilder.Build(
                         "", PilotName_Localised, "Rank: ".T(EDCTx.JournalEntry_Rank), PilotRank, "< in ".T(EDCTx.JournalShipTargeted_in), Ship_Localised,
                         "Shield ;;N1".T(EDCTx.JournalEntry_Shield), ShieldHealth, "Hull ;;N1".T(EDCTx.JournalShipTargeted_Hull), HullHealth);
-                        
+
 
                 }
                 else if (ScanStage.Value == 3)
                 {
-                    info = BaseUtils.FieldBuilder.Build(
+                    return BaseUtils.FieldBuilder.Build(
                                     "", PilotName_Localised, "< (;)", LegalStatus, "Rank: ".T(EDCTx.JournalEntry_Rank), PilotRank, "< in ".T(EDCTx.JournalShipTargeted_in), Ship_Localised,
                                     "Shield ;;N1".T(EDCTx.JournalEntry_Shield), ShieldHealth, "Hull ;;N1".T(EDCTx.JournalShipTargeted_Hull), HullHealth,
                                     "Bounty: ; cr;N0".T(EDCTx.JournalEntry_Bounty), Bounty,
@@ -174,23 +181,27 @@ namespace EliteDangerousCore.JournalEvents
         public List<string> MergedEntries { get; set; }     // if verbose.. doing it this way does not break action packs as the variables are maintained
                                                             // This is second, third merge etc.  First one is in above variables
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            detailed = "";
             if (MergedEntries != null)
-            {
-                info = (MergedEntries.Count+1).ToString("N0") + " " + "times".T(EDCTx.JournalUnderAttack_ACOUNT);
-                for (int i = MergedEntries.Count - 1; i >= 0; i--)
-                    detailed = detailed.AppendPrePad(MergedEntries[i], System.Environment.NewLine);
-                detailed = detailed.AppendPrePad(Target, System.Environment.NewLine);   // ours is the last one
-            }
+                return (MergedEntries.Count + 1).ToString("N0") + " " + "times".T(EDCTx.JournalUnderAttack_ACOUNT);
             else
-            {
-                info = BaseUtils.FieldBuilder.Build("", Target);
-            }
+                return BaseUtils.FieldBuilder.Build("", Target);
         }
 
-        public void Add( string target )
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            if (MergedEntries != null)
+            {
+                for (int i = MergedEntries.Count - 1; i >= 0; i--)
+                    sb.AppendPrePad(MergedEntries[i].ToString(), System.Environment.NewLine);
+            }
+            sb.AppendPrePad(Target, System.Environment.NewLine);   // ours is the last one
+            return sb.ToString();
+        }
+
+        public void Add(string target)
         {
             if (MergedEntries == null)
                 MergedEntries = new List<string>();
@@ -211,10 +222,9 @@ namespace EliteDangerousCore.JournalEvents
 
         protected override JournalTypeEnum IconEventType { get { return ShieldsUp ? JournalTypeEnum.ShieldState_ShieldsUp : JournalTypeEnum.ShieldState_ShieldsDown; } }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Shields Down;Shields Up".T(EDCTx.JournalEntry_ShieldsDown), ShieldsUp);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Shields Down;Shields Up".T(EDCTx.JournalEntry_ShieldsDown), ShieldsUp);
         }
     }
 

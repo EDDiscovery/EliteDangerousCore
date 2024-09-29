@@ -142,46 +142,50 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys) { return string.Format("At {0}".T(EDCTx.JournalDocked_At), StationName); }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            FillInformation(out info, out detailed, true);
-        }
-
-        public void FillInformation(out string info, out string detailed, bool printdocked)
-        {
-            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop); // because of translation
-
-            info = "";
-            
-            if ( printdocked )
-                info += "Docked".T(EDCTx.JournalTypeEnum_Docked) + ", ";
-
-            info += BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType), "< in system ".T(EDCTx.JournalEntry_insystem), StarSystem, 
+            var sb = new System.Text.StringBuilder(256);
+            sb.Append("Docked".T(EDCTx.JournalTypeEnum_Docked));
+            sb.Append(", ");
+            BaseUtils.FieldBuilder.Build(sb,"Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType), "< in system ".T(EDCTx.JournalEntry_insystem), StarSystem,
                 "State: ".TxID(EDCTx.JournalLocOrJump_State), StationDefinitions.ToLocalisedLanguage(StationState),
-                ";(Wanted)".T(EDCTx.JournalEntry_Wanted), Wanted, 
-                ";Active Fine".T(EDCTx.JournalEntry_ActiveFine),ActiveFine,
-                "Faction: ".T(EDCTx.JournalEntry_Faction), Faction,  
+                ";(Wanted)".T(EDCTx.JournalEntry_Wanted), Wanted,
+                ";Active Fine".T(EDCTx.JournalEntry_ActiveFine), ActiveFine,
+                "Faction: ".T(EDCTx.JournalEntry_Faction), Faction,
                 "< in state ".T(EDCTx.JournalEntry_instate), FactionDefinitions.ToLocalisedLanguage(FactionState));
 
-            detailed = BaseUtils.FieldBuilder.Build("Allegiance: ".T(EDCTx.JournalEntry_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance), 
+            return sb.ToString();
+        }
+
+        public override string GetDetailed()
+        {
+            var sb = new System.Text.StringBuilder(256);
+
+            sb.Build("Allegiance: ".T(EDCTx.JournalEntry_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance), 
                     "Economy: ".T(EDCTx.JournalEntry_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),
                     "Government: ".T(EDCTx.JournalEntry_Government),  GovernmentDefinitions.ToLocalisedLanguage(Government));
 
             if (StationServices != null)
             {
-                string l = "";
+                var lsb = new System.Text.StringBuilder(256);
                 foreach (var s in StationServices)
-                    l = l.AppendPrePad(StationDefinitions.ToLocalisedLanguage(s), ", ");
-                detailed += System.Environment.NewLine + "Station services: ".T(EDCTx.JournalEntry_Stationservices) + l;
+                    lsb.AppendPrePad(StationDefinitions.ToLocalisedLanguage(s), ", ");
+                sb.AppendCR();
+                sb.Append("Station services: ".T(EDCTx.JournalEntry_Stationservices));
+                sb.Append(lsb);
             }
 
             if (EconomyList != null)
             {
-                string l = "";
+                var lsb = new System.Text.StringBuilder(256);
                 foreach (Economies e in EconomyList)
-                    l = l.AppendPrePad(EconomyDefinitions.ToLocalisedLanguage(e.Name) + " " + (e.Proportion * 100).ToString("0.#") + "%", ", ");
-                detailed += System.Environment.NewLine + "Economies: ".T(EDCTx.JournalEntry_Economies) + l;
+                    lsb.AppendPrePad(EconomyDefinitions.ToLocalisedLanguage(e.Name) + " " + (e.Proportion * 100).ToString("0.#") + "%", ", ");
+                sb.AppendCR();
+                sb.Append("Economies: ".T(EDCTx.JournalEntry_Economies));
+                sb.Append(lsb);
             }
+
+            return sb.ToString();
         }
 
         public void UpdateStats(Stats stats, ISystem system, string stationfaction)
@@ -207,10 +211,9 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = StationName;
-            detailed = "";
+            return StationName;
         }
     }
 
@@ -234,10 +237,9 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", StationName, "", Reason);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", StationName, "", Reason);
         }
     }
 
@@ -259,10 +261,9 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", StationName, "< on pad ".T(EDCTx.JournalEntry_onpad), LandingPad, "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType));
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", StationName, "< on pad ".T(EDCTx.JournalEntry_onpad), LandingPad, "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType));
         }
     }
 
@@ -284,10 +285,9 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID { get; set; }
         public JournalDocked.LandingPadList LandingPads { get; set; } // 4.0 update 5
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = StationName;
-            detailed = "";
+            return StationName;
         }
     }
 
@@ -307,10 +307,9 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = StationName;
-            detailed = "";
+            return StationName;
         }
     }
 
@@ -336,10 +335,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", StationName, "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType));
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", StationName, "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType));
         }
     }
 

@@ -44,10 +44,9 @@ namespace EliteDangerousCore.JournalEvents
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, FDName, -Count, 0);
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {
-            info = BaseUtils.FieldBuilder.Build("",Name_Localised , "Num: ".T(EDCTx.JournalEntry_Num), Count, "Reward: ".T(EDCTx.JournalSearchAndRescue_Reward), Reward);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("",Name_Localised , "Num: ".T(EDCTx.JournalEntry_Num), Count, "Reward: ".T(EDCTx.JournalSearchAndRescue_Reward), Reward);
         }
 
         public void Ledger(Ledger mcl)

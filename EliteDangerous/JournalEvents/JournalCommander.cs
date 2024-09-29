@@ -30,10 +30,9 @@ namespace EliteDangerousCore.JournalEvents
         public string Name { get; set; }
         public string FID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {
-            info = BaseUtils.FieldBuilder.Build("Cmdr ", Name);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Cmdr ", Name);
         }
     }
 
@@ -51,10 +50,9 @@ namespace EliteDangerousCore.JournalEvents
         public string Package { get; set; }
         public string FID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Cmdr ", Name, "Starting Package: ".T(EDCTx.JournalEntry_StartingPackage), Package);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Cmdr ", Name, "Starting Package: ".T(EDCTx.JournalEntry_StartingPackage), Package);
         }
     }
 
@@ -69,11 +67,5 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Name { get; set; }
         public string FID { get; set; }
-
-        public override void FillInformation(out string info, out string detailed)
-        {
-            info = Name;
-            detailed = "";
-        }
     }
 }

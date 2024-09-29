@@ -200,6 +200,7 @@ namespace EliteDangerousCore
 
                 HistoryEntry hecur = hist.MakeHistoryEntry(je);
 
+                //System.Diagnostics.Debug.WriteLine($"HE created {hecur.EventSummary} {hecur.GetInfo()}\r\n{hecur.GetDetailed()}");
                 // System.Diagnostics.Debug.WriteLine("++ {0} {1}", he.EventTimeUTC.ToString(), he.EntryType);
                 var reorderlist = hist.ReorderRemove(hecur);
 
@@ -224,9 +225,11 @@ namespace EliteDangerousCore
 
             foreach (var s in hist.StarScan.ToProcess)
             {
-                s.Item1.FillInformation(out string info, out string detailed);
-                System.Diagnostics.Debug.WriteLine($"StarScan could not assign {s.Item1.EventTimeUTC} {s.Item1.GetType().Name} {info} {s.Item2?.Name ?? "???"} {s.Item2?.SystemAddress}");
+                System.Diagnostics.Debug.WriteLine($"StarScan could not assign {s.Item1.EventTimeUTC} {s.Item1.GetType().Name} {s.Item2?.Name ?? "???"} {s.Item2?.SystemAddress}");
             }
+
+            // dump all events info+detailed to file, useful for checking formatting
+            //JournalTest.CheckAllHistoryGetInfoDescription(hist, @"c:\code\out.log");      
 
             // foreach (var kvp in hist.IdentifierList.Items) System.Diagnostics.Debug.WriteLine($"IDList {kvp.Key} -> {kvp.Value}"); // debug
 

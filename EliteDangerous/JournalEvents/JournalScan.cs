@@ -635,11 +635,11 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
+        public override string GetInfo(FillInformationData fid)
         {
             if (IsStar)
             {
-                info = BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass: ;SM;0.00".T(EDCTx.JournalScan_MSM), nStellarMass,
+                return BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass: ;SM;0.00".T(EDCTx.JournalScan_MSM), nStellarMass,
                                                 "Age: ;my;0.0".T(EDCTx.JournalScan_Age), nAge,
                                                 "Radius: ".T(EDCTx.JournalScan_RS), RadiusText,
                                                 "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
@@ -647,7 +647,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else
             {
-                info = BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass: ".T(EDCTx.JournalScan_MASS), MassEMMM,
+                return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass: ".T(EDCTx.JournalScan_MASS), MassEMMM,
                                                 "<;, Landable".T(EDCTx.JournalScan_Landable), IsLandable,
                                                 "<;, Terraformable".T(EDCTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", Atmosphere,
                                                  "Gravity: ;G;0.00".T(EDCTx.JournalScan_Gravity), nSurfaceGravityG,
@@ -655,8 +655,11 @@ namespace EliteDangerousCore.JournalEvents
                                                  "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
                                                  "Name: ".T(EDCTx.JournalScan_SNME), BodyName.ReplaceIfStartsWith(fid.System.Name));
             }
+        }
 
-            detailed = DisplayString(0, includefront: false);
+        public override string GetDetailed()
+        {
+            return DisplayString(includefront: true);
         }
 
         public string ShortInformation()

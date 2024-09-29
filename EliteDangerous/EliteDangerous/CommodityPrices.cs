@@ -19,16 +19,17 @@ namespace EliteDangerousCore
 {
     public class CCommodities : System.IEquatable<CCommodities>
     {
+        // beware case change - this case is matched to frontier CAPI
         public long id { get; private set; }
 
-        [JsonName("name")]                                  // Oct 22: No sign of a FromObject for JSON.  I think this is old but may as well maintain. Maintain CAPI output names when emitting, even though we use a different naming
+        [JsonName("name")]                                  // Oct 22: No sign of a JSON.FromObject use.  I think this is old but may as well maintain. Maintain CAPI output names when emitting, even though we use a different naming
         public string fdname { get; private set; }          // EDDN use : name is lower cased in CAPI but thats all to match Marketing use of it
         [JsonIgnore]
         public string fdname_unnormalised { get; private set; }  // unnormalised, with FD decoration, if present
         public string locName { get; private set; }
 
         [JsonName("categoryname")]
-        public string category { get; private set; }        // as per market entry, its $MARKET_category_<x>; for market and CAPI. For spansh, its just the cat TBD on the ;
+        public string category { get; private set; }        // as per market entry, its $MARKET_category_<x>; for market and CAPI. For spansh, its the name (Techonology etc)
         public string loccategory { get; private set; }     // in this context, it means, its type (Metals).. as per MaterialCommoditiesDB
         public string legality { get; private set; }        // CAPI only
 

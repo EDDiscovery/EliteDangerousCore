@@ -252,7 +252,7 @@ namespace EliteDangerousCore.Spansh
 
                         evt["EDDFromSpanshBody"] = true;
 
-                        JournalScan js = new JournalScan(evt); System.Diagnostics.Debug.WriteLine($"Journal scan {js.DisplayString(0, includefront: true)}");
+                       // JournalScan js = new JournalScan(evt); System.Diagnostics.Debug.WriteLine($"Journal scan {js.DisplayString(0, includefront: true)}");
 
                         retresult.Add(evt);
                     }

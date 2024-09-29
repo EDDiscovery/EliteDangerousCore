@@ -82,44 +82,46 @@ namespace EliteDangerousCore.JournalEvents
         public int OfflineCount { get; set; }
         public int OtherCount { get; set; }             // counts other status counts
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {
-            detailed = "";
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
             if (StatusList != null)
             {
                 var flist = FriendState();      // get consolidated list, ignoring repeat names
 
-                info = "";
                // if ( flist.Count != OnlineCount + OfflineCount)
-               //     info = BaseUtils.FieldBuilder.Build("Number of Statuses: ".T(EDCTx.JournalEntry_NumberofStatuses), flist.Count);
+               //     return BaseUtils.FieldBuilder.Build("Number of Statuses: ".T(EDCTx.JournalEntry_NumberofStatuses), flist.Count);
 
                 if (OnlineCount > 0)
                 {
-                    info = info.AppendPrePad("Online: ".T(EDCTx.JournalEntry_Online) + OnlineCount.ToString(), ", ");
+                    sb.AppendPrePad("Online: ".T(EDCTx.JournalEntry_Online) + OnlineCount.ToString(), ", ");
 
                     foreach (var f in flist.Where(x => x.Value.Item1 > 0))
-                        info = info.AppendPrePad(f.Key, ", ");
+                        sb.AppendPrePad(f.Key, ", ");
                 }
 
                 if (OfflineCount > 0)
                 {
-                    info = info.AppendPrePad("Offline: ".T(EDCTx.JournalEntry_Offline) + OfflineCount.ToString(), ", ");
+                    sb.AppendPrePad("Offline: ".T(EDCTx.JournalEntry_Offline) + OfflineCount.ToString(), ", ");
 
                     foreach (var f in flist.Where(x => x.Value.Item1 < 0))
-                        info = info.AppendPrePad(f.Key, ", ");
+                        sb.AppendPrePad(f.Key, ", ");
                 }
 
                 foreach( var f in flist.Where(x=>x.Value.Item1 == 0 ) )
-                    info = info.AppendPrePad(f.Key + ": " + f.Value.Item2, ", ");
+                    sb.AppendPrePad(f.Key + ": " + f.Value.Item2, ", ");
 
                 for ( int i = 0; i < StatusList.Count; i++ )
-                    detailed = detailed.AppendPrePad(ST(StatusList[i].Name, StatusList[i].Status) , System.Environment.NewLine);
+                    sb.AppendPrePad(Translate(StatusList[i].Name, StatusList[i].Status) , System.Environment.NewLine);
             }
             else
             {
-                info = ST(Name, Status);
+                sb.Append(Translate(Name, Status));
             }
+
+            return sb.ToString();
+
         }
 
         public List<FriendClass> Statuses()
@@ -158,7 +160,7 @@ namespace EliteDangerousCore.JournalEvents
             return new Tuple<int, string>(v, status);
         }
 
-        static private string ST(string friendname, string status)
+        static private string Translate(string friendname, string status)
         {
             if (status.EqualsIIC("Online"))
                 return "Online: ".T(EDCTx.JournalEntry_Online) + friendname;

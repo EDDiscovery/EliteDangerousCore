@@ -63,42 +63,55 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(out string info, out string detailed)  
+        public override string GetInfo()
         {
-           
-            info = "";
-            detailed = "";
-            if (Raw != null && Raw.Length>0)
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            if (Raw != null && Raw.Length > 0)
             {
-                info += BaseUtils.FieldBuilder.Build("Raw: ".T(EDCTx.JournalMaterials_Raw) + "; ", Raw.Length);
-                detailed += "Raw: ".T(EDCTx.JournalMaterials_Raw) + List(Raw);
+                sb.Build("Raw: ".T(EDCTx.JournalMaterials_Raw) + "; ", Raw.Length);
             }
-            if (Manufactured != null && Manufactured.Length>0)
+            if (Manufactured != null && Manufactured.Length > 0)
             {
-                info += BaseUtils.FieldBuilder.Build("Manufactured: ".T(EDCTx.JournalMaterials_Manufactured) + "; ", Manufactured.Length);// NOT DONE
-                if (detailed.Length > 0)
-                    detailed += Environment.NewLine;
-                detailed += "Manufactured: ".T(EDCTx.JournalMaterials_Manufactured) + List(Manufactured);
+                sb.BuildPrePad(", ", "Manufactured: ".T(EDCTx.JournalMaterials_Manufactured) + "; ", Manufactured.Length);
             }
             if (Encoded != null && Encoded.Length > 0)
             {
-                info += BaseUtils.FieldBuilder.Build("Encoded: ".T(EDCTx.JournalMaterials_Encoded) + "; ", Encoded.Length);// NOT DONE
-                if (detailed.Length > 0)
-                    detailed += Environment.NewLine;
-                detailed += "Encoded: ".T(EDCTx.JournalMaterials_Encoded) + List(Encoded);
-            }
-        }
-
-        public string List(Material[] mat)
-        {
-            StringBuilder sb = new StringBuilder(64);
-
-            foreach (Material m in mat)
-            {
-                sb.Append(Environment.NewLine);
-                sb.Append(BaseUtils.FieldBuilder.Build(" ", m.FriendlyName, "; items".T(EDCTx.JournalEntry_items), m.Count));
+                sb.BuildPrePad(", ", "Encoded: ".T(EDCTx.JournalMaterials_Encoded) + "; ", Encoded.Length);
             }
             return sb.ToString();
+        }
+
+
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            if (Raw != null && Raw.Length>0)
+            {
+                sb.Append("Raw: ".T(EDCTx.JournalMaterials_Raw));
+                List(sb,Raw);
+            }
+            if (Manufactured != null && Manufactured.Length > 0)
+            {
+                sb.Append("Manufactured: ".T(EDCTx.JournalMaterials_Manufactured));
+                List(sb, Manufactured);
+            }
+            if (Encoded != null && Encoded.Length > 0)
+            {
+                sb.Append("Encoded: ".T(EDCTx.JournalMaterials_Encoded));
+                List(sb, Encoded);
+            }
+
+            return sb.ToString();
+        }
+
+        public void List(StringBuilder sb, Material[] mat)
+        {
+            foreach (Material m in mat)
+            {
+                sb.Append(BaseUtils.FieldBuilder.Build(" ", m.FriendlyName, "; items".T(EDCTx.JournalEntry_items), m.Count));
+                sb.AppendCR();
+            }
         }
 
         public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
@@ -146,15 +159,13 @@ namespace EliteDangerousCore.JournalEvents
             Total = mc.GetLast(Name)?.Count ?? 0;
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
-                info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".T(EDCTx.JournalEntry_MatC), Count, "Total: ".T(EDCTx.JournalEntry_Total), Total);
+                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".T(EDCTx.JournalEntry_MatC), Count, "Total: ".T(EDCTx.JournalEntry_Total), Total);
             else
-                info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".T(EDCTx.JournalEntry_MatC), Count);
-
-            detailed = "";
+                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".T(EDCTx.JournalEntry_MatC), Count);
         }
     }
 
@@ -182,15 +193,13 @@ namespace EliteDangerousCore.JournalEvents
             Total = mc.GetLast(Name)?.Count ?? 0;
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
-                info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".T(EDCTx.JournalEntry_MatC), Count, "Total: ".T(EDCTx.JournalEntry_Total), Total);
+                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".T(EDCTx.JournalEntry_MatC), Count, "Total: ".T(EDCTx.JournalEntry_Total), Total);
             else
-                info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".T(EDCTx.JournalEntry_MatC), Count);
-    
-            detailed = "";
+                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".T(EDCTx.JournalEntry_MatC), Count);
         }
     }
 
@@ -210,16 +219,17 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyName { get; set; }
         public int DiscoveryNumber { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", FriendlyName);
+            string info = BaseUtils.FieldBuilder.Build("", FriendlyName);
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
                 info += BaseUtils.FieldBuilder.Build(" (", mcd.TranslatedCategory, ";)", mcd.TranslatedType);
 
             if (DiscoveryNumber > 0)
                 info += string.Format(", Discovery {0}".T(EDCTx.JournalMaterialDiscovered_DN), DiscoveryNumber);
-            detailed = "";
+
+            return info;
         }
     }
 
@@ -292,15 +302,15 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = detailed = "";
-
             if (Paid != null && Received != null)
             {
-                info = BaseUtils.FieldBuilder.Build("Sold: ".T(EDCTx.JournalEntry_Sold), Paid.Quantity, "< ", Paid.Material_Localised,
+                return BaseUtils.FieldBuilder.Build("Sold: ".T(EDCTx.JournalEntry_Sold), Paid.Quantity, "< ", Paid.Material_Localised,
                                                     "Received: ".T(EDCTx.JournalEntry_Received), Received.Quantity, "< ", Received.Material_Localised);
             }
+            else
+                return "";
         }
     }
 
@@ -369,14 +379,18 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = Name;
-            if (Materials != null)
-                foreach (KeyValuePair<string, int> k in Materials)
-                    info += ", " + MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(k.Key) + ": " + k.Value.ToString();
+            var sb = new System.Text.StringBuilder(256);
+            sb.Append(Name);
 
-            detailed = "";
+            if (Materials != null)
+            {
+                foreach (KeyValuePair<string, int> k in Materials)
+                    sb.AppendPrePad(MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(k.Key) + ": " + k.Value.ToString(), ", ");
+
+            }
+            return sb.ToString();
         }
     }
 

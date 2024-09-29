@@ -958,6 +958,7 @@ namespace EliteDangerousCore
             if (hescan != null)
             {
                 JournalScan js = hescan.journalEntry as JournalScan;
+
                 info = js.DisplayString();
 
                 if (hescan.ScanNode != null)
@@ -1004,12 +1005,12 @@ namespace EliteDangerousCore
                 if (he.EntryType != JournalTypeEnum.Scan)      // for all the rest of the results, ignoring scan
                 {
                     string time = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(he.EventTimeUTC).ToString();
-                    he.FillInformation(out string info2, out string detailed);
                     if (info.HasChars())
-                        info = info.AppendPrePad(time + ": " + info2, Environment.NewLine);
+                        info = info.AppendPrePad(time + ": " + he.GetInfo(), Environment.NewLine);
                     else
-                        info = info.AppendPrePad(info2, Environment.NewLine);
+                        info = info.AppendPrePad(he.GetInfo(), Environment.NewLine);
 
+                    string detailed = he.GetDetailed();     // may be null
                     if (detailed.HasChars())
                     {
                         infotooltip += time + Environment.NewLine + detailed.LineIndentation("    ") + Environment.NewLine;

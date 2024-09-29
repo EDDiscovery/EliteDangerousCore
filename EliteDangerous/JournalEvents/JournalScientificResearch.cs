@@ -36,10 +36,9 @@ namespace EliteDangerousCore.JournalEvents
         public string Category { get; set; }
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {
-            info = BaseUtils.FieldBuilder.Build("",Name_Localised, "Count: ".T(EDCTx.JournalEntry_Count),  Count , "Category: ".T(EDCTx.JournalEntry_Category), Category);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("",Name_Localised, "Count: ".T(EDCTx.JournalEntry_Count),  Count , "Category: ".T(EDCTx.JournalEntry_Category), Category);
         }
     }
 }

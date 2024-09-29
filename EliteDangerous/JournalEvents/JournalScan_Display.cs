@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016 - 2023 EDDiscovery development team
+ * Copyright 2016 - 2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -21,245 +21,341 @@ namespace EliteDangerousCore.JournalEvents
 {
     public partial class JournalScan 
     {
-
-        // has no trailing LF
-        public string DisplayString(int indent = 0, List<MaterialCommodityMicroResource> historicmatlist = null,
+        public string DisplayString(List<MaterialCommodityMicroResource> historicmatlist = null,
                                                         List<MaterialCommodityMicroResource> currentmatlist = null,
                                                         bool includefront = true)
         {
-            string inds = new string(' ', indent);
+            var sb = new StringBuilder(1024);
+            DisplaySummary(sb, historicmatlist, currentmatlist, includefront);
+            return sb.ToString();
+        }
 
-            StringBuilder scanText = new StringBuilder();
-
-            scanText.Append(inds);
-
+        public void DisplaySummary(StringBuilder sb, List<MaterialCommodityMicroResource> historicmatlist = null,
+                                                        List<MaterialCommodityMicroResource> currentmatlist = null,
+                                                        bool includefront = true)
+        {
             if (includefront)
             {
-                scanText.AppendFormat("{0} {1}" + Environment.NewLine, BodyName, IsWebSourced ? $" ({DataSourceName})" : "");
-                scanText.Append(Environment.NewLine);
+                sb.AppendFormat("{0} {1}", BodyName, IsWebSourced ? $" ({DataSourceName})" : "");
+                sb.AppendCR();
 
                 if (IsStar)
                 {
-                    scanText.AppendFormat(StarTypeText + " (" + StarClassification + ")\n");
+                    sb.Append(StarTypeText);
+                    sb.AppendSPC();
+                    sb.AppendBracketed(StarClassification);
+                    sb.AppendCR();
                 }
                 else if (IsPlanet)
                 {
-                    scanText.AppendFormat("{0}", PlanetTypeText);
+                    sb.Append(PlanetTypeText);
 
                     if (!GasWorld)      // all gas worlds have atmospheres, so don't add it on
                     {
-                        scanText.AppendFormat(", " + (Atmosphere == "none" ? "No Atmosphere".T(EDCTx.JournalScan_NoAtmosphere) : Atmosphere));
+                        sb.AppendCS();
+                        sb.Append(Atmosphere == "none" ? "No Atmosphere".T(EDCTx.JournalScan_NoAtmosphere) : Atmosphere);
                     }
 
                     if (IsLandable)
-                        scanText.AppendFormat(", Landable".T(EDCTx.JournalScan_LandC));
-                    scanText.AppendFormat("\n");
+                    {
+                        sb.AppendCS();
+                        sb.Append("Landable".T(EDCTx.JournalScan_LandC));
+                    }
+                    sb.AppendCR();
                 }
 
                 if (Terraformable)
-                    scanText.Append("Candidate for terraforming\n".T(EDCTx.JournalScan_Candidateforterraforming));
+                {
+                    sb.Append("Candidate for terraforming".T(EDCTx.JournalScan_Candidateforterraforming));
+                    sb.AppendCR();
+                }
 
                 if (nAge.HasValue)
-                    scanText.AppendFormat("Age: {0} my\n".T(EDCTx.JournalScan_AMY), nAge.Value.ToString("N0"));
+                {
+                    sb.AppendFormat("Age: {0} my".T(EDCTx.JournalScan_AMY), nAge.Value.ToString("N0"));
+                    sb.AppendCR();
+                }
 
                 if (nStellarMass.HasValue)
-                    scanText.AppendFormat("Solar Masses: {0:0.00}\n".T(EDCTx.JournalScan_SolarMasses), nStellarMass.Value);
+                {
+                    sb.AppendFormat("Solar Masses: {0:0.00}".T(EDCTx.JournalScan_SolarMasses), nStellarMass.Value);
+                    sb.AppendCR();
+                }
 
                 if (nMassEM.HasValue)
-                    scanText.AppendFormat("Mass: ".T(EDCTx.JournalScan_MASS) + " " + MassEMMM + "\n");
+                {
+                    sb.AppendFormat("Mass: ".T(EDCTx.JournalScan_MASS) + " " + MassEMMM + "");
+                    sb.AppendCR();
+                }
 
                 if (nRadius.HasValue)
-                    scanText.AppendFormat("Radius: ".T(EDCTx.JournalScan_RS) + " " + RadiusText + "\n");
+                {
+                    sb.AppendFormat("Radius: ".T(EDCTx.JournalScan_RS) + " " + RadiusText + "");
+                    sb.AppendCR();
+                }
 
                 if (DistanceFromArrivalLS > 0)
-                    scanText.AppendFormat("Distance from Arrival Point {0:N1}ls\n".T(EDCTx.JournalScan_DistancefromArrivalPoint), DistanceFromArrivalLS);
+                {
+                    sb.AppendFormat("Distance from Arrival Point {0:N1}ls".T(EDCTx.JournalScan_DistancefromArrivalPoint), DistanceFromArrivalLS);
+                    sb.AppendCR();
+                }
 
                 if (HasAtmosphericComposition)
-                    scanText.Append(DisplayAtmosphere(4));
+                {
+                    DisplayAtmosphere(sb, 4);
+                }
 
                 if (HasPlanetaryComposition)
-                    scanText.Append(DisplayComposition(4));
+                {
+                    DisplayComposition(sb,4);
+                }
             }
 
             if (nSurfaceTemperature.HasValue)
-                scanText.AppendFormat("Surface Temp: {0}K\n".T(EDCTx.JournalScan_SurfaceTemp), nSurfaceTemperature.Value.ToString("N0"));
+            {
+                sb.AppendFormat("Surface Temp: {0}K".T(EDCTx.JournalScan_SurfaceTemp), nSurfaceTemperature.Value.ToString("N0"));
+                sb.AppendCR();
+            }
 
             if (nSurfaceGravity.HasValue)
-                scanText.AppendFormat("Gravity: {0:0.00}g\n".T(EDCTx.JournalScan_GV), nSurfaceGravityG.Value);
+            {
+                sb.AppendFormat("Gravity: {0:0.00}g".T(EDCTx.JournalScan_GV), nSurfaceGravityG.Value);
+                sb.AppendCR();
+            }
 
             if (nSurfacePressure.HasValue && nSurfacePressure.Value > 0.00 && !GasWorld)        // don't print for gas worlds
             {
                 if (nSurfacePressure.Value > 1000)
                 {
-                    scanText.AppendFormat("Surface Pressure: {0} Atmospheres\n".T(EDCTx.JournalScan_SPA), nSurfacePressureEarth.Value.ToString("N2"));
+                    sb.AppendFormat("Surface Pressure: {0} Atmospheres".T(EDCTx.JournalScan_SPA), nSurfacePressureEarth.Value.ToString("N2"));
                 }
                 else
                 {
-                    scanText.AppendFormat("Surface Pressure: {0} Pa\n".T(EDCTx.JournalScan_SPP), (nSurfacePressure.Value).ToString("N2"));
+                    sb.AppendFormat("Surface Pressure: {0} Pa".T(EDCTx.JournalScan_SPP), (nSurfacePressure.Value).ToString("N2"));
                 }
+                sb.AppendCR();
             }
 
             if (Volcanism.HasChars())
-                scanText.AppendFormat("Volcanism: {0}\n".T(EDCTx.JournalScan_Volcanism), Volcanism.IsEmpty() ? "No Volcanism".T(EDCTx.JournalScan_NoVolcanism) : System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.
+            {
+                sb.AppendFormat("Volcanism: {0}".T(EDCTx.JournalScan_Volcanism), Volcanism.IsEmpty() ? "No Volcanism".T(EDCTx.JournalScan_NoVolcanism) : System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.
                                                                                             ToTitleCase(Volcanism.ToLowerInvariant()));
+                sb.AppendCR();
+            }
 
 
             if (nOrbitalPeriodDays.HasValue && nOrbitalPeriodDays > 0)
-                scanText.AppendFormat("Orbital Period: {0} days\n".T(EDCTx.JournalScan_OrbitalPeriod), nOrbitalPeriodDays.Value.ToString("0.0####"));
+            {
+                sb.AppendFormat("Orbital Period: {0} days".T(EDCTx.JournalScan_OrbitalPeriod), nOrbitalPeriodDays.Value.ToString("0.0####"));
+                sb.AppendCR();
+            }
 
             if (nSemiMajorAxis.HasValue)
             {
                 if (IsStar || nSemiMajorAxis.Value > BodyPhysicalConstants.oneAU_m / 10)
-                    scanText.AppendFormat("Semi Major Axis: {0:0.00}AU\n".T(EDCTx.JournalScan_SMA), nSemiMajorAxisAU.Value);
+                    sb.AppendFormat("Semi Major Axis: {0:0.00}AU".T(EDCTx.JournalScan_SMA), nSemiMajorAxisAU.Value);
                 else
-                    scanText.AppendFormat("Semi Major Axis: {0}km\n".T(EDCTx.JournalScan_SMK), (nSemiMajorAxis.Value / 1000).ToString("N1"));
+                    sb.AppendFormat("Semi Major Axis: {0}km".T(EDCTx.JournalScan_SMK), (nSemiMajorAxis.Value / 1000).ToString("N1"));
+                sb.AppendCR();
             }
 
             if (nEccentricity.HasValue)
             {
                 if (nEccentricity < 0.9)
-                    scanText.AppendFormat("Orbital Eccentricity: ".T(EDCTx.JournalScan_OrbitalEccentricity) + "{0:0.000}\n", nEccentricity.Value);
+                    sb.AppendFormat("Orbital Eccentricity: ".T(EDCTx.JournalScan_OrbitalEccentricity) + "{0:0.000}", nEccentricity.Value);
                 else 
-                    scanText.AppendFormat("Orbital Eccentricity: ".T(EDCTx.JournalScan_OrbitalEccentricity) + "{0:0.000000}\n", nEccentricity.Value);
+                    sb.AppendFormat("Orbital Eccentricity: ".T(EDCTx.JournalScan_OrbitalEccentricity) + "{0:0.000000}", nEccentricity.Value);
+                sb.AppendCR();
             }
 
             if (nOrbitalInclination.HasValue)
-                scanText.AppendFormat("Orbital Inclination: {0:0.000}°\n".T(EDCTx.JournalScan_OrbitalInclination), nOrbitalInclination.Value);
+            {
+                sb.AppendFormat("Orbital Inclination: {0:0.000}°".T(EDCTx.JournalScan_OrbitalInclination), nOrbitalInclination.Value);
+                sb.AppendCR();
+            }
 
             if (nAscendingNode.HasValue)
-                scanText.AppendFormat("Ascending Node: {0:0.000}°\n".T(EDCTx.JournalScan_AscendingNode), nAscendingNode.Value);
+            {
+                sb.AppendFormat("Ascending Node: {0:0.000}°".T(EDCTx.JournalScan_AscendingNode), nAscendingNode.Value);
+                sb.AppendCR();
+            }
 
             if (nPeriapsis.HasValue)
-                scanText.AppendFormat("Arg Of Periapsis: {0:0.000}°\n".T(EDCTx.JournalScan_ArgOfPeriapsis), nPeriapsis.Value);
+            {
+                sb.AppendFormat("Arg Of Periapsis: {0:0.000}°".T(EDCTx.JournalScan_ArgOfPeriapsis), nPeriapsis.Value);
+                sb.AppendCR();
+            }
 
             if (nMeanAnomaly.HasValue)
-                scanText.AppendFormat("Mean Anomaly: {0:0.000}°\n".T(EDCTx.JournalScan_MeanAnomaly), nMeanAnomaly.Value);
+            {
+                sb.AppendFormat("Mean Anomaly: {0:0.000}°".T(EDCTx.JournalScan_MeanAnomaly), nMeanAnomaly.Value);
+                sb.AppendCR();
+            }
 
             if (nAxialTiltDeg.HasValue)
-                scanText.AppendFormat("Axial tilt: {0:0.00}°\n".T(EDCTx.JournalScan_Axialtilt), nAxialTiltDeg.Value);
+            {
+                sb.AppendFormat("Axial tilt: {0:0.00}°".T(EDCTx.JournalScan_Axialtilt), nAxialTiltDeg.Value);
+                sb.AppendCR();
+            }
 
             if (nRotationPeriodDays.HasValue)
-                scanText.AppendFormat("Rotation Period: {0} days\n".T(EDCTx.JournalScan_RotationPeriod), nRotationPeriodDays.Value.ToString("0.0####"));
+            {
+                sb.AppendFormat("Rotation Period: {0} days".T(EDCTx.JournalScan_RotationPeriod), nRotationPeriodDays.Value.ToString("0.0####"));
+                sb.AppendCR();
+            }
 
 
             if (nAbsoluteMagnitude.HasValue)
-                scanText.AppendFormat("Absolute Magnitude: {0:0.00}\n".T(EDCTx.JournalScan_AbsoluteMagnitude), nAbsoluteMagnitude.Value);
+            {
+                sb.AppendFormat("Absolute Magnitude: {0:0.00}".T(EDCTx.JournalScan_AbsoluteMagnitude), nAbsoluteMagnitude.Value);
+                sb.AppendCR();
+            }
 
             if (nTidalLock.HasValue && nTidalLock.Value)
-                scanText.Append("Tidally locked\n".T(EDCTx.JournalScan_Tidallylocked));
+            {
+                sb.Append("Tidally locked".T(EDCTx.JournalScan_Tidallylocked));
+                sb.AppendCR();
+            }
 
             if (HasRingsOrBelts)
             {
-                scanText.Append("\n");
-
                 if (HasRings)
-                    scanText.AppendFormat(Rings.Count() == 1 ? "Ring".T(EDCTx.JournalScan_Ring) : "Rings".T(EDCTx.JournalScan_Rings), ""); // OLD translator files had "Rings{0}" so supply an empty string just in case
+                    sb.AppendFormat(Rings.Count() == 1 ? "Ring".T(EDCTx.JournalScan_Ring) : "Rings".T(EDCTx.JournalScan_Rings), ""); // OLD translator files had "Rings{0}" so supply an empty string just in case
                 else
-                    scanText.AppendFormat(Rings.Count() == 1 ? "Belt".T(EDCTx.JournalScan_Belt) : "Belts".T(EDCTx.JournalScan_Belts), ""); // OLD translator files had "Belt{0}" so supply an empty string just in case
+                    sb.AppendFormat(Rings.Count() == 1 ? "Belt".T(EDCTx.JournalScan_Belt) : "Belts".T(EDCTx.JournalScan_Belts), ""); // OLD translator files had "Belt{0}" so supply an empty string just in case
+
+                sb.Append(": ");
 
                 for (int i = 0; i < Rings.Length; i++)
-                    scanText.Append("\n" + Rings[i].RingInformation());
-
-                scanText.Append("\n");
+                    Rings[i].RingText(sb);
             }
 
             if (HasMaterials)
             {
-                scanText.Append(DisplayMaterials(4, historicmatlist, currentmatlist));
+                DisplayMaterials(sb, 4, historicmatlist, currentmatlist);
             }
 
             if (IsStar)
             {
-                string czs = CircumstellarZonesString(true, CZPrint.CZAll);
-                if (czs != null)
-                    scanText.Append(czs);
+                HabZoneText(sb, true);
             }
 
             if (Mapped)
             {
-                scanText.Append("Mapped".T(EDCTx.JournalScan_MPI));
+                sb.Append("Mapped".T(EDCTx.JournalScan_MPI));
                 if (EfficientMapped)
-                    scanText.Append(" " + "Efficiently".T(EDCTx.JournalScan_MPIE));
-                scanText.Append("\n");
+                {
+                    sb.AppendSPC();
+                    sb.Append("Efficiently".T(EDCTx.JournalScan_MPIE));
+                }
+                sb.AppendCR();
             }
 
             ScanEstimatedValues ev = GetEstimatedValues();
 
-            scanText.AppendFormat("Current value: {0:N0}".T(EDCTx.JournalScan_CV) + "\n", ev.EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsWebSourced));
+            sb.AppendFormat("Current value: {0:N0}".T(EDCTx.JournalScan_CV) + "", ev.EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsWebSourced));
+            sb.AppendCR();
 
             if (ev.EstimatedValueFirstDiscoveredFirstMapped > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
             {
-                string msg = "First Discovered+Mapped value: {0:N0}/{1:N0}e".T(EDCTx.JournalScan_EVFD) + "\n";
-                scanText.AppendFormat(msg, ev.EstimatedValueFirstDiscoveredFirstMapped, ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently);
+                string msg = "First Discovered+Mapped value: {0:N0}/{1:N0}e".T(EDCTx.JournalScan_EVFD) + "";
+                sb.AppendFormat(msg, ev.EstimatedValueFirstDiscoveredFirstMapped, ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently);
+                sb.AppendCR();
             }
 
             if (ev.EstimatedValueFirstMapped > 0 && (!WasMapped.HasValue || !WasMapped.Value))    // if was not mapped
             {
-                scanText.AppendFormat("First Mapped value: {0:N0}/{1:N0}e".T(EDCTx.JournalScan_EVFM) + "\n", ev.EstimatedValueFirstMapped, ev.EstimatedValueFirstMappedEfficiently);
+                sb.AppendFormat("First Mapped value: {0:N0}/{1:N0}e".T(EDCTx.JournalScan_EVFM) + "", ev.EstimatedValueFirstMapped, ev.EstimatedValueFirstMappedEfficiently);
+                sb.AppendCR();
             }
 
             if (ev.EstimatedValueFirstDiscovered > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
             {
-                scanText.AppendFormat("First Discovered value: {0:N0}".T(EDCTx.JournalScan_FDV) + "\n", ev.EstimatedValueFirstDiscovered);
+                sb.AppendFormat("First Discovered value: {0:N0}".T(EDCTx.JournalScan_FDV) + "", ev.EstimatedValueFirstDiscovered);
+                sb.AppendCR();
             }
 
             if (ev.EstimatedValueFirstDiscovered > 0) // if we have extra details, on planets, show the base value
             {
-                scanText.AppendFormat("Mapped value: {0:N0}/{1:N0}e".T(EDCTx.JournalScan_EVM) + "\n", ev.EstimatedValueMapped, ev.EstimatedValueMappedEfficiently);
-                scanText.AppendFormat("Base Estimated value: {0:N0}".T(EDCTx.JournalScan_EV) + "\n", ev.EstimatedValueBase);
+                sb.AppendFormat("Mapped value: {0:N0}/{1:N0}e".T(EDCTx.JournalScan_EVM) + "", ev.EstimatedValueMapped, ev.EstimatedValueMappedEfficiently);
+                sb.AppendCR();
+                sb.AppendFormat("Base Estimated value: {0:N0}".T(EDCTx.JournalScan_EV) + "", ev.EstimatedValueBase);
+                sb.AppendCR();
             }
 
             if (WasDiscovered.HasValue && WasDiscovered.Value)
-                scanText.AppendFormat("Already Discovered".T(EDCTx.JournalScan_EVAD) + "\n");
+            {
+                sb.AppendFormat("Already Discovered".T(EDCTx.JournalScan_EVAD) + "");
+                sb.AppendCR();
+            }
             if (WasMapped.HasValue && WasMapped.Value)
-                scanText.AppendFormat("Already Mapped".T(EDCTx.JournalScan_EVAM) + "\n");
+            {
+                sb.AppendFormat("Already Mapped".T(EDCTx.JournalScan_EVAM) + "");
+                sb.AppendCR();
+            }
 
             if (EDSMDiscoveryCommander != null)
-                scanText.AppendFormat("Discovered by {0} on {1}".T(EDCTx.JournalScan_DB) + "\n", EDSMDiscoveryCommander, EDSMDiscoveryUTC.ToStringZulu());
+            {
+                sb.AppendFormat("Discovered by {0} on {1}".T(EDCTx.JournalScan_DB) + "", EDSMDiscoveryCommander, EDSMDiscoveryUTC.ToStringZulu());
+                sb.AppendCR();
+            }
 
             if (SurfaceFeatures != null)
-                scanText.AppendFormat("Surface features".T(EDCTx.ScanDisplayUserControl_SurfaceFeatures) + ":\n" + StarScan.SurfaceFeatureList(SurfaceFeatures, 4, "\n") + "\n");
+            {
+                sb.Append("Surface features".T(EDCTx.ScanDisplayUserControl_SurfaceFeatures));
+                sb.Append(": ");
+                StarScan.SurfaceFeatureList(sb, SurfaceFeatures, 4, false, Environment.NewLine);
+                sb.AppendCR();
+            }
             if (Signals != null)
-                scanText.AppendFormat("Signals".T(EDCTx.ScanDisplayUserControl_Signals) + ":\n" + JournalSAASignalsFound.SignalList(Signals, 4, "\n") + "\n");
+            {
+                sb.Append("Signals".T(EDCTx.ScanDisplayUserControl_Signals));
+                sb.Append(": ");
+                JournalSAASignalsFound.SignalList(sb, Signals, 4, false, false, Environment.NewLine);
+                sb.AppendCR();
+            }
             if (Genuses != null)
-                scanText.AppendFormat("Genuses".T(EDCTx.ScanDisplayUserControl_Genuses) + ":\n" + JournalSAASignalsFound.GenusList(Genuses, 4, "\n") + "\n");
+            {
+                sb.Append("Genuses".T(EDCTx.ScanDisplayUserControl_Genuses));
+                sb.Append(": ");
+                JournalSAASignalsFound.GenusList(sb, Genuses, 4, false, false, Environment.NewLine);
+                sb.AppendCR();
+            }
             if (Organics != null)
-                scanText.AppendFormat("Organics".T(EDCTx.ScanDisplayUserControl_Organics) + ":\n" + JournalScanOrganic.OrganicList(Organics, 4, "\n") + "\n");
+            {
+                sb.Append("Organics".T(EDCTx.ScanDisplayUserControl_Organics));
+                sb.Append(": ");
+                JournalScanOrganic.OrganicList(sb, Organics, 4, false, Environment.NewLine);
+                sb.AppendCR();
+            }
 
-            scanText.AppendFormat("Scan Type: {0}".T(EDCTx.JournalScan_SCNT) + "\n", ScanType);
+            if (ScanType.HasChars())        // early entries did not
+            {
+                sb.AppendFormat("Scan Type: {0}".T(EDCTx.JournalScan_SCNT), ScanType);
+                sb.AppendCR();
+            }
 
             if ( Parents!=null && Parents.Count > 0 && Parents[0].Barycentre != null)      // dec 22 bug here on edsm data received a empty parent array- be more defensive
             { 
                 JournalScanBaryCentre barycentrejs = Parents[0].Barycentre;
-                scanText.AppendLine();
-                scanText.AppendLine("Barycentre: " + barycentrejs.BodyID.ToString());
-                barycentrejs.FillInformation(out string info, out string detailed);
-                scanText.AppendLine(info);
-                scanText.AppendLine(detailed);
+                sb.AppendLine("Barycentre: " + barycentrejs.BodyID.ToString());
+                sb.AppendLine("  " + barycentrejs.GetInfo());            // verified it exists
+                sb.AppendLine("  " + barycentrejs.GetDetailed());        // verified it exists
             }
 
 
 #if DEBUG
             if ( Parents != null)
             {
-                scanText.AppendLine();
-                scanText.AppendLine($"Body ID {BodyID}");
+                sb.AppendLine($"Body ID {BodyID}");
                 foreach (var x in Parents)
-                    scanText.AppendLine($"Parent {x.BodyID} {x.Type}");
+                    sb.AppendLine($"Parent {x.BodyID} {x.Type}");
             }
 
 #endif
 
-            //scanText.AppendFormat("BID+Parents: {0} - {1}\n", BodyID ?? -1, ParentList());
-
-            if (scanText.Length > 0 && scanText[scanText.Length - 1] == '\n')
-                scanText.Remove(scanText.Length - 1, 1);
-
-            return scanText.ToNullSafeString().Replace("\n", "\n" + inds);
+            //scanText.AppendFormat("BID+Parents: {0} - {1}", BodyID ?? -1, ParentList());
         }
-
-
-
     }
 }
 
