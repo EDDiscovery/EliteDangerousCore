@@ -24,7 +24,7 @@ namespace EliteDangerousCore
 {
     public partial class SystemDisplay
     {
-        public enum DrawLevel { TopLevelStar, PlanetLevel, MoonLevel };
+        public enum DrawLevel { TopLevelStar, PlanetLevel, MoonLevel, NoText };
 
         private Dictionary<Bitmap, float> imageintensities = new Dictionary<Bitmap, float>();       // cached
 
@@ -41,7 +41,7 @@ namespace EliteDangerousCore
                             out Rectangle imagepos,         // this is the rectangle used by the node to draw into
                             out int imagexcentre,           // this is the x centre of the image which may not be in the middle of the rectangle
                             Size size,                      // nominal size
-                            DrawLevel drawtype,             // drawing..
+                            DrawLevel drawtype,             // drawing.. determines text printed mostly
                             Random random,                  // for random placements
                             Color? backwash = null,         // optional back wash on image 
                             string appendlabeltext = ""     // any label text to append
@@ -101,13 +101,13 @@ namespace EliteDangerousCore
                             nodelabels[1] = nodelabels[1].AppendPrePad($"{(sn.ScanData.nSurfaceGravity / BodyPhysicalConstants.oneGee_m_s2):N2}g", Environment.NewLine);
                         }
 
-                        if ( ShowPlanetMass && sn.ScanData.nMassEM.HasValue)
+                        if (ShowPlanetMass && sn.ScanData.nMassEM.HasValue)
                         {
                             nodelabels[1] = nodelabels[1].AppendPrePad(sn.ScanData.MassEMMM, Environment.NewLine);
                         }
                     }
 
-                    if (ShowDist && sn.ScanData.DistanceFromArrivalLS > 0 )         // show distance, and not 0 (thus main star)
+                    if (ShowDist && sn.ScanData.DistanceFromArrivalLS > 0)         // show distance, and not 0 (thus main star)
                     {
                         if (drawtype != DrawLevel.MoonLevel)       // other than moons
                         {
@@ -123,7 +123,7 @@ namespace EliteDangerousCore
                             else
                             {
                                 //System.Diagnostics.Debug.WriteLine(sn.ScanData.BodyName + " SMA " + sn.ScanData.nSemiMajorAxis + " " + sn.ScanData.DistanceFromArrivalm);
-                                string s2 = sn.ScanData.nSemiMajorAxis.HasValue && Math.Abs(sn.ScanData.nSemiMajorAxis.Value- sn.ScanData.DistanceFromArrivalm) > BodyPhysicalConstants.oneAU_m ? ("/" + sn.ScanData.SemiMajorAxisLSKM) : "";
+                                string s2 = sn.ScanData.nSemiMajorAxis.HasValue && Math.Abs(sn.ScanData.nSemiMajorAxis.Value - sn.ScanData.DistanceFromArrivalm) > BodyPhysicalConstants.oneAU_m ? ("/" + sn.ScanData.SemiMajorAxisLSKM) : "";
                                 nodelabels[1] = nodelabels[1].AppendPrePad(s1 + s2, Environment.NewLine);
                             }
                         }
@@ -143,15 +143,15 @@ namespace EliteDangerousCore
 
                     nodelabels[1] = nodelabels[1].AppendPrePad(appendlabeltext, Environment.NewLine);
 
-//  nodelabels[1] = nodelabels[1].AppendPrePad("" + sn.ScanData?.BodyID, Environment.NewLine);
-                                                        
-                    bool valuable = sc.GetEstimatedValues().EstimatedValue(sc.WasDiscovered, sc.WasMapped, true, true,false) >= ValueLimit;
+                    //  nodelabels[1] = nodelabels[1].AppendPrePad("" + sn.ScanData?.BodyID, Environment.NewLine);
+
+                    bool valuable = sc.GetEstimatedValues().EstimatedValue(sc.WasDiscovered, sc.WasMapped, true, true, false) >= ValueLimit;
                     bool isdiscovered = sc.IsPreviouslyDiscovered && sc.IsPlanet;
-                    int numiconoverlays = ShowOverlays ? ((sc.Terraformable ? 1 : 0) + (sc.HasMeaningfulVolcanism ? 1 : 0) + 
+                    int numiconoverlays = ShowOverlays ? ((sc.Terraformable ? 1 : 0) + (sc.HasMeaningfulVolcanism ? 1 : 0) +
                                         (valuable ? 1 : 0) + (sc.Mapped ? 1 : 0) + (isdiscovered ? 1 : 0) + (sc.IsPreviouslyMapped ? 1 : 0) +
                                         (sn.Signals != null ? 1 : 0) + (sn.Organics != null ? 1 : 0)
                                         ) : 0;
-   
+
                     bool materialsicon = sc.HasMaterials && !ShowMaterials;
 
                     int bitmapheight = size.Height * nodeheightratio / noderatiodivider;        // what height it is in units of noderatiodivider
@@ -168,14 +168,14 @@ namespace EliteDangerousCore
                     // space between icons if wanted
                     const int iconvspacing = 0;
                     // get icon size, bitmap height minus iconvspacing parts / divider.. (ie. 125 with 6 icons = 125-(6-1)*1 = 120 / 6 = 20
-                    int iconsize = (bitmapheight- iconvspacing * (numiconoverlays-1)) / iconsizedivider;       
+                    int iconsize = (bitmapheight - iconvspacing * (numiconoverlays - 1)) / iconsizedivider;
                     // actual area width, which is only set to iconsize if we have icons
                     int iconwidtharea = numiconoverlays > 0 ? iconsize : 0;
 
                     //System.Diagnostics.Debug.WriteLine($"..DrawNode {sn.OwnName} imagewidtharea {imagewidtharea} iconsize {iconsize} total {imagewidtharea+iconsize}");
 
                     // total width, of icon and image area
-                    int bitmapwidth = iconwidtharea + imagewidtharea;                   
+                    int bitmapwidth = iconwidtharea + imagewidtharea;
 
                     Bitmap bmp = new Bitmap(bitmapwidth, bitmapheight);
 
@@ -214,9 +214,9 @@ namespace EliteDangerousCore
                         }
 
                         int ss = StarScan.SurfaceFeatureListSettlementsCount(sc.SurfaceFeatures);
-                        if ( ss>0 )
+                        if (ss > 0)
                         {
-                            using (Brush b = new SolidBrush(Color.FromArgb(255, 255,255,255)))
+                            using (Brush b = new SolidBrush(Color.FromArgb(255, 255, 255, 255)))
                             {
                                 for (int i = 0; i < ss; i++)    // draw the number of settlements and pick alternately a random pos on X and top/bottom flick
                                 {
@@ -310,7 +310,7 @@ namespace EliteDangerousCore
                                 //System.Diagnostics.Debug.WriteLine("Calculated Image intensity of " + sn.fullname + " " + ii);
                             }
 
-                            Color text = ii> 0.3f ? Color.Black : Color.FromArgb(255, 200, 200, 200);
+                            Color text = ii > 0.3f ? Color.Black : Color.FromArgb(255, 200, 200, 200);
 
                             using (Font f = new Font(Font.Name, size.Width / 5.0f))
                             {
@@ -323,7 +323,10 @@ namespace EliteDangerousCore
                     }
 
                     // need left middle, if xiscentre, translate to it
-                    Point postoplot = xiscentre ? new Point(position.X - imagewidtharea/2 - iconwidtharea, position.Y) : position;
+                    Point postoplot = xiscentre ? new Point(position.X - imagewidtharea / 2 - iconwidtharea, position.Y) : position;
+
+                    if (drawtype == DrawLevel.NoText)
+                        nodelabels = null;
 
                     //System.Diagnostics.Debug.WriteLine("Body " + sc.BodyName + " plot at "  + postoplot + " " + bmp.Size + " " + (postoplot.X+imageleft) + "," + (postoplot.Y-bmp.Height/2+imagetop));
                     endpoint = CreateImageAndLabel(pc, bmp, postoplot, bmp.Size, shiftrightifneeded, out imagepos, nodelabels, sc.DisplayString(historicmats,curmats));
@@ -368,7 +371,11 @@ namespace EliteDangerousCore
 
                 Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
 
-                endpoint = CreateImageAndLabel(pc, BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt"), postoplot, bmpsize, shiftrightifneeded, out imagepos, new string[] { sn.OwnName.AppendPrePad(appendlabeltext, Environment.NewLine) }, 
+                var nodelabels = new string[] { sn.OwnName.AppendPrePad(appendlabeltext, Environment.NewLine) };
+                if (drawtype == DrawLevel.NoText)
+                    nodelabels = null;
+
+                endpoint = CreateImageAndLabel(pc, BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt"), postoplot, bmpsize, shiftrightifneeded, out imagepos, nodelabels, 
                                     tooltip.ToString(), false, backwash);
 
                 imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the belt is
@@ -423,12 +430,13 @@ namespace EliteDangerousCore
                     tooltip.AppendCR();
                 }
 
-                string nodelabel = sn.CustomName ?? sn.OwnName;
-                nodelabel = nodelabel.AppendPrePad(appendlabeltext,Environment.NewLine);
+                var nodelabels = new string[] { (sn.CustomName ?? sn.OwnName).AppendPrePad(appendlabeltext, Environment.NewLine) };
+                if (drawtype == DrawLevel.NoText)
+                    nodelabels = null;
 
                 Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
 
-                endpoint = CreateImageAndLabel(pc, notscanned, postoplot, size, shiftrightifneeded, out imagepos, new string[] { nodelabel }, tooltip.ToString(), false, backwash);
+                endpoint = CreateImageAndLabel(pc, notscanned, postoplot, size, shiftrightifneeded, out imagepos, nodelabels, tooltip.ToString(), false, backwash);
 
                 imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the not scanned thing is
             }

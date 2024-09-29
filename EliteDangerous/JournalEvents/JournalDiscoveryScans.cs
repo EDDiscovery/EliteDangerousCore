@@ -642,6 +642,8 @@ namespace EliteDangerousCore.JournalEvents
         public int? EstimatedValue { get; set; }       // set on analyse
         [PropertyNameAttribute("Potential value cr")]
         public int? PotentialEstimatedValue { get; set; }  // set on non analyse
+        [PropertyNameAttribute("Estimated or potential value cr")]
+        public int Value { get { return EstimatedValue.HasValue ? EstimatedValue.Value : PotentialEstimatedValue.HasValue ? PotentialEstimatedValue.Value : 0; } }
 
         public void AddStarScan(StarScan s, ISystem system)
         {

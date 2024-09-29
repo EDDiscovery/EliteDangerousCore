@@ -204,16 +204,14 @@ namespace EliteDangerousCore.JournalEvents
 
         private ScanEstimatedValues EstimatedValues = null;
 
-        public ScanEstimatedValues GetEstimatedValues()
+        public ScanEstimatedValues GetEstimatedValues()         // get, compute if never computed before. It will never change after calc.
         {
             if (EstimatedValues == null)
+            {
                 EstimatedValues = new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdysseyEstimatedValues);
-            return EstimatedValues;
-        }
+            }
 
-        public ScanEstimatedValues RecalcEstimatedValues()
-        {
-            return new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdysseyEstimatedValues);
+            return EstimatedValues;
         }
 
         public void AccumulateJumponium(ref string jumponium, string sysname)
