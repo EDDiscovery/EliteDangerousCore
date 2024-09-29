@@ -106,7 +106,7 @@ namespace EliteDangerousCore
         {
             if (services != null)
             {
-                var ret = services.Array()?.ToObject<StationDefinitions.StationServices[]>(false, false,
+                var ret = services.Array()?.ToObject<StationDefinitions.StationServices[]>(false, 
                         process: (t, x) =>      // we need to process the station services enum ourself
                         {
                             if (translations.TryGetValue(x.ToLowerInvariant(), out StationServices tx))     // if its a special name

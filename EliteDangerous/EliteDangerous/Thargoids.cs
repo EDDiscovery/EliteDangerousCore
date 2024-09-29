@@ -36,7 +36,7 @@ namespace EliteDangerousCore
 
             public static ThargoidWar ReadJSON(JObject evt, DateTime utc)
             {
-                var tw = evt.ToObject<ThargoidWar>(false, false);
+                var tw = evt.ToObject<ThargoidWar>(false);
 
                 if (tw == null)   // if read okay (following FactionDefinitions pattern)
                 {

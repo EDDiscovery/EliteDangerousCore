@@ -38,8 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="QuickJSON, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\QuickJSON\QuickJSON\bin\Release\net48\QuickJSON.dll</HintPath>
+      <HintPath>..\..\packages\RJKJSoft.QuickJSON.2.2.0\lib\net48\QuickJSON.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -400,6 +399,7 @@
     <None Include="JournalEvents\translation-polski-je.tlp" />
     <None Include="JournalEvents\translation-portugues-je.tlp" />
     <None Include="JournalEvents\translation-spanish-je.tlp" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BaseUtilities\BaseUtilities\BaseUtils.csproj">

@@ -82,7 +82,7 @@ namespace EliteDangerousCore
                     //System.Diagnostics.Debug.WriteLine($"Exp effect {ExperimentalEffect} loc {loc} recp {recp?.Name} = {ExperimentalEffect_Localised}");
                 }
 
-                Modifiers = evt["Modifiers"]?.ToObject<EngineeringModifiers[]>(true,false);     // instances of Value being wrong type - ignore and continue
+                Modifiers = evt["Modifiers"]?.ToObject<EngineeringModifiers[]>(true);     // instances of Value being wrong type - ignore and continue
 
                 if (Modifiers != null)
                 {

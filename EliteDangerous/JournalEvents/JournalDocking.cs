@@ -123,7 +123,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (evt != null)
             {
-                var ret = evt?.ToObject<Economies[]>(false, false, process: (t, x) => {
+                var ret = evt?.ToObject<Economies[]>(false, process: (t, x) => {
                     return EconomyDefinitions.ToEnum(x);      // for enums, we need to process them ourselves
                 });
                 

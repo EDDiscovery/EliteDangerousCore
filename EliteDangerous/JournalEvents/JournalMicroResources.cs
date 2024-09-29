@@ -501,9 +501,9 @@ namespace EliteDangerousCore.JournalEvents
         public JournalBackpackChange(JObject evt) : base(evt, JournalTypeEnum.BackpackChange)
         {
             // collect Name, Name_localised, OwnerId, Count, Type
-            Added = evt["Added"]?.ToObject<MicroResource[]>(false, true)?.ToArray();
+            Added = evt["Added"]?.ToObject<MicroResource[]>(false)?.ToArray();
             MicroResource.Normalise(Added,null);
-            Removed = evt["Removed"]?.ToObject<MicroResource[]>(false, true)?.ToArray();
+            Removed = evt["Removed"]?.ToObject<MicroResource[]>(false)?.ToArray();
             MicroResource.Normalise(Removed,null);
         }
 
