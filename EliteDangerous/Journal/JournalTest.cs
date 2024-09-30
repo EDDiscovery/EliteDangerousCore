@@ -62,7 +62,7 @@ namespace EliteDangerousCore
                 }
             }
         }
-        public static void CheckAllHistoryGetInfoDescription(HistoryList hl, string outfile)
+        public static void DumpHistoryGetInfoDescription(HistoryList hl, string outfile)
         {
             using (StreamWriter st = new StreamWriter(outfile))
             {
@@ -71,7 +71,7 @@ namespace EliteDangerousCore
                     string info = he.GetInfo();
                     string detailed = he.GetDetailed();
 
-                    st.WriteLine($"\r\nEvent: {he.EventTimeUTC} '{he.EventSummary}' {info}\r\nDetailed: ```{detailed ?? "Not present"}```");
+                    st.WriteLine($"\r\nEvent: {he.EventTimeUTC} '{he.EventSummary}'\r\nInfo:```{info}```\r\nDetailed: ```{detailed ?? "Not present"}```");
                 }
             }
         }

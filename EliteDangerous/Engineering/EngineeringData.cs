@@ -141,9 +141,9 @@ namespace EliteDangerousCore
             return jo;
         }
 
-        public override string ToString()
+        public void Build(System.Text.StringBuilder sb)
         {
-            string ret = BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine,
+            sb.BuildSetPad(Environment.NewLine,
                     "Engineer:".T(EDCTx.EngineeringData_Engineer) + " ", Engineer,
                     "Blueprint:".T(EDCTx.EngineeringData_Blueprint) + " ", FriendlyBlueprintName,
                     "Level:".T(EDCTx.EngineeringData_Level) + " ", Level,
@@ -159,7 +159,7 @@ namespace EliteDangerousCore
                         dynamic value = kvp.Key.GetValue(se);                       // if not null, we apply
                         if (value != null)
                         {
-                            ret = ret.AppendPrePad($"   {kvp.Key.Name}: {value}", Environment.NewLine);
+                            sb.AppendPrePad($"   {kvp.Key.Name}: {value}", Environment.NewLine);
                         }
                     }
                 }
@@ -167,27 +167,30 @@ namespace EliteDangerousCore
 
             if (Modifiers != null)
             {
-                ret += Environment.NewLine;
+                sb.AppendCR();
 
                 foreach (EngineeringModifiers m in Modifiers)
                 {
                     if (m.ValueStr != null)
-                        ret += BaseUtils.FieldBuilder.Build("", m.Label, "<:", m.ValueStr_Localised ?? m.ValueStr ?? "Not set") + Environment.NewLine;
+                    {
+                        sb.Build("", m.Label, "<:", m.ValueStr_Localised ?? m.ValueStr ?? "Not set");
+                    }
                     else
                     {
                         if (m.Value != m.OriginalValue)
                         {
                             bool better = m.LessIsGood ? (m.Value < m.OriginalValue) : (m.Value > m.OriginalValue);
                             double mul = m.Value / m.OriginalValue * 100 - 100;
-                            ret += BaseUtils.FieldBuilder.Build("", m.FriendlyLabel,"<: ;;0.###", m.Value, "Original: ;;0.###".T(EDCTx.EngineeringData_Original), m.OriginalValue, "Mult: ;%;N1", mul , "< (Worse); (Better)".T(EDCTx.EngineeringData_Worse), better) + Environment.NewLine;
+                            sb.Build("", m.FriendlyLabel, "<: ;;0.###", m.Value, "Original: ;;0.###".T(EDCTx.EngineeringData_Original), m.OriginalValue, "Mult: ;%;N1", mul, "< (Worse); (Better)".T(EDCTx.EngineeringData_Worse), better);
                         }
                         else
-                            ret += BaseUtils.FieldBuilder.Build("", m.FriendlyLabel, "<: ;;0.###", m.Value) + Environment.NewLine;
+                        {
+                            sb.Build("", m.FriendlyLabel, "<: ;;0.###", m.Value);
+                        }
                     }
+                    sb.AppendCR();
                 }
             }
-
-            return ret;
         }
 
         public bool Same(EngineeringData other)

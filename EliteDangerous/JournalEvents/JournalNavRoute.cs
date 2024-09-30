@@ -103,15 +103,25 @@ namespace EliteDangerousCore.JournalEvents
                     var r = Route[i];
                     string n = r.StarSystem ?? r.SystemAddress.ToStringInvariant();     // star system has been seen to be empty
 
-                    if (Route.Length >= 18)       // 0.14 printed, 15 = .. , -2/-1 printed
+                    if (i == 1)         // first one, just the system, no append
+                    {
+                        sb.Append(n);
+                    }
+                    else if (Route.Length >= 18)       // if route is long printed, 15 = .. , -2/-1 printed
                     {
                         if (i < 15 || i >= Route.Length - 2)
-                            sb.AppendPrePad(n, ", ");
+                        {
+                            sb.AppendCS();
+                            sb.Append(n);
+                        }
                         else if (i == 15)
                             sb.Append(", .. ");
                     }
                     else
-                        sb.AppendPrePad(n, ", ");
+                    {
+                        sb.AppendCS();
+                        sb.Append(n);
+                    }
                 }
 
                 return sb.ToString();

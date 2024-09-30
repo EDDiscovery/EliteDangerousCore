@@ -78,19 +78,23 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (nStellarMass.HasValue)
                 {
-                    sb.AppendFormat("Solar Masses: {0:0.00}".T(EDCTx.JournalScan_SolarMasses), nStellarMass.Value);
+                    sb.AppendFormat("Solar Masses: {0:N2}".T(EDCTx.JournalScan_SolarMasses), nStellarMass.Value);
                     sb.AppendCR();
                 }
 
                 if (nMassEM.HasValue)
                 {
-                    sb.AppendFormat("Mass: ".T(EDCTx.JournalScan_MASS) + " " + MassEMMM + "");
+                    sb.Append("Mass: ".T(EDCTx.JournalScan_MASS));
+                    sb.AppendSPC();
+                    sb.Append(MassEMMM);
                     sb.AppendCR();
                 }
 
                 if (nRadius.HasValue)
                 {
-                    sb.AppendFormat("Radius: ".T(EDCTx.JournalScan_RS) + " " + RadiusText + "");
+                    sb.AppendFormat("Radius: ".T(EDCTx.JournalScan_RS));
+                    sb.AppendSPC();
+                    sb.Append(RadiusText);
                     sb.AppendCR();
                 }
 
@@ -119,7 +123,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (nSurfaceGravity.HasValue)
             {
-                sb.AppendFormat("Gravity: {0:0.00}g".T(EDCTx.JournalScan_GV), nSurfaceGravityG.Value);
+                sb.AppendFormat("Gravity: {0:N2}g".T(EDCTx.JournalScan_GV), nSurfaceGravityG.Value);
                 sb.AppendCR();
             }
 

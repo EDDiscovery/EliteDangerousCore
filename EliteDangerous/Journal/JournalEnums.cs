@@ -279,7 +279,7 @@ namespace EliteDangerousCore
 
         // EDD Entries
 
-        EDDItemSet = 2000,
+        EDDItemSet = 2000,          // obsolete
         EDDCommodityPrices = 2010,
 
         // below are not events currently supported or icon rename events

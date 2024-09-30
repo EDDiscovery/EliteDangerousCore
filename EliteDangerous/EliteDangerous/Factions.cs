@@ -185,7 +185,7 @@ namespace EliteDangerousCore
 
             public DateTime UTC { get; set; }                       // EDD addition, UTC of record
 
-            // long form report into string builder
+            // long form report into string builder, with a LF at the end
             public void ToString(System.Text.StringBuilder sb, bool datetime, bool frontpart, bool otherinfo, bool pendingstates, bool recoveringstates, bool activestates)
             {
                 if (datetime)
@@ -193,46 +193,49 @@ namespace EliteDangerousCore
 
                 if (frontpart)
                 {
-                    sb.Append(BaseUtils.FieldBuilder.Build("", Name, "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(FactionState),
-                                                                   "Reputation: ;%;N1".T(EDCTx.JournalLocOrJump_Reputation), MyReputation,
-                                                                   "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(Government),
-                                                                   "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
-                                                                   "Inf: ;%".T(EDCTx.JournalLocOrJump_Inf), (Influence * 100.0).ToString("0.0")
-                                                                   ));
+                    sb.Build("", Name,  "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(FactionState),
+                                        "Reputation: ;%;N1".T(EDCTx.JournalLocOrJump_Reputation), MyReputation,
+                                        "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(Government),
+                                        "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
+                                        "Inf: ;%".T(EDCTx.JournalLocOrJump_Inf), (Influence * 100.0).ToString("0.0")
+                                                                   );
                 }
 
                 if (otherinfo)
                 {
-                    sb.Append(BaseUtils.FieldBuilder.Build("Happiness: ".T(EDCTx.JournalLocOrJump_Happiness), Happiness_Localised,
+                    sb.BuildCont("Happiness: ".T(EDCTx.JournalLocOrJump_Happiness), Happiness_Localised,
                                                                    ";Squadron System".T(EDCTx.JournalLocOrJump_SquadronSystem), SquadronFaction,
                                                                    ";Happiest System".T(EDCTx.JournalLocOrJump_HappiestSystem), HappiestSystem,
                                                                    ";Home System".T(EDCTx.JournalLocOrJump_HomeSystem), HomeSystem
-                                                                   ));
+                                                                   );
                 }
 
                 if (pendingstates && PendingStates != null)
                 {
-                    sb.Append(BaseUtils.FieldBuilder.Build(",", "Pending State: ".T(EDCTx.JournalLocOrJump_PendingState)));
+                    sb.AppendCS();
+                    sb.Append("Pending State: ".T(EDCTx.JournalLocOrJump_PendingState));
 
                     foreach (FactionDefinitions.FactionInformation.PowerStatesInfo state in PendingStates)
-                        sb.Append(BaseUtils.FieldBuilder.Build(" ", state.State, "<(;)", state.Trend));
+                        sb.Build(" ", state.State, "<(;)", state.Trend);
 
                 }
 
                 if (recoveringstates && RecoveringStates != null)
                 {
-                    sb.Append(BaseUtils.FieldBuilder.Build(",", "Recovering State: ".T(EDCTx.JournalLocOrJump_RecoveringState)));
+                    sb.AppendCS();
+                    sb.Append("Recovering State: ".T(EDCTx.JournalLocOrJump_RecoveringState));
 
                     foreach (FactionDefinitions.FactionInformation.PowerStatesInfo state in RecoveringStates)
-                        sb.Append(BaseUtils.FieldBuilder.Build(" ", state.State, "<(;)", state.Trend));
+                        sb.Build(" ", state.State, "<(;)", state.Trend);
                 }
 
                 if (activestates && ActiveStates != null)
                 {
-                    sb.Append(BaseUtils.FieldBuilder.Build(",", "Active State: ".T(EDCTx.JournalLocOrJump_ActiveState)));
+                    sb.AppendCS();
+                    sb.Append("Active State: ".T(EDCTx.JournalLocOrJump_ActiveState));
 
                     foreach (FactionDefinitions.FactionInformation.ActiveStatesInfo state in ActiveStates)
-                        sb.Append(BaseUtils.FieldBuilder.Build(" ", state.State));
+                        sb.Build(" ", state.State);
                 }
                 sb.Append(Environment.NewLine);
             }

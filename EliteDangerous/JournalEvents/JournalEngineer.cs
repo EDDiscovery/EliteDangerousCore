@@ -246,19 +246,17 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var i in Ingredients)        // may be commodities or materials
                 {
-                    sb.Append(BaseUtils.FieldBuilder.Build("", MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(i.NameFD), "", i.Count) + "; ");
+                    sb.BuildCont("", MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(i.NameFD), "<:", i.Count);
                 }
             }
 
             if (Engineering != null)
             {
-                if (sb.Length > 0)
-                    sb.Append(System.Environment.NewLine);
-                sb.Append(Engineering.ToString());
+                sb.AppendCR();
+                Engineering.Build(sb);
             }
 
             return sb.ToString();
-
         }
     }
 
@@ -323,11 +321,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetDetailed()
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
 
             foreach (var p in Engineers)
             {
-                sb.BuildPrePad(System.Environment.NewLine, "", p.Engineer, "", p.Progress, "Rank: ".T(EDCTx.JournalEngineerProgress_Rank), p.Rank, ";%", p.RankProgress);
+                sb.AppendCR();
+                sb.Build("", p.Engineer, "", p.Progress, "Rank: ".T(EDCTx.JournalEngineerProgress_Rank), p.Rank, ";%", p.RankProgress);
             }
 
             return sb.ToString();

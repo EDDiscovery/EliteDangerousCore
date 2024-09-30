@@ -311,10 +311,11 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var v in State.Services)
                 {
+                    sb.AppendCR();
                     if (v.Activated)
-                        sb.BuildPrePad(Environment.NewLine, "Activated:", v.CrewRole, "", v.CrewName, "< (Disabled);", v.Enabled);
+                        sb.Build("Activated:", v.CrewRole, "", v.CrewName, "< (Disabled);", v.Enabled);
                     else
-                        sb.BuildPrePad(Environment.NewLine, "Not Activated:", v.CrewRole);
+                        sb.Build("Not Activated:", v.CrewRole);
                 }
             }
 
@@ -322,7 +323,8 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var v in State.ShipPacks)
                 {
-                    sb.BuildPrePad(Environment.NewLine, "Pack: ", v.PackTheme, "", v.PackTier);
+                    sb.AppendCR();
+                    sb.Build("Pack: ", v.PackTheme, "", v.PackTier);
                 }
             }
 
@@ -330,7 +332,8 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var v in State.ModulePacks)
                 {
-                    sb.BuildPrePad(Environment.NewLine,"Module: ", v.PackTheme, "", v.PackTier);
+                    sb.AppendCR();
+                    sb.Build("Module: ", v.PackTheme, "", v.PackTier);
                 }
 
             }

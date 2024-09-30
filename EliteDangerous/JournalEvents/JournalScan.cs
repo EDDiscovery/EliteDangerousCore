@@ -263,7 +263,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Mass in Moons")]
         public double? nMassMM { get { if (nMassEM.HasValue) return nMassEM * BodyPhysicalConstants.oneEarthMoonMassRatio; else return null; } }
         [PropertyNameAttribute(null)]       // this excludes it from any queries etc, as its not really useful. Mass in moons or earths
-        public string MassEMMM { get { if (nMassEM.HasValue) { if (nMassEM.Value < 0.01) return nMassMM.Value.ToString("0.####") + " MM"; else return nMassEM.Value.ToString("0.##") + " EM"; } else return null; } }
+        public string MassEMMM { get { if (nMassEM.HasValue) { if (nMassEM.Value < 0.01) return nMassMM.Value.ToString("N4") + " MM"; else return nMassEM.Value.ToString("N2") + " EM"; } else return null; } }
         [PropertyNameAttribute("Does it have materials list")]
         public bool HasMaterials { get { return Materials != null && Materials.Any(); } }
         [PropertyNameAttribute("Materials dictionary, in %")]
@@ -645,13 +645,19 @@ namespace EliteDangerousCore.JournalEvents
                                                 "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
                                                 "Name: ".T(EDCTx.JournalScan_BNME), BodyName.ReplaceIfStartsWith(fid.System.Name));
             }
-            else
+            else if (IsPlanet)
             {
                 return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass: ".T(EDCTx.JournalScan_MASS), MassEMMM,
                                                 "<;, Landable".T(EDCTx.JournalScan_Landable), IsLandable,
                                                 "<;, Terraformable".T(EDCTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", Atmosphere,
                                                  "Gravity: ;G;0.00".T(EDCTx.JournalScan_Gravity), nSurfaceGravityG,
                                                  "Radius: ".T(EDCTx.JournalScan_RS), RadiusText,
+                                                 "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
+                                                 "Name: ".T(EDCTx.JournalScan_SNME), BodyName.ReplaceIfStartsWith(fid.System.Name));
+            }
+            else 
+            {
+                return BaseUtils.FieldBuilder.Build("Mass: ".T(EDCTx.JournalScan_MASS), MassEMMM,
                                                  "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
                                                  "Name: ".T(EDCTx.JournalScan_SNME), BodyName.ReplaceIfStartsWith(fid.System.Name));
             }

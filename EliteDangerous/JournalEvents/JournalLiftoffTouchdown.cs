@@ -51,10 +51,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            string info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
-            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled, 
-                                        "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised), ". ");
-            return info;
+            return BaseUtils.FieldBuilder.Build("", Body, 
+                                          "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled,
+                                        "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised, 
+                                        "Latitude: ;°;F4".T(EDCTx.JournalEntry_Latitude), Latitude, "Longitude: ;°;F4".T(EDCTx.JournalEntry_Longitude), Longitude);
         }
     }
 
@@ -98,10 +98,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            string info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
-            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled, 
-                                                                "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised), ". ");
-            return info;
+            return BaseUtils.FieldBuilder.Build("", Body,
+                                            "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled,
+                                          "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised,
+                                          "Latitude: ;°;F4".T(EDCTx.JournalEntry_Latitude), Latitude, "Longitude: ;°;F4".T(EDCTx.JournalEntry_Longitude), Longitude);
+
         }
 
         public void UpdateIdentifiers()

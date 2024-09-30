@@ -138,6 +138,25 @@ namespace EliteDangerousCore
             return list.Where(x => x != StationServices.Unknown).ToArray();
         }
 
+        public static void Build(System.Text.StringBuilder sb, bool title, StationServices[] list)
+        {
+            if ( title )
+                sb.Append("Station services: ".T(EDCTx.JournalEntry_Stationservices));
+
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (i > 0)
+                {
+                    if (i % 10 == 0)
+                        sb.AppendCR();
+                    else
+                        sb.AppendCS();
+                }
+
+                sb.Append(ToLocalisedLanguage(list[i]));
+            }
+        }
+
         #endregion
 
         #region Starports

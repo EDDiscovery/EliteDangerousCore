@@ -72,11 +72,11 @@ namespace EliteDangerousCore.JournalEvents
             }
             if (Manufactured != null && Manufactured.Length > 0)
             {
-                sb.BuildPrePad(", ", "Manufactured: ".T(EDCTx.JournalMaterials_Manufactured) + "; ", Manufactured.Length);
+                sb.BuildCont("Manufactured: ".T(EDCTx.JournalMaterials_Manufactured) + "; ", Manufactured.Length);
             }
             if (Encoded != null && Encoded.Length > 0)
             {
-                sb.BuildPrePad(", ", "Encoded: ".T(EDCTx.JournalMaterials_Encoded) + "; ", Encoded.Length);
+                sb.BuildCont("Encoded: ".T(EDCTx.JournalMaterials_Encoded) + "; ", Encoded.Length);
             }
             return sb.ToString();
         }

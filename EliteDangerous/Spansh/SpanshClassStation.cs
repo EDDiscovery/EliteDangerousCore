@@ -147,12 +147,12 @@ namespace EliteDangerousCore.Spansh
             JObject eco = evt["economies"].Object();
             if (eco != null)
             {
-                station.EconomyList = new JournalDocked.Economies[eco.Count];
+                station.EconomyList = new EconomyDefinitions.Economies[eco.Count];
                 int i = 0;
                 foreach (var e in eco)
                 {
                     var ec = EconomyNameToEnum(e.Key);
-                    station.EconomyList[i++] = new JournalDocked.Economies { Name = ec, Name_Localised = e.Key, Proportion = e.Value.Double(0) / 100.0 };
+                    station.EconomyList[i++] = new EconomyDefinitions.Economies { Name = ec, Name_Localised = e.Key, Proportion = e.Value.Double(0) / 100.0 };
                 }
             }
 
@@ -621,12 +621,12 @@ namespace EliteDangerousCore.Spansh
                             JObject eco = evt["economies"].Object();
                             if (eco != null)
                             {
-                                station.EconomyList = new JournalDocked.Economies[eco.Count];
+                                station.EconomyList = new EconomyDefinitions.Economies[eco.Count];
                                 int i = 0;
                                 foreach (var e in eco)
                                 {
                                     var ec = EconomyNameToEnum(e.Key);
-                                    station.EconomyList[i++] = new JournalDocked.Economies { Name = ec, Name_Localised = e.Key, Proportion = e.Value.Double(0) / 100.0 };
+                                    station.EconomyList[i++] = new EconomyDefinitions.Economies { Name = ec, Name_Localised = e.Key, Proportion = e.Value.Double(0) / 100.0 };
                                 }
                             }
 

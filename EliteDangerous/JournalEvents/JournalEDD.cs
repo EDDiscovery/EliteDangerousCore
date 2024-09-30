@@ -25,7 +25,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalEDDCommodityPrices(JObject evt) : base(evt, JournalTypeEnum.EDDCommodityPrices)
         {
-            Station = evt["station"].Str();         // these are the old names used in EDD CP, not aligned to market (introduced before). keep
+            Station = evt["station"].Str();         
             StarSystem = evt["starsystem"].Str();
             MarketID = evt["MarketID"].LongNull();
             Rescan(evt["commodities"].Array());
@@ -156,105 +156,6 @@ namespace EliteDangerousCore.JournalEvents
                 return null;
         }
 
-
-        //When written: by EDD when a user manually sets an item count (material or commodity)
-        [JournalEntryType(JournalTypeEnum.EDDItemSet)]
-        public class JournalEDDItemSet : JournalEntry, ICommodityJournalEntry, IMaterialJournalEntry
-        {
-            public JournalEDDItemSet(JObject evt) : base(evt, JournalTypeEnum.EDDItemSet)
-            {
-                Materials = new MaterialListClass(evt["Materials"]?.ToObjectQ<MaterialItem[]>().ToList());
-                Commodities = new CommodityListClass(evt["Commodities"]?.ToObjectQ<CommodityItem[]>().ToList());
-            }
-
-            public MaterialListClass Materials { get; set; }             // FDNAMES
-            public CommodityListClass Commodities { get; set; }
-
-            public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
-            {
-                if (Materials != null)
-                {
-                    foreach (MaterialItem m in Materials.Materials)
-                        mc.Change(EventTimeUTC, m.Category, m.Name, m.Count, 0, 0, true);
-                }
-            }
-
-            public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
-            {
-                if (Commodities != null)
-                {
-                    foreach (CommodityItem m in Commodities.Commodities)
-                        mc.Change(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, m.Name, m.Count, (long)m.BuyPrice, 0, true);
-                }
-            }
-
-            public override string GetInfo()
-            {
-                StringBuilder info = new StringBuilder();
-                bool comma = false;
-                if (Materials != null)
-                {
-                    foreach (MaterialItem m in Materials.Materials)
-                    {
-                        if (comma)
-                            info.Append(", ");
-                        comma = true;
-                        info.Append(BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalEntry_Name), MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(m.Name), "", m.Count));
-                    }
-                }
-
-                if (Commodities != null)
-                {
-                    foreach (CommodityItem m in Commodities.Commodities)
-                    {
-                        if (comma)
-                            info.Append(", ");
-                        comma = true;
-                        info.Append(BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalEntry_Name), MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(m.Name), "", m.Count));
-                    }
-                }
-
-                return info.ToString();
-            }
-
-            public class MaterialItem
-            {
-                public string Name;     //FDNAME
-                public string Category;
-                public int Count;
-            }
-
-            public class CommodityItem
-            {
-                public string Name;     //FDNAME
-                public int Count;
-                public double BuyPrice;
-            }
-
-            public class MaterialListClass
-            {
-                public MaterialListClass(System.Collections.Generic.List<MaterialItem> ma)
-                {
-                    Materials = ma ?? new System.Collections.Generic.List<MaterialItem>();
-                    foreach (MaterialItem i in Materials)
-                        i.Name = JournalFieldNaming.FDNameTranslation(i.Name);
-                }
-
-                public System.Collections.Generic.List<MaterialItem> Materials { get; protected set; }
-            }
-
-            public class CommodityListClass
-            {
-                public CommodityListClass(System.Collections.Generic.List<CommodityItem> ma)
-                {
-                    Commodities = ma ?? new System.Collections.Generic.List<CommodityItem>();
-                    foreach (CommodityItem i in Commodities)
-                        i.Name = JournalFieldNaming.FDNameTranslation(i.Name);
-                }
-
-                public System.Collections.Generic.List<CommodityItem> Commodities { get; protected set; }
-            }
-        }
 
     }
 }

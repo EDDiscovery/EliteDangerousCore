@@ -197,11 +197,11 @@ namespace EliteDangerousCore.JournalEvents
 
             if (StoreOldShip != null)
             {
-                sb.BuildPrePad(", ", "Stored: ".T(EDCTx.JournalEntry_Stored), StoreOldShip);
+                sb.BuildCont("Stored: ".T(EDCTx.JournalEntry_Stored), StoreOldShip);
             }
             if (SellOldShip != null)
             {
-                sb.BuildPrePad(", ", "Sold: ".T(EDCTx.JournalEntry_Sold), StoreOldShip, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), SellPrice);
+                sb.BuildCont("Sold: ".T(EDCTx.JournalEntry_Sold), StoreOldShip, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), SellPrice);
             }
             return sb.ToString();
         }

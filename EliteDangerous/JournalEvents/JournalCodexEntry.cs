@@ -119,17 +119,15 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            string info = BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalCodexEntry_At), System, ";", EDDBodyName, "ID", EDDBodyId, "in ".T(EDCTx.JournalCodexEntry_in), Region_Localised,
+            return BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalCodexEntry_At), System, ";", EDDBodyName, "ID", EDDBodyId, "in ".T(EDCTx.JournalCodexEntry_in), Region_Localised,
                                                 "", Name_Localised,
                                                 "", Category_Localised,
                                                 "", SubCategory_Localised,
                                                 ";New Entry".T(EDCTx.JournalCodexEntry_NewEntry), IsNewEntry,
                                                 ";Traits".T(EDCTx.JournalCodexEntry_Traits), NewTraitsDiscovered,
-                                                "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised
+                                                "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised,
+                                                "Latitude: ;°;F4".T(EDCTx.JournalEntry_Latitude), Latitude, "Longitude: ;°;F4".T(EDCTx.JournalEntry_Longitude), Longitude
                                                 );
-            if (Latitude.HasValue)
-                info += ", " + JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
-            return info;
         }
 
         public override string GetDetailed()

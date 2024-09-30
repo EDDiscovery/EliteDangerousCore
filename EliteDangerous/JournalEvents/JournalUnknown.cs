@@ -87,4 +87,13 @@ namespace EliteDangerousCore.JournalEvents
     }
 
 
+    [JournalEntryType(JournalTypeEnum.EDDItemSet)]
+    public class JournalEDDItemSet : JournalUnimplemented
+    {
+        public JournalEDDItemSet(JObject evt) : base(evt, JournalTypeEnum.BackPack, true)
+        {
+        }
+    }
+
+
 }

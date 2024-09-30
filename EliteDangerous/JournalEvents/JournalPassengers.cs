@@ -57,11 +57,12 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Manifest != null && Manifest.Length > 0)
             {
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                StringBuilder sb = new System.Text.StringBuilder();
                 foreach (Passengers p in Manifest)
                 {
-                    sb.BuildPrePad(", ", "", p.Type, "< ", p.Count, "; (VIP)", p.VIP, ";(Wanted)".T(EDCTx.JournalEntry_Wanted), p.Wanted);
+                    sb.AppendSemiColonS().Build("", p.Type, "< ", p.Count, "; (VIP)", p.VIP, ";(Wanted)".T(EDCTx.JournalEntry_Wanted), p.Wanted);
                 }
+
                 return sb.ToString();
             }
             else

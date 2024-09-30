@@ -225,7 +225,7 @@ namespace EliteDangerousCore.JournalEvents
             StationAllegiance = AllegianceDefinitions.ToEnum(evt["StationAllegiance"].StrNull());    // may be missing, due to training
 
             StationServices = StationDefinitions.ReadServicesFromJson(evt["StationServices"]);          // need to read thru these functions to do some name mangling
-            StationEconomyList = JournalDocked.ReadEconomiesClassFromJson(evt["StationEconomies"]);
+            StationEconomyList = EconomyDefinitions.ReadEconomiesClassFromJson(evt["StationEconomies"]);
 
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
@@ -256,7 +256,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationGovernment_Localised { get; set; }
         public AllegianceDefinitions.Allegiance StationAllegiance { get; set; }   // fdname
         public StationDefinitions.StationServices[] StationServices { get; set; }   // may be null
-        public JournalDocked.Economies[] StationEconomyList { get; set; }        // may be null
+        public EconomyDefinitions.Economies[] StationEconomyList { get; set; }        // may be null
 
         //4.0 alpha 4
         public bool? Taxi { get; set; }
@@ -290,7 +290,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else if (Latitude.HasValue && Longitude.HasValue)
             {
-                return "At " + JournalFieldNaming.RLat(Latitude.Value) + " " + JournalFieldNaming.RLong(Longitude.Value);
+                return BaseUtils.FieldBuilder.Build("", Body, "< @ " + "Latitude: ;°;F4".T(EDCTx.JournalEntry_Latitude), Latitude, "Longitude: ;°;F4".T(EDCTx.JournalEntry_Longitude), Longitude);
             }
             else
             {
@@ -380,7 +380,7 @@ namespace EliteDangerousCore.JournalEvents
         public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
 
         public StationDefinitions.StationServices[] StationServices { get; set; }
-        public JournalDocked.Economies[] StationEconomyList { get; set; }        // may be null
+        public EconomyDefinitions.Economies[] StationEconomyList { get; set; }        // may be null
 
         public override string SummaryName(ISystem sys)
         {
@@ -481,7 +481,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Faction.HasChars() || Allegiance != AllegianceDefinitions.Allegiance.Unknown || Economy != EconomyDefinitions.Economy.Unknown)
             {
-                sb.BuildPrePad(", ", 
+                sb.BuildCont(
                     "Faction: ".T(EDCTx.JournalLocOrJump_Faction), Faction, "<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted,
                     "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(FactionState),
                     "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),

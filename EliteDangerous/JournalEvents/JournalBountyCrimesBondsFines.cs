@@ -141,7 +141,7 @@ namespace EliteDangerousCore.JournalEvents
                 var sb = new System.Text.StringBuilder(256);
                 foreach (BountyReward r in Rewards)
                 {
-                    sb.BuildPrePad(", ", "Faction: ".T(EDCTx.JournalEntry_Faction), r.Faction, "; cr;N0", r.Reward);
+                    sb.BuildCont("Faction: ".T(EDCTx.JournalEntry_Faction), r.Faction, "; cr;N0", r.Reward);
                 }
                 return sb.ToString();
             }

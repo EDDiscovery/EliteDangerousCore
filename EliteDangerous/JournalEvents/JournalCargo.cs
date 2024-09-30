@@ -104,32 +104,34 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            string info = "No Cargo".T(EDCTx.JournalEntry_NoCargo);
-
             if (Inventory != null && Inventory.Length > 0)
             {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
+
                 int total = 0;
                 foreach (Cargo c in Inventory)
                     total += c.Count;
 
-                info = Vessel.Equals("Ship") ? "Ship".T(EDCTx.JournalCargo_CargoShip) : "SRV".T(EDCTx.JournalCargo_CargoSRV);
-                info += " ";
-
-                info += string.Format("Cargo, {0} items".T(EDCTx.JournalEntry_Cargo), total);
+                sb.Append(Vessel.Equals("Ship") ? "Ship".T(EDCTx.JournalCargo_CargoShip) : "SRV".T(EDCTx.JournalCargo_CargoSRV));
+                sb.AppendSPC();
+                sb.AppendFormat("Cargo, {0} items".T(EDCTx.JournalEntry_Cargo), total);
+                return sb.ToString();
             }
-            return info;
+            else
+                return "No Cargo".T(EDCTx.JournalEntry_NoCargo);
         }
         public override string GetDetailed()
         {
             if (Inventory != null && Inventory.Length > 0)
             {
-                var sb = new System.Text.StringBuilder(256);
+                var sb = new System.Text.StringBuilder(1024);
                 foreach (Cargo c in Inventory)
                 {
                     int? stolen = null;
                     if (c.Stolen > 0)
                         stolen = c.Stolen;
-                    sb.BuildPrePad("; ", "", c.FriendlyName, "; items".T(EDCTx.JournalEntry_items), c.Count, "(;)", stolen, "<; (Mission Cargo)".T(EDCTx.JournalEntry_MissionCargo), c.MissionID != null);
+                    sb.AppendCR();
+                    sb.Build("", c.FriendlyName, "<: ; items".T(EDCTx.JournalEntry_items), c.Count, "(;)", stolen, "<; (Mission Cargo)".T(EDCTx.JournalEntry_MissionCargo), c.MissionID != null);
                 }
                 return sb.ToString();
             }

@@ -496,9 +496,9 @@ SECTION JournalScan
 .NoAtmosphere: "No Atmosphere" @
 .LandC: ", Landable" @
 .AMY: "Age: {0} my\n" @
-.SolarMasses: "Solar Masses: {0:0.00}\n" @
+.SolarMasses: "Solar Masses: {0:N2}\n" @
 .SurfaceTemp: "Surface Temp: {0}K\n" @
-.GV: "Gravity: {0:0.00}g\n" @
+.GV: "Gravity: {0:N2}g\n" @
 .SPA: "Surface Pressure: {0} Atmospheres\n" @
 .SPP: "Surface Pressure: {0} Pa\n" @
 .Volcanism: "Volcanism: {0}\n" @
@@ -1069,8 +1069,8 @@ SECTION JournalEntry
 .LostTarget: "Lost Target" @
 .ShieldsDown: "Shields Down;Shields Up" @
 .Category: "Category: " @
-.Latitude: "Latitude: " @
-.Longitude: "Longitude: " @
+.Latitude: "Latitude: ;°;F4" @
+.Longitude: "Longitude: ;°;F4" @
 .Num: "Num: " @
 .Ships: "Ships" @
 .Distance: "Distance: ; ly;0.0" @
