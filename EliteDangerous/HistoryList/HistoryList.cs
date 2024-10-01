@@ -229,7 +229,7 @@ namespace EliteDangerousCore
             }
 
             // dump all events info+detailed to file, useful for checking formatting
-            JournalTest.DumpHistoryGetInfoDescription(hist, @"c:\code\out.log");      
+            //JournalTest.DumpHistoryGetInfoDescription(hist, @"c:\code\out.log");      
 
             // foreach (var kvp in hist.IdentifierList.Items) System.Diagnostics.Debug.WriteLine($"IDList {kvp.Key} -> {kvp.Value}"); // debug
 
