@@ -50,7 +50,7 @@ namespace EliteDangerousCore
         public bool StopMarker { get { return journalEntry.StopMarker; } }
         public bool IsFSDCarrierJump { get { return EntryType == JournalTypeEnum.FSDJump || EntryType == JournalTypeEnum.CarrierJump; } }
         public bool IsFSDLocationCarrierJump { get { return EntryType == JournalTypeEnum.FSDJump || EntryType == JournalTypeEnum.CarrierJump || EntryType == JournalTypeEnum.Location; } }
-        public bool IsFSD{ get { return EntryType == JournalTypeEnum.FSDJump;  } }
+        public bool IsFSD { get { return EntryType == JournalTypeEnum.FSDJump; } }
         public bool IsLocOrJump { get { return EntryType == JournalTypeEnum.FSDJump || EntryType == JournalTypeEnum.Location || EntryType == JournalTypeEnum.CarrierJump; } }
         public bool IsFuelScoop { get { return EntryType == JournalTypeEnum.FuelScoop; } }
 
@@ -104,19 +104,18 @@ namespace EliteDangerousCore
         public Ship ShipInformation { get; private set; }     // may be null if not set up yet
         public ShipModulesInStore StoredModules { get; private set; }
         public uint MissionList { get; private set; }       // generation index
-        public uint Statistics { get; private set; }        // generation index
         public uint Weapons { get; private set; }           // generation index
         public uint Suits { get; private set; }             // generation index
         public uint Loadouts { get; private set; }          // generation index
         public uint Engineering { get; private set; }       // generation index
 
-        public StarScan.ScanNode ScanNode {get; set; } // only for journal scan, and only after you called FillScanNode in history list.
+        public StarScan.ScanNode ScanNode { get; set; } // only for journal scan, and only after you called FillScanNode in history list.
 
         #endregion
 
         #region Private Variables
 
-        private HistoryEntryStatus EntryStatus { get;  set; }
+        private HistoryEntryStatus EntryStatus { get; set; }
         private HistoryTravelStatus TravelStatus { get; set; }
 
         #endregion
@@ -175,9 +174,9 @@ namespace EliteDangerousCore
             MaterialCommodity = gen;
         }
 
-        public void UpdateStats(JournalEntry je, Stats stats, string station)
+        public void UpdateStats(JournalEntry je, Stats stats)
         {
-            Statistics = stats.Process(je, station);
+            stats.Process(je, System, Status.StationFaction);
         }
 
         public void UpdateShipInformation(Ship si)       // something externally updated SI
@@ -260,30 +259,50 @@ namespace EliteDangerousCore
                 double mass = ShipInformation.HullMass() + ShipInformation.ModuleMass();
 
                 if (mass > 0)
-                    return fsdspec.GetJumpInfo(cargo, mass, ShipInformation.FuelLevel, ShipInformation.FuelCapacity/2, Status.CurrentBoost);
+                    return fsdspec.GetJumpInfo(cargo, mass, ShipInformation.FuelLevel, ShipInformation.FuelCapacity / 2, Status.CurrentBoost);
             }
 
             return null;
         }
 
-        public void FillInformation(out string eventDescription, out string eventDetailedInfo)
+        // always returns a string
+        public string GetInfo()
         {
-            journalEntry.FillInformation(out eventDescription, out eventDetailedInfo);
-
-            if (eventDescription == null)       // FillInformation was not implemented, try the next one
+            string ret = journalEntry.GetInfo();
+            if (ret == null)
             {
-                JournalEntry.FillInformationData fid = new JournalEntry.FillInformationData() 
-                { System = this.System, WhereAmI = this.WhereAmI , NextJumpSystemName = this.Status.FSDJumpNextSystemName, NextJumpSystemAddress = this.Status.FSDJumpNextSystemAddress };
+                JournalEntry.FillInformationData fid = new JournalEntry.FillInformationData()
+                { System = this.System, WhereAmI = this.WhereAmI, NextJumpSystemName = this.Status.FSDJumpNextSystemName, NextJumpSystemAddress = this.Status.FSDJumpNextSystemAddress };
 
-                journalEntry.FillInformationExtended(fid,out eventDescription, out eventDetailedInfo);
+                ret = journalEntry.GetInfo(fid);
+
+                if (ret == null)
+                    ret = "";
             }
+            return ret;
+        }
 
-            if (isTravelling && (IsFSD || StopMarker))
+        // will return null if no detailed info
+        public string GetDetailed()
+        {
+            string ret = journalEntry.GetDetailed();
+            if (ret == null)
             {
-                string ts = TravelledStats;
-                if ( ts.Length>0)
-                    eventDescription = ts + ", " + eventDescription;
+                JournalEntry.FillInformationData fid = new JournalEntry.FillInformationData()
+                { System = this.System, WhereAmI = this.WhereAmI, NextJumpSystemName = this.Status.FSDJumpNextSystemName, NextJumpSystemAddress = this.Status.FSDJumpNextSystemAddress };
+
+                ret = journalEntry.GetDetailed(fid);
             }
+            return ret;
+        }
+
+        public string GetInfoDetailed()
+        {
+            string ret = GetInfo();
+            string detail = GetDetailed();
+            if (detail != null)
+                ret = ret + Environment.NewLine + detail;
+            return ret;
         }
 
         public void SetStartStop()

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2016 EDDiscovery development team
+ * Copyright © 2015 - 2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,14 +10,10 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-using EliteDangerousCore.DB;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -46,10 +42,22 @@ namespace EliteDangerousCore
         {
         }
 
-        public Transaction TransactionBefore(DateTime dateutc)
+        // find first transaction from tx with a date time at or before the time distance timespan
+        public Transaction TransactionBefore(Transaction tx, TimeSpan timespan)
         {
-            int index = Transactions.FindLastIndex(x => x.EventTimeUTC < dateutc);
-            return index >= 0 ? Transactions[index] : null;
+            int index = Transactions.IndexOf(tx);
+            if (index >= 0)
+            {
+                DateTime before = tx.EventTimeUTC - timespan;
+                while (--index >= 0)
+                {
+                    //System.Diagnostics.Debug.WriteLine($"...try {Transactions[index].EventTimeUTC}");
+                    if (Transactions[index].EventTimeUTC <= before)
+                        return Transactions[index];
+                }
+            }
+
+            return null;
         }
 
         public void AddEvent(long jidn, DateTime t, JournalTypeEnum j, string n, long ca)      // event with cash adjust but no profit

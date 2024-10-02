@@ -59,7 +59,7 @@ namespace EliteDangerousCore
             public JournalScan.StarPlanetRing BeltData { get; internal set; }    // can be null if not belt. if its a type==belt, it is populated with belt data
             public List<JournalSAASignalsFound.SAASignal> Signals { get; internal set; } // can be null if no signals for this node, else its a list of signals.
             public List<JournalSAASignalsFound.SAAGenus> Genuses { get; internal set; } // can be null if no genusus for this node, else its a list of genus
-            public List<JournalScanOrganic> Organics { get; internal set; }  // can be null if nothing for this node, else a list of organics
+            public List<JournalScanOrganic> Organics { get; internal set; }  // can be null if nothing for this node, else a list of organics scans performed on the planet
             public List<IBodyFeature> SurfaceFeatures { get; internal set; }   // can be null if nothing for this node, else a list of journal entries
 
             public ScanNode() { }

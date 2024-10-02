@@ -32,7 +32,7 @@ namespace EliteDangerousCore
             N1ValueOnly     // Pru Eurk CQ-L d2-                            SectorName = sector, StarName = null, L1L2L3 set, MassCode set, NValue set
         };
 
-        public NameType EntryType { get; set; } = NameType.NotSet;
+        public NameType EntryType { get; private set; } = NameType.NotSet;
         public string SectorName { get; set; } = null;    // for string inputs, set always. Either the sector name (Pru Eurk or survey HIP etc) or "NotInSector" for Named (Sol). For id input, null
         public string StarName { get; set; } = null;      // for string inputs, set for surveys or non standard names, else null. For id input, null
         public ulong NameIdNumeric { get; set; } = 0;      // for string inputs: if its a numeric, value, else 0. For id input, NIndex into name table (for Sol) or numeric name (for 12345=56) else zero
@@ -43,9 +43,10 @@ namespace EliteDangerousCore
 
         //   6    5    5    4  4444 4444    3    3    2    2    2    1    1      
         //   0    6    2    8  7654 3210    6    2    8    4    0    6    2    8    4    0
-        //0000 0000 0000 0000  1000 0111 1122 2223 3333 MMMM N111 1111 N222 2222 2222 2222               
+        //0000 0000 0000 0000  1000 0111 1122 2223 3333 MMMM N111 1111 N222 2222 2222 2222                  - older style - Bit 47 is marker
+        //0010 0000 0000 0000  0000 0111 1122 2223 3333 MMMM N111 1111 N222 2222 2222 2222                  - newer style - bit 61 is marker
         //   F    F    F    F     F    8    0    0    0    0    0    0    0    0    0    0
-        private const int StandardPosMarker = 47;   // Standard (L1/Mass/N apply).   47 means its in 6 bytes, fitting within a 6 byte SQL field
+        private static int L1L2L3Marker = 47;       // Standard (L1/Mass/N apply).   47 means its in 6 bytes, fitting within a 6 byte SQL field
         private const int L1Marker = 38;            // Standard: 5 bits 38-42 (1 = A, 26=Z)
         private const int L2Marker = 33;            // Standard: 5 bits 33-37 (1 = A, 26=Z)
         private const int L3Marker = 28;            // Standard: 5 bits 28-32 (aligned for display purposes) (1 = A, 26=Z)
@@ -54,15 +55,17 @@ namespace EliteDangerousCore
 
         //   6    5    5    4  4444 4444    3    3    2    2    2    1    1      
         //   0    6    2    8  7654 3210    6    2    8    4    0    6    2    8    4    0
-        //0000 0000 0000 0000  01CC CCDD DDNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN               
+        //0000 0000 0000 0000  01CC CCDD DDNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN                  - older style - bit 46 is marker           
+        //0001 0000 0000 0000  00CC CCDD DDNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN                  - newer style - bit 60 is marker           
         //   F    F    F    F     C    0    0    0    0    0    0    0    0    0    0    0
-        private const int NumericMarker = 46;       // Numeric (HIP 1232-23). bits 0-35 hold value.  
+        private static int NumericMarker = 46;       // Numeric (HIP 1232-23). bits 0-35 hold value.  
         private const int NumericCountMarker = 42;  // Numeric: 4 bits 42-45 Number of digits in number
         private const int NumericDashMarker = 38;   // Numeric: 4 bits 38-41 position of dash in number (0 = none, 1 = 0 char in, 2 = 1 char in etc) 
 
         //   6    5    5    4  4444 4444    3    3    2    2    2    1    1      
         //   0    6    2    8  7654 3210    6    2    8    4    0    6    2    8    4    0
-        //0000 0000 0000 0000  00NN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN               
+        //0000 0000 0000 0000  00NN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN                  - older style - Bit 46 and 47 is zero
+        //0000 0000 0000 0000  00NN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN NNNN                  - newer style - bit 60 and 61 is zero
         //   0    0    0    0     3    F    F    F    F    F    F    F    F    F    F    F
         private const long NameIDNumbericMask = 0x3fffffffff;     // 38 bits
 
@@ -73,21 +76,22 @@ namespace EliteDangerousCore
 
         public static bool IsIDStandard(ulong id)       // if encoded ID a standard masscode type
         {
-            return (id & (1UL << StandardPosMarker)) != 0;
+            return (id & (1UL << L1L2L3Marker)) != 0;
         }
         public static bool IsIDNumeric(ulong id)        // if encoded ID a numeric marker
         {
             return (id & (1UL << NumericMarker)) != 0;
         }
 
-        public ulong ID // get the ID code which goes into the DB in the nameid field
+        // Turn the data in the class into an ID code (which goes into the DB in the nameid field)
+        public ulong ID 
         {
             get
             {
                 if (IsStandardParts)
                 {
                     System.Diagnostics.Debug.Assert(L1 < 31 && L2 < 32 && L3 < 32 && NValue < 0xffffff && MassCode < 8);
-                    return ((ulong)NValue << NMarker) | ((ulong)(MassCode) << MassMarker) | ((ulong)(L3) << L3Marker) | ((ulong)(L2) << L2Marker) | ((ulong)(L1) << L1Marker) | (1UL << StandardPosMarker);
+                    return ((ulong)NValue << NMarker) | ((ulong)(MassCode) << MassMarker) | ((ulong)(L3) << L3Marker) | ((ulong)(L2) << L2Marker) | ((ulong)(L1) << L1Marker) | (1UL << L1L2L3Marker);
                 }
                 else if (IsNumeric)
                 {
@@ -106,7 +110,7 @@ namespace EliteDangerousCore
             {
                 if (IsStandardParts)
                 {
-                    ulong lcodes = ((ulong)(L3) << L3Marker) | ((ulong)(L2) << L2Marker) | ((ulong)(L1) << L1Marker) | (1UL << StandardPosMarker);
+                    ulong lcodes = ((ulong)(L3) << L3Marker) | ((ulong)(L2) << L2Marker) | ((ulong)(L1) << L1Marker) | (1UL << L1L2L3Marker);
 
                     if (EntryType == NameType.Identifier)
                         return ((1UL << L3Marker) - 1) | lcodes;
@@ -130,7 +134,9 @@ namespace EliteDangerousCore
         public override string ToString()
         {
             if (IsStandard)
+            {
                 return (SectorName != null ? (SectorName + " ") : "") + (char)(L1 + 'A' - 1) + (char)(L2 + 'A' - 1) + "-" + (char)(L3 + 'A' - 1) + " " + (char)(MassCode + 'a') + (NValue > 0xffff ? ((NValue / 0x10000).ToStringInvariant() + "-") : "") + (NValue & 0xffff).ToStringInvariant();
+            }
             else if (IsNumeric)
             {
                 string num = NameIdNumeric.ToStringInvariant("0000000000000000".Substring(0, (int)NumericDigits));
@@ -152,12 +158,20 @@ namespace EliteDangerousCore
             Classify(n);
         }
 
-        public EliteNameClassifier(ulong id)        // set from DB encoded ID
+        // Create from ID
+        public EliteNameClassifier(ulong id)        
         {
             Classify(id);
         }
 
-        public void Classify(ulong id)              // take the ID from the DB and turn it back into parts
+        public static void ChangeToNewBitPositions()       // fixes issue with systemid being 56 bits long, and thus impacting bit 46/47 markers
+        {
+            L1L2L3Marker = 61;
+            NumericMarker = 60;
+        }
+
+        // take the ID from the DB and turn it back into parts
+        public void Classify(ulong id)              
         {
             if (IsIDStandard(id))       // ID has standard L1L2L3 masscode NValues
             {

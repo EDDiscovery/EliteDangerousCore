@@ -37,10 +37,9 @@ namespace EliteDangerousCore.JournalEvents
             shp.DockSRV();
         }
 
-        public override void FillInformation(out string info, out string detailed)  
+        public override string GetInfo()  
         {
-            info = BaseUtils.FieldBuilder.Build("", SRVType_Localised);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", SRVType_Localised);
         }
     }
 
@@ -67,11 +66,10 @@ namespace EliteDangerousCore.JournalEvents
             shp.LaunchSRV();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", SRVType_Localised, "Loadout: ".T(EDCTx.JournalEntry_Loadout), Loadout) + 
+            return BaseUtils.FieldBuilder.Build("", SRVType_Localised, "Loadout: ".T(EDCTx.JournalEntry_Loadout), Loadout) + 
                         BaseUtils.FieldBuilder.Build(", " + "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled);
-            detailed = "";
         }
     }
 
@@ -96,10 +94,9 @@ namespace EliteDangerousCore.JournalEvents
             shp.DestroyedSRV();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", SRVType_Localised);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", SRVType_Localised);
         }
 
     }

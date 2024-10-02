@@ -43,7 +43,7 @@ namespace EliteDangerousCore.JournalEvents
 
             //if (evt["TG_ENCOUNTERS"] != null)                 System.Diagnostics.Debug.WriteLine($"Thargoid read {Thargoids.Format("  ")}");
 
-            FLEETCARRIER = evt["FLEETCARRIER"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("FLEETCARRIER")?.ToObject<FLEETCARRIERClass>(true,true) ?? new FLEETCARRIERClass();
+            FLEETCARRIER = evt["FLEETCARRIER"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("FLEETCARRIER")?.ToObject<FLEETCARRIERClass>(true) ?? new FLEETCARRIERClass();
             JToken dt = evt["FLEETCARRIER"].I("FLEETCARRIER_DISTANCE_TRAVELLED");   // this is a classic frontier eff up
             if ( dt !=null)
             {
@@ -77,11 +77,15 @@ namespace EliteDangerousCore.JournalEvents
         public ExobiologyClass Exobiology { get; set; }
         public ThargoidsClass Thargoids { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Wealth: ; cr;N0".T(EDCTx.JournalEntry_Wealth), BankAccount.CurrentWealth, "Notoriety Index: ;;N0".T(EDCTx.JournalEntry_NotorietyIndex), Crime.Notoriety);
+            return BaseUtils.FieldBuilder.Build("Wealth: ; cr;N0".T(EDCTx.JournalEntry_Wealth), BankAccount.CurrentWealth, "Notoriety Index: ;;N0".T(EDCTx.JournalEntry_NotorietyIndex), Crime.Notoriety);
+        }
 
-            detailed = "Bank Account".T(EDCTx.JournalStatistics_BankAccount) + Environment.NewLine + BankAccount?.Format() + Environment.NewLine +
+
+        public override string GetDetailed()
+        {
+            return "Bank Account".T(EDCTx.JournalStatistics_BankAccount) + Environment.NewLine + BankAccount?.Format() + Environment.NewLine +
                         "Combat".T(EDCTx.JournalStatistics_Combat) + Environment.NewLine + Combat?.Format() + Environment.NewLine +
                         "Crime".T(EDCTx.JournalStatistics_Crime) + Environment.NewLine + Crime?.Format() + Environment.NewLine +
                         "Smuggling".T(EDCTx.JournalStatistics_Smuggling) + Environment.NewLine + Smuggling?.Format() + Environment.NewLine +

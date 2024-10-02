@@ -39,12 +39,12 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Multicrew { get; set; }
 
         public bool? Wanted { get; set; }   //seen in patch 17, but might be older
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = StarSystem;
+            string info = StarSystem;
             if (Wanted == true)
                 info += ", You are wanted.".T(EDCTx.JournalSuperCruiseEntry_Wanted);
-            detailed = "";
+            return info;
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -78,18 +78,18 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Multicrew { get; set; }
         public JournalSupercruiseDestinationDrop DestinationDrop { get; set; }       // update 15 associated destination drop. 
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
+            string info = "";
             if ( DestinationDrop != null )                                          // this gets set during history merge
             {
-                DestinationDrop.FillInformation(out info, out string d);
-                info += ", ";
+                info += DestinationDrop.GetInfo() + ", ";
             }
             else
                 info = "At ".T(EDCTx.JournalSupercruiseExit_At);
 
             info += BaseUtils.FieldBuilder.Build("",Body, "< in ".T(EDCTx.JournalSupercruiseExit_in), StarSystem, "Type: ".T(EDCTx.JournalEntry_Type), BodyType);
-            detailed = "";
+            return info;
         }
     }
 
@@ -109,10 +109,9 @@ namespace EliteDangerousCore.JournalEvents
         public int Threat { get; set; }
         public long MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalSupercruiseExit_At), Location_Localised.Alt(Location), "Threat Level: ".T(EDCTx.FSSSignal_ThreatLevel), Threat);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalSupercruiseExit_At), Location_Localised.Alt(Location), "Threat Level: ".T(EDCTx.FSSSignal_ThreatLevel), Threat);
         }
     }
 

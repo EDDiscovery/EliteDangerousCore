@@ -148,7 +148,8 @@ namespace EliteDangerousCore.DLL
             };
 
             // v1
-            he.FillInformation(out je.info, out je.detailedinfo);
+            je.info = he.GetInfo();
+            je.detailedinfo = he.GetDetailed() ?? "";       // may return null, we return ""
             je.materials = (from x in mats select x.Details.TranslatedName + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
             je.commodities = (from x in commds select x.Details.TranslatedName + ":" + x.Count.ToStringInvariant() + ":" + x.Details.FDName).ToArray();
             je.currentmissions = missionlist.Select(x=>x.DLLInfo()).ToArray();

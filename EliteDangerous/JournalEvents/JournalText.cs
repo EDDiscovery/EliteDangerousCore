@@ -37,10 +37,9 @@ namespace EliteDangerousCore.JournalEvents
         public string Message { get; set; }
         public bool Command { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {
-            info = BaseUtils.FieldBuilder.Build("To: ".T(EDCTx.JournalSendText_To), To_Localised, "Msg: ".T(EDCTx.JournalSendText_Msg), Message);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("To: ".T(EDCTx.JournalSendText_To), To_Localised, "Msg: ".T(EDCTx.JournalSendText_Msg), Message);
         }
     }
 
@@ -73,19 +72,36 @@ namespace EliteDangerousCore.JournalEvents
         public List<JournalReceiveText> MergedEntries { get; set; }    // if verbose.. doing it this way does not break action packs as the variables are maintained
                                                                        // This is second, third merge etc.  First one is in above variables
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            detailed = "";
             if (MergedEntries == null)
-                info = ToString();
+                return ToString();
             else
             {
-                info = (MergedEntries.Count() + 1).ToString() + " Texts".T(EDCTx.JournalReceiveText_Text) + " " + "from ".T(EDCTx.JournalReceiveText_FC) + Channel;
-                for (int i = MergedEntries.Count - 1; i >= 0; i--)
-                    detailed = detailed.AppendPrePad(MergedEntries[i].ToStringNC(), System.Environment.NewLine);
-                detailed = detailed.AppendPrePad(ToStringNC(), System.Environment.NewLine);   // ours is the last one
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                sb.Append((MergedEntries.Count() + 1).ToString());
+                sb.Append(" Texts".T(EDCTx.JournalReceiveText_Text));
+                sb.AppendSPC();
+                sb.Append("from ".T(EDCTx.JournalReceiveText_FC));
+                sb.Append(Channel);
+                return sb.ToString();
             }
         }
+
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            if (MergedEntries != null)
+            {
+                for (int i = MergedEntries.Count - 1; i >= 0; i--)
+                    sb.AppendPrePad(MergedEntries[i].ToStringNC(), System.Environment.NewLine);
+            }
+
+            sb.AppendPrePad(ToStringNC(), System.Environment.NewLine);   // ours is the last one
+
+            return sb.ToString();
+        }    
 
         public override string ToString()
         {

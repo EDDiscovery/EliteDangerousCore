@@ -33,11 +33,10 @@ namespace EliteDangerousCore.JournalEvents
         public long SystemAddress { get; set; }
         public int Bodies { get; set; }
 
-        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
+        public override string GetInfo(FillInformationData fid)
         {
-            info = BaseUtils.FieldBuilder.Build("New bodies discovered: ".T(EDCTx.JournalEntry_Dscan), Bodies,
+            return BaseUtils.FieldBuilder.Build("New bodies discovered: ".T(EDCTx.JournalEntry_Dscan), Bodies,
                                                 "@ ", fid.System.Name);
-            detailed = "";
         }
     }
 
@@ -64,13 +63,12 @@ namespace EliteDangerousCore.JournalEvents
             s.SetFSSDiscoveryScan(this, system);
         }
 
-        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
+        public override string GetInfo(FillInformationData fid)
         {
-            info = BaseUtils.FieldBuilder.Build("Progress: ;%;N1".T(EDCTx.JournalFSSDiscoveryScan_Progress), Progress, 
+            return BaseUtils.FieldBuilder.Build("Progress: ;%;N1".T(EDCTx.JournalFSSDiscoveryScan_Progress), Progress, 
                 "Bodies: ".T(EDCTx.JournalFSSDiscoveryScan_Bodies), BodyCount, 
                 "Others: ".T(EDCTx.JournalFSSDiscoveryScan_Others), NonBodyCount,
                 "@ ", fid.System.Name);
-            detailed = "";
         }
     }
 
@@ -78,130 +76,6 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.FSSSignalDiscovered)]
     public class JournalFSSSignalDiscovered : JournalEntry, IStarScan, IIdentifiers
     {
-        [System.Diagnostics.DebuggerDisplay("{ClassOfSignal} {SignalName}")]
-        public class FSSSignal
-        {
-            [PropertyNameAttribute("Signal name string, FDName")]
-            public string SignalName { get; set; }
-            [PropertyNameAttribute("Signal name localised")]
-            public string SignalName_Localised { get; set; }
-            [PropertyNameAttribute("Signal type, may not be present in old data")]
-            public string SignalType { get; set; }  // may be null/empty on older records
-            [PropertyNameAttribute("Spawing state, USS Only")]
-            public string SpawningState { get; set; }
-            [PropertyNameAttribute("Signal state localised, USS Only")]
-            public string SpawningState_Localised { get; set; }
-            [PropertyNameAttribute("Signal faction, FDName, USS only")]
-            public string SpawningFaction { get; set; }
-            [PropertyNameAttribute("Signal faction, Localised, USS only")]
-            public string SpawningFaction_Localised { get; set; }
-            [PropertyNameAttribute("Optional time remaining seconds for USS types")]
-            public double? TimeRemaining { get; set; }          // null if not expiring
-            [PropertyNameAttribute("Optional Frontier system address")]
-            public long? SystemAddress { get; set; }
-
-            [PropertyNameAttribute("Is it a station")]
-            public bool? IsStation { get; set; }
-            
-            [PropertyNameAttribute("Threat level, USS Only")]
-            public int? ThreatLevel { get; set; }           
-            [PropertyNameAttribute("Optional USS Type, FDName")]
-            public string USSType { get; set; }     // only for signal types of USS
-            [PropertyNameAttribute("Optional USS Type, Localised")]
-            public string USSTypeLocalised { get; set; }
-
-            [PropertyNameAttribute("When signal was recorded")]
-            public System.DateTime RecordedUTC { get; set; }        // when it was recorded
-
-            [PropertyNameAttribute("Optional signal expiry time, UTC, USS types")]
-            public System.DateTime ExpiryUTC { get; set; }
-            [PropertyNameAttribute("Optional signal expiry time, Local, USS types")]
-            public System.DateTime ExpiryLocal { get; set; }
-
-            [PropertyNameAttribute("EDD Definition of signal classification")]
-            public SignalDefinitions.Classification ClassOfSignal { get; set; }
-
-            const int CarrierExpiryTime = 10 * (60 * 60 * 24);              // days till we consider the carrier signal expired..
-
-            public FSSSignal(JObject evt, System.DateTime EventTimeUTC)
-            {
-                SignalName = evt["SignalName"].Str();
-                string signalnamelocalised = evt["SignalName_Localised"].Str();     // not present for stations/installations
-                SignalName_Localised = signalnamelocalised.Alt(SignalName);         // don't mangle if no localisation, its prob not there because its a proper name
-                SignalType = evt["SignalType"].Str();
-
-                SpawningState = evt["SpawningState"].Str();          // USS only, checked
-                SpawningState_Localised = JournalFieldNaming.CheckLocalisation(evt["SpawningState_Localised"].Str(), SpawningState);
-
-                SpawningFaction = evt["SpawningFaction"].Str();      // USS only, checked
-                SpawningFaction_Localised = JournalFieldNaming.CheckLocalisation(evt["SpawningFaction_Localised"].Str(), SpawningFaction);
-                //if ( SpawningFaction.HasChars() ) System.Diagnostics.Debug.WriteLine($"DS {SpawningFaction} {SpawningFaction_Localised}");
-
-                if ( SpawningFaction.EqualsIIC("$faction_none;"))       // kill these none entries
-                    SpawningFaction = SpawningFaction_Localised = "";
-
-                USSType = evt["USSType"].Str();                     // USS Only, checked
-                USSTypeLocalised = JournalFieldNaming.CheckLocalisation(evt["USSType_Localised"].Str(), USSType);
-
-                ThreatLevel = evt["ThreatLevel"].IntNull();         // USS only, checked
-
-                TimeRemaining = evt["TimeRemaining"].DoubleNull();  // USS only, checked
-
-                SystemAddress = evt["SystemAddress"].LongNull();
-
-                IsStation = evt["IsStation"].BoolNull();
-
-                ClassOfSignal = SignalDefinitions.GetClassification(SignalName, SignalType, IsStation == true, signalnamelocalised);
-
-                if ( ClassOfSignal == SignalDefinitions.Classification.Carrier)
-                    TimeRemaining = CarrierExpiryTime;
-
-                RecordedUTC = EventTimeUTC;
-
-                if (TimeRemaining != null)
-                {
-                    ExpiryUTC = EventTimeUTC.AddSeconds(TimeRemaining.Value);
-                    ExpiryLocal = ExpiryUTC.ToLocalTime();
-                }
-            }
-
-            public bool IsSame(FSSSignal other)     // is this signal the same as the other one
-            {
-                return SignalName.Equals(other.SignalName) && SpawningFaction.Equals(other.SpawningFaction) && SpawningState.Equals(other.SpawningState) &&
-                       USSType.Equals(other.USSType) && ThreatLevel == other.ThreatLevel &&
-                       (ClassOfSignal == SignalDefinitions.Classification.Carrier || ExpiryUTC == other.ExpiryUTC);       // note carriers have our own expiry on it, so we don't
-            }
-
-            public string ToString( bool showseentime)
-            {
-                DateTime? outoftime = null;
-                if (TimeRemaining != null && ClassOfSignal != SignalDefinitions.Classification.Carrier)       // ignore carrier timeout for printing
-                    outoftime = ExpiryLocal;
-
-                DateTime? seen = null;
-                if (showseentime && (ClassOfSignal == SignalDefinitions.Classification.Carrier || ClassOfSignal == SignalDefinitions.Classification.Megaship)) //both move in and out of systems, so show last seen
-                    seen = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(RecordedUTC);
-
-                string signname = ClassOfSignal == SignalDefinitions.Classification.USS ? null : SignalName_Localised;        // signal name for USS is boring, remove
-
-                string spstate = SpawningState_Localised != null ? SpawningState_Localised.Truncate(0, 32, "..") : null;
-
-                return BaseUtils.FieldBuilder.Build(
-                            ";Station: ".T(EDCTx.FSSSignal_StationBool), ClassOfSignal == SignalDefinitions.Classification.Station,
-                            ";Carrier: ".T(EDCTx.FSSSignal_CarrierBool), ClassOfSignal == SignalDefinitions.Classification.Carrier,
-                            ";Megaship: ".T(EDCTx.FSSSignal_MegashipBool), ClassOfSignal == SignalDefinitions.Classification.Megaship,
-                            ";Installation: ".T(EDCTx.FSSSignal_InstallationBool), ClassOfSignal == SignalDefinitions.Classification.Installation,
-                            "<", signname,
-                            "", USSTypeLocalised,
-                            "Threat Level: ".T(EDCTx.FSSSignal_ThreatLevel), ThreatLevel,
-                            "Faction: ".T(EDCTx.FSSSignal_Faction), SpawningFaction_Localised,
-                            "State: ".T(EDCTx.FSSSignal_State), spstate,
-                            "Time: ".T(EDCTx.JournalEntry_Time), outoftime,
-                            "Last Seen: ".T(EDCTx.FSSSignal_LastSeen), seen
-                            );
-            }
-        }
-
         public JournalFSSSignalDiscovered(JObject evt) : base(evt, JournalTypeEnum.FSSSignalDiscovered)
         {
             Signals = new List<FSSSignal>();
@@ -242,37 +116,58 @@ namespace EliteDangerousCore.JournalEvents
             s.AddFSSSignalsDiscoveredToSystem(this);
         }
 
-        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
+        public override string GetInfo(FillInformationData fid)
         {
             const int maxsignals = 20;
 
-            detailed = "";
-            info = fid.NextJumpSystemName != null ? "@ " + fid.NextJumpSystemName + ": ": "";
+            var sb = new System.Text.StringBuilder(1024);
+
+            if (fid.NextJumpSystemName != null)
+            {
+                sb.Append("@ ");
+                sb.Append(fid.NextJumpSystemName);
+                sb.Append(": ");
+            }
 
             if (Signals.Count > 1)
             {
-                info += BaseUtils.FieldBuilder.Build("Detected ; signals".T(EDCTx.JournalFSSSignalDiscovered_Detected), Signals.Count);
+                sb.Build("Detected ; signals".T(EDCTx.JournalFSSSignalDiscovered_Detected), Signals.Count);
+
+                // resort the list, when first printed, it will reorder this, then it will be a low power operation
+                FSSSignal.Sort(Signals);
 
                 if (Signals.Count < maxsignals)
                 {
                     foreach (var s in Signals)
                     {
                         if (s.ClassOfSignal == SignalDefinitions.Classification.USS)
-                            info += ", " + s.USSTypeLocalised;
+                            sb.AppendPrePadCS(s.USSTypeLocalised);
                         else
-                            info += ", " + s.SignalName_Localised;
+                            sb.AppendPrePadCS(s.SignalName_Localised);
                     }
                 }
-
-                // in a jump seqence, those frontier people send a FSD while jumping, and HES records there is a jump system name, so use it. else use current system name
-
-                foreach (var s in Signals)
-                    detailed = detailed.AppendPrePad(s.ToString(false), System.Environment.NewLine);
             }
             else
             {
-                info += Signals[0].ToString(false);
+                sb.Append( Signals[0].ToString(false));
             }
+            return sb.ToString();
+        }
+        public override string GetDetailed(FillInformationData fid)
+        {
+            if (Signals.Count > 1)
+            {
+                // resort the list, when first printed, it will reorder this, then it will be a low power operation
+                FSSSignal.Sort(Signals);
+                
+                var sb = new System.Text.StringBuilder(1024);
+                foreach (var s in Signals)
+                    sb.AppendPrePadCR(s.ToString(false));
+
+                return sb.ToString();
+            }
+            else
+                return null;
         }
 
         // return signals, removing duplicates, and starting with the latest jsd.
@@ -329,10 +224,9 @@ namespace EliteDangerousCore.JournalEvents
         public int NumBodies { get; set; }
         public long? SystemAddress { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Bodies: ".T(EDCTx.JournalEntry_Bodies), NumBodies);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Bodies: ".T(EDCTx.JournalEntry_Bodies), NumBodies);
         }
     }
 
@@ -364,13 +258,12 @@ namespace EliteDangerousCore.JournalEvents
             return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
-        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
+        public override string GetInfo(FillInformationData fid)
         {
             string name = BodyName.Contains(fid.System.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : fid.System.Name + ":" + BodyName;
-            info = BaseUtils.FieldBuilder.Build("Probes: ".T(EDCTx.JournalSAAScanComplete_Probes), ProbesUsed,
+            return BaseUtils.FieldBuilder.Build("Probes: ".T(EDCTx.JournalSAAScanComplete_Probes), ProbesUsed,
                                                 "Efficiency Target: ".T(EDCTx.JournalSAAScanComplete_EfficiencyTarget), EfficiencyTarget,
                                                 "@ ", name);
-            detailed = "";
         }
     }
 
@@ -484,36 +377,63 @@ namespace EliteDangerousCore.JournalEvents
 
         private string SignalNames() { return string.Join(",", Signals?.Select(x => x.Type)); }       // for debugger
 
-        static public string SignalList(List<SAASignal> list, int indent = 0, string separ = ", ", bool logtype = false)
+        // print list, with optional indent, and separ.  Separ is not placed on last entry
+        // logtype = false localised, true ID
+        static public void SignalList(System.Text.StringBuilder sb, List<SAASignal> list, int indent, bool indentfirst, bool logtype, string separ = ", ")
         {
-            string inds = new string(' ', indent);
-
-            string info = "";
             if (list != null)
             {
+                string inds = new string(' ', indent);
+                int index = 0;
                 foreach (var x in list)
                 {
-                    info = info.AppendPrePad(inds + (logtype ? x.Type : x.Type_Localised.Alt(x.Type)) + ": " + x.Count.ToString("N0"), separ);
+                    if (indent > 0 && (index > 0 || indentfirst))       // if indent, and its either not first or allowed to indent first
+                        sb.Append(inds);
+
+                    sb.Append(logtype ? x.Type : x.Type_Localised.Alt(x.Type));
+                    sb.Append(": ");
+                    sb.Append(x.Count.ToString("N0"));
+
+                    if (index++ < list.Count - 1)     // if another to go, separ
+                        sb.Append(separ);
                 }
             }
-
-            return info;
         }
-        static public string GenusList(List<SAAGenus> list, int indent = 0, string separ = ", ", bool logtype = false)
-        {
-            string inds = new string(' ', indent);
 
-            string info = "";
+        static public string SignalListString(List<SAASignal> list, int indent, bool indentfirst, bool logtype, string separ = ", ")
+        {
+            var sb = new System.Text.StringBuilder(1024);
+            SignalList(sb, list, indent, indentfirst, logtype, separ);
+            return sb.ToString();
+        }
+
+        // print list, with optional indent, and separ.  Separ is not placed on last entry
+        // logtype = false localised, true ID
+        static public void GenusList(System.Text.StringBuilder sb, List<SAAGenus> list, int indent, bool indentfirst, bool logtype, string separ = ", ")
+        {
             if (list != null)
             {
+                string inds = new string(' ', indent);
+                int index = 0;
                 foreach (var x in list)
                 {
-                    info = info.AppendPrePad(inds + (logtype ? x.Genus : x.Genus_Localised.Alt(x.Genus)), separ);
+                    if (indent > 0 && (index > 0 || indentfirst))       // if indent, and its either not first or allowed to indent first
+                        sb.Append(inds);
+                    sb.AppendPrePad(logtype ? x.Genus : x.Genus_Localised.Alt(x.Genus));
+
+                    if (index++ < list.Count - 1)     // if another to go, separ
+                        sb.Append(separ);
                 }
             }
-
-            return info;
         }
+
+        static public string GenusListString(List<SAAGenus> list, int indent, bool indentfirst, bool logtype, string separ = ", ")
+        {
+            var sb = new System.Text.StringBuilder(1024);
+            GenusList(sb, list, indent, indentfirst, logtype, separ );
+            return sb.ToString();
+        }
+
         static public bool ContainsBio(List<SAASignal> list)
         {
             return list.Find(x => x.IsBio) != null;
@@ -523,14 +443,15 @@ namespace EliteDangerousCore.JournalEvents
             return list.Find(x => x.IsGeo) != null;
         }
 
-        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
+        public override string GetInfo(FillInformationData fid)
         {
-            info = SignalList(Signals);
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            SignalList(sb, Signals, 0,false,false);
             string name = BodyName.Contains(fid.System.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : fid.System.Name + ":" + BodyName;
-            info = info.AppendPrePad("@ " + name, ", ");
+            sb.AppendPrePad("@ " + name, ", ");
             if (Genuses != null)
-                info = info.AppendPrePad(GenusList(Genuses), "; ");
-            detailed = "";
+                GenusList(sb, Genuses, 0, false, false);
+            return sb.ToString();
         }
 
         public int Contains(string fdname)      // give count if contains fdname, else zero
@@ -577,10 +498,9 @@ namespace EliteDangerousCore.JournalEvents
         public string SystemName { get; set; }
         public int Count { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = Count.ToString() + " @ " + SystemName;
-            detailed = "";
+            return Count.ToString() + " @ " + SystemName;
         }
     }
 
@@ -654,12 +574,13 @@ namespace EliteDangerousCore.JournalEvents
             return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
-        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
+        public override string GetInfo(FillInformationData fid)
         {
-            info = JournalSAASignalsFound.SignalList(Signals);
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            JournalSAASignalsFound.SignalList(sb, Signals, 0, false, false);
             string name = BodyName.Contains(fid.System.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : fid.System.Name + ":" + BodyName;
-            info = info.AppendPrePad("@ " + name, ", ");
-            detailed = "";
+            sb.AppendPrePad("@ " + name, ", ");
+            return sb.ToString();
         }
 
     }
@@ -670,7 +591,13 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalScanOrganic(JObject evt) : base(evt, JournalTypeEnum.ScanOrganic)
         {
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this,
+                process:(t,x)=> {
+                            return (ScanTypeEnum)Enum.Parse(typeof(ScanTypeEnum),x,true);       // only enum, and we just use Parse
+                        }
+                );        // read fields named in this structure matching JSON names
 
             Species = Species.Alt("Unknown");       // seen entries with empty entries for these, set to unknown.
             Species_Localised = Species_Localised.Alt(Species);
@@ -715,6 +642,8 @@ namespace EliteDangerousCore.JournalEvents
         public int? EstimatedValue { get; set; }       // set on analyse
         [PropertyNameAttribute("Potential value cr")]
         public int? PotentialEstimatedValue { get; set; }  // set on non analyse
+        [PropertyNameAttribute("Estimated or potential value cr")]
+        public int Value { get { return EstimatedValue.HasValue ? EstimatedValue.Value : PotentialEstimatedValue.HasValue ? PotentialEstimatedValue.Value : 0; } }
 
         public void AddStarScan(StarScan s, ISystem system)
         {
@@ -722,12 +651,11 @@ namespace EliteDangerousCore.JournalEvents
             s.AddScanOrganicToSystem(this,system);
         }
 
-        public override void FillInformationExtended(FillInformationData fid, out string info, out string detailed)
+        public override string GetInfo(FillInformationData fid)
         {
             int? ev = ScanType == ScanTypeEnum.Analyse ? EstimatedValue : null;     // if analyse, its estimated value
             int? pev = ev == null ? PotentialEstimatedValue : null;                 // if not at analyse, its potential value
-            info = BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "< @ ", fid.WhereAmI);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "< @ ", fid.WhereAmI);
         }
 
         // this sorts the list by date/time, then runs the algorithm that returns only the latest sample state for each key
@@ -773,28 +701,37 @@ namespace EliteDangerousCore.JournalEvents
             return stage.Values.ToList();
         }
 
-        static public string OrganicList(List<JournalScanOrganic> list, int indent = 0, string separ = null)        // default is environment.newline
+        // print list, with optional indent, and separ.  Separ is not placed on last entry
+        static public void OrganicList(System.Text.StringBuilder sb, List<JournalScanOrganic> unsortedlist, int indent, bool indentfirst, string separ = ", ")        // default is environment.newline
         {
-            var listsorted = SortList(list);
+            var list = SortList(unsortedlist);
             string inds = new string(' ', indent);
-            string res = "";
 
-            foreach (var t in listsorted)
+            int index = 0;
+            foreach (var t in list)
             {
+                if ((index > 0 || indentfirst) && indent > 0)
+                    sb.Append(inds);
+
                 var s = t.Item2;
-                //System.Diagnostics.Debug.WriteLine($"{s.ScanType} {s.Genus_Localised} {s.Species_Localised}");
-                res = res.AppendPrePad(inds + BaseUtils.FieldBuilder.Build(";/3", t.Item1, "", s.ScanType, 
+                sb.Build( ";/3", t.Item1, "", s.ScanType, 
                             "<: ", s.Genus_Localised, 
                             "", s.Species_Localised_Short, 
                             "", s.Variant_Localised_Short,
                             "Value: ; cr;N0".T(EDCTx.JournalScanOrganics_Value), s.EstimatedValue, 
-                            "Potential Value: ; cr;N0".T(EDCTx.JournalScanOrganics_PotentialValue), s.PotentialEstimatedValue),
-                            separ ?? Environment.NewLine);
-            }
+                            "Potential Value: ; cr;N0".T(EDCTx.JournalScanOrganics_PotentialValue), s.PotentialEstimatedValue);
 
-            return res;
+                if (index++ < list.Count - 1)     // if another to go, separ
+                    sb.Append(separ);
+            }
         }
 
+        static public string OrganicListString(List<JournalScanOrganic> list, int indent, bool indentfirst, string separ = ", ")
+        {
+            var sb = new System.Text.StringBuilder(1024);
+            OrganicList(sb, list, indent, indentfirst, separ);
+            return sb.ToString();
+        }
     }
 
 }

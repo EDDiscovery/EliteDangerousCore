@@ -41,14 +41,13 @@ namespace EliteDangerousCore.JournalEvents
             Total = mc.GetLast(Type)?.Count ?? 0;
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Type);
             if (mcd != null)
-                info = BaseUtils.FieldBuilder.Build("", Type_Localised, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "Total: ".T(EDCTx.JournalEntry_Total), Total);
+                return BaseUtils.FieldBuilder.Build("", Type_Localised, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "Total: ".T(EDCTx.JournalEntry_Total), Total);
             else
-                info = Type_Localised;
-            detailed = "";
+                return Type_Localised;
         }
     }
 
@@ -62,10 +61,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Body { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = Body;
-            detailed = "";
+            return Body;
         }
     }
 
@@ -96,7 +94,7 @@ namespace EliteDangerousCore.JournalEvents
             MotherlodeMaterial_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["MotherlodeMaterial_Localised"].Str(),FriendlyMotherlodeMaterial);
 
             Remaining = evt["Remaining"].Double();      // 0-100
-            Materials = evt["Materials"]?.ToObjectQ<Material[]>().OrderBy(x => x.Name)?.ToArray();
+            Materials = evt["Materials"]?.ToObjectQ<Material[]>()?.ToArray();
 
             if ( Materials != null )
             {
@@ -117,20 +115,20 @@ namespace EliteDangerousCore.JournalEvents
         public double Remaining { get; set; }
         public Material[] Materials { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", FriendlyMotherlodeMaterial, "", Content_Localised, "Remaining: ;%;N1".T(EDCTx.JournalProspectedAsteroid_Remaining), Remaining);
+            var sb = new System.Text.StringBuilder(256);
+
+            sb.Build("", FriendlyMotherlodeMaterial, "", Content_Localised, "Remaining: ;%;N1".T(EDCTx.JournalProspectedAsteroid_Remaining), Remaining);
             
             if ( Materials != null )
             {
-                info += " ";
                 foreach (Material m in Materials)
                 {
-                    info = info.AppendPrePad( BaseUtils.FieldBuilder.Build("", m.FriendlyName, "< ;%;N1", m.Proportion), System.Environment.NewLine );
+                    sb.AppendPrePad( BaseUtils.FieldBuilder.Build("", m.FriendlyName, "< ;%;N1", m.Proportion), System.Environment.NewLine );
                 }
             }
-
-            detailed = "";
+            return sb.ToString();
         }
     }
 

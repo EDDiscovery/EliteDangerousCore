@@ -19,16 +19,17 @@ namespace EliteDangerousCore
 {
     public class CCommodities : System.IEquatable<CCommodities>
     {
+        // beware case change - this case is matched to frontier CAPI
         public long id { get; private set; }
 
-        [JsonName("name")]                                  // Oct 22: No sign of a FromObject for JSON.  I think this is old but may as well maintain. Maintain CAPI output names when emitting, even though we use a different naming
+        [JsonName("name")]                                  // Oct 22: No sign of a JSON.FromObject use.  I think this is old but may as well maintain. Maintain CAPI output names when emitting, even though we use a different naming
         public string fdname { get; private set; }          // EDDN use : name is lower cased in CAPI but thats all to match Marketing use of it
         [JsonIgnore]
         public string fdname_unnormalised { get; private set; }  // unnormalised, with FD decoration, if present
         public string locName { get; private set; }
 
         [JsonName("categoryname")]
-        public string category { get; private set; }        // in this context, it means, its type (Metals).. as per MaterialCommoditiesDB
+        public string category { get; private set; }        // as per market entry, its $MARKET_category_<x>; for market and CAPI. For spansh, its the name (Techonology etc)
         public string loccategory { get; private set; }     // in this context, it means, its type (Metals).. as per MaterialCommoditiesDB
         public string legality { get; private set; }        // CAPI only
 
@@ -91,6 +92,8 @@ namespace EliteDangerousCore
         [JsonIgnore]
         public int CargoCarried { get; set; }                  // NOT in Frontier data, cargo currently carried for this item
 
+        private const string marketmarker = "$MARKET_category_";
+
         public CCommodities()
         {
         }
@@ -130,6 +133,26 @@ namespace EliteDangerousCore
             ComparisionLR = ComparisionRL = "";
         }
 
+        public CCommodities(long id, string fdname, string locname, string cat, string loccat, int buyprice, int sellprice, int demandbracket, int stockbracket, int stock, int demand)
+        {
+            this.id = id;
+            this.fdname_unnormalised = this.fdname = fdname;
+            this.locName = locname;
+            this.category = cat;
+            if (!category.StartsWith(marketmarker))     // check its not already been fixed
+                category = marketmarker + category;
+            this.loccategory = loccat;
+            this.buyPrice = buyPrice;
+            this.sellPrice = sellPrice;
+            this.meanPrice = (buyPrice + sellPrice) / 2;
+            this.demandBracket = demandBracket;
+            this.stockBracket = stockBracket;
+            this.stock = stock;
+            this.demand = demand;
+            this.statusFlags = new List<string>();
+            ComparisionLR = ComparisionRL = "";
+        }
+
         public bool Equals(CCommodities other)
         {
             return (id == other.id && string.Compare(fdname, other.fdname) == 0 && string.Compare(locName, other.locName) == 0 &&
@@ -158,7 +181,6 @@ namespace EliteDangerousCore
                     category = category.Replace(" ", "_").ToLowerInvariant().Replace("narcotics", "drugs"); // CAPI does not have a loccategory unlike market
                 }
 
-                const string marketmarker = "$MARKET_category_";
                 // this normalises the category name to the same used in the market Journal entry
                 if (!category.StartsWith(marketmarker))     // check its not already been fixed.. will happen when EDD entry is reread
                     category = marketmarker + category;
@@ -337,6 +359,7 @@ namespace EliteDangerousCore
             });
         }
 
+        // return merged list of left and right, copied, originals left alone
         public static List<CCommodities> Merge(List<CCommodities> left, List<CCommodities> right)
         {
             List<CCommodities> merged = new List<CCommodities>();

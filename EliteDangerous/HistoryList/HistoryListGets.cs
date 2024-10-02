@@ -100,6 +100,8 @@ namespace EliteDangerousCore
         }
 
         // history filter - limit by date range
+        // reverse means reverse whatever order the list is in
+        // entries means only accept these entries
         static public List<HistoryEntry> LimitByDate(List<HistoryEntry> list, DateTime startdateutc, DateTime enddaysutc, HashSet<JournalTypeEnum> entries = null, bool reverse = true)     // list should be in entry order (oldest first)
         {
             System.Diagnostics.Debug.Assert(startdateutc.Kind == DateTimeKind.Utc);
@@ -236,6 +238,10 @@ namespace EliteDangerousCore
         static public List<HistoryEntry> FilterByDateRange(List<HistoryEntry> list, DateTime startutc, DateTime endutc) // UTC! in time ascending order
         {
             return list.Where(s => s.EventTimeUTC >= startutc && s.EventTimeUTC <= endutc).ToList();
+        }
+        static public List<HistoryEntry> FilterByDateRange(List<HistoryEntry> list, DateTime startutc, DateTime endutc, Predicate<HistoryEntry> pred) // UTC! in time ascending order
+        {
+            return list.Where(s => pred(s) && s.EventTimeUTC >= startutc && s.EventTimeUTC <= endutc).ToList();
         }
 
         // combat panel, List should be in entry order.

@@ -1002,7 +1002,7 @@ namespace EliteDangerousCore.EDSM
                 ["EDDFromEDSMBodie"] = true,
                 ["BodyName"] = jo["name"],
                 ["WasDiscovered"] = true,
-                ["WasMapped"] = false,          // tbd ? why false?
+                ["WasMapped"] = false,          
                 ["ScanType"] = "Detailed",
             };
 

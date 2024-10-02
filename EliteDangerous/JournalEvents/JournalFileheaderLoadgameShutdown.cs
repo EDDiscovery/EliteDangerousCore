@@ -58,10 +58,9 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {
-            info = BaseUtils.FieldBuilder.Build("Version: ".T(EDCTx.JournalEntry_Version), GameVersion , "Build: ".T(EDCTx.JournalEntry_Build), Build , "Part: ".T(EDCTx.JournalEntry_Part), Part);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Version: ".T(EDCTx.JournalEntry_Version), GameVersion , "Build: ".T(EDCTx.JournalEntry_Build), Build , "Part: ".T(EDCTx.JournalEntry_Part), Part);
         }
     }
 
@@ -161,10 +160,13 @@ namespace EliteDangerousCore.JournalEvents
         public bool InFighter { get { return ItemData.IsFighter(ShipFD); } }
         public bool InShipSRVOrFighter { get { return ItemData.IsShipSRVOrFighter(ShipFD); } }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship: ".T(EDCTx.JournalEntry_Ship), Ship, "Name: ".T(EDCTx.JournalEntry_Name), ShipName, "Ident: ".T(EDCTx.JournalEntry_Ident), ShipIdent, "Credits: ;;N0".T(EDCTx.JournalEntry_Credits), Credits);
-            detailed = BaseUtils.FieldBuilder.Build("Mode: ".T(EDCTx.JournalEntry_Mode), GameMode, "Group: ".T(EDCTx.JournalEntry_Group), Group, "Not Landed;Landed".T(EDCTx.JournalEntry_NotLanded), StartLanded, "Fuel Level: ;;0.0".T(EDCTx.JournalEntry_FuelLevel), FuelLevel, "Capacity: ;;0.0".T(EDCTx.JournalEntry_Capacity), FuelCapacity);
+            return BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship: ".T(EDCTx.JournalEntry_Ship), Ship, "Name: ".T(EDCTx.JournalEntry_Name), ShipName, "Ident: ".T(EDCTx.JournalEntry_Ident), ShipIdent, "Credits: ;;N0".T(EDCTx.JournalEntry_Credits), Credits);
+        }
+        public override string GetDetailed()
+        {
+            return BaseUtils.FieldBuilder.Build("Mode: ".T(EDCTx.JournalEntry_Mode), GameMode, "Group: ".T(EDCTx.JournalEntry_Group), Group, "Not Landed;Landed".T(EDCTx.JournalEntry_NotLanded), StartLanded, "Fuel Level: ;;0.0".T(EDCTx.JournalEntry_FuelLevel), FuelLevel, "Capacity: ;;0.0".T(EDCTx.JournalEntry_Capacity), FuelCapacity);
         }
 
         public void Ledger(Ledger mcl)
@@ -192,13 +194,6 @@ namespace EliteDangerousCore.JournalEvents
         public JournalShutdown(JObject evt) : base(evt, JournalTypeEnum.Shutdown)
         {
         }
-
-        public override void FillInformation(out string info, out string detailed)
-        {
-            info = "";
-            detailed = "";
-        }
-
     }
 
     [JournalEntryType(JournalTypeEnum.Continued)]
@@ -211,10 +206,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public int Part { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = Part.ToString();
-            detailed = "";
+            return Part.ToString();
         }
     }
 

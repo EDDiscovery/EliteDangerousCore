@@ -32,8 +32,7 @@ namespace EliteDangerousCore.UIEvents
 
         public override string ToString()
         {
-            FSDTarget.FillInformation(out string info, out string detailed);
-            return $"{info}: {detailed}";
+            return $"{FSDTarget.GetInfo()} {FSDTarget.GetDetailed()}";
         }
 
     }

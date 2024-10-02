@@ -52,29 +52,33 @@ namespace EliteDangerousCore.JournalEvents
             }
 
             // has trailing LF
-            public string RingInformation(string frontpad = "  ")
+            public void RingText(StringBuilder sb, string frontpad = "  ")
             {
-                StringBuilder scanText = new StringBuilder();
-
-                scanText.AppendFormat(frontpad + "{0} ({1})\n", Name.Alt("Unknown".T(EDCTx.Unknown)), TranslatedRingClass());
+                sb.Append(frontpad);
+                sb.AppendFormat("{0} ({1})", Name.Alt("Unknown".T(EDCTx.Unknown)), TranslatedRingClass());
+                sb.AppendCR();
 
                 if (MassMT > (BodyPhysicalConstants.oneMoon_KG / 1e9 / 1000))
-                    scanText.AppendFormat(frontpad + "Mass: {0:N4}{1}\n".T(EDCTx.StarPlanetRing_Mass), MassMT / (BodyPhysicalConstants.oneMoon_KG / 1E9), " Moons".T(EDCTx.JournalScan_Moons));
+                    sb.AppendFormat(frontpad + "Mass: {0:N4}{1}".T(EDCTx.StarPlanetRing_Mass), MassMT / (BodyPhysicalConstants.oneMoon_KG / 1E9), " Moons".T(EDCTx.JournalScan_Moons));
                 else
-                    scanText.AppendFormat(frontpad + "Mass: {0:N4}{1}\n".T(EDCTx.StarPlanetRing_Mass), MassMT, " MT");
+                    sb.AppendFormat(frontpad + "Mass: {0:N4}{1}".T(EDCTx.StarPlanetRing_Mass), MassMT, " MT");
+
+                sb.AppendCR();
 
                 if (InnerRad > BodyPhysicalConstants.oneAU_m / 10)       // more than 0.1AU, its in ls
                 {
-                    scanText.AppendFormat(frontpad + "Inner Radius: {0:0.00}ls".T(EDCTx.StarPlanetRing_InnerRadius) + Environment.NewLine, (InnerRad / BodyPhysicalConstants.oneLS_m));
-                    scanText.AppendFormat(frontpad + "Outer Radius: {0:0.00}ls".T(EDCTx.StarPlanetRing_OuterRadius) + Environment.NewLine, (OuterRad / BodyPhysicalConstants.oneLS_m));
+                    sb.AppendFormat(frontpad + "Inner Radius: {0:0.00}ls".T(EDCTx.StarPlanetRing_InnerRadius), (InnerRad / BodyPhysicalConstants.oneLS_m));
+                    sb.AppendCR();
+                    sb.AppendFormat(frontpad + "Outer Radius: {0:0.00}ls".T(EDCTx.StarPlanetRing_OuterRadius), (OuterRad / BodyPhysicalConstants.oneLS_m));
+                    sb.AppendCR();
                 }
                 else
                 {
-                    scanText.AppendFormat(frontpad + "Inner Radius: {0}km".T(EDCTx.StarPlanetRing_IK) + Environment.NewLine, (InnerRad / 1000).ToString("N0"));
-                    scanText.AppendFormat(frontpad + "Outer Radius: {0}km".T(EDCTx.StarPlanetRing_OK) + " \u0394 {1}" + Environment.NewLine, (OuterRad / 1000).ToString("N0"), ((OuterRad - InnerRad) / 1000).ToString("N0"));
+                    sb.AppendFormat(frontpad + "Inner Radius: {0}km".T(EDCTx.StarPlanetRing_IK) , (InnerRad / 1000).ToString("N0"));
+                    sb.AppendCR();
+                    sb.AppendFormat(frontpad + "Outer Radius: {0}km".T(EDCTx.StarPlanetRing_OK) + " \u0394 {1}" , (OuterRad / 1000).ToString("N0"), ((OuterRad - InnerRad) / 1000).ToString("N0"));
+                    sb.AppendCR();
                 }
-
-                return scanText.ToNullSafeString();
             }
 
             public string TranslatedRingClass() 
@@ -176,97 +180,85 @@ namespace EliteDangerousCore.JournalEvents
             return hz != null ? $"{hz.HabitableZoneInner:N0}-{hz.HabitableZoneOuter:N0}ls" : "";
         }
 
-        public enum CZPrint { CZAll, CZHab, CZMR, CZWW, CZEL, CZAW, CZIP };
+        public void HabZoneText_Hab(HabZones hz, StringBuilder sb)
+        {
+            sb.AppendFormat(" - Habitable Zone, {0} ({1}-{2} AU),".T(EDCTx.JournalScan_HabitableZone),
+                 $"{hz.HabitableZoneInner:N0}-{hz.HabitableZoneOuter:N0}ls",
+                 (hz.HabitableZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
+                 (hz.HabitableZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
+        }
 
-        // trailing LF if titles are on, else not.
-        public string CircumstellarZonesString(bool titles, CZPrint p)
+        public void HabZoneText_MRP(HabZones hz, StringBuilder sb)
+        {
+            sb.AppendFormat(" - Metal Rich planets, {0} ({1}-{2} AU),".T(EDCTx.JournalScan_MetalRichplanets),
+                             $"{hz.MetalRichZoneInner:N0}-{hz.MetalRichZoneOuter:N0}ls",
+                             (hz.MetalRichZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
+                             (hz.MetalRichZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
+        }
+
+        public void HabZoneText_WW(HabZones hz, StringBuilder sb)
+        {
+            sb.AppendFormat(" - Water Worlds, {0} ({1}-{2} AU),".T(EDCTx.JournalScan_WaterWorlds),
+                             $"{hz.WaterWrldZoneInner:N0}-{hz.WaterWrldZoneOuter:N0}ls",
+                             (hz.WaterWrldZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
+                             (hz.WaterWrldZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
+        }
+        public void HabZoneText_EL(HabZones hz, StringBuilder sb)
+        {
+            sb.AppendFormat(" - Earth Like Worlds, {0} ({1}-{2} AU),".T(EDCTx.JournalScan_EarthLikeWorlds),
+                             $"{hz.EarthLikeZoneInner:N0}-{hz.EarthLikeZoneOuter:N0}ls",
+                             (hz.EarthLikeZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
+                             (hz.EarthLikeZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
+        }
+        public void HabZoneText_AW(HabZones hz, StringBuilder sb)
+        {
+            sb.AppendFormat(" - Ammonia Worlds, {0} ({1}-{2} AU),".T(EDCTx.JournalScan_AmmoniaWorlds),
+                             $"{hz.AmmonWrldZoneInner:N0}-{hz.AmmonWrldZoneOuter:N0}ls",
+                             (hz.AmmonWrldZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
+                             (hz.AmmonWrldZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
+        }
+        public void HabZoneText_ZIP(HabZones hz, StringBuilder sb)
+        {
+            sb.AppendFormat(" - Icy Planets, {0} (from {1} AU)".T(EDCTx.JournalScan_IcyPlanets),
+                             $"{hz.IcyPlanetZoneInner:N0}ls to ~",
+                             (hz.IcyPlanetZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
+        }
+
+        public void HabZoneText(StringBuilder sb, bool title)
         {
             HabZones hz = GetHabZones();
 
             if (hz != null)
             {
-                StringBuilder habZone = new StringBuilder();
-
-                if (titles)
-                    habZone.Append("Inferred Circumstellar zones:\n".T(EDCTx.JournalScan_InferredCircumstellarzones));
-
-                if (p == CZPrint.CZAll || p == CZPrint.CZHab)
+                if (title)
                 {
-                    habZone.AppendFormat(" - Habitable Zone, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_HabitableZone),
-                                     $"{hz.HabitableZoneInner:N0}-{hz.HabitableZoneOuter:N0}ls",
-                                     (hz.HabitableZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
-                                     (hz.HabitableZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
+                    sb.AppendLine("Inferred Circumstellar zones:".T(EDCTx.JournalScan_InferredCircumstellarzones));
                 }
 
-                if (p == CZPrint.CZAll || p == CZPrint.CZMR)
-                {
-                    habZone.AppendFormat(" - Metal Rich planets, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_MetalRichplanets),
-                                     $"{hz.MetalRichZoneInner:N0}-{hz.MetalRichZoneOuter:N0}ls",
-                                     (hz.MetalRichZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
-                                     (hz.MetalRichZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
-                }
+                HabZoneText_Hab(hz, sb);
+                sb.AppendCR();
+                HabZoneText_MRP(hz, sb);
+                sb.AppendCR();
+                HabZoneText_WW(hz, sb);
+                sb.AppendCR();
+                HabZoneText_EL(hz, sb);
+                sb.AppendCR();
+                HabZoneText_AW(hz, sb);
+                sb.AppendCR();
+                HabZoneText_ZIP(hz, sb);
+                sb.AppendCR();
 
-                if (p == CZPrint.CZAll || p == CZPrint.CZWW)
-                {
-                    habZone.AppendFormat(" - Water Worlds, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_WaterWorlds),
-                                     $"{hz.WaterWrldZoneInner:N0}-{hz.WaterWrldZoneOuter:N0}ls",
-                                     (hz.WaterWrldZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
-                                     (hz.WaterWrldZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
-                }
-
-                if (p == CZPrint.CZAll || p == CZPrint.CZEL)
-                {
-                    habZone.AppendFormat(" - Earth Like Worlds, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_EarthLikeWorlds),
-                                     $"{hz.EarthLikeZoneInner:N0}-{hz.EarthLikeZoneOuter:N0}ls",
-                                     (hz.EarthLikeZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
-                                     (hz.EarthLikeZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
-                }
-
-                if (p == CZPrint.CZAll || p == CZPrint.CZAW)
-                {
-                    habZone.AppendFormat(" - Ammonia Worlds, {0} ({1}-{2} AU),\n".T(EDCTx.JournalScan_AmmoniaWorlds),
-                                     $"{hz.AmmonWrldZoneInner:N0}-{hz.AmmonWrldZoneOuter:N0}ls",
-                                     (hz.AmmonWrldZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
-                                     (hz.AmmonWrldZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
-                }
-
-                if (p == CZPrint.CZAll || p == CZPrint.CZIP)
-                {
-                    habZone.AppendFormat(" - Icy Planets, {0} (from {1} AU)\n".T(EDCTx.JournalScan_IcyPlanets),
-                                     $"{hz.IcyPlanetZoneInner:N0}ls to ~",
-                                     (hz.IcyPlanetZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
-                }
-
-                if (titles)
+                if (title)
                 {
                     if (nSemiMajorAxis.HasValue && nSemiMajorAxis.Value > 0)
-                        habZone.Append(" - Others stars not considered\n".T(EDCTx.JournalScan_Othersstarsnotconsidered));
-
-                    return habZone.ToNullSafeString();
+                    {
+                        sb.Append(" - Others stars not considered".T(EDCTx.JournalScan_Othersstarsnotconsidered));
+                        sb.AppendCR();
+                    }
                 }
-                else
-                {
-                    if (habZone.Length > 2)
-                        habZone.Remove(habZone.Length - 2, 2);      // remove ,\n
-
-                    string s = habZone.ToNullSafeString();
-                    if (s.StartsWith(" - "))        // mangle the translated string - can't do it above for backwards compat reasons
-                        s = s.Substring(3);
-
-                    return s;
-                }
-
             }
-            else
-                return null;
         }
-
-
-
-
-
     }
-
 }
 
 

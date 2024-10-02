@@ -18,7 +18,7 @@ using System;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Docked)]
-    public class JournalDocked : JournalEntry
+    public class JournalDocked : JournalEntry, IStatsJournalEntry
     {
         public JournalDocked(System.DateTime utc) : base(utc, JournalTypeEnum.Docked,false)
         {
@@ -39,13 +39,13 @@ namespace EliteDangerousCore.JournalEvents
             if (jk != null && jk.IsObject)     // new 3.03
             {
                 Faction = jk["Name"].Str();                // system faction pick up
-                FactionState = FactionDefinitions.ToEnum(jk["FactionState"].Str("Unknown")).Value;
+                FactionState = FactionDefinitions.FactionStateToEnum(jk["FactionState"].Str("Unknown")).Value;
             }
             else
             {
                 // old pre 3.3.3 had this
                 Faction = evt.MultiStr(new string[] { "StationFaction", "Faction" });
-                FactionState = FactionDefinitions.ToEnum(evt["FactionState"].Str("Unknown")).Value;           // PRE 2.3 .. not present in newer files, fixed up in next bit of code (but see 3.3.2 as its been incorrectly reintroduced)
+                FactionState = FactionDefinitions.FactionStateToEnum(evt["FactionState"].Str("Unknown")).Value;           // PRE 2.3 .. not present in newer files, fixed up in next bit of code (but see 3.3.2 as its been incorrectly reintroduced)
             }
 
             Allegiance = AllegianceDefinitions.ToEnum( evt.MultiStr(new string[] { "StationAllegiance", "Allegiance" }, null) );    // may not be present, pass null to accept it
@@ -53,14 +53,14 @@ namespace EliteDangerousCore.JournalEvents
             Economy = EconomyDefinitions.ToEnum(evt.MultiStr(evt.MultiStr(new string[] { "StationEconomy", "Economy" }, null)));    // may not be present
             Economy_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationEconomy_Localised", "Economy_Localised" }), EconomyDefinitions.ToEnglish(Economy));
 
-            EconomyList = evt["StationEconomies"]?.ToObjectQ<Economies[]>();        // not checking custom attributes, so name in class
+            EconomyList = EconomyDefinitions.ReadEconomiesClassFromJson(evt["StationEconomies"]);        // not checking custom attributes, so name in class
 
             Government = GovernmentDefinitions.ToEnum(evt.MultiStr(new string[] { "StationGovernment", "Government" }, null));
             Government_Localised = JournalFieldNaming.CheckLocalisation(evt.MultiStr(new string[] { "StationGovernment_Localised", "Government_Localised" }), GovernmentDefinitions.ToEnglish(Government));
 
             Wanted = evt["Wanted"].Bool();
 
-            StationServices = evt["StationServices"]?.ToObjectQ<StationDefinitions.StationServices[]>();
+            StationServices = StationDefinitions.ReadServicesFromJson(evt["StationServices"]);
 
             ActiveFine = evt["ActiveFine"].BoolNull();
 
@@ -83,7 +83,7 @@ namespace EliteDangerousCore.JournalEvents
         public AllegianceDefinitions.Allegiance Allegiance { get; set; }          // FDName
         public EconomyDefinitions.Economy Economy { get; set; }
         public string Economy_Localised { get; set; }
-        public Economies[] EconomyList { get; set; }        // may be null
+        public EconomyDefinitions.Economies[] EconomyList { get; set; }        // may be null
         public GovernmentDefinitions.Government Government { get; set; }
         public string Government_Localised { get; set; }
         public StationDefinitions.StationServices[] StationServices { get; set; }   // fdname
@@ -109,16 +109,6 @@ namespace EliteDangerousCore.JournalEvents
             return fdnames != null && StationServices != null && Array.FindIndex(StationServices, 0, x => fdnames.Equals(x.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0;
         }
 
-        public class Economies
-        {
-            [JsonName("name", "Name")]                  //name is for spansh, Name is for journal
-            public EconomyDefinitions.Economy Name;     // fdname
-            public string Name_Localised;
-            [JsonName("Proportion", "share")]           //share is for spansh, proportion is for journal
-            public double Proportion;                   // 0-1
-        }
-
-
         public class LandingPadList
         {
             public int Small;
@@ -128,48 +118,47 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys) { return string.Format("At {0}".T(EDCTx.JournalDocked_At), StationName); }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            FillInformation(out info, out detailed, true);
-        }
-
-        public void FillInformation(out string info, out string detailed, bool printdocked)
-        {
-            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop); // because of translation
-
-            info = "";
-            
-            if ( printdocked )
-                info += "Docked".T(EDCTx.JournalTypeEnum_Docked) + ", ";
-
-            info += BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType), "< in system ".T(EDCTx.JournalEntry_insystem), StarSystem, 
+            var sb = new System.Text.StringBuilder(256);
+            sb.Build("", "Docked".T(EDCTx.JournalTypeEnum_Docked), "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType), "< in system ".T(EDCTx.JournalEntry_insystem), StarSystem,
                 "State: ".TxID(EDCTx.JournalLocOrJump_State), StationDefinitions.ToLocalisedLanguage(StationState),
-                ";(Wanted)".T(EDCTx.JournalEntry_Wanted), Wanted, 
-                ";Active Fine".T(EDCTx.JournalEntry_ActiveFine),ActiveFine,
-                "Faction: ".T(EDCTx.JournalEntry_Faction), Faction,  
+                ";(Wanted)".T(EDCTx.JournalEntry_Wanted), Wanted,
+                ";Active Fine".T(EDCTx.JournalEntry_ActiveFine), ActiveFine,
+                "Faction: ".T(EDCTx.JournalEntry_Faction), Faction,
                 "< in state ".T(EDCTx.JournalEntry_instate), FactionDefinitions.ToLocalisedLanguage(FactionState));
 
-            detailed = BaseUtils.FieldBuilder.Build("Allegiance: ".T(EDCTx.JournalEntry_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance), 
+            return sb.ToString();
+        }
+
+        public override string GetDetailed()
+        {
+            var sb = new System.Text.StringBuilder(256);
+
+            sb.Build("Allegiance: ".T(EDCTx.JournalEntry_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance), 
                     "Economy: ".T(EDCTx.JournalEntry_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),
                     "Government: ".T(EDCTx.JournalEntry_Government),  GovernmentDefinitions.ToLocalisedLanguage(Government));
 
             if (StationServices != null)
             {
-                string l = "";
-                foreach (var s in StationServices)
-                    l = l.AppendPrePad(StationDefinitions.ToLocalisedLanguage(s), ", ");
-                detailed += System.Environment.NewLine + "Station services: ".T(EDCTx.JournalEntry_Stationservices) + l;
+                sb.AppendCR();
+                StationDefinitions.Build(sb, true, StationServices);
             }
 
             if (EconomyList != null)
             {
-                string l = "";
-                foreach (Economies e in EconomyList)
-                    l = l.AppendPrePad(EconomyDefinitions.ToLocalisedLanguage(e.Name) + " " + (e.Proportion * 100).ToString("0.#") + "%", ", ");
-                detailed += System.Environment.NewLine + "Economies: ".T(EDCTx.JournalEntry_Economies) + l;
+                sb.AppendCR();
+                EconomyDefinitions.Build(sb, true, EconomyList);
             }
+
+            return sb.ToString();
         }
 
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
+        {
+            if (Faction.HasChars())
+                stats.Docking(system,this);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.DockingCancelled)]
@@ -188,10 +177,9 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = StationName;
-            detailed = "";
+            return StationName;
         }
     }
 
@@ -215,10 +203,9 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", StationName, "", Reason);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", StationName, "", Reason);
         }
     }
 
@@ -240,10 +227,9 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", StationName, "< on pad ".T(EDCTx.JournalEntry_onpad), LandingPad, "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType));
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", StationName, "< on pad ".T(EDCTx.JournalEntry_onpad), LandingPad, "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType));
         }
     }
 
@@ -265,10 +251,9 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID { get; set; }
         public JournalDocked.LandingPadList LandingPads { get; set; } // 4.0 update 5
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = StationName;
-            detailed = "";
+            return StationName;
         }
     }
 
@@ -288,10 +273,9 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = StationName;
-            detailed = "";
+            return StationName;
         }
     }
 
@@ -317,10 +301,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", StationName, "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType));
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", StationName, "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType));
         }
     }
 

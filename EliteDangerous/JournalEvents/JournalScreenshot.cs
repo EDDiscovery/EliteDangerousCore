@@ -57,11 +57,12 @@ namespace EliteDangerousCore.JournalEvents
         public int EDDOutputWidth { get; set; }
         public int EDDOutputHeight { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)  
+        public override string GetInfo()  
         {
-            info = BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalScreenshot_At), Body , "< in ".T(EDCTx.JournalScreenshot_in), System , "File: ".T(EDCTx.JournalScreenshot_File), Filename, 
-                        "Width: ".T(EDCTx.JournalScreenshot_Width), Width , "Height: ".T(EDCTx.JournalScreenshot_Height), Height, "Latitude: ".T(EDCTx.JournalEntry_Latitude), JournalFieldNaming.RLat(nLatitude), "Longitude: ".T(EDCTx.JournalEntry_Longitude), JournalFieldNaming.RLong(nLongitude));
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalScreenshot_At), Body , "< in ".T(EDCTx.JournalScreenshot_in), System , "File: ".T(EDCTx.JournalScreenshot_File), Filename, 
+                        "Width: ".T(EDCTx.JournalScreenshot_Width), Width , "Height: ".T(EDCTx.JournalScreenshot_Height), Height,
+                        "Latitude: ;°;F4".T(EDCTx.JournalEntry_Latitude), nLatitude, "Longitude: ;°;F4".T(EDCTx.JournalEntry_Longitude), nLongitude);
+
         }
 
         public void SetConvertedFilename(string input_filename, string output_filename, int width, int height)  // called when screenshot is captured, records info for later display

@@ -49,12 +49,12 @@ namespace EliteDangerousCore.JournalEvents
         public bool? OnStation { get; set; }
         public bool? OnPlanet { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {
-            info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
-            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled, 
-                                        "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised), ". ");
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", Body, 
+                                          "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled,
+                                        "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised, 
+                                        "Latitude: ;°;F4".T(EDCTx.JournalEntry_Latitude), Latitude, "Longitude: ;°;F4".T(EDCTx.JournalEntry_Longitude), Longitude);
         }
     }
 
@@ -96,12 +96,13 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised { get { return "Touchdown".TxID(EDCTx.JournalTypeEnum_Touchdown); } }
         public string BodyDesignation { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
-            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", Body, "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled, 
-                                                                "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised), ". ");
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", Body,
+                                            "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled,
+                                          "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised,
+                                          "Latitude: ;°;F4".T(EDCTx.JournalEntry_Latitude), Latitude, "Longitude: ;°;F4".T(EDCTx.JournalEntry_Longitude), Longitude);
+
         }
 
         public void UpdateIdentifiers()

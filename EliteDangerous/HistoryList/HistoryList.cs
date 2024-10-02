@@ -37,9 +37,12 @@ namespace EliteDangerousCore
         public ShipYardList Shipyards { get; private set; } = new ShipYardList(); // yards in space (not meters)
         public OutfittingList Outfitting { get; private set; } = new OutfittingList();        // outfitting on stations
         public StarScan StarScan { get; private set; } = new StarScan();      // the results of scanning
-        public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>(StringComparer.InvariantCultureIgnoreCase);  // not in any particular order.
+
+        // not in any particular order.  Each entry is pointing to the HE of the last time you entered the system (if your in there a while, no more updates are made)
+        public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>(StringComparer.InvariantCultureIgnoreCase);  
+
         public Dictionary<string, EDStar> StarClass { get; private set; } = new Dictionary<string, EDStar>();     // not in any particular order.
-        public Dictionary<string, Stats.FactionStatistics> GetStatsAtGeneration(uint g) { return statisticsaccumulator.GetAtGeneration(g); }
+        public Stats Stats { get; private set; } = new Stats();               // stats on all entries, not generationally recorded
 
         // History variables
         public int CommanderId { get; private set; } = -999;                 // set by history load at end, indicating commander loaded
@@ -47,7 +50,6 @@ namespace EliteDangerousCore
 
         // privates
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
-        private Stats statisticsaccumulator = new Stats();
 
         private HistoryEntry hlastprocessed = null;
 
@@ -72,7 +74,7 @@ namespace EliteDangerousCore
             he.UpdateWeapons(WeaponList.Process(je, he.WhereAmI, he.System));
             he.UpdateLoadouts(SuitLoadoutList.Process(je, WeaponList, he.WhereAmI, he.System));
 
-            he.UpdateStats(je, statisticsaccumulator, he.Status.StationFaction);
+            he.UpdateStats(je, Stats);
 
             CashLedger.Process(je);
             he.Credits = CashLedger.CashTotal;
@@ -155,7 +157,10 @@ namespace EliteDangerousCore
             {
                 System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" Journal Creation of {tabledata.Count}");
 
-                var jes = JournalEntry.CreateJournalEntries(tabledata, cancelRequested, (p) => reportProgress(p, $"Creating Cmdr. {cmdname} journal entries {(int)(tabledata.Count * p / 100):N0}/{tabledata.Count:N0}"));
+                var jes = JournalEntry.CreateJournalEntries(tabledata, cancelRequested, 
+                            (p) => reportProgress(p, $"Creating Cmdr. {cmdname} journal entries {(int)(tabledata.Count * p / 100):N0}/{tabledata.Count:N0}"),
+                            true);
+
                 if (jes != null)        // if not cancelled, use it
                     journalentries = jes;
             }
@@ -195,6 +200,7 @@ namespace EliteDangerousCore
 
                 HistoryEntry hecur = hist.MakeHistoryEntry(je);
 
+                //System.Diagnostics.Debug.WriteLine($"HE created {hecur.EventSummary} {hecur.GetInfo()}\r\n{hecur.GetDetailed()}");
                 // System.Diagnostics.Debug.WriteLine("++ {0} {1}", he.EventTimeUTC.ToString(), he.EntryType);
                 var reorderlist = hist.ReorderRemove(hecur);
 
@@ -219,9 +225,11 @@ namespace EliteDangerousCore
 
             foreach (var s in hist.StarScan.ToProcess)
             {
-                s.Item1.FillInformation(out string info, out string detailed);
-                System.Diagnostics.Debug.WriteLine($"StarScan could not assign {s.Item1.EventTimeUTC} {s.Item1.GetType().Name} {info} {s.Item2?.Name ?? "???"} {s.Item2?.SystemAddress}");
+                System.Diagnostics.Debug.WriteLine($"StarScan could not assign {s.Item1.EventTimeUTC} {s.Item1.GetType().Name} {s.Item2?.Name ?? "???"} {s.Item2?.SystemAddress}");
             }
+
+            // dump all events info+detailed to file, useful for checking formatting
+            //JournalTest.DumpHistoryGetInfoDescription(hist, @"c:\code\out.log");      
 
             // foreach (var kvp in hist.IdentifierList.Items) System.Diagnostics.Debug.WriteLine($"IDList {kvp.Key} -> {kvp.Value}"); // debug
 
@@ -272,15 +280,17 @@ namespace EliteDangerousCore
 
             if ((LastSystem == null || he.System.Name != LastSystem ) && he.System.Name != "Unknown" )   // if system is not last, we moved somehow (FSD, location, carrier jump), add
             {
-                if (Visited.TryGetValue(he.System.Name, out var value))
+                if (Visited.TryGetValue(he.System.Name, out var value))     // if we have it
                 {
-                    he.UpdateVisits(value.Visits + 1);               // visits is 1 more than previous entry
-                    Visited[he.System.Name] = he;          // reset to point to latest he
+                    he.UpdateVisits(value.Visits + 1);                      // visits is 1 more than previous entry
+                    Visited[he.System.Name] = he;                           // reset to point to he where we entered the system
+                    //System.Diagnostics.Debug.WriteLine($"Visited {he.System.Name} on {he.EventTimeUTC} for {value.Visits + 1} times");
                 }
                 else
                 {
                     he.UpdateVisits(1);               // visits is 1 more than previous entry
                     Visited[he.System.Name] = he;          // point to he
+                    //System.Diagnostics.Debug.WriteLine($"Visited {he.System.Name} on {he.EventTimeUTC} for first time");
                 }
 
                 LastSystem = he.System.Name;

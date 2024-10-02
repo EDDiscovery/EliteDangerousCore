@@ -28,12 +28,6 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string Name { get; set; }
-
-        public override void FillInformation(out string info, out string detailed)
-        {
-            info = Name;
-            detailed = "";
-        }
     }
 
     [JournalEntryType(JournalTypeEnum.AppliedToSquadron)]
@@ -108,11 +102,10 @@ namespace EliteDangerousCore.JournalEvents
             NewRank = (RankDefinitions.SquadronRank)evt["NewRank"].Int();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", Name, "Old: ".T(EDCTx.JournalEntry_Old), RankDefinitions.FriendlyName(OldRank), 
+            return BaseUtils.FieldBuilder.Build("", Name, "Old: ".T(EDCTx.JournalEntry_Old), RankDefinitions.FriendlyName(OldRank), 
                             "New: ".T(EDCTx.JournalEntry_New), RankDefinitions.FriendlyName(NewRank));
-            detailed = "";
         }
 
         public RankDefinitions.SquadronRank OldRank { get; set; }
@@ -154,10 +147,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public RankDefinitions.SquadronRank CurrentRank { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), RankDefinitions.FriendlyName(CurrentRank));
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), RankDefinitions.FriendlyName(CurrentRank));
         }
     }
 

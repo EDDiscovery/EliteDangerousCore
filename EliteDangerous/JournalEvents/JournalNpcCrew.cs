@@ -32,10 +32,9 @@ namespace EliteDangerousCore.JournalEvents
         public string Name { get; set; }
         public long Amount { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {           
-            info = BaseUtils.FieldBuilder.Build("<", Name , "; Cr;N0" , Amount);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("<", Name , "; Cr;N0" , Amount);
         }
 
         public void Ledger(Ledger mcl)
@@ -59,10 +58,9 @@ namespace EliteDangerousCore.JournalEvents
         public string Name { get; set; }
         public RankDefinitions.CombatRank RankCombat { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("<", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), RankDefinitions.FriendlyName(RankCombat));
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("<", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), RankDefinitions.FriendlyName(RankCombat));
         }
 
     }

@@ -98,43 +98,55 @@ namespace EliteDangerousCore
         public double ShipyardAgeInDays { get { return DateTime.UtcNow.Subtract(ShipyardUpdateUTC).TotalDays; } }
         public string ShipyardStateString { get { if (HasShipyard && Shipyard != null) return $"\u2713 {ShipyardAgeInDays:N1}"; else if (HasShipyard) return "\u2713 ND"; else return ""; } }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Station:", StationName, "System:", System.Name, "Body:", BodyName, "Lat:;;N4", Latitude, "Long:;;N4", Longitude, "Distance to Arrival:;ls;N1", DistanceToArrival);
-            base.FillInformation(out string baseinfo, out string basedetailed, false);
-            info = info.AppendPrePad(baseinfo, global::System.Environment.NewLine);
-            detailed = basedetailed;
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Build("Station:", StationName, "System:", System.Name, "Body:", BodyName, "Lat:;;N4", Latitude, "Long:;;N4", Longitude, "Distance to Arrival:;ls;N1", DistanceToArrival);
+            sb.AppendPrePad(base.GetInfo(), global::System.Environment.NewLine);
+            return sb.ToString();
+        }
+
+        public override string GetDetailed()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append(base.GetDetailed());
+
             if (HasMarket)
             {
-                string l = "";
+                sb.AppendCR();
+                sb.Append("Market: ");
+                sb.AppendCR();
+
                 foreach (CCommodities m in Market.EmptyIfNull())
                 {
-                    l = l.AppendPrePad(" " + m.ToStringShort(), global::System.Environment.NewLine);
+                    sb.Append(" " + m.ToStringShort());
                 }
-
-                detailed += global::System.Environment.NewLine + "Market: " + global::System.Environment.NewLine + l;
             }
 
             if (HasOutfitting)
             {
-                string l = "";
+                sb.AppendCR();
+                sb.Append("Outfitting: ");
+                sb.AppendCR();
                 foreach (var o in Outfitting.EmptyIfNull())
                 {
-                    l = l.AppendPrePad(" " + o.ToStringShort(), global::System.Environment.NewLine);
+                    sb.Append(" " + o.ToStringShort());
+                    sb.AppendCR();
                 }
-
-                detailed += global::System.Environment.NewLine + "Outfitting: " + global::System.Environment.NewLine + l;
             }
             if (HasShipyard)
             {
-                string l = "";
+                sb.AppendCR();
+                sb.Append("Shipyard: ");
+                sb.AppendCR();
                 foreach (var s in Shipyard.EmptyIfNull())
                 {
-                    l = l.AppendPrePad(" " + s.ToStringShort(), global::System.Environment.NewLine);
+                    sb.Append(" " + s.ToStringShort());
+                    sb.AppendCR();
                 }
-
-                detailed += global::System.Environment.NewLine + "Shipyard: " + global::System.Environment.NewLine + l;
             }
+
+            return sb.ToString();
         }
 
         public void ViewMarket(Form fm, DB.IUserDatabaseSettingsSaver saver)
@@ -170,7 +182,7 @@ namespace EliteDangerousCore
             }
 
             ConfigurableForm f = new ConfigurableForm();
-            f.Add(new ConfigurableForm.Entry(dgvpanel, "Grid", "", new System.Drawing.Point(3, 30), new System.Drawing.Size(800, 400), null)
+            f.Add(new ConfigurableEntryList.Entry(dgvpanel, "Grid", "", new System.Drawing.Point(3, 30), new System.Drawing.Size(800, 400), null)
             { Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom });
             f.AddOK(new Point(800 - 100, 460), "OK", anchor: AnchorStyles.Right | AnchorStyles.Bottom);
             f.InstallStandardTriggers();
@@ -205,7 +217,7 @@ namespace EliteDangerousCore
             }
 
             ConfigurableForm f = new ConfigurableForm();
-            f.Add(new ConfigurableForm.Entry(dgvpanel, "Grid", "", new System.Drawing.Point(3, 30), new System.Drawing.Size(800, 400), null)
+            f.Add(new ConfigurableEntryList.Entry(dgvpanel, "Grid", "", new System.Drawing.Point(3, 30), new System.Drawing.Size(800, 400), null)
             { Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom });
             f.AddOK(new Point(800 - 100, 460), "OK", anchor: AnchorStyles.Right | AnchorStyles.Bottom);
             f.InstallStandardTriggers();
@@ -239,7 +251,7 @@ namespace EliteDangerousCore
             }
 
             ConfigurableForm f = new ConfigurableForm();
-            f.Add(new ConfigurableForm.Entry(dgvpanel, "Grid", "", new System.Drawing.Point(3, 30), new System.Drawing.Size(800, 400), null)
+            f.Add(new ConfigurableEntryList.Entry(dgvpanel, "Grid", "", new System.Drawing.Point(3, 30), new System.Drawing.Size(800, 400), null)
             { Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom });
             f.AddOK(new Point(800 - 100, 460), "OK", anchor: AnchorStyles.Right | AnchorStyles.Bottom);
             f.InstallStandardTriggers();

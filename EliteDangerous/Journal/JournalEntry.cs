@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -27,7 +26,7 @@ using System.Threading;
 
 namespace EliteDangerousCore
 {
-    [DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} JID {Id} C {CommanderId}")]
+    [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} JID {Id} C {CommanderId}")]
     public abstract partial class JournalEntry
     {
         #region Public Instance properties and fields
@@ -84,11 +83,24 @@ namespace EliteDangerousCore
             public long? NextJumpSystemAddress { get; set; }
         };
 
-        // define one of these, either FillInformation or FillInformationExtended
-        public virtual void FillInformationExtended(FillInformationData fid, out string info, out string detailed) 
-        { System.Diagnostics.Debug.Assert(false, "Called but not defined"); info = detailed = null; }     // if entries return info =null, this is called
+        // these may or may not be overriden by class.  
 
-        public virtual void FillInformation(out string info, out string detailed) { info = detailed = null; }     // if entries return info =null, this is called
+        public virtual string GetInfo()         // if overridden, always return a string
+        {
+            return null;
+        }
+        public virtual string GetInfo(FillInformationData fid)  // if overridden, always return a string
+        {
+            return null;
+        }
+        public virtual string GetDetailed() // may return null if no more data available
+        {
+            return null;
+        }
+        public virtual string GetDetailed(FillInformationData fid) // may return null if no more data available
+        {
+            return null;
+        }
 
         // the long name of it, such as Approach Body. May be overridden, is translated
         public virtual string SummaryName(ISystem sys) { return TranslatedEventNames.ContainsKey(EventTypeID) ? TranslatedEventNames[EventTypeID] : EventTypeID.ToString(); }  // entry may be overridden for specialist output
@@ -337,16 +349,23 @@ namespace EliteDangerousCore
             public Action<int,float> progress;
         }
 
+        private class Stats
+        {
+            public JournalTypeEnum type;
+            public int number;
+            public long ticks;
+        }
+
         // from table data ID, travellogid, commanderid, event json, sync flag
         // create journal entries.  Multithreaded if many entries
         // null if cancelled
-        static public JournalEntry[] CreateJournalEntries(List<TableData> tabledata, CancellationToken cancel, Action<int> progress = null)
+        static public JournalEntry[] CreateJournalEntries(List<TableData> tabledata, CancellationToken cancel, Action<int> progress = null, bool multithread = true)
         {
             JournalEntry[] jlist = new JournalEntry[tabledata.Count];
 
-            if (tabledata.Count > 10000 && System.Environment.ProcessorCount>1)  // a good amount, worth MTing - just in case someone is using this on a potato
+            if (multithread && tabledata.Count > 10000 && System.Environment.ProcessorCount > 1)  // a good amount, worth MTing - just in case someone is using this on a potato
             {
-                int threads = Math.Max(System.Environment.ProcessorCount*3/4,2);   // leave a few processors for other things
+                int threads = Math.Max(System.Environment.ProcessorCount * 3 / 4, 2);   // leave a few processors for other things
 
                 CountdownEvent cd = new CountdownEvent(threads);
                 float[] threadprogress = new float[threads];
@@ -358,17 +377,17 @@ namespace EliteDangerousCore
                     Thread t1 = new Thread(new ParameterizedThreadStart(CreateJEinThread));
                     t1.Priority = ThreadPriority.Highest;
                     t1.Name = $"GetAll {i}";
-                    
+
                     System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Journal Creation Spawn {s}..{e}");
-                    
-                    var data = new JETable() { processor = i, table = tabledata, results = jlist, start = s, end = e, finished = cd, 
-                                iscancelled = cancel, 
-                                progress = (tno,p)=> {
-                                threadprogress[tno] = p;
-                                int percent = (int)(100 * threadprogress.Sum() / (threads));
-                                progress?.Invoke(percent);
-                                // System.Diagnostics.Debug.WriteLine($"CJE progress {p} from {tno} of {threads}, total {percent}");
-                                }
+
+                    var data = new JETable() { processor = i, table = tabledata, results = jlist, start = s, end = e, finished = cd,
+                        iscancelled = cancel,
+                        progress = (tno, p) => {
+                            threadprogress[tno] = p;
+                            int percent = (int)(100 * threadprogress.Sum() / (threads));
+                            progress?.Invoke(percent);
+                            // System.Diagnostics.Debug.WriteLine($"CJE progress {p} from {tno} of {threads}, total {percent}");
+                        }
                     };
                     t1.Start(data);
                 }
@@ -377,10 +396,74 @@ namespace EliteDangerousCore
             }
             else
             {
+                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                Dictionary<JournalTypeEnum, Stats> ticks = new Dictionary<JournalTypeEnum, Stats>();
+
+                // code to measure performance.. use this by turning off multitasking and either select individual or total time
+
+#if true
+                // measure each one
+
+                for (int j = 0; j < tabledata.Count; j++)
+                {
+                    long ticks1 = sw.ElapsedTicks;
+                    var e = tabledata[j];
+                    jlist[j] = CreateJournalEntry(e.ID, e.TLUID, e.Cmdr, e.Json, e.Syncflag);
+                    long ticks2 = sw.ElapsedTicks;
+                    if (!ticks.TryGetValue(jlist[j].EventTypeID, out Stats ticksn))
+                        ticks[jlist[j].EventTypeID] = new Stats() { ticks = ticks2 - ticks1, number = 1, type = jlist[j].EventTypeID };
+                    else
+                    {
+                        ticks[jlist[j].EventTypeID].number++;
+                        ticks[jlist[j].EventTypeID].ticks += ticks2 - ticks1;
+                    }
+                }
+#else
+                // measure total
+
+                long ticks1 = sw.ElapsedTicks;
+
                 for (int j = 0; j < tabledata.Count; j++)
                 {
                     var e = tabledata[j];
                     jlist[j] = CreateJournalEntry(e.ID, e.TLUID, e.Cmdr, e.Json, e.Syncflag);
+                }
+                long ticks2 = sw.ElapsedTicks;
+
+                ticks[JournalTypeEnum.Unknown] = new Stats() { ticks = ticks2 - ticks1, number = 1, type = JournalTypeEnum.Unknown };
+
+#endif
+                //{
+                //    var values = ticks.Values.ToList();
+                //    values.Sort(delegate (Stats left, Stats right) { return left.number.CompareTo(right.number); });
+
+                //    System.Diagnostics.Debug.WriteLine($"-------------------- by number");
+
+                //    foreach (var x in values)
+                //        System.Diagnostics.Debug.WriteLine($"Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency} per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
+                //}
+
+                //{
+                //    var values = ticks.Values.ToList();
+                //    values.Sort(delegate (Stats left, Stats right) { return ((double)left.ticks / left.number).CompareTo((double)right.ticks / right.number); });
+
+                //    System.Diagnostics.Debug.WriteLine($"-------------------- by time ");
+                //    foreach (var x in values)
+                //    {
+                //        if (x.number > 50)
+                //            System.Diagnostics.Debug.WriteLine($"Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency} per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
+                //    }
+                //}
+                {
+                    var values = ticks.Values.ToList();
+                    values.Sort(delegate (Stats left, Stats right) { return left.ticks.CompareTo(right.ticks); });
+
+                    System.Diagnostics.Debug.WriteLine($"-------------------- by ticks ");
+                    foreach (var x in values)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency}s per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
+                    }
                 }
             }
 
@@ -412,9 +495,9 @@ namespace EliteDangerousCore
             data.finished.Signal();
         }
 
-        #endregion
+#endregion
 
-        #region MT process table data to a callback
+#region MT process table data to a callback
 
         // from table data ID, travellogid, commanderid, event json, sync flag
         // create journal entries and dispatch to a thread. Entries will bombard the thread in any order, in multiple threads
@@ -453,9 +536,9 @@ namespace EliteDangerousCore
             cmd.Item5.Signal();
         }
 
-        #endregion
+#endregion
 
-        #region Types of events
+#region Types of events
 
         static public Type TypeOfJournalEntry(string text)
         {
@@ -475,10 +558,10 @@ namespace EliteDangerousCore
             }
         }
 
-        #endregion
+#endregion
 
 
-        #region Private variables
+#region Private variables
 
         private enum SyncFlags
         {
@@ -491,15 +574,15 @@ namespace EliteDangerousCore
         }
         private int Synced { get; set; }                     // sync flags
 
-        #endregion
+#endregion
 
-        #region Virtual overrides
+#region Virtual overrides
 
         protected virtual JournalTypeEnum IconEventType { get { return EventTypeID; } }  // entry may be overridden to dynamically change icon event for an event
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         protected JournalEntry(DateTime utc, JournalTypeEnum jtype, bool edsmsynced)       // manual creation via NEW
         {
@@ -519,9 +602,9 @@ namespace EliteDangerousCore
             TLUId = 0;
         }
 
-        #endregion
+#endregion
 
-        #region Private Type info
+#region Private Type info
 
         private static string JournalRootClassname = typeof(JournalEvents.JournalTouchdown).Namespace;        // pick one at random to find out root classname
         private static Dictionary<JournalTypeEnum, Type> JournalEntryTypes = GetJournalEntryTypes();        // enum -> type
@@ -571,9 +654,9 @@ namespace EliteDangerousCore
         }
 
 
-        #endregion
+#endregion
 
-        #region Icons and names
+#region Icons and names
 
         // enum -> icons 
         public static IReadOnlyDictionary<JournalTypeEnum, Image> JournalTypeIcons { get; } = new BaseUtils.Icons.IconGroup<JournalTypeEnum>("Journal");
@@ -589,9 +672,9 @@ namespace EliteDangerousCore
             return tx;
         }
 
-        #endregion
+#endregion
 
-        #region Helpers
+#region Helpers
 
         public static JObject RemoveEDDGeneratedKeys(JObject obj)      // obj not changed
         {
@@ -694,7 +777,7 @@ namespace EliteDangerousCore
             return null;
         }
 
-        #endregion
+#endregion
 
     }
 }

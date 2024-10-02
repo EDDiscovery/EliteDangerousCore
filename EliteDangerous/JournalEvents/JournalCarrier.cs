@@ -196,12 +196,11 @@ namespace EliteDangerousCore.JournalEvents
             Callsign = evt["Callsign"].Str();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalCarrier_At), Location,
+            return BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalCarrier_At), Location,
                                               "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price,
                                               "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), Callsign);
-            detailed = "";
         }
 
         public void Ledger(Ledger mcl)
@@ -276,9 +275,9 @@ namespace EliteDangerousCore.JournalEvents
         }
 
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), State.Name,
+            return BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), State.Name,
                                                 "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), State.Callsign,
                                                 "Fuel Level: ;;N0".T(EDCTx.JournalCarrier_FuelLevel), State.FuelLevel,
                                                 "Jump Range: ; ly;0.0".T(EDCTx.JournalCarrier_JumpRange), State.JumpRangeCurr,
@@ -293,8 +292,14 @@ namespace EliteDangerousCore.JournalEvents
                                                 "Tax Rate Refuel: ;;N1".T(EDCTx.JournalCarrier_TaxRateRefuel), State.Finance.TaxRateRefuel,
                                                 "Tax Rate Repair: ;;N1".T(EDCTx.JournalCarrier_TaxRateRepair), State.Finance.TaxRateRepair
                                                 );
+        }
 
-            detailed = BaseUtils.FieldBuilder.Build("Total Capacity: ".T(EDCTx.JournalCarrier_TotalCapacity), State.SpaceUsage.TotalCapacity,
+
+        public override string GetDetailed()
+        {
+            var sb = new System.Text.StringBuilder(256);
+
+            sb.Build("Total Capacity: ".T(EDCTx.JournalCarrier_TotalCapacity), State.SpaceUsage.TotalCapacity,
                                                     "Crew: ".T(EDCTx.JournalCarrier_Crew), State.SpaceUsage.Crew,
                                                     "Cargo: ".T(EDCTx.JournalCarrier_Cargo), State.SpaceUsage.Cargo,
                                                     "Cargo Space Reserved: ".T(EDCTx.JournalCarrier_CargoReserved), State.SpaceUsage.CargoSpaceReserved,
@@ -302,16 +307,15 @@ namespace EliteDangerousCore.JournalEvents
                                                     "Module Packs: ".T(EDCTx.JournalCarrier_ModulePacks), State.SpaceUsage.ModulePacks,
                                                     "Free Space: ".T(EDCTx.JournalCarrier_FreeSpace), State.SpaceUsage.FreeSpace);
 
-            detailed += Environment.NewLine;
             if (State.Services != null && State.Services.Count>0)
             {
-
                 foreach (var v in State.Services)
                 {
-                    if ( v.Activated )
-                        detailed += BaseUtils.FieldBuilder.Build("Activated:" , v.CrewRole, "", v.CrewName, "< (Disabled);", v.Enabled ) + Environment.NewLine;
+                    sb.AppendCR();
+                    if (v.Activated)
+                        sb.Build("Activated:", v.CrewRole, "", v.CrewName, "< (Disabled);", v.Enabled);
                     else
-                        detailed += BaseUtils.FieldBuilder.Build("Not Activated:", v.CrewRole) + Environment.NewLine;
+                        sb.Build("Not Activated:", v.CrewRole);
                 }
             }
 
@@ -319,7 +323,8 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var v in State.ShipPacks)
                 {
-                    detailed += BaseUtils.FieldBuilder.Build("Pack: ", v.PackTheme, "", v.PackTier) + Environment.NewLine;
+                    sb.AppendCR();
+                    sb.Build("Pack: ", v.PackTheme, "", v.PackTier);
                 }
             }
 
@@ -327,10 +332,13 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var v in State.ModulePacks)
                 {
-                    detailed += BaseUtils.FieldBuilder.Build("Module: ", v.PackTheme, "", v.PackTier) + Environment.NewLine;
+                    sb.AppendCR();
+                    sb.Build("Module: ", v.PackTheme, "", v.PackTier);
                 }
 
             }
+
+            return sb.ToString();
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -361,17 +369,16 @@ namespace EliteDangerousCore.JournalEvents
                 DepartureTime = evt["DepartureTime"].DateTimeUTC();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             DateTime? dtime = null;
             if (DepartureTime.HasValue)
                 dtime = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(DepartureTime.Value);
 
-            info = BaseUtils.FieldBuilder.Build("To ".T(EDCTx.JournalCarrier_ToSystem), SystemName,
+            return BaseUtils.FieldBuilder.Build("To ".T(EDCTx.JournalCarrier_ToSystem), SystemName,
                                                 "Body ".T(EDCTx.JournalCarrier_Body), Body,
                                                 "@ ", dtime
                                                 );
-            detailed = "";
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -396,12 +403,11 @@ namespace EliteDangerousCore.JournalEvents
             ScrapDateTimeUTC = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(ScrapTime);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Refund: ; cr;N0".T(EDCTx.JournalCarrier_Refund), ScrapRefund,
+            return BaseUtils.FieldBuilder.Build("Refund: ; cr;N0".T(EDCTx.JournalCarrier_Refund), ScrapRefund,
                                                 "at UTC ".T(EDCTx.JournalCarrier_RefundTime), ScrapDateTimeUTC
                                                 );
-            detailed = "";
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -420,10 +426,9 @@ namespace EliteDangerousCore.JournalEvents
             CarrierID = evt["CarrierID"].Long();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = "";
-            detailed = "";
+            return "";
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -450,13 +455,12 @@ namespace EliteDangerousCore.JournalEvents
             CarrierBalance = evt["CarrierBalance"].Long();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             if (Deposit > 0)
-                info = BaseUtils.FieldBuilder.Build("Deposit: ; cr;N0".T(EDCTx.JournalCarrier_Deposit), Deposit, "Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), CarrierBalance);
+                return BaseUtils.FieldBuilder.Build("Deposit: ; cr;N0".T(EDCTx.JournalCarrier_Deposit), Deposit, "Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), CarrierBalance);
             else
-                info = BaseUtils.FieldBuilder.Build("Withdraw: ; cr;N0".T(EDCTx.JournalCarrier_Withdraw), Withdraw, "Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), CarrierBalance);
-            detailed = "";
+                return BaseUtils.FieldBuilder.Build("Withdraw: ; cr;N0".T(EDCTx.JournalCarrier_Withdraw), Withdraw, "Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), CarrierBalance);
         }
 
         public void Ledger(Ledger mcl)
@@ -490,11 +494,10 @@ namespace EliteDangerousCore.JournalEvents
             Total = evt["Total"].Int();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Amount: ;;N0".T(EDCTx.JournalCarrier_Amount), Amount,
+            return BaseUtils.FieldBuilder.Build("Amount: ;;N0".T(EDCTx.JournalCarrier_Amount), Amount,
                                                 "Fuel Level: ;;N0".T(EDCTx.JournalCarrier_FuelLevel), Total);
-            detailed = "";
         }
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
@@ -502,10 +505,10 @@ namespace EliteDangerousCore.JournalEvents
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, "tritium", -Amount, 0);
         }
 
-        public void UpdateStats(Stats stats, string stationfaction)
+        public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if (stationfaction.HasChars())
-                stats.UpdateCommodity("tritium", -Amount, 0, stationfaction);
+                stats.UpdateCommodity(system, "tritium", -Amount, 0, stationfaction);
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -574,13 +577,12 @@ namespace EliteDangerousCore.JournalEvents
             CrewName = evt["CrewName"].Str();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Role: ".T(EDCTx.JournalEntry_Role), FriendlyCrewRole,
+            return BaseUtils.FieldBuilder.Build("Role: ".T(EDCTx.JournalEntry_Role), FriendlyCrewRole,
                                                 "Operation: ".T(EDCTx.JournalCarrier_Operation), Operation,
                                                 "Crew Member: ".T(EDCTx.JournalEntry_CrewMember), CrewName
                                                 );
-            detailed = "";
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -647,9 +649,9 @@ namespace EliteDangerousCore.JournalEvents
             Finance.ReservePercent = evt["ReservePercent"].Double();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), Finance.CarrierBalance,
+            return BaseUtils.FieldBuilder.Build("Carrier Balance: ; cr;N0".T(EDCTx.JournalCarrier_Balance), Finance.CarrierBalance,
                                                 "Reserve Balance: ; cr;N0".T(EDCTx.JournalCarrier_ReserveBalance), Finance.ReserveBalance,
                                                 "Available Balance: ; cr;N0".T(EDCTx.JournalCarrier_AvailableBalance), Finance.AvailableBalance,
                                                 "Reserve Percent: ;;N1".T(EDCTx.JournalCarrier_ReservePercent), Finance.ReservePercent,
@@ -660,7 +662,6 @@ namespace EliteDangerousCore.JournalEvents
                                                 "Tax Rate Refuel: ;;N1".T(EDCTx.JournalCarrier_TaxRateRefuel), Finance.TaxRateRefuel,
                                                 "Tax Rate Repair: ;;N1".T(EDCTx.JournalCarrier_TaxRateRepair), Finance.TaxRateRepair
                                                 );
-            detailed = "";
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -691,9 +692,9 @@ namespace EliteDangerousCore.JournalEvents
             Refund = evt["Refund"].LongNull();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build(
+            return BaseUtils.FieldBuilder.Build(
                                                 "", FriendlyOperation,
                                                 "", PackTheme,
                                                 "Tier: ".T(EDCTx.JournalCarrier_Tier), PackTier,
@@ -701,7 +702,6 @@ namespace EliteDangerousCore.JournalEvents
                                                 "Refund: ; cr;N0".T(EDCTx.JournalCarrier_Refund), Refund
                                                 );
 
-            detailed = "";
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -732,16 +732,15 @@ namespace EliteDangerousCore.JournalEvents
             Refund = evt["Refund"].LongNull();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", FriendlyOperation,
+            return BaseUtils.FieldBuilder.Build("", FriendlyOperation,
                                                 "", PackTheme,
                                                 "Tier: ".T(EDCTx.JournalCarrier_Tier), PackTier,
                                                 "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost,
                                                 "Refund: ; cr;N0".T(EDCTx.JournalCarrier_Refund), Refund
                                                 );
 
-            detailed = "";
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -800,32 +799,30 @@ namespace EliteDangerousCore.JournalEvents
             Order.Placed = this.EventTimeUTC;
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             if (Order.PurchaseOrder != null)
             {
-                info = BaseUtils.FieldBuilder.Build("Purchase: ".T(EDCTx.JournalCarrier_Purchase), Order.Commodity_Localised,
+                return BaseUtils.FieldBuilder.Build("Purchase: ".T(EDCTx.JournalCarrier_Purchase), Order.Commodity_Localised,
                                                     "", Order.PurchaseOrder,
                                                     "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Order.Price,
                                                     "<; (Blackmarket)", Order.BlackMarket);
             }
             else if (Order.SaleOrder != null)
             {
-                info = BaseUtils.FieldBuilder.Build("Sell: ".T(EDCTx.JournalCarrier_Sell), Order.Commodity_Localised,
+                return BaseUtils.FieldBuilder.Build("Sell: ".T(EDCTx.JournalCarrier_Sell), Order.Commodity_Localised,
                                                     "", Order.SaleOrder,
                                                     "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Order.Price,
                                                     "<; (Blackmarket)", Order.BlackMarket); 
             }
             else if ( CancelTrade != null && CancelTrade.Value == true )
             {
-                info = BaseUtils.FieldBuilder.Build("Cancel Sell of: ".T(EDCTx.JournalCarrier_CancelSell), Order.Commodity_Localised, "<; (Blackmarket)", Order.BlackMarket);
+                return BaseUtils.FieldBuilder.Build("Cancel Sell of: ".T(EDCTx.JournalCarrier_CancelSell), Order.Commodity_Localised, "<; (Blackmarket)", Order.BlackMarket);
             }
             else
             {
-                info = "Incorrect options for this entry, report journal entry to EDD Team";
+                return "Incorrect options for this entry, report journal entry to EDD Team";
             }
-
-            detailed = "";
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -848,11 +845,10 @@ namespace EliteDangerousCore.JournalEvents
             AllowNotorious = evt["AllowNotorious"].Bool();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Access: ".T(EDCTx.JournalCarrier_Access), DockingAccess,
+            return BaseUtils.FieldBuilder.Build("Access: ".T(EDCTx.JournalCarrier_Access), DockingAccess,
                                                 ";Allow Notorious".T(EDCTx.JournalCarrier_AllowNotorious), AllowNotorious);
-            detailed = "";
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -875,10 +871,9 @@ namespace EliteDangerousCore.JournalEvents
             Name = evt["Name"].Str();
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), Name, "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), Callsign);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Name: ".T(EDCTx.JournalCarrier_Name), Name, "Call Sign: ".T(EDCTx.JournalCarrier_Callsign), Callsign);
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -895,12 +890,6 @@ namespace EliteDangerousCore.JournalEvents
         public JournalCarrierJumpCancelled(JObject evt) : base(evt, JournalTypeEnum.CarrierJumpCancelled)
         {
             CarrierID = evt["CarrierID"].Long();
-        }
-
-        public override void FillInformation(out string info, out string detailed)
-        {
-            info = "";
-            detailed = "";
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -955,37 +944,59 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys) { return "Bartender Materials".TxID(EDCTx.JournalEntry_BartenderMaterials); }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             if (Items == null)
             {
-                info = BaseUtils.FieldBuilder.Build("", CarrierName);
-                detailed = "";
+                return BaseUtils.FieldBuilder.Build("", CarrierName);
             }
             else
             {
-                info = BaseUtils.FieldBuilder.Build("", CarrierName, "Prices on ; items".T(EDCTx.JournalCommodityPricesBase_PON), Items.Count);
-
-                detailed = "Items to buy: ".T(EDCTx.JournalCommodityPricesBase_Itemstobuy) + System.Environment.NewLine;
-                foreach (CCommodities c in Items)
-                {
-                    if (c.HasStock)
-                    {
-                        string name = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.fdname);
-                        detailed += string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.buyPrice) + Environment.NewLine;
-                    }
-                }
-
-                detailed += "Sell only Items: ".T(EDCTx.JournalCommodityPricesBase_SO) + System.Environment.NewLine;
-                foreach (CCommodities c in Items)
-                {
-                    if (!c.HasStock)
-                    {
-                        string name = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.fdname);
-                        detailed += string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.sellPrice) + Environment.NewLine;
-                    }
-                }
+                return BaseUtils.FieldBuilder.Build("", CarrierName, "Prices on ; items".T(EDCTx.JournalCommodityPricesBase_PON), Items.Count);
             }
+        }
+
+
+        public override string GetDetailed()
+        {
+            if (Items != null)
+            {
+                var sb = new System.Text.StringBuilder();
+
+                var stocked = Items.Where(x => x.HasStock);
+                if (stocked.Count() > 0)
+                {
+                    sb.Append("Items to buy: ".T(EDCTx.JournalCommodityPricesBase_Itemstobuy));
+                    sb.AppendCR();
+                    foreach (CCommodities c in stocked)
+                    {
+                        string name = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.fdname);
+                        sb.Append("  ");
+                        sb.Append(string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.buyPrice));
+                        sb.AppendCR();
+                    }
+                }
+
+                var sellonly = Items.Where(x => !x.HasStock);
+
+                if (sellonly.Count() > 0)
+                {
+                    sb.Append("Sell only Items: ".T(EDCTx.JournalCommodityPricesBase_SO));
+                    sb.AppendCR();
+
+                    foreach (CCommodities c in sellonly)
+                    {
+                        string name = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.fdname);
+                        sb.Append("  ");
+                        sb.Append(string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.sellPrice));
+                        sb.AppendCR();
+                    }
+                }
+
+                return sb.ToString();
+            }
+            else
+                return null;
         }
 
         // pattern also used in journaldocking stationinfo

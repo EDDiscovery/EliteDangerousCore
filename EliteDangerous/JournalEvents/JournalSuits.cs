@@ -27,7 +27,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;        // pre alpha 4 this was missing.
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                    membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    initialobject: this);        // read fields named in this structure matching JSON names
             if (Name.HasChars())    // protect against bad json
             {
                 FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
@@ -43,11 +45,11 @@ namespace EliteDangerousCore.JournalEvents
         public long Price { get; set; }
         public string[] SuitMods { get; set; }          // may be null or empty
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             string smod = SuitMods != null ? string.Join(", ", SuitMods.Select(x=>Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
-            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "Mods: ".T(EDCTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", FriendlyName, "Mods: ".T(EDCTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price);
+            
         }
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)
@@ -71,7 +73,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;        // pre alpha 4 this was missing
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                    membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                    initialobject: this);        // read fields named in this structure matching JSON names
             if (Name.HasChars())    // protect against bad json
             {
                 FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
@@ -93,10 +97,10 @@ namespace EliteDangerousCore.JournalEvents
         public long Price { get; set; }
         public string[] SuitMods { get; set; }      // may be null
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
+            
         }
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)
@@ -141,7 +145,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this);        // read fields named in this structure matching JSON names
 
             if (SuitName.HasChars())    // protect against bad json
             {
@@ -162,10 +168,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public SuitLoadout.LoadoutModule[] Modules { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< ++> ", LoadoutName);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< ++> ", LoadoutName);
+            
         }
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)      // executed first
@@ -201,7 +207,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags:System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
+                initialobject: this);        // read fields named in this structure matching JSON names
 
             if (SuitName.HasChars())
             {
@@ -221,10 +229,10 @@ namespace EliteDangerousCore.JournalEvents
         public ulong LoadoutID { get; set; }
         public SuitLoadout.LoadoutModule[] Modules { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID % 10000, "", SuitFriendlyName, "< ==> ", LoadoutName);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID % 10000, "", SuitFriendlyName, "< ==> ", LoadoutName);
+            
         }
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)      // executed first
@@ -260,7 +268,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true,
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this);        // read fields named in this structure matching JSON names
             if (SuitName.HasChars())
             {
                 SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
@@ -276,10 +286,10 @@ namespace EliteDangerousCore.JournalEvents
         public string LoadoutName { get; set; }
         public ulong LoadoutID { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< --> ", LoadoutName);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< --> ", LoadoutName);
+            
         }
 
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
@@ -298,7 +308,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this);        // read fields named in this structure matching JSON names
 
             if (SuitName.HasChars() && ModuleName.HasChars())
             {
@@ -327,11 +339,11 @@ namespace EliteDangerousCore.JournalEvents
         public string[] WeaponMods { get; set; }    // fdname, may be null or empty
         public ulong SuitModuleID { get; set; }         // aka weapon ID
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             string wmod = WeaponMods != null ? string.Join(", ", WeaponMods) : null;
-            info = BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID%10000, "", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< ++> ", ModuleNameFriendly, "Class: ".T(EDCTx.JournalEntry_Class), Class, "Mods: ".T(EDCTx.JournalEntry_Mods), wmod);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID%10000, "", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< ++> ", ModuleNameFriendly, "Class: ".T(EDCTx.JournalEntry_Class), Class, "Mods: ".T(EDCTx.JournalEntry_Mods), wmod);
+            
         }
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)      // executed first
@@ -371,7 +383,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this);        // read fields named in this structure matching JSON names
 
             if (SuitName.HasChars() && ModuleName.HasChars())
             {
@@ -401,10 +415,10 @@ namespace EliteDangerousCore.JournalEvents
         public int Class { get; set; }        // may not be there
         public string[] WeaponMods { get; set; }    // fdname, may be null or empty
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< --> ", ModuleNameFriendly);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< --> ", ModuleNameFriendly);
+            
         }
 
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
@@ -430,7 +444,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this);        // read fields named in this structure matching JSON names
 
             if (SuitName.HasChars())
             {
@@ -447,10 +463,10 @@ namespace EliteDangerousCore.JournalEvents
         public ulong LoadoutID { get; set; }
         public string LoadoutName { get; set; }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "<: ==> ", LoadoutName);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "<: ==> ", LoadoutName);
+            
         }
 
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
@@ -471,7 +487,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this);        // read fields named in this structure matching JSON names
             if (SuitName.HasChars())
             {
                 SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
@@ -491,10 +509,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public SuitLoadout.LoadoutModule[] Modules;
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< ==> ", LoadoutName);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "< ==> ", LoadoutName);
+            
         }
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)
@@ -523,7 +541,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, false, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, this);        // read fields named in this structure matching JSON names
+            evt.ToObjectProtected(this.GetType(), true, 
+                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
+                initialobject: this);        // read fields named in this structure matching JSON names
             if (Name.HasChars())
             {
                 FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
@@ -540,12 +560,12 @@ namespace EliteDangerousCore.JournalEvents
         public int Class { get; set; }
         public string[] SuitMods { get; set; }          // may be null or empty
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             long? p = Cost > 0 ? Cost : default(long?);
             string smod = SuitMods != null ? string.Join(", ", SuitMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
-            info = BaseUtils.FieldBuilder.Build("", Name_Localised, "< => ", Class, "Mods: ".T(EDCTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), p);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", Name_Localised, "< => ", Class, "Mods: ".T(EDCTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), p);
+            
         }
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)

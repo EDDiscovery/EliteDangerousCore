@@ -425,18 +425,19 @@ namespace EliteDangerousCore
 
         //find a named search, async
         public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist, Dictionary<string, List<ResultEntry>> results,
-                            string searchname,
+                            string filterdescription,
                             BaseUtils.Variables defaultvars,
-                            StarScan starscan, bool wantdebug)
+                            StarScan starscan, 
+                            bool wantreport)
         {
-            var search = Searches.Find(x => x.Name.Equals(searchname));
+            var search = Searches.Find(x => x.Name.Equals(filterdescription));
 
             var cond = search != null ? new BaseUtils.ConditionLists(search.Condition) : null;
 
             if (cond == null)
-                System.Diagnostics.Trace.WriteLine($"Queries did not find search {searchname} - probably the search list is out of date in surveyor");
+                System.Diagnostics.Trace.WriteLine($"Queries did not find search {filterdescription} - probably the search list is out of date in surveyor");
 
-            return Find(helist, results, searchname, cond, defaultvars, starscan, wantdebug);
+            return Find(helist, results, filterdescription, cond, defaultvars, starscan, wantreport);
         }
 
         public class ResultEntry
@@ -446,13 +447,17 @@ namespace EliteDangerousCore
         }
 
 
-        // find using cond, async. return string of result info.  Fill in results dictionary (already made)
+        // find using cond, async. return string of result info.
+        // Fill in results dictionary (already made) with lock
         // default vars can be null
+        // pass in the filterdescription which is the search name for the search, used to prevent repeats
         static public System.Threading.Tasks.Task<string> Find(List<HistoryEntry> helist,
-                                   Dictionary<string, List<ResultEntry>> results, string filterdescription,
+                                   Dictionary<string, List<ResultEntry>> results, 
+                                   string filterdescription,
                                    BaseUtils.ConditionLists cond,
                                    BaseUtils.Variables defaultvars,
-                                   StarScan starscan, bool wantreport)
+                                   StarScan starscan, 
+                                   bool wantreport)
         {
             return System.Threading.Tasks.Task.Run(() =>
             {
@@ -579,12 +584,13 @@ namespace EliteDangerousCore
                         {
                             if (results.TryGetValue((he.journalEntry as JournalScan).BodyName, out List<ResultEntry> prevres))
                             {
-                                // if we have a prev scan, we may have a repeat
+                                // we have results on this body, see if any is a prev scan
                                 var prevscan = prevres.Find(x => x.HistoryEntry.EntryType == JournalTypeEnum.Scan);
 
                                 // we have a scan, and its got the same search ID name (note discoveries/surveyor reuse the results structure across search names, so need to screen it out)
                                 if (prevscan != null && prevscan.FilterPassed.Equals(filterdescription))
                                 {
+                                    // then we nuke it
                                     string bodyname = (he.journalEntry as JournalScan).BodyName;
 
                                     // System.Diagnostics.Debug.WriteLine($"Detected repeated scan result on {bodyname}:`{filterdescription}` remove previous");
@@ -952,6 +958,7 @@ namespace EliteDangerousCore
             if (hescan != null)
             {
                 JournalScan js = hescan.journalEntry as JournalScan;
+
                 info = js.DisplayString();
 
                 if (hescan.ScanNode != null)
@@ -998,12 +1005,12 @@ namespace EliteDangerousCore
                 if (he.EntryType != JournalTypeEnum.Scan)      // for all the rest of the results, ignoring scan
                 {
                     string time = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(he.EventTimeUTC).ToString();
-                    he.FillInformation(out string info2, out string detailed);
                     if (info.HasChars())
-                        info = info.AppendPrePad(time + ": " + info2, Environment.NewLine);
+                        info = info.AppendPrePad(time + ": " + he.GetInfo(), Environment.NewLine);
                     else
-                        info = info.AppendPrePad(info2, Environment.NewLine);
+                        info = info.AppendPrePad(he.GetInfo(), Environment.NewLine);
 
+                    string detailed = he.GetDetailed();     // may be null
                     if (detailed.HasChars())
                     {
                         infotooltip += time + Environment.NewLine + detailed.LineIndentation("    ") + Environment.NewLine;

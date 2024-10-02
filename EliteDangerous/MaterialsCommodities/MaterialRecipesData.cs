@@ -142,6 +142,7 @@ namespace EliteDangerousCore
             }
         }
 
+        // always returns a string, may be empty
         public static string UsedInRecipesByFDName(string fdname, string join = ", ")
         {
             string s = Recipes.UsedInEngineeringByFDName(fdname, join);
@@ -149,6 +150,7 @@ namespace EliteDangerousCore
             return s;
         }
 
+        // always returns a string, may be empty
         public static string UsedInSythesisByFDName(string fdname, string join = ", ")
         {
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
@@ -161,6 +163,7 @@ namespace EliteDangerousCore
                 return "";
         }
 
+        // always returns a string, may be empty
         public static string UsedInEngineeringByFDName(string fdname, string join = ", ")
         {
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);

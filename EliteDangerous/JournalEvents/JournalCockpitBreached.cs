@@ -24,11 +24,5 @@ namespace EliteDangerousCore.JournalEvents
         public JournalCockpitBreached(JObject evt ) : base(evt, JournalTypeEnum.CockpitBreached)
         {
         }
-
-        public override void FillInformation(out string info, out string detailed) 
-        {         
-            info = "";
-            detailed = "";
-        }
     }
 }

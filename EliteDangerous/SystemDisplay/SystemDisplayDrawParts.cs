@@ -32,12 +32,11 @@ namespace EliteDangerousCore
             Point maximum = matpos;
             int noperline = 0;
 
-            string matclicktext = sn.DisplayMaterials(2, historicmats, curmats);
+            var matclicktext = new System.Text.StringBuilder(256);
+            sn.DisplayMaterials(matclicktext, 2, historicmats, curmats);
 
             foreach (KeyValuePair<string, double> sd in sn.Materials)
             {
-                string tooltip = sn.DisplayMaterial(sd.Key, sd.Value, historicmats, curmats);
-
                 Color fillc = Color.Yellow;
                 string abv = sd.Key.Substring(0, 1);
 
@@ -72,8 +71,11 @@ namespace EliteDangerousCore
 
                 BaseUtils.BitMapHelpers.DrawTextCentreIntoBitmap(ref mat, abv, Font, fillc.GetBrightness() > 0.4f ? Color.Black : Color.White);
 
+                var tooltip = new System.Text.StringBuilder(256);
+                sn.DisplayMaterial(tooltip, sd.Key, sd.Value, historicmats, curmats);
+
                 ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(
-                                new Rectangle(matpos.X, matpos.Y, matsize.Width, matsize.Height), mat, tooltip + "\n\n" + "All " + matclicktext, tooltip);
+                                new Rectangle(matpos.X, matpos.Y, matsize.Width, matsize.Height), mat, tooltip + "\n\n" + "All " + matclicktext.ToString(), tooltip.ToString());
 
                 pc.Add(ie);
 
@@ -167,16 +169,13 @@ namespace EliteDangerousCore
 
             string tip = "";
 
-            var notexpired = signallist.Where(x => !x.TimeRemaining.HasValue || x.ExpiryUTC >= DateTime.UtcNow).ToList();
-            notexpired.Sort(delegate (JournalFSSSignalDiscovered.FSSSignal l, JournalFSSSignalDiscovered.FSSSignal r) { return l.ClassOfSignal.CompareTo(r.ClassOfSignal); });
+            var notexpired = FSSSignal.NotExpiredSorted(signallist);
             foreach (var sig in notexpired)
                 tip = tip.AppendPrePad(sig.ToString(true), Environment.NewLine);
 
-            var expired = signallist.Where(x => x.TimeRemaining.HasValue && x.ExpiryUTC < DateTime.UtcNow).ToList();
-
+            var expired = FSSSignal.ExpiredSorted(signallist);
             if (expired.Count > 0)
             {
-                expired.Sort(delegate (JournalFSSSignalDiscovered.FSSSignal l, JournalFSSSignalDiscovered.FSSSignal r) { return r.ExpiryUTC.CompareTo(l.ExpiryUTC); });
                 tip = tip.AppendPrePad("Expired:".T(EDCTx.UserControlScan_Expired), Environment.NewLine + Environment.NewLine);
                 foreach (var sig in expired)
                     tip = tip.AppendPrePad(sig.ToString(true), Environment.NewLine);
@@ -198,16 +197,21 @@ namespace EliteDangerousCore
         }
 
 
-        // plot at leftmiddle the image of size, return bot left accounting for label 
-        // label can be null.
+        // plot at leftmiddle the image of size
         // returns max point and in imageloc the area drawn
         // you can shift right if required so you don't clip right
+        // return bot left accounting for label 
 
-        private Point CreateImageAndLabel(List<ExtPictureBox.ImageElement> c, Image i, Point leftmiddle, Size size, bool shiftrightifneeded, out Rectangle imageloc,
-                                    string[] labels, string ttext, bool imgowned = true, Color? backwash = null)
+        private Point CreateImageAndLabel(List<ExtPictureBox.ImageElement> pcs, 
+                                    Image image, 
+                                    Point leftmiddle, Size size, 
+                                    bool shiftrightifneeded, 
+                                    out Rectangle imageloc,
+                                    string[] labels,  // may be null, no labels
+                                    string ttext, bool imgowned = true, Color? backwash = null)
         {
 
-            ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(new Rectangle(leftmiddle.X, leftmiddle.Y - size.Height / 2, size.Width, size.Height), i, ttext, ttext, imgowned);
+            ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(new Rectangle(leftmiddle.X, leftmiddle.Y - size.Height / 2, size.Width, size.Height), image, ttext, ttext, imgowned);
 
             if (backwash.HasValue)  // this is dodgy as its filling source bitmap but it shows rect
             {
@@ -220,56 +224,59 @@ namespace EliteDangerousCore
                 }
             }
 
+            int laboff = 0;
             Point max = new Point(leftmiddle.X + size.Width, leftmiddle.Y + size.Height / 2);
 
-            var labelie = new List<ExtPictureBox.ImageElement>();
-            int laboff = 0;
-            int vpos = leftmiddle.Y + size.Height / 2;
-
-            foreach (string label in labels)
+            if (labels != null)
             {
-                if (label.HasChars())
+                var labelie = new List<ExtPictureBox.ImageElement>();
+                int vpos = leftmiddle.Y + size.Height / 2;
+
+                foreach (string label in labels)
                 {
-                    Font f = Font;
-                    int labcut = 0;
-                    if (label[0] == '_')
+                    if (label.HasChars())
                     {
-                        f = FontUnderlined;
-                        labcut = 1;
+                        Font f = Font;
+                        int labcut = 0;
+                        if (label[0] == '_')
+                        {
+                            f = FontUnderlined;
+                            labcut = 1;
+                        }
+
+                        Point labposcenthorz = new Point(leftmiddle.X + size.Width / 2, vpos);
+
+                        ExtPictureBox.ImageElement labie = new ExtPictureBox.ImageElement();
+
+                        using (var frmt = new StringFormat() { Alignment = StringAlignment.Center })
+                        {
+                            labie.TextCentreAutoSize(labposcenthorz, new Size(0, 1000), label.Substring(labcut), f, LabelColor, BackColor, frmt: frmt);
+                        }
+
+                        labelie.Add(labie);
+
+                        // if we are allowed, and we are left of the instructed position in the label, set the laboff
+
+                        if (shiftrightifneeded && labie.Location.X < leftmiddle.X)
+                            laboff = Math.Max(laboff, leftmiddle.X - labie.Location.X);
+
+                        vpos += labie.Location.Height;
                     }
-
-                    Point labposcenthorz = new Point(leftmiddle.X + size.Width / 2, vpos);
-
-                    ExtPictureBox.ImageElement labie = new ExtPictureBox.ImageElement();
-
-                    using (var frmt = new StringFormat() { Alignment = StringAlignment.Center })
-                    {
-                        labie.TextCentreAutoSize(labposcenthorz, new Size(0, 1000), label.Substring(labcut), f, LabelColor, BackColor, frmt: frmt);
-                    }
-
-                    labelie.Add(labie);
-
-                    // if we are allowed, and we are left of the instructed position in the label, set the laboff
-
-                    if (shiftrightifneeded && labie.Location.X < leftmiddle.X)      
-                        laboff = Math.Max(laboff, leftmiddle.X - labie.Location.X);
-
-                    vpos += labie.Location.Height;
                 }
-            }
 
-           // System.Diagnostics.Debug.WriteLine($"..Create Image and Label {leftmiddle} {size} {labels[0]} shiftright {laboff}");
+                // System.Diagnostics.Debug.WriteLine($"..Create Image and Label {leftmiddle} {size} {labels[0]} shiftright {laboff}");
 
-            foreach (var l in labelie)
-            {
-                l.Translate(laboff, 0);
-                c.Add(l);
-                max = new Point(Math.Max(max.X, l.Location.Right), Math.Max(max.Y, l.Location.Bottom));
+                foreach (var l in labelie)
+                {
+                    l.Translate(laboff, 0);
+                    pcs.Add(l);
+                    max = new Point(Math.Max(max.X, l.Location.Right), Math.Max(max.Y, l.Location.Bottom));
+                }
             }
 
             ie.Translate(laboff, 0);
             max = new Point(Math.Max(max.X, ie.Location.Right), Math.Max(max.Y, ie.Location.Bottom));
-            c.Add(ie);
+            pcs.Add(ie);
 
             imageloc = ie.Location;
 

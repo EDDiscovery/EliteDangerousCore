@@ -10,13 +10,10 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- *
  */
+
+
 using QuickJSON;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -61,8 +58,9 @@ namespace EliteDangerousCore.JournalEvents
 
         protected override JournalTypeEnum IconEventType { get { return SRV ? JournalTypeEnum.EmbarkSRV : JournalTypeEnum.Embark; } }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
+            string info = "";
             if (Taxi)
                 info = "Taxi".T(EDCTx.JournalEntry_Taxi);
             else if (SRV)
@@ -78,7 +76,7 @@ namespace EliteDangerousCore.JournalEvents
             if (FDStationType != StationDefinitions.StarportTypes.Unknown)
                 info += ", " + "Type: ".T(EDCTx.JournalEntry_Type) + StationDefinitions.ToLocalisedLanguage(FDStationType);
 
-            detailed = "";
+            return info;
         }
     }
 
@@ -125,8 +123,9 @@ namespace EliteDangerousCore.JournalEvents
 
         protected override JournalTypeEnum IconEventType { get { return SRV ? JournalTypeEnum.DisembarkSRV : JournalTypeEnum.Disembark; } }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
+            string info = "";
             if (Taxi)
                 info = "Taxi".T(EDCTx.JournalEntry_Taxi);
             else if (SRV)
@@ -140,7 +139,7 @@ namespace EliteDangerousCore.JournalEvents
             info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", StationName, "", body, "", StarSystem), ". ");
             if (FDStationType != StationDefinitions.StarportTypes.Unknown)
                 info += ", " + "Type: ".T(EDCTx.JournalEntry_Type) + StationDefinitions.ToLocalisedLanguage(FDStationType);
-            detailed = "";
+            return info;
         }
     }
 }

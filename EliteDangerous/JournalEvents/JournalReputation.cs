@@ -34,10 +34,9 @@ namespace EliteDangerousCore.JournalEvents
         public double? Independent { get; set; }
         public double? Alliance { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo() 
         {
-            info = BaseUtils.FieldBuilder.Build("Federation: ;;0.#".T(EDCTx.JournalReputation_Federation), Federation , "Empire: ;;0.#".T(EDCTx.JournalReputation_Empire), Empire, "Independent: ;;0.#".T(EDCTx.JournalReputation_Independent), Independent , "Alliance: ;;0.#".T(EDCTx.JournalReputation_Alliance), Alliance);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("Federation: ;;0.#".T(EDCTx.JournalReputation_Federation), Federation , "Empire: ;;0.#".T(EDCTx.JournalReputation_Empire), Empire, "Independent: ;;0.#".T(EDCTx.JournalReputation_Independent), Independent , "Alliance: ;;0.#".T(EDCTx.JournalReputation_Alliance), Alliance);
         }
 
     }

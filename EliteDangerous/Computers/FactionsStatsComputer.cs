@@ -17,144 +17,86 @@ using System.Collections.Generic;
 
 namespace EliteDangerousCore
 {
-    // this accumulates mission events and information from Stats.FactionStatsitic on a per faction basis
 
-    public class FactionStats
+    public class FactionStatsComputer
     {
-        public class MissionReward
-        {
-            public string Name { get; }
-            public int Count { get; private set; }
+        // per faction
+        // Data for a faction accumulated by the computer - mostly from Stats.FactionStatistics
+        // adding in mission events 
 
-            public MissionReward(string name)
+        public class FactionResults
+        {
+            public string Name { get; }     // faction name
+
+            // mission info
+
+            public class PerSystem          // per system additional info - missions for now
+            {
+                public ISystem System { get; set; }
+                public int Missions { get; set; }
+                public int MissionsInProgress { get; set; }
+                public int Influence { get; set; }
+                public int Reputation { get; set; }
+                public long MissionCredits { get; set; }
+
+                public class MissionReward
+                {
+                    public string Name { get; }
+                    public int Count { get; set; }
+
+                    public MissionReward(string name)
+                    {
+                        Name = name;
+                        Count = 0;
+                    }
+
+                    public void Add(int amount)
+                    {
+                        Count += amount;
+                    }
+                }
+
+                public Dictionary<string, MissionReward> MissionRewards { get; } = new Dictionary<string, MissionReward>();
+
+                public void AddMaterialCommodityReward(string rewardlocalisedname, int amount)
+                {
+                    MissionReward reward;
+                    if (!MissionRewards.TryGetValue(rewardlocalisedname, out reward))
+                    {
+                        reward = new MissionReward(rewardlocalisedname);
+                        MissionRewards.Add(rewardlocalisedname, reward);
+                    }
+                    reward.Add(amount);
+                }
+            }
+
+            // the additional per system data
+            public Dictionary<string, PerSystem> PerSystemData { get; private set; } = new Dictionary<string, PerSystem>();
+
+            // other stats from FactionStatistics
+            public Stats.FactionStatistics FactionStats { get; set; }
+
+            public FactionResults(string name)
             {
                 Name = name;
-                Count = 0;
-            }
-
-            public void Add(int amount)
-            {
-                Count += amount;
             }
         }
 
-        public class SystemInfluence
+        // Compute Stats from the mission list (total) filtered by start/end date,
+        // statsinfo (pass in latest if not limiting by date, or null to recompute over date range)
+        // whole history
+
+        public static SortedDictionary<string, FactionResults> Compute(List<MissionState> ml,   // total mission list
+                                                                Stats statsinfo, // if passed in null, then this will compute it. If passed in, uses this to populate FactionStats above
+                                                                HistoryList hist,   // total history
+                                                                DateTime startdateutc, DateTime enddateutc) // bounding times, must be set up
         {
-            public long SystemAddress { get; }
-            public int Influence { get; private set; }
-            public int Missions { get { return MissionsList.Count; } }
-            private List<ulong> MissionsList;
-
-            public SystemInfluence(long systemAddress, int influence, ulong missionId)
-            {
-                this.SystemAddress = systemAddress;
-                this.Influence = influence;
-                this.MissionsList = new List<ulong>();
-                this.MissionsList.Add(missionId);
-            }
-
-            public void AddInfluence(int influence, ulong missionId)
-            {
-                this.Influence += influence;
-                if (!this.MissionsList.Contains(missionId))
-                {
-                    this.MissionsList.Add(missionId);
-                }
-            }
-        }
-
-        public class FactionStatistics
-        {
-            public string Name { get; }
-            public int TotalMissions { get; private set; }
-            public int MissionsInProgress { get; private set; }
-            public int Influence { get; private set; }
-            public int Reputation { get; private set; }
-            public long MissionCredits { get; private set; }
-            public Dictionary<string, MissionReward> MissionRewards { get; }
-            public Dictionary<long, SystemInfluence> MissionSystemsWithInfluence { get; }
-
-            // these are the faction statsS
-            public Stats.FactionStatistics FactionStats { get; private set; }
-
-            public FactionStatistics(string name)
-            {
-                Name = name;
-                TotalMissions = 0;
-                Influence = 0;
-                Reputation = 0;
-                MissionCredits = 0;
-                MissionRewards = new Dictionary<string, MissionReward>();
-                this.MissionSystemsWithInfluence = new Dictionary<long, SystemInfluence>();
-                FactionStats = defstats;
-            }
-
-            private static Stats.FactionStatistics defstats = new Stats.FactionStatistics("-");
-
-            public void AddMissions(int amount)
-            {
-                TotalMissions += amount;
-            }
-
-            public void AddMissionsInProgress(int amount)
-            {
-                MissionsInProgress += amount;
-            }
-
-            public void AddInfluence(int amount)
-            {
-                Influence += amount;
-            }
-
-            public void AddReputation(int amount)
-            {
-                Reputation += amount;
-            }
-
-            public void AddMissionCredits(long amount)
-            {
-                MissionCredits += amount;
-            }
-
-            public void AddFactionStats(Stats.FactionStatistics mc)
-            {
-                FactionStats = mc;
-            }
-
-            public void AddReward(string name, int amount)
-            {
-                MissionReward reward;
-                if (!MissionRewards.TryGetValue(name, out reward))
-                {
-                    reward = new MissionReward(name);
-                    MissionRewards.Add(name, reward);
-                }
-                reward.Add(amount);
-            }
-
-            public void AddSystemInfluence(long systemAddress, int amount, ulong missionId)
-            {
-                SystemInfluence si;
-                if (!MissionSystemsWithInfluence.TryGetValue(systemAddress, out si))
-                {
-                    si = new SystemInfluence(systemAddress, amount, missionId);
-                    MissionSystemsWithInfluence.Add(systemAddress, si);
-                    //System.Diagnostics.Debug.WriteLine($"Faction sys influence made for {systemAddress}");
-                }
-                else
-                {
-                    si.AddInfluence(amount, missionId);
-                }
-            }
-        }
-
-        public static Dictionary<string, FactionStatistics> Compute(List<MissionState> ml, Dictionary<string, Stats.FactionStatistics> factioninfo,
-                                                            HistoryList hist, DateTime startdateutc, DateTime enddateutc)
-        {
-            var FactionList = new Dictionary<string, FactionStatistics>();
+            var FactionList = new SortedDictionary<string, FactionResults>();
 
             if ( ml != null )
             {
+                // first we make this.FactionStatistics and fill in with applicable missions between start/end dates
+
                 foreach (MissionState ms in ml)
                 {
                     bool withinstarttime = DateTime.Compare(ms.Mission.EventTimeUTC, startdateutc) >= 0 && DateTime.Compare(ms.Mission.EventTimeUTC, enddateutc) <= 0;
@@ -163,101 +105,93 @@ namespace EliteDangerousCore
 
                     if (withinstarttime || withincompletetime)
                     {
-                        var faction = ms.Mission.Faction;
-                        FactionStatistics factionStats;
-                        if (!FactionList.TryGetValue(faction, out factionStats))   // is faction present? if not create
-                        {
-                            factionStats = new FactionStatistics(faction);
-                            FactionList.Add(faction, factionStats);
-                        }
+                        if (!FactionList.TryGetValue(ms.Mission.Faction, out FactionResults factionStats))   // is faction present? if not create
+                            factionStats = FactionList[ms.Mission.Faction] = new FactionResults(ms.Mission.Faction);
+
+                        if (!factionStats.PerSystemData.TryGetValue(ms.OriginatingSystem.Name.ToLowerInvariant(), out FactionResults.PerSystem entry))
+                            entry = factionStats.PerSystemData[ms.OriginatingSystem.Name.ToLowerInvariant()] = new FactionResults.PerSystem() { System = ms.OriginatingSystem };
 
                         if (ms.Completed != null)           // effects/rewards are dependent on completion
                         {
-                            factionStats.AddMissions(1);        // 1 more mission, 
+                            entry.Missions++;
 
                             if (ms.Completed.FactionEffects != null)
                             {
                                 foreach (var fe in ms.Completed.FactionEffects)
                                 {
-                                    if (fe.Faction == faction)
+                                    if (fe.Faction == ms.Mission.Faction)
                                     {
                                         if (fe.ReputationTrend == "UpGood" && fe.Reputation?.Length > 0)
                                         {
-                                            factionStats.AddReputation(fe.Reputation.Length);
+                                            entry.Reputation += fe.Reputation.Length;
                                         }
 
                                         foreach (var si in fe.Influence)
                                         {
                                             if (si.Trend == "UpGood" && si.Influence?.Length > 0)
                                             {
-                                                factionStats.AddInfluence(si.Influence.Length);
-                                                factionStats.AddSystemInfluence(si.SystemAddress, si.Influence.Length, ms.Completed.MissionId);
+                                                entry.Influence += si.Influence.Length;
                                             }
                                         }
                                     }
                                 }
                             }
+
                             long credits = ms.Completed.Reward != null ? (long)ms.Completed.Reward : 0;
                             if (credits > 0)
                             {
-                                factionStats.AddMissionCredits(credits);
+                                entry.MissionCredits += credits;
                             }
                             if (ms.Completed.MaterialsReward != null)
                             {
                                 foreach (var mr in ms.Completed.MaterialsReward)
                                 {
-                                    factionStats.AddReward(mr.Name_Localised, mr.Count);
+                                    entry.AddMaterialCommodityReward(mr.Name_Localised, mr.Count);
                                 }
                             }
                             if (ms.Completed.CommodityReward != null)
                             {
                                 foreach (var cr in ms.Completed.CommodityReward)
                                 {
-                                    factionStats.AddReward(cr.Name_Localised, cr.Count);
+                                    entry.AddMaterialCommodityReward(cr.Name_Localised, cr.Count);
                                 }
                             }
                         }
                         else if (withinexpirytime && ms.State == MissionState.StateTypes.InProgress)
                         {
-                            factionStats.AddMissionsInProgress(1);
+                            entry.MissionsInProgress++;
                         }
                     }
 
                 }
             }  // end ml
 
-            // if we were not passed factioninfo stats, then we need to calculate it over the period
+            // if we were not passed stats, then we need to calculate it over the period
 
-            if ( factioninfo == null )    // don't have it, so we need to recalc
+            if ( statsinfo == null )    // don't have it, so we need to recalc
             { 
-                var stats = new Stats();      // reprocess this list completely
+                statsinfo = new Stats();      // reprocess this list completely
 
                 foreach (var he in HistoryList.FilterByDateRange(hist.EntryOrder(), startdateutc, enddateutc))
                 {
-                    stats.Process(he.journalEntry, he.Status.StationFaction);
+                    statsinfo.Process(he.journalEntry, he.System, he.Status.StationFaction);
                 }
-
-                factioninfo = stats.GetLastEntries(); // pick the last generation in there.
             }
 
             // if we have some stats on factions accumulated via the history, add to the faction list
 
-            if (factioninfo != null)
+            if (statsinfo != null)
             {
-                foreach (var fkvp in factioninfo)
+                foreach (var fkvp in statsinfo.GetFactionData())    // for all factions in statsinfo
                 {
-                    if (!FactionList.TryGetValue(fkvp.Value.Faction, out FactionStatistics factionStats))  // is faction present? if not create
-                    {
-                        factionStats = new FactionStatistics(fkvp.Value.Faction);
-                        FactionList.Add(fkvp.Value.Faction, factionStats);
-                    }
+                    if (!FactionList.TryGetValue(fkvp.Value.Faction, out FactionResults factionStats))   // is faction present? if not create
+                        factionStats = FactionList[fkvp.Value.Faction] = new FactionResults(fkvp.Value.Faction);
 
-                    FactionList[fkvp.Value.Faction].AddFactionStats(fkvp.Value);
+                    factionStats.FactionStats = fkvp.Value;        // set the FactionStats to the statsinfo
                 }
             }
 
             return FactionList;
         }
-
     }
 }

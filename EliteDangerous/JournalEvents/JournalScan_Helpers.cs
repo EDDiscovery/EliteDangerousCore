@@ -21,29 +21,28 @@ namespace EliteDangerousCore.JournalEvents
     public partial class JournalScan
     {
         // show material counts at the historic point and current.  Has trailing LF if text present.
-        public string DisplayMaterials(int indent = 0, List<MaterialCommodityMicroResource> historicmatlist = null, List<MaterialCommodityMicroResource> currentmatlist = null)
+        public void DisplayMaterials(StringBuilder sb, int indent = 0, List<MaterialCommodityMicroResource> historicmatlist = null, List<MaterialCommodityMicroResource> currentmatlist = null)
         {
-            StringBuilder scanText = new StringBuilder();
-
             if (HasMaterials)
             {
                 string indents = new string(' ', indent);
 
-                scanText.Append("Materials:\n".T(EDCTx.JournalScan_Materials));
+                sb.Append("Materials:".T(EDCTx.JournalScan_Materials));
+                sb.AppendSPC();
+
+                int index = 0;
                 foreach (KeyValuePair<string, double> mat in Materials)
                 {
-                    scanText.Append(indents + DisplayMaterial(mat.Key, mat.Value, historicmatlist, currentmatlist));
+                    if (index++ > 0)
+                        sb.Append(indents);
+                    DisplayMaterial(sb,mat.Key, mat.Value, historicmatlist, currentmatlist);
                 }
             }
-
-            return scanText.ToNullSafeString();
         }
-
-        public string DisplayMaterial(string fdname, double percent, List<MaterialCommodityMicroResource> historicmatlist = null,
-                                                                      List<MaterialCommodityMicroResource> currentmatlist = null)  // has trailing LF
+        // has trailing LF
+        public void DisplayMaterial(StringBuilder sb, string fdname, double percent, List<MaterialCommodityMicroResource> historicmatlist = null,
+                                                                      List<MaterialCommodityMicroResource> currentmatlist = null)  
         {
-            StringBuilder scanText = new StringBuilder();
-
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
 
             if (mc != null && (historicmatlist != null || currentmatlist != null))
@@ -59,42 +58,48 @@ namespace EliteDangerousCore.JournalEvents
                 if (current != null && (historic == null || historic.Count != current.Count))
                     matinfo += " Cur " + current.Count.ToString();
 
-                scanText.AppendFormat("{0} ({1}) {2} {3}% {4}\n", mc.TranslatedName, mc.Shortname, mc.TranslatedType, percent.ToString("N1"), matinfo);
+                sb.AppendFormat("{0}: ({1}) {2} {3}% {4}", mc.TranslatedName, mc.Shortname, mc.TranslatedType, percent.ToString("N1"), matinfo);
             }
             else
-                scanText.AppendFormat("{0} {1}%\n", System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(fdname.ToLowerInvariant()),
+                sb.AppendFormat("{0}: {1}%", System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(fdname.ToLowerInvariant()),
                                                             percent.ToString("N1"));
-
-            return scanText.ToNullSafeString();
+            sb.AppendCR();
         }
 
-        private string DisplayAtmosphere(int indent = 0)     // has trailing LF
+        private void DisplayAtmosphere(StringBuilder sb, int indent = 0)     // has trailing LF
         {
-            StringBuilder scanText = new StringBuilder();
             string indents = new string(' ', indent);
 
-            scanText.Append("Atmospheric Composition:\n".T(EDCTx.JournalScan_AtmosphericComposition));
+            sb.Append("Atmospheric Composition:".T(EDCTx.JournalScan_AtmosphericComposition));
+            sb.AppendSPC();
+            int index = 0;
             foreach (KeyValuePair<string, double> comp in AtmosphereComposition)
             {
-                scanText.AppendFormat(indents + "{0} - {1}%\n", comp.Key, comp.Value.ToString("N2"));
-            }
+                if (index++ > 0)
+                    sb.Append(indents);
 
-            return scanText.ToNullSafeString();
+                sb.AppendFormat("{0}: {1}%", comp.Key, comp.Value.ToString("N2"));
+                sb.AppendCR();
+            }
         }
 
-        private string DisplayComposition(int indent = 0)   // has trailing LF
+        private void DisplayComposition(StringBuilder sb, int indent = 0)   // has trailing LF
         {
-            StringBuilder scanText = new StringBuilder();
             string indents = new string(' ', indent);
 
-            scanText.Append("Planetary Composition:\n".T(EDCTx.JournalScan_PlanetaryComposition));
+            sb.Append("Planetary Composition:".T(EDCTx.JournalScan_PlanetaryComposition));
+            sb.AppendSPC();
+            int index = 0;
             foreach (KeyValuePair<string, double> comp in PlanetComposition)
             {
                 if (comp.Value > 0)
-                    scanText.AppendFormat(indents + "{0} - {1}%\n", comp.Key, comp.Value.ToString("N2"));
+                {
+                    if (index++ > 0)
+                        sb.Append(indents);
+                    sb.AppendFormat("{0}: {1}%", comp.Key, comp.Value.ToString("N2"));
+                    sb.AppendCR();
+                }
             }
-
-            return scanText.ToNullSafeString();
         }
 
 
@@ -199,16 +204,86 @@ namespace EliteDangerousCore.JournalEvents
 
         private ScanEstimatedValues EstimatedValues = null;
 
-        public ScanEstimatedValues GetEstimatedValues()
+        public ScanEstimatedValues GetEstimatedValues()         // get, compute if never computed before. It will never change after calc.
         {
             if (EstimatedValues == null)
+            {
                 EstimatedValues = new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdysseyEstimatedValues);
+            }
+
             return EstimatedValues;
         }
 
-        public ScanEstimatedValues RecalcEstimatedValues()
+        public bool PR31State { get { return IsNotPreviouslyDiscovered && IsPreviouslyMapped; } }         // condition of bodies in the bubble, marked not discovered, but mapped
+
+        // work out what is possible now
+        // previously in EstimatedValues
+        // showimpossiblevalues turns on reporting of values which cannot now be achieved
+        // values not possible are -1
+        public void GetPossibleEstimatedValues(bool showimpossiblevalues,
+                                            out long basevalue,
+                                            out long mappedvalue, out long mappedefficiently,                       // previous mapped and not mapped
+                                            out long firstmappedvalue, out long firstmappedefficiently,             // not previous mapped and not mapped
+                                            out long firstdiscoveredmappedvalue, out long firstdiscoveredmappedefficiently, // not previously discovred or mapped and not mapped
+                                            out long best // best value now possible
+                                            )
         {
-            return new ScanEstimatedValues(EventTimeUTC, IsStar, StarTypeID, IsPlanet, PlanetTypeID, Terraformable, nStellarMass, nMassEM, IsOdysseyEstimatedValues);
+            var ev = GetEstimatedValues();
+
+            basevalue = ev.EstimatedValueBase;
+            best = IsPreviouslyDiscovered ? basevalue : ev.EstimatedValueFirstDiscovered;       // if previously discovered, best base is basevalue, else its first discovered tag
+
+            mappedvalue = mappedefficiently = -1;
+            firstmappedvalue = firstmappedefficiently = -1;
+            firstdiscoveredmappedvalue = firstdiscoveredmappedefficiently = -1;
+
+            if (ev.EstimatedValueMapped > 0)        // if value is set by estimator (not on stars)
+            {
+                // work out if previous mapped but you've not mapped yet
+                bool notpreviouslymappedandnotmapped = IsPreviouslyMapped && Mapped == false;
+
+                if (showimpossiblevalues || notpreviouslymappedandnotmapped)
+                {
+                    mappedefficiently = ev.EstimatedValueMappedEfficiently;
+                    mappedvalue = ev.EstimatedValueMapped;
+                }
+
+                best = ev.EstimatedValueMappedEfficiently;
+            }
+
+
+            if (ev.EstimatedValueFirstMappedEfficiently > 0)
+            {
+                // Note EDSM bodies are marked as wasdiscovered=true, wasmapped=false (don't know so presume not)
+
+                // First Mapped: shown if previously discovered, not previously mapped and we have not mapped
+                bool firstmappossible = IsPreviouslyDiscovered && IsNotPreviouslyMapped && Mapped == false;
+
+                if (showimpossiblevalues || firstmappossible)
+                {
+                    firstmappedefficiently = ev.EstimatedValueFirstMappedEfficiently;
+                    firstmappedvalue = ev.EstimatedValueFirstMapped;
+                }
+
+                if (!IsPreviouslyMapped)            // if we can acheive a first map, thats good
+                    best = ev.EstimatedValueFirstMappedEfficiently;
+            }
+
+
+            if (ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently > 0)
+            {
+                // First Discovered Mapped: shown if not in pr31, not discovered, not mapped, have not mapped
+                bool firstdiscoveredmappossible = !PR31State && IsNotPreviouslyDiscovered && IsNotPreviouslyMapped && Mapped == false;
+
+                if (showimpossiblevalues || firstdiscoveredmappossible)
+                {
+                    firstdiscoveredmappedefficiently = ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently;
+                    firstdiscoveredmappedvalue = ev.EstimatedValueFirstDiscoveredFirstMapped;
+                }
+                
+                if (!IsPreviouslyDiscovered && !IsPreviouslyMapped)     // if we can acheive a first discover and first map, good
+                    best = ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently;
+            }
         }
 
         public void AccumulateJumponium(ref string jumponium, string sysname)

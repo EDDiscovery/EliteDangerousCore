@@ -43,10 +43,10 @@ namespace EliteDangerousCore.JournalEvents
             return sn;
         }
 
-        public override void FillInformation(out string info, out string detailed) 
+
+        public override string GetInfo()
         {
-            info = "In ".T(EDCTx.JournalApproachBody_In) + StarSystem;
-            detailed = "";
+            return "In ".T(EDCTx.JournalApproachBody_In) + StarSystem;
         }
     }
 
@@ -75,10 +75,9 @@ namespace EliteDangerousCore.JournalEvents
             return sn;
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = "In ".T(EDCTx.JournalLeaveBody_In) + StarSystem;
-            detailed = "";
+            return "In ".T(EDCTx.JournalLeaveBody_In) + StarSystem;
         }
     }
 
@@ -104,12 +103,12 @@ namespace EliteDangerousCore.JournalEvents
             StationEconomy = EconomyDefinitions.ToEnum(evt["StationEconomy"].StrNull());
             StationEconomy_Localised = JournalFieldNaming.CheckLocalisation(evt["StationEconomy_Localised"].StrNull(),  EconomyDefinitions.ToEnglish(StationEconomy));
 
-            EconomyList = evt["StationEconomies"]?.ToObjectQ<JournalDocked.Economies[]>();
+            EconomyList = EconomyDefinitions.ReadEconomiesClassFromJson(evt["StationEconomies"]);
 
-            StationServices = evt["StationServices"]?.ToObjectQ<StationDefinitions.StationServices[]>();
+            StationServices = StationDefinitions.ReadServicesFromJson(evt["StationServices"]);
 
             Faction = evt["StationFaction"].I("Name").StrNull();        // may not be present, so null if not
-            FactionState = FactionDefinitions.ToEnum(evt["StationFaction"].I("FactionState").StrNull());    // null if not present
+            FactionState = FactionDefinitions.FactionStateToEnum(evt["StationFaction"].I("FactionState").StrNull());    // null if not present
             FriendlyFactionState = FactionDefinitions.ToEnglish(FactionState); // null if not present
 
             StationAllegiance = AllegianceDefinitions.ToEnum( evt["StationAllegiance"].StrNull());
@@ -131,7 +130,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationGovernment_Localised { get; set; }// may be null
         public EconomyDefinitions.Economy StationEconomy { get; set; }// may be null
         public string StationEconomy_Localised { get; set; }// may be null
-        public JournalDocked.Economies[] EconomyList { get; set; }        // may be null
+        public EconomyDefinitions.Economies[] EconomyList { get; set; }        // may be null
         public StationDefinitions.StationServices[] StationServices { get; set; }       // may be null, fdnames
         public string Faction { get; set; }       //may be null
         public FactionDefinitions.State? FactionState { get; set; }       //may be null, FDName
@@ -144,40 +143,39 @@ namespace EliteDangerousCore.JournalEvents
         public string BodyDesignation { get; set; }
         public string StarSystem { get; set; }      // filled in by StarScan::AddApproachSettlement
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = Name_Localised + " (" + BodyName + ")";
+            return BaseUtils.FieldBuilder.Build("", Name_Localised, "< (;)", BodyName, "Latitude: ;°;F4".T(EDCTx.JournalEntry_Latitude), Latitude, "Longitude: ;°;F4".T(EDCTx.JournalEntry_Longitude), Longitude);
+        }
 
-            if (Latitude != null && Longitude != null)
-                info += " " + JournalFieldNaming.RLat(Latitude) + " " + JournalFieldNaming.RLong(Longitude);
-
-            detailed = "";
-
+        public override string GetDetailed()
+        {
             if (StationGovernment != GovernmentDefinitions.Government.Unknown)      // update 17
             {
-                detailed = BaseUtils.FieldBuilder.Build("Economy: ".T(EDCTx.JournalEntry_Economy), EconomyDefinitions.ToLocalisedLanguage(StationEconomy), 
+                System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
+
+                sb.Build("Economy: ".T(EDCTx.JournalEntry_Economy), EconomyDefinitions.ToLocalisedLanguage(StationEconomy),
                     "Government: ".T(EDCTx.JournalEntry_Government), GovernmentDefinitions.ToLocalisedLanguage(StationGovernment),
-                    "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, 
+                    "Faction: ".T(EDCTx.JournalEntry_Faction), Faction,
                     "< in state ".T(EDCTx.JournalEntry_instate), FactionDefinitions.ToLocalisedLanguage(FactionState),
                     "Allegiance: ".T(EDCTx.JournalEntry_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance));
 
                 if (StationServices != null)
                 {
-                    string l = "";
-                    foreach (var s in StationServices)
-                        l = l.AppendPrePad(StationDefinitions.ToLocalisedLanguage(s), ", ");
-                    detailed += System.Environment.NewLine + "Station services: ".T(EDCTx.JournalEntry_Stationservices) + l;
+                    sb.AppendCR();
+                    StationDefinitions.Build(sb, true, StationServices);
                 }
 
                 if (EconomyList != null)
                 {
-                    string l = "";
-                    foreach (JournalDocked.Economies e in EconomyList)
-                        l = l.AppendPrePad(EconomyDefinitions.ToLocalisedLanguage(e.Name) + " " + (e.Proportion * 100).ToString("0.#") + "%", ", ");
-                    detailed += System.Environment.NewLine + "Economies: ".T(EDCTx.JournalEntry_Economies) + l;
+                    sb.AppendCR();
+                    EconomyDefinitions.Build(sb, true, EconomyList);
                 }
-            }
 
+                return sb.ToString();
+            }
+            else
+                return null;
         }
 
     }

@@ -53,22 +53,20 @@ namespace EliteDangerousCore.JournalEvents
 
         public Passengers[] Manifest { get; set; }
 
-        public override void FillInformation(out string info, out string detailed) //U
+        public override string GetInfo() 
         {
-            info = "No Passengers".T(EDCTx.JournalEntry_NoPassengers);
-
             if (Manifest != null && Manifest.Length > 0)
             {
-                info = "";
+                StringBuilder sb = new System.Text.StringBuilder();
                 foreach (Passengers p in Manifest)
                 {
-                    if (info.Length > 0)
-                        info += ", ";
-                    info += BaseUtils.FieldBuilder.Build("", p.Type , "< ", p.Count , "; (VIP)" , p.VIP , ";(Wanted)".T(EDCTx.JournalEntry_Wanted), p.Wanted);
+                    sb.AppendSemiColonS().Build("", p.Type, "< ", p.Count, "; (VIP)", p.VIP, ";(Wanted)".T(EDCTx.JournalEntry_Wanted), p.Wanted);
                 }
-            }
 
-            detailed = "";
+                return sb.ToString();
+            }
+            else
+                return "No Passengers".T(EDCTx.JournalEntry_NoPassengers);
         }
     }
 }

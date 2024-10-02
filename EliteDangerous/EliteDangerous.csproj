@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;VANITYADD</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NOVANITYADD</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -37,8 +37,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="QuickJSON, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)\packages\RJKJSoft.QuickJSON.2.0.1\lib\net48\QuickJSON.dll</HintPath>
+    <Reference Include="QuickJSON, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RJKJSoft.QuickJSON.2.2.0\lib\net48\QuickJSON.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -85,6 +85,7 @@
     <Compile Include="EDSM\EDSMJournalSync.cs" />
     <Compile Include="EDSM\EDSMClass.cs" />
     <Compile Include="EDSM\EDSMLogFetcher.cs" />
+    <Compile Include="EliteDangerous\Thargoids.cs" />
     <Compile Include="Engineering\EngineeringData.cs" />
     <Compile Include="Engineering\EngineeringUnitTest.cs" />
     <Compile Include="EliteDangerous\ShipSlots.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="EliteDangerous\EstimatedValues.cs" />
     <Compile Include="EliteDangerous\FrontierFolder.cs" />
     <Compile Include="EliteDangerous\Translations.cs" />
+    <Compile Include="Journal\JournalTest.cs" />
     <Compile Include="Stats\EngineerCrafting.cs" />
     <Compile Include="Forms\CommanderForm.cs">
       <SubType>Form</SubType>

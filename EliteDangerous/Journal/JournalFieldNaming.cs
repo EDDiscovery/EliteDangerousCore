@@ -59,33 +59,6 @@ namespace EliteDangerousCore
             return cat;
         }
 
-        public static string RLat(double? lv)
-        {
-            if (lv.HasValue)
-                return RLat(lv.Value);
-            else
-                return null;
-        }
-
-
-        public static string RLat(double lv)      
-        {
-            return string.Format("{0:F4}°", lv);
-        }
-
-        public static string RLong(double? lv)
-        {
-            if (lv.HasValue)
-                return RLong(lv.Value);
-            else
-                return null;
-        }
-
-        public static string RLong(double lv)      
-        {
-            return string.Format("{0:F4}°", lv);
-        }
-
         static public string GetBetterMissionName(string inname)
         {
             return inname.Replace("_name", "").SplitCapsWordFull();

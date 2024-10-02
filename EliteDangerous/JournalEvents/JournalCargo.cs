@@ -50,7 +50,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             Vessel = evt["Vessel"].Str("Ship");         // ship is the default.. present in 3.3 only.  Other value SRV
 
-            Inventory = evt["Inventory"]?.ToObjectQ<Cargo[]>().OrderBy(x => x.Name)?.ToArray();
+            Inventory = evt["Inventory"]?.ToObjectQ<Cargo[]>()?.ToArray();
 
             EDDFromFile = evt["EDDFromFile"].Bool(false);  // EDD marker its from file - will only be present if cargo > Nov 20 and it was read from file
 
@@ -102,33 +102,41 @@ namespace EliteDangerousCore.JournalEvents
         public Cargo[] Inventory { get; set; }      // may be NULL
         public bool EDDFromFile { get; set; }       // set if from file, but only from nov 2020
 
-        public override void FillInformation(out string info, out string detailed) 
+        public override string GetInfo()
         {
-            info = "No Cargo".T(EDCTx.JournalEntry_NoCargo);
-            detailed = "";
-
             if (Inventory != null && Inventory.Length > 0)
             {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
+
                 int total = 0;
                 foreach (Cargo c in Inventory)
                     total += c.Count;
 
-                info = Vessel.Equals("Ship") ? "Ship".T(EDCTx.JournalCargo_CargoShip) : "SRV".T(EDCTx.JournalCargo_CargoSRV);
-                info += " ";
-
-                info += string.Format( "Cargo, {0} items".T(EDCTx.JournalEntry_Cargo), total);
-                detailed = "";
-
+                sb.Append(Vessel.Equals("Ship") ? "Ship".T(EDCTx.JournalCargo_CargoShip) : "SRV".T(EDCTx.JournalCargo_CargoSRV));
+                sb.AppendSPC();
+                sb.AppendFormat("Cargo, {0} items".T(EDCTx.JournalEntry_Cargo), total);
+                return sb.ToString();
+            }
+            else
+                return "No Cargo".T(EDCTx.JournalEntry_NoCargo);
+        }
+        public override string GetDetailed()
+        {
+            if (Inventory != null && Inventory.Length > 0)
+            {
+                var sb = new System.Text.StringBuilder(1024);
                 foreach (Cargo c in Inventory)
                 {
-                    if (detailed.Length > 0)
-                        detailed += Environment.NewLine;
                     int? stolen = null;
                     if (c.Stolen > 0)
                         stolen = c.Stolen;
-                    detailed += BaseUtils.FieldBuilder.Build("", c.FriendlyName, "; items".T(EDCTx.JournalEntry_items), c.Count , "(;)" , stolen, "<; (Mission Cargo)".T(EDCTx.JournalEntry_MissionCargo), c.MissionID != null);
+                    sb.AppendCR();
+                    sb.Build("", c.FriendlyName, "<: ; items".T(EDCTx.JournalEntry_items), c.Count, "(;)", stolen, "<; (Mission Cargo)".T(EDCTx.JournalEntry_MissionCargo), c.MissionID != null);
                 }
+                return sb.ToString();
             }
+            else
+                return null;
         }
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
@@ -175,12 +183,11 @@ namespace EliteDangerousCore.JournalEvents
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, -Count, 0);   // same in the srv or ship, we lose count
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", Type_Localised, "Count: ".T(EDCTx.JournalEntry_Count), Count,
+            return BaseUtils.FieldBuilder.Build("", Type_Localised, "Count: ".T(EDCTx.JournalEntry_Count), Count,
                             "<; (Mission Cargo)".T(EDCTx.JournalEntry_MissionCargo), MissionID != null,
                             ";Abandoned".T(EDCTx.JournalEntry_Abandoned), Abandoned, "PowerPlay: ".T(EDCTx.JournalEntry_PowerPlay), PowerplayOrigin);
-            detailed = "";
         }
     }
 
@@ -238,26 +245,24 @@ namespace EliteDangerousCore.JournalEvents
             mlist.CargoDepot(this);
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
             if (UpdateEnum == UpdateTypeEnum.Collect)
             {
-                info = BaseUtils.FieldBuilder.Build("Collected: ".T(EDCTx.JournalEntry_Collected), Count, "< of ".T(EDCTx.JournalEntry_of), FriendlyCargoType, "Total: ".T(EDCTx.JournalEntry_Total), ItemsDelivered, "To Go:".T(EDCTx.JournalEntry_ToGo), ItemsToGo, "Progress: ;%;N1".T(EDCTx.JournalEntry_Progress), ProgressPercent);
+                return BaseUtils.FieldBuilder.Build("Collected: ".T(EDCTx.JournalEntry_Collected), Count, "< of ".T(EDCTx.JournalEntry_of), FriendlyCargoType, "Total: ".T(EDCTx.JournalEntry_Total), ItemsDelivered, "To Go:".T(EDCTx.JournalEntry_ToGo), ItemsToGo, "Progress: ;%;N1".T(EDCTx.JournalEntry_Progress), ProgressPercent);
             }
             else if (UpdateEnum == UpdateTypeEnum.Deliver)
             {
-                info = BaseUtils.FieldBuilder.Build("Delivered: ".T(EDCTx.JournalEntry_Delivered), Count, "< of ".T(EDCTx.JournalEntry_of), FriendlyCargoType, "Total: ".T(EDCTx.JournalEntry_Total), ItemsDelivered, "To Go:".T(EDCTx.JournalEntry_ToGo), ItemsToGo, "Progress: ;%;N1".T(EDCTx.JournalEntry_Progress), ProgressPercent);
+                return BaseUtils.FieldBuilder.Build("Delivered: ".T(EDCTx.JournalEntry_Delivered), Count, "< of ".T(EDCTx.JournalEntry_of), FriendlyCargoType, "Total: ".T(EDCTx.JournalEntry_Total), ItemsDelivered, "To Go:".T(EDCTx.JournalEntry_ToGo), ItemsToGo, "Progress: ;%;N1".T(EDCTx.JournalEntry_Progress), ProgressPercent);
             }
             else if (UpdateEnum == UpdateTypeEnum.WingUpdate)
             {
-                info = BaseUtils.FieldBuilder.Build("Update, Collected: ".T(EDCTx.JournalEntry_Update), ItemsCollected, "Delivered: ".T(EDCTx.JournalEntry_Delivered), ItemsDelivered, "To Go:".T(EDCTx.JournalEntry_ToGo), ItemsToGo, "Progress Left: ;%;N1".T(EDCTx.JournalEntry_ProgressLeft), ProgressPercent);
+                return BaseUtils.FieldBuilder.Build("Update, Collected: ".T(EDCTx.JournalEntry_Update), ItemsCollected, "Delivered: ".T(EDCTx.JournalEntry_Delivered), ItemsDelivered, "To Go:".T(EDCTx.JournalEntry_ToGo), ItemsToGo, "Progress Left: ;%;N1".T(EDCTx.JournalEntry_ProgressLeft), ProgressPercent);
             }
             else
             {
-                info = "Unknown CargoDepot type " + UpdateType;
+                return "Unknown CargoDepot type " + UpdateType;
             }
-
-            detailed = "";
         }
     }
 
@@ -285,10 +290,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, 1, 0);     // collecting cargo in srv same as collecting cargo in ship. srv autotransfers it to ship
         }
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = BaseUtils.FieldBuilder.Build("", Type_Localised, ";Stolen".T(EDCTx.JournalEntry_Stolen), Stolen, "<; (Mission Cargo)".T(EDCTx.JournalEntry_MissionCargo), MissionID != null);
-            detailed = "";
+            return BaseUtils.FieldBuilder.Build("", Type_Localised, ";Stolen".T(EDCTx.JournalEntry_Stolen), Stolen, "<; (Mission Cargo)".T(EDCTx.JournalEntry_MissionCargo), MissionID != null);
         }
     }
 
@@ -316,18 +320,20 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override void FillInformation(out string info, out string detailed)
+        public override string GetInfo()
         {
-            info = "";
-            detailed = "";
-            if ( Transfers != null )
+            if (Transfers != null)
             {
+                var sb = new System.Text.StringBuilder(256);
                 foreach (var t in Transfers)
                 {
                     string d = t.Direction.Replace("to", "To ", StringComparison.InvariantCultureIgnoreCase);
-                    info = info.AppendPrePad(t.Type_Localised + "->" + d, ", ");
+                    sb.AppendPrePad(", ", t.Type_Localised + "->" + d);
                 }
+                return sb.ToString();
             }
+            else
+                return null;
         }
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool insrv) 
