@@ -44,10 +44,6 @@ namespace EliteDangerousCore
         public Dictionary<string, EDStar> StarClass { get; private set; } = new Dictionary<string, EDStar>();     // not in any particular order.
         public Stats Stats { get; private set; } = new Stats();               // stats on all entries, not generationally recorded
 
-        // History variables
-        public int CommanderId { get; private set; } = -999;                 // set by history load at end, indicating commander loaded
-
-
         // privates
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
 

@@ -54,41 +54,39 @@ namespace EliteDangerousCore
         public bool IsLocOrJump { get { return EntryType == JournalTypeEnum.FSDJump || EntryType == JournalTypeEnum.Location || EntryType == JournalTypeEnum.CarrierJump; } }
         public bool IsFuelScoop { get { return EntryType == JournalTypeEnum.FuelScoop; } }
 
-        public bool isTravelling { get { return TravelStatus.IsTravelling; } }
-        public TimeSpan TravelledSeconds { get { return TravelStatus.IsTravelling ? (EventTimeUTC - TravelStatus.TravelStartTimeUTC) : new TimeSpan(0); } }  // 0 if not travelling, else time since start
-        public double TravelledDistance { get { return TravelStatus.TravelledDistance(EventTimeUTC); } }
-        public TimeSpan TravelledTime { get { return TravelStatus.TravelledTime(EventTimeUTC); } }
-        public int TravelledJumps { get { return TravelStatus.TravelledJumps(EventTimeUTC); } }
-        public int TravelledMissingJumps { get { return TravelStatus.TravelledMissingjump; } }
-        public string TravelledStats { get { return TravelStatus.Stats(EventTimeUTC); } }
-        public HistoryEntryStatus.TravelStateType TravelState { get { return EntryStatus.TravelState; } }
-
-        public HistoryEntryStatus Status { get { return EntryStatus; } }
-        public string WhereAmI { get { return EntryStatus.StationName ?? EntryStatus.BodyName ?? "Unknown"; } }
+        public bool isTravelling { get { return travelStatus.IsTravelling; } }
+        public TimeSpan TravelledSeconds { get { return travelStatus.IsTravelling ? (EventTimeUTC - travelStatus.TravelStartTimeUTC) : new TimeSpan(0); } }  // 0 if not travelling, else time since start
+        public double TravelledDistance { get { return travelStatus.TravelledDistance(EventTimeUTC); } }
+        public TimeSpan TravelledTime { get { return travelStatus.TravelledTime(EventTimeUTC); } }
+        public int TravelledJumps { get { return travelStatus.TravelledJumps(EventTimeUTC); } }
+        public int TravelledMissingJumps { get { return travelStatus.TravelledMissingjump; } }
+        public string TravelledStats { get { return travelStatus.Stats(EventTimeUTC); } }
+        public HistoryEntryStatus Status { get { return entryStatus; } }
+        public string WhereAmI { get { return entryStatus.StationName ?? entryStatus.BodyName ?? "Unknown"; } }
 
         public int Visits { get; private set; }                                     // set by Historylist, visits up to this point in time
 
         public long? FullBodyID { get {                                     // only if at a body
                 if (System.SystemAddress.HasValue && Status.HasBodyID)
-                    return System.SystemAddress.Value | ((long)EntryStatus.BodyID.Value << 55);
+                    return System.SystemAddress.Value | ((long)entryStatus.BodyID.Value << 55);
                 else
                     return null;
             } }
 
-        public string GetNoteText { get { return journalEntry.SNC?.Note ?? ""; } }      // get SNC note text or empty string
+        public string GetNoteText() { return journalEntry.SNC?.Note ?? ""; }      // get SNC note text or empty string
 
         public string DebugStatus { get {      // Use as a replacement for note in travel grid to debug
                 return
                      WhereAmI
-                     + ", " + (EntryStatus.BodyType ?? "Null")
-                     + "," + (EntryStatus.BodyName ?? "Null")
-                     + " SN:" + (EntryStatus.StationName ?? "Null")
-                     + " ST:" + (EntryStatus.StationType ?? "Null")
-                     + " T:" + EntryStatus.TravelState
-                     + " S:" + EntryStatus.ShipID + "," + EntryStatus.ShipType
-                     + " GM:" + EntryStatus.GameMode
-                     + " W:" + EntryStatus.Wanted
-                     + " BA:" + EntryStatus.BodyApproached
+                     + ", " + (entryStatus.BodyType ?? "Null")
+                     + "," + (entryStatus.BodyName ?? "Null")
+                     + " SN:" + (entryStatus.StationName ?? "Null")
+                     + " ST:" + (entryStatus.StationType ?? "Null")
+                     + " T:" + entryStatus.TravelState
+                     + " S:" + entryStatus.ShipID + "," + entryStatus.ShipType
+                     + " GM:" + entryStatus.GameMode
+                     + " W:" + entryStatus.Wanted
+                     + " BA:" + entryStatus.BodyApproached
                      ;
             } }
 
@@ -100,23 +98,33 @@ namespace EliteDangerousCore
 
         // Calculated values, not from JE
 
+        [QuickJSON.JsonIgnore()]
         public uint MaterialCommodity { get; private set; } // generation index
+        [QuickJSON.JsonIgnore()]
         public Ship ShipInformation { get; private set; }     // may be null if not set up yet
+        [QuickJSON.JsonIgnore()]
         public ShipModulesInStore StoredModules { get; private set; }
+
+        [QuickJSON.JsonIgnore()]
         public uint MissionList { get; private set; }       // generation index
+        [QuickJSON.JsonIgnore()]
         public uint Weapons { get; private set; }           // generation index
+        [QuickJSON.JsonIgnore()]
         public uint Suits { get; private set; }             // generation index
+        [QuickJSON.JsonIgnore()]
         public uint Loadouts { get; private set; }          // generation index
+        [QuickJSON.JsonIgnore()]
         public uint Engineering { get; private set; }       // generation index
 
+        [QuickJSON.JsonIgnore()]
         public StarScan.ScanNode ScanNode { get; set; } // only for journal scan, and only after you called FillScanNode in history list.
 
         #endregion
 
         #region Private Variables
 
-        private HistoryEntryStatus EntryStatus { get; set; }
-        private HistoryTravelStatus TravelStatus { get; set; }
+        private HistoryEntryStatus entryStatus { get; set; }
+        private HistoryTravelStatus travelStatus { get; set; }
 
         #endregion
 
@@ -161,7 +169,7 @@ namespace EliteDangerousCore
             {
                 journalEntry = je,
                 System = isys,
-                EntryStatus = HistoryEntryStatus.Update(prev?.EntryStatus, je, isys.Name),
+                entryStatus = HistoryEntryStatus.Update(prev?.entryStatus, je, isys.Name),
             };
 
             return he;
@@ -225,7 +233,7 @@ namespace EliteDangerousCore
 
         public void UpdateTravelStatus(HistoryEntry prev)      // update travel status from previous given current.
         {
-            TravelStatus = HistoryTravelStatus.Update(prev?.TravelStatus, prev, this);
+            travelStatus = HistoryTravelStatus.Update(prev?.travelStatus, prev, this);
         }
 
         public void ReplaceJournalEntry(JournalEntry p, DateTime utc)

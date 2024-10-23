@@ -39,8 +39,8 @@ namespace EliteDangerousCore
         public JournalTypeEnum EventTypeID { get; private set; }
         public string EventTypeStr { get { return EventTypeID.ToString(); } }             // name of event. these two duplicate each other, string if for debuggin in the db view of a browser
 
-        public System.Drawing.Image Icon { get { return JournalTypeIcons.ContainsKey(this.IconEventType) ? JournalTypeIcons[this.IconEventType] : JournalTypeIcons[JournalTypeEnum.Unknown]; } }   // Icon to paint for this
-        public string GetIconPackPath { get { return "Journal." + IconEventType.ToString(); } } // its icon pack name..
+        public System.Drawing.Image Icon() { return JournalTypeIcons.ContainsKey(this.IconEventType) ? JournalTypeIcons[this.IconEventType] : JournalTypeIcons[JournalTypeEnum.Unknown]; }    // Icon to paint for this
+        public string GetIconPackPath() { return "Journal." + IconEventType.ToString(); } // its icon pack name..
 
         public DateTime EventTimeUTC { get; set; }
 
@@ -55,14 +55,14 @@ namespace EliteDangerousCore
         public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.IsHorizons ?? DefaultHorizonsFlag; } }  // horizons flag from loadgame
         public virtual bool IsOdyssey { get { return TravelLogUnit.Get(TLUId)?.IsOdyssey ?? DefaultOdysseyFlag; } } // odyseey flag from loadgame
 
-        public bool IsOdysseyEstimatedValues { get      // work out which estimated values algorithm to use
-            {
-                var tlu = TravelLogUnit.Get(TLUId);
-                if (tlu != null)
-                    return IsOdyssey || GameVersion.StartsWith("4.");       // if odyssey flag is set, OR we have a horizons 4.0 situation
-                else
-                    return DefaultOdysseyFlag;
-            } }
+        public bool IsOdysseyEstimatedValues() 
+        {
+            var tlu = TravelLogUnit.Get(TLUId);
+            if (tlu != null)
+                return IsOdyssey || GameVersion.StartsWith("4.");       // if odyssey flag is set, OR we have a horizons 4.0 situation
+            else
+                return DefaultOdysseyFlag;
+        }
 
         public virtual string GameVersion { get { return TravelLogUnit.Get(TLUId)?.GameVersion ?? ""; } }
         public virtual string Build { get { return TravelLogUnit.Get(TLUId)?.Build ?? ""; } }

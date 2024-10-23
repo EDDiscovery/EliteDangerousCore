@@ -23,8 +23,10 @@ namespace EliteDangerousCore
     public partial class HistoryList 
     {
         #region General gets
+        public int CommanderId { get; private set; } = -999;                 // set by history load at end, indicating commander loaded
         public bool HistoryLoaded { get { return CommanderId > -999; } }      // history is loaded
         public bool IsRealCommanderId { get { return CommanderId >= 0; } }      // history is loaded with a non hidden commander log etc
+        public string CommanderName() { return EDCommander.GetCommander(CommanderId)?.Name ?? null; }
         public string LastSystem { get; private set; }                          // last system seen in
 
         public int Count { get { return historylist.Count; } }
@@ -307,7 +309,7 @@ namespace EliteDangerousCore
 
         #region Status
 
-        public HistoryEntryStatus.TravelStateType CurrentTravelState() { HistoryEntry he = GetLast; return (he != null) ? he.TravelState : HistoryEntryStatus.TravelStateType.Unknown; }     //safe methods
+        public HistoryEntryStatus.TravelStateType CurrentTravelState() { HistoryEntry he = GetLast; return (he != null) ? he.Status.TravelState : HistoryEntryStatus.TravelStateType.Unknown; }     //safe methods
         public ISystem CurrentSystem() { HistoryEntry he = GetLast; return (he != null) ? he.System : null; }  // current system
 
         public double DistanceCurrentTo(string system)          // from current, if we have one, to system, if its found.
