@@ -35,7 +35,7 @@ namespace EliteDangerousCore
 
                     // find any stored scans associated with this scanbarycentre and assign
 
-                    var scannodelist = systemnode.Bodies.Where(x => x.ScanData?.Parents != null && x.ScanData.Parents.FindIndex(y => y.BodyID == jsa.BodyID) >= 0);   // all entries where JSA BodyID occurs
+                    var scannodelist = systemnode.Bodies().Where(x => x.ScanData?.Parents != null && x.ScanData.Parents.FindIndex(y => y.BodyID == jsa.BodyID) >= 0);   // all entries where JSA BodyID occurs
 
                     foreach (var scannode in scannodelist)
                     {

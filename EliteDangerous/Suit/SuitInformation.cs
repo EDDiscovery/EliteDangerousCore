@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2021 - 2021 EDDiscovery development team
+ * Copyright 2021 - 2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using BaseUtils;
@@ -44,6 +42,7 @@ namespace EliteDangerousCore
     public class SuitList
     {
         public Dictionary<ulong, Suit> Suits(uint gen) { return suits.Get(gen, x => x.Sold == false && x.FDName.HasChars()); }    // all valid unsold suits with valid names. fdname=null special entry
+
         public Suit Suit(ulong suit, uint gen) { return suits.Get(suit, gen); }    // get suit at gen
 
         public ulong CurrentID(uint gen) { return suits.Get(CURSUITID, gen)?.ID ?? 0; }

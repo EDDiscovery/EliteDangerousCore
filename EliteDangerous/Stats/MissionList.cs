@@ -73,26 +73,20 @@ namespace EliteDangerousCore
             return s;
         }
 
-        public string StateText
+        public string StateText()
         {
-            get
-            {
-                if (State != MissionState.StateTypes.Completed || Completed == null)
-                    return State.ToString();
-                else
-                    return Completed.Value.ToString("N0");
-            }
+            if (State != MissionState.StateTypes.Completed || Completed == null)
+                return State.ToString();
+            else
+                return Completed.Value.ToString("N0");
         }
 
-        public long Value
+        public long Value()
         {
-            get
-            {
-                if (State != MissionState.StateTypes.Completed || Completed == null)
-                    return 0;
-                else
-                    return Completed.Value;
-            }
+            if (State != MissionState.StateTypes.Completed || Completed == null)
+                return 0;
+            else
+                return Completed.Value;
         }
 
         public MissionState(JournalMissionAccepted m, ISystem s, string b)      // Start!

@@ -56,7 +56,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    foreach (var body in systemnode.Bodies)
+                    foreach (var body in systemnode.Bodies())
                     {
                         if ((body.FullName == jsaa.BodyName || body.CustomName == jsaa.BodyName) &&
                             (body.FullName != sys.Name || body.Level != 0))

@@ -24,16 +24,20 @@ namespace EliteDangerousCore
         [System.Diagnostics.DebuggerDisplay("{Name} {BuyPrice}")]
         public class OutfittingItem: IEquatable<OutfittingItem>
         {
-            public long id { get; set; }             // json fields
-            public string Name { get; set; }         // json field is fdevid, then its English Text name after normalisation
-            public long BuyPrice { get; set; }       // json
+            public long id { get; set; }             // json,frontier
+            public string Name { get; set; }         // json, frontier. Field from frontier json is fdevid, then its English Text name after normalisation
+            public long BuyPrice { get; set; }       // json, frontier
 
-            public string FDName { get; set; }      // FDName normalised
+            public string FDName { get; set; }      // FDName normalised from Name field from frontier json
 
+            [QuickJSON.JsonIgnore()]                // too big to output
             public ItemData.ShipModule ModuleInfo { get; set; }      // Module data from item data, may be null if module not found
 
             public string EnglishModTypeString { get { return ModuleInfo?.EnglishModTypeString ?? "Unknown"; } }
+
+            [QuickJSON.JsonIgnore()]                // no output
             public string TranslatedModTypeString { get { return ModuleInfo?.TranslatedModTypeString ?? "Unknown"; } }
+            [QuickJSON.JsonIgnore()]                // no output
             public string TranslatedModuleName { get { return ModuleInfo?.TranslatedModName ?? Name; } }
 
             public void Normalise()
@@ -57,16 +61,16 @@ namespace EliteDangerousCore
             }
         }
 
-        public OutfittingItem[] Items { get; private set; }     // can be null if its retrospecively read
         public string StationName { get; private set; }
         public string StarSystem { get; private set; }
-        public DateTime Datetimeutc { get; private set; }
+        public DateTime DateTimeUTC { get; private set; }
+        public OutfittingItem[] Items { get; private set; }     // can be null if its retrospecively read
 
         public Outfitting(string stationname, string starsystem, DateTime dt, OutfittingItem[] it = null)        // items can be null if no data captured at the point
         {
             StationName = stationname;
             StarSystem = starsystem;
-            Datetimeutc = dt;
+            DateTimeUTC = dt;
             Items = it;
             if (it != null)
             {
@@ -85,7 +89,7 @@ namespace EliteDangerousCore
 
         public string Ident()
         {
-            return StarSystem + ":" + StationName + " on " + EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Datetimeutc).ToString();
+            return StarSystem + ":" + StationName + " on " + EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(DateTimeUTC).ToString();
         }
 
         public List<string> ItemList() { return (from x1 in Items select x1.Name).ToList(); }
@@ -121,7 +125,7 @@ namespace EliteDangerousCore
                 if (!nolocrepeats || outfittings.Find(x => x.Location.Equals(yard.Location)) == null) // allow yard repeats or not in list
                 {
                     // if no last or different name or time is older..
-                    if (last == null || !yard.Location.Equals(last.Location) || (last.Datetimeutc - yard.Datetimeutc).TotalSeconds >= timeout)
+                    if (last == null || !yard.Location.Equals(last.Location) || (last.DateTimeUTC - yard.DateTimeUTC).TotalSeconds >= timeout)
                     {
                         outfittings.Add(yard);
                         last = yard;

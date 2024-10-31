@@ -31,6 +31,8 @@ namespace EliteDangerousCore
             Consumable,                                     // odyssey 4.0. 
         };
         public CatType Category { get; private set; }               // see above
+        
+        [QuickJSON.JsonIgnore()]
         public string TranslatedCategory { get; private set; }      // translation of above..
 
         public enum ItemType
@@ -42,6 +44,8 @@ namespace EliteDangerousCore
         };
 
         public ItemType Type { get; private set; }                  // and its type, for materials its commonality, for commodities its group ("Metals" etc), for microresources Unknown
+
+        [QuickJSON.JsonIgnore()]
         public string TranslatedType { get; private set; }          // translation of above..        
 
 
@@ -56,6 +60,8 @@ namespace EliteDangerousCore
 
 
         public MaterialGroupType MaterialGroup { get; private set; } // only for materials, grouping
+
+        [QuickJSON.JsonIgnore()]
         public string TranslatedMaterialGroup { get; private set; }
 
         // DO NOT REORDER, add new ones to category END
@@ -181,31 +187,33 @@ namespace EliteDangerousCore
             AMM_Grenade_EMP = 7000, AMM_Grenade_Frag, AMM_Grenade_Shield, Bypass, EnergyCell, HealthPack,
         }
 
-        public MCMR FDType { get; private set; }                    // the enum
+        [QuickJSON.JsonIgnore()] public MCMR FDType { get; private set; }                    // the enum
         public string FDName { get; private set; }                  // fdname, lower case..
 
-        public string TranslatedName { get; private set; }          // name of it in nice text. This gets translated
+        [QuickJSON.JsonIgnore()] public string TranslatedName { get; private set; }          // name of it in nice text. This gets translated
+        
         public string EnglishName { get; private set; }             // name of it in English
 
         public string Shortname { get; private set; }               // short abv. name
-        public Color Colour { get; private set; }                   // colour if its associated with one
+
+        [QuickJSON.JsonIgnore()] public Color Colour { get; private set; }                   // colour if its associated with one
         public bool Rarity { get; private set; }                    // if it is a rare commodity
 
-        public bool IsCommodity { get { return Category == CatType.Commodity; } }
-        public bool IsMaterial { get { return Category == CatType.Encoded || Category == CatType.Manufactured || Category == CatType.Raw; } }
-        public bool IsRaw { get { return Category == CatType.Raw; } }
-        public bool IsEncoded { get { return Category == CatType.Encoded; } }
-        public bool IsManufactured { get { return Category == CatType.Manufactured; } }
-        public bool IsEncodedOrManufactured { get { return Category == CatType.Encoded || Category == CatType.Manufactured; } }
-        public bool IsRareCommodity { get { return Rarity && IsCommodity; } }
-        public bool IsNormalCommodity { get { return !Rarity && IsCommodity; } }
-        public bool IsCommonMaterial { get { return Type == ItemType.Common || Type == ItemType.VeryCommon; } }
+        [QuickJSON.JsonIgnore()] public bool IsCommodity { get { return Category == CatType.Commodity; } }
+        [QuickJSON.JsonIgnore()] public bool IsMaterial { get { return Category == CatType.Encoded || Category == CatType.Manufactured || Category == CatType.Raw; } }
+        [QuickJSON.JsonIgnore()] public bool IsRaw { get { return Category == CatType.Raw; } }
+        [QuickJSON.JsonIgnore()] public bool IsEncoded { get { return Category == CatType.Encoded; } }
+        [QuickJSON.JsonIgnore()] public bool IsManufactured { get { return Category == CatType.Manufactured; } }
+        [QuickJSON.JsonIgnore()] public bool IsEncodedOrManufactured { get { return Category == CatType.Encoded || Category == CatType.Manufactured; } }
+        [QuickJSON.JsonIgnore()] public bool IsRareCommodity { get { return Rarity && IsCommodity; } }
+        [QuickJSON.JsonIgnore()] public bool IsNormalCommodity { get { return !Rarity && IsCommodity; } }
+        [QuickJSON.JsonIgnore()] public bool IsCommonMaterial { get { return Type == ItemType.Common || Type == ItemType.VeryCommon; } }
 
-        public bool IsMicroResources { get { return Category >= CatType.Item; } }     // odyssey 4.0
-        public bool IsConsumable { get { return Category == CatType.Consumable; } }     // odyssey 4.0
-        public bool IsData { get { return Category == CatType.Data; } }
-        public bool IsItem { get { return Category == CatType.Item; } }
-        public bool IsComponent { get { return Category == CatType.Component; } }
+        [QuickJSON.JsonIgnore()] public bool IsMicroResources { get { return Category >= CatType.Item; } }     // odyssey 4.0
+        [QuickJSON.JsonIgnore()] public bool IsConsumable { get { return Category == CatType.Consumable; } }     // odyssey 4.0
+        [QuickJSON.JsonIgnore()] public bool IsData { get { return Category == CatType.Data; } }
+        [QuickJSON.JsonIgnore()] public bool IsItem { get { return Category == CatType.Item; } }
+        [QuickJSON.JsonIgnore()] public bool IsComponent { get { return Category == CatType.Component; } }
 
         public bool IsJumponium
         {

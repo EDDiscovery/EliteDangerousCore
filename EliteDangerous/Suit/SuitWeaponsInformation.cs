@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2021 - 2021 EDDiscovery development team
+ * Copyright 2021 - 2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,12 +10,11 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using BaseUtils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EliteDangerousCore
@@ -42,7 +41,7 @@ namespace EliteDangerousCore
 
     public class SuitWeaponList
     {
-        public GenerationalDictionary<ulong, SuitWeapon> Weapons { get; private set; } = new GenerationalDictionary<ulong, SuitWeapon>();
+        public Dictionary<ulong, SuitWeapon> Weapons(uint gen) { return weapons.Get(gen, x => x.Sold == false && x.FDName.HasChars()); }    // all valid unsold weapons with valid names. fdname=null special entry
 
         public SuitWeaponList()
         {
@@ -50,17 +49,17 @@ namespace EliteDangerousCore
 
         public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, string[] weaponmods)
         {
-            Weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, weaponmods, false);
+            weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, weaponmods, false);
         }
 
         public bool VerifyPresence(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, string[] weaponmods)
         {
-            var w = Weapons.GetLast(id);
+            var w = weapons.GetLast(id);
 
             if (w == null)
             {
                 System.Diagnostics.Debug.WriteLine("Missing weapon {0} {1} {2}", id, fdname, namelocalised);
-                Weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, weaponmods, false);
+                weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, weaponmods, false);
                 return false;
             }
             else 
@@ -69,7 +68,7 @@ namespace EliteDangerousCore
                 if ( w.Class != cls || (w.WeaponMods == null && weaponmods != null ) || (w.WeaponMods != null && weaponmods != null && !w.WeaponMods.SequenceEqual(weaponmods)))
                 {
                     //System.Diagnostics.Debug.WriteLine("Update weapon info {0} {1} {2}", id, fdname, namelocalised);
-                    Weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, w.Price, cls, weaponmods, false);
+                    weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, w.Price, cls, weaponmods, false);
                     return false;
                 }
             }
@@ -79,12 +78,12 @@ namespace EliteDangerousCore
 
         public void Sell(DateTime time, ulong id)
         {
-            if (Weapons.ContainsKey(id))
+            if (weapons.ContainsKey(id))
             {
-                var last = Weapons.GetLast(id);
+                var last = weapons.GetLast(id);
                 if (last.Sold == false)       // if not sold
                 {
-                    Weapons[id] = new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, last.Class, last.WeaponMods, true);               // new entry with this time but sold
+                    weapons[id] = new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, last.Class, last.WeaponMods, true);               // new entry with this time but sold
                 }
                 else
                     System.Diagnostics.Debug.WriteLine("Weapons sold a weapon already sold " + id);
@@ -95,12 +94,12 @@ namespace EliteDangerousCore
 
         public void Upgrade(DateTime time, ulong id, int cls, string[] weaponmods)
         {
-            if (Weapons.ContainsKey(id))
+            if (weapons.ContainsKey(id))
             {
-                var last = Weapons.GetLast(id);
+                var last = weapons.GetLast(id);
                 if (last.Sold == false)       // if not sold
                 {                   // new entry with the new class
-                    Weapons[id] = new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, cls, weaponmods, false);
+                    weapons[id] = new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, cls, weaponmods, false);
                 }
                 else
                     System.Diagnostics.Debug.WriteLine("Weapons upgrade but already sold " + id);
@@ -113,17 +112,17 @@ namespace EliteDangerousCore
         {
             if (je is IWeaponInformation )
             {
-                Weapons.NextGeneration();     // increment number, its cheap operation even if nothing gets changed
+                weapons.NextGeneration();     // increment number, its cheap operation even if nothing gets changed
 
                 //System.Diagnostics.Debug.WriteLine("***********************" + je.EventTimeUTC + " GENERATION " + items.Generation);
 
                 IWeaponInformation e = je as IWeaponInformation;
                 e.WeaponInformation(this,whereami,system);
 
-                if (Weapons.UpdatesAtThisGeneration == 0)         // if nothing changed, abandon it.
+                if (weapons.UpdatesAtThisGeneration == 0)         // if nothing changed, abandon it.
                 {
                   //  System.Diagnostics.Debug.WriteLine("{0} {1} No changes for Weapon Generation {2} Abandon", je.EventTimeUTC.ToString(), je.EventTypeStr, Weapons.Generation);
-                    Weapons.AbandonGeneration();
+                    weapons.AbandonGeneration();
                 }
                 else
                 {
@@ -131,8 +130,10 @@ namespace EliteDangerousCore
                 }
             }
 
-            return Weapons.Generation;        // return the generation we are on.
+            return weapons.Generation;        // return the generation we are on.
         }
+
+        public GenerationalDictionary<ulong, SuitWeapon> weapons { get; private set; } = new GenerationalDictionary<ulong, SuitWeapon>();
 
     }
 }

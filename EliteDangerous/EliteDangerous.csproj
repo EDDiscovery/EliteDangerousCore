@@ -292,7 +292,7 @@
     </Compile>
     <Compile Include="Status\UIEvents.cs" />
     <Compile Include="Suit\SuitLoadouts.cs" />
-    <Compile Include="Suit\SuitWeapons.cs" />
+    <Compile Include="Suit\SuitWeaponsInformation.cs" />
     <Compile Include="Suit\SuitInformation.cs" />
     <Compile Include="SystemDB\EliteNameClassifier.cs" />
     <Compile Include="SystemDB\SQLiteConnectionSystem.cs" />

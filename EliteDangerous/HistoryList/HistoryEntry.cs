@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    [DebuggerDisplay("Event {EntryType} {System.Name} ({System.X,nq},{System.Y,nq},{System.Z,nq}) {EventTimeUTC} Inx:{Index} JID:{Journalid}")]
+    [DebuggerDisplay("Event {journalEntry.EventTypeID} {System.Name} ({System.X,nq},{System.Y,nq},{System.Z,nq}) {journalEntry.EventTimeUTC} Inx:{Index} JID:{JournalEntry.Id}")]
     public class HistoryEntry           // DONT store commander ID.. this history is externally filtered on it.
     {
         #region Public Variables
@@ -36,31 +36,42 @@ namespace EliteDangerousCore
                                                             // The Minimum is name 
                                                             // x/y/z can be NANs or position. 
 
+        [QuickJSON.JsonIgnore()]
         public JournalTypeEnum EntryType { get { return journalEntry.EventTypeID; } }
+        [QuickJSON.JsonIgnore()]
         public long Journalid { get { return journalEntry.Id; } }
         public EDCommander Commander { get { return EDCommander.GetCommander(journalEntry.CommanderId); } }
+        [QuickJSON.JsonIgnore()]
         public DateTime EventTimeUTC { get { return journalEntry.EventTimeUTC; } }  // local removed to stop us using it!.
-        public TimeSpan AgeOfEntry() { return DateTime.UtcNow - EventTimeUTC; }
+        public TimeSpan AgeOfEntry() { return DateTime.UtcNow - journalEntry.EventTimeUTC; }
 
         public string EventSummary { get { return journalEntry.SummaryName(System); } }
 
+        [QuickJSON.JsonIgnore()]
         public bool EdsmSync { get { return journalEntry.SyncedEDSM; } }           // flag populated from journal entry when HE is made. Have we synced?
+        [QuickJSON.JsonIgnore()]
         public bool EDDNSync { get { return journalEntry.SyncedEDDN; } }
+        [QuickJSON.JsonIgnore()]
         public bool StartMarker { get { return journalEntry.StartMarker; } }
+        [QuickJSON.JsonIgnore()]
         public bool StopMarker { get { return journalEntry.StopMarker; } }
-        public bool IsFSDCarrierJump { get { return EntryType == JournalTypeEnum.FSDJump || EntryType == JournalTypeEnum.CarrierJump; } }
-        public bool IsFSDLocationCarrierJump { get { return EntryType == JournalTypeEnum.FSDJump || EntryType == JournalTypeEnum.CarrierJump || EntryType == JournalTypeEnum.Location; } }
-        public bool IsFSD { get { return EntryType == JournalTypeEnum.FSDJump; } }
-        public bool IsLocOrJump { get { return EntryType == JournalTypeEnum.FSDJump || EntryType == JournalTypeEnum.Location || EntryType == JournalTypeEnum.CarrierJump; } }
-        public bool IsFuelScoop { get { return EntryType == JournalTypeEnum.FuelScoop; } }
+        [QuickJSON.JsonIgnore()]
+        public bool IsFSDCarrierJump { get { return  journalEntry.EventTypeID == JournalTypeEnum.FSDJump || journalEntry.EventTypeID == JournalTypeEnum.CarrierJump; } }
+        [QuickJSON.JsonIgnore()]
+        public bool IsFSDLocationCarrierJump { get { return journalEntry.EventTypeID == JournalTypeEnum.FSDJump || journalEntry.EventTypeID == JournalTypeEnum.CarrierJump || journalEntry.EventTypeID == JournalTypeEnum.Location; } }
+        [QuickJSON.JsonIgnore()]
+        public bool IsFSD { get { return journalEntry.EventTypeID == JournalTypeEnum.FSDJump; } }
+        [QuickJSON.JsonIgnore()]
+        public bool IsLocOrJump { get { return journalEntry.EventTypeID == JournalTypeEnum.FSDJump || journalEntry.EventTypeID == JournalTypeEnum.Location || journalEntry.EventTypeID == JournalTypeEnum.CarrierJump; } }
+        [QuickJSON.JsonIgnore()]
+        public bool IsFuelScoop { get { return journalEntry.EventTypeID == JournalTypeEnum.FuelScoop; } }
 
         public bool isTravelling { get { return travelStatus.IsTravelling; } }
-        public TimeSpan TravelledSeconds { get { return travelStatus.IsTravelling ? (EventTimeUTC - travelStatus.TravelStartTimeUTC) : new TimeSpan(0); } }  // 0 if not travelling, else time since start
-        public double TravelledDistance { get { return travelStatus.TravelledDistance(EventTimeUTC); } }
-        public TimeSpan TravelledTime { get { return travelStatus.TravelledTime(EventTimeUTC); } }
-        public int TravelledJumps { get { return travelStatus.TravelledJumps(EventTimeUTC); } }
+        public TimeSpan TravelledTimeSpan() { return travelStatus.IsTravelling ? (journalEntry.EventTimeUTC - travelStatus.TravelStartTimeUTC) : new TimeSpan(0); }
+        public long TravelledTimeSec { get { return travelStatus.IsTravelling ? (long)((journalEntry.EventTimeUTC - travelStatus.TravelStartTimeUTC).TotalSeconds) : 0; } }
+        public double TravelledDistance { get { return travelStatus.TravelledDistance(journalEntry.EventTimeUTC); } }
+        public int TravelledJumps { get { return travelStatus.TravelledJumps(journalEntry.EventTimeUTC); } }
         public int TravelledMissingJumps { get { return travelStatus.TravelledMissingjump; } }
-        public string TravelledStats { get { return travelStatus.Stats(EventTimeUTC); } }
         public HistoryEntryStatus Status { get { return entryStatus; } }
         public string WhereAmI { get { return entryStatus.StationName ?? entryStatus.BodyName ?? "Unknown"; } }
 
@@ -75,21 +86,6 @@ namespace EliteDangerousCore
 
         public string GetNoteText() { return journalEntry.SNC?.Note ?? ""; }      // get SNC note text or empty string
 
-        public string DebugStatus { get {      // Use as a replacement for note in travel grid to debug
-                return
-                     WhereAmI
-                     + ", " + (entryStatus.BodyType ?? "Null")
-                     + "," + (entryStatus.BodyName ?? "Null")
-                     + " SN:" + (entryStatus.StationName ?? "Null")
-                     + " ST:" + (entryStatus.StationType ?? "Null")
-                     + " T:" + entryStatus.TravelState
-                     + " S:" + entryStatus.ShipID + "," + entryStatus.ShipType
-                     + " GM:" + entryStatus.GameMode
-                     + " W:" + entryStatus.Wanted
-                     + " BA:" + entryStatus.BodyApproached
-                     ;
-            } }
-
         // These parts are held here so we don't create new Status Entries each time
 
         public long Credits { get; set; }       // set up by Historylist during ledger accumulation
@@ -99,9 +95,10 @@ namespace EliteDangerousCore
         // Calculated values, not from JE
 
         [QuickJSON.JsonIgnore()]
-        public uint MaterialCommodity { get; private set; } // generation index
-        [QuickJSON.JsonIgnore()]
         public Ship ShipInformation { get; private set; }     // may be null if not set up yet
+
+        [QuickJSON.JsonIgnore()]
+        public uint MaterialCommodity { get; private set; } // generation index
         [QuickJSON.JsonIgnore()]
         public ShipModulesInStore StoredModules { get; private set; }
 
@@ -245,8 +242,6 @@ namespace EliteDangerousCore
         #endregion
 
         #region Interaction
-
-
 
         public bool IsJournalEventInEventFilter(string[] events)
         {

@@ -121,7 +121,7 @@ namespace EliteDangerousCore
 
                 if (checkchildren)
                 {
-                    foreach (var body in Bodies)
+                    foreach (var body in Bodies())
                     {
                         if (body.IsBodyInFilter(filternames))
                             return true;
@@ -146,20 +146,17 @@ namespace EliteDangerousCore
                 return filternames.Contains(name, StringComparer.InvariantCultureIgnoreCase);
             }
 
-            public IEnumerable<ScanNode> Bodies
+            public IEnumerable<ScanNode> Bodies()
             {
-                get
-                {
-                    if (Children != null)                                   
-                    {       
-                        foreach (ScanNode sn in Children.Values)            
-                        {
-                            yield return sn;
+                if (Children != null)                                   
+                {       
+                    foreach (ScanNode sn in Children.Values)            
+                    {
+                        yield return sn;
 
-                            foreach (ScanNode c in sn.Bodies)          // recurse back up to go as deep as required
-                            {
-                                yield return c;
-                            }
+                        foreach (ScanNode c in sn.Bodies())          // recurse back up to go as deep as required
+                        {
+                            yield return c;
                         }
                     }
                 }

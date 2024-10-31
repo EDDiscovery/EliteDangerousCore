@@ -141,7 +141,7 @@ namespace EliteDangerousCore
                         if (reprocessPrimary && systemnode.StarNodes.Any(n => n.Key.Length > 1 && n.Value.NodeType == ScanNodeType.star))
                         {
                             // get bodies with scans
-                            List<ScanNode> bodies = systemnode.Bodies.Where(b => b.ScanData != null).ToList();
+                            List<ScanNode> bodies = systemnode.Bodies().Where(b => b.ScanData != null).ToList();
 
                             // reset the nodes to zero
                             systemnode.ClearChildren();

@@ -66,7 +66,7 @@ namespace EliteDangerousCore
         }
 
         // faction data, never null, may be empty!
-        public Dictionary<string,FactionStatistics> GetFactionData() => factions;
+        public Dictionary<string,FactionStatistics> FactionData => factions;
 
         // may return null
         public FactionStatistics GetFaction(string faction)

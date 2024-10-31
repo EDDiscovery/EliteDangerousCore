@@ -425,7 +425,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (SuitID != ulong.MaxValue)
             {
-                var w = weap.Weapons.GetLast(SuitModuleID);
+                var w = weap.weapons.GetLast(SuitModuleID);
                 if (w != null && w.Sold == false)
                 {
                     shp.VerifyPresence(EventTimeUTC, LoadoutID, LoadoutName, SuitID, null);

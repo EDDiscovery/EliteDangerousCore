@@ -325,7 +325,7 @@ namespace EliteDangerousCore
 
         public HistoryEntry GetByJID(long jid)
         {
-            return historylist.Find(x => x.Journalid == jid);
+            return historylist.FindLast(x => x.Journalid == jid);
         }
 
         public HistoryEntry GetByEntryNo(int entryno)
