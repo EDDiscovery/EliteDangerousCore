@@ -185,7 +185,7 @@ namespace EliteDangerousCore
             WeaponInventory, WeaponTestData, XenoDefenceProtocols,
 
             // new Ascendency 1 3/11/24
-            PowerPreperationSpyware, PowerSpyware, PowerResearchData, PowerEmployeeData, PowerFinancialRecords, PowerPropagandaData, PowerClassifiedData, PowerMegashipData,
+            PowerPreparationSpyware, PowerSpyware, PowerResearchData, PowerEmployeeData, PowerFinancialRecords, PowerPropagandaData, PowerClassifiedData, PowerMegashipData,
 
             //---------------------------------------------------------- Consumable
             AMM_Grenade_EMP = 7000, AMM_Grenade_Frag, AMM_Grenade_Shield, Bypass, EnergyCell, HealthPack,
@@ -1355,7 +1355,7 @@ namespace EliteDangerousCore
 
             // ascendency, 3/11/24
 
-            Add(CatType.Data, MCMR.PowerPreperationSpyware, "Power Injection Malware", "MRDPIM");
+            Add(CatType.Data, MCMR.PowerPreparationSpyware, "Power Injection Malware", "MRDPIM");
             Add(CatType.Data, MCMR.PowerSpyware, "Power Tracker Malware", "MRDPTM");
             Add(CatType.Data, MCMR.PowerResearchData, "Power Research Data", "MRDPRD");
             Add(CatType.Data, MCMR.PowerEmployeeData, "Power Association Data", "MRDPAD");
