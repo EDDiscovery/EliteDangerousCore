@@ -1008,6 +1008,14 @@ namespace EliteDangerousCore
                 { "python_nx_armour_mirrored", new ShipModule(-1,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Python Mk II Mirrored Surface Composite"){ Mass=53, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
                 { "python_nx_armour_reactive", new ShipModule(-1,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Python Mk II Reactive Surface Composite"){ Mass=53, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
+                // IDs are real, properties have no real data on these. holding for real data
+                { "mandalay_armour_grade1", new ShipModule(129030681,ShipModule.ModuleTypes.LightweightAlloy,"Mandalay Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
+                { "mandalay_armour_grade2", new ShipModule(129030682,ShipModule.ModuleTypes.ReinforcedAlloy,"Mandalay Reinforced Alloy"){ Mass=32, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
+                { "mandalay_armour_grade3", new ShipModule(129030683,ShipModule.ModuleTypes.MilitaryGradeComposite,"Mandalay Military Grade Composite"){ Mass=63, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
+                { "mandalay_armour_mirrored", new ShipModule(129030684,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Mandalay Mirrored Surface Composite"){ Mass=63, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
+                { "mandalay_armour_reactive", new ShipModule(129030685,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Mandalay Reactive Surface Composite"){ Mass=63, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
+                //end
+
                 // Auto field maint
 
                 { "int_repairer_size1_class1", new ShipModule(128667598,ShipModule.ModuleTypes.AutoField_MaintenanceUnit,"Auto Field Maintenance Unit Class 1 Rating E"){ Cost = 10000, Class = 1, Rating = "E", Integrity = 32, PowerDraw = 0.54, BootTime = 9, Ammo = 1000, RateOfRepairConsumption = 10, RepairCostPerMat = 0.012, AmmoCost = 1 } },
@@ -2208,6 +2216,7 @@ namespace EliteDangerousCore
                 { "viper_cockpit", new ShipModule(999999914,ShipModule.ModuleTypes.CockpitType,"Viper Cockpit" ) },
                 { "viper_mkiv_cockpit", new ShipModule(999999935,ShipModule.ModuleTypes.CockpitType,"Viper Mk IV Cockpit" ) },
                 { "vulture_cockpit", new ShipModule(999999919,ShipModule.ModuleTypes.CockpitType,"Vulture Cockpit" ) },
+                { "mandalay_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.CockpitType,"Mandalay Cockpit" ) },
 
                 { "int_codexscanner", new ShipModule(999999947,ShipModule.ModuleTypes.Codex,"Codex Scanner" ) },
                 { "hpt_shipdatalinkscanner", new ShipModule(999999940,ShipModule.ModuleTypes.DataLinkScanner,"Hpt Shipdatalinkscanner" ) },

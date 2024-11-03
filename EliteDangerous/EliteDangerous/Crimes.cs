@@ -64,6 +64,7 @@ namespace EliteDangerousCore
             ["piracy"] = "Piracy",
             ["recklessweaponsdischarge"] = "Discharging a weapon",
             ["shuttledestruction"] = "Destroying an APEX Shuttle",
+            ["stationTamperingMinor"] = "Tampering with a station",
         };
 
         // maps CrimeType FDname to an english string

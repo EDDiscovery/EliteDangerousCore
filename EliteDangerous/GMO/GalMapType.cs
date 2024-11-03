@@ -43,6 +43,7 @@ namespace EliteDangerousCore.GMO
             GeyserPOI,
             OrganicPOI,
             EDSMUnknown,
+            InhabitedSystem,
 
             MarxNebula, // non EDSM
         }
@@ -109,8 +110,9 @@ namespace EliteDangerousCore.GMO
             type.Add(new GalMapType("GECMEM", "Memorials", GroupType.Markers, VisibleObjectsType.historicalLocation, index++));     //?
             type.Add(new GalMapType("GECGGG", "Green Gas Giants", GroupType.Markers, VisibleObjectsType.planetFeatures, index++));     
             type.Add(new GalMapType("GECPC", "Planetary Circumnavigation", GroupType.Markers, VisibleObjectsType.planetFeatures, index++));     
-            type.Add(new GalMapType("GECGLITCH", "Glitches", GroupType.Markers, VisibleObjectsType.minorPOI, index++));     
+            type.Add(new GalMapType("GECGLITCH", "Glitches", GroupType.Markers, VisibleObjectsType.minorPOI, index++));
             type.Add(new GalMapType("GECSF", "System Features", GroupType.Markers, VisibleObjectsType.minorPOI, index++));     //?
+            type.Add(new GalMapType("GECIS", "Inhabited System", GroupType.Markers, VisibleObjectsType.minorPOI, index++));     //?
 
             // not EDSM/GEC
 

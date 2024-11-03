@@ -167,7 +167,7 @@ namespace EliteDangerousCore.GMO
             if (ty == null)
             {
                 ty = GalMapType.GalTypes.Find(x => x.VisibleType == GalMapType.VisibleObjectsType.EDSMUnknown);      // select edsm unknown
-                System.Diagnostics.Debug.WriteLine($"GMO unknown type {typename}");
+                System.Diagnostics.Debug.WriteLine($"******** GMO unknown type {typename}");
             }
 
             return ty;

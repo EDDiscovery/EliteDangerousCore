@@ -127,6 +127,12 @@ namespace EliteDangerousCore
         [PropertyNameAttribute("Optional USS Type, Localised")]
         public string USSTypeLocalised { get; set; }
 
+        [PropertyNameAttribute("Ascendency, Optional Spawning Power")]
+        public string SpawningPower { get; set; }     
+
+        [PropertyNameAttribute("Ascendency, Optional Opposing Power")]
+        public string OpposingPower { get; set; }     
+
         [PropertyNameAttribute("When signal was recorded")]
         public System.DateTime RecordedUTC { get; set; }        // when it was recorded
 
@@ -213,6 +219,8 @@ namespace EliteDangerousCore
                         "", USSTypeLocalised,
                         "Threat Level: ".T(EDCTx.FSSSignal_ThreatLevel), ThreatLevel,
                         "Faction: ".T(EDCTx.FSSSignal_Faction), SpawningFaction_Localised,
+                        "Power: ".T(EDCTx.JournalEntry_Power), SpawningPower,
+                        "vs " + "Power: ".T(EDCTx.JournalEntry_Power), OpposingPower,
                         "State: ".T(EDCTx.FSSSignal_State), spstate,
                         "Time: ".T(EDCTx.JournalEntry_Time), outoftime,
                         "Last Seen: ".T(EDCTx.FSSSignal_LastSeen), seen

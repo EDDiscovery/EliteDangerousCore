@@ -48,8 +48,8 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasCoordinate { get { return !float.IsNaN(StarPos.X); } }
         public bool IsTrainingEvent { get; private set; } // True if detected to be in training
 
-   
- 
+        public string ControllingPower { get; set; }     // only for signal types of USS
+
         protected JournalLocOrJump(DateTime utc, ISystem sys, JournalTypeEnum jtype, bool edsmsynced ) : base(utc, jtype, edsmsynced)
         {
             StarSystem = sys.Name;
@@ -309,7 +309,8 @@ namespace EliteDangerousCore.JournalEvents
                             "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance),
                             "Economy: ".T(EDCTx.JournalLocOrJump_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),
                             "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(Government),
-                            "Security: ".T(EDCTx.JournalLocOrJump_Security), SecurityDefinitions.ToLocalisedLanguage(Security));
+                            "Security: ".T(EDCTx.JournalLocOrJump_Security), SecurityDefinitions.ToLocalisedLanguage(Security),
+                            "Power: ".T(EDCTx.JournalEntry_Power), ControllingPower);
 
                 if (Factions != null)
                 {
@@ -486,7 +487,8 @@ namespace EliteDangerousCore.JournalEvents
                     "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(FactionState),
                     "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
                     "Economy: ".T(EDCTx.JournalLocOrJump_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),
-                    "Population: ".T(EDCTx.JournalLocOrJump_Population), Population);
+                    "Population: ".T(EDCTx.JournalLocOrJump_Population), Population,
+                    "Power: ".T(EDCTx.JournalEntry_Power), ControllingPower);
             }
 
             return sb.ToString();

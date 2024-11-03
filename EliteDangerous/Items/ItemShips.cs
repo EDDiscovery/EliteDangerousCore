@@ -183,6 +183,7 @@ namespace EliteDangerousCore
                 ["Viper"] = "Faulcon DeLacy",
                 ["Viper_MkIV"] = "Faulcon DeLacy",
                 ["Vulture"] = "Core Dynamics",
+                ["Mandalay"] = "Zorgon Peterson",
             };
 
             foreach (var kvp in Manu)
@@ -1267,6 +1268,37 @@ namespace EliteDangerousCore
             Class = 2,
             Shields = 335,
             Armour = 280,
+
+            // from edsy, not correct yet
+            MinThrust = 85.85,
+            BoostCost = 20,
+            FuelReserve = 0.83,
+            HeatCap = 260,
+            HeatDispMin = 2.68,
+            HeatDispMax = 52.05,
+            FuelCost = 50,
+            Hardness = 70,
+            Crew = 2,
+            FwdAcc = -999,
+            RevAcc = -999,
+            LatAcc = -999
+        };
+
+        private static ShipProperties mandalay = new ShipProperties()       // from inara
+        {
+            FDID = "Mandalay",
+            EDCDID = "Mandalay",
+            Manufacturer = "<code>",
+            HullMass = 230F, //inara
+            Name = "Mandalay",
+            Speed = 285, //inara
+            Boost = 357, //inara
+            HullCost = 17639220, //inara
+            Class = 2,  // inara, medium
+            Shields = 269,  //inara
+            Armour = 414, //inara
+
+            // from edsy normally, not known yet
             MinThrust = 85.85,
             BoostCost = 20,
             FuelReserve = 0.83,
@@ -1314,6 +1346,7 @@ namespace EliteDangerousCore
             { "krait_mkii",krait_mkii},
             { "krait_light",krait_light},
             { "mamba",mamba},
+            { "mandalay",mandalay},
             { "orca",orca},
             { "python",python},
             { "python_nx",python_nx},
