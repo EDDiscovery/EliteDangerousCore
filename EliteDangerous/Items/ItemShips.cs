@@ -1291,22 +1291,21 @@ namespace EliteDangerousCore
             Manufacturer = "<code>",
             HullMass = 230F, //inara
             Name = "Mandalay",
-            Speed = 285, //inara
-            Boost = 357, //inara
+            Speed = 280, //inara
+            Boost = 350, //inara
             HullCost = 17639220, //inara
             Class = 2,  // inara, medium
-            Shields = 269,  //inara
-            Armour = 414, //inara
+            Shields = 220,  //inara
+            Armour = 230, //inara
 
-            // from edsy normally, not known yet
-            MinThrust = 85.85,
-            BoostCost = 20,
-            FuelReserve = 0.83,
-            HeatCap = 260,
-            HeatDispMin = 2.68,
-            HeatDispMax = 52.05,
+            MinThrust = 71.5,
+            BoostCost = 14,
+            FuelReserve = 0.5,
+            HeatCap = 250,
+            HeatDispMin = 2.68, //not correct, unknown as of 03/11/2024
+            HeatDispMax = 51,
             FuelCost = 50,
-            Hardness = 70,
+            Hardness = 55,
             Crew = 2,
             FwdAcc = -999,
             RevAcc = -999,
