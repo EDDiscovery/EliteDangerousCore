@@ -28,6 +28,8 @@ namespace EliteDangerousCore
             Controlled,
             Turmoil,    // not seen in logs, but in manual
             HomeSystem,
+            Fortified,  // new Ascendency 
+            Stronghold,
         }
 
 

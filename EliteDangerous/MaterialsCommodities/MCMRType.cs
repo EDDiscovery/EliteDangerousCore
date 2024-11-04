@@ -24,7 +24,8 @@ namespace EliteDangerousCore
     {
         public enum CatType
         {
-            Commodity, Raw, Encoded, Manufactured,          // all
+            Commodity,                                      // all, commodity items
+            Raw, Encoded, Manufactured,                     // all, materials
             Item,                                           // odyssey 4.0.  Called goods in game
             Component,                                      // odyssey 4.0.  Called assets in game
             Data,                                           // odyssey 4.0.  
@@ -38,7 +39,7 @@ namespace EliteDangerousCore
         public enum ItemType
         {
             VeryCommon, Common, Standard, Rare, VeryRare,           // materials
-            Unknown,                                                // used for microresources
+            Unknown,                                                // used for microresources (Item/Component/Data/Consumable)
             ConsumerItems, Chemicals, Drones, Foods, IndustrialMaterials, LegalDrugs, Machinery, Medicines, Metals, Minerals, Narcotics, PowerPlay,     // commodities..
             Salvage, Slaves, Technology, Textiles, Waste, Weapons,
         };
@@ -154,14 +155,19 @@ namespace EliteDangerousCore
             TG_WreckageComponents,
             // August 29 2024
             TacticalCoreChip,
-            //---------------------------------------------------------- Item
+            //---------------------------------------------------------- Item/Goods
             AgriculturalProcessSample = 4000, BiochemicalAgent, BuildingSchematic, Californium, CastFossil, ChemicalProcessSample, ChemicalSample, CompactLibrary,
             CompressionLiquefiedGas, DeepMantleSample, DegradedPowerRegulator, GeneticRepairMeds, GeneticSample, GMeds, HealthMonitor, Hush,
             InertiaCanister, infinity, InorganicContaminant, insight, InsightDataBank, InsightEntertainmentSuite, IonisedGas, LargeCapacityPowerRegulator,
             Lazarus, MicrobialInhibitor, MutagenicCatalyst, NutritionalConcentrate, PersonalComputer, PersonalDocuments, PetrifiedFossil, Push,
             PyrolyticCatalyst, RefinementProcessSample, ShipSchematic, SuitSchematic, SurveillanceEquipment, SyntheticGenome, SyntheticPathogen, TrueFormFossil,
             UniversalTranslator, VehicleSchematic, WeaponSchematic,
-            //---------------------------------------------------------- Component
+
+            // new Ascendency 3/11/2024
+            PowerIndustrial,PowerMiscIndust, PowerInventory, PowerPlayMilitary, PowerElectronics, PowerComputer, PowerExperiment,
+            PowerAgriculture, PowerExtraction, PowerEquipment, PowerMedical, PowerMiscComputer, PowerSecurity, PowerPower, PowerReasearch,
+
+            //---------------------------------------------------------- Component/Assets
             Aerogel = 5000, CarbonFibrePlating, ChemicalCatalyst, ChemicalSuperbase, Circuitboard, CircuitSwitch, ElectricalFuse, ElectricalWiring,
             Electromagnet, EncryptedMemoryChip, Epinephrine, EpoxyAdhesive, Graphene, IonBattery, MemoryChip, MetalCoil,
             MicroElectrode, MicroHydraulics, MicroSupercapacitor, MicroThrusters, Microtransformer, Motor, OpticalFibre, OpticalLens,
@@ -183,6 +189,10 @@ namespace EliteDangerousCore
             SpectralAnalysisData, Spyware, StellarActivityLogs, SurveilleanceLogs, TacticalPlans, TaxRecords, TopographicalSurveys, TravelPermits,
             TroopDeploymentRecords, UnionmemberShip, VaccinationRecords, VaccineResearch, VIPSecurityDetail, VirologyData, Virus, VisitorRegister,
             WeaponInventory, WeaponTestData, XenoDefenceProtocols,
+
+            // new Ascendency 1 3/11/24
+            PowerPreparationSpyware, PowerSpyware, PowerResearchData, PowerEmployeeData, PowerFinancialRecords, PowerPropagandaData, PowerClassifiedData, PowerMegashipData,
+
             //---------------------------------------------------------- Consumable
             AMM_Grenade_EMP = 7000, AMM_Grenade_Frag, AMM_Grenade_Shield, Bypass, EnergyCell, HealthPack,
         }
@@ -465,11 +475,13 @@ namespace EliteDangerousCore
         }
         private static void Add(CatType catname, ItemType typeofit, MaterialGroupType mtg, MCMR id, string fdname, string englishtext, string shortname, bool rare = false)
         {
+#if DEBUG
             if (shortname.HasChars() && mcmrlist.Values.ToList().Find(x => x.Shortname.Equals(shortname, StringComparison.InvariantCultureIgnoreCase)) != null)
             {
                 System.Diagnostics.Trace.WriteLine("**** Shortname repeat for " + id);
+                System.Diagnostics.Debug.Assert(false);
             }
-
+#endif
             Color colour = Color.Green;
 
             if (typeofit == ItemType.VeryRare)
@@ -1179,6 +1191,26 @@ namespace EliteDangerousCore
             Add(CatType.Item, MCMR.UniversalTranslator, "Universal Translator", "MRIUT");
             Add(CatType.Item, MCMR.VehicleSchematic, "Vehicle Schematic", "MRIVS");
             Add(CatType.Item, MCMR.WeaponSchematic, "Weapon Schematic", "MRIWS");
+
+            // ascendency 3/11/24
+            Add(CatType.Item, MCMR.PowerIndustrial, "Industrial Component", "MRINCP");
+            Add(CatType.Item, MCMR.PowerMiscIndust, "Industrial Machinery", "MRINM");  
+            Add(CatType.Item, MCMR.PowerInventory, "Inventory Record", "MRPIR");
+            Add(CatType.Item, MCMR.PowerPlayMilitary, "Military Schematic", "MRPPM");
+            Add(CatType.Item, MCMR.PowerElectronics, "Electronics Package", "MRPPE");
+            Add(CatType.Item, MCMR.PowerComputer, "Computer Parts", "MRPPC");
+            Add(CatType.Item, MCMR.PowerExperiment, "Experimental Prototype", "MRPPEx");
+            Add(CatType.Item, MCMR.PowerAgriculture, "Agricultural Sample", "MRPAS");
+            Add(CatType.Item, MCMR.PowerExtraction, "Extraction Sample", "MRPPES");
+            Add(CatType.Item, MCMR.PowerEquipment, "Personal Protective Equipment", "MRPEM");
+            Add(CatType.Item, MCMR.PowerMedical, "Medical sample", "MRPME");
+            Add(CatType.Item, MCMR.PowerMiscComputer, "Data Storage Device","MRPMC");
+            Add(CatType.Item, MCMR.PowerSecurity, "Security Logs", "MRPSL");
+            Add(CatType.Item, MCMR.PowerPower, "Energy Regulator", "MRPPP");
+            Add(CatType.Item, MCMR.PowerReasearch, "Research Nodes", "MRPRD");
+
+            // Components
+
             Add(CatType.Component, MCMR.Aerogel, "Aerogel", "MRCA");
             Add(CatType.Component, MCMR.CarbonFibrePlating, "Carbon Fibre Plating", "MRCCFP");
             Add(CatType.Component, MCMR.ChemicalCatalyst, "Chemical Catalyst", "MRCCC");
@@ -1212,6 +1244,7 @@ namespace EliteDangerousCore
             Add(CatType.Component, MCMR.TungstenCarbide, "Tungsten Carbide", "MRCTC");
             Add(CatType.Component, MCMR.ViscoElasticPolymer, "Viscoelastic Polymer", "MRCVP");
             Add(CatType.Component, MCMR.WeaponComponent, "Weapon Component", "MRCWC");
+
             Add(CatType.Data, MCMR.AccidentLogs, "Accident Logs", "MRDACCLOGS");
             Add(CatType.Data, MCMR.AirqualityReports, "Air Quality Reports", "MRDAQR");
             Add(CatType.Data, MCMR.AtmosphericData, "Atmospheric Data", "MRDAD");
@@ -1327,6 +1360,21 @@ namespace EliteDangerousCore
             Add(CatType.Data, MCMR.WeaponInventory, "Weapon Inventory", "MRDWI");
             Add(CatType.Data, MCMR.WeaponTestData, "Weapon Test Data", "MRWTD");
             Add(CatType.Data, MCMR.XenoDefenceProtocols, "Xeno-Defence Protocols", "MRDXDP");
+
+            // ascendency, 3/11/24
+
+            Add(CatType.Data, MCMR.PowerPreparationSpyware, "Power Injection Malware", "MRDPIM");
+            Add(CatType.Data, MCMR.PowerSpyware, "Power Tracker Malware", "MRDPTM");
+            Add(CatType.Data, MCMR.PowerResearchData, "Power Research Data", "MRDPRD");
+            Add(CatType.Data, MCMR.PowerEmployeeData, "Power Association Data", "MRDPAD");
+            Add(CatType.Data, MCMR.PowerFinancialRecords, "Power Industrial Data", "MRDPID");
+            Add(CatType.Data, MCMR.PowerPropagandaData, "Power Political Data", "MRDPPD");
+            Add(CatType.Data, MCMR.PowerClassifiedData, "Power Classified Data", "MRDPCD");
+            Add(CatType.Data, MCMR.PowerMegashipData,"Power Megaship Data", "MRDPMD");
+
+
+            // consumable
+
             Add(CatType.Consumable, MCMR.AMM_Grenade_EMP, "Shield Disruptor", "MRCSD");
             Add(CatType.Consumable, MCMR.AMM_Grenade_Frag, "Frag Grenade", "MRCFG");
             Add(CatType.Consumable, MCMR.AMM_Grenade_Shield, "Shield Projector", "MRCSP");

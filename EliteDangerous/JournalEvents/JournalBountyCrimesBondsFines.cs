@@ -556,4 +556,22 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [JournalEntryType(JournalTypeEnum.HoloscreenHacked)]
+    public class JournalHoloscreenHacked : JournalEntry
+    {
+        public JournalHoloscreenHacked(JObject evt) : base(evt, JournalTypeEnum.HoloscreenHacked)
+        {
+            PowerBefore = evt["PowerBefore"].Str();
+            PowerAfter = evt["PowerAfter"].Str();
+        }
+
+        public string PowerBefore { get; set; }
+        public string PowerAfter { get; set; }
+
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("Power: ".TxID(EDCTx.JournalEntry_Power), PowerBefore, "< -> ", PowerAfter);
+        }
+    }
+
 }

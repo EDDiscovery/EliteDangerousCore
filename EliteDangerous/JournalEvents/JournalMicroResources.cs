@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2021-2023 EDDiscovery development team
+ * Copyright 2021-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,9 +10,8 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- *
  */
+
 using QuickJSON;
 using System;
 using System.Collections.Generic;
@@ -66,11 +65,11 @@ namespace EliteDangerousCore.JournalEvents
                 m.Normalise(cat);
         }
 
-        static public void List(StringBuilder sb, MicroResource[] mat)
+        static public void List(StringBuilder sb, MicroResource[] mat, string prefix = " ")
         {
             foreach (MicroResource m in mat.EmptyIfNull())
             {
-                sb.Append(BaseUtils.FieldBuilder.Build(" ", m.GetFriendlyName(), "; items".T(EDCTx.JournalEntry_items), m.Count));
+                sb.Append(BaseUtils.FieldBuilder.Build(prefix, m.GetFriendlyName(), "; items".T(EDCTx.JournalEntry_items), m.Count));
                 sb.AppendCR();
             }
         }
@@ -644,7 +643,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalUseConsumable(JObject evt) : base(evt, JournalTypeEnum.UseConsumable)
         {
             // Collect name, NameLocalised, Type.  Enable custom attributes to allow type to alias to category
-            evt.ToObjectProtected(Resource.GetType(), true, 
+            evt.ToObjectProtected(Resource.GetType(), true,
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     initialobject: Resource);        // read fields named in this structure matching JSON names
             Resource.Normalise(null);
@@ -669,6 +668,79 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
     }
+
+    [JournalEntryType(JournalTypeEnum.DeliverPowerMicroResources)]
+    public class JournalDeliverPowerMicroResources : JournalEntry, IMicroResourceJournalEntry
+    {
+        public JournalDeliverPowerMicroResources(JObject evt) : base(evt, JournalTypeEnum.DeliverPowerMicroResources)
+        {
+            TotalCount = evt["TotalCount"].Int();
+            MarketID = evt["MarketID"].Long();
+            MicroResources = evt["MicroResources"]?.ToObject<MicroResource[]>(false)?.ToArray();
+            MicroResource.Normalise(MicroResources, null);
+        }
+
+        public int TotalCount { get; set; }
+        public MicroResource[] MicroResources { get; set; }
+        public long MarketID { get; set; }
+
+        public override string GetInfo()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            if (MicroResources != null && MicroResources.Length > 0)
+            {
+                sb.Append("Items".T(EDCTx.JournalMicroResources_Items));
+                sb.Append(": ");
+                MicroResource.List(sb, MicroResources,"");
+            }
+
+            return sb.ToString();
+        }
+
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)    
+        {
+            foreach (var i in MicroResources)
+            {
+                mc.Change(EventTimeUTC, i.Category, i.Name, -i.Count, 0, MicroResource.BackPack, false);        // mark as removed
+            }
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.RequestPowerMicroResources)]
+    public class JournalRequestPowerMicroResources : JournalEntry, IMicroResourceJournalEntry
+    {
+        public JournalRequestPowerMicroResources(JObject evt) : base(evt, JournalTypeEnum.RequestPowerMicroResources)
+        {
+            TotalCount = evt["TotalCount"].Int();
+            MarketID = evt["MarketID"].Long();
+            MicroResources = evt["MicroResources"]?.ToObject<MicroResource[]>(false)?.ToArray();
+            MicroResource.Normalise(MicroResources, null);
+        }
+
+        public int TotalCount { get; set; }
+        public MicroResource[] MicroResources { get; set; }
+        public long MarketID { get; set; }
+
+        public override string GetInfo()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            if (MicroResources != null && MicroResources.Length > 0)
+            {
+                sb.Append("Items".T(EDCTx.JournalMicroResources_Items));
+                sb.Append(": ");
+                MicroResource.List(sb, MicroResources,"");
+            }
+
+            return sb.ToString();
+        }
+
+        public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)    // no action does not affect but need to mark as MR
+        {
+        }
+    }
+
 
     #endregion
 }

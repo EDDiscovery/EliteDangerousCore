@@ -201,11 +201,12 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderRankPilot", dt, eventData);
         }
 
-        static public JToken setCommanderRankPower(string name, int value, DateTime dt)  
+        static public JToken setCommanderRankPower(string name, int value, int merits, DateTime dt)  
         {
             JObject eventData = new JObject();
             eventData["powerName"] = name;
-            eventData["rankValue"] = value+1;       // rank here is 1-5, not 0-4
+            eventData["rankValue"] = value;       // from nov 24, rank here is 0-4, no +1
+            eventData["meritsValue"] = merits;      // new from nov 24
             return Event("setCommanderRankPower", dt, eventData);
         }
 

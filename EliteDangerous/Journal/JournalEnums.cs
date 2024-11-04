@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2019 EDDiscovery development team
+ * Copyright 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 namespace EliteDangerousCore
@@ -86,6 +84,7 @@ namespace EliteDangerousCore
         DatalinkScan = 130,
         DatalinkVoucher = 1020,
         DeleteSuitLoadout = 4010,
+        DeliverPowerMicroResources = 135,
         Died = 140,
         DiscoveryScan = 141,
         DisbandedSquadron = 142,
@@ -126,6 +125,7 @@ namespace EliteDangerousCore
         HeatDamage = 310,
         HeatWarning = 320,
         HullDamage = 330,
+        HoloscreenHacked = 335,
         Interdicted = 340,
         Interdiction = 350,
         InvitedToSquadron = 351,
@@ -205,6 +205,7 @@ namespace EliteDangerousCore
         RefuelAll = 720,
         RefuelPartial = 730,
         RenameSuitLoadout = 4016,
+        RequestPowerMicroResources = 735,
         Repair = 740,
         RepairAll = 745,
         RepairDrone = 747,

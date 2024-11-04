@@ -363,7 +363,22 @@ namespace EliteDangerousCore.Inara
                 case JournalTypeEnum.Powerplay: // VERIFIED 16/5/18
                     {
                         JournalPowerplay power = he.journalEntry as JournalPowerplay;
-                        eventstosend.Add(InaraClass.setCommanderRankPower(power.Power, power.Rank, power.EventTimeUTC));
+                        eventstosend.Add(InaraClass.setCommanderRankPower(power.Power, power.Rank, power.Merits, power.EventTimeUTC));
+                        break;
+                    }
+
+                case JournalTypeEnum.PowerplayLeave: // New Nov 24
+                    {
+                        JournalPowerplayLeave power = he.journalEntry as JournalPowerplayLeave;
+                        eventstosend.Add(InaraClass.setCommanderRankPower(power.Power, -1, 0, power.EventTimeUTC));
+                        break;
+                    }
+
+                case JournalTypeEnum.PowerplayDefect: // New Nov 24
+                    {
+                        JournalPowerplayDefect power = he.journalEntry as JournalPowerplayDefect;
+                        eventstosend.Add(InaraClass.setCommanderRankPower(power.FromPower, -1, 0, power.EventTimeUTC));
+                        eventstosend.Add(InaraClass.setCommanderRankPower(power.ToPower, 0, 0, power.EventTimeUTC));
                         break;
                     }
 

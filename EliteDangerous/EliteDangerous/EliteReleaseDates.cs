@@ -27,6 +27,7 @@ namespace EliteDangerousCore
         public static DateTime Odyssey5 = new DateTime(2021, 7, 1,12,0,0, DateTimeKind.Utc);
         public static DateTime Odyssey14 = new DateTime(2022, 11, 29, 12, 0, 0, DateTimeKind.Utc);
         public static DateTime OdysseyType8 = new DateTime(2024, 8, 7, 12, 0, 0, DateTimeKind.Utc);
+        public static DateTime Ascendency1 = new DateTime(2024, 10, 31, 12, 0, 0, DateTimeKind.Utc);
         public static DateTime GameEndTime = new DateTime(2999, 12, 14, 23, 59, 59, DateTimeKind.Utc); // not according to the forums, its already dead!
     }
     public static class EliteFixesDates

@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+//#define VANITYADD
 
 using System;
 using System.Collections.Generic;
@@ -67,7 +68,7 @@ namespace EliteDangerousCore
 
                                 ShipModule sm = new ShipModule(fid.Value, modtype, GenerateCandidateModuleName(text));
 
-                                if (!vanitymodules.ContainsKey(id))
+                                if (!vanitymodules.ContainsKey(id) && !shipmodules.ContainsKey(id) && !othershipmodules.ContainsKey(id))
                                 {
                                     System.Diagnostics.Debug.WriteLine($"Added new module {fid.Value}, {sm.ModuleID} {sm.ModType} {sm.EnglishModName}");
                                     vanitymodules[id] = sm;
@@ -161,7 +162,7 @@ namespace EliteDangerousCore
 
                     // auto update cs file - this breaks the debugger note and causes it to notice text updates. Just ignore
 
-                    string csfile = @"c:\code\eddiscovery\elitedangerouscore\elitedangerous\items\itemmodules.cs";
+                    string csfile = @"c:\code\eddiscovery2\elitedangerouscore\elitedangerous\items\itemmodules.cs";
 
                     if (System.IO.File.Exists(csfile))
                     {

@@ -115,6 +115,7 @@ namespace EliteDangerousCore.EDDN
             ["SystemSecurity"] = true,
             ["Population"] = true,
             ["PowerplayState"] = true,
+            ["ControllingPower"] = true,
             ["Powers"] = "[]",
             ["Factions"] = new JArray
             {
@@ -1073,6 +1074,10 @@ namespace EliteDangerousCore.EDDN
                         sj["SpawningFaction"] = sig.SpawningFaction;
                     if (sig.ThreatLevel != null)
                         sj["ThreatLevel"] = sig.ThreatLevel.Value;
+                    if (sig.SpawningPower != null)
+                        sj["SpawningPower"] = sig.SpawningPower;
+                    if (sig.OpposingPower != null)
+                        sj["OpposingPower"] = sig.OpposingPower;
 
                     ja.Add(sj);
                 }
