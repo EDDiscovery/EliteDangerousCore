@@ -27,6 +27,7 @@ SECTION JournalTypeEnum
 .CrewHire: "Crew Hire" => "Нанят член экипажа"
 .ClearImpound: "Clear Impound" @
 .DatalinkScan: "Datalink Scan" => "Сканирование канала данных"
+.DeliverPowerMicroResources: "Deliver Power Micro Resources" @
 .Died: "Died" => "Корабль уничтожен"
 .DiscoveryScan: "Discovery Scan" => "Сканирование системы"
 .Docked: "Docked" => "Стыковка"
@@ -55,6 +56,7 @@ SECTION JournalTypeEnum
 .HeatDamage: "Heat Damage" => "Повреждения от перегрева"
 .HeatWarning: "Heat Warning" => "Предупреждение о перегреве"
 .HullDamage: "Hull Damage" => "Повреждения корпуса"
+.HoloscreenHacked: "Holoscreen Hacked" @
 .Interdicted: "Interdicted" => "Ваш корабль перехвачен"
 .Interdiction: "Interdiction" => "Инициирован перехват"
 .JetConeBoost: "Jet Cone Boost" => "Перегрузка FSD (джет)"
@@ -124,6 +126,7 @@ SECTION JournalTypeEnum
 .RepairAll: "Repair All" => "Корабль полностью отремонтирован"
 .RepairDrone: "Repair Drone" => "Корабль отремонтирован дроном"
 .Reputation: "Reputation" => "Репутация"
+.RequestPowerMicroResources: "Request Power Micro Resources" @
 .RestockVehicle: "Restock Vehicle" => "Покупка транспорта"
 .Resurrect: "Resurrect" => "Воскрешение"
 .SAASignalsFound: "SAA Signals Found" @
@@ -1069,8 +1072,8 @@ SECTION JournalEntry
 .LostTarget: "Lost Target" => "Цель потеряна"
 .ShieldsDown: "Shields Down;Shields Up" => "Щиты отключены;Щиты включены"
 .Category: "Category: " => "Категория: "
-.Latitude: "Latitude: " => "широта: "
-.Longitude: "Longitude: " => "долгота: "
+.Latitude: "Latitude: ;°;F4" => "широта: "
+.Longitude: "Longitude: ;°;F4" => "долгота: "
 .Num: "Num: " => "кол-во: "
 .Ships: "Ships" => "корабл."
 .Distance: "Distance: ; ly;0.0" => "расстояние: ; св. л.;0.0"

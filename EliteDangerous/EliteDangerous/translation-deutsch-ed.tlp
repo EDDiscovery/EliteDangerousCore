@@ -894,6 +894,29 @@ SECTION MaterialCommodityMicroResourceType
 .thargoidorgansample: "Organ Sample" => "Organprobe"
 .tg_abrasion01: "Heat Exposure Specimen" => "Hitzeexponierte Probe"
 .tacticalcorechip: "Tactical Core Chip" @
+.powerindustrial: "Industrial Component" @
+.powermiscindust: "Industrial Machinery" @
+.powerinventory: "Inventory Record" @
+.powerplaymilitary: "Military Schematic" @
+.powerelectronics: "Electronics Package" @
+.powercomputer: "Computer Parts" @
+.powerexperiment: "Experimental Prototype" @
+.poweragriculture: "Agricultural Sample" @
+.powerextraction: "Extraction Sample" @
+.powerequipment: "Personal Protective Equipment" @
+.powermedical: "Medical sample" @
+.powermisccomputer: "Data Storage Device" @
+.powersecurity: "Security Logs" @
+.powerpower: "Energy Regulator" @
+.powerreasearch: "Research Nodes" @
+.powerpreparationspyware: "Power Injection Malware" @
+.powerspyware: "Power Tracker Malware" @
+.powerresearchdata: "Power Research Data" @
+.poweremployeedata: "Power Association Data" @
+.powerfinancialrecords: "Power Industrial Data" @
+.powerpropagandadata: "Power Political Data" @
+.powerclassifieddata: "Power Classified Data" @
+.powermegashipdata: "Power Megaship Data" @
 
 SECTION EngineeringData
 
@@ -1055,6 +1078,7 @@ SECTION Crimes
 .piracy: "Piracy" => "Piraterie"
 .recklessweaponsdischarge: "Discharging a weapon" => "Abfeuern einer Waffe"
 .shuttledestruction: "Destroying an APEX Shuttle" => "Zerstörung eines APEX-Shuttles"
+.stationTamperingMinor: "Tampering with a station" @
 
 SECTION FactionStates
 
@@ -1187,6 +1211,8 @@ SECTION PowerPlayStates
 .Controlled: "Controlled" => "Kontrolliert"
 .Turmoil: "In turmoil" => "In Aufruhr"
 .HomeSystem: "Home system" => "Heimatsystem"
+.Fortified: "Fortified" @
+.Stronghold: "Stronghold" @
 
 SECTION ModuleTypeNames
 

@@ -27,6 +27,7 @@ SECTION JournalTypeEnum
 .CrewHire: "Crew Hire" => "Embauche Équipage"
 .ClearImpound: "Clear Impound" @
 .DatalinkScan: "Datalink Scan" => "Scan de liaison de données"
+.DeliverPowerMicroResources: "Deliver Power Micro Resources" @
 .Died: "Died" => "Mort"
 .DiscoveryScan: "Discovery Scan" => "Scan de découverte"
 .Docked: "Docked" => "Apponté"
@@ -55,6 +56,7 @@ SECTION JournalTypeEnum
 .HeatDamage: "Heat Damage" => "Dégats thermiques"
 .HeatWarning: "Heat Warning" => "Alerte thermique"
 .HullDamage: "Hull Damage" => "Dégats de coque"
+.HoloscreenHacked: "Holoscreen Hacked" @
 .Interdicted: "Interdicted" => "Interdit"
 .Interdiction: "Interdiction" @
 .JetConeBoost: "Jet Cone Boost" => "Boost par jet de matières"
@@ -124,6 +126,7 @@ SECTION JournalTypeEnum
 .RepairAll: "Repair All" => "Réparation complète"
 .RepairDrone: "Repair Drone" => "Réparation de drone"
 .Reputation: "Reputation" @
+.RequestPowerMicroResources: "Request Power Micro Resources" @
 .RestockVehicle: "Restock Vehicle" => "Restock de véhicule"
 .Resurrect: "Resurrect" => "Résurection"
 .SAASignalsFound: "SAA Signals Found" => "Signaux DSD trouvés"

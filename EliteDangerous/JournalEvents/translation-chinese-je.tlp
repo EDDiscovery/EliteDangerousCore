@@ -27,6 +27,7 @@ SECTION JournalTypeEnum
 .CrewHire: "Crew Hire" => "NPC船员雇佣"
 .ClearImpound: "Clear Impound" @
 .DatalinkScan: "Datalink Scan" => "扫描数据链接"
+.DeliverPowerMicroResources: "Deliver Power Micro Resources" @
 .Died: "Died" => "死亡"
 .DiscoveryScan: "Discovery Scan" => "发现式扫描"
 .Docked: "Docked" => "停靠"
@@ -55,6 +56,7 @@ SECTION JournalTypeEnum
 .HeatDamage: "Heat Damage" => "高温伤害"
 .HeatWarning: "Heat Warning" => "高温警告"
 .HullDamage: "Hull Damage" => "船体伤害"
+.HoloscreenHacked: "Holoscreen Hacked" @
 .Interdicted: "Interdicted" => "被拦截"
 .Interdiction: "Interdiction" => "拦截"
 .JetConeBoost: "Jet Cone Boost" => "等离子喷流助推"
@@ -124,6 +126,7 @@ SECTION JournalTypeEnum
 .RepairAll: "Repair All" => "全部维修"
 .RepairDrone: "Repair Drone" => "维修无人机"
 .Reputation: "Reputation" => "声望"
+.RequestPowerMicroResources: "Request Power Micro Resources" @
 .RestockVehicle: "Restock Vehicle" => "补充库存载具"
 .Resurrect: "Resurrect" => "复活"
 .SAASignalsFound: "SAA Signals Found" @
