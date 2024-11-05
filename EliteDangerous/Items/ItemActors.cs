@@ -127,6 +127,7 @@ namespace EliteDangerousCore
              { "federation_capitalship", new Actor("Federation Capital Ship") },
 
              { "lizryder", new Actor("Engineer Liz Ryder") },
+             { "heratani", new Actor("Engineer Hera Tani") },
 
              { "thedweller", new Actor("The Dweller") },
         };

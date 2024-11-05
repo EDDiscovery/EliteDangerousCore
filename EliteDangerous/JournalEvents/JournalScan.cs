@@ -57,10 +57,10 @@ namespace EliteDangerousCore.JournalEvents
         public double DistanceFromArrivalm { get { return DistanceFromArrivalLS * BodyPhysicalConstants.oneLS_m; } }
         [PropertyNameAttribute("Astronomic Unit (AU) and Ls")]
         public string DistanceFromArrivalText { get { return string.Format("{0:N2}AU ({1:N1}ls)", DistanceFromArrivalLS / BodyPhysicalConstants.oneAU_LS, DistanceFromArrivalLS); } }
-        [PropertyNameAttribute("Seconds, may be negative indicating reverse rotation")]
+        [PropertyNameAttribute("Seconds, negatives indicating reverse rotation")]
         public double? nRotationPeriod { get; private set; }                // direct, can be negative indi
-        [PropertyNameAttribute("Days, may be negative indicating reverse rotation")]
-        public double? nRotationPeriodDays { get { if (nRotationPeriod.HasValue) return nRotationPeriod.Value / BodyPhysicalConstants.oneDay_s; else return null; } }
+        [PropertyNameAttribute("Days, will always be positive")]
+        public double? nRotationPeriodDays { get { if (nRotationPeriod.HasValue) return Math.Abs(nRotationPeriod.Value) / BodyPhysicalConstants.oneDay_s; else return null; } }
         [PropertyNameAttribute("K")]
         public double? nSurfaceTemperature { get; private set; }            // direct
         [PropertyNameAttribute("Meters")]
