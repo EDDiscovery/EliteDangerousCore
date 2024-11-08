@@ -811,6 +811,15 @@ namespace EliteDangerousCore
             new Values("Tussock Virgam", 14313700, "$Codex_Ent_Tussocks_14"),
             new Values("Tussock Capillum", 7025800, "$Codex_Ent_Tussocks_15"),
             new Values("Amphora Plant", 1628800, "$Codex_Ent_Vents"),
+            new Values("Coral Tree", 1896800, "$Codex_Ent_Thargoid_Coral_Tree_Name"),
+            new Values("Coral Root", 1924600, "$Codex_Ent_Thargoid_Coral_Root_Name"),
+            new Values("Major Thargoid Spire", 2247100, "$Codex_Ent_Thargoid_Tower_High_Name"),
+            new Values("Minor Thargoid Spire", 2247100, "$Codex_Ent_Thargoid_Tower_Low_Name"),
+            new Values("Primary Thargoid Spire", 2247100, "$Codex_Ent_Thargoid_Tower_ExtraHigh_Name"),
+            new Values("Thargoid Mega Barnacles", 2313500, "$Codex_Ent_Thargoid_Barnacle_Matrix_Name"),
+            new Values("Thargoid Spire", 2247100, "$Codex_Ent_Thargoid_Tower_Med_Name"),
+            new Values("Thargoid Spires", 2247100, "$Codex_Ent_Thargoid_Tower_Name"),
+            new Values("Thargoid Barnacle Matrix", 2313500, "$Codex_Ent_Thargoid_Barnacle_Matrix_Name"),
         };
     }
 }
