@@ -87,6 +87,7 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("MK I Ii", "MK III");
             candidatename = candidatename.Replace("Highcolour", "High Colour");
             candidatename = candidatename.Replace("Blackfriday", "Black Friday");
+            candidatename = candidatename.Replace(" Textamper", " Text Ampersand");
             return candidatename;
         }
 
@@ -2526,6 +2527,7 @@ namespace EliteDangerousCore
                 {"bobble_ap2_text9", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ap 2 Text 9") },
                 {"bobble_ap2_texta", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ap 2 Text A") },
                 {"bobble_ap2_texta02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ap 2 Texta 2") },
+                {"bobble_ap2_textamper", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ap 2 Text Ampersand") },
                 {"bobble_ap2_textasterisk", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ap 2 Text Asterisk") },
                 {"bobble_ap2_textat", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ap 2 Textat") },
                 {"bobble_ap2_textb", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ap 2 Text B") },
@@ -6687,6 +6689,12 @@ namespace EliteDangerousCore
                 {"paintjob_type9_corrosive_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Corrosive 4") },
                 {"paintjob_type9_corrosive_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Corrosive 5") },
                 {"paintjob_type9_corrosive_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Corrosive 6") },
+                {"paintjob_type9_extraction1_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Extraction 1 1") },
+                {"paintjob_type9_extraction1_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Extraction 1 2") },
+                {"paintjob_type9_extraction1_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Extraction 1 3") },
+                {"paintjob_type9_extraction1_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Extraction 1 4") },
+                {"paintjob_type9_extraction1_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Extraction 1 5") },
+                {"paintjob_type9_extraction1_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Extraction 1 6") },
                 {"paintjob_type9_industrial_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Industrial 1") },
                 {"paintjob_type9_industrial_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Industrial 2") },
                 {"paintjob_type9_industrial_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type 9 Industrial 3") },
@@ -7490,6 +7498,22 @@ namespace EliteDangerousCore
                 {"type8_shipkitc_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 8 Shipkitc Wings 2") },
                 {"type8_shipkitc_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 8 Shipkitc Wings 3") },
                 {"type8_shipkitc_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 8 Shipkitc Wings 4") },
+                {"type9_extraction1_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Extraction 1 Bumper 1") },
+                {"type9_extraction1_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Extraction 1 Bumper 2") },
+                {"type9_extraction1_bumper3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Extraction 1 Bumper 3") },
+                {"type9_extraction1_bumper4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Extraction 1 Bumper 4") },
+                {"type9_extraction1_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Extraction 1 Spoiler 1") },
+                {"type9_extraction1_spoiler2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Extraction 1 Spoiler 2") },
+                {"type9_extraction1_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Extraction 1 Spoiler 3") },
+                {"type9_extraction1_spoiler4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Extraction 1 Spoiler 4") },
+                {"type9_extraction1_tail1", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Type 9 Extraction 1 Tail 1") },
+                {"type9_extraction1_tail2", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Type 9 Extraction 1 Tail 2") },
+                {"type9_extraction1_tail3", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Type 9 Extraction 1 Tail 3") },
+                {"type9_extraction1_tail4", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Type 9 Extraction 1 Tail 4") },
+                {"type9_extraction1_wings1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Extraction 1 Wings 1") },
+                {"type9_extraction1_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Extraction 1 Wings 2") },
+                {"type9_extraction1_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Extraction 1 Wings 3") },
+                {"type9_extraction1_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Extraction 1 Wings 4") },
                 {"type9_industrial1_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Industrial 1 Bumper 1") },
                 {"type9_industrial1_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Industrial 1 Bumper 2") },
                 {"type9_industrial1_bumper3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Type 9 Industrial 1 Bumper 3") },
