@@ -26,7 +26,7 @@ namespace EliteDangerousCore.JournalEvents
             Power = evt["Power"].Str();
             Rank = evt["Rank"].Int();
             Merits = evt["Merits"].Int();
-            Votes = evt["Votes"].Int();
+            Votes = evt["Votes"].IntNull();
             TimePledged = evt["TimePledged"].Long();
             TimePledgedSpan = new TimeSpan((int)(TimePledged/60/60),(int)((TimePledged/60)%60),(int)(TimePledged%60));
             TimePledgedString = TimePledgedSpan.ToString();
@@ -35,7 +35,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Power { get; set; }
         public int Rank { get; set; }
         public int Merits { get; set; }
-        public int Votes { get; set; }
+        public int? Votes { get; set; }     // votes removed in Ascendency V1 update
         public long TimePledged { get; set; }
         public TimeSpan TimePledgedSpan { get;}
         public DateTime TimeJoinedUTC { get { return EventTimeUTC.Subtract(TimePledgedSpan); } }

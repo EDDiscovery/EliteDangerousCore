@@ -328,7 +328,7 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (var t in Transfers)
                 {
                     string d = t.Direction.Replace("to", "To ", StringComparison.InvariantCultureIgnoreCase);
-                    sb.AppendPrePad(", ", t.Type_Localised + "->" + d);
+                    sb.AppendPrePad(t.Type_Localised + "->" + d, ", ");
                 }
                 return sb.ToString();
             }

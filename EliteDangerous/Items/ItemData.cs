@@ -45,7 +45,7 @@ namespace EliteDangerousCore
             if (System.IO.File.Exists(infile))
             {
                 string[] toadd = System.IO.File.ReadAllLines(infile);
-                bool added = false;
+                bool changedvms = false;
 
                 foreach (var line in toadd)
                 {
@@ -72,7 +72,7 @@ namespace EliteDangerousCore
                                 {
                                     System.Diagnostics.Debug.WriteLine($"Added new module {fid.Value}, {sm.ModuleID} {sm.ModType} {sm.EnglishModName}");
                                     vanitymodules[id] = sm;
-                                    added = true;
+                                    changedvms = true;
                                 }
                                 else
                                 {
@@ -113,7 +113,7 @@ namespace EliteDangerousCore
                                 ShipModule sm2 = new ShipModule(vanitymodules[id].ModuleID, vanitymodules[id].ModType, text.Substring(0, text.Length - 1) + i.ToStringInvariant());
                                 System.Diagnostics.Debug.WriteLine($"Added estimated module {newid}");
                                 vanitymodules.Add(newid, sm2);
-                                added = true;
+                                changedvms = true;
                             }
                         }
                     }
@@ -135,17 +135,28 @@ namespace EliteDangerousCore
                                     ShipModule sm2 = new ShipModule(vanitymodules[id].ModuleID, vanitymodules[id].ModType, text.Substring(0, text.Length - 1) + i.ToStringInvariant());
                                     System.Diagnostics.Debug.WriteLine($"Added estimated module {newid}");
                                     vanitymodules.Add(newid, sm2);
-                                    added = true;
+                                    changedvms = true;
                                 }
                             }
 
 
                         }
                     }
-
                 }
 
-                if (added)
+                foreach( var vm in vanitymodules)
+                {
+                    string org = vm.Value.EnglishModName;
+                    string text = GenerateCandidateModuleName(org);
+                    if (text != org)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"*** Want to modify {org} -> {text}");
+                        vm.Value.EnglishModName = text;
+                        changedvms = true;
+                    }
+                }
+
+                if (changedvms)
                 {
                     System.Diagnostics.Trace.WriteLine($"*** NEW MODULES!");
 

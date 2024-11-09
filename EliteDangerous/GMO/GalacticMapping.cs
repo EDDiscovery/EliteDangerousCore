@@ -25,8 +25,8 @@ namespace EliteDangerousCore.GMO
     {
         public List<GalacticMapObject> GalacticMapObjects = null;
 
-        // these need have have a VisibleType in entry 0 AND have an associated star system
-        public GalacticMapObject[] VisibleMapObjects { get { return GalacticMapObjects.Where(x => x.GalMapTypes[0] != null && x.StarSystem != null).ToArray(); } }
+        // these need have have a Gal map type, a VisibleType in entry 0 AND have an associated star system
+        public GalacticMapObject[] VisibleMapObjects { get { return GalacticMapObjects.Where(x => x.GalMapTypes[0] != null && x.GalMapTypes[0].VisibleType != null && x.StarSystem != null).ToArray(); } }
 
         public bool Loaded { get { return GalacticMapObjects.Count > 0; } }
 

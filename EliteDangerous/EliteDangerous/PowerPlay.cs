@@ -30,6 +30,7 @@ namespace EliteDangerousCore
             HomeSystem,
             Fortified,  // new Ascendency 
             Stronghold,
+            Unoccupied,
         }
 
 

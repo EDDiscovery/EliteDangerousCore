@@ -97,6 +97,7 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [System.Diagnostics.DebuggerDisplay("Fuel {FuelMain} reservoir {FuelReservoir} Events {FuelEvents} Start {FuelStart}")]
     [JournalEntryType(JournalTypeEnum.ReservoirReplenished)]
     public class JournalReservoirReplenished : JournalEntry, IShipInformation
     {
@@ -106,12 +107,18 @@ namespace EliteDangerousCore.JournalEvents
             FuelReservoir = evt["FuelReservoir"].Double();
         }
 
-        public double FuelMain { get; set; }
-        public double FuelReservoir { get; set; }
+        public double FuelMain { get; set; }            // Journal
+        public double FuelReservoir { get; set; }       // Journal
+
+        public int? FuelEvents { get; set; }           // EDD, if merged, the number of merges.  HistoryList::MergeJournalEntries. Merging only done on history read, not dynamically
+        public double? FuelStart { get; set; }         // EDD, if merged, the first FuelMain in the sequence
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Main: ;t;0.0".T(EDCTx.JournalReservoirReplenished_Main), FuelMain, "Reservoir: ;t;0.0".T(EDCTx.JournalReservoirReplenished_Reservoir), FuelReservoir);
+            return BaseUtils.FieldBuilder.Build("Main: ;t;0.0".T(EDCTx.JournalReservoirReplenished_Main), FuelMain,
+                                                "< <- ;t;0.0", FuelStart,
+                                                "Reservoir: ;t;0.0".T(EDCTx.JournalReservoirReplenished_Reservoir), FuelReservoir , 
+                                                "< (x;)", FuelEvents);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)

@@ -52,7 +52,8 @@ namespace EliteDangerousCore.GMO
             Markers = 1,
             Routes,
             Regions,
-            Quadrants,I
+            Quadrants,
+            Legacy,
         }
         static public List<GalMapType> GalTypes { get; private set; }  = CreateTypes();     // all the types.
         static public GalMapType[] VisibleTypes { get { return GalTypes.Where(x => x.VisibleType != null).ToArray(); } }
@@ -125,6 +126,7 @@ namespace EliteDangerousCore.GMO
             type.Add(new GalMapType("neutronRoute", "Neutron highway", GroupType.Routes, null,index++));
             type.Add(new GalMapType("region", "Region", GroupType.Regions, null,index++));
             type.Add(new GalMapType("regionQuadrants", "Galactic Quadrants", GroupType.Quadrants , null,index++));
+            type.Add(new GalMapType("GECLEGACY", "Legacy", GroupType.Legacy, null, index++));     // GEC Legacy 3.8 version mark
 
 
             return type;
