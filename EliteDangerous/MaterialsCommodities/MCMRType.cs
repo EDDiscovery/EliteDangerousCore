@@ -19,7 +19,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("Mat {Category} {Type} {MaterialGroup} {Name} {FDName} {Shortname}")]
+    [System.Diagnostics.DebuggerDisplay("Mat {Category} {Type} {MaterialGroup} {EnglishName} {FDName} {Shortname}")]
     public class MaterialCommodityMicroResourceType
     {
         public enum CatType
@@ -147,8 +147,6 @@ namespace EliteDangerousCore
             MilitarySupercapacitors, PharmaceuticalIsolators, ProtoHeatRadiators, ProtoRadiolicAlloys, TG_PropulsionElement, Unknownenergysource, UnknownOrganicCircuitry,
             // March 15 2024
             TG_WreckageComponents,
-            // August 29 2024 - this appears to be an error, keep ID for consistency
-            TacticalCoreChip,
             // November 11/24 - this appears to be the same as TactivalCoreChip
             UnknownCoreChip,
             //---------------------------------------------------------- Item/Goods
