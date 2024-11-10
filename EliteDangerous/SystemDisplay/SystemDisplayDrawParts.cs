@@ -50,7 +50,7 @@ namespace EliteDangerousCore
 
                     if (HideFullMaterials)                 // check full
                     {
-                        int? limit = mc.MaterialLimit();
+                        int? limit = mc.MaterialLimitOrNull();
                         MaterialCommodityMicroResource matnow = curmats?.Find(x => x.Details == mc);  // allow curmats = null
 
                         // debug if (matnow != null && mc.shortname == "Fe")  matnow.count = 10000;

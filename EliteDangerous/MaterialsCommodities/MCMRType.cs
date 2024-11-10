@@ -48,7 +48,7 @@ namespace EliteDangerousCore
 
         public enum MaterialGroupType                               // Material trader group type
         {
-            NA,
+            NA,                                                     // for other than materials
             RawCategory1, RawCategory2, RawCategory3, RawCategory4, RawCategory5, RawCategory6, RawCategory7,
             EncodedEmissionData, EncodedWakeScans, EncodedShieldData, EncodedEncryptionFiles, EncodedDataArchives, EncodedFirmware,
             ManufacturedChemical, ManufacturedThermic, ManufacturedHeat, ManufacturedConductive, ManufacturedMechanicalComponents,
@@ -147,8 +147,10 @@ namespace EliteDangerousCore
             MilitarySupercapacitors, PharmaceuticalIsolators, ProtoHeatRadiators, ProtoRadiolicAlloys, TG_PropulsionElement, Unknownenergysource, UnknownOrganicCircuitry,
             // March 15 2024
             TG_WreckageComponents,
-            // August 29 2024
+            // August 29 2024 - this appears to be an error, keep ID for consistency
             TacticalCoreChip,
+            // November 11/24 - this appears to be the same as TactivalCoreChip
+            UnknownCoreChip,
             //---------------------------------------------------------- Item/Goods
             AgriculturalProcessSample = 4000, BiochemicalAgent, BuildingSchematic, Californium, CastFossil, ChemicalProcessSample, ChemicalSample, CompactLibrary,
             CompressionLiquefiedGas, DeepMantleSample, DegradedPowerRegulator, GeneticRepairMeds, GeneticSample, GMeds, HealthMonitor, Hush,
@@ -250,7 +252,8 @@ namespace EliteDangerousCore
         public const int RareCap = 150;
         public const int VeryRareCap = 100;
 
-        public int? MaterialLimit()
+        // does the material have a limit.   Null if not a material
+        public int? MaterialLimitOrNull()
         {
             if (Type == ItemType.VeryCommon) return VeryCommonCap;
             if (Type == ItemType.Common) return CommonCap;
@@ -436,11 +439,20 @@ namespace EliteDangerousCore
             {
                 lock (mcmrlist)
                 {
-                    Add(cat, ItemType.Unknown, MaterialGroupType.NA, (MCMR)fakeid, fdname, locname ?? fdname.SplitCapsWordFull(), fakeid.ToStringInvariant(), false);
+                    bool material = cat == CatType.Raw || cat == CatType.Encoded || cat == CatType.Manufactured;
+
+                    // base itemtype on cat type - materials get common, commodities are assigned to waste!, MCMRs to Unknown
+                    ItemType it = material ? ItemType.Common : cat == CatType.Commodity ? ItemType.Waste :  ItemType.Unknown;
+                    
+                    // we could base it on type, but the problem it messes up the material group display
+                    // assign it to MGT NA. prev code cat == CatType.Raw ? MaterialGroupType.RawCategory1 : cat == CatType.Encoded ? MaterialGroupType.EncodedDataArchives : cat == CatType.Manufactured ? MaterialGroupType.ManufacturedChemical : MaterialGroupType.NA;
+                    MaterialGroupType mgt = MaterialGroupType.NA;
+
+                    Add(cat, it, mgt, (MCMR)fakeid, fdname, locname ?? fdname.SplitCapsWordFull(), fakeid.ToStringInvariant(), false);
+                    System.Diagnostics.Debug.WriteLine($"*** Unknown Material/Commodity/Microresource: {fdname}, {cat}, {locname} -> {cat}, {it}, {mgt}");
                     fakeid++;
                 }
 
-                System.Diagnostics.Debug.WriteLine("** Made MCMRType: {0},{1},{2},{3}", "?", fdname, cat.ToString(), locname);
             }
 
             return mcmrlist[fdname.ToLowerInvariant()];
@@ -1117,7 +1129,7 @@ namespace EliteDangerousCore
             Add(CatType.Manufactured, ItemType.VeryCommon, MCMR.TG_Abrasion03, "Hardened Surface Fragments", "HSF");
             Add(CatType.Manufactured, ItemType.Common, MCMR.Guardian_PowerConduit, "Guardian Power Conduit", "GPC");
             Add(CatType.Manufactured, ItemType.Common, MCMR.UnknownCarapace, "Thargoid Carapace", "UKCP");
-            Add(CatType.Manufactured, ItemType.Common, MCMR.TacticalCoreChip, "Tactical Core Chip", "TCC");
+            Add(CatType.Manufactured, ItemType.Common, MCMR.UnknownCoreChip, "Tactical Core Chip", "TCC");
             Add(CatType.Manufactured, ItemType.Standard, MCMR.Guardian_Sentinel_WeaponParts, "Guardian Sentinel Weapon Parts", "GSWP");
             Add(CatType.Manufactured, ItemType.Standard, MCMR.Guardian_TechComponent, "Guardian Technology Component", "GTC");
             Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_Abrasion02, "Phasing Membrane Residue", "PMR");
