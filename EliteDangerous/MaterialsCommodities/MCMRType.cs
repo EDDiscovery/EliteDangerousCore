@@ -1209,7 +1209,7 @@ namespace EliteDangerousCore
             Add(CatType.Item, MCMR.PowerMiscComputer, "Data Storage Device","MRPMC");
             Add(CatType.Item, MCMR.PowerSecurity, "Security Logs", "MRPSL");
             Add(CatType.Item, MCMR.PowerPower, "Energy Regulator", "MRPPP");
-            Add(CatType.Item, MCMR.PowerReasearch, "Research Nodes", "MRPRD");
+            Add(CatType.Item, MCMR.PowerReasearch, "Research Notes", "MRPRD");
 
             // Components
 

@@ -908,7 +908,7 @@ SECTION MaterialCommodityMicroResourceType
 .powermisccomputer: "Data Storage Device" => "Datenspeichergerät"
 .powersecurity: "Security Logs" => "Sicherheitsaufzeichnung"
 .powerpower: "Energy Regulator" => "Energieregler"
-.powerreasearch: "Research Nodes" => "Forschungsnotizen"
+.powerreasearch: "Research Notes" => "Forschungsnotizen"
 .powerpreparationspyware: "Power Injection Malware" => "Macht-Injektionsschadsoftware"
 .powerspyware: "Power Tracker Malware" => "Macht-Verfolgungsschadsoftware"
 .powerresearchdata: "Power Research Data" => "Macht-Forschungsdaten"
