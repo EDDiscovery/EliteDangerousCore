@@ -6191,6 +6191,7 @@ namespace EliteDangerousCore
                 {"paintjob_orca_vibrant_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Vibrant Green") },
                 {"paintjob_orca_vibrant_orange", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Vibrant Orange") },
                 {"paintjob_orca_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Vibrant Purple") },
+                {"paintjob_orca_vibrant_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Vibrant Red") },
                 {"paintjob_orca_vibrant_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Vibrant Yellow") },
                 {"paintjob_python_autumn_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Autumn 1") },
                 {"paintjob_python_autumn_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Autumn 2") },
