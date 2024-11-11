@@ -255,17 +255,23 @@ namespace EliteDangerousCore
                 mc = new MaterialCommodityMicroResource(mc);                // copy constructor, new copy of it
             }
 
+            int limit = mc.Details.MaterialLimitOrNull() ?? 1000000;        // if its a material, the limit will be set. Otherwise some arbitary stupid figure
+
             double costprev = mc.Counts[0] * mc.Price;
             double costofnew = counts[0] * price;
             bool changed = false;
 
             for (int i = 0; i < counts.Length; i++)
             {
-                int newcount = set[i] ? counts[i] : Math.Max(mc.Counts[i] + counts[i], 0);       // don't let it go below zero if changing
+                int newcount = set[i] ? counts[i] : Math.Min(Math.Max(mc.Counts[i] + counts[i], 0), limit);       // don't let it go below zero if changing, or above limit
+
+                // just output if we hit the limit and we are delta 
+                if ( set[i] == false && mc.Counts[i] + counts[i] > limit)   System.Diagnostics.Debug.WriteLine($"MCMRLIST {utc} Gen {items.Generation} Changed {mc.Details.Category}:{mc.Details.FDName} cnum {i} : newc {mc.Counts[i] + counts[i]} lastc {mc.Counts[i]} limit {limit} HIT!");
+
                 if (newcount != mc.Counts[i])
                 {
                     changed = true;
-                    //  System.Diagnostics.Debug.WriteLine("MCMRLIST {0} Gen {1} Changed {2}:{3} Entry {4} {5} -> {6} {7}", utc.ToString(), items.Generation, mc.Details.Category, mc.Details.FDName, i, mc.Counts[i], newcount, mc.Counts[i]<newcount ? "+++" : "---");
+                    //System.Diagnostics.Debug.WriteLine($"MCMRLIST {utc} Gen {items.Generation} Changed {mc.Details.Category}:{mc.Details.FDName} cnum {i} : newc {newcount} lastc {mc.Counts[i]} limit {limit}");
                     //   System.Diagnostics.Debug.WriteLine(Environment.StackTrace);
                     mc.Counts[i] = newcount;
                 }
