@@ -39,7 +39,7 @@ SECTION EDPlanet
 
 .Metalrichbody: "Metal-rich body" => "Metallreicher Planet"
 .Highmetalcontentbody: "High metal content world" => "Planet mit hochwertigen Metallen"
-.Rockybody: "Rocky body" => "Steinerner Planet"
+.Rockybody: "Rocky body" => "Gesteinsplanet"
 .Icybody: "Icy body" => "Eisplanet"
 .Rockyicebody: "Rocky ice world" => "Felsiger Eisplanet"
 .Earthlikebody: "Earth-like world" => "Erdähnliche Welt"
@@ -80,7 +80,7 @@ SECTION MaterialCommodityMicroResourceType
 .Foods: "Foods" => "Nahrungsmittel"
 .IndustrialMaterials: "Industrial Materials" => "Industrielle Materialien"
 .LegalDrugs: "Legal Drugs" => "Legale Drogen"
-.Machinery: "Machinery" => "Maschinen"
+.Machinery: "Machinery" => "Ausrüstung"
 .Medicines: "Medicines" => "Medizin"
 .Metals: "Metals" => "Metalle"
 .Minerals: "Minerals" => "Mineralien"
@@ -893,30 +893,30 @@ SECTION MaterialCommodityMicroResourceType
 .thargoidbonefragments: "Bone Fragments" => "Knochenfragmente"
 .thargoidorgansample: "Organ Sample" => "Organprobe"
 .tg_abrasion01: "Heat Exposure Specimen" => "Hitzeexponierte Probe"
-.tacticalcorechip: "Tactical Core Chip" @
-.powerindustrial: "Industrial Component" @
-.powermiscindust: "Industrial Machinery" @
-.powerinventory: "Inventory Record" @
-.powerplaymilitary: "Military Schematic" @
-.powerelectronics: "Electronics Package" @
-.powercomputer: "Computer Parts" @
-.powerexperiment: "Experimental Prototype" @
-.poweragriculture: "Agricultural Sample" @
-.powerextraction: "Extraction Sample" @
-.powerequipment: "Personal Protective Equipment" @
-.powermedical: "Medical sample" @
-.powermisccomputer: "Data Storage Device" @
-.powersecurity: "Security Logs" @
-.powerpower: "Energy Regulator" @
-.powerreasearch: "Research Nodes" @
-.powerpreparationspyware: "Power Injection Malware" @
-.powerspyware: "Power Tracker Malware" @
-.powerresearchdata: "Power Research Data" @
-.poweremployeedata: "Power Association Data" @
-.powerfinancialrecords: "Power Industrial Data" @
-.powerpropagandadata: "Power Political Data" @
-.powerclassifieddata: "Power Classified Data" @
-.powermegashipdata: "Power Megaship Data" @
+.tacticalcorechip: "Tactical Core Chip" => "Taktischer Kernchip"
+.powerindustrial: "Industrial Component" => "Industrielle Komponente"
+.powermiscindust: "Industrial Machinery" => "Industrielle Ausrüstung"
+.powerinventory: "Inventory Record" => "Inventaraufzeichnung"
+.powerplaymilitary: "Military Schematic" => "Militärisches Schaltbild"
+.powerelectronics: "Electronics Package" => "Elektronikpaket"
+.powercomputer: "Computer Parts" => "Computerteile"
+.powerexperiment: "Experimental Prototype" => "Experimenteller Prototyp"
+.poweragriculture: "Agricultural Sample" => "Agrikulturelle Probe"
+.powerextraction: "Extraction Sample" => "Extraktionsprobe"
+.powerequipment: "Personal Protective Equipment" => "Persönliche Schutzausrüstung"
+.powermedical: "Medical sample" => "Medizinische Probe"
+.powermisccomputer: "Data Storage Device" => "Datenspeichergerät"
+.powersecurity: "Security Logs" => "Sicherheitsaufzeichnung"
+.powerpower: "Energy Regulator" => "Energieregler"
+.powerreasearch: "Research Notes" => "Forschungsnotizen"
+.powerpreparationspyware: "Power Injection Malware" => "Macht-Injektionsschadsoftware"
+.powerspyware: "Power Tracker Malware" => "Macht-Verfolgungsschadsoftware"
+.powerresearchdata: "Power Research Data" => "Macht-Forschungsdaten"
+.poweremployeedata: "Power Association Data" => "Macht-Verbandsdaten"
+.powerfinancialrecords: "Power Industrial Data" => "Macht-Industriedaten"
+.powerpropagandadata: "Power Political Data" => "Macht-Politikdaten"
+.powerclassifieddata: "Power Classified Data" => "Macht-Geheimdaten"
+.powermegashipdata: "Power Megaship Data" => "Macht-Megaschiffdaten"
 
 SECTION EngineeringData
 
@@ -1078,7 +1078,7 @@ SECTION Crimes
 .piracy: "Piracy" => "Piraterie"
 .recklessweaponsdischarge: "Discharging a weapon" => "Abfeuern einer Waffe"
 .shuttledestruction: "Destroying an APEX Shuttle" => "Zerstörung eines APEX-Shuttles"
-.stationTamperingMinor: "Tampering with a station" @
+.stationTamperingMinor: "Tampering with a station" => "Sabotage einer Station"
 
 SECTION FactionStates
 
@@ -1124,7 +1124,7 @@ SECTION Allegiances
 .Guardian: "Guardian" => "Guardian"
 .Thargoid: "Thargoid" => "Thargoid"
 .PilotsFederation: "Pilots Federation" => "Pilotenföderation"
-.PlayerPilots: "Player Pilots Federation" @
+.PlayerPilots: "Player Pilots Federation" => "Spieler-Pilotenföderation"
 
 SECTION GovernmentTypes
 
@@ -1211,8 +1211,8 @@ SECTION PowerPlayStates
 .Controlled: "Controlled" => "Kontrolliert"
 .Turmoil: "In turmoil" => "In Aufruhr"
 .HomeSystem: "Home system" => "Heimatsystem"
-.Fortified: "Fortified" @
-.Stronghold: "Stronghold" @
+.Fortified: "Fortified" => "Befestigt"
+.Stronghold: "Stronghold" => "Festung"
 
 SECTION ModuleTypeNames
 
@@ -1505,8 +1505,8 @@ SECTION ShipSlots
 .SmallHardpoint2: "Small Hardpoint 2" => "Kleine Aufhängung 2"
 .SmallHardpoint3: "Small Hardpoint 3" => "Kleine Aufhängung 3"
 .SmallHardpoint4: "Small Hardpoint 4" => "Kleine Aufhängung 4"
-.SmallHardpoint5: "Small Hardpoint 5" @
-.SmallHardpoint6: "Small Hardpoint 6" @
+.SmallHardpoint5: "Small Hardpoint 5" => "Kleine Aufhängung 5"
+.SmallHardpoint6: "Small Hardpoint 6" => "Kleine Aufhängung 6"
 .StringLights: "String Lights" => "Lichterkette"
 .TinyHardpoint1: "Utility Mount 1" => "Werkzeugsteckplatz 1"
 .TinyHardpoint2: "Utility Mount 2" => "Werkzeugsteckplatz 2"
