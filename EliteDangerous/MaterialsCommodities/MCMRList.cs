@@ -128,88 +128,40 @@ namespace EliteDangerousCore
 
         public int CargoCount(uint gen) { return Count(Get(gen))[(int)MaterialCommodityMicroResourceType.CatType.Commodity]; }
 
-        // change entry 0
-        public void Change(DateTime utc, string catname, string fdname, int num, long price, int cnum = 0, bool setit = false)        
+        // change entry by a delta
+        public void ChangeCommd(DateTime utc, string fdname, int delta, long price)
+        {
+            ChangeInt(utc, MaterialCommodityMicroResourceType.CatType.Commodity, fdname, delta, price, 0);
+        }
+        public void ChangeMat(DateTime utc, string catname, string fdname, int delta)
         {
             var cat = MaterialCommodityMicroResourceType.CategoryFrom(catname);
             if (cat.HasValue)
             {
-                Change(utc, cat.Value, fdname, num, price, cnum, setit);
+                ChangeInt(utc, cat.Value, fdname, delta, 0, 0);
+            }
+            else
+                System.Diagnostics.Debug.WriteLine("MCMRLIST Unknown Cat " + catname);
+        }
+        public void ChangeMR(int cnum, DateTime utc, string catname, string fdname, int delta )
+        {
+            var cat = MaterialCommodityMicroResourceType.CategoryFrom(catname);
+            if (cat.HasValue)
+            {
+                ChangeInt(utc, cat.Value, fdname, delta, 0, cnum);
             }
             else
                 System.Diagnostics.Debug.WriteLine("MCMRLIST Unknown Cat " + catname);
         }
 
-        // change entry 0
-        public void Change(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int num, long price, int cnum = 0, bool setit = false)
-        {
-            var vsets = new bool[MaterialCommodityMicroResource.NoCounts];      // all set to false, change
-            vsets[cnum] = setit;                                                // set cnum to change/set
-            var varray = new int[MaterialCommodityMicroResource.NoCounts];      // all set to zero
-            varray[cnum] = num;                                                 // set value on cnum
-            Change(utc, cat, fdname, varray, vsets, price);
-        }
-
-        // counts/set array can be of length 1 to maximum number of counts
-        // to set a value, set count/set=1 for that entry
-        // to change a value, set count/set = 0 for that entry
-        // to leave a value, set count=0,set=0 for that entry
-        // set means set to value, else add to value
-        public bool Change(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int[] counts, bool[] set, long price)
-        {
-            fdname = fdname.ToLowerInvariant();
-
-            MaterialCommodityMicroResource mc = items.GetLast(fdname);      // find last entry, may return null if none stored
-
-            if (mc == null)     // not stored, make new
-            {
-                MaterialCommodityMicroResourceType mcdb = MaterialCommodityMicroResourceType.EnsurePresent(cat, fdname);    // get a MCDB of this
-                mc = new MaterialCommodityMicroResource(mcdb);
-            }
-            else
-            {
-                mc = new MaterialCommodityMicroResource(mc);                // copy constructor, new copy of it
-            }
-
-            double costprev = mc.Counts[0] * mc.Price;
-            double costofnew = counts[0] * price;
-            bool changed = false;
-
-            for (int i = 0; i < counts.Length; i++)
-            {
-                int newcount = set[i] ? counts[i] : Math.Max(mc.Counts[i] + counts[i], 0);       // don't let it go below zero if changing
-                if (newcount != mc.Counts[i])
-                {
-                    changed = true;
-                  //  System.Diagnostics.Debug.WriteLine("MCMRLIST {0} Gen {1} Changed {2}:{3} Entry {4} {5} -> {6} {7}", utc.ToString(), items.Generation, mc.Details.Category, mc.Details.FDName, i, mc.Counts[i], newcount, mc.Counts[i]<newcount ? "+++" : "---");
-                 //   System.Diagnostics.Debug.WriteLine(Environment.StackTrace);
-                    mc.Counts[i] = newcount;
-                }
-            }
-
-            if (changed)                                                    // only store back a new entry if material change to counts
-            {
-                if (mc.Counts[0] > 0 && counts[0] > 0)                      // if bought (defensive with mc.counts)
-                    mc.Price = (costprev + costofnew) / mc.Counts[0];       // price is now a combination of the current cost and the new cost. in case we buy in tranches
-
-                items[fdname] = mc;                                         // and set fdname to mc - this allows for any repeat adds due to frontier data repeating stuff in things like cargo
-            }
-            else
-            {
-                // System.Diagnostics.Debug.WriteLine("{0} Not changed {1} {2}", utc.ToString(), mc.Details.FDName, mc.Count);
-            }
-
-            return changed;
-        }
-
-        //always changes entry 0
-        public void Craft(DateTime utc, string fdname, int num)       
+       //always changes entry 0
+        public void Craft(DateTime utc, string fdname, int deltaoff)       
         {
             MaterialCommodityMicroResource mc = items.GetLast(fdname.ToLowerInvariant());      // find last entry, may return null if none stored
             if ( mc != null )
             {
                 mc = new MaterialCommodityMicroResource(mc);      // new clone of
-                mc.Counts[0] = Math.Max(mc.Counts[0] - num, 0);
+                mc.Counts[0] = Math.Max(mc.Counts[0] - deltaoff, 0);
                 items[mc.Details.FDName.ToLowerInvariant()] = mc;
                 //System.Diagnostics.Debug.WriteLine("MCMRLIST {0} Craft {1} {2}", utc.ToString(), mc.Details.FDName, num);
             }
@@ -248,7 +200,7 @@ namespace EliteDangerousCore
             foreach (var v in values)           
             {
                 varray[cnum] = v.Item2;                         // set cnum value
-                if (Change(utc, cat, v.Item1, varray, vsets, 0))      // set entry 
+                if (ChangeInt(utc, cat, v.Item1, varray, vsets, 0))      // set entry 
                 {
                     //System.Diagnostics.Debug.WriteLine("MCMRLIST {0} updated {1} {2} to {3} (entry {4})", utc.ToString(), cat, v.Item1, v.Item2 , cnum);
                     changed++;                                 // indicated changed
@@ -271,6 +223,69 @@ namespace EliteDangerousCore
 
             return changed;
         }
+
+        // change entry - helper to set up arrays for change below
+        private void ChangeInt(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int num, long price, int cnum)
+        {
+            var vsets = new bool[MaterialCommodityMicroResource.NoCounts];      // all set to false, change
+            vsets[cnum] = false;                                                // set cnum to change only
+            var varray = new int[MaterialCommodityMicroResource.NoCounts];      // all set to zero
+            varray[cnum] = num;                                                 // set value on cnum
+            ChangeInt(utc, cat, fdname, varray, vsets, price);
+        }
+
+        // counts/set array can be of length 1 to maximum number of counts
+        // to set a value, set count/set=1 for that entry
+        // to change a value, set count/set = 0 for that entry
+        // to leave a value, set count=0,set=0 for that entry
+        // set means set to value, else add to value
+        private bool ChangeInt(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int[] counts, bool[] set, long price)
+        {
+            fdname = fdname.ToLowerInvariant();
+
+            MaterialCommodityMicroResource mc = items.GetLast(fdname);      // find last entry, may return null if none stored
+
+            if (mc == null)     // not stored, make new
+            {
+                MaterialCommodityMicroResourceType mcdb = MaterialCommodityMicroResourceType.EnsurePresent(cat, fdname);    // get a MCDB of this
+                mc = new MaterialCommodityMicroResource(mcdb);
+            }
+            else
+            {
+                mc = new MaterialCommodityMicroResource(mc);                // copy constructor, new copy of it
+            }
+
+            double costprev = mc.Counts[0] * mc.Price;
+            double costofnew = counts[0] * price;
+            bool changed = false;
+
+            for (int i = 0; i < counts.Length; i++)
+            {
+                int newcount = set[i] ? counts[i] : Math.Max(mc.Counts[i] + counts[i], 0);       // don't let it go below zero if changing
+                if (newcount != mc.Counts[i])
+                {
+                    changed = true;
+                    //  System.Diagnostics.Debug.WriteLine("MCMRLIST {0} Gen {1} Changed {2}:{3} Entry {4} {5} -> {6} {7}", utc.ToString(), items.Generation, mc.Details.Category, mc.Details.FDName, i, mc.Counts[i], newcount, mc.Counts[i]<newcount ? "+++" : "---");
+                    //   System.Diagnostics.Debug.WriteLine(Environment.StackTrace);
+                    mc.Counts[i] = newcount;
+                }
+            }
+
+            if (changed)                                                    // only store back a new entry if material change to counts
+            {
+                if (mc.Counts[0] > 0 && counts[0] > 0)                      // if bought (defensive with mc.counts)
+                    mc.Price = (costprev + costofnew) / mc.Counts[0];       // price is now a combination of the current cost and the new cost. in case we buy in tranches
+
+                items[fdname] = mc;                                         // and set fdname to mc - this allows for any repeat adds due to frontier data repeating stuff in things like cargo
+            }
+            else
+            {
+                // System.Diagnostics.Debug.WriteLine("{0} Not changed {1} {2}", utc.ToString(), mc.Details.FDName, mc.Count);
+            }
+
+            return changed;
+        }
+
 
 #if !TESTHARNESS
         public uint Process(JournalEntry je, JournalEntry lastentry, bool insrv )

@@ -265,7 +265,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (DeliveryMissions.StartsWith(FDName, StringComparison.InvariantCultureIgnoreCase)>=0 )   // before, we accept only these as mission deliveries
                 {
-                    mc.Change(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Commodity, (int)Count, 0);
+                    mc.ChangeCommd(EventTimeUTC, Commodity, (int)Count, 0);
                 }
                 else
                 {
@@ -398,7 +398,7 @@ namespace EliteDangerousCore.JournalEvents
             if (CommodityReward != null)
             {
                 foreach (CommodityRewards c in CommodityReward)
-                    mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, c.Name, c.Count, 0);    // commodities are traded by faction
+                    mc.ChangeCommd( EventTimeUTC, c.Name, c.Count, 0);    // commodities are traded by faction
             }
         }
 
@@ -408,7 +408,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (MaterialRewards m in MaterialsReward)                 // 7/3/2018 not yet fully proven.. changed in 3.02
                 {
-                    mc.Change( EventTimeUTC, m.Category.Alt("Raw"), m.Name, m.Count, 0);      // mats from faction of mission
+                    mc.ChangeMat( EventTimeUTC, m.Category.Alt("Raw"), m.Name, m.Count);      // mats from faction of mission
                 }
             }
         }

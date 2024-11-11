@@ -70,7 +70,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, Count, 0);
+            mc.ChangeCommd( EventTimeUTC, Type, Count, 0);
         }
     }
 
@@ -115,7 +115,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, -Count, 0 );
+            mc.ChangeCommd( EventTimeUTC, Type, -Count, 0 );
         }
     }
 

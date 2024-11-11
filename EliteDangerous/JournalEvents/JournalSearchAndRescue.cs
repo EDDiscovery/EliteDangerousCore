@@ -41,7 +41,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, FDName, -Count, 0);
+            mc.ChangeCommd( EventTimeUTC, FDName, -Count, 0);
         }
 
         public override string GetInfo() 
