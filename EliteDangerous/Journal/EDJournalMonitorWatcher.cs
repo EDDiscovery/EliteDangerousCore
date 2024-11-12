@@ -33,7 +33,7 @@ namespace EliteDangerousCore
 
         public JournalMonitorWatcher(string folder, string journalmatchpattern, DateTime mindateutcp, bool pincludesubfolders)
         {
-            Folder = folder;
+            Folder = folder.TrimEnd(Path.DirectorySeparatorChar);       // ensure no trailing /
             journalfilematch = journalmatchpattern;
             mindateutc = mindateutcp;
             IncludeSubfolders = pincludesubfolders;
@@ -52,7 +52,7 @@ namespace EliteDangerousCore
                     StoreToDBDuringUpdateRead = storetodb;
                     m_netLogFileQueue = new ConcurrentQueue<string>();
                     m_Watcher = new System.IO.FileSystemWatcher();
-                    m_Watcher.Path = Folder + Path.DirectorySeparatorChar;
+                    m_Watcher.Path = Folder;       // Fix, 12/11/24, without end character, I have no evidence its needed
                     m_Watcher.Filter = journalfilematch;
                     m_Watcher.IncludeSubdirectories = IncludeSubfolders;
                     m_Watcher.NotifyFilter = NotifyFilters.FileName;
@@ -60,7 +60,7 @@ namespace EliteDangerousCore
                     m_Watcher.Created += new FileSystemEventHandler(OnNewFile);
                     m_Watcher.EnableRaisingEvents = true;
 
-                    System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Start Monitor on {Folder} incl {IncludeSubfolders}");
+                    System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Start Monitor on `{m_Watcher.Path}` incl {IncludeSubfolders}");
                 }
                 catch (Exception ex)
                 {
@@ -114,7 +114,7 @@ namespace EliteDangerousCore
                     //var notdone = new FileInfo(lastnfi.FullName).Length != lastnfi.Pos ? "**********" : ""; System.Diagnostics.Debug.WriteLine($"Scan last nfi {lastnfi.FullName} from {lastnfi.Pos} Length file is {new FileInfo(lastnfi.FullName).Length} {notdone} ");
 
                     ScanReader(unfilteredentries,filteredentries, uientries);
-
+               
                     if (unfilteredentries.Count > 0 || filteredentries.Count > 0 || uientries.Count > 0)
                     {
                        // System.Diagnostics.Debug.WriteLine("ScanFornew read " + entries.Count() + " ui " + uientries.Count());
@@ -172,7 +172,7 @@ namespace EliteDangerousCore
 
         private void ScanReader(List<JournalEntry> unfilteredentries,List<JournalEntry> filteredentries, List<UIEvent> uientries)
         {
-            System.Diagnostics.Debug.WriteLine($"ScanReader {lastnfi.FullName} netlogreaders {netlogreaders.Count}");
+          //  System.Diagnostics.Debug.WriteLine($"ScanReader {lastnfi.FullName} netlogreaders {netlogreaders.Count}");
 
             System.Diagnostics.Debug.Assert(lastnfi.ID != 0,"Last NFI is zero");       // must have committed it at this point, prev code checked for it but it must have been done
             System.Diagnostics.Debug.Assert(netlogreaders.ContainsKey(lastnfi.FullName),$"Can't find {lastnfi.FullName} in netlogreaders");       // must have added to netlogreaders.. double check
