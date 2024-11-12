@@ -127,7 +127,7 @@ namespace EliteDangerousCore
             if (m_netLogFileQueue.TryDequeue(out filename))      // if a new one queued, we swap to using it
             {
                 lastnfi = OpenFileReader(filename);
-                System.Diagnostics.Debug.WriteLine(string.Format("Change to scan {0}", lastnfi.FullName));
+                System.Diagnostics.Debug.WriteLine($"Change to scan {lastnfi.FullName} filename {filename}" );
                 ScanReader(unfilteredentries, filteredentries, uientries);
             }
             else if (ticksNoActivity >= 30 && (lastnfi == null || lastnfi.Pos >= new FileInfo(lastnfi.FullName).Length))
@@ -149,7 +149,7 @@ namespace EliteDangerousCore
                     if (filenames.Length > 0)
                     {
                         lastnfi = OpenFileReader(filenames[0]);     // open first one
-                        System.Diagnostics.Debug.WriteLine(string.Format("Found new file {0}", lastnfi.FullName));
+                        System.Diagnostics.Debug.WriteLine($"Found new file {lastnfi.FullName} from {filenames[0]}");
                         ScanReader(unfilteredentries, filteredentries, uientries);
                     }
                 }
@@ -172,8 +172,10 @@ namespace EliteDangerousCore
 
         private void ScanReader(List<JournalEntry> unfilteredentries,List<JournalEntry> filteredentries, List<UIEvent> uientries)
         {
-            System.Diagnostics.Debug.Assert(lastnfi.ID != 0);       // must have committed it at this point, prev code checked for it but it must have been done
-            System.Diagnostics.Debug.Assert(netlogreaders.ContainsKey(lastnfi.FullName));       // must have added to netlogreaders.. double check
+            System.Diagnostics.Debug.WriteLine($"ScanReader {lastnfi.FullName} netlogreaders {netlogreaders.Count}");
+
+            System.Diagnostics.Debug.Assert(lastnfi.ID != 0,"Last NFI is zero");       // must have committed it at this point, prev code checked for it but it must have been done
+            System.Diagnostics.Debug.Assert(netlogreaders.ContainsKey(lastnfi.FullName),$"Can't find {lastnfi.FullName} in netlogreaders");       // must have added to netlogreaders.. double check
 
             bool readanything = lastnfi.ReadJournal(unfilteredentries,filteredentries, uientries, historyrefreshparsing: false);
 
@@ -398,9 +400,9 @@ namespace EliteDangerousCore
                 if (!delayadd)                      // if we add immediately, add to db
                     reader.TravelLogUnit.Add();
 
-                netlogreaders[filepath] = reader;
+                System.Diagnostics.Trace.WriteLine($"Create New TLU in DB {filepath}");
 
-                //System.Diagnostics.Trace.WriteLine($"Create New TLU in DB {filepath}");
+                netlogreaders[filepath] = reader;
             }
 
             return reader;
