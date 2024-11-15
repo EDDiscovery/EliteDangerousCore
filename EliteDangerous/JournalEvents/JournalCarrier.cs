@@ -502,7 +502,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, "tritium", -Amount, 0);
+            mc.ChangeCommd( EventTimeUTC, "tritium", -Amount, 0);
         }
 
         public void UpdateStats(Stats stats, ISystem system, string stationfaction)

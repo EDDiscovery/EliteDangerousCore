@@ -49,7 +49,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 MaterialCommodityMicroResource historic = historicmatlist?.Find(x => x.Details == mc);
                 MaterialCommodityMicroResource current = ReferenceEquals(historicmatlist, currentmatlist) ? null : currentmatlist?.Find(x => x.Details == mc);
-                int? limit = mc.MaterialLimit();
+                int? limit = mc.MaterialLimitOrNull();
 
                 string matinfo = historic?.Count.ToString() ?? "0";
                 if (limit != null)

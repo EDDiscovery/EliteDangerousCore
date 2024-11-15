@@ -88,13 +88,13 @@ namespace EliteDangerousCore.JournalEvents
         public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
             if (Type.Equals("Materials"))
-                mc.Change(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Raw, Material, -Quantity, 0);
+                mc.ChangeMat(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Raw.ToString(), Material, -Quantity);
         }
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
             if (Type.Equals("Commodity"))
-                mc.Change(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Commodity, -Quantity, 0);
+                mc.ChangeCommd(EventTimeUTC, Commodity, -Quantity, 0);
         }
 
         public void UpdateStats(Stats stats, ISystem system, string unusedstationfaction)

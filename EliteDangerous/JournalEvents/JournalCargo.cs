@@ -180,7 +180,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, -Count, 0);   // same in the srv or ship, we lose count
+            mc.ChangeCommd( EventTimeUTC, Type, -Count, 0);   // same in the srv or ship, we lose count
         }
 
         public override string GetInfo()
@@ -237,7 +237,7 @@ namespace EliteDangerousCore.JournalEvents
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
             if (CargoType.Length > 0 && Count > 0)
-                mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, CargoType, (UpdateEnum == UpdateTypeEnum.Collect) ? Count : -Count, 0);
+                mc.ChangeCommd( EventTimeUTC, CargoType, (UpdateEnum == UpdateTypeEnum.Collect) ? Count : -Count, 0);
         }
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)
@@ -288,7 +288,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool innormalspace) 
         {
-            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, Type, 1, 0);     // collecting cargo in srv same as collecting cargo in ship. srv autotransfers it to ship
+            mc.ChangeCommd( EventTimeUTC, Type, 1, 0);     // collecting cargo in srv same as collecting cargo in ship. srv autotransfers it to ship
         }
         public override string GetInfo()
         {
@@ -343,9 +343,9 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (var t in Transfers)
                 {
                     if (t.Direction.Contains("ship", StringComparison.InvariantCultureIgnoreCase))     // toship, with some leaway to allow fd to change their formatting in future
-                        mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, t.Type, t.Count, 0);
+                        mc.ChangeCommd( EventTimeUTC, t.Type, t.Count, 0);
                     else
-                        mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, t.Type, -t.Count, 0);
+                        mc.ChangeCommd( EventTimeUTC, t.Type, -t.Count, 0);
                 }
             }
         }

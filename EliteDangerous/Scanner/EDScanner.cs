@@ -184,19 +184,21 @@ namespace EliteDangerousCore
 
             foreach (string std in stdfolders)          // setup the std folders
             {
-                var path = Path.GetFullPath(std);
+                var path = Path.GetFullPath(std).TrimEnd(Path.DirectorySeparatorChar);  // nov 24 ensure no trailing /
 
                 if (Directory.Exists(path))             // make sure the bugger exists
                 {
                     folderlist.Add(new Tuple<string, bool>(path, false));        // std folders are not sub folder scanned
                 }
+                else
+                    System.Diagnostics.Trace.WriteLine($"Scanner Std Folder {path} does not exist");
             }
 
             foreach (var cmdr in EDCommander.GetListActiveCommanders())       // setup any commander folders first, so the watches are established with subfolder search
             {
                 if (!cmdr.ConsoleCommander && cmdr.JournalDir.HasChars())
                 {
-                    var path = Path.GetFullPath(cmdr.JournalDir);
+                    var path = Path.GetFullPath(cmdr.JournalDir).TrimEnd(Path.DirectorySeparatorChar); // nov 24 ensure no trailing /
 
                     if (Directory.Exists(path))
                     {
@@ -213,6 +215,9 @@ namespace EliteDangerousCore
                         if (tp == null)
                             folderlist.Add(new Tuple<string, bool>(path, cmdr.IncludeSubFolders));
                     }
+                    else
+                        System.Diagnostics.Trace.WriteLine($"Scanner Cmdr Folder {path} does not exist");
+
                 }
             }
 

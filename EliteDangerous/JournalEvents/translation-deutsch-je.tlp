@@ -27,7 +27,7 @@ SECTION JournalTypeEnum
 .CrewHire: "Crew Hire" => "Besatzung eingestellt"
 .ClearImpound: "Clear Impound" => "Begleiche Pfändung"
 .DatalinkScan: "Datalink Scan" => "Datenverbindungsscan"
-.DeliverPowerMicroResources: "Deliver Power Micro Resources" @
+.DeliverPowerMicroResources: "Deliver Power Micro Resources" => "Liefere Macht-Mikroressourcen"
 .Died: "Died" => "Verstorben"
 .DiscoveryScan: "Discovery Scan" => "Entdeckungsscan"
 .Docked: "Docked" => "Angelegt"
@@ -56,7 +56,7 @@ SECTION JournalTypeEnum
 .HeatDamage: "Heat Damage" => "Hitzeschaden"
 .HeatWarning: "Heat Warning" => "Hitzewarnung"
 .HullDamage: "Hull Damage" => "Hüllenschaden"
-.HoloscreenHacked: "Holoscreen Hacked" @
+.HoloscreenHacked: "Holoscreen Hacked" => "Holoschirm gehackt"
 .Interdicted: "Interdicted" => "Unterbrochen"
 .Interdiction: "Interdiction" => "Unterbrechung"
 .JetConeBoost: "Jet Cone Boost" => "Kegelstrahlboost"
@@ -126,7 +126,7 @@ SECTION JournalTypeEnum
 .RepairAll: "Repair All" => "Reparatur (vollständig)"
 .RepairDrone: "Repair Drone" => "Drohnenreparatur"
 .Reputation: "Reputation" => "Ansehen"
-.RequestPowerMicroResources: "Request Power Micro Resources" @
+.RequestPowerMicroResources: "Request Power Micro Resources" => "Fordere Macht-Mikrosressourcen an"
 .RestockVehicle: "Restock Vehicle" => "Fahrzeuge nachgefüllt"
 .Resurrect: "Resurrect" => "Auferstehen"
 .SAASignalsFound: "SAA Signals Found" => "Oberflächensignale gefunden"
@@ -339,7 +339,7 @@ SECTION JournalEngineerProgress
 SECTION JournalFSDJump
 
 .Jumpto: "Jump to {0}" => "Springe zu {0}"
-.Distance: "; ly;N2" @
+.Distance: "; ly;N2" => "; ly;N2"
 .FuelUsed: "Fuel used: ; t;N2" => "Treibstoff verbraucht: ; t;N2"
 .FuelLeft: "Fuel left: ; t;N2" => "Treibstoff übrig: ; t;N2"
 

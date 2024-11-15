@@ -154,7 +154,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
-            mc.Change( EventTimeUTC, Category, Name, Count, 0);
+            mc.ChangeMat( EventTimeUTC, Category, Name, Count);
 
             Total = mc.GetLast(Name)?.Count ?? 0;
         }
@@ -189,7 +189,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
-            mc.Change( EventTimeUTC, Category, Name, -Count, 0);
+            mc.ChangeMat( EventTimeUTC, Category, Name, -Count);
             Total = mc.GetLast(Name)?.Count ?? 0;
         }
 
@@ -287,8 +287,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Paid != null && Received != null)
             {
-                mc.Change( EventTimeUTC, Paid.Category.Alt(TraderType), Paid.Material, -Paid.Quantity, 0);        // use faction - person your using to swap
-                mc.Change( EventTimeUTC, Received.Category.Alt(TraderType), Received.Material, Received.Quantity, 0);
+                mc.ChangeMat( EventTimeUTC, Paid.Category.Alt(TraderType), Paid.Material, -Paid.Quantity);        // use faction - person your using to swap
+                mc.ChangeMat( EventTimeUTC, Received.Category.Alt(TraderType), Received.Material, Received.Quantity);
             }
         }
 
@@ -375,7 +375,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Name.Contains("Limpet", StringComparison.InvariantCultureIgnoreCase) )      // hard code limpets mean 1 more cargo of them
             {
-                mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, "drones", 1, 0);   // ignore faction - synthesis
+                mc.ChangeCommd( EventTimeUTC, "drones", 1, 0);   // ignore faction - synthesis
             }
         }
 

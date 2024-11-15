@@ -323,7 +323,7 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (var m in Items.EmptyIfNull())
                 {
                     MaterialCommodityMicroResourceType.EnsurePresent(m.Category, m.Name, m.Name_Localised);
-                    mc.Change(EventTimeUTC, m.Category, m.Name, m.Count, 0, MicroResource.ShipLocker);
+                    mc.ChangeMR(MicroResource.ShipLocker, EventTimeUTC, m.Category, m.Name, m.Count );
                 }
             }
 
@@ -386,7 +386,7 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (var m in Items.EmptyIfNull())
                 {
                     MaterialCommodityMicroResourceType.EnsurePresent(m.Category, m.Name, m.Name_Localised);
-                    mc.Change(EventTimeUTC, m.Category, m.Name, -m.Count, 0, MicroResource.ShipLocker);
+                    mc.ChangeMR(MicroResource.ShipLocker, EventTimeUTC, m.Category, m.Name, -m.Count);
                 }
             }
         }
@@ -439,13 +439,13 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (var m in Offered.EmptyIfNull())
                 {
                     MaterialCommodityMicroResourceType.EnsurePresent(m.Category, m.Name, m.Name_Localised);
-                    mc.Change(EventTimeUTC, m.Category, m.Name, -m.Count, 0, MicroResource.ShipLocker);
+                    mc.ChangeMR(MicroResource.ShipLocker, EventTimeUTC, m.Category, m.Name, -m.Count);
                 }
 
                 if (Received.HasChars())
                 {
                     MaterialCommodityMicroResourceType.EnsurePresent(Category, Received, Received_Localised);
-                    mc.Change(EventTimeUTC, Category, Received, Count, 0, MicroResource.ShipLocker);
+                    mc.ChangeMR(MicroResource.ShipLocker, EventTimeUTC, Category, Received, Count);
                 }
             }
         }
@@ -553,14 +553,14 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var i in Added)
                 {
-                    mc.Change(EventTimeUTC, i.Category, i.Name, i.Count, 0, MicroResource.BackPack, false);
+                    mc.ChangeMR(MicroResource.BackPack, EventTimeUTC, i.Category, i.Name, i.Count);
                 }
             }
             if (Removed != null)
             {
                 foreach (var i in Removed)
                 {
-                    mc.Change(EventTimeUTC, i.Category, i.Name, -i.Count, 0, MicroResource.BackPack, false);
+                    mc.ChangeMR(MicroResource.BackPack, EventTimeUTC, i.Category, i.Name, -i.Count);
                 }
             }
 
@@ -702,7 +702,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             foreach (var i in MicroResources)
             {
-                mc.Change(EventTimeUTC, i.Category, i.Name, -i.Count, 0, MicroResource.BackPack, false);        // mark as removed
+                mc.ChangeMR(MicroResource.BackPack, EventTimeUTC, i.Category, i.Name, -i.Count);        // mark as removed
             }
         }
     }

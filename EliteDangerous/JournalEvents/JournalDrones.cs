@@ -66,7 +66,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, "drones", Count, 0);
+            mc.ChangeCommd( EventTimeUTC, "drones", Count, 0);
         }
 
         public void UpdateStats(Stats stats, ISystem system, string stationfaction)
@@ -107,7 +107,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, "drones", -Count, 0);
+            mc.ChangeCommd( EventTimeUTC, "drones", -Count, 0);
         }
 
         public void UpdateStats(Stats stats, ISystem system, string stationfaction)
@@ -143,7 +143,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv) 
         {
-            mc.Change( EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, "drones", -1, 0);
+            mc.ChangeCommd( EventTimeUTC, "drones", -1, 0);
         }
 
         public override string GetInfo()
