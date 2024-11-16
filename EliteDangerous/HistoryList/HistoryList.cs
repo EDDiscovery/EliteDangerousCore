@@ -479,16 +479,33 @@ namespace EliteDangerousCore
                         var jdprev = prev as EliteDangerousCore.JournalEvents.JournalReservoirReplenished;
                         var jd = je as EliteDangerousCore.JournalEvents.JournalReservoirReplenished;
 
-                        if ( jd.FuelReservoir == jdprev.FuelReservoir)      // if we have the same reservior
+                        if (jd.FuelReservoir == jdprev.FuelReservoir)      // if we have the same reservior
                         {
                             // we are throwing away the current one (jd) and keeping jdprev.
                             // If first time, we move into fuelstart the opening fuel main
-                            if (jdprev.FuelStart == null)           
+                            if (jdprev.FuelStart == null)
                                 jdprev.FuelStart = jdprev.FuelMain;
                             // move the updated fuel to jdprev.
                             jdprev.FuelMain = jd.FuelMain;
                             // and incremement the event count
                             jdprev.FuelEvents = jdprev.FuelEvents == null ? 2 : jdprev.FuelEvents.Value + 1;
+                            return true;
+                        }
+                    }
+
+                    else if (je.EventTypeID == JournalTypeEnum.FactionKillBond)
+                    {
+                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalFactionKillBond;
+                        var jd = je as EliteDangerousCore.JournalEvents.JournalFactionKillBond;
+
+                        if (jd.AwardingFaction == jdprev.AwardingFaction && jd.VictimFaction == jdprev.VictimFaction)
+                        {
+                            // we are throwing away the current one (jd) and keeping jdprev.
+                            if (jdprev.NumberRewards == null)
+                                jdprev.NumberRewards = 1;
+
+                            jdprev.NumberRewards++;     // increment count
+                            jdprev.Reward += jd.Reward;
                             return true;
                         }
                     }

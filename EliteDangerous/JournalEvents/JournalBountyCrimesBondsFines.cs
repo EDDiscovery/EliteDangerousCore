@@ -305,6 +305,7 @@ namespace EliteDangerousCore.JournalEvents
         public string VictimFaction { get; set; }
         public string VictimFaction_Localised { get; set; }         // may be empty
         public long Reward { get; set; }
+        public int? NumberRewards { get; set; }                      // EDD addition, number of rewards
 
         public string Type { get { return "Faction Kill Bond".T(EDCTx.JournalTypeEnum_FactionKillBond); } }
         public string Target { get { return ""; } }
@@ -318,8 +319,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward, "< from ".T(EDCTx.JournalEntry_from), AwardingFaction_Localised,
-                "<, due to ".T(EDCTx.JournalEntry_dueto), VictimFaction_Localised);
+            return BaseUtils.FieldBuilder.Build("x", NumberRewards,
+                                        "Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward, 
+                                        "< from ".T(EDCTx.JournalEntry_from), AwardingFaction_Localised,
+                                        "<, due to ".T(EDCTx.JournalEntry_dueto), VictimFaction_Localised);
         }
 
         public bool HasFaction(string faction)
