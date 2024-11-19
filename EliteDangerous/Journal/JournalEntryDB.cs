@@ -73,28 +73,6 @@ namespace EliteDangerousCore
             }
         }
 
-        public bool Update()
-        {
-            return UserDatabase.Instance.DBWrite<bool>(cn => { return Update(cn); });
-        }
-
-        private bool Update(SQLiteConnectionUser cn)
-        {
-            using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set EventTime=@EventTime, TravelLogID=@TravelLogID, CommanderID=@CommanderID, EventTypeId=@EventTypeId, EventType=@EventStrName, Synced=@Synced where ID=@id"))
-            {
-                cmd.AddParameterWithValue("@ID", Id);
-                cmd.AddParameterWithValue("@EventTime", EventTimeUTC);  // MUST use UTC connection
-                cmd.AddParameterWithValue("@TravelLogID", TLUId);
-                cmd.AddParameterWithValue("@CommanderID", CommanderId);
-                cmd.AddParameterWithValue("@EventTypeId", EventTypeID);
-                cmd.AddParameterWithValue("@EventStrName", EventTypeStr);
-                cmd.AddParameterWithValue("@Synced", Synced);
-                cmd.ExecuteNonQuery();
-
-                return true;
-            }
-        }
-
         internal void UpdateJsonEntry(JObject jo, SQLiteConnectionUser cn, DbTransaction txn)
         {
             if ( JsonCached != null )
@@ -297,6 +275,7 @@ namespace EliteDangerousCore
         // ID, travellogid, commanderid, event json, sync flag
         // null if cancelled
 
+        [System.Diagnostics.DebuggerDisplay("{ID} {TLUID} {Cmdr} {Json}")]
         public class TableData
         {
             public long ID;
@@ -306,8 +285,13 @@ namespace EliteDangerousCore
             public int Syncflag;
         }
 
-        static public List<TableData> GetTableData(System.Threading.CancellationToken cancel, int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
-                             JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null)
+        static public List<TableData> GetTableData(System.Threading.CancellationToken cancel, 
+                        int commander = -999, 
+                        DateTime? startdateutc = null,          // start/end date limit
+                        DateTime? enddateutc = null,            
+                        JournalTypeEnum[] ids = null,           // ids before allidsafterutc
+                        DateTime? allidsafterutc = null,        // date where everything is loaded from
+                        long? tluid = null)                      // tluid to consider only
                              
         {
             // in the connection thread, construct the command and execute a read..
@@ -330,6 +314,11 @@ namespace EliteDangerousCore
                 {
                     condition = condition.AppendPrePad("EventTime <= @before", " and ");
                     cmd.AddParameterWithValue("@before", enddateutc.Value);
+                }
+                if (tluid != null)
+                {
+                    condition = condition.AppendPrePad("TravelLogId = @tluid", " and ");
+                    cmd.AddParameterWithValue("@tluid", tluid.Value);
                 }
                 if (ids != null)
                 {

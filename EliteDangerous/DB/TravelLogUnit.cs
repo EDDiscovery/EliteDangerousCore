@@ -83,6 +83,8 @@ namespace EliteDangerousCore.DB
             return UserDatabase.Instance.DBWrite<bool>(cn => { return Add(cn,null); });
         }
 
+        // Monitor watcher adds TLUs into the DB in LastWrite order - see EDJournalMonitorWatcher line 240 
+
         internal bool Add(SQLiteConnectionUser cn, DbTransaction txn)
         {
             FetchAll();
@@ -139,6 +141,8 @@ namespace EliteDangerousCore.DB
             }
         }
 
+        // Monitor watcher adds TLUs into the DB in LastWrite order so the TLU caches will be in LastWrite order (dictionary keeps insert order)
+
         static private void FetchAll()
         {
             if (cacheid == null)
@@ -148,7 +152,7 @@ namespace EliteDangerousCore.DB
 
                 UserDatabase.Instance.DBRead(cn =>
                 {
-                    using (DbCommand cmd = cn.CreateCommand("select * from TravelLogUnit"))
+                    using (DbCommand cmd = cn.CreateCommand("select * from TravelLogUnit Order By id"))
                     {
                         using (DbDataReader rdr = cmd.ExecuteReader())
                         {
@@ -165,31 +169,17 @@ namespace EliteDangerousCore.DB
             }
         }
 
-        static public List<TravelLogUnit> GetAll()
-        {
-            FetchAll();
-            return cacheid.Values.ToList();
-        }
-
         public static List<string> GetAllNames()
         {
             FetchAll();
             return cacheid.Values.Select(x=>x.FullName).ToList();
         }
 
-        public static TravelLogUnit Get(string pathfilename)
+        // case sensitive.
+        public static bool TryGet(string pathfilename, out TravelLogUnit tlu)
         {
             FetchAll();
-            if (cachepath.TryGetValue(pathfilename, out TravelLogUnit res))
-                return res;
-            else
-                return null;
-        }
-
-        public static bool TryGet(string name, out TravelLogUnit tlu)
-        {
-            tlu = Get(name);
-            return tlu != null;
+            return cachepath.TryGetValue(pathfilename, out tlu);
         }
 
         public static TravelLogUnit Get(long id)
@@ -200,8 +190,15 @@ namespace EliteDangerousCore.DB
 
         public static bool TryGet(long id, out TravelLogUnit tlu)
         {
-            tlu = Get(id);
-            return tlu != null;
+            FetchAll();
+            return cacheid.TryGetValue(id, out tlu);
+        }
+
+        // will be in last write order due to insert order
+        public static List<TravelLogUnit> GetCommander(int cmdrid)
+        {
+            FetchAll();
+            return cacheid.Where(x => x.Value.CommanderId == cmdrid).Select(x=>x.Value).ToList();
         }
 
         public static Dictionary<long, TravelLogUnit> cacheid = null;

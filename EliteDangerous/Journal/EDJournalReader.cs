@@ -204,12 +204,6 @@ namespace EliteDangerousCore
 
             }
 
-            //if (Government == GovernmentDefinitions.Government.None)
-            //{
-            //    IsTrainingEvent = true;
-            //}
-
-
             // if in dynamic read during play, and its an additional file JE, and we are NOT a console commander, see if we can pick up extra info
 
             if (!inhistoryrefreshparse && (je is IAdditionalFiles) && !(EDCommander.GetCommander(cmdrid)?.ConsoleCommander ?? false) )
