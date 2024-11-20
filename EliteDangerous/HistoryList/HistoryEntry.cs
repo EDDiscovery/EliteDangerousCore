@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    [DebuggerDisplay("Event {journalEntry.EventTypeID} {System.Name} ({System.X,nq},{System.Y,nq},{System.Z,nq}) {journalEntry.EventTimeUTC} Inx:{Index} JID:{JournalEntry.Id}")]
+    [DebuggerDisplay("Event {journalEntry.EventTypeID} {System.Name} ({System.X,nq},{System.Y,nq},{System.Z,nq}) {journalEntry.EventTimeUTC} Inx:{Index} JID:{journalEntry.Id}")]
     public class HistoryEntry           // DONT store commander ID.. this history is externally filtered on it.
     {
         #region Public Variables

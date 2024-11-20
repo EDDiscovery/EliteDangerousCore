@@ -396,7 +396,7 @@ namespace EliteDangerousCore
         {
             System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("JSC", true)} Stats table read start for commander {cmdrid}");
 
-            var jlist = JournalEntry.GetAll(Exit.Token, cmdrid, ids: events, startdateutc: start, enddateutc: end);
+            var jlist = JournalEntry.GetAll(Exit.Token, cmdrid, onlyidstoreport: events, startdateutc: start, enddateutc: end);
 
             System.Diagnostics.Debug.WriteLine($"{BaseUtils.AppTicks.TickCountLap("JSC")} Stats table read end - no {jlist.Length}");
 

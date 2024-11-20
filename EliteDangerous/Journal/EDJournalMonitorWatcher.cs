@@ -95,10 +95,9 @@ namespace EliteDangerousCore
         // Called by EDScanner periodically to scan for journal entries
         // returns unfiltered jevents, filtered jevents, uievents
 
-        public Tuple<List<JournalEntry>, List<JournalEntry>, List<UIEvent>> ScanForNewEntries()
+        public Tuple<List<JournalEntry>, List<UIEvent>> ScanForNewEntries()
         {
-            var unfilteredentries = new List<JournalEntry>();
-            var filteredentries = new List<JournalEntry>();
+            var jeentries = new List<JournalEntry>();
             var uientries = new List<UIEvent>();
 
             string filename = null;
@@ -113,13 +112,13 @@ namespace EliteDangerousCore
                 {
                     //var notdone = new FileInfo(lastnfi.FullName).Length != lastnfi.Pos ? "**********" : ""; System.Diagnostics.Debug.WriteLine($"Scan last nfi {lastnfi.FullName} from {lastnfi.Pos} Length file is {new FileInfo(lastnfi.FullName).Length} {notdone} ");
 
-                    ScanReader(unfilteredentries,filteredentries, uientries);
+                    ScanReader(jeentries, uientries);
                
-                    if (unfilteredentries.Count > 0 || filteredentries.Count > 0 || uientries.Count > 0)
+                    if (jeentries.Count > 0 || uientries.Count > 0)
                     {
                        // System.Diagnostics.Debug.WriteLine("ScanFornew read " + entries.Count() + " ui " + uientries.Count());
                         ticksNoActivity = 0;
-                        return new Tuple<List<JournalEntry>, List<JournalEntry>, List<UIEvent>>(unfilteredentries, filteredentries, uientries);     // feed back now don't change file
+                        return new Tuple<List<JournalEntry>, List<UIEvent>>(jeentries, uientries);     // feed back now don't change file
                     }
                 }
             }
@@ -128,7 +127,7 @@ namespace EliteDangerousCore
             {
                 lastnfi = OpenFileReader(filename);
                 System.Diagnostics.Debug.WriteLine($"Change to scan {lastnfi.FullName} filename {filename}" );
-                ScanReader(unfilteredentries, filteredentries, uientries);
+                ScanReader(jeentries, uientries);
             }
             else if (ticksNoActivity >= 30 && (lastnfi == null || lastnfi.Pos >= new FileInfo(lastnfi.FullName).Length))
             {
@@ -150,7 +149,7 @@ namespace EliteDangerousCore
                     {
                         lastnfi = OpenFileReader(filenames[0]);     // open first one
                         System.Diagnostics.Debug.WriteLine($"Found new file {lastnfi.FullName} from {filenames[0]}");
-                        ScanReader(unfilteredentries, filteredentries, uientries);
+                        ScanReader(jeentries, uientries);
                     }
                 }
                 catch (Exception ex)
@@ -165,23 +164,23 @@ namespace EliteDangerousCore
 
             ticksNoActivity++;
 
-            return new Tuple<List<JournalEntry>, List<JournalEntry>, List<UIEvent>>(unfilteredentries,filteredentries, uientries);     // feed back now don't change file
+            return new Tuple<List<JournalEntry>, List<UIEvent>>(jeentries, uientries);     // feed back now don't change file
         }
 
         // Called by ScanForNewEntries (from EDJournalClass Scan Tick Worker) to scan a NFI for new entries
 
-        private void ScanReader(List<JournalEntry> unfilteredentries,List<JournalEntry> filteredentries, List<UIEvent> uientries)
+        private void ScanReader(List<JournalEntry> jeentries, List<UIEvent> uientries)
         {
           //  System.Diagnostics.Debug.WriteLine($"ScanReader {lastnfi.FullName} netlogreaders {netlogreaders.Count}");
 
             System.Diagnostics.Debug.Assert(lastnfi.ID != 0,"Last NFI is zero");       // must have committed it at this point, prev code checked for it but it must have been done
             System.Diagnostics.Debug.Assert(netlogreaders.ContainsKey(lastnfi.FullName),$"Can't find {lastnfi.FullName} in netlogreaders");       // must have added to netlogreaders.. double check
 
-            bool readanything = lastnfi.ReadJournal(unfilteredentries,filteredentries, uientries, historyrefreshparsing: false);
+            bool readanything = lastnfi.ReadJournal(jeentries, uientries, historyrefreshparsing: false);
 
             if (StoreToDBDuringUpdateRead)
             {
-                if (filteredentries.Count > 0 || readanything )
+                if (jeentries.Count > 0 || readanything )
                 {
                     UserDatabase.Instance.DBWrite(cn =>
                     {
@@ -190,11 +189,11 @@ namespace EliteDangerousCore
 
                         using (DbTransaction txn = cn.BeginTransaction())
                         {
-                            if (filteredentries.Count > 0)
+                            if (jeentries.Count > 0)
                             {
-                                filteredentries = filteredentries.Where(jre => JournalEntry.FindEntry(jre, cn, jre.GetJson(cn)).Count == 0).ToList();
+                                jeentries = jeentries.Where(jre => JournalEntry.FindEntry(jre, cn, jre.GetJson(cn)).Count == 0).ToList();
 
-                                foreach (JournalEntry jre in filteredentries)
+                                foreach (JournalEntry jre in jeentries)
                                 {
                                     var json = jre.GetJson(cn);
                                     jre.Add(json,cn,txn);
@@ -208,7 +207,7 @@ namespace EliteDangerousCore
 
                         if (sw.ElapsedMilliseconds >= 50)        // this is written to the log to try and debug bad DB behaviour
                         {
-                            System.Diagnostics.Trace.WriteLine($"Warning access to DB to write new journal entries slow {sw.ElapsedMilliseconds} for {filteredentries.Count}");
+                            System.Diagnostics.Trace.WriteLine($"Warning access to DB to write new journal entries slow {sw.ElapsedMilliseconds} for {jeentries.Count}");
                             //foreach (var e in entries)   System.Diagnostics.Trace.WriteLine(".." + e.EventTimeUTC + " " + e.EventTypeStr);
                         }
 
@@ -304,11 +303,10 @@ namespace EliteDangerousCore
 
                 //System.Diagnostics.Debug.WriteLine($"Processing {reader.FullName}");
 
-                List<JournalEntry> unfilteredwasted = new List<JournalEntry>();     // we don't care about the raw unfiltered ones
                 List<JournalEntry> dbentries = new List<JournalEntry>();            // entries found for db
                 List<UIEvent> uieventswasted = new List<UIEvent>();                 // any UI events converted are wasted here
 
-                bool readanything = reader.ReadJournal(unfilteredwasted, jeslist != null ? jeslist : dbentries, uieventswasted, historyrefreshparsing: true);      // this may create new commanders, and may write (but not commit) to the TLU
+                bool readanything = reader.ReadJournal(jeslist != null ? jeslist : dbentries, uieventswasted, historyrefreshparsing: true);      // this may create new commanders, and may write (but not commit) to the TLU
                     
                 if ( jeslist != null )                  // if updating jes list
                 {

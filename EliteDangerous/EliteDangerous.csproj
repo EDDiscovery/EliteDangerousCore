@@ -149,7 +149,7 @@
     <Compile Include="Journal\EDJournalReader.cs" />
     <Compile Include="Journal\EDJournalMonitorWatcher.cs" />
     <Compile Include="JournalEvents\JournalMicroResources.cs" />
-    <Compile Include="Journal\JournalEssentialEvents.cs" />
+    <Compile Include="Journal\JournalEventsManagement.cs" />
     <Compile Include="Journal\JournalEntryDB.cs" />
     <Compile Include="Journal\JournalEnums.cs" />
     <Compile Include="Computers\JournalStatsComputer.cs" />
