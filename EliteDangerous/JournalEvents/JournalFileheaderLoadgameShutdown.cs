@@ -69,6 +69,8 @@ namespace EliteDangerousCore.JournalEvents
     [System.Diagnostics.DebuggerDisplay("LoadGame {LoadGameCommander} {ShipId} {Ship} {GameMode}")]
     public class JournalLoadGame : JournalEntry, ILedgerJournalEntry, IShipInformation
     {
+        const string UnknownShip = "Unknown";
+
         public JournalLoadGame(JObject evt) : base(evt, JournalTypeEnum.LoadGame)
         {
             LoadGameCommander = JournalFieldNaming.SubsituteCommanderName( evt["Commander"].Str() );
@@ -78,7 +80,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (ShipFD.Length == 0)      // Vega logs show no ship on certain logs.. handle it to prevent warnings.
             {
-                Ship_Localised = ShipFD = "Unknown";
+                Ship = Ship_Localised = ShipFD = UnknownShip;
             }
             else
             {
@@ -180,8 +182,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
-            if (InShipSRVOrFighter)        // only call if in these types from 4.0 we can be on foot or in a taxi
+            // only call if in these types from 4.0 we can be on foot or in a taxi
+            if (Ship != UnknownShip && InShipSRVOrFighter)
+            {
                 shp.LoadGame(ShipId, Ship, ShipFD, ShipName, ShipIdent, FuelLevel, FuelCapacity);
+            }
         }
 
         private bool Horizons { get; set; }
