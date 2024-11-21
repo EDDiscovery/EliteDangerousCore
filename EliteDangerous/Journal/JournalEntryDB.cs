@@ -286,7 +286,7 @@ namespace EliteDangerousCore
         }
 
         static public List<TableData> GetTableData(System.Threading.CancellationToken cancel, 
-                        int commander = -999, 
+                        int commander = -999,
                         DateTime? startdateutc = null,              // start/end date limit
                         DateTime? enddateutc = null,
                         JournalTypeEnum[] onlyidstoreport = null,   // ids before allidsafterutc
@@ -382,7 +382,6 @@ namespace EliteDangerousCore
 
             return new JournalEntry[] { };  // default is empty array
         }
-
 
         public static List<JournalEntry> GetByEventType(JournalTypeEnum eventtype, int commanderid, DateTime startutc, DateTime stoputc)
         {
@@ -574,6 +573,14 @@ namespace EliteDangerousCore
             return count;
         }
 
+        static public bool WriteJournals(DateTime? startdateutc, DateTime? enddateutc, string file)
+        {
+            var data = GetTableData(new System.Threading.CancellationToken(), startdateutc: startdateutc, enddateutc: enddateutc);
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            foreach (var row in data)
+                sb.AppendLine(row.Json);
+            return FileHelpers.TryWriteToFile(file, sb.ToString());
+        }
     }
 }
 
