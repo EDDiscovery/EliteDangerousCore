@@ -405,7 +405,7 @@ SECTION MaterialCommodityMicroResourceType
 .animalmonitors: "Animal Monitors" => "Monitores de animales"
 .aquaponicsystems: "Aquaponic Systems" => "Sistemas de Hidroponía"
 .bioreducinglichen: "Bioreducing Lichen" => "Liquenes bioreductores"
-.computercomponents: "Computer Components" => "Componentes informaticos"
+.computercomponents: "Computer Components" => "Componentes informáticos"
 .autofabricators: "Auto-Fabricators" => "Autofabricantes"
 .microcontrollers: "Micro Controllers" => "Microcontroladores"
 .medicaldiagnosticequipment: "Medical Diagnostic Equipment" => "Equipo de diagnóstico médico"
@@ -886,37 +886,37 @@ SECTION MaterialCommodityMicroResourceType
 .coralsap: "Coral Sap" @
 .onionheadc: "Onionhead Gamma Strain" => "Cepa Gamma de Cebollazo"
 .classifiedexperimentalequipment: "Classified Experimental Equipment" @
-.unknownmineral: "Impure Spire Mineral" @
-.unknownrefinedmineral: "Semi-Refined Spire Mineral" @
+.unknownmineral: "Impure Spire Mineral" => "Mineral de agujas impuro"
+.unknownrefinedmineral: "Semi-Refined Spire Mineral" => "Mineral de agujas semi-refinado"
 .thargoidtitandrivecomponent: "Titan Drive Component" => "Componente de Motor de Titan"
 .thargoidcystspecimen: "Cyst Specimen" => "Espécimen de Quiste"
 .thargoidbonefragments: "Bone Fragments" => "Fragmentos de Hueso"
 .thargoidorgansample: "Organ Sample" => "Muestra de Órgano"
-.tg_abrasion01: "Heat Exposure Specimen" @
-.tacticalcorechip: "Tactical Core Chip" @
-.powerindustrial: "Industrial Component" @
-.powermiscindust: "Industrial Machinery" @
-.powerinventory: "Inventory Record" @
-.powerplaymilitary: "Military Schematic" @
-.powerelectronics: "Electronics Package" @
-.powercomputer: "Computer Parts" @
-.powerexperiment: "Experimental Prototype" @
-.poweragriculture: "Agricultural Sample" @
-.powerextraction: "Extraction Sample" @
-.powerequipment: "Personal Protective Equipment" @
-.powermedical: "Medical sample" @
-.powermisccomputer: "Data Storage Device" @
-.powersecurity: "Security Logs" @
-.powerpower: "Energy Regulator" @
-.powerreasearch: "Research Notes" @
-.powerpreparationspyware: "Power Injection Malware" @
-.powerspyware: "Power Tracker Malware" @
-.powerresearchdata: "Power Research Data" @
-.poweremployeedata: "Power Association Data" @
-.powerfinancialrecords: "Power Industrial Data" @
-.powerpropagandadata: "Power Political Data" @
-.powerclassifieddata: "Power Classified Data" @
-.powermegashipdata: "Power Megaship Data" @
+.tg_abrasion01: "Heat Exposure Specimen" => "Espécimen de Exposición Térmica"
+.tacticalcorechip: "Tactical Core Chip" => "Chip de Núcleo Táctico"
+.powerindustrial: "Industrial Component" => "Componente Industrial"
+.powermiscindust: "Industrial Machinery" => "Maquinaria Industrial"
+.powerinventory: "Inventory Record" => "Registro de Inventario"
+.powerplaymilitary: "Military Schematic" => "Plano Militar"
+.powerelectronics: "Electronics Package" => "Paquete de Componentes Electrónicos"
+.powercomputer: "Computer Parts" => "Piezas Informáticas"
+.powerexperiment: "Experimental Prototype" => "Prototipo Experimental"
+.poweragriculture: "Agricultural Sample" => "Muestra de Proceso Agrícola"
+.powerextraction: "Extraction Sample" => "Extracción Fallida"
+.powerequipment: "Personal Protective Equipment" => "Equipamiento de Protección Personal"
+.powermedical: "Medical sample" => "Naves Médicas"
+.powermisccomputer: "Data Storage Device" => "Dispositivo de Almacenamiento de Datos"
+.powersecurity: "Security Logs" => "Registros de Seguridad"
+.powerpower: "Energy Regulator" => "Regulador de Energía"
+.powerreasearch: "Research Notes" => "Notas de Investigación"
+.powerpreparationspyware: "Power Injection Malware" => "Software Malicioso de Inyección de Potencia"
+.powerspyware: "Power Tracker Malware" => "Software Malicioso de Seguimiento de Potencia"
+.powerresearchdata: "Power Research Data" => "Datos de Investigación de la Potencia"
+.poweremployeedata: "Power Association Data" => "Información De Asociación de Potencia"
+.powerfinancialrecords: "Power Industrial Data" => "Datos Industriales de la Potencia"
+.powerpropagandadata: "Power Political Data" => "Información Política de la Potencia"
+.powerclassifieddata: "Power Classified Data" => "Información Clasificada de la Potencia"
+.powermegashipdata: "Power Megaship Data" => "Datos de Meganave de Potencia"
 
 SECTION EngineeringData
 
@@ -1030,7 +1030,7 @@ SECTION ScanDisplayUserControl
 .Signals: "Signals" => "Señales"
 .Codex: "Codex" => "Códice"
 .Organics: "Organics" => "Orgánicos"
-.Genuses: "Genuses" @
+.Genuses: "Genuses" => "Géneros"
 
 SECTION Signals
 
@@ -1078,7 +1078,7 @@ SECTION Crimes
 .piracy: "Piracy" => "Piratería"
 .recklessweaponsdischarge: "Discharging a weapon" => "Disparo negligente de armas"
 .shuttledestruction: "Destroying an APEX Shuttle" => "Destrucción de lanzadera de Apex"
-.stationTamperingMinor: "Tampering with a station" @
+.stationTamperingMinor: "Tampering with a station" => "Manipulación de una estación"
 
 SECTION FactionStates
 
@@ -1124,7 +1124,7 @@ SECTION Allegiances
 .Guardian: "Guardian" => "Guardianes"
 .Thargoid: "Thargoid" => "Thargoides"
 .PilotsFederation: "Pilots Federation" => "Federación de Pilotos"
-.PlayerPilots: "Player Pilots Federation" @
+.PlayerPilots: "Player Pilots Federation" => "Federación de Pilotos de Jugadores"
 
 SECTION GovernmentTypes
 
@@ -1204,15 +1204,15 @@ SECTION StarportTypes
 SECTION PowerPlayStates
 
 .Unknown: "Unknown" = Unknown
-.InPrepareRadius: "In prepare radius" @
+.InPrepareRadius: "In prepare radius" => "En radio para preparación"
 .Prepared: "Prepared" => "Preparado"
 .Exploited: "Exploited" = FactionStates.Exploited
 .Contested: "Contested" => "Disputado"
 .Controlled: "Controlled" => "Controlado"
 .Turmoil: "In turmoil" => "Sufriendo Revueltas"
 .HomeSystem: "Home system" => "Cuartel General"
-.Fortified: "Fortified" @
-.Stronghold: "Stronghold" @
+.Fortified: "Fortified" => "Fortificado"
+.Stronghold: "Stronghold" => "Bastión"
 
 SECTION ModuleTypeNames
 
@@ -1222,7 +1222,7 @@ SECTION ModuleTypeNames
 .Guardian_Shield_Reinforcement: "Guardian Shield Reinforcement" => "Refuerzo de Escudo Guardián"
 .Guardian_FSD_Booster: "Guardian FSD Booster" => "Potenciador de Motor de Distorsión Guardián"
 .Guardian_Hull_Reinforcement: "Guardian Hull Reinforcement" => "Refuerzo Estructural Guardián"
-.Meta_Alloy_Hull_Reinforcement: "Meta Alloy Hull Reinforcement" @
+.Meta_Alloy_Hull_Reinforcement: "Meta Alloy Hull Reinforcement" => "Refuerzo del casco de Meta aleaciones"
 .Operations_Multi_Limpet_Controller: "Operations Multi Limpet Controller" => "Multilanzador Dron de Operaciones"
 .Rescue_Multi_Limpet_Controller: "Rescue Multi Limpet Controller" => "Lanzador Dron de Rescate"
 .Xeno_Multi_Limpet_Controller: "Xeno Multi Limpet Controller" => "Multilanzador Dron Xeno"
@@ -1301,7 +1301,7 @@ SECTION ModulePartNames
 .Guardian_Hybrid_Power_Plant: "Guardian Hybrid Power Plant" => "Núcleo de Energía Híbrida Guardián"
 .Hull_Reinforcement_Package: "Hull Reinforcement Package" => "Paquete de Refuerzo Estructural"
 .Guardian_Hull_Reinforcement_Package: "Guardian Hull Reinforcement Package" => "Paquete de Refuerzo Estructural Guardián"
-.Meta_Alloy_Hull_Reinforcement_Package: "Meta Alloy Hull Reinforcement Package" @
+.Meta_Alloy_Hull_Reinforcement_Package: "Meta Alloy Hull Reinforcement Package" => "Paquete de refuerzo del casco de meta-aleaciones"
 .Frame_Shift_Drive: "Frame Shift Drive" => "Motor de Distorsión"
 .Frame_Shift_Drive_(SCO): "Frame Shift Drive (SCO)" => "Motor de Distorsión (SCO)"
 .Frame_Shift_Wake_Scanner: "Frame Shift Wake Scanner" => "Escáner de Estelas de Distorsión"
@@ -1372,7 +1372,7 @@ SECTION ModulePartNames
 .Experimental_Weapon_Stabiliser: "Experimental Weapon Stabiliser" => "Estabilizador de Armas Experimentales"
 .Supercruise_Assist: "Supercruise Assist" => "Asistencia de Supercrusero"
 .Stellar_Body_Discovery_Scanner: "Stellar Body Discovery Scanner" @
-.Intermediate: "Intermediate" @
+.Intermediate: "Intermediate" => "Intermedio"
 .Thrusters: "Thrusters" => "Impulsores"
 .Enhanced_Performance_Thrusters: "Enhanced Performance Thrusters" => "Propulsores de Rendimiento Mejorado"
 .Xeno_Scanner: "Xeno Scanner" => "Escáner Xeno"
@@ -1404,12 +1404,12 @@ SECTION ShipSlots
 .Federation_Fighter_Shield: "Federation Fighter Shield" @
 .FrameShiftDrive: "Frame Shift Drive" = ModulePartNames.Frame_Shift_Drive
 .FuelTank: "Fuel Tank" = ModulePartNames.Fuel_Tank
-.GDN_Hybrid_Fighter_V1_Shield: "GDN Hybrid Fighter V 1 Shield" @
-.GDN_Hybrid_Fighter_V2_Shield: "GDN Hybrid Fighter V 2 Shield" @
-.GDN_Hybrid_Fighter_V3_Shield: "GDN Hybrid Fighter V 3 Shield" @
+.GDN_Hybrid_Fighter_V1_Shield: "GDN Hybrid Fighter V 1 Shield" => "Escudo caza híbrido GDN V 1"
+.GDN_Hybrid_Fighter_V2_Shield: "GDN Hybrid Fighter V 2 Shield" => "Escudo caza híbrido GDN V 2"
+.GDN_Hybrid_Fighter_V3_Shield: "GDN Hybrid Fighter V 3 Shield" => "Escudo caza híbrido GDN V 3"
 .HugeHardpoint1: "Huge Hardpoint 1" => "Anclaje Enorme 1"
 .HugeHardpoint2: "Huge Hardpoint 2" => "Anclaje Enorme 2"
-.Independent_Fighter_Shield: "Independent Fighter Shield" @
+.Independent_Fighter_Shield: "Independent Fighter Shield" => "Escudo caza independiente"
 .LargeHardpoint1: "Large Hardpoint 1" => "Anclaje Grande 1"
 .LargeHardpoint2: "Large Hardpoint 2" => "Anclaje Grande 2"
 .LargeHardpoint3: "Large Hardpoint 3" => "Anclaje Grande 3"
@@ -1505,8 +1505,8 @@ SECTION ShipSlots
 .SmallHardpoint2: "Small Hardpoint 2" => "Anclaje Pequeño 2"
 .SmallHardpoint3: "Small Hardpoint 3" => "Anclaje Pequeño 3"
 .SmallHardpoint4: "Small Hardpoint 4" => "Anclaje Pequeño 4"
-.SmallHardpoint5: "Small Hardpoint 5" @
-.SmallHardpoint6: "Small Hardpoint 6" @
+.SmallHardpoint5: "Small Hardpoint 5" => "Anclaje Pequeño 5"
+.SmallHardpoint6: "Small Hardpoint 6" => "Anclaje Pequeño 6"
 .StringLights: "String Lights" => "Cordón de Luz"
 .TinyHardpoint1: "Utility Mount 1" => "Anclaje de Apoyo 1"
 .TinyHardpoint2: "Utility Mount 2" => "Anclaje de Apoyo 2"
@@ -1518,10 +1518,10 @@ SECTION ShipSlots
 .TinyHardpoint8: "Utility Mount 8" => "Anclaje de Apoyo 8"
 .VesselVoice: "Vessel Voice" => "Voz de la Nave"
 .WeaponColour: "Weapon Colour" => "Color del Arma"
-.Turret: "Turret" @
-.Turret2: "Turret Type 2" @
+.Turret: "Turret" => "Torreta"
+.Turret2: "Turret Type 2" => "Torreta tipo 2"
 .SineWaveScanner: "Sine Wave Scanner" @
-.BuggyCargoHatch: "Cargo Hatch" @
+.BuggyCargoHatch: "Cargo Hatch" => "Escotilla de carga"
 
 SECTION StationServices
 
@@ -1535,7 +1535,7 @@ SECTION StationServices
 .Dock: "Dock" @
 .Workshop: "Workshop" => "Taller"
 .FleetCarrierAdministration: "Fleet Carrier Administration" => "Administración de Portanaves"
-.FleetCarrierFuel: "Fleet Carrier Fuel" @
+.FleetCarrierFuel: "Fleet Carrier Fuel" => "Combustible del Portanaves"
 .FleetCarrierManagement: "Fleet Carrier Management" => "Gestión del Portanaves"
 .FleetCarrierVendor: "Fleet Carrier Vendor" => "Vendedor del Portanaves"
 .FlightController: "Flight Controller" => "Controlador de Vuelo"
@@ -1557,10 +1557,10 @@ SECTION StationServices
 .Restock: "Restock" => "Reaprovisionar"
 .SearchAndRescue: "Search And Rescue" => "Búsqueda y Rescate"
 .Shipyard: "Shipyard" => "Astillero"
-.Shop: "Shop" @
-.SocialSpace: "Social Space" @
-.StationMenu: "Station Menu" @
-.StationOperations: "Station Operations" @
+.Shop: "Shop" => "Tienda"
+.SocialSpace: "Social Space" => "Espacio Social"
+.StationMenu: "Station Menu" => "Menú de la Estación"
+.StationOperations: "Station Operations" => "Operaciones de la Estación"
 .TechnologyBroker: "Technology Broker" => "Bróker de Tecnología"
 .Tuning: "Tuning" @
 .UniversalCartographics: "Universal Cartographics" @

@@ -27,7 +27,7 @@ SECTION JournalTypeEnum
 .CrewHire: "Crew Hire" => "Contratar Tripulación"
 .ClearImpound: "Clear Impound" @
 .DatalinkScan: "Datalink Scan" => "Escaneo de enlace de datos"
-.DeliverPowerMicroResources: "Deliver Power Micro Resources" @
+.DeliverPowerMicroResources: "Deliver Power Micro Resources" => "Entregar micro recursos de potencia"
 .Died: "Died" => "Fallecido"
 .DiscoveryScan: "Discovery Scan" => "Exploración de descubrimiento"
 .Docked: "Docked" => "Acoplado"
@@ -49,14 +49,14 @@ SECTION JournalTypeEnum
 .FCMaterials: "Bartender Materials" => "Materiales del Camarero"
 .FSDJump: "FSD Jump" => "Salto MDD"
 .FuelScoop: "Fuel Scoop" => "Toma de combustible"
-.Fileheader: "Fileheader" @
+.Fileheader: "Fileheader" => "Encabezado"
 .FighterDestroyed: "Fighter Destroyed" => "Caza destruido"
 .FighterRebuilt: "Fighter Rebuilt" => "Caza reconstruido"
 .Friends: "Friends" => "Amigos"
 .HeatDamage: "Heat Damage" => "Daño causado por el calor"
 .HeatWarning: "Heat Warning" => "Advertencia de calor"
 .HullDamage: "Hull Damage" => "Daños en el casco"
-.HoloscreenHacked: "Holoscreen Hacked" @
+.HoloscreenHacked: "Holoscreen Hacked" => "Holograma hackeado"
 .Interdicted: "Interdicted" => "Interdicto"
 .Interdiction: "Interdiction" => "Interdicción"
 .JetConeBoost: "Jet Cone Boost" => "Jet Cone Boost"
@@ -126,7 +126,7 @@ SECTION JournalTypeEnum
 .RepairAll: "Repair All" => "Repara todo"
 .RepairDrone: "Repair Drone" => "Reparar Drone"
 .Reputation: "Reputation" => "Reputación"
-.RequestPowerMicroResources: "Request Power Micro Resources" @
+.RequestPowerMicroResources: "Request Power Micro Resources" => "Solicitar microrecursos de potencia"
 .RestockVehicle: "Restock Vehicle" => "Reabastecer vehículo"
 .Resurrect: "Resurrect" => "Resucitar"
 .SAASignalsFound: "SAA Signals Found" => "Señales SAA encontradas"
@@ -182,8 +182,8 @@ SECTION JournalTypeEnum
 .CrewMemberRoleChange: "Crew Member Role Change" => "Cambio de rol de miembro de la tripulación"
 .EDDItemSet: "EDD Item Set" => "Conjunto de elementos EDD"
 .EDDCommodityPrices: "EDD Commodity Prices" => "Precios de Mercancías del EDD"
-.EngineerContribution_Unknown: "Engineer Contribution_Unknown" @
-.EngineerContribution_MatCommod: "Engineer Contribution_Mat Commod" @
+.EngineerContribution_Unknown: "Engineer Contribution_Unknown" => "Ingeniero Contribución_Desconocida"
+.EngineerContribution_MatCommod: "Engineer Contribution_Mat Commod" => "Ingeniero Contribución_Mat Merc"
 .AppliedToSquadron: "Applied To Squadron" => "Aplicado a la Flota"
 .AsteroidCracked: "Asteroid Cracked" => "Asteroide fisurado"
 .CodexEntry: "Codex Entry" => "Entrada del códice"
@@ -254,7 +254,7 @@ SECTION JournalTypeEnum
 .SuitLoadout: "Suit Loadout" => "Equipamiento de Traje"
 .DropshipDeploy: "Dropship Deploy" => "Despliegue de Nave de Descenso"
 .FactionKillBond: "Faction Kill Bond" => "Bono de muerte de facción"
-.CapShipBond: "Capital Ship Bond" @
+.CapShipBond: "Capital Ship Bond" => "Bono Nave Capital"
 .BackpackChange: "Backpack Change" => "Cambio de Mochila"
 .Backpack: "Backpack" => "Mochila"
 .Resupply: "Resupply" => "Reabastecer"
@@ -263,8 +263,8 @@ SECTION JournalTypeEnum
 .ModuleBuyAndStore: "Module Buy And Store" => "Comprar y Almacenar Modulo"
 .ScanBaryCentre: "Scan Bary Centre" => "Escanear Baricentro"
 .NavRouteClear: "Nav Route Clear" => "Limpiar Ruta de Navegación"
-.ShipRedeemed: "Ship Redeemed" @
-.ShipyardRedeem: "Shipyard Redeem" @
+.ShipRedeemed: "Ship Redeemed" => "Nave reclamada"
+.ShipyardRedeem: "Shipyard Redeem" => "Reclamar Astillero"
 
 SECTION JournalCargo
 
@@ -763,7 +763,7 @@ SECTION SearchAndRescueClass
 .SalvageLegalSettlements: "Legal Salvage Value - Settlements: ; cr;N0" => "Valor de Salvamento Legal - Asentamientos: ; cr;N0"
 .SalvageIllegalPOI: "Illegal Salvage Value - Surface: ; cr;N0" => "Valor de Salvamento Ilegal - Superficie: ; cr;N0"
 .SalvageIllegalSettlements: "Illegal Salvage Value - Settlements: ; cr;N0" => "Valor de Salvamento Ilegal - Asentamientos: ; cr;N0"
-.MaglocksOpened: "Maglocks cut: ;;N0" @
+.MaglocksOpened: "Maglocks cut: ;;N0" => "Maglocks cortados: ;;N0"
 .PanelsOpened: "Panels cut: ;;N0" => "Paneles cortados: ;;N0"
 .SettlementsStateFireOut: "Settlement Fires extinguished: ;;N0" => "Incendios en asentamientos apagados: ;;N0"
 .SettlementsStateReboot: "Settlements rebooted: ;;N0" => "Asentamientos reiniciados: ;;N0"
@@ -1091,8 +1091,8 @@ SECTION JournalEntry
 .Mods: "Mods: " @
 .Class: "Class: " => "Clase: "
 .Pilot: "Pilot: " => "Piloto: "
-.ShipRedeem: "Redeemed and deployed ship {0} at {1} into shipyard" @
-.ShipyardRedeem: "Redeem ship {0} at {1}, available to deploy" @
+.ShipRedeem: "Redeemed and deployed ship {0} at {1} into shipyard" => "Nave {0} en {1} reclamada y desplegada en el astillero"
+.ShipyardRedeem: "Redeem ship {0} at {1}, available to deploy" => "Nave {0} en {1}, lista para ser desplegada"
 
 SECTION JournalCarrierJump
 
