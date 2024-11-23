@@ -220,11 +220,15 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool ShieldsUp { get; set; }
 
+        public int? Events { get; set; }        // EDD addition to merge these.. if null, single entry, else no of merged events, ShieldsUp is last state
+
         protected override JournalTypeEnum IconEventType { get { return ShieldsUp ? JournalTypeEnum.ShieldState_ShieldsUp : JournalTypeEnum.ShieldState_ShieldsDown; } }
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Shields Down;Shields Up".T(EDCTx.JournalEntry_ShieldsDown), ShieldsUp);
+            return BaseUtils.FieldBuilder.Build("x ", Events,
+                                                "Shields Down;Shields Up".T(EDCTx.JournalEntry_ShieldsDown), ShieldsUp
+                                                );
         }
     }
 

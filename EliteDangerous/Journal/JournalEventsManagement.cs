@@ -303,6 +303,16 @@ namespace EliteDangerousCore
                         }
                     }
 
+                    else if (je.EventTypeID == JournalTypeEnum.ShieldState)
+                    {
+                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalShieldState;
+                        var jd = je as EliteDangerousCore.JournalEvents.JournalShieldState;
+                                
+                        jdprev.ShieldsUp = jd.ShieldsUp;            // move current state back to prev
+                        jdprev.Events = (jdprev.Events ?? 1) + 1;   // increment counter
+                        return true;
+                    }
+
                 }
             }
 
