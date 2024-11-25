@@ -468,7 +468,7 @@ SECTION JournalReservoirReplenished
 
 SECTION StarPlanetRing
 
-.Mass: "Mass: {0:N4}{1}\n" @
+.Mass: "Mass: {0:N4}{1}" @
 .InnerRadius: "Inner Radius: {0:0.00}ls" @
 .OuterRadius: "Outer Radius: {0:0.00}ls" @
 .IK: "Inner Radius: {0}km" @
@@ -497,27 +497,27 @@ SECTION JournalScan
 .Terraformable: "<;, Terraformable" @
 .Gravity: "Gravity: ;G;0.00" @
 .NoAtmosphere: "No Atmosphere" @
-.LandC: ", Landable" @
-.AMY: "Age: {0} my\n" @
-.SolarMasses: "Solar Masses: {0:N2}\n" @
-.SurfaceTemp: "Surface Temp: {0}K\n" @
-.GV: "Gravity: {0:N2}g\n" @
-.SPA: "Surface Pressure: {0} Atmospheres\n" @
-.SPP: "Surface Pressure: {0} Pa\n" @
-.Volcanism: "Volcanism: {0}\n" @
+.LandC: "Landable" @
+.AMY: "Age: {0} my" @
+.SolarMasses: "Solar Masses: {0:N2}" @
+.SurfaceTemp: "Surface Temp: {0}K" @
+.GV: "Gravity: {0:N2}g" @
+.SPA: "Surface Pressure: {0} Atmospheres" @
+.SPP: "Surface Pressure: {0} Pa" @
+.Volcanism: "Volcanism: {0}" @
 .NoVolcanism: "No Volcanism" @
-.DistancefromArrivalPoint: "Distance from Arrival Point {0:N1}ls\n" @
-.OrbitalPeriod: "Orbital Period: {0} days\n" @
-.SMA: "Semi Major Axis: {0:0.00}AU\n" @
-.SMK: "Semi Major Axis: {0}km\n" @
+.DistancefromArrivalPoint: "Distance from Arrival Point {0:N1}ls" @
+.OrbitalPeriod: "Orbital Period: {0} days" @
+.SMA: "Semi Major Axis: {0:0.00}AU" @
+.SMK: "Semi Major Axis: {0}km" @
 .OrbitalEccentricity: "Orbital Eccentricity: " @
-.OrbitalInclination: "Orbital Inclination: {0:0.000}°\n" @
-.ArgOfPeriapsis: "Arg Of Periapsis: {0:0.000}°\n" @
-.AbsoluteMagnitude: "Absolute Magnitude: {0:0.00}\n" @
-.Axialtilt: "Axial tilt: {0:0.00}°\n" @
-.RotationPeriod: "Rotation Period: {0} days\n" @
-.Tidallylocked: "Tidally locked\n" @
-.Candidateforterraforming: "Candidate for terraforming\n" @
+.OrbitalInclination: "Orbital Inclination: {0:0.000}°" @
+.ArgOfPeriapsis: "Arg Of Periapsis: {0:0.000}°" @
+.AbsoluteMagnitude: "Absolute Magnitude: {0:0.00}" @
+.Axialtilt: "Axial tilt: {0:0.00}°" @
+.RotationPeriod: "Rotation Period: {0} days" @
+.Tidallylocked: "Tidally locked" @
+.Candidateforterraforming: "Candidate for terraforming" @
 .Moons: " Moons" @
 .Belt: "Belt" @
 .Belts: "Belts" @
@@ -526,16 +526,16 @@ SECTION JournalScan
 .EV: "Base Estimated value: {0:N0}" @
 .EVM: "Mapped value: {0:N0}/{1:N0}e" @
 .DB: "Discovered by {0} on {1}" @
-.Othersstarsnotconsidered: " - Others stars not considered\n" @
-.Materials: "Materials:\n" @
-.AtmosphericComposition: "Atmospheric Composition:\n" @
-.PlanetaryComposition: "Planetary Composition:\n" @
-.HabitableZone: " - Habitable Zone, {0} ({1}-{2} AU),\n" @
-.MetalRichplanets: " - Metal Rich planets, {0} ({1}-{2} AU),\n" @
-.WaterWorlds: " - Water Worlds, {0} ({1}-{2} AU),\n" @
-.EarthLikeWorlds: " - Earth Like Worlds, {0} ({1}-{2} AU),\n" @
-.AmmoniaWorlds: " - Ammonia Worlds, {0} ({1}-{2} AU),\n" @
-.IcyPlanets: " - Icy Planets, {0} (from {1} AU)\n" @
+.Othersstarsnotconsidered: " - Others stars not considered" @
+.Materials: "Materials:" @
+.AtmosphericComposition: "Atmospheric Composition:" @
+.PlanetaryComposition: "Planetary Composition:" @
+.HabitableZone: " - Habitable Zone, {0} ({1}-{2} AU)," @
+.MetalRichplanets: " - Metal Rich planets, {0} ({1}-{2} AU)," @
+.WaterWorlds: " - Water Worlds, {0} ({1}-{2} AU)," @
+.EarthLikeWorlds: " - Earth Like Worlds, {0} ({1}-{2} AU)," @
+.AmmoniaWorlds: " - Ammonia Worlds, {0} ({1}-{2} AU)," @
+.IcyPlanets: " - Icy Planets, {0} (from {1} AU)" @
 .DISTA: "Dist: ;ls;0.0" @
 .DIST: "Dist: " @
 .BNME: "Name: " @
@@ -547,10 +547,10 @@ SECTION JournalScan
 .SCNT: "Scan Type: {0}" @
 .EVAD: "Already Discovered" @
 .EVAM: "Already Mapped" @
-.InferredCircumstellarzones: "Inferred Circumstellar zones:\n" @
+.InferredCircumstellarzones: "Inferred Circumstellar zones:" @
 .MASS: "Mass: " @
-.AscendingNode: "Ascending Node: {0:0.000}°\n" @
-.MeanAnomaly: "Mean Anomaly: {0:0.000}°\n" @
+.AscendingNode: "Ascending Node: {0:0.000}°" @
+.MeanAnomaly: "Mean Anomaly: {0:0.000}°" @
 
 SECTION JournalSAAScanComplete
 
