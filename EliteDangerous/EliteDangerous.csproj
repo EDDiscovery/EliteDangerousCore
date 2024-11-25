@@ -398,6 +398,7 @@
     <None Include="JournalEvents\translation-italiano-je.tlp" />
     <None Include="JournalEvents\translation-polski-je.tlp" />
     <None Include="JournalEvents\translation-portugues-je.tlp" />
+    <None Include="JournalEvents\translation-russian-je.tlp" />
     <None Include="JournalEvents\translation-spanish-je.tlp" />
     <None Include="packages.config" />
   </ItemGroup>
