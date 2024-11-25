@@ -899,7 +899,7 @@ SECTION MaterialCommodityMicroResourceType
 .powerinventory: "Inventory Record" => "Inventaraufzeichnung"
 .powerplaymilitary: "Military Schematic" => "Militärisches Schaltbild"
 .powerelectronics: "Electronics Package" => "Elektronikpaket"
-.powercomputer: "Computer Parts" => "Computerteile"
+.powercomputer: "Computer Parts" = MaterialCommodityMicroResourceType.computercomponents
 .powerexperiment: "Experimental Prototype" => "Experimenteller Prototyp"
 .poweragriculture: "Agricultural Sample" => "Agrikulturelle Probe"
 .powerextraction: "Extraction Sample" => "Extraktionsprobe"
@@ -917,6 +917,7 @@ SECTION MaterialCommodityMicroResourceType
 .powerpropagandadata: "Power Political Data" => "Macht-Politikdaten"
 .powerclassifieddata: "Power Classified Data" => "Macht-Geheimdaten"
 .powermegashipdata: "Power Megaship Data" => "Macht-Megaschiffdaten"
+.unknowncorechip: "Tactical Core Chip" @
 
 SECTION EngineeringData
 
