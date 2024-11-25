@@ -131,7 +131,7 @@ namespace EliteDangerousCore.JournalEvents
                     if (c.Stolen > 0)
                         stolen = c.Stolen;
                     sb.AppendCR();
-                    sb.Build("", c.FriendlyName, "<: ; items".T(EDCTx.JournalEntry_items), c.Count, "(;)", stolen, "<; (Mission Cargo)".T(EDCTx.JournalEntry_MissionCargo), c.MissionID != null);
+                    sb.Build("", c.FriendlyName, "<: "+ "; items".T(EDCTx.JournalEntry_items), c.Count, "(;)", stolen, "<; (Mission Cargo)".T(EDCTx.JournalEntry_MissionCargo), c.MissionID != null);
                 }
                 return sb.ToString();
             }
