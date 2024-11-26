@@ -156,7 +156,7 @@ namespace EliteDangerousCore
 
         static public JournalTypeEnum[] NeverReadFromDBEvents = new JournalTypeEnum[]
         {
-            JournalTypeEnum.Music, JournalTypeEnum.UnderAttack, JournalTypeEnum.FSDTarget, JournalTypeEnum.NavRouteClear
+            JournalTypeEnum.Music, JournalTypeEnum.UnderAttack, JournalTypeEnum.FSDTarget, JournalTypeEnum.NavRouteClear, 
         };
 
         // These are discarded from history during reading database
@@ -213,8 +213,8 @@ namespace EliteDangerousCore
                 {
                     if (je.EventTypeID == JournalTypeEnum.FuelScoop)  // merge scoops
                     {
-                        EliteDangerousCore.JournalEvents.JournalFuelScoop jfs = je as EliteDangerousCore.JournalEvents.JournalFuelScoop;
-                        EliteDangerousCore.JournalEvents.JournalFuelScoop jfsprev = prev as EliteDangerousCore.JournalEvents.JournalFuelScoop;
+                        JournalFuelScoop jfs = je as JournalFuelScoop;
+                        JournalFuelScoop jfsprev = prev as JournalFuelScoop;
                         jfsprev.Scooped += jfs.Scooped;
                         jfsprev.Total = jfs.Total;
                         //System.Diagnostics.Debug.WriteLine("Merge FS " + jfsprev.EventTimeUTC);
@@ -222,16 +222,16 @@ namespace EliteDangerousCore
                     }
                     else if (je.EventTypeID == JournalTypeEnum.Friends) // merge friends
                     {
-                        EliteDangerousCore.JournalEvents.JournalFriends jfprev = prev as EliteDangerousCore.JournalEvents.JournalFriends;
-                        EliteDangerousCore.JournalEvents.JournalFriends jf = je as EliteDangerousCore.JournalEvents.JournalFriends;
+                        JournalFriends jfprev = prev as JournalFriends;
+                        JournalFriends jf = je as JournalFriends;
                         jfprev.AddFriend(jf);
                         //System.Diagnostics.Debug.WriteLine("Merge Friends " + jfprev.EventTimeUTC + " " + jfprev.NameList.Count);
                         return true;
                     }
                     else if (je.EventTypeID == JournalTypeEnum.FSSSignalDiscovered)
                     {
-                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalFSSSignalDiscovered;
-                        var jd = je as EliteDangerousCore.JournalEvents.JournalFSSSignalDiscovered;
+                        var jdprev = prev as JournalFSSSignalDiscovered;
+                        var jd = je as JournalFSSSignalDiscovered;
                         if (jdprev.Signals[0].SystemAddress == jd.Signals[0].SystemAddress)     // only if same system address
                         {
                             jdprev.Add(jd);
@@ -240,15 +240,15 @@ namespace EliteDangerousCore
                     }
                     else if (je.EventTypeID == JournalTypeEnum.ShipTargeted)
                     {
-                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalShipTargeted;
-                        var jd = je as EliteDangerousCore.JournalEvents.JournalShipTargeted;
+                        var jdprev = prev as JournalShipTargeted;
+                        var jd = je as JournalShipTargeted;
                         jdprev.Add(jd);
                         return true;
                     }
                     else if (je.EventTypeID == JournalTypeEnum.FSSAllBodiesFound)
                     {
-                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalFSSAllBodiesFound;
-                        var jd = je as EliteDangerousCore.JournalEvents.JournalFSSAllBodiesFound;
+                        var jdprev = prev as JournalFSSAllBodiesFound;
+                        var jd = je as JournalFSSAllBodiesFound;
                         if (jdprev.SystemAddress == jd.SystemAddress && jdprev.Count == jd.Count)          // same system, repeat, remove.  seen instances of this
                         {
                             //  System.Diagnostics.Debug.WriteLine("Duplicate FSSAllBodiesFound **********");
@@ -257,8 +257,8 @@ namespace EliteDangerousCore
                     }
                     else if (je.EventTypeID == JournalTypeEnum.ReceiveText)
                     {
-                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalReceiveText;
-                        var jd = je as EliteDangerousCore.JournalEvents.JournalReceiveText;
+                        var jdprev = prev as JournalReceiveText;
+                        var jd = je as JournalReceiveText;
 
                         // merge if same channel 
                         if (jd.Channel == jdprev.Channel)
@@ -269,8 +269,8 @@ namespace EliteDangerousCore
                     }
                     else if (je.EventTypeID == JournalTypeEnum.ReservoirReplenished)
                     {
-                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalReservoirReplenished;
-                        var jd = je as EliteDangerousCore.JournalEvents.JournalReservoirReplenished;
+                        var jdprev = prev as JournalReservoirReplenished;
+                        var jd = je as JournalReservoirReplenished;
 
                         if (jd.FuelReservoir == jdprev.FuelReservoir)      // if we have the same reservior
                         {
@@ -288,8 +288,8 @@ namespace EliteDangerousCore
 
                     else if (je.EventTypeID == JournalTypeEnum.FactionKillBond)
                     {
-                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalFactionKillBond;
-                        var jd = je as EliteDangerousCore.JournalEvents.JournalFactionKillBond;
+                        var jdprev = prev as JournalFactionKillBond;
+                        var jd = je as JournalFactionKillBond;
 
                         if (jd.AwardingFaction == jdprev.AwardingFaction && jd.VictimFaction == jdprev.VictimFaction)
                         {
@@ -305,11 +305,24 @@ namespace EliteDangerousCore
 
                     else if (je.EventTypeID == JournalTypeEnum.ShieldState)
                     {
-                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalShieldState;
-                        var jd = je as EliteDangerousCore.JournalEvents.JournalShieldState;
-                                
+                        var jdprev = prev as JournalShieldState;
+                        var jd = je as JournalShieldState;
+
                         jdprev.ShieldsUp = jd.ShieldsUp;            // move current state back to prev
                         jdprev.Events = (jdprev.Events ?? 1) + 1;   // increment counter
+                        return true;
+                    }
+
+                    else if (je.EventTypeID == JournalTypeEnum.HullDamage)
+                    {
+                        var jdprev = prev as JournalHullDamage;
+                        var jd = je as JournalHullDamage;
+
+                        //System.Diagnostics.Debug.Write($"{jdprev.HealthPercentMax} {jdprev.Health} with {jd.Health} -> ");
+                        jdprev.HealthPercentMax = System.Math.Max(jdprev.HealthPercentMax ?? (jdprev.Health*100), jd.Health * 100);     // pick the maximum value
+                        jdprev.Health = jd.Health;  // set to the current value
+                        //System.Diagnostics.Debug.WriteLine($"{jdprev.HealthPercentMax} {jdprev.Health}");
+
                         return true;
                     }
 

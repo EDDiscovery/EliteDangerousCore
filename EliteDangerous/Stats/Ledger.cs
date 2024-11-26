@@ -64,8 +64,9 @@ namespace EliteDangerousCore
         {
             if (ca == 0)
             {
-                System.Diagnostics.Debug.WriteLine($"Ledger no cash transaction detected {j} {n} ");
+                //System.Diagnostics.Debug.WriteLine($"Ledger no cash transaction detected {j} {n} ");
             }
+
             AddEvent(jidn, t, j, n, ca, 0 , 0);
         }
 
