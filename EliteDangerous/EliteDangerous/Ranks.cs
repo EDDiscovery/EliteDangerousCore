@@ -43,7 +43,10 @@ namespace EliteDangerousCore
             if (rank != null && Enum.TryParse<RankDefinitions.CombatRank>(rank.Replace(" ", "_"), true, out RankDefinitions.CombatRank cr))
                 return cr;
             else
+            {
+                System.Diagnostics.Trace.WriteLine($"**** Unknown rank `{rank}`");
                 return CombatRank.Unknown;
+            }
         }
 
         public static string FriendlyName(CombatRank cr)

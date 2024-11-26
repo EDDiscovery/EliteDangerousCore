@@ -76,13 +76,13 @@ namespace EliteDangerousCore
                 System.Diagnostics.Trace.WriteLine($"**** NULL crime type error");
                 return "Null Crime Type - ERROR";
             }
-            else if (crimesFDToEnglish.TryGetValue(fdname.ToLowerInvariant(), out string english))
+            else if (crimesFDToEnglish.TryGetValue(fdname.ToLowerInvariant().Trim(), out string english))
             {
                 return english;
             }
             else
             {
-                System.Diagnostics.Trace.WriteLine($"**** Unknown crime type {fdname}");
+                System.Diagnostics.Trace.WriteLine($"**** Unknown crime type `{fdname}`");
                 return fdname.SplitCapsWordFull();
             }
         }

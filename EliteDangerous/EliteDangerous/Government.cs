@@ -47,13 +47,13 @@ namespace EliteDangerousCore
             if (!fdname.HasChars()) // null or empty
                 return Government.Unknown;
 
-            fdname = fdname.ToLowerInvariant().Replace("$government_", "").Replace(" ", "").Replace(";", "");
+            string fdm = fdname.ToLowerInvariant().Replace("$government_", "").Replace(" ", "").Replace(";", "");
 
-            if (parselist.TryGetValue(fdname.ToLowerInvariant(), out Government value))
+            if (parselist.TryGetValue(fdm.ToLowerInvariant(), out Government value))
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"**** Unknown government {fdname}");
+                System.Diagnostics.Trace.WriteLine($"**** Unknown government `{fdname}`");
                 return Government.Unknown;
             }
         }

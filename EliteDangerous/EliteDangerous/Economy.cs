@@ -56,17 +56,17 @@ namespace EliteDangerousCore
             if (!fdname.HasChars()) // null or empty
                 return Economy.Unknown;
 
-            fdname = fdname.ToLowerInvariant().Replace("$economy_", "").Replace(" ", "").Replace(";", "");
+            string fdm = fdname.ToLowerInvariant().Replace("$economy_", "").Replace(" ", "").Replace(";", "");
 
-            if (parselist.TryGetValue(fdname.ToLowerInvariant(), out Economy value))
+            if (parselist.TryGetValue(fdm.ToLowerInvariant(), out Economy value))
                 return value;
-            else if (fdname == "hightech")
+            else if (fdm == "hightech")
                 return Economy.High_Tech;
-            else if (fdname == "unknown_value")     // this has been found in a few 2017/2018 journal files
+            else if (fdm == "unknown_value")     // this has been found in a few 2017/2018 journal files
                 return Economy.Unknown;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Economy is unknown {fdname}");
+                System.Diagnostics.Trace.WriteLine($"*** Economy is unknown `{fdname}`");
                 return Economy.Unknown;
             }
         }

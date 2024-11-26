@@ -73,11 +73,11 @@ namespace EliteDangerousCore
             if (!fdname.HasChars()) // null or empty
                 return StationServices.Unknown;
 
-            if (stationservicesparselist.TryGetValue(fdname.ToLowerInvariant(), out StationServices value))
+            if (stationservicesparselist.TryGetValue(fdname.ToLowerInvariant().Trim(), out StationServices value))
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Station Services is unknown {fdname}");
+                System.Diagnostics.Trace.WriteLine($"*** Station Services is unknown `{fdname}`");
                 return StationServices.Unknown;
             }
         }
@@ -181,15 +181,16 @@ namespace EliteDangerousCore
         // If null is passed in, its presumed field is missing and thus Unknown.
         public static StarportTypes StarportTypeToEnum(string fdname)
         {
-            if (fdname == null || fdname == "")     // again seen empty output from fdev of type
+            if (!fdname.HasChars())     // again seen empty output from fdev of type
                 return StarportTypes.Unknown;
 
-            fdname = fdname.ToLowerInvariant().Replace(" ", "").Replace(";", "");
-            if (starporttypesparselist.TryGetValue(fdname,out StarportTypes value))
+            string fdm= fdname.ToLowerInvariant().Replace(" ", "").Replace(";", "");
+
+            if (starporttypesparselist.TryGetValue(fdm,out StarportTypes value))
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Unknown starport type {fdname}");
+                System.Diagnostics.Trace.WriteLine($"*** Unknown starport type `{fdname}`");
                 return StarportTypes.Unknown;
             }
         }
@@ -228,12 +229,13 @@ namespace EliteDangerousCore
         // maps the StationType field to an enum
         public static StarportState StarportStateToEnum(string fdname)
         {
-            fdname = fdname.ToLowerInvariant().Replace(" ", "").Replace(";", "");
-            if (Enum.TryParse(fdname, true, out StarportState value))
+            string fdm = fdname.ToLowerInvariant().Replace(" ", "").Replace(";", "");
+
+            if (Enum.TryParse(fdm, true, out StarportState value))
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Unknown starport state {fdname}");
+                System.Diagnostics.Trace.WriteLine($"*** Unknown starport state `{fdname}`");
                 return StarportState.Unknown;
             }
         }

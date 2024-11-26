@@ -41,11 +41,11 @@ namespace EliteDangerousCore
             if (fdname == null)
                 return State.Unknown;
 
-            if (Enum.TryParse(fdname, true, out State value))
+            if (Enum.TryParse(fdname.Trim(), true, out State value))
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Power Play state is unknown {fdname}");
+                System.Diagnostics.Trace.WriteLine($"*** Power Play state is unknown `{fdname}`");
                 return State.Unknown;
             }
         }

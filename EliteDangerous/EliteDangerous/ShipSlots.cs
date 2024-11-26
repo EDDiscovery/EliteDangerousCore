@@ -333,13 +333,13 @@ namespace EliteDangerousCore
             if (!fdname.HasChars())
                 return Slot.Unknown;
 
-            if (parselist.TryGetValue(fdname.ToLower(), out Slot value))
+            if (parselist.TryGetValue(fdname.ToLowerInvariant().Trim(), out Slot value))
             {
                 return value;
             }
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Slots unknown {fdname}");
+                System.Diagnostics.Trace.WriteLine($"*** Slots unknown `{fdname}`");
                 return Slot.Unknown;
             }
         }

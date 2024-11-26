@@ -40,17 +40,15 @@ namespace EliteDangerousCore
             if (!fdname.HasChars()) // null or empty
                 return Allegiance.Unknown;
 
-            if (parselist.TryGetValue(fdname.ToLower(), out Allegiance value))
-            {
-                return value;
-            }
-            else if (parselist.TryGetValue(fdname.ToLower().Replace(" ", ""), out value))
+            string fdm = fdname.ToLowerInvariant().Replace(" ", "");
+
+            if (parselist.TryGetValue(fdm, out Allegiance value))
             {
                 return value;
             }
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Allegiance unknown {fdname}");
+                System.Diagnostics.Trace.WriteLine($"*** Allegiance unknown `{fdname}`");
                 return Allegiance.Unknown;
             }
         }
