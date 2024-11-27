@@ -75,6 +75,7 @@ namespace EliteDangerousCore
 
         private bool ProcessJournalScan(JournalScan sc, ISystem sys, bool reprocessPrimary = false, ScanNode oldnode = null)  // background or foreground.. FALSE if you can't process it
         {
+            //System.Diagnostics.Debug.WriteLine($"ProcessJournalScan `{sc.BodyName}` => `{sc.BodyDesignation}` : `{sys.Name}` {sys.SystemAddress}");
             if (sc.SystemAddress.HasValue)
             {
                 if (sys.SystemAddress.HasValue && sc.SystemAddress.Value != sys.SystemAddress.Value)
@@ -235,6 +236,7 @@ namespace EliteDangerousCore
                 elements.Insert(0, MainStar);                                           // insert the MAIN designator as the star designator
             }
 
+            //System.Diagnostics.Debug.WriteLine($".. Extract Elements `{sc.BodyName}` => `{sc.BodyDesignation}` -> `{rest}` -> { starscannodetype} isbc:{isbeltcluster} isring:{isring} -> {string.Join(" | ",elements)}");
             return elements;
         }
 
@@ -244,6 +246,7 @@ namespace EliteDangerousCore
         private ScanNode ProcessElementsJournalScan(JournalScan sc, ISystem sys, SystemNode systemnode, string customname, List<string> elements, 
                                                     ScanNodeType starscannodetype, bool isbeltcluster, bool isring, ScanNode oldnode = null)
         {
+            //System.Diagnostics.Debug.WriteLine($".. ProcessElements {customname} ID:{sc.BodyID}");
 
             List<JournalScan.BodyParent> ancestors = sc.Parents?.AsEnumerable()?.ToList();      // this includes Rings, Barycentres(Nulls) that frontier put into the list..
 

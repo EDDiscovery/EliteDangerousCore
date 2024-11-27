@@ -23,14 +23,19 @@ namespace EliteDangerousCore
     {
         public bool AddBodyToBestSystem(IBodyNameAndID je, ISystem sys, int startindex, List<HistoryEntry> hl)
         {
+            bool isstar = je.BodyType == "Star";
+
             //  may have a system address.  If it matches current system, we can go for an immediate add
             if (je.SystemAddress == sys.SystemAddress)
             {
+                // fix up body designation (nov 24 added it was missing)
+                je.BodyDesignation = BodyDesignations.GetBodyDesignation(je.Body, je.BodyID, isstar, sys.Name);
                 return ProcessBodyAndID(je, sys);
             }
             else
             {
-                var best = FindBestSystem(startindex, hl, je.SystemAddress, je.Body, je.BodyID, je.BodyType == "Star");
+                // look thru history to find best system match and return body designation and system
+                var best = FindBestSystemAndName(startindex, hl, je.SystemAddress, je.Body, je.BodyID, isstar);
 
                 if (best == null)
                 {
@@ -39,7 +44,6 @@ namespace EliteDangerousCore
                 }
 
                 je.BodyDesignation = best.Item1;
-
                 return ProcessBodyAndID(je, best.Item2);
             }
         }
