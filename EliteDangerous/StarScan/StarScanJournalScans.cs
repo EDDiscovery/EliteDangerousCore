@@ -175,8 +175,11 @@ namespace EliteDangerousCore
             isbeltcluster = false;
             isring = false;
             List<string> elements;
-                
-            string rest = sc.IsStarNameRelatedReturnRest(sys.Name, sys.SystemAddress);      // extract any relationship between the system we are in and the name, and return it if so
+
+            // extract any relationship between the system we are in and the name, and return it
+            // body designation is preferred (like Sol 1) over bodyname, which is what frontier call it
+            
+            string rest = sc.RemoveStarnameFromDesignation(sys.Name, sys.SystemAddress);      
 
             if (rest != null)                                   // if we have a relationship between the system name and the body name
             {
@@ -433,7 +436,7 @@ namespace EliteDangerousCore
 
         private string GetCustomNameJournalScan(JournalScan sc, ISystem sys)
         {
-            string rest = sc.IsStarNameRelatedReturnRest(sys.Name, sys.SystemAddress);      // this can be null
+            string rest = sc.RemoveStarnameFromDesignation(sys.Name, sys.SystemAddress);      // this can be null
             string customname = null;
 
             if (sc.BodyName.StartsWith(sys.Name, StringComparison.InvariantCultureIgnoreCase))  // if body starts with system name

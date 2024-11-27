@@ -33,10 +33,10 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Is it a planet")]
         public bool IsPlanet { get { return PlanetClass != null; } }
 
-        [PropertyNameAttribute("EDD name for well known bodies")]
+        [PropertyNameAttribute("EDD logical name for well known bodies, such as Sol 3 (Earth)")]
         public string BodyDesignation { get; set; }
 
-        [PropertyNameAttribute("EDD name or journal name")]
+        [PropertyNameAttribute("EDD logical name or journal name")]
         public string BodyDesignationOrName { get { return BodyDesignation ?? BodyName; } }
 
         ////////////////////////////////////////////////////////////////////// ALL
