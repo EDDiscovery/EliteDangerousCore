@@ -224,7 +224,7 @@ namespace EliteDangerousCore
                                             SystemSource.Synthesised);
 
                     currentnodelist.Add(ownname, subnode);
-                    //  System.Diagnostics.Debug.WriteLine($"StarScan BID Created subnode {subnode.FullName}");
+                   // System.Diagnostics.Debug.WriteLine($"StarScan BID Created subnode des:`{subnode.BodyDesignator}` on:`{subnode.OwnName}` bn:`{subnode.BodyName}`");
                 }
                 else
                 {
