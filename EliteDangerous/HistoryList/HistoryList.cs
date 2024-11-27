@@ -347,7 +347,11 @@ namespace EliteDangerousCore
             }
             else if (he.journalEntry is IBodyNameAndID je)  // all entries under this type
             {
-                if (he.EntryType == JournalTypeEnum.ApproachSettlement)    // we need to process this uniquely, as it has information for starscan as well as body info
+                if ( (je.StarSystem != null && he.System.Name != je.StarSystem) || (je.SystemAddress != null && je.SystemAddress != he.System.SystemAddress))
+                {
+                    System.Diagnostics.Debug.WriteLine($"IBodyNameAndID has a different system `{je.StarSystem}` {je.SystemAddress} vs current system `{he.System.Name}` {je.SystemAddress}");
+                }
+                else if (he.EntryType == JournalTypeEnum.ApproachSettlement)    // we need to process this uniquely, as it has information for starscan as well as body info
                 {
                     JournalApproachSettlement jas = he.journalEntry as JournalApproachSettlement;
 
