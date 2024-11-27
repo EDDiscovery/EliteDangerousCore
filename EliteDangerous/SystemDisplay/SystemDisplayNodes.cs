@@ -55,6 +55,12 @@ namespace EliteDangerousCore
             imagepos = Rectangle.Empty;
             imagexcentre = 0;
 
+#if DEBUG
+            string presentationname = sn.BodyName!=null ? sn.BodyName + "/" + sn.OwnName : sn.OwnName;
+#else
+            string presentationname = sn.BodyNameOrOwnName;
+#endif
+
             JournalScan sc = sn.ScanData;
 
             if (sc != null && (!sc.IsWebSourced || ShowWebBodies))     // has a scan and its our scan, or we are showing EDSM
@@ -66,7 +72,7 @@ namespace EliteDangerousCore
                     string overlaytext = "";
                     var nodelabels = new string[2] { "", "" };
 
-                    nodelabels[0] = sn.CustomNameOrOwnname;
+                    nodelabels[0] = presentationname;
                     if (sc.IsWebSourced)
                         nodelabels[0] = "_" + nodelabels[0];
 
@@ -139,7 +145,6 @@ namespace EliteDangerousCore
 #if DEBUG
                     //nodelabels[1] = nodelabels[1] + $" ID:{sc.BodyID}";
 #endif
-
 
                     nodelabels[1] = nodelabels[1].AppendPrePad(appendlabeltext, Environment.NewLine);
 
@@ -390,7 +395,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    tooltip.AppendLine(sn.FullName);
+                    tooltip.AppendLine(sn.BodyDesignator);
                     tooltip.AppendLine("No scan data available".T(EDCTx.ScanDisplayUserControl_NSD));
                     tooltip.AppendCR();
 
@@ -430,7 +435,7 @@ namespace EliteDangerousCore
                     tooltip.AppendCR();
                 }
 
-                var nodelabels = new string[] { (sn.CustomName ?? sn.OwnName).AppendPrePad(appendlabeltext, Environment.NewLine) };
+                var nodelabels = new string[] { presentationname.AppendPrePad(appendlabeltext, Environment.NewLine) };
                 if (drawtype == DrawLevel.NoText)
                     nodelabels = null;
 

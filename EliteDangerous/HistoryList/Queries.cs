@@ -845,7 +845,7 @@ namespace EliteDangerousCore
                             if (starscan.ScanDataBySysaddr.TryGetValue(so.SystemAddress, out StarScan.SystemNode sn))
                             {
                                 if (sn.NodesByID.TryGetValue(so.Body, out StarScan.ScanNode ssn))
-                                    key = ssn.FullName;
+                                    key = ssn.BodyDesignator;
                             }
                         }
                         else
@@ -966,14 +966,14 @@ namespace EliteDangerousCore
                     if (pinfowanted && hescan.ScanNode.Parent != null)
                     {
                         var parentjs = hescan.ScanNode?.Parent?.ScanData;               // parent journal entry, may be null
-                        pinfo = parentjs != null ? parentjs.DisplayString() : hescan.ScanNode.Parent.CustomNameOrOwnname + " " + hescan.ScanNode.Parent.NodeType;
+                        pinfo = parentjs != null ? parentjs.DisplayString() : hescan.ScanNode.Parent.BodyNameOrOwnName + " " + hescan.ScanNode.Parent.NodeType;
                     }
 
                     if (ppinfowanted && hescan.ScanNode.Parent?.Parent != null)        // if want parent.parent and we have one
                     {
                         var parentparentjs = hescan.ScanNode.Parent.Parent.ScanData;               // parent journal entry, may be null
 
-                        ppinfo = parentparentjs != null ? parentparentjs.DisplayString() : hescan.ScanNode.Parent.Parent.CustomNameOrOwnname + " " + hescan.ScanNode.Parent.Parent.NodeType;
+                        ppinfo = parentparentjs != null ? parentparentjs.DisplayString() : hescan.ScanNode.Parent.Parent.BodyNameOrOwnName + " " + hescan.ScanNode.Parent.Parent.NodeType;
                     }
 
                     if (sinfowanted)
