@@ -70,13 +70,13 @@ namespace EliteDangerousCore
 
                     foreach (var body in systemnode.Bodies())
                     {
-                        if ((body.FullName == bodyname || body.CustomName == bodyname) &&
-                            (body.FullName != sys.Name || body.Level != 0))
+                        if ((body.BodyDesignator == bodyname || body.BodyName == bodyname) &&
+                            (body.BodyDesignator != sys.Name || body.Level != 0))
                         {
                             relatednode = body;
                             break;
                         }
-                        else if (ringcutname != null && body.FullName.Equals(ringcutname))
+                        else if (ringcutname != null && body.BodyDesignator.Equals(ringcutname))
                         {
                             relatednode = body;
                             break;

@@ -36,12 +36,12 @@ namespace EliteDangerousCore
         public partial class ScanNode
         {
             public ScanNodeType NodeType { get; internal set; }
-            public string FullName { get; private set; }                 // full name including star system
-            public string OwnName { get; private set; }                  // Just the name of the body under the parent, so "2" or "a" for 2 a etc.
+            public string BodyDesignator { get; private set; }          // full name including star system. Such as Eowyg Auscs FG-Y d34 or Sol 3
+            public string OwnName { get; private set; }                 // Just the name of the body under the parent, so "2" or "a" for 2 a etc. used for child index. Not the Elite custom name (Earth)
             // name of the body in the system (2 A)
-            public string SystemBodyName { get { return FullName.Length > SystemNode.System.Name.Length + 1 ? FullName.Substring(SystemNode.System.Name.Length + 1) : FullName; } }
-            public string CustomName{ get; internal set; }               // if we can extract from the journals a custom name of it, this holds it. Mostly null
-            public SortedList<string, ScanNode> Children{ get; private set; }   // kids, may ne null
+            public string SystemBodyName { get { return BodyDesignator.Length > SystemNode.System.Name.Length + 1 ? BodyDesignator.Substring(SystemNode.System.Name.Length + 1) : BodyDesignator; } }
+            public string BodyName { get; internal set; }               // if we can extract from the journals a custom name of it, this holds it. Mostly null. Named bodies use this (earth)
+            public SortedList<string, ScanNode> Children{ get; private set; }   // kids, may ne null, indexed by OwnName
             public ScanNode Parent{ get; private set; }                 // Parent of this node 
             public SystemNode SystemNode{ get; private set; }           // the system node the entry is associated with
             public ScanNode ParentStar { get { return FindStarNode(this); } }
@@ -54,7 +54,7 @@ namespace EliteDangerousCore
             // did Web create the node? JournalScan sets it to ScanData.WebsourcedBody.
             public bool WebCreatedNode { get { return DataSource == SystemSource.FromEDSM || DataSource == SystemSource.FromSpansh; } }       
 
-            public string CustomNameOrOwnname { get { return CustomName ?? OwnName; } }
+            public string BodyNameOrOwnName { get { return BodyName ?? OwnName; } }
 
             public JournalScan.StarPlanetRing BeltData { get; internal set; }    // can be null if not belt. if its a type==belt, it is populated with belt data
             public List<JournalSAASignalsFound.SAASignal> Signals { get; internal set; } // can be null if no signals for this node, else its a list of signals.
@@ -65,18 +65,18 @@ namespace EliteDangerousCore
             public ScanNode() { }
             public ScanNode(string name, ScanNodeType node, int? bodyid) 
             { 
-                FullName = OwnName = name; NodeType = node; BodyID = bodyid;  Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>()); 
+                BodyDesignator = OwnName = name; NodeType = node; BodyID = bodyid;  Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>()); 
             }
             public ScanNode(ScanNode other) // copy constructor, but not children
             {
-                NodeType = other.NodeType; FullName = other.FullName; OwnName = other.OwnName; CustomName = other.CustomName;
+                NodeType = other.NodeType; BodyDesignator = other.BodyDesignator; OwnName = other.OwnName; BodyName = other.BodyName;
                 Level = other.Level; BodyID = other.BodyID; IsMapped = other.IsMapped; WasMappedEfficiently = other.WasMappedEfficiently;
                 ScanData = other.ScanData; BeltData = other.BeltData; Signals = other.Signals; Organics = other.Organics;
                 Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());
             }
-            public ScanNode(string ownname, string fullname, ScanNodeType nodetype, int level, ScanNode parent, SystemNode sysn, SystemSource datasource)
+            public ScanNode(string ownname, string bodydesignator, ScanNodeType nodetype, int level, ScanNode parent, SystemNode sysn, SystemSource datasource)
             {
-                OwnName = ownname; FullName = fullname; NodeType = nodetype; Level = level; Parent = parent; SystemNode = sysn; DataSource = datasource;
+                OwnName = ownname; BodyDesignator = bodydesignator; NodeType = nodetype; Level = level; Parent = parent; SystemNode = sysn; DataSource = datasource;
             }
 
 

@@ -23,14 +23,19 @@ namespace EliteDangerousCore
     {
         public bool AddBodyToBestSystem(IBodyNameAndID je, ISystem sys, int startindex, List<HistoryEntry> hl)
         {
+            bool isstar = je.BodyType == "Star";
+
             //  may have a system address.  If it matches current system, we can go for an immediate add
             if (je.SystemAddress == sys.SystemAddress)
             {
+                // fix up body designation (nov 24 added it was missing)
+                je.BodyDesignation = BodyDesignations.GetBodyDesignation(je.Body, je.BodyID, isstar, sys.Name);
                 return ProcessBodyAndID(je, sys);
             }
             else
             {
-                var best = FindBestSystem(startindex, hl, je.SystemAddress, je.Body, je.BodyID, je.BodyType == "Star");
+                // look thru history to find best system match and return body designation and system
+                var best = FindBestSystemAndName(startindex, hl, je.SystemAddress, je.Body, je.BodyID, isstar);
 
                 if (best == null)
                 {
@@ -39,7 +44,6 @@ namespace EliteDangerousCore
                 }
 
                 je.BodyDesignation = best.Item1;
-
                 return ProcessBodyAndID(je, best.Item2);
             }
         }
@@ -61,11 +65,11 @@ namespace EliteDangerousCore
                     {
                         foreach (var body in systemnode.Bodies())
                         {
-                            if ((body.FullName == sc.Body || body.CustomName == sc.Body) &&
-                                (body.FullName != sc.StarSystem || (sc.BodyType == "Star" && body.Level == 0) || (sc.BodyType != "Star" && body.Level != 0)))
+                            if ((body.BodyDesignator == sc.Body || body.BodyName == sc.Body) &&
+                                (body.BodyDesignator != sc.StarSystem || (sc.BodyType == "Star" && body.Level == 0) || (sc.BodyType != "Star" && body.Level != 0)))
                             {
                                 scannode = body;
-                                sc.BodyDesignation = body.FullName;
+                                sc.BodyDesignation = body.BodyDesignator;
                                 break;
                             }
                         }
@@ -76,8 +80,8 @@ namespace EliteDangerousCore
                     {
                         foreach (var body in systemnode.Bodies())
                         {
-                            if ((body.FullName == sc.Body || body.CustomName == sc.Body) &&
-                                (body.FullName != sc.StarSystem || (sc.BodyType == "Star" && body.Level == 0) || (sc.BodyType != "Star" && body.Level != 0)))
+                            if ((body.BodyDesignator == sc.Body || body.BodyName == sc.Body) &&
+                                (body.BodyDesignator != sc.StarSystem || (sc.BodyType == "Star" && body.Level == 0) || (sc.BodyType != "Star" && body.Level != 0)))
                             {
                                 scannode = body;
                                 break;
@@ -212,7 +216,7 @@ namespace EliteDangerousCore
                     string ownname = elements[lvl];
 
                     subnode = new ScanNode(ownname,
-                                            lvl == 0 ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
+                                            lvl == 0 ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.BodyDesignator + " " + ownname,
                                             sublvtype,
                                             lvl,
                                             previousnode,
@@ -229,7 +233,7 @@ namespace EliteDangerousCore
 
                 if (lvl == elements.Count - 1)
                 {
-                    subnode.CustomName = customname;
+                    subnode.BodyName = customname;
 
                     if (sc.BodyID != null)
                     {

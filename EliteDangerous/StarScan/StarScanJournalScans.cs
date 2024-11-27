@@ -75,6 +75,8 @@ namespace EliteDangerousCore
 
         private bool ProcessJournalScan(JournalScan sc, ISystem sys, bool reprocessPrimary = false, ScanNode oldnode = null)  // background or foreground.. FALSE if you can't process it
         {
+          //  System.Diagnostics.Debug.WriteLine($"ProcessJournalScan `{sc.BodyName}` => `{sc.BodyDesignation}` : `{sys.Name}` {sys.SystemAddress}");
+
             if (sc.SystemAddress.HasValue)
             {
                 if (sys.SystemAddress.HasValue && sc.SystemAddress.Value != sys.SystemAddress.Value)
@@ -111,13 +113,11 @@ namespace EliteDangerousCore
 
             lock (systemnode)
             {
-                //System.Diagnostics.Debug.WriteLine($"StarScan Made body JS {sc.BodyName}");
-
-                // Get custom name if different to designation
-                string customname = GetCustomNameJournalScan(sc, sys);
+                // Get custom name if different to designation. Will be null if not an unique name
+                string bodyname = GetBodyNameJournalScan(sc, sys);
 
                 // Process elements, 
-                ScanNode node = ProcessElementsJournalScan(sc, sys, systemnode, customname, elements, starscannodetype, isbeltcluster, isring, oldnode);
+                ScanNode node = ProcessElementsJournalScan(sc, sys, systemnode, bodyname, elements, starscannodetype, isbeltcluster, isring, oldnode);
 
                 if (node.BodyID != null)
                 {
@@ -174,8 +174,11 @@ namespace EliteDangerousCore
             isbeltcluster = false;
             isring = false;
             List<string> elements;
-                
-            string rest = sc.IsStarNameRelatedReturnRest(sys.Name, sys.SystemAddress);      // extract any relationship between the system we are in and the name, and return it if so
+
+            // extract any relationship between the system we are in and the name, and return it
+            // body designation is preferred (like Sol 1) over bodyname, which is what frontier call it
+            
+            string rest = sc.RemoveStarnameFromDesignation(sys.Name, sys.SystemAddress);      
 
             if (rest != null)                                   // if we have a relationship between the system name and the body name
             {
@@ -235,15 +238,17 @@ namespace EliteDangerousCore
                 elements.Insert(0, MainStar);                                           // insert the MAIN designator as the star designator
             }
 
+            //System.Diagnostics.Debug.WriteLine($".. Extract Elements `{sc.BodyName}` => `{sc.BodyDesignation}` -> `{rest}` -> { starscannodetype} isbc:{isbeltcluster} isring:{isring} -> {string.Join(" | ",elements)}");
             return elements;
         }
 
         // see above for elements
         // protected by global lock on system node
 
-        private ScanNode ProcessElementsJournalScan(JournalScan sc, ISystem sys, SystemNode systemnode, string customname, List<string> elements, 
+        private ScanNode ProcessElementsJournalScan(JournalScan sc, ISystem sys, SystemNode systemnode, string bodyname, List<string> elements, 
                                                     ScanNodeType starscannodetype, bool isbeltcluster, bool isring, ScanNode oldnode = null)
         {
+            //System.Diagnostics.Debug.WriteLine($".. ProcessElements bodyname:{bodyname} ID:{sc.BodyID}");
 
             List<JournalScan.BodyParent> ancestors = sc.Parents?.AsEnumerable()?.ToList();      // this includes Rings, Barycentres(Nulls) that frontier put into the list..
 
@@ -295,12 +300,13 @@ namespace EliteDangerousCore
                     string ownname = elements[lvl];
 
                     subnode = new ScanNode(ownname,
-                                            previousnode == null ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.FullName + " " + ownname,
+                                            previousnode == null ? (sys.Name + (ownname.Contains("Main") ? "" : (" " + ownname))) : previousnode.BodyDesignator + " " + ownname,
                                             sublvtype,
                                             lvl,
                                             previousnode,
                                             systemnode,
                                             sc.DataSource);
+
 
                     currentnodelist.Add(ownname, subnode);
                     madenew = true;
@@ -321,7 +327,7 @@ namespace EliteDangerousCore
                 {
                     // if we are replacing the node, make sure we dup across some info which was injected into it by other events
 
-                    if (oldnode != null && oldnode.FullName == subnode.FullName && !object.ReferenceEquals(subnode, oldnode))      
+                    if (oldnode != null && oldnode.BodyDesignator == subnode.BodyDesignator && !object.ReferenceEquals(subnode, oldnode))      
                     {
                         subnode.CopyExternalDataFromOldNode(oldnode);
                     }
@@ -345,7 +351,9 @@ namespace EliteDangerousCore
 
                     subnode.ScanData.SetMapped(subnode.IsMapped, subnode.WasMappedEfficiently);      // pass this data to node, as we may have previously had a SAA Scan
 
-                    subnode.CustomName = customname;                            // and its custom name
+                    subnode.BodyName = bodyname;                                // and its body name if its known
+
+                    //System.Diagnostics.Debug.WriteLine($"StarScan Journal Created Subnode `{subnode.BodyDesignator}` ownname:`{subnode.OwnName}` bodyname:`{bodyname}`");
 
                     if (sc.BodyID != null)                                      // if scan has a body ID, pass it to the node
                     {
@@ -415,8 +423,8 @@ namespace EliteDangerousCore
                         if (node.Children == null)
                             node.MakeChildList();
 
-                        belt = new ScanNode(beltname, node.FullName + " " + beltname, ScanNodeType.belt, 1, node, sn, SystemSource.FromJournal);
-                        belt.CustomName = ring.Name;
+                        belt = new ScanNode(beltname, node.BodyDesignator + " " + beltname, ScanNodeType.belt, 1, node, sn, SystemSource.FromJournal);
+                        belt.BodyName = ring.Name;
                         belt.BeltData = ring;
                         node.Children.Add(beltname, belt);
                     }
@@ -427,31 +435,30 @@ namespace EliteDangerousCore
         }
 
         // find a better name for the body
-
-        private string GetCustomNameJournalScan(JournalScan sc, ISystem sys)
+        private string GetBodyNameJournalScan(JournalScan sc, ISystem sys)
         {
-            string rest = sc.IsStarNameRelatedReturnRest(sys.Name, sys.SystemAddress);      // this can be null
-            string customname = null;
+            string rest = sc.RemoveStarnameFromDesignation(sys.Name, sys.SystemAddress);      // this can be null
+            string name = null;
 
             if (sc.BodyName.StartsWith(sys.Name, StringComparison.InvariantCultureIgnoreCase))  // if body starts with system name
             {
-                customname = sc.BodyName.Substring(sys.Name.Length).TrimStart(' ', '-');    // cut out system name
+                name = sc.BodyName.Substring(sys.Name.Length).TrimStart(' ', '-');    // cut out system name
 
-                if (customname == "" && !sc.IsStar)                                         // if empty, and not star, customname is just the body name
+                if (name == "" && !sc.IsStar)                                         // if empty, and not star, customname is just the body name
                 {
-                    customname = sc.BodyName;
+                    name = sc.BodyName;
                 }
-                else if (customname == "" || customname == rest)                            // if empty, or its the same as the star name related, its not got a customname
+                else if (name == "" || name == rest)                            // if empty, or its the same as the star name related, its not got a customname
                 {
-                    customname = null;
+                    name = null;
                 }
             }
             else if (rest == null || !sc.BodyName.EndsWith(rest))                           // not related to star, or not related to bodyname, set back to body name
             {
-                customname = sc.BodyName;
+                name = sc.BodyName;
             }
 
-            return customname;
+            return name;
         }
     }
 }

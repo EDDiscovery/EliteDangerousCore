@@ -55,7 +55,7 @@ namespace EliteDangerousCore
 
                                     if (bodynode == null && sd.Parents[i - 1].Type == "Null")   // if can't find, and its another barycentre, add a new dummy barycentre node
                                     {
-                                        bodynode = new ScanNode() { BodyID = bodyid, NodeType = ScanNodeType.barycentre, FullName = "Created Barynode " + bodyid,
+                                        bodynode = new ScanNode() { BodyID = bodyid, NodeType = ScanNodeType.barycentre, BodyDesignator = "Created Barynode " + bodyid,
                                                                     OwnName = bodyid.ToString("00000") };
                                     }
                                 }
@@ -81,7 +81,7 @@ namespace EliteDangerousCore
                                     else
                                     {
                                         // make a new barycentre for the list
-                                        topbarycentrenode = new ScanNode() { BodyID = sp.BodyID, NodeType = ScanNodeType.barycentre, FullName = "Created Barynode " + sp.BodyID };    // make it
+                                        topbarycentrenode = new ScanNode() { BodyID = sp.BodyID, NodeType = ScanNodeType.barycentre, BodyDesignator = "Created Barynode " + sp.BodyID };    // make it
                                         topbarycentrenode.Children = new SortedList<string, ScanNode>();
                                         barycentrelist.Children[barykey] = topbarycentrenode;
                                     }
@@ -137,7 +137,7 @@ namespace EliteDangerousCore
                         //System.Diagnostics.Debug.WriteLine(".. barycenter  " + keyid);
                         ScanNode tocopy = barycentrelist.Children[keyid];
 
-                        System.Diagnostics.Debug.Assert(sn.Value.FullName.Contains("Created Barynode"));    // double check we are only altering stuff we made
+                        System.Diagnostics.Debug.Assert(sn.Value.BodyDesignator.Contains("Created Barynode"));    // double check we are only altering stuff we made
 
                         if (sn.Value.Children == null)                      // we are altering sn, which is a barycentre, and made by us.
                             sn.Value.Children = new SortedList<string, ScanNode>();

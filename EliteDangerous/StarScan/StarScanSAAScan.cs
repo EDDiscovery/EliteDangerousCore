@@ -33,7 +33,7 @@ namespace EliteDangerousCore
                 if (jsaa.BodyName == null)
                     return false;
 
-                var best = FindBestSystem(startindex, hl, jsaa.SystemAddress, jsaa.BodyName, jsaa.BodyID, false);
+                var best = FindBestSystemAndName(startindex, hl, jsaa.SystemAddress, jsaa.BodyName, jsaa.BodyID, false);
 
                 if (best == null)
                     return false;
@@ -58,8 +58,8 @@ namespace EliteDangerousCore
                 {
                     foreach (var body in systemnode.Bodies())
                     {
-                        if ((body.FullName == jsaa.BodyName || body.CustomName == jsaa.BodyName) &&
-                            (body.FullName != sys.Name || body.Level != 0))
+                        if ((body.BodyDesignator == jsaa.BodyName || body.BodyName == jsaa.BodyName) &&
+                            (body.BodyDesignator != sys.Name || body.Level != 0))
                         {
                             relatednode = body;
                             break;

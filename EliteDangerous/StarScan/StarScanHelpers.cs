@@ -86,11 +86,12 @@ namespace EliteDangerousCore
         }
 
         // scan the history and try and find the best star system this bodyname is associated with
-        // find best system for scan.  Note startindex might be -1, if only 1 entry is in the list
+        // return it and the custom body designation name 
+        // Note startindex might be -1, if only 1 entry is in the list
         // bodyid can be null, bodyname must be set.
         // sysaddr can be null
 
-        private static Tuple<string, ISystem> FindBestSystem( int startindex, List<HistoryEntry> hl, long? sysaddr, string bodyname, int? bodyid, bool isstar )
+        private static Tuple<string, ISystem> FindBestSystemAndName( int startindex, List<HistoryEntry> hl, long? sysaddr, string bodyname, int? bodyid, bool isstar )
         {
             System.Diagnostics.Debug.Assert(bodyname != null);
 

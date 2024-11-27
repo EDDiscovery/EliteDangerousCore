@@ -159,16 +159,20 @@ namespace EliteDangerousCore.JournalEvents
             return PlanetComposition[c];
         }
 
-        // is the name in starname 
-
+        // given a star name and system address, the EDD designation of the body (Sol 3) and the JournalScan
+        // return true if the starname/sysaddress matches the journal scan fields
+        // return true if the designation contains the starname
         public bool IsStarNameRelated(string starname, long? sysaddr, string designation)
         {
-            if (StarSystem != null && SystemAddress != null && sysaddr != null)     // if we are a star system AND sysaddr in the scan is set, and we got passed a system addr, direct compare
+            // if we have a star system and system address, and we got passed a system address..
+            if (StarSystem != null && SystemAddress != null && sysaddr != null)     
             {
-                return starname.Equals(StarSystem, StringComparison.InvariantCultureIgnoreCase) && sysaddr == SystemAddress;    // star is the same name and sys addr same
+                // star is the same name and sys addr same
+                return starname.Equals(StarSystem, StringComparison.InvariantCultureIgnoreCase) && sysaddr == SystemAddress;    
             }
 
-            if (designation.Length >= starname.Length)      // and compare against starname root
+            // else lets see if the designator contains the starname
+            if (designation.Length >= starname.Length)      
             {
                 string s = designation.Substring(0, starname.Length);
                 return starname.Equals(s, StringComparison.InvariantCultureIgnoreCase);
@@ -177,14 +181,18 @@ namespace EliteDangerousCore.JournalEvents
                 return false;
         }
 
-        public string IsStarNameRelatedReturnRest(string starname, long? sysaddr)          // null if not related, else rest of string
+        // given a star name and system address, and the JournalScan
+        // use the journal scan body designation, or the body name of the body
+        // check to see if the scan is the same system as the given starname/sysaddress, if not, return null
+        // return name without the star name prefix
+        public string RemoveStarnameFromDesignation(string starname, long? sysaddr)          
         {
             string designation = BodyDesignation ?? BodyName;
             string desigrest = null;
 
-            if (this.StarSystem != null && this.SystemAddress != null && sysaddr != null)
+            if (this.StarSystem != null && this.SystemAddress != null && sysaddr != null)       // if scan has starsystem/systemaddress, and given sysaddress is set
             {
-                if (starname != this.StarSystem || sysaddr != this.SystemAddress)
+                if (starname != this.StarSystem || sysaddr != this.SystemAddress)       // then the star names and system address must match
                 {
                     return null;        // no relationship between starname and system in JE
                 }
@@ -192,7 +200,7 @@ namespace EliteDangerousCore.JournalEvents
                 desigrest = designation;
             }
 
-            if (designation.Length >= starname.Length)
+            if (designation.Length >= starname.Length)              // cut out the star name from the designation
             {
                 string s = designation.Substring(0, starname.Length);
                 if (starname.Equals(s, StringComparison.InvariantCultureIgnoreCase))

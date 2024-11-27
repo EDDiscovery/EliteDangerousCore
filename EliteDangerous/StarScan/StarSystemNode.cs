@@ -111,7 +111,7 @@ namespace EliteDangerousCore
             {
                 foreach (var b in Bodies())
                 {
-                    if (b.FullName.Equals(fullnameinclsystemname, StringComparison.InvariantCultureIgnoreCase))
+                    if (b.BodyDesignator.Equals(fullnameinclsystemname, StringComparison.InvariantCultureIgnoreCase))
                         return b;
                 }
                 return null;
@@ -122,7 +122,7 @@ namespace EliteDangerousCore
             {
                 foreach (var b in Bodies())
                 {
-                    if (b.CustomName.EqualsIIC(bodyname) || b.SystemBodyName.EqualsIIC(bodyname) || b.FullName.EqualsIIC(bodyname))
+                    if (b.BodyName.EqualsIIC(bodyname) || b.SystemBodyName.EqualsIIC(bodyname) || b.BodyDesignator.EqualsIIC(bodyname))
                         return b;
                 }
                 return null;

@@ -61,7 +61,7 @@ namespace EliteDangerousCore
         string Body { get; }
         string BodyType { get; }
         int? BodyID { get; }
-        string BodyDesignation { get; set; }
+        string BodyDesignation { get; set; }    // such as Sol 3 for BodyName = Earth, or null if not unique
         string StarSystem { get; }
         long? SystemAddress { get; }
     }
