@@ -1079,7 +1079,7 @@ SECTION Crimes
 .piracy: "Piracy" @
 .recklessweaponsdischarge: "Discharging a weapon" @
 .shuttledestruction: "Destroying an APEX Shuttle" @
-.stationTamperingMinor: "Tampering with a station" @
+.stationtamperingminor: "Tampering with a station" @
 
 SECTION FactionStates
 

@@ -390,6 +390,7 @@
     <None Include="EliteDangerous\translation-italiano-ed.tlp" />
     <None Include="EliteDangerous\translation-polski-ed.tlp" />
     <None Include="EliteDangerous\translation-portugues-ed.tlp" />
+    <None Include="EliteDangerous\translation-russian-ed.tlp" />
     <None Include="EliteDangerous\translation-spanish-ed.tlp" />
     <None Include="JournalEvents\translation-chinese-je.tlp" />
     <None Include="JournalEvents\translation-deutsch-je.tlp" />
