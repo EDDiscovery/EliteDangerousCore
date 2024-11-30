@@ -1069,7 +1069,7 @@ namespace EliteDangerousCore
         {
             FDID = "Type8",
             EDCDID = "Type8",
-            Manufacturer = "Lakon",
+            Manufacturer = "<code>",
             HullMass = 400F,
             Name = "Type-8 Transporter",
             Speed = 200,        // game
@@ -1288,7 +1288,7 @@ namespace EliteDangerousCore
         {
             FDID = "Mandalay",
             EDCDID = "Mandalay",
-            Manufacturer = "Zorgon Peterson",
+            Manufacturer = "<code>",
             HullMass = 230F, //inara
             Name = "Mandalay",
             Speed = 280, //inara
