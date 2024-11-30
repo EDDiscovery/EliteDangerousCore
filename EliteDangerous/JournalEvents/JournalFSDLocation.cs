@@ -440,14 +440,11 @@ namespace EliteDangerousCore.JournalEvents
             MapColor = jm.Int(EDCommander.Current.MapColour);
             if (jm.IsNull())
                 evt["EDDMapColor"] = EDCommander.Current.MapColour;      // new entries get this default map colour if its not already there
-
-            EDSMFirstDiscover = evt["EDD_EDSMFirstDiscover"].Bool(false);
         }
 
-        public JournalFSDJump(DateTime utc, ISystem sys, int colour, bool first, bool edsmsynced) : base(utc, sys, JournalTypeEnum.FSDJump, edsmsynced)
+        public JournalFSDJump(DateTime utc, ISystem sys, int colour, bool edsmsynced) : base(utc, sys, JournalTypeEnum.FSDJump, edsmsynced)
         {
             MapColor = colour;
-            EDSMFirstDiscover = first;
         }
 
         public double JumpDist { get; set; }
@@ -456,7 +453,6 @@ namespace EliteDangerousCore.JournalEvents
         public int BoostUsed { get; set; }          // 1 = basic (25% x1.25), 2 = standard (50% x1.5), 3 = premium (100% x2 ), 4 = neutron (x4)
         public int MapColor { get; set; }
         public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
-        public bool EDSMFirstDiscover { get; set; }
         public string Body { get; set; }
         public int? BodyID { get; set; }
         public string BodyType { get; set; }
@@ -526,26 +522,6 @@ namespace EliteDangerousCore.JournalEvents
             });
         }
 
-        public void UpdateFirstDiscover(bool value)
-        {
-            UserDatabase.Instance.DBWrite(cn =>
-            {
-                UpdateFirstDiscover(value, cn, null);
-            });
-        }
-
-        internal void UpdateFirstDiscover(bool value, SQLiteConnectionUser cn, DbTransaction txn)
-        {
-            JObject jo = GetJson(Id, cn);
-
-            if (jo != null)
-            {
-                jo["EDD_EDSMFirstDiscover"] = value;
-                UpdateJsonEntry(jo, cn, txn);
-                EDSMFirstDiscover = value;
-            }
-        }
-
         public JObject CreateFSDJournalEntryJson()          // minimal version, not the whole schebang
         {
             JObject jo = new JObject();
@@ -554,7 +530,6 @@ namespace EliteDangerousCore.JournalEvents
             jo["StarSystem"] = StarSystem;
             jo["StarPos"] = new JArray(StarPos.X, StarPos.Y, StarPos.Z);
             jo["EDDMapColor"] = MapColor;
-            jo["EDD_EDSMFirstDiscover"] = EDSMFirstDiscover;
             return jo;
         }
     }

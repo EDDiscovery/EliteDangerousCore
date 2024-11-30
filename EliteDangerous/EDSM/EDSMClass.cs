@@ -457,9 +457,8 @@ namespace EliteDangerousCore.EDSM
                         if (systems[i].Item1 != null )    // we need a good system to add.. we may have failed EDSM check above (unlikely)
                         {
                             JObject jo = systems[i].Item2;
-                            bool firstdiscover = jo["firstDiscover"].Bool();
                             DateTime etutc = DateTime.ParseExact(jo["date"].Str(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal); // UTC time
-                            JournalFSDJump fsd = new JournalFSDJump(etutc, systems[i].Item1, EDCommander.Current.MapColour, firstdiscover, true);
+                            JournalFSDJump fsd = new JournalFSDJump(etutc, systems[i].Item1, EDCommander.Current.MapColour, true);
                             fsd.LocOrJumpSource = SystemSource.FromEDSM;
                             fsdjumps.Add(fsd);
                         }

@@ -214,14 +214,7 @@ namespace EliteDangerousCore.EDSM
                     toadd.Add(jfsd);
                 }
                 else
-                {                   // it is a duplicate, check if the first discovery flag is set right
-                    JournalFSDJump existingfsd = hlfsdlist[index].journalEntry as JournalFSDJump;
-
-                    if (existingfsd != null && existingfsd.EDSMFirstDiscover != jfsd.EDSMFirstDiscover)    // if we have a FSD one, and first discover is different
-                    {
-                        existingfsd.UpdateFirstDiscover(jfsd.EDSMFirstDiscover);
-                    }
-
+                {                   // it is a duplicate, update previdx to record last position
                     previdx = index;
                 }
             }
