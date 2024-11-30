@@ -353,9 +353,9 @@ namespace EliteDangerousCore.JournalEvents
             Mapped = m; EfficientMapped = e;
         }
 
-        [PropertyNameAttribute("cr")]
+        [PropertyNameAttribute("cr. Estimated value now")]
         public int EstimatedValue { get { return GetEstimatedValues().EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsWebSourced); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
-        [PropertyNameAttribute("cr")]
+        [PropertyNameAttribute("cr. Best estimated value possible")]
         public int MaximumEstimatedValue { get { return GetEstimatedValues().EstimatedValue(WasDiscovered, WasMapped, true, true,false); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
 
         public int HasSameParents(JournalScan other)     // return -1 if not, or index of last match , 0,1,2
