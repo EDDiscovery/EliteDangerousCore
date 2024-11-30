@@ -25,7 +25,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StarSystem { get; set; }
         public EMK.LightGeometry.Vector3 StarPos { get; set; }
         public long? SystemAddress { get; set; }
-        public bool StarPosFromEDSM { get; set; }
+        public SystemSource LocOrJumpSource { get; set; } = SystemSource.FromJournal;     // this is the default..
 
         public string Faction { get; set; }         // System Faction - keep name for backwards compat.
         public FactionDefinitions.State FactionState { get; set; }       //may be null, FDName
@@ -60,7 +60,7 @@ namespace EliteDangerousCore.JournalEvents
         protected JournalLocOrJump(JObject evt, JournalTypeEnum jtype) : base(evt, jtype)
         {
             StarSystem = evt["StarSystem"].Str();
-            StarPosFromEDSM = evt["StarPosFromEDSM"].Bool(false);
+            LocOrJumpSource = evt["StarPosFromEDSM"].Bool(false) ? SystemSource.FromEDSM : SystemSource.FromJournal;
 
             EMK.LightGeometry.Vector3 pos = new EMK.LightGeometry.Vector3();
 

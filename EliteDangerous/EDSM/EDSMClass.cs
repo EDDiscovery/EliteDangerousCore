@@ -460,7 +460,7 @@ namespace EliteDangerousCore.EDSM
                             bool firstdiscover = jo["firstDiscover"].Bool();
                             DateTime etutc = DateTime.ParseExact(jo["date"].Str(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal); // UTC time
                             JournalFSDJump fsd = new JournalFSDJump(etutc, systems[i].Item1, EDCommander.Current.MapColour, firstdiscover, true);
-                            fsd.StarPosFromEDSM = true;
+                            fsd.LocOrJumpSource = SystemSource.FromEDSM;
                             fsdjumps.Add(fsd);
                         }
                     }
