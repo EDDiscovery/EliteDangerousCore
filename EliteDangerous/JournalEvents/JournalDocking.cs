@@ -20,7 +20,7 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.Docked)]
     public class JournalDocked : JournalEntry, IStatsJournalEntry
     {
-        public JournalDocked(System.DateTime utc) : base(utc, JournalTypeEnum.Docked,false)
+        public JournalDocked(System.DateTime utc) : base(utc, JournalTypeEnum.Docked)
         {
         }
 

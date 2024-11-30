@@ -580,7 +580,7 @@ namespace EliteDangerousCore.JournalEvents
             Stolen = evt["Stolen"].Bool();
         }
 
-        public JournalCollectItems(DateTime utc, MicroResource res, bool stolen, long tluid, int cmdr, long id) : base(utc, JournalTypeEnum.CollectItems, false)
+        public JournalCollectItems(DateTime utc, MicroResource res, bool stolen, long tluid, int cmdr, long id) : base(utc, JournalTypeEnum.CollectItems)
         {
             SetTLUCommander(tluid, cmdr);
             SetJID(id);
@@ -616,7 +616,7 @@ namespace EliteDangerousCore.JournalEvents
             Resource.Normalise(null);
         }
 
-        public JournalDropItems(DateTime utc, MicroResource res, long tluid, int cmdr, long id) : base(utc, JournalTypeEnum.DropItems, false)
+        public JournalDropItems(DateTime utc, MicroResource res, long tluid, int cmdr, long id) : base(utc, JournalTypeEnum.DropItems)
         {
             SetTLUCommander(tluid, cmdr);
             SetJID(id);
@@ -650,7 +650,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         // use to make a use consumable JE 
-        public JournalUseConsumable(DateTime utc, MicroResource res, long tluid, int cmdr, long id) : base(utc, JournalTypeEnum.UseConsumable, false)
+        public JournalUseConsumable(DateTime utc, MicroResource res, long tluid, int cmdr, long id) : base(utc, JournalTypeEnum.UseConsumable)
         {
             SetTLUCommander(tluid, cmdr);
             SetJID(id);

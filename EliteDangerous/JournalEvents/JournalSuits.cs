@@ -84,7 +84,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public JournalSellSuit(DateTime utc, ulong id, string fdname, string locname, long price, int cmdrid) : base(utc,JournalTypeEnum.SellSuit,false)
+        public JournalSellSuit(DateTime utc, ulong id, string fdname, string locname, long price, int cmdrid) : base(utc,JournalTypeEnum.SellSuit)
         {
             SuitID = id; Name = fdname; Name_Localised = locname; price = Price;
             SetCommander(cmdrid);

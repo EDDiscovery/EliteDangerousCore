@@ -590,7 +590,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         // special, for star scan node tree only, create a scan record with the contents of the journal scan bary centre info
-        public JournalScan(JournalScanBaryCentre js) : base(DateTime.Now, JournalTypeEnum.ScanBaryCentre, false)
+        public JournalScan(JournalScanBaryCentre js) : base(DateTime.Now, JournalTypeEnum.ScanBaryCentre)
         {
             BodyID = js.BodyID;
             nSemiMajorAxis = js.SemiMajorAxis;

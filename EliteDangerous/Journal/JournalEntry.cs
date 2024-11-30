@@ -292,13 +292,13 @@ namespace EliteDangerousCore
             return CreateJournalEntry(jo.ToString());
         }
 
-        static protected JournalEntry CreateJournalEntry(long id, long tluid, int cmdrid, string json, int flags)      
+        static protected JournalEntry CreateJournalEntry(long id, long tluid, int cmdrid, string json, int syncflags)      
         {
             JournalEntry jr = JournalEntry.CreateJournalEntry(json);
             jr.Id = id;
             jr.TLUId = tluid;
             jr.CommanderId = cmdrid;
-            jr.Synced = flags;
+            jr.Synced = syncflags;
             return jr;
         }
 
@@ -568,7 +568,7 @@ namespace EliteDangerousCore
 
 #region Private variables
 
-        private enum SyncFlags
+        protected enum SyncFlags
         {
             NoBit = 0,                      // for sync change func only
             EDSM = 0x01,
@@ -589,11 +589,11 @@ namespace EliteDangerousCore
 
 #region Constructors
 
-        protected JournalEntry(DateTime utc, JournalTypeEnum jtype, bool edsmsynced)       // manual creation via NEW
+        protected JournalEntry(DateTime utc, JournalTypeEnum jtype, int syncflags = 0)       // manual creation via NEW
         {
             EventTypeID = jtype;
             EventTimeUTC = utc;
-            Synced = edsmsynced ? (int)SyncFlags.EDSM : 0;
+            Synced = syncflags;
             TLUId = 0;
         }
 

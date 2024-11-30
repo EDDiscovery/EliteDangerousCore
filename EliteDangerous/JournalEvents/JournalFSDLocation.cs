@@ -50,7 +50,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string ControllingPower { get; set; }     // only for signal types of USS
 
-        protected JournalLocOrJump(DateTime utc, ISystem sys, JournalTypeEnum jtype, bool edsmsynced ) : base(utc, jtype, edsmsynced)
+        protected JournalLocOrJump(DateTime utc, ISystem sys, JournalTypeEnum jtype, bool edsmsynced ) : base(utc, jtype,  edsmsynced ? (int)SyncFlags.EDSM : 0)
         {
             StarSystem = sys.Name;
             SystemAddress = sys.SystemAddress;
