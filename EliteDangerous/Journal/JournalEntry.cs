@@ -687,7 +687,7 @@ namespace EliteDangerousCore
 
             foreach (var kvp in obj)
             {
-                if (kvp.Key.StartsWith("EDD") || kvp.Key.Equals("StarPosFromEDSM"))
+                if (kvp.Key.StartsWith("EDD") || kvp.Key.Equals("StarPosFromEDSM")) // remove all EDD generated keys from json
                 {
                     if (jcopy == null)      // only pay the expense if it has one of the entries in it
                         jcopy = (JObject)obj.Clone();

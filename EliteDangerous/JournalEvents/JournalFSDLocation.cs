@@ -522,7 +522,7 @@ namespace EliteDangerousCore.JournalEvents
             });
         }
 
-        public JObject CreateFSDJournalEntryJson()          // minimal version, not the whole schebang
+        public JObject CreateJsonOfFSDJournalEntry()          // minimal version, not the whole schebang
         {
             JObject jo = new JObject();
             jo["timestamp"] = EventTimeUTC.ToStringZuluInvariant();
@@ -530,6 +530,7 @@ namespace EliteDangerousCore.JournalEvents
             jo["StarSystem"] = StarSystem;
             jo["StarPos"] = new JArray(StarPos.X, StarPos.Y, StarPos.Z);
             jo["EDDMapColor"] = MapColor;
+            jo["StarPosFromEDSM"] = true;       // mark as non journal sourced
             return jo;
         }
     }
