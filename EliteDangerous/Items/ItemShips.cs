@@ -1069,25 +1069,25 @@ namespace EliteDangerousCore
         {
             FDID = "Type8",
             EDCDID = "Type8",
-            Manufacturer = "<code>",
+            Manufacturer = "Lakon",
             HullMass = 400F,
             Name = "Type-8 Transporter",
-            Speed = 201,        // game
-            Boost = 342,        // game
+            Speed = 200,        // game
+            Boost = 340,        // game
             // unknown        
-                    HullCost = 72108220,
-                    Class = 3,
-                    Shields = 240,
-                    Armour = 480,
+                    HullCost = 34820576,
+                    Class = 2,
+                    Shields = 228,
+                    Armour = 440,
                     MinThrust = 30.769,
-                    BoostCost = 19,
+                    BoostCost = 10,
                     FuelReserve = 0.52,
-                    HeatCap = 289,
+                    HeatCap = 226,
                     HeatDispMin = 3.1,
                     HeatDispMax = 48.35,
                     FuelCost = 50,
-                    Hardness = 65,
-                    Crew = 3,
+                    Hardness = 58,
+                    Crew = 1,
                     FwdAcc = 20.03,
                     RevAcc = 10.11,
                     LatAcc = 10.03
@@ -1288,7 +1288,7 @@ namespace EliteDangerousCore
         {
             FDID = "Mandalay",
             EDCDID = "Mandalay",
-            Manufacturer = "<code>",
+            Manufacturer = "Zorgon Peterson",
             HullMass = 230F, //inara
             Name = "Mandalay",
             Speed = 280, //inara
