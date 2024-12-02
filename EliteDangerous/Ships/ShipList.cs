@@ -531,7 +531,11 @@ namespace EliteDangerousCore
                 }
             }
 
-            //System.Diagnostics.Debug.WriteLine("Made new ship " + id);
+            System.Diagnostics.Debug.WriteLine($"Made new ship `{id}`");
+            if ( id == "krait_mkii:21")
+            {
+
+            }
 
             ulong i = id.Substring(id.IndexOf(":") + 1).InvariantParseULong(0);
             Ship smn = new Ship(i);
@@ -551,12 +555,19 @@ namespace EliteDangerousCore
 
         #region process
 
-        public Tuple<Ship, ShipModulesInStore> Process(JournalEntry je, string whereami, ISystem system)
+        public Tuple<Ship, ShipModulesInStore> Process(JournalEntry je, string whereami, ISystem system ,bool multicrew)
         {
             if (je is IShipInformation)
             {
-                IShipInformation e = je as IShipInformation;
-                e.ShipInformation(this, whereami, system);                             // not cloned.. up to callers to see if they need to
+                if (multicrew)
+                {
+                    System.Diagnostics.Debug.WriteLine($"ShipList Ignore {je.EventTimeUTC} {je.EventTypeStr} due to multicrew");
+                }
+                else
+                {
+                    IShipInformation e = je as IShipInformation;
+                    e.ShipInformation(this, whereami, system);                             // not cloned.. up to callers to see if they need to
+                }
             }
 
             return new Tuple<Ship, ShipModulesInStore>(CurrentShip, StoredModules);

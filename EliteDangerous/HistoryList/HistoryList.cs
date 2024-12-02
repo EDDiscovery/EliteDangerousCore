@@ -86,7 +86,7 @@ namespace EliteDangerousCore
 
             Carrier.Process(je,he.Status.OnFootFleetCarrier);
 
-            Tuple<Ship, ShipModulesInStore> ret = ShipInformationList.Process(je, he.WhereAmI, he.System);
+            Tuple<Ship, ShipModulesInStore> ret = ShipInformationList.Process(je, he.WhereAmI, he.System ,he.Status.IsInMultiPlayer);
             he.UpdateShipInformation(ret.Item1);
             he.UpdateShipStoredModules(ret.Item2);
 
