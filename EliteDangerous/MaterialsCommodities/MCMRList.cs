@@ -268,7 +268,7 @@ namespace EliteDangerousCore
                 int newcount = set[i] ? counts[i] : Math.Min(Math.Max(mc.Counts[i] + counts[i], 0), limit);       // don't let it go below zero if changing, or above limit
 
                 // just output if we hit the limit and we are delta 
-                if ( set[i] == false && mc.Counts[i] + counts[i] > limit)   System.Diagnostics.Debug.WriteLine($"MCMRLIST {utc} Gen {items.Generation} Changed {mc.Details.Category}:{mc.Details.FDName} cnum {i} : newc {mc.Counts[i] + counts[i]} lastc {mc.Counts[i]} limit {limit} HIT!");
+                //if ( set[i] == false && mc.Counts[i] + counts[i] > limit)   System.Diagnostics.Debug.WriteLine($"MCMRLIST {utc} Gen {items.Generation} Changed {mc.Details.Category}:{mc.Details.FDName} cnum {i} : newc {mc.Counts[i] + counts[i]} lastc {mc.Counts[i]} limit {limit} HIT!");
 
                 if (newcount != mc.Counts[i])
                 {
