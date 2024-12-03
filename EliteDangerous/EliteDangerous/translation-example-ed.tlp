@@ -918,7 +918,10 @@ SECTION MaterialCommodityMicroResourceType
 .powerpropagandadata: "Power Political Data" @
 .powerclassifieddata: "Power Classified Data" @
 .powermegashipdata: "Power Megaship Data" @
-
+.biomechanicalcomponent: "Spire Refinery Compound" @
+.sabotagedcomponent: "Contaminated Spire Compound" @
+.tg_structuraldata02: "Thargoid Capital Ship Data" @
+.searchrescuevoucher: "Search and Rescue Voucher" @
 .unknowncorechip: "Tactical Core Chip" @
 
 SECTION EngineeringData

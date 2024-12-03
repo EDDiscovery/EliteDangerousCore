@@ -153,6 +153,7 @@ namespace EliteDangerousCore
                 ["BelugaLiner"] = "Saud Kruger",
                 ["CobraMkIII"] = "Faulcon DeLacy",
                 ["CobraMkIV"] = "Faulcon DeLacy",
+                ["CobraMkV"] = "Faulcon DeLacy",
                 ["DiamondBackXL"] = "Lakon",
                 ["DiamondBack"] = "Lakon",
                 ["Dolphin"] = "Saud Kruger",
@@ -460,6 +461,34 @@ namespace EliteDangerousCore
             MinThrust = 50,
             BoostCost = 10,
             FuelReserve = 0.51,
+            HeatCap = 228,
+            HeatDispMin = 1.99,
+            HeatDispMax = 31.68,
+            FuelCost = 50,
+            Hardness = 35,
+            Crew = 2,
+            FwdAcc = 27.84,
+            RevAcc = 19.91,
+            LatAcc = 15.03
+        };
+
+        // tbd values
+        private static ShipProperties cobramkv = new ShipProperties()
+        {
+            FDID = "CobraMkV",
+            EDCDID = "CobraMkV",
+            Manufacturer = "<code>",
+            HullMass = 210F,
+            Name = "Cobra Mk V",
+            Speed = 200,
+            Boost = 300,
+            HullCost = 584200,
+            Class = 1,
+            Shields = 120,
+            Armour = 120,
+            MinThrust = 50,
+            BoostCost = 10,
+            FuelReserve = 0.49,     // loadout
             HeatCap = 228,
             HeatDispMin = 1.99,
             HeatDispMax = 31.68,
@@ -1327,6 +1356,7 @@ namespace EliteDangerousCore
             { "belugaliner",belugaliner},
             { "cobramkiii",cobramkiii},
             { "cobramkiv",cobramkiv},
+            { "cobramkv",cobramkv},
             { "diamondbackxl",diamondbackxl},
             { "diamondback",diamondback},
             { "dolphin",dolphin},

@@ -100,6 +100,8 @@ namespace EliteDangerousCore
         public bool FSDJumpSequence{ get { return FSDJumpNextSystemName != null; } }    // true from startjump until location/fsdjump
         public string GameModeGroup { get { return GameMode + (Group.HasChars() ? (":" + Group) : ""); } }
         public string GameModeGroupMulticrew { get { return GameMode + (Group.HasChars() ? (":" + Group) : "") + (OnCrewWithCaptain.HasChars() ? " @ Cmdr " + OnCrewWithCaptain :""); } }
+        public string PowerPledged { get; private set; } = null;            // null, set on PowerJoin, cleared on PowerLeave
+        public string PowerPledgedThisLoadGame { get; private set; } = null;    // null, clear on loadgame, set on PowerJoin or PowerPlay
 
         private HistoryEntryStatus()
         {
@@ -128,6 +130,8 @@ namespace EliteDangerousCore
             CurrentBoost = prevstatus.CurrentBoost;
             FSDJumpNextSystemName = prevstatus.FSDJumpNextSystemName;
             FSDJumpNextSystemAddress = prevstatus.FSDJumpNextSystemAddress;
+            PowerPledged = prevstatus.PowerPledged;
+            PowerPledgedThisLoadGame = prevstatus.PowerPledgedThisLoadGame;
         }
 
         public static HistoryEntryStatus Update(HistoryEntryStatus prev, JournalEntry je, string curStarSystem)
@@ -284,6 +288,7 @@ namespace EliteDangerousCore
                         BookedTaxi = false,
                         BookedDropship = false, //  to ensure
                         CurrentBoost = 1,
+                        PowerPledgedThisLoadGame = null,
                     };
                     break;
 
@@ -577,6 +582,24 @@ namespace EliteDangerousCore
                         };
                     }
                     break;
+                case JournalTypeEnum.Powerplay:
+                    {
+                        JournalPowerplay pp = (JournalPowerplay)je;
+                        hes = new HistoryEntryStatus(prev) { PowerPledged = pp.Power, PowerPledgedThisLoadGame = pp.Power };
+                    }
+                    break;
+                case JournalTypeEnum.PowerplayJoin:
+                    {
+                        JournalPowerplayJoin pp = (JournalPowerplayJoin)je;
+                        hes = new HistoryEntryStatus(prev) { PowerPledged = pp.Power, PowerPledgedThisLoadGame = pp.Power };
+                    }
+                    break;
+                case JournalTypeEnum.PowerplayLeave:
+                    {
+                        hes = new HistoryEntryStatus(prev) { PowerPledged = null, PowerPledgedThisLoadGame = null };
+                    }
+                    break;
+
                 case JournalTypeEnum.Synthesis:
                     {
                         JournalSynthesis jsyn = (JournalSynthesis)je;
@@ -585,8 +608,8 @@ namespace EliteDangerousCore
                             hes = new HistoryEntryStatus(prev)
                             {
                                 CurrentBoost = jsyn.FSDBoostValue
-                        };
-                    }
+                            };
+                        }
                     }
                     break;
             }
