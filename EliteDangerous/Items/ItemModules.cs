@@ -1020,10 +1020,10 @@ namespace EliteDangerousCore
 
                 // IDs are real, properties have no real data on these. holding for real data
                 { "mandalay_armour_grade1", new ShipModule(129030681,ShipModule.ModuleTypes.LightweightAlloy,"Mandalay Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
-                { "mandalay_armour_grade2", new ShipModule(129030682,ShipModule.ModuleTypes.ReinforcedAlloy,"Mandalay Reinforced Alloy"){ Mass=32, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
-                { "mandalay_armour_grade3", new ShipModule(129030683,ShipModule.ModuleTypes.MilitaryGradeComposite,"Mandalay Military Grade Composite"){ Mass=63, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
-                { "mandalay_armour_mirrored", new ShipModule(129030684,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Mandalay Mirrored Surface Composite"){ Mass=63, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
-                { "mandalay_armour_reactive", new ShipModule(129030685,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Mandalay Reactive Surface Composite"){ Mass=63, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
+                { "mandalay_armour_grade2", new ShipModule(129030682,ShipModule.ModuleTypes.ReinforcedAlloy,"Mandalay Reinforced Alloy"){ Mass=19, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
+                { "mandalay_armour_grade3", new ShipModule(129030683,ShipModule.ModuleTypes.MilitaryGradeComposite,"Mandalay Military Grade Composite"){ Mass=38, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
+                { "mandalay_armour_mirrored", new ShipModule(129030684,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Mandalay Mirrored Surface Composite"){ Mass=38, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
+                { "mandalay_armour_reactive", new ShipModule(129030685,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Mandalay Reactive Surface Composite"){ Mass=38, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
                 { "cobramkv_armour_grade1", new ShipModule(129031231,ShipModule.ModuleTypes.LightweightAlloy,"Cobra Mk V Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
                 { "cobramkv_armour_grade2", new ShipModule(129031232,ShipModule.ModuleTypes.ReinforcedAlloy,"Cobra Mk V Reinforced Alloy"){ Mass=14, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
@@ -1124,6 +1124,7 @@ namespace EliteDangerousCore
                 { "hpt_cannon_turret_large", new ShipModule(128049447,ShipModule.ModuleTypes.Cannon,"Cannon Turret Large"){ Cost = 16204800, Mount = "T", Class = 3, Rating = "D", Mass = 8, Integrity = 64, PowerDraw = 0.64, BootTime = 0, DPS = 11.154, Damage = 30.34, DistributorDraw = 0.53, ThermalLoad = 1.58, ArmourPiercing = 70, Range = 4000, Speed = 800, RateOfFire = 0.368, BurstInterval = 2.72, Clip = 5, Ammo = 100, ReloadTime = 4, BreachDamage = 28.8, BreachMin = 60, BreachMax = 90, KineticProportionDamage = 100, ExplosiveProportionDamage = 0, Falloff = 4000, AmmoCost = 20, Jitter = 0 } },
 
                 { "hpt_cannon_gimbal_large", new ShipModule(128671120,ShipModule.ModuleTypes.Cannon,"Cannon Gimbal Large"){ Cost = 1350400, Mount = "G", Class = 3, Rating = "C", Mass = 8, Integrity = 64, PowerDraw = 0.75, BootTime = 0, DPS = 16.485, Damage = 37.421, DistributorDraw = 1.14, ThermalLoad = 2.93, ArmourPiercing = 70, Range = 4000, Speed = 800, RateOfFire = 0.441, BurstInterval = 2.27, Clip = 5, Ammo = 100, ReloadTime = 4, BreachDamage = 35.5, BreachMin = 60, BreachMax = 90, KineticProportionDamage = 100, ExplosiveProportionDamage = 0, Falloff = 4000, AmmoCost = 20, Jitter = 0 } },
+                { "hpt_cannon_gimbal_medium_burst", new ShipModule(129030051,ShipModule.ModuleTypes.Cannon,"Concord Cannon Medium"){ Cost = 314620, Mount = "G", Class = 2, Rating = "D", Mass = 4, Integrity = 51, PowerDraw = 0.64, BootTime = 0, DPS = 20.44, Damage = 31.286, DistributorDraw = 0.75, ThermalLoad = 1.9, ArmourPiercing = 42, Range = 3500, Speed = 1300, RateOfFire = 2.143, BurstInterval = 0.9, BurstRateOfFire = 4, BurstSize = 3, Clip = 9, Ammo = 300, ReloadTime = 4, BreachDamage = 13.9, BreachMin = 60, BreachMax = 90, KineticProportionDamage = 100, ExplosiveProportionDamage = 0, Falloff = 3500, AmmoCost = 20, Jitter = 0 } },
 
                 // Frag cannon
 
@@ -3296,7 +3297,6 @@ namespace EliteDangerousCore
                 {"ferdelance_shipkit1_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Fer De Lance Shipkit 1 Wings 2") },
                 {"ferdelance_shipkit1_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Fer De Lance Shipkit 1 Wings 3") },
                 {"ferdelance_shipkit1_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Fer De Lance Shipkit 1 Wings 4") },
-                {"hpt_cannon_gimbal_medium_burst", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Hpt Cannon Gimbal Medium Burst") },
                 {"hull", new ShipModule(-1,ShipModule.ModuleTypes.WearAndTearType,"Repair All") },
                 {"independant_trader_shipkit1_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Independant Trader Shipkit 1 Bumper 1") },
                 {"independant_trader_shipkit1_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Independant Trader Shipkit 1 Bumper 2") },
