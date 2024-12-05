@@ -934,12 +934,6 @@ namespace EliteDangerousCore
                 { "cobramkiv_armour_mirrored", new ShipModule(128672267,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Cobra Mk IV Mirrored Surface Composite"){ Mass=27, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
                 { "cobramkiv_armour_reactive", new ShipModule(128672268,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Cobra Mk IV Reactive Surface Composite"){ Mass=27, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
-                // tbd ids
-                { "cobramkv_armour_grade1", new ShipModule(111111164,ShipModule.ModuleTypes.LightweightAlloy,"Cobra Mk V Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
-                { "cobramkv_armour_grade2", new ShipModule(111111165,ShipModule.ModuleTypes.ReinforcedAlloy,"Cobra Mk V Reinforced Alloy"){ Mass=14, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
-                { "cobramkv_armour_grade3", new ShipModule(111111166,ShipModule.ModuleTypes.MilitaryGradeComposite,"Cobra Mk V Military Grade Composite"){ Mass=27, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
-                { "cobramkv_armour_mirrored", new ShipModule(111111167,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Cobra Mk V Mirrored Surface Composite"){ Mass=27, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
-                { "cobramkv_armour_reactive", new ShipModule(111111168,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Cobra Mk V Reactive Surface Composite"){ Mass=27, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
                 { "independant_trader_armour_grade1", new ShipModule(128672271,ShipModule.ModuleTypes.LightweightAlloy,"Keelback Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
                 { "independant_trader_armour_grade2", new ShipModule(128672272,ShipModule.ModuleTypes.ReinforcedAlloy,"Keelback Reinforced Alloy"){ Mass=12, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
@@ -1030,6 +1024,13 @@ namespace EliteDangerousCore
                 { "mandalay_armour_grade3", new ShipModule(129030683,ShipModule.ModuleTypes.MilitaryGradeComposite,"Mandalay Military Grade Composite"){ Mass=63, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
                 { "mandalay_armour_mirrored", new ShipModule(129030684,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Mandalay Mirrored Surface Composite"){ Mass=63, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
                 { "mandalay_armour_reactive", new ShipModule(129030685,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Mandalay Reactive Surface Composite"){ Mass=63, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
+
+                { "cobramkv_armour_grade1", new ShipModule(129031231,ShipModule.ModuleTypes.LightweightAlloy,"Cobra Mk V Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
+                { "cobramkv_armour_grade2", new ShipModule(129031232,ShipModule.ModuleTypes.ReinforcedAlloy,"Cobra Mk V Reinforced Alloy"){ Mass=14, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
+                { "cobramkv_armour_grade3", new ShipModule(129031233, ShipModule.ModuleTypes.MilitaryGradeComposite,"Cobra Mk V Military Grade Composite"){ Mass=27, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
+                { "cobramkv_armour_mirrored", new ShipModule(129031234, ShipModule.ModuleTypes.MirroredSurfaceComposite,"Cobra Mk V Mirrored Surface Composite"){ Mass=27, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
+                { "cobramkv_armour_reactive", new ShipModule(129031235,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Cobra Mk V Reactive Surface Composite"){ Mass=27, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
+
                 //end
 
                 // Auto field maint
