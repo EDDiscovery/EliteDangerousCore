@@ -141,6 +141,10 @@ namespace EliteDangerousCore
             AncientHistoricalData, AncientLanguageData, AncientTechnologicalData, DecodedEmissionData, EncodedScandata, EncryptionArchives, Guardian_ModuleBlueprint, Guardian_WeaponBlueprint,
             HyperspaceTrajectories, SecurityFirmware, ShieldPatternAnalysis, TG_ResidueData, TG_ShipSystemsData, UnknownWakeData, AdaptiveEncryptors, ClassifiedScandata,
             CompactEmissionsData, DataminedWake, EmbeddedFirmware, Guardian_VesselBlueprint, ShieldFrequencyData,
+
+            // Ascendency 3/12/2024
+            TG_StructuralData02, SearchRescueVoucher,
+
             //---------------------------------------------------------- Manufactured
             BasicConductors = 3000, ChemicalStorageUnits, CompactComposites, CrystalShards, GridResistors, Guardian_PowerCell, Guardian_Sentinel_WreckageComponents, HeatConductionWiring,
             MechanicalScrap, SalvagedAlloys, TemperedAlloys, TG_Abrasion03, WornShieldEmitters, ChemicalProcessors, ConductiveComponents, FilamentComposites,
@@ -166,6 +170,10 @@ namespace EliteDangerousCore
             // new Ascendency 3/11/2024
             PowerIndustrial,PowerMiscIndust, PowerInventory, PowerPlayMilitary, PowerElectronics, PowerComputer, PowerExperiment,
             PowerAgriculture, PowerExtraction, PowerEquipment, PowerMedical, PowerMiscComputer, PowerSecurity, PowerPower, PowerReasearch,
+
+            // new Ascendency 3/12/2024
+
+            BioMechanicalComponent, SabotagedComponent,
 
             //---------------------------------------------------------- Component/Assets
             Aerogel = 5000, CarbonFibrePlating, ChemicalCatalyst, ChemicalSuperbase, Circuitboard, CircuitSwitch, ElectricalFuse, ElectricalWiring,
@@ -1126,6 +1134,10 @@ namespace EliteDangerousCore
             Add(CatType.Encoded, ItemType.Standard, MCMR.TG_ShipFlightData, "Ship Flight Data", "SFD");
             Add(CatType.Encoded, ItemType.Standard, MCMR.UnknownShipSignature, "Thargoid Ship Signature", "USSig");
 
+            // ascendency 3/12/2024
+            Add(CatType.Encoded, ItemType.Standard, MCMR.TG_StructuralData02, "Thargoid Capital Ship Data", "TGSTRUCTD2");
+            Add(CatType.Encoded, ItemType.Standard, MCMR.SearchRescueVoucher, "Search and Rescue Voucher", "SRCHRESV");
+
             #endregion
 
             #region Other Manufactured
@@ -1218,6 +1230,11 @@ namespace EliteDangerousCore
             Add(CatType.Item, MCMR.PowerSecurity, "Security Logs", "MRPSL");
             Add(CatType.Item, MCMR.PowerPower, "Energy Regulator", "MRPPP");
             Add(CatType.Item, MCMR.PowerReasearch, "Research Notes", "MRPRD");
+
+            // ascendency 3/12/24
+
+            Add(CatType.Item, MCMR.BioMechanicalComponent, "Spire Refinery Compound", "MRSPRC");
+            Add(CatType.Item, MCMR.SabotagedComponent, "Contaminated Spire Compound", "MRSBSC");
 
             // Components
 
@@ -1382,6 +1399,7 @@ namespace EliteDangerousCore
             Add(CatType.Data, MCMR.PowerClassifiedData, "Power Classified Data", "MRDPCD");
             Add(CatType.Data, MCMR.PowerMegashipData,"Power Megaship Data", "MRDPMD");
 
+            
 
             // consumable
 

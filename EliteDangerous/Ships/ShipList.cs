@@ -531,12 +531,6 @@ namespace EliteDangerousCore
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine($"Made new ship `{id}`");
-            if ( id == "krait_mkii:21")
-            {
-
-            }
-
             ulong i = id.Substring(id.IndexOf(":") + 1).InvariantParseULong(0);
             Ship smn = new Ship(i);
             Ships[id] = smn;

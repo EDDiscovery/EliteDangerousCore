@@ -12,7 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
-//#define VANITYADD
+//define VANITYADD
 
 using System;
 using System.Collections.Generic;

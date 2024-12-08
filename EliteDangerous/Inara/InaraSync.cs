@@ -294,10 +294,23 @@ namespace EliteDangerousCore.Inara
                         break;
                     }
 
-                case JournalTypeEnum.MissionCompleted: // VERIFIED 18/5/2018
+                case JournalTypeEnum.MissionCompleted: // VERIFIED 18/5/2018 - updated 8/12/24 to send materials or commodity counts as well
                     {
                         var je = he.journalEntry as JournalMissionCompleted;
                         eventstosend.Add(InaraClass.setCommanderMissionCompleted(je));
+
+                        foreach (var mat in je.MaterialsReward.EmptyIfNull())
+                        {
+                            if (mcmr.TryGetValue(mat.Name, out MaterialCommodityMicroResource item))
+                                eventstosend.Add(InaraClass.setCommanderInventoryItem(item, heutc));
+
+                        }
+                        foreach (var commd in je.CommodityReward.EmptyIfNull())
+                        {
+                            if (mcmr.TryGetValue(commd.Name, out MaterialCommodityMicroResource item))
+                                eventstosend.Add(InaraClass.setCommanderInventoryItem(item, heutc));
+
+                        }
                         break;
                     }
 
@@ -485,11 +498,15 @@ namespace EliteDangerousCore.Inara
                             eventstosend.Add(InaraClass.setCommanderInventoryItem(item, heutc));
                         break;
                     }
-                case JournalTypeEnum.Cargo: //VERIFIED 16/5/18
+                case JournalTypeEnum.Cargo: //VERIFIED 16/5/18 - 8/12/24 lets use this to send MRs as well - shiplocker is too verbose to use as a trigger
                     {
                         var commod = mcmr.Values.Where(x => x.Details.IsCommodity).ToList();
                         if (commod.Count > 0)
                             eventstosend.Add(InaraClass.setCommanderInventory(commod, heutc));
+
+                        var mr = mcmr.Values.Where(x => x.Details.IsMicroResources).ToList();
+                        if (mr.Count > 0)
+                            eventstosend.Add(InaraClass.setCommanderInventory(mr, heutc, 0, "ShipLocker"));
                         break;
                     }
 
