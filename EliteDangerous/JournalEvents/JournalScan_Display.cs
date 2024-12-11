@@ -50,10 +50,10 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     sb.Append(PlanetTypeText);
 
-                    if (!GasWorld)      // all gas worlds have atmospheres, so don't add it on
+                    if (HasAtmosphere)
                     {
                         sb.AppendCS();
-                        sb.Append(Atmosphere == "none" ? "No Atmosphere".T(EDCTx.JournalScan_NoAtmosphere) : Atmosphere);
+                        sb.Append(AtmosphereTranslated);
                     }
 
                     if (IsLandable)

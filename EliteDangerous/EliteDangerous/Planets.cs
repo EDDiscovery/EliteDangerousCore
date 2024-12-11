@@ -160,6 +160,11 @@ namespace EliteDangerousCore
             return EDPlanet.Unknown_Body_Type;
         }
 
+        public static bool HasAtmosphere(EDAtmosphereType ty)
+        {
+            return ty != EDAtmosphereType.No_atmosphere && ty != EDAtmosphereType.Unknown;
+        }
+
         public static EDAtmosphereType ToEnum(string v, out EDAtmosphereProperty atmprop)
         {
             atmprop = EDAtmosphereProperty.None;
@@ -195,6 +200,7 @@ namespace EliteDangerousCore
                     return kvp.Key;
             }
 
+            atmprop = EDAtmosphereProperty.None;
             return EDAtmosphereType.Unknown;
         }
 

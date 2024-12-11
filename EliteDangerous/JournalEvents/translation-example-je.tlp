@@ -1196,3 +1196,76 @@ SECTION JournalScanOrganics
 
 .Value: "Value: ; cr;N0" @
 .PotentialValue: "Potential Value: ; cr;N0" @
+
+SECTION AtmosphereTypes
+
+.Ammonia: "Ammonia Atmosphere" @
+.Ammonia_Rich: "Rich Ammonia Atmosphere" @
+.Ammonia_Rich_Thick: "Rich Thick Ammonia Atmosphere" @
+.Ammonia_Rich_Thick_Hot: "Rich Thick Hot Ammonia Atmosphere" @
+.Ammonia_Thick: "Thick Ammonia Atmosphere" @
+.Ammonia_Thick_Hot: "Thick Hot Ammonia Atmosphere" @
+.Ammonia_Thin: "Thin Ammonia Atmosphere" @
+.Argon: "Argon Atmosphere" @
+.Argon_Rich: "Rich Argon Atmosphere" @
+.Argon_Rich_Thick: "Rich Thick Argon Atmosphere" @
+.Argon_Rich_Thick_Hot: "Rich Thick Hot Argon Atmosphere" @
+.Argon_Rich_Thin: "Rich Thin Argon Atmosphere" @
+.Argon_Thick: "Thick Argon Atmosphere" @
+.Argon_Thick_Hot: "Thick Hot Argon Atmosphere" @
+.Argon_Thin: "Thin Argon Atmosphere" @
+.Carbon_dioxide: "Carbon dioxide Atmosphere" @
+.Carbon_dioxide_Hot: "Hot Carbon dioxide Atmosphere" @
+.Carbon_dioxide_Rich: "Rich Carbon dioxide Atmosphere" @
+.Carbon_dioxide_Rich_Hot: "Rich Hot Carbon dioxide Atmosphere" @
+.Carbon_dioxide_Rich_Thick: "Rich Thick Carbon dioxide Atmosphere" @
+.Carbon_dioxide_Rich_Thick_Hot: "Rich Thick Hot Carbon dioxide Atmosphere" @
+.Carbon_dioxide_Rich_Thin: "Rich Thin Carbon dioxide Atmosphere" @
+.Carbon_dioxide_Thick: "Thick Carbon dioxide Atmosphere" @
+.Carbon_dioxide_Thick_Hot: "Thick Hot Carbon dioxide Atmosphere" @
+.Carbon_dioxide_Thin: "Thin Carbon dioxide Atmosphere" @
+.Carbon_dioxide_Thin_Hot: "Thin Hot Carbon dioxide Atmosphere" @
+.Earth_Like: "Earth Like Atmosphere" @
+.Earth_Like_Thick: "Thick Earth Like Atmosphere" @
+.Helium: "Helium Atmosphere" @
+.Helium_Thick: "Thick Helium Atmosphere" @
+.Helium_Thin: "Thin Helium Atmosphere" @
+.Metallic_vapour_Thick_Hot: "Thick Hot Metallic vapour Atmosphere" @
+.Methane: "Methane Atmosphere" @
+.Methane_Rich: "Rich Methane Atmosphere" @
+.Methane_Rich_Thick: "Rich Thick Methane Atmosphere" @
+.Methane_Rich_Thick_Hot: "Rich Thick Hot Methane Atmosphere" @
+.Methane_Rich_Thin: "Rich Thin Methane Atmosphere" @
+.Methane_Thick: "Thick Methane Atmosphere" @
+.Methane_Thick_Hot: "Thick Hot Methane Atmosphere" @
+.Methane_Thin: "Thin Methane Atmosphere" @
+.Neon_Rich: "Rich Neon Atmosphere" @
+.Neon_Rich_Thin: "Rich Thin Neon Atmosphere" @
+.Neon_Thin: "Thin Neon Atmosphere" @
+.Nitrogen: "Nitrogen Atmosphere" @
+.Nitrogen_Thick: "Thick Nitrogen Atmosphere" @
+.Nitrogen_Thick_Hot: "Thick Hot Nitrogen Atmosphere" @
+.Nitrogen_Thin: "Thin Nitrogen Atmosphere" @
+.No_atmosphere: "No Atmosphere" @
+.Oxygen: "Oxygen Atmosphere" @
+.Oxygen_Thin: "Thin Oxygen Atmosphere" @
+.Silicate_vapour_Hot: "Hot Silicate vapour Atmosphere" @
+.Silicate_vapour_Thick_Hot: "Thick Hot Silicate vapour Atmosphere" @
+.Silicate_vapour_Thin_Hot: "Thin Hot Silicate vapour Atmosphere" @
+.Sulphur_dioxide: "Sulphur dioxide Atmosphere" @
+.Sulphur_dioxide_Hot: "Hot Sulphur dioxide Atmosphere" @
+.Sulphur_dioxide_Thick: "Thick Sulphur dioxide Atmosphere" @
+.Sulphur_dioxide_Thick_Hot: "Thick Hot Sulphur dioxide Atmosphere" @
+.Sulphur_dioxide_Thin: "Thin Sulphur dioxide Atmosphere" @
+.Sulphur_dioxide_Thin_Hot: "Thin Hot Sulphur dioxide Atmosphere" @
+.Unknown: "Unknown Atmosphere" @
+.Water: "Water Atmosphere" @
+.Water_Hot: "Hot Water Atmosphere" @
+.Water_Rich: "Rich Water Atmosphere" @
+.Water_Rich_Hot: "Rich Hot Water Atmosphere" @
+.Water_Rich_Thick: "Rich Thick Water Atmosphere" @
+.Water_Rich_Thick_Hot: "Rich Thick Hot Water Atmosphere" @
+.Water_Rich_Thin: "Rich Thin Water Atmosphere" @
+.Water_Thick: "Thick Water Atmosphere" @
+.Water_Thick_Hot: "Thick Hot Water Atmosphere" @
+.Water_Thin: "Thin Water Atmosphere" @

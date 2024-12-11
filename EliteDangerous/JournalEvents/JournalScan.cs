@@ -220,13 +220,25 @@ namespace EliteDangerousCore.JournalEvents
         public bool CanBeTerraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
 
         [PropertyNameAttribute("Does it have atmosphere")]
-        public bool HasAtmosphere { get { return Atmosphere != null && Atmosphere != "none"; } }  // none is used if no atmosphere
+        public bool HasAtmosphere { get { return EliteDangerousCore.Planets.HasAtmosphere(AtmosphereID); } }  
         [PropertyNameAttribute("Atmosphere string, can be none")]
-        public string Atmosphere { get; private set; }                      // processed data, always there, may be "none"
+        public string Atmosphere { get; private set; }                      // EDD then processed, always there, may be "none"
         [PropertyNameAttribute("EDD ID")]
         public EDAtmosphereType AtmosphereID { get; }                       // Atmosphere -> ID (Ammonia, Carbon etc)
         [PropertyNameAttribute("EDD atmospheric property")]
         public EDAtmosphereProperty AtmosphereProperty { get; private set; }  // Atomsphere -> Property (None, Rich, Thick , Thin, Hot)
+        [PropertyNameAttribute("Translated name of Atmosphere")]
+        public string AtmosphereTranslated { get
+            {
+                string key = "AtmosphereTypes." + AtmosphereID.ToString() + ((AtmosphereProperty != EDAtmosphereProperty.None) ? "_" + AtmosphereProperty.ToString().Replace(", ", "_") : "");
+                if (!BaseUtils.Translator.Instance.TryGetValue(key, out string res))
+                {
+                    res = (AtmosphereProperty != EDAtmosphereProperty.None ? AtmosphereProperty.ToString().Replace(",", " ") + " " : "") +
+                            AtmosphereID.ToString().Replace("_", " ") + " Atmosphere";
+                }
+                return res;
+            } }
+
         [PropertyNameAttribute("Dictionary of atmosphere composition, in %. Use an Iter variable to search it")]
         public Dictionary<string, double> AtmosphereComposition { get; private set; }       // from journal. value is in % (0-100)
         [PropertyNameAttribute("Atmospheric composition list, comma separated")]
@@ -649,7 +661,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass: ".T(EDCTx.JournalScan_MASS), MassEMMM,
                                                 "<;, Landable".T(EDCTx.JournalScan_Landable), IsLandable,
-                                                "<;, Terraformable".T(EDCTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", Atmosphere,
+                                                "<;, Terraformable".T(EDCTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", AtmosphereTranslated,
                                                  "Gravity: ;G;0.00".T(EDCTx.JournalScan_Gravity), nSurfaceGravityG,
                                                  "Radius: ".T(EDCTx.JournalScan_RS), RadiusText,
                                                  "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
