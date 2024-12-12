@@ -230,13 +230,25 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Translated name of Atmosphere")]
         public string AtmosphereTranslated { get
             {
-                string key = "AtmosphereTypes." + AtmosphereID.ToString() + ((AtmosphereProperty != EDAtmosphereProperty.None) ? "_" + AtmosphereProperty.ToString().Replace(", ", "_") : "");
-                if (!BaseUtils.Translator.Instance.TryGetValue(key, out string res))
+                if (BaseUtils.Translator.Instance.Translating)
                 {
-                    res = (AtmosphereProperty != EDAtmosphereProperty.None ? AtmosphereProperty.ToString().Replace(",", " ") + " " : "") +
-                            AtmosphereID.ToString().Replace("_", " ") + " Atmosphere";
+                    string key = "AtmosphereTypes." + AtmosphereID.ToString() + ((AtmosphereProperty != EDAtmosphereProperty.None) ? "_" + AtmosphereProperty.ToString().Replace(", ", "_") : "");
+                    if (BaseUtils.Translator.Instance.IsDefined(key))       // if we defined it, all good, not an unknown combo
+                    {
+                        string res = BaseUtils.Translator.Instance.GetTranslation(key); // but it may be undefined (example.ex etc) so don't accept null
+                        if ( res != null )
+                            return res;
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"*** Missing translator ID for atmosphere {AtmosphereID} : {AtmosphereProperty} : `{Atmosphere}`");
+                    }
                 }
-                return res;
+
+                string mainpart = AtmosphereID.ToString().Replace("_", " ") + ((AtmosphereProperty & EDAtmosphereProperty.Rich) != 0 ? " Rich" : "") + " Atmosphere";
+                EDAtmosphereProperty apnorich = AtmosphereProperty & ~(EDAtmosphereProperty.Rich);
+                string final = apnorich != EDAtmosphereProperty.None ? apnorich.ToString().Replace(",", "") + " " + mainpart : mainpart;
+                return final;
             } }
 
         [PropertyNameAttribute("Dictionary of atmosphere composition, in %. Use an Iter variable to search it")]
