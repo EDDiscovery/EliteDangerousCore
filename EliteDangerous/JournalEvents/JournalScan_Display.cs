@@ -140,10 +140,9 @@ namespace EliteDangerousCore.JournalEvents
                 sb.AppendCR();
             }
 
-            if (Volcanism.HasChars())
+            if (HasMeaningfulVolcanism)
             {
-                sb.AppendFormat("Volcanism: {0}".T(EDCTx.JournalScan_Volcanism), Volcanism.IsEmpty() ? "No Volcanism".T(EDCTx.JournalScan_NoVolcanism) : System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.
-                                                                                            ToTitleCase(Volcanism.ToLowerInvariant()));
+                sb.AppendFormat("Volcanism: {0}".T(EDCTx.JournalScan_Volcanism), VolcanismTranslated);
                 sb.AppendCR();
             }
 

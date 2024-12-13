@@ -220,7 +220,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool CanBeTerraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
 
         [PropertyNameAttribute("Does it have atmosphere")]
-        public bool HasAtmosphere { get { return EliteDangerousCore.Planets.HasAtmosphere(AtmosphereID); } }  
+        public bool HasAtmosphere { get { return AtmosphereID > EDAtmosphereType.No; } }  
         [PropertyNameAttribute("Atmosphere string, can be none")]
         public string Atmosphere { get; private set; }                      // EDD then processed, always there, may be "none"
         [PropertyNameAttribute("EDD ID")]
@@ -266,9 +266,36 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("EDD Volcanism ID")]
         public EDVolcanism VolcanismID { get; }                     // Volcanism -> ID (Water_Magma, Nitrogen_Magma etc)
         [PropertyNameAttribute("Has volcanism, excluding unknowns")]
-        public bool HasMeaningfulVolcanism { get { return VolcanismID != EDVolcanism.None && VolcanismID != EDVolcanism.Unknown; } }
+        public bool HasMeaningfulVolcanism { get { return VolcanismID > EDVolcanism.No; } }
         [PropertyNameAttribute("EDD Volcanism type")]
         public EDVolcanismProperty VolcanismProperty { get; private set; }               // Volcanism -> Property (None, Major, Minor)
+
+        [PropertyNameAttribute("Translated name of Volcanism")]
+        public string VolcanismTranslated
+        {
+            get
+            {
+                if (BaseUtils.Translator.Instance.Translating)
+                {
+                    string key = "VolcanismTypes." + VolcanismID.ToString() + (VolcanismProperty != EDVolcanismProperty.None ? "_" + VolcanismProperty.ToString() : "");
+                    if (BaseUtils.Translator.Instance.IsDefined(key))       // if we defined it, all good, not an unknown combo
+                    {
+                        string res = BaseUtils.Translator.Instance.GetTranslation(key); // but it may be undefined (example.ex etc) so don't accept null
+                        if (res != null)
+                            return res;
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"*** Missing translator ID for volcanism {VolcanismID} : {VolcanismProperty} : `{Volcanism}`");
+                    }
+                }
+
+                string mainpart = VolcanismID.ToString().Replace("_", " ") + " Volcanism";
+                string final = VolcanismProperty != EDVolcanismProperty.None ? VolcanismProperty.ToString() + " " + mainpart : mainpart;
+                return final;
+            }
+        }
+
         [PropertyNameAttribute("m/s")]
         public double? nSurfaceGravity { get; private set; }                // direct
         [PropertyNameAttribute("Fractions of earth gravity")]

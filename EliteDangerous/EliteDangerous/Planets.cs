@@ -55,7 +55,7 @@ namespace EliteDangerousCore
     public enum EDAtmosphereType   
     {
         Unknown = 0,
-        No = 1,         // No atmosphere
+        No = 1,         // No atmosphere, keep order, below is active
         Earth_Like,
         Ammonia,
         Water,
@@ -83,7 +83,7 @@ namespace EliteDangerousCore
     public enum EDVolcanism
     {
         Unknown = 0,
-        None,
+        No = 1,         // no volcanism, keep order, below is active
         Water_Magma = 100,
         Sulphur_Dioxide_Magma = 200,
         Ammonia_Magma = 300,
@@ -159,17 +159,12 @@ namespace EliteDangerousCore
             return EDPlanet.Unknown_Body_Type;
         }
 
-        public static bool HasAtmosphere(EDAtmosphereType ty)
-        {
-            return ty != EDAtmosphereType.No && ty != EDAtmosphereType.Unknown;
-        }
-
         public static EDAtmosphereType ToEnum(string v, out EDAtmosphereProperty atmprop)
         {
             atmprop = EDAtmosphereProperty.None;
 
             if (v.IsEmpty())
-                return EDAtmosphereType.Unknown;
+                return EDAtmosphereType.No;
 
             if (v.Equals("None", StringComparison.InvariantCultureIgnoreCase))
                 return EDAtmosphereType.No;
@@ -208,7 +203,7 @@ namespace EliteDangerousCore
             vprop = EDVolcanismProperty.None;
 
             if (v.IsEmpty())
-                return EDVolcanism.Unknown;
+                return EDVolcanism.No;
 
             string searchstr = v.ToLowerInvariant().Replace("_", "").Replace(" ", "").Replace("-", "").Replace("volcanism", "");
 
@@ -226,6 +221,7 @@ namespace EliteDangerousCore
             if (volcanismStr2EnumLookup.ContainsKey(searchstr))
                 return volcanismStr2EnumLookup[searchstr];
 
+            vprop = EDVolcanismProperty.None;
             return EDVolcanism.Unknown;
         }
 

@@ -1277,3 +1277,32 @@ SECTION AtmosphereTypes
 .Argon_Hot_Rich "Hot Argon Rich Atmosphere" @
 .Metallic_Vapour_Hot : "Hot Metallic Vapour Atmosphere" @
 .Metallic_Vapour_Hot_Thin : "Hot Thin Metallic Vapour Atmosphere" @
+
+SECTION VolcanismTypes
+
+.Ammonia_Magma_Minor: "Minor Ammonia Magma Volcanism" @
+.Carbon_Dioxide_Geysers: "Carbon Dioxide Geysers Volcanism" @
+.Carbon_Dioxide_Geysers_Minor: "Minor Carbon Dioxide Geysers Volcanism" @
+.Metallic_Magma: "Metallic Magma Volcanism" @
+.Metallic_Magma_Major: "Major Metallic Magma Volcanism" @
+.Metallic_Magma_Minor: "Minor Metallic Magma Volcanism" @
+.Methane_Magma_Minor: "Minor Methane Magma Volcanism" @
+.Nitrogen_Magma_Minor: "Minor Nitrogen Magma Volcanism" @
+.No: "No Volcanism" @
+.Rocky_Magma: "Rocky Magma Volcanism" @
+.Rocky_Magma_Major: "Major Rocky Magma Volcanism" @
+.Rocky_Magma_Minor: "Minor Rocky Magma Volcanism" @
+.Silicate_Vapour_Geysers: "Silicate Vapour Geysers Volcanism" @
+.Silicate_Vapour_Geysers_Major: "Major Silicate Vapour Geysers Volcanism" @
+.Silicate_Vapour_Geysers_Minor: "Minor Silicate Vapour Geysers Volcanism" @
+.Water_Geysers: "Water Geysers Volcanism" @
+.Water_Geysers_Major: "Major Water Geysers Volcanism" @
+.Water_Geysers_Minor: "Minor Water Geysers Volcanism" @
+.Water_Magma: "Water Magma Volcanism" @
+.Water_Magma_Major: "Major Water Magma Volcanism" @
+.Water_Magma_Minor: "Minor Water Magma Volcanism" @
+
+// added
+
+.Unknown: "Unknown Volcanism" @
+
