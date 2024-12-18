@@ -220,13 +220,37 @@ namespace EliteDangerousCore.JournalEvents
         public bool CanBeTerraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
 
         [PropertyNameAttribute("Does it have atmosphere")]
-        public bool HasAtmosphere { get { return Atmosphere != null && Atmosphere != "none"; } }  // none is used if no atmosphere
+        public bool HasAtmosphere { get { return AtmosphereID > EDAtmosphereType.No; } }  
         [PropertyNameAttribute("Atmosphere string, can be none")]
-        public string Atmosphere { get; private set; }                      // processed data, always there, may be "none"
+        public string Atmosphere { get; private set; }                      // EDD then processed, always there, may be "none"
         [PropertyNameAttribute("EDD ID")]
         public EDAtmosphereType AtmosphereID { get; }                       // Atmosphere -> ID (Ammonia, Carbon etc)
         [PropertyNameAttribute("EDD atmospheric property")]
         public EDAtmosphereProperty AtmosphereProperty { get; private set; }  // Atomsphere -> Property (None, Rich, Thick , Thin, Hot)
+        [PropertyNameAttribute("Translated name of Atmosphere")]
+        public string AtmosphereTranslated { get
+            {
+                if (BaseUtils.Translator.Instance.Translating)
+                {
+                    string key = "AtmosphereTypes." + AtmosphereID.ToString() + ((AtmosphereProperty != EDAtmosphereProperty.None) ? "_" + AtmosphereProperty.ToString().Replace(", ", "_") : "");
+                    if (BaseUtils.Translator.Instance.IsDefined(key))       // if we defined it, all good, not an unknown combo
+                    {
+                        string res = BaseUtils.Translator.Instance.GetTranslation(key); // but it may be undefined (example.ex etc) so don't accept null
+                        if ( res != null )
+                            return res;
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"*** Missing translator ID for atmosphere {AtmosphereID} : {AtmosphereProperty} : `{Atmosphere}`");
+                    }
+                }
+
+                string mainpart = AtmosphereID.ToString().Replace("_", " ") + ((AtmosphereProperty & EDAtmosphereProperty.Rich) != 0 ? " Rich" : "") + " Atmosphere";
+                EDAtmosphereProperty apnorich = AtmosphereProperty & ~(EDAtmosphereProperty.Rich);
+                string final = apnorich != EDAtmosphereProperty.None ? apnorich.ToString().Replace(",", "") + " " + mainpart : mainpart;
+                return final;
+            } }
+
         [PropertyNameAttribute("Dictionary of atmosphere composition, in %. Use an Iter variable to search it")]
         public Dictionary<string, double> AtmosphereComposition { get; private set; }       // from journal. value is in % (0-100)
         [PropertyNameAttribute("Atmospheric composition list, comma separated")]
@@ -242,9 +266,36 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("EDD Volcanism ID")]
         public EDVolcanism VolcanismID { get; }                     // Volcanism -> ID (Water_Magma, Nitrogen_Magma etc)
         [PropertyNameAttribute("Has volcanism, excluding unknowns")]
-        public bool HasMeaningfulVolcanism { get { return VolcanismID != EDVolcanism.None && VolcanismID != EDVolcanism.Unknown; } }
+        public bool HasMeaningfulVolcanism { get { return VolcanismID > EDVolcanism.No; } }
         [PropertyNameAttribute("EDD Volcanism type")]
         public EDVolcanismProperty VolcanismProperty { get; private set; }               // Volcanism -> Property (None, Major, Minor)
+
+        [PropertyNameAttribute("Translated name of Volcanism")]
+        public string VolcanismTranslated
+        {
+            get
+            {
+                if (BaseUtils.Translator.Instance.Translating)
+                {
+                    string key = "VolcanismTypes." + VolcanismID.ToString() + (VolcanismProperty != EDVolcanismProperty.None ? "_" + VolcanismProperty.ToString() : "");
+                    if (BaseUtils.Translator.Instance.IsDefined(key))       // if we defined it, all good, not an unknown combo
+                    {
+                        string res = BaseUtils.Translator.Instance.GetTranslation(key); // but it may be undefined (example.ex etc) so don't accept null
+                        if (res != null)
+                            return res;
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"*** Missing translator ID for volcanism {VolcanismID} : {VolcanismProperty} : `{Volcanism}`");
+                    }
+                }
+
+                string mainpart = VolcanismID.ToString().Replace("_", " ") + " Volcanism";
+                string final = VolcanismProperty != EDVolcanismProperty.None ? VolcanismProperty.ToString() + " " + mainpart : mainpart;
+                return final;
+            }
+        }
+
         [PropertyNameAttribute("m/s")]
         public double? nSurfaceGravity { get; private set; }                // direct
         [PropertyNameAttribute("Fractions of earth gravity")]
@@ -649,7 +700,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass: ".T(EDCTx.JournalScan_MASS), MassEMMM,
                                                 "<;, Landable".T(EDCTx.JournalScan_Landable), IsLandable,
-                                                "<;, Terraformable".T(EDCTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", Atmosphere,
+                                                "<;, Terraformable".T(EDCTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", AtmosphereTranslated,
                                                  "Gravity: ;G;0.00".T(EDCTx.JournalScan_Gravity), nSurfaceGravityG,
                                                  "Radius: ".T(EDCTx.JournalScan_RS), RadiusText,
                                                  "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,

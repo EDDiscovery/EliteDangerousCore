@@ -1387,6 +1387,7 @@ SECTION ModulePartNames
 .Xeno_Scanner: "Xeno Scanner" @
 .Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" @
 .Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" @
+.Concord_Cannon: "Concord Cannon" @
 
 
 SECTION ShipSlots

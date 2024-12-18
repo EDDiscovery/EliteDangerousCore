@@ -102,17 +102,25 @@ namespace EliteDangerousCore
             }
         }
 
-        static public void DeleteCommander(int cmdrid)
+        static public void DeleteCommander(int cmdrid, bool removetlus)
         {
-            UserDatabase.Instance.DBWrite(cn => { DeleteCommander(cmdrid, cn); });
+            UserDatabase.Instance.DBWrite(cn => { DeleteCommander(cmdrid, removetlus, cn); });
         }
 
-        static private void DeleteCommander(int cmdrid, SQLiteConnectionUser cn)
+        static private void DeleteCommander(int cmdrid, bool tlus, SQLiteConnectionUser cn)
         {
             using (DbCommand cmd = cn.CreateCommand("DELETE FROM JournalEntries WHERE CommanderId = @id"))
             {
                 cmd.AddParameterWithValue("@id", cmdrid);
                 cmd.ExecuteNonQuery();
+            }
+            if (tlus)
+            {
+                using (DbCommand cmd = cn.CreateCommand("DELETE FROM TravelLogUnit WHERE CommanderId = @id"))
+                {
+                    cmd.AddParameterWithValue("@id", cmdrid);
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
