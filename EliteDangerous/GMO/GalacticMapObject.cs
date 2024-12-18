@@ -84,6 +84,8 @@ namespace EliteDangerousCore.GMO
             if (descriptionhtml != null)
             {
                 string xmltext = "<Body> " + descriptionhtml + " </Body>";
+                xmltext = xmltext.Replace("&deg;", "\u00b0");       // new dec 24 xml reader barfs on this
+
                 string res = xmltext.XMLtoText();
                 if (res != null)
                     Description = res;
