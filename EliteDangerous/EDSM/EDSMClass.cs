@@ -915,7 +915,7 @@ namespace EliteDangerousCore.EDSM
 
                     // calc name of cache file
 
-                    string cachefile = EliteConfigInstance.InstanceOptions.ScanCachePath != null ?
+                    string cachefile = EliteConfigInstance.InstanceOptions.ScanCacheEnabled ?
                             System.IO.Path.Combine(EliteConfigInstance.InstanceOptions.ScanCachePath, $"edsm_{(sys.SystemAddress.HasValue ? sys.SystemAddress.Value.ToStringInvariant() : sys.Name.SafeFileString())}.json") :
                             null;
 
@@ -958,6 +958,8 @@ namespace EliteDangerousCore.EDSM
                                 JObject jbody = EDSMClass.ConvertFromEDSMBodies(edsmbody,sysaddr);
 
                                 JournalScan js = new JournalScan(jbody);
+
+                                //System.Diagnostics.Debug.WriteLine($"EDSM JS: {js.DisplayString(null, null)}");
 
                                 bodies.Add(js);
                             }
@@ -1042,11 +1044,24 @@ namespace EliteDangerousCore.EDSM
 
                     jout["SurfaceGravity"] = jo["gravity"].Double() * BodyPhysicalConstants.oneGee_m_s2;      // if not there, we get 0
 
-                    jout["Volcanism"] = jo["volcanismType"];
+                    string vol = jo["volcanismType"].StrNull();
+                    if (vol.HasChars() && !vol.EqualsIIC("No volcanism"))       // journal has this missing if no volcanism, so don't include it
+                    {
+                        if (vol.IndexOf("volcanism", StringComparison.InvariantCultureIgnoreCase) == -1)
+                            vol += " volcanism";
+                        jout["Volcanism"] = vol;
+                    }
+
                     string atmos = jo["atmosphereType"].StrNull();
-                    if (atmos != null && atmos.IndexOf("atmosphere", StringComparison.InvariantCultureIgnoreCase) == -1)
-                        atmos += " atmosphere";
-                    jout["Atmosphere"] = atmos;
+                    if (atmos.HasChars() && !atmos.EqualsIIC("No atmosphere"))
+                    {
+                        //if (atmos.IndexOf("atmosphere", StringComparison.InvariantCultureIgnoreCase) == -1) // journal does not have atmosphere on some values
+                        //    atmos += " atmosphere";
+                        jout["Atmosphere"] = atmos;
+                    }
+
+                    //System.Diagnostics.Debug.WriteLine($"EDSM reads {jout["BodyName"]} atmos `{jout["Atmosphere"]}` vol `{jout["Volcanism"]}`");
+
                     jout["Radius"] = jo["radius"].Double() * 1000.0; // km -> metres
                     jout["PlanetClass"] = EDSMPlanet2JournalName(jo["subType"].Str());
                     if (jo["terraformingState"] != null) jout["TerraformState"] = jo["terraformingState"];

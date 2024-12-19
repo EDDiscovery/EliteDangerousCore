@@ -222,7 +222,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Does it have atmosphere")]
         public bool HasAtmosphere { get { return AtmosphereID > EDAtmosphereType.No; } }  
         [PropertyNameAttribute("Atmosphere string, can be none")]
-        public string Atmosphere { get; private set; }                      // EDD then processed, always there, may be "none"
+        public string Atmosphere { get; private set; }                      // EDD then processed, No atmosphere is "none" else its the atmosphere from the journal, which may or may not include the word atmosphere
         [PropertyNameAttribute("EDD ID")]
         public EDAtmosphereType AtmosphereID { get; }                       // Atmosphere -> ID (Ammonia, Carbon etc)
         [PropertyNameAttribute("EDD atmospheric property")]
@@ -262,7 +262,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Does it have planetary composition stats")]
         public bool HasPlanetaryComposition { get { return PlanetComposition != null && PlanetComposition.Any(); } }
         [PropertyNameAttribute("Journal volcanism string")]
-        public string Volcanism { get; private set; }                       // direct from journal - can be null or a blank string
+        public string Volcanism { get; private set; }                       // direct from journal - will be a blank string for no volcanism
         [PropertyNameAttribute("EDD Volcanism ID")]
         public EDVolcanism VolcanismID { get; }                     // Volcanism -> ID (Water_Magma, Nitrogen_Magma etc)
         [PropertyNameAttribute("Has volcanism, excluding unknowns")]
@@ -514,15 +514,12 @@ namespace EliteDangerousCore.JournalEvents
                 if (TerraformState != null && TerraformState.Equals("Not Terraformable", StringComparison.InvariantCultureIgnoreCase)) // EDSM returns this, normalise to journal
                     TerraformState = String.Empty;
 
-
-
                 JToken atmos = evt["AtmosphereComposition"];
                 if (!atmos.IsNull())
                 {
                     if (atmos.IsObject)
                     {
                         AtmosphereComposition = atmos?.ToObjectQ<Dictionary<string, double>>();
-                        //System.Diagnostics.Debug.WriteLine($"Atmos list {AtmosphericComppositionList}");
                     }
                     else if (atmos.IsArray)
                     {
@@ -531,22 +528,32 @@ namespace EliteDangerousCore.JournalEvents
                         {
                             AtmosphereComposition[jo["Name"].Str("Default")] = jo["Percent"].Double();
                         }
-                        //System.Diagnostics.Debug.WriteLine($"Atmos list {AtmosphericComppositionList}");
                     }
                 }
 
                 Atmosphere = evt["Atmosphere"].StrNull();               // can be null, or empty
 
-                if ( Atmosphere == "thick  atmosphere" )            // obv a frontier bug, atmosphere type has the missing text
+                if (Atmosphere.IsEmpty())                               // try type.
+                {
+                    Atmosphere = evt["AtmosphereType"].StrNull();       // it may still be null here or empty string
+                }
+                
+                if ( Atmosphere.EqualsIIC("thick  atmosphere") )            // obv a frontier bug, atmosphere type has the missing text
                 {
                     Atmosphere = "thick " + evt["AtmosphereType"].Str().SplitCapsWord() + " atmosphere";
                 }
-                else if ( Atmosphere == "thin  atmosphere")             
+                else if (Atmosphere.EqualsIIC("thin  atmosphere"))
                 {
                     Atmosphere = "thin " + evt["AtmosphereType"].Str().SplitCapsWord() + " atmosphere";
                 }
-                else if ( Atmosphere.IsEmpty())                         // try type.
-                    Atmosphere = evt["AtmosphereType"].StrNull();       // it may still be null here or empty string
+                else if (Atmosphere.EqualsIIC("No Atmosphere"))
+                {
+                    Atmosphere = "none";
+                }
+                else if (Atmosphere.HasChars() && !Atmosphere.EqualsIIC("none") && !Atmosphere.ContainsIIC("atmosphere") )
+                {
+                    Atmosphere += " atmosphere";
+                }
 
                 if (Atmosphere.IsEmpty())       // null or empty - nothing in either, see if there is composition
                 {
@@ -594,7 +601,7 @@ namespace EliteDangerousCore.JournalEvents
                     }
                 }
 
-                Volcanism = evt["Volcanism"].StrNull();
+                Volcanism = evt["Volcanism"].Str();     // blank string empty
                 VolcanismID = Planets.ToEnum(Volcanism, out EDVolcanismProperty vp);
                 VolcanismProperty = vp;
 
@@ -700,7 +707,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass: ".T(EDCTx.JournalScan_MASS), MassEMMM,
                                                 "<;, Landable".T(EDCTx.JournalScan_Landable), IsLandable,
-                                                "<;, Terraformable".T(EDCTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", AtmosphereTranslated,
+                                                "<;, Terraformable".T(EDCTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", HasAtmosphere ? AtmosphereTranslated : null,
                                                  "Gravity: ;G;0.00".T(EDCTx.JournalScan_Gravity), nSurfaceGravityG,
                                                  "Radius: ".T(EDCTx.JournalScan_RS), RadiusText,
                                                  "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,

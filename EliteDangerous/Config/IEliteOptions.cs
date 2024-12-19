@@ -25,6 +25,7 @@ namespace EliteDangerousCore
         bool DisableJournalRemoval { get; }
         bool DisableBetaCommanderCheck { get; }
         string ScanCachePath { get; }
+        bool ScanCacheEnabled { get; }
         bool SetEDDNforNewCommanders { get; }
     }
 }
