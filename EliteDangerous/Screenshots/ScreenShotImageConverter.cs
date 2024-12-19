@@ -79,6 +79,20 @@ namespace EliteDangerousCore.ScreenShots
             "MM-DD-YYYY HH-MM-SS Bodyname", "%MM-%dd-%yyyy %HH-%mm-%ss %B%H",
             "Bodyname", "%B%H",
             "YYYY-MM-DD_HH-MM-SS_Bodyname",    "%yyyy-%MM-%dd_%HH-%mm-%ss_%B%H",
+            "Sysname ShortBodyName (YYYYMMDD-HHMMSS)",   "%S-%BS (%yyyy%MM%dd-%HH%mm%ss)%H",
+            "Sysname ShortBodyName (Windows dateformat)", "%S-%BS (%WT)%H",
+            "YYYY-MM-DD HH-MM-SS Sysname-ShortBodyName", "%yyyy-%MM-%dd %HH-%mm-%ss %S-%BS%H",
+            "DD-MM-YYYY HH-MM-SS Sysname-ShortBodyName","%dd-%MM-%yyyy %HH-%mm-%ss %S-%BS%H",
+            "MM-DD-YYYY HH-MM-SS Sysname-ShortBodyName", "%MM-%dd-%yyyy %HH-%mm-%ss %S-%BS%H",
+            "HH-MM-SS Sysname-ShortBodyName",        "%HH-%mm-%ss %S-%BS%H",
+            "Sysname-ShortBodyName",               "%S-%BS%H",
+            "YYYY-MM-DD_HH-MM-SS_Sysname_ShortBodyName",     "%yyyy-%MM-%dd_%HH-%mm-%ss_%S_%BS%H",
+            "YYYY-MM-DD HH-MM-SS Sysname @ ShortBodyName",   "%yyyy-%MM-%dd %HH-%mm-%ss %S @ %BS%H",
+            "Sysname @ ShortBodyName",   "%S @ %BS%H",
+            "ShortBodyName @ Sysname",   "%BS @ %S%H",
+            "YYYY-MM-DD HH-MM-SS Sysname @ ShortBodyName", "%yyyy-%MM-%dd %HH-%mm-%ss %S @ %BS%H",
+            "DD-MM-YYYY HH-MM-SS Sysname @ ShortBodyName","%dd-%MM-%yyyy %HH-%mm-%ss %S @ %BS%H",
+            "MM-DD-YYYY HH-MM-SS Sysname @ ShortBodyName", "%MM-%dd-%yyyy %HH-%mm-%ss %S @ %BS%H",
         };
 
         public static string[] FileNameFormats = FileNameCtrl.Where((s,i)=>i%2 ==0).ToArray();      // every other is a selection
@@ -346,6 +360,8 @@ namespace EliteDangerousCore.ScreenShots
             cur_sysname = cur_sysname.SafeFileString();
             cur_bodyname = cur_bodyname.SafeFileString();
             bool hasbodyname = cur_bodyname.Length > 0;
+            string shortbodyname = cur_bodyname.StartsWith(cur_sysname) ? cur_bodyname.Replace(cur_sysname, "").Trim().SafeFileString() : cur_bodyname;
+            
 
             string ctrl = (formatindex >= 0 && formatindex < FileNameFormats.Length) ? FileNameCtrl[formatindex * 2 + 1] : "%O";    // being paranoid
 
@@ -377,6 +393,12 @@ namespace EliteDangerousCore.ScreenShots
                 {
                     if (hasbodyname)
                         b.Append("-" + cur_bodyname);
+                    i += 2;
+                }
+                else if (part.StartsWith("%BS"))
+                {
+                    if (hasbodyname)
+                        b.Append(shortbodyname);
                     i += 2;
                 }
                 else if (part.StartsWith("%B"))
