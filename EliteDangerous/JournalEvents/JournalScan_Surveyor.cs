@@ -52,7 +52,7 @@ namespace EliteDangerousCore.JournalEvents
             // Additional information
             information.Append((js.IsStar) ? Stars.StarName(js.StarTypeID) + "." : null);
             information.Append((js.CanBeTerraformable) ? @"terraformable ".T(EDCTx.JournalScanInfo_terraformable) : null);
-            information.Append((js.IsPlanet) ? Planets.PlanetName(js.PlanetTypeID) + "." : null);
+            information.Append((js.IsPlanet) ? Planets.PlanetNameTranslated(js.PlanetTypeID) + "." : null);
             information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? @" Is tiny ".T(EDCTx.JournalScanInfo_LowRadius) + "(" + RadiusText + ")." : null);
             information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? @" Is large ".T(EDCTx.JournalScanInfo_LargeRadius) + "(" + RadiusText + ")." : null);
             information.Append((js.IsLandable) ? @" Is landable.".T(EDCTx.JournalScanInfo_islandable) : null);

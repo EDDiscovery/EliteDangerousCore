@@ -189,11 +189,11 @@ namespace EliteDangerousCore.JournalEvents
         ////////////////////////////////////////////////////////////////////// Planets
         ///
         [PropertyNameAttribute("Long text name from journal")]
-        public string PlanetClass { get; private set; }                     // planet class, direct. If belt cluster, null. Try to avoid. Not localised
+        public string PlanetClass { get; private set; }                     // planet class, direct. If belt cluster, null. Try to avoid. Not localised. Such as "Icy Body" , "Water World" plain text 
         [PropertyNameAttribute("EDD Enum")]
         public EDPlanet PlanetTypeID { get; }                       // planet class -> ID
         [PropertyNameAttribute("Localised Name")]
-        public string PlanetTypeText { get { return IsPlanet ? Planets.PlanetName(PlanetTypeID) : ""; } }   // Use in preference to planet class for display
+        public string PlanetTypeText { get { return IsPlanet ? Planets.PlanetNameTranslated(PlanetTypeID) : ""; } }   // Use in preference to planet class for display
 
         [PropertyNameAttribute("Is it an ammonia world")]
         public bool AmmoniaWorld { get { return Planets.AmmoniaWorld(PlanetTypeID); } }

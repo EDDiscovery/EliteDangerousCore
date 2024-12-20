@@ -124,7 +124,10 @@ namespace EliteDangerousCore.Spansh
 
                         if (so["type"].Str() == "Star")
                         {
-                            evt["StarType"] = SpanshStarNameToEDStar(so[dump ? "subType" : "subtype"].Str()).ToString();
+                            string spanshst = so[dump ? "subType" : "subtype"].Str();
+                            EDStar? startype = SpanshStarNameToEDStar(spanshst);
+                            evt["StarType"] = startype != null ? Stars.ToEnglish(startype.Value) : spanshst;        // so if we recognise it, use the text version of the enum. ToEnum should turn it back
+                            //System.Diagnostics.Debug.WriteLine($"Spansh star type {evt["StarType"].Str()}");
 
                             evt["StellarMass"] = so[dump ? "solarMasses" : "solar_masses"];
                             evt["AbsoluteMagnitude"] = so["absoluteMagnitude"];
@@ -135,7 +138,11 @@ namespace EliteDangerousCore.Spansh
                         }
                         else if (so["type"].Str() == "Planet")
                         {
-                            evt["PlanetClass"] = SpanshPlanetNameToEDPlanet(so[dump ? "subType" : "subtype"].Str()).ToString();
+                            string spanshpc = so[dump ? "subType" : "subtype"].Str();
+                            EDPlanet? planet = SpanshPlanetNameToEDPlanet(spanshpc);
+                            evt["PlanetClass"] =planet != null ? Planets.ToEnglish(planet.Value) : spanshpc;      // if recognised, turn back to string, with _ removed.
+
+                            //System.Diagnostics.Debug.WriteLine($"Spansh  planet class {spanshpc} -> {evt["PlanetClass"]}");
                         }
                         else
                         {
@@ -404,7 +411,7 @@ namespace EliteDangerousCore.Spansh
                 return value;
             else
             {
-                System.Diagnostics.Debug.WriteLine($"SPANSH failed to decode star {name}");
+                System.Diagnostics.Trace.WriteLine($"*** SPANSH failed to decode star {name}");
                 return null;
             }
         }
@@ -478,7 +485,7 @@ namespace EliteDangerousCore.Spansh
                 return value;
             else
             {
-                System.Diagnostics.Debug.WriteLine($"SPANSH failed to decode planet {name}");
+                System.Diagnostics.Trace.WriteLine($"*** SPANSH failed to decode planet {name}");
                 return null;
             }
         }

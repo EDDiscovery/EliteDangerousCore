@@ -159,6 +159,11 @@ namespace EliteDangerousCore
             return EDPlanet.Unknown_Body_Type;
         }
 
+        public static string ToEnglish(EDPlanet planet)
+        {
+            return planet.ToString().Replace("_", " ");
+        }
+
         public static EDAtmosphereType ToEnum(string v, out EDAtmosphereProperty atmprop)
         {
             atmprop = EDAtmosphereProperty.None;
@@ -198,6 +203,13 @@ namespace EliteDangerousCore
             return EDAtmosphereType.Unknown;
         }
 
+
+        // without volcanism at the end
+        public static string ToEnglish(EDAtmosphereType at)
+        {
+            return at.ToString().Replace("_", " ");
+        }
+
         public static EDVolcanism ToEnum(string v, out EDVolcanismProperty vprop )
         {
             vprop = EDVolcanismProperty.None;
@@ -225,6 +237,16 @@ namespace EliteDangerousCore
             return EDVolcanism.Unknown;
         }
 
+        // without volcanism at the end
+        public static string ToEnglish(EDVolcanism volc)
+        {
+            return volc.ToString().Replace("_", " ");
+        }
+        public static string ToEnglish(EDVolcanismProperty volc)
+        {
+            return volc.ToString();
+        }
+
         public static EDReserve ReserveToEnum(string reservelevel)
         {
             if (reservelevel.IsEmpty())
@@ -237,6 +259,12 @@ namespace EliteDangerousCore
 
             return EDReserve.None;
         }
+
+        public static string ToEnglish(EDReserve reserve)
+        {
+            return reserve.ToString();
+        }
+
 
         // These should be translated to match the in-game planet types
         private static readonly Dictionary<EDPlanet, string> planetEnumToNameLookup = new Dictionary<EDPlanet, string>
@@ -263,7 +291,7 @@ namespace EliteDangerousCore
             [EDPlanet.Unknown_Body_Type] = "Unknown planet type".T(EDCTx.EDPlanet_Unknown),
         };
 
-        public static string PlanetName(EDPlanet type)
+        public static string PlanetNameTranslated(EDPlanet type)
         {
             string name;
             if (planetEnumToNameLookup.TryGetValue(type, out name))

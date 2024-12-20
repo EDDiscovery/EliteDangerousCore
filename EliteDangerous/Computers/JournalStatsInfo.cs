@@ -184,7 +184,7 @@ namespace EliteDangerousCore
                 {
                     int i = 0;
                     foreach (EDPlanet planettype in Enum.GetValues(typeof(EDPlanet)))
-                        crs.chart1labels[i++] = planettype == EDPlanet.Unknown_Body_Type ? "Belt Cluster".T(EDCTx.UserControlStats_Beltcluster) : Planets.PlanetName(planettype);
+                        crs.chart1labels[i++] = planettype == EDPlanet.Unknown_Body_Type ? "Belt Cluster".T(EDCTx.UserControlStats_Beltcluster) : Planets.PlanetNameTranslated(planettype);
                 }
 
                 int intervals = tupletimes.Item1.Length;
