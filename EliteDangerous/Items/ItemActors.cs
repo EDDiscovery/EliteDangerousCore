@@ -40,6 +40,22 @@ namespace EliteDangerousCore
             }
         }
 
+        // copes with $...;data actors found in NPC messages with semi colon seperated ID text
+        static public Actor GetActorNPC(string fdname)
+        {
+            int semi = fdname.IndexOf(';');
+            string id = semi>0 ? fdname.Substring(0, semi): fdname;
+            id = id.ToLowerInvariant();
+
+            if (actors.TryGetValue(id, out Actor var))
+            {
+                return new Actor(var.Name + (semi > 0 ? ": " + fdname.Substring(semi + 1).Trim() : ""));
+            }
+            else
+                return null;
+        }
+
+
         public class Actor
         {
             public string Name;
@@ -130,6 +146,8 @@ namespace EliteDangerousCore
              { "heratani", new Actor("Engineer Hera Tani") },
 
              { "thedweller", new Actor("The Dweller") },
+
+             { "$name_ax_military", new Actor("AX Military Pilot") },       // seen in NPC texts
         };
 
 
