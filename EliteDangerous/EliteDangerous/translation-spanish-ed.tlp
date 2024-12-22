@@ -881,8 +881,8 @@ SECTION MaterialCommodityMicroResourceType
 .thargoidtissuesampletype10a: "Titan Maw Deep Tissue Sample" => "Muestra de tejido profundo de fauces de Titan"
 .thargoidtissuesampletype10b: "Titan Maw Tissue Sample" => "Muestra de tejido de fauces de Titan"
 .thargoidtissuesampletype7: "Thargoid Scythe Tissue Sample" => "Muestra de tejido Scythe Thargoide"
-.unknownsack: "Protective Membrane Scrap" @
-.thargoidpod: "Xenobiological Prison Pod" @
+.unknownsack: "Protective Membrane Scrap" => "Fragmento de Membrana Protectora"
+.thargoidpod: "Xenobiological Prison Pod" => "Cápsula de Bioconservación Thargoide"
 .coralsap: "Coral Sap" @
 .onionheadc: "Onionhead Gamma Strain" => "Cepa Gamma de Cebollazo"
 .classifiedexperimentalequipment: "Classified Experimental Equipment" @
