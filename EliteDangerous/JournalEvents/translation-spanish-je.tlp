@@ -498,7 +498,7 @@ SECTION JournalScan
 .Gravity: "Gravity: ;G;0.00" => "Gravedad: ;G;0.00"
 .NoAtmosphere: "No Atmosphere" => "Sin atmósfera"
 .LandC: "Landable" => "Aterrizable"
-.AMY: "Age: {0} my" => "Edad: {0} mi"
+.AMY: "Age: {0} my" => "Edad: {0} ma"
 .SolarMasses: "Solar Masses: {0:N2}" => "Masas solares: {0:0.00}"
 .SurfaceTemp: "Surface Temp: {0}K" => "Temperatura de la superficie: {0} K"
 .GV: "Gravity: {0:N2}g" => "Gravedad: {0:0.00} g"
