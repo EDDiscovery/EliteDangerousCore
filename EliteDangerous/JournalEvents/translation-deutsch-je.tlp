@@ -1205,7 +1205,7 @@ SECTION AtmosphereTypes
 .Ammonia_Thick_Rich: "Thick Ammonia Rich Atmosphere" => "Dichte ammoniakreiche Atmosphäre"
 .Ammonia_Thin: "Thin Ammonia Atmosphere" => "Dünne Ammoniakatmosphäre"
 .Argon: "Argon Atmosphere" => "Argonatmosphäre"
-.Argon_Hot_Thick: "Hot Thick Argon Atmosphere" => "Hei0e dichte Argonatmosphäre"
+.Argon_Hot_Thick: "Hot Thick Argon Atmosphere" => "Heiße dichte Argonatmosphäre"
 .Argon_Hot_Thick_Rich: "Hot Thick Argon Rich Atmosphere" => "Heiße dichte argonreiche Atmosphäre"
 .Argon_Rich: "Argon Rich Atmosphere" => "Argonreiche Atmosphäre"
 .Argon_Thick: "Thick Argon Atmosphere" => "Dichte Argonatmosphäre"
@@ -1269,6 +1269,7 @@ SECTION AtmosphereTypes
 .Water_Thin_Rich: "Thin Water Rich Atmosphere" => "Dünne wasserreiche Atmosphäre"
 .Ammonia_Thin_Rich: "Thin Ammonia Rich Atmosphere" => "Dünne ammoniakreiche Atmosphäre"
 .Argon_Hot: "Hot Argon Atmosphere" => "Heiße Argonatmosphäre"
+.Argon_Hot_Rich: "Hot Argon Rich Atmosphere" => "Heiße argonreiche Atmosphäre"
 .Metallic_Vapour_Hot: "Hot Metallic Vapour Atmosphere" => "Heiße Metalldampfatmosphäre"
 .Metallic_Vapour_Hot_Thin: "Hot Thin Metallic Vapour Atmosphere" => "Heiße dünne Metalldampfatmosphäre"
 

@@ -1274,9 +1274,9 @@ SECTION AtmosphereTypes
 
 .Ammonia_Thin_Rich: "Thin Ammonia Rich Atmosphere" @
 .Argon_Hot: "Hot Argon Atmosphere" @
-.Argon_Hot_Rich "Hot Argon Rich Atmosphere" @
-.Metallic_Vapour_Hot : "Hot Metallic Vapour Atmosphere" @
-.Metallic_Vapour_Hot_Thin : "Hot Thin Metallic Vapour Atmosphere" @
+.Argon_Hot_Rich: "Hot Argon Rich Atmosphere" @
+.Metallic_Vapour_Hot: "Hot Metallic Vapour Atmosphere" @
+.Metallic_Vapour_Hot_Thin: "Hot Thin Metallic Vapour Atmosphere" @
 
 SECTION VolcanismTypes
 
