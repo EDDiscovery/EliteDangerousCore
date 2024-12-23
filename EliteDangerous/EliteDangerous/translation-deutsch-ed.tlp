@@ -917,7 +917,7 @@ SECTION MaterialCommodityMicroResourceType
 .powerpropagandadata: "Power Political Data" => "Macht-Politikdaten"
 .powerclassifieddata: "Power Classified Data" => "Macht-Geheimdaten"
 .powermegashipdata: "Power Megaship Data" => "Macht-Megaschiffdaten"
-.unknowncorechip: "Tactical Core Chip" @
+.unknowncorechip: "Tactical Core Chip" => "Taktischer Kernchip"
 
 SECTION EngineeringData
 
