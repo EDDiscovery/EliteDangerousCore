@@ -71,15 +71,6 @@ namespace EliteDangerousCore.JournalEvents
                     FromLocalised = ac.Name;
                // System.Diagnostics.Debug.WriteLine($"RT {EventTimeUTC} {Channel} `{From}` `{loc}`=> `{FromLocalised}` {evt.ToString()}");
             }
-
-
-            //if (loc == null && Channel.EqualsIIC("npc"))
-            //{
-            //    var actor = ItemData.GetActor(From);
-            //    if (actor != null)
-            //        FromLocalised = actor.Name;
-            //}
-
         }
 
         public string From { get; set; }

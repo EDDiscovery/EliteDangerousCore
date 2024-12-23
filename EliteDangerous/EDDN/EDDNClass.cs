@@ -46,6 +46,7 @@ namespace EliteDangerousCore.EDDN
         private readonly string FCMaterialsSchema = "https://eddn.edcd.io/schemas/fcmaterials_journal/1";
         private readonly string DockingDenied = "https://eddn.edcd.io/schemas/dockingdenied/1";
         private readonly string DockingGranted = "https://eddn.edcd.io/schemas/dockinggranted/1";
+        private readonly string FSSBodySignals = "https://eddn.edcd.io/schemas/fssbodysignals/1";
 
         public EDDNClass(string commandernamep)
         {
@@ -88,7 +89,8 @@ namespace EliteDangerousCore.EDDN
                  EntryType == JournalTypeEnum.FSSSignalDiscovered ||
                  EntryType == JournalTypeEnum.FCMaterials ||
                  EntryType == JournalTypeEnum.DockingDenied ||
-                 EntryType == JournalTypeEnum.DockingGranted
+                 EntryType == JournalTypeEnum.DockingGranted ||
+                 EntryType == JournalTypeEnum.FSSBodySignals
                );
         }
 
@@ -1094,7 +1096,7 @@ namespace EliteDangerousCore.EDDN
         }
 
         // Create EDDN message from journal
-        public JObject CreateEDDNFCMaterials(JournalFCMaterials journal, ISystem system)
+        public JObject CreateEDDNFCMaterials(JournalFCMaterials journal)
         {
             if (journal.Items == null)
                 return null;
@@ -1134,7 +1136,7 @@ namespace EliteDangerousCore.EDDN
 
 
         // Create EDDN message from journal
-        public JObject CreateEDDNDockingDenied(JournalDockingDenied journal, ISystem system)
+        public JObject CreateEDDNDockingDenied(JournalDockingDenied journal)
         {
             JObject msg = new JObject();
             msg["header"] = Header(journal.GameVersion, journal.Build);
@@ -1157,7 +1159,7 @@ namespace EliteDangerousCore.EDDN
         }
 
         // Create EDDN message from journal
-        public JObject CreateEDDNDockingGranted(JournalDockingGranted journal, ISystem system)
+        public JObject CreateEDDNDockingGranted(JournalDockingGranted journal)
         {
             JObject msg = new JObject();
             msg["header"] = Header(journal.GameVersion, journal.Build);
@@ -1173,6 +1175,32 @@ namespace EliteDangerousCore.EDDN
             message["StationName"] = journal.StationName;
             message["StationType"] = journal.FDStationType.ToString();
             message["LandingPad"] = journal.LandingPad;
+
+            msg["message"] = message;
+
+            return msg;
+        }
+
+        public JObject CreateEDDNFSSBodySignals(JournalFSSBodySignals journal, ISystem system)
+        {
+            JObject msg = new JObject();
+            msg["header"] = Header(journal.GameVersion, journal.Build);
+            msg["$schemaRef"] = FSSBodySignals;
+
+            JObject message = journal.GetJsonCloned();
+
+            if (message == null)
+                return null;
+
+            if (message["SystemAddress"].Long() != system.SystemAddress)        // double check not being 'frontiered'
+                return null;
+
+            message["horizons"] = journal.IsHorizons;
+            message["odyssey"] = journal.IsOdyssey;
+            message["StarSystem"] = system.Name;
+            // it has SystemAddress
+            message["StarPos"] = new JArray(new float[] { (float)system.X, (float)system.Y, (float)system.Z });
+            // it has Signals, BodyName, BodyID
 
             msg["message"] = message;
 
