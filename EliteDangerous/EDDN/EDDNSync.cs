@@ -210,15 +210,19 @@ namespace EliteDangerousCore.EDDN
             }
             else if (je.EventTypeID == JournalTypeEnum.FCMaterials)     
             {
-                msg = eddn.CreateEDDNFCMaterials(je as JournalFCMaterials, he.System);
+                msg = eddn.CreateEDDNFCMaterials(je as JournalFCMaterials);
             }
             else if (je.EventTypeID == JournalTypeEnum.DockingGranted)    
             {
-                msg = eddn.CreateEDDNDockingGranted(je as JournalDockingGranted, he.System);
+                msg = eddn.CreateEDDNDockingGranted(je as JournalDockingGranted);
             }
-            else if (je.EventTypeID == JournalTypeEnum.DockingDenied)      
+            else if (je.EventTypeID == JournalTypeEnum.DockingDenied)
             {
-                msg = eddn.CreateEDDNDockingDenied(je as JournalDockingDenied, he.System);
+                msg = eddn.CreateEDDNDockingDenied(je as JournalDockingDenied);
+            }
+            else if (je.EventTypeID == JournalTypeEnum.FSSBodySignals)
+            {
+                msg = eddn.CreateEDDNFSSBodySignals(je as JournalFSSBodySignals, he.System);
             }
 
             if (msg != null)

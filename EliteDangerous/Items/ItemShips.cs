@@ -1313,7 +1313,7 @@ namespace EliteDangerousCore
             LatAcc = -999
         };
 
-        private static ShipProperties mandalay = new ShipProperties()       // from inara
+        private static ShipProperties mandalay = new ShipProperties()       // synced with EDSY 5/12/24
         {
             FDID = "Mandalay",
             EDCDID = "Mandalay",
@@ -1322,7 +1322,7 @@ namespace EliteDangerousCore
             Name = "Mandalay",
             Speed = 280, //inara
             Boost = 350, //inara
-            HullCost = 17639220, //inara
+            HullCost = 16527690, //inara
             Class = 2,  // inara, medium
             Shields = 220,  //inara
             Armour = 230, //inara
@@ -1331,14 +1331,14 @@ namespace EliteDangerousCore
             BoostCost = 14,
             FuelReserve = 0.5,
             HeatCap = 250,
-            HeatDispMin = 2.68, //not correct, unknown as of 03/11/2024
+            HeatDispMin = 0,
             HeatDispMax = 51,
             FuelCost = 50,
             Hardness = 55,
             Crew = 2,
-            FwdAcc = -999,
-            RevAcc = -999,
-            LatAcc = -999
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0
         };
 
 

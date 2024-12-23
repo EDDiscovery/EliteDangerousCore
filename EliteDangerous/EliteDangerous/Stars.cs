@@ -120,6 +120,11 @@ namespace EliteDangerousCore
             return EDStar.Unknown;
         }
 
+        public static string ToEnglish(EDStar star)
+        {
+            return star.ToString().SplitCapsWordFull();
+        }
+
         public static string StarName( EDStar id )
         {
             switch (id)       // see journal, section 11.2

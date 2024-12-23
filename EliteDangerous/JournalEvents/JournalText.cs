@@ -50,7 +50,8 @@ namespace EliteDangerousCore.JournalEvents
         public JournalReceiveText(JObject evt) : base(evt, JournalTypeEnum.ReceiveText)
         {
             From = evt["From"].Str();
-            FromLocalised = JournalFieldNaming.CheckLocalisation(evt["From_Localised"].Str(), From);
+            string loc = evt["From_Localised"].StrNull();       // is it present, if so, what is it
+            FromLocalised = JournalFieldNaming.CheckLocalisation(loc??"", From);
             Message = evt["Message"].Str();
             MessageLocalised = JournalFieldNaming.CheckLocalisation(evt["Message_Localised"].Str(), Message);
             Channel = evt["Channel"].Str();
@@ -60,6 +61,15 @@ namespace EliteDangerousCore.JournalEvents
             if ( specials.StartsWith(Message, System.StringComparison.InvariantCultureIgnoreCase)>=0)
             {
                 Channel = "Info";
+            }
+
+            // some From's contain an ID without a localisation field, try and fix it
+            if (loc == null && Channel.EqualsIIC("npc") && From.Contains("$"))
+            {
+                ItemData.Actor ac = ItemData.GetActorNPC(From);
+                if (ac != null)
+                    FromLocalised = ac.Name;
+               // System.Diagnostics.Debug.WriteLine($"RT {EventTimeUTC} {Channel} `{From}` `{loc}`=> `{FromLocalised}` {evt.ToString()}");
             }
         }
 

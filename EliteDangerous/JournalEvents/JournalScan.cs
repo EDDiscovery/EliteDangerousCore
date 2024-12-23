@@ -189,11 +189,11 @@ namespace EliteDangerousCore.JournalEvents
         ////////////////////////////////////////////////////////////////////// Planets
         ///
         [PropertyNameAttribute("Long text name from journal")]
-        public string PlanetClass { get; private set; }                     // planet class, direct. If belt cluster, null. Try to avoid. Not localised
+        public string PlanetClass { get; private set; }                     // planet class, direct. If belt cluster, null. Try to avoid. Not localised. Such as "Icy Body" , "Water World" plain text 
         [PropertyNameAttribute("EDD Enum")]
         public EDPlanet PlanetTypeID { get; }                       // planet class -> ID
         [PropertyNameAttribute("Localised Name")]
-        public string PlanetTypeText { get { return IsPlanet ? Planets.PlanetName(PlanetTypeID) : ""; } }   // Use in preference to planet class for display
+        public string PlanetTypeText { get { return IsPlanet ? Planets.PlanetNameTranslated(PlanetTypeID) : ""; } }   // Use in preference to planet class for display
 
         [PropertyNameAttribute("Is it an ammonia world")]
         public bool AmmoniaWorld { get { return Planets.AmmoniaWorld(PlanetTypeID); } }
@@ -220,13 +220,37 @@ namespace EliteDangerousCore.JournalEvents
         public bool CanBeTerraformable { get { return TerraformState != null && new[] { "terraformable", "terraforming" }.Contains(TerraformState, StringComparer.InvariantCultureIgnoreCase); } }
 
         [PropertyNameAttribute("Does it have atmosphere")]
-        public bool HasAtmosphere { get { return Atmosphere != null && Atmosphere != "none"; } }  // none is used if no atmosphere
+        public bool HasAtmosphere { get { return AtmosphereID > EDAtmosphereType.No; } }  
         [PropertyNameAttribute("Atmosphere string, can be none")]
-        public string Atmosphere { get; private set; }                      // processed data, always there, may be "none"
+        public string Atmosphere { get; private set; }                      // EDD then processed, No atmosphere is "none" else its the atmosphere from the journal, which may or may not include the word atmosphere
         [PropertyNameAttribute("EDD ID")]
         public EDAtmosphereType AtmosphereID { get; }                       // Atmosphere -> ID (Ammonia, Carbon etc)
         [PropertyNameAttribute("EDD atmospheric property")]
         public EDAtmosphereProperty AtmosphereProperty { get; private set; }  // Atomsphere -> Property (None, Rich, Thick , Thin, Hot)
+        [PropertyNameAttribute("Translated name of Atmosphere")]
+        public string AtmosphereTranslated { get
+            {
+                if (BaseUtils.Translator.Instance.Translating)
+                {
+                    string key = "AtmosphereTypes." + AtmosphereID.ToString() + ((AtmosphereProperty != EDAtmosphereProperty.None) ? "_" + AtmosphereProperty.ToString().Replace(", ", "_") : "");
+                    if (BaseUtils.Translator.Instance.IsDefined(key))       // if we defined it, all good, not an unknown combo
+                    {
+                        string res = BaseUtils.Translator.Instance.GetTranslation(key); // but it may be undefined (example.ex etc) so don't accept null
+                        if ( res != null )
+                            return res;
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"*** Missing translator ID for atmosphere {AtmosphereID} : {AtmosphereProperty} : `{Atmosphere}`");
+                    }
+                }
+
+                string mainpart = AtmosphereID.ToString().Replace("_", " ") + ((AtmosphereProperty & EDAtmosphereProperty.Rich) != 0 ? " Rich" : "") + " Atmosphere";
+                EDAtmosphereProperty apnorich = AtmosphereProperty & ~(EDAtmosphereProperty.Rich);
+                string final = apnorich != EDAtmosphereProperty.None ? apnorich.ToString().Replace(",", "") + " " + mainpart : mainpart;
+                return final;
+            } }
+
         [PropertyNameAttribute("Dictionary of atmosphere composition, in %. Use an Iter variable to search it")]
         public Dictionary<string, double> AtmosphereComposition { get; private set; }       // from journal. value is in % (0-100)
         [PropertyNameAttribute("Atmospheric composition list, comma separated")]
@@ -238,13 +262,40 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Does it have planetary composition stats")]
         public bool HasPlanetaryComposition { get { return PlanetComposition != null && PlanetComposition.Any(); } }
         [PropertyNameAttribute("Journal volcanism string")]
-        public string Volcanism { get; private set; }                       // direct from journal - can be null or a blank string
+        public string Volcanism { get; private set; }                       // direct from journal - will be a blank string for no volcanism
         [PropertyNameAttribute("EDD Volcanism ID")]
         public EDVolcanism VolcanismID { get; }                     // Volcanism -> ID (Water_Magma, Nitrogen_Magma etc)
         [PropertyNameAttribute("Has volcanism, excluding unknowns")]
-        public bool HasMeaningfulVolcanism { get { return VolcanismID != EDVolcanism.None && VolcanismID != EDVolcanism.Unknown; } }
+        public bool HasMeaningfulVolcanism { get { return VolcanismID > EDVolcanism.No; } }
         [PropertyNameAttribute("EDD Volcanism type")]
         public EDVolcanismProperty VolcanismProperty { get; private set; }               // Volcanism -> Property (None, Major, Minor)
+
+        [PropertyNameAttribute("Translated name of Volcanism")]
+        public string VolcanismTranslated
+        {
+            get
+            {
+                if (BaseUtils.Translator.Instance.Translating)
+                {
+                    string key = "VolcanismTypes." + VolcanismID.ToString() + (VolcanismProperty != EDVolcanismProperty.None ? "_" + VolcanismProperty.ToString() : "");
+                    if (BaseUtils.Translator.Instance.IsDefined(key))       // if we defined it, all good, not an unknown combo
+                    {
+                        string res = BaseUtils.Translator.Instance.GetTranslation(key); // but it may be undefined (example.ex etc) so don't accept null
+                        if (res != null)
+                            return res;
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"*** Missing translator ID for volcanism {VolcanismID} : {VolcanismProperty} : `{Volcanism}`");
+                    }
+                }
+
+                string mainpart = VolcanismID.ToString().Replace("_", " ") + " Volcanism";
+                string final = VolcanismProperty != EDVolcanismProperty.None ? VolcanismProperty.ToString() + " " + mainpart : mainpart;
+                return final;
+            }
+        }
+
         [PropertyNameAttribute("m/s")]
         public double? nSurfaceGravity { get; private set; }                // direct
         [PropertyNameAttribute("Fractions of earth gravity")]
@@ -463,15 +514,12 @@ namespace EliteDangerousCore.JournalEvents
                 if (TerraformState != null && TerraformState.Equals("Not Terraformable", StringComparison.InvariantCultureIgnoreCase)) // EDSM returns this, normalise to journal
                     TerraformState = String.Empty;
 
-
-
                 JToken atmos = evt["AtmosphereComposition"];
                 if (!atmos.IsNull())
                 {
                     if (atmos.IsObject)
                     {
                         AtmosphereComposition = atmos?.ToObjectQ<Dictionary<string, double>>();
-                        //System.Diagnostics.Debug.WriteLine($"Atmos list {AtmosphericComppositionList}");
                     }
                     else if (atmos.IsArray)
                     {
@@ -480,22 +528,32 @@ namespace EliteDangerousCore.JournalEvents
                         {
                             AtmosphereComposition[jo["Name"].Str("Default")] = jo["Percent"].Double();
                         }
-                        //System.Diagnostics.Debug.WriteLine($"Atmos list {AtmosphericComppositionList}");
                     }
                 }
 
                 Atmosphere = evt["Atmosphere"].StrNull();               // can be null, or empty
 
-                if ( Atmosphere == "thick  atmosphere" )            // obv a frontier bug, atmosphere type has the missing text
+                if (Atmosphere.IsEmpty())                               // try type.
+                {
+                    Atmosphere = evt["AtmosphereType"].StrNull();       // it may still be null here or empty string
+                }
+                
+                if ( Atmosphere.EqualsIIC("thick  atmosphere") )            // obv a frontier bug, atmosphere type has the missing text
                 {
                     Atmosphere = "thick " + evt["AtmosphereType"].Str().SplitCapsWord() + " atmosphere";
                 }
-                else if ( Atmosphere == "thin  atmosphere")             
+                else if (Atmosphere.EqualsIIC("thin  atmosphere"))
                 {
                     Atmosphere = "thin " + evt["AtmosphereType"].Str().SplitCapsWord() + " atmosphere";
                 }
-                else if ( Atmosphere.IsEmpty())                         // try type.
-                    Atmosphere = evt["AtmosphereType"].StrNull();       // it may still be null here or empty string
+                else if (Atmosphere.EqualsIIC("No Atmosphere"))
+                {
+                    Atmosphere = "none";
+                }
+                else if (Atmosphere.HasChars() && !Atmosphere.EqualsIIC("none") && !Atmosphere.ContainsIIC("atmosphere") )
+                {
+                    Atmosphere += " atmosphere";
+                }
 
                 if (Atmosphere.IsEmpty())       // null or empty - nothing in either, see if there is composition
                 {
@@ -543,7 +601,7 @@ namespace EliteDangerousCore.JournalEvents
                     }
                 }
 
-                Volcanism = evt["Volcanism"].StrNull();
+                Volcanism = evt["Volcanism"].Str();     // blank string empty
                 VolcanismID = Planets.ToEnum(Volcanism, out EDVolcanismProperty vp);
                 VolcanismProperty = vp;
 
@@ -649,7 +707,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass: ".T(EDCTx.JournalScan_MASS), MassEMMM,
                                                 "<;, Landable".T(EDCTx.JournalScan_Landable), IsLandable,
-                                                "<;, Terraformable".T(EDCTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", Atmosphere,
+                                                "<;, Terraformable".T(EDCTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", HasAtmosphere ? AtmosphereTranslated : null,
                                                  "Gravity: ;G;0.00".T(EDCTx.JournalScan_Gravity), nSurfaceGravityG,
                                                  "Radius: ".T(EDCTx.JournalScan_RS), RadiusText,
                                                  "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,

@@ -398,7 +398,10 @@ namespace EliteDangerousCore.JournalEvents
             if (CommodityReward != null)
             {
                 foreach (CommodityRewards c in CommodityReward)
-                    mc.ChangeCommd( EventTimeUTC, c.Name, c.Count, 0);    // commodities are traded by faction
+                {
+                    //System.Diagnostics.Debug.WriteLine($"Mission completed {EventTimeUTC} Materials Reward {c.Name} {c.Count}");
+                    mc.ChangeCommd(EventTimeUTC, c.Name, c.Count, 0);    // commodities are traded by faction
+                }
             }
         }
 
@@ -408,6 +411,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (MaterialRewards m in MaterialsReward)                 // 7/3/2018 not yet fully proven.. changed in 3.02
                 {
+                    //System.Diagnostics.Debug.WriteLine($"Mission completed {EventTimeUTC} Materials Reward {m.Name} {m.Category} {m.Count}");
                     mc.ChangeMat( EventTimeUTC, m.Category.Alt("Raw"), m.Name, m.Count);      // mats from faction of mission
                 }
             }

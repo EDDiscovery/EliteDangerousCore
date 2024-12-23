@@ -336,8 +336,7 @@ namespace EliteDangerousCore
             if (e.StoredItem.Length > 0)                             // if we stored something
                 StoredModules = StoredModules.StoreModule(e.StoredItemFD, e.StoredItem, e.StoredItemLocalised, sys);
 
-            // if we sold it, who cares?
-        ////// tbd    Ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.BuyItem, e.BuyItemFD, e.BuyItemLocalised);      // replace the slot with this
+            Ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.BuyItem, e.BuyItemFD, e.BuyItemLocalised);      // replace the slot with this
 
             itemlocalisation[e.BuyItem] = e.BuyItemLocalised;       // record any localisations
             if (e.SellItem.Length > 0)
@@ -529,12 +528,6 @@ namespace EliteDangerousCore
                 {
                     Ships[Key(sm.ShipFD, newsoldid++)] = sm;              // okay, we place this information on back ID list+  all Ids of this will now refer to new entry
                 }
-            }
-
-            System.Diagnostics.Debug.WriteLine($"Made new ship `{id}`");
-            if ( id == "krait_mkii:21")
-            {
-
             }
 
             ulong i = id.Substring(id.IndexOf(":") + 1).InvariantParseULong(0);

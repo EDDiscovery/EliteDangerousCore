@@ -46,30 +46,29 @@ namespace EliteDangerousCore
     public enum EDAtmosphereProperty
     {
         None = 0,
-        Rich = 1,
+        Hot = 1,
         Thick = 2,
         Thin = 4,
-        Hot = 8,
+        Rich = 64,
     }
 
-    public enum EDAtmosphereType   // from the journal
+    public enum EDAtmosphereType   
     {
-        Earth_Like = 900,
-        Ammonia = 1000,
-        Water = 2000,
-        Carbon_dioxide = 3000,
-        Methane = 4000,
-        Helium = 5000,
-        Argon = 6000,
-        Neon = 7000,
-        Sulphur_dioxide = 8000,
-        Nitrogen = 9000,
-        Silicate_vapour = 10000,
-        Metallic_vapour = 11000,
-        Oxygen = 12000,
-
         Unknown = 0,
-        No_atmosphere = 1,                        
+        No = 1,         // No atmosphere, keep order, below is active
+        Earth_Like,
+        Ammonia,
+        Water,
+        Carbon_Dioxide,
+        Methane,
+        Helium,
+        Argon,
+        Neon,
+        Sulphur_Dioxide,
+        Nitrogen,
+        Silicate_Vapour,
+        Metallic_Vapour,
+        Oxygen,
     }
 
 
@@ -84,7 +83,7 @@ namespace EliteDangerousCore
     public enum EDVolcanism
     {
         Unknown = 0,
-        None,
+        No = 1,         // no volcanism, keep order, below is active
         Water_Magma = 100,
         Sulphur_Dioxide_Magma = 200,
         Ammonia_Magma = 300,
@@ -160,15 +159,20 @@ namespace EliteDangerousCore
             return EDPlanet.Unknown_Body_Type;
         }
 
+        public static string ToEnglish(EDPlanet planet)
+        {
+            return planet.ToString().Replace("_", " ");
+        }
+
         public static EDAtmosphereType ToEnum(string v, out EDAtmosphereProperty atmprop)
         {
             atmprop = EDAtmosphereProperty.None;
 
             if (v.IsEmpty())
-                return EDAtmosphereType.Unknown;
+                return EDAtmosphereType.No;
 
             if (v.Equals("None", StringComparison.InvariantCultureIgnoreCase))
-                return EDAtmosphereType.No_atmosphere;
+                return EDAtmosphereType.No;
 
             var searchstr = v.ToLowerInvariant();
 
@@ -195,7 +199,15 @@ namespace EliteDangerousCore
                     return kvp.Key;
             }
 
+            atmprop = EDAtmosphereProperty.None;
             return EDAtmosphereType.Unknown;
+        }
+
+
+        // without volcanism at the end
+        public static string ToEnglish(EDAtmosphereType at)
+        {
+            return at.ToString().Replace("_", " ");
         }
 
         public static EDVolcanism ToEnum(string v, out EDVolcanismProperty vprop )
@@ -203,7 +215,7 @@ namespace EliteDangerousCore
             vprop = EDVolcanismProperty.None;
 
             if (v.IsEmpty())
-                return EDVolcanism.Unknown;
+                return EDVolcanism.No;
 
             string searchstr = v.ToLowerInvariant().Replace("_", "").Replace(" ", "").Replace("-", "").Replace("volcanism", "");
 
@@ -221,7 +233,18 @@ namespace EliteDangerousCore
             if (volcanismStr2EnumLookup.ContainsKey(searchstr))
                 return volcanismStr2EnumLookup[searchstr];
 
+            vprop = EDVolcanismProperty.None;
             return EDVolcanism.Unknown;
+        }
+
+        // without volcanism at the end
+        public static string ToEnglish(EDVolcanism volc)
+        {
+            return volc.ToString().Replace("_", " ");
+        }
+        public static string ToEnglish(EDVolcanismProperty volc)
+        {
+            return volc.ToString();
         }
 
         public static EDReserve ReserveToEnum(string reservelevel)
@@ -236,6 +259,12 @@ namespace EliteDangerousCore
 
             return EDReserve.None;
         }
+
+        public static string ToEnglish(EDReserve reserve)
+        {
+            return reserve.ToString();
+        }
+
 
         // These should be translated to match the in-game planet types
         private static readonly Dictionary<EDPlanet, string> planetEnumToNameLookup = new Dictionary<EDPlanet, string>
@@ -262,7 +291,7 @@ namespace EliteDangerousCore
             [EDPlanet.Unknown_Body_Type] = "Unknown planet type".T(EDCTx.EDPlanet_Unknown),
         };
 
-        public static string PlanetName(EDPlanet type)
+        public static string PlanetNameTranslated(EDPlanet type)
         {
             string name;
             if (planetEnumToNameLookup.TryGetValue(type, out name))

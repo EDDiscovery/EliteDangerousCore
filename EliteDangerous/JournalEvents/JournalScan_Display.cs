@@ -50,10 +50,10 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     sb.Append(PlanetTypeText);
 
-                    if (!GasWorld)      // all gas worlds have atmospheres, so don't add it on
+                    if (HasAtmosphere)
                     {
                         sb.AppendCS();
-                        sb.Append(Atmosphere == "none" ? "No Atmosphere".T(EDCTx.JournalScan_NoAtmosphere) : Atmosphere);
+                        sb.Append(AtmosphereTranslated);
                     }
 
                     if (IsLandable)
@@ -140,10 +140,9 @@ namespace EliteDangerousCore.JournalEvents
                 sb.AppendCR();
             }
 
-            if (Volcanism.HasChars())
+            if (HasMeaningfulVolcanism)
             {
-                sb.AppendFormat("Volcanism: {0}".T(EDCTx.JournalScan_Volcanism), Volcanism.IsEmpty() ? "No Volcanism".T(EDCTx.JournalScan_NoVolcanism) : System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.
-                                                                                            ToTitleCase(Volcanism.ToLowerInvariant()));
+                sb.AppendFormat("Volcanism: {0}".T(EDCTx.JournalScan_Volcanism), VolcanismTranslated);
                 sb.AppendCR();
             }
 

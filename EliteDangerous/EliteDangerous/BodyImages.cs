@@ -474,7 +474,7 @@ namespace EliteDangerousCore
                     iconName = "AMWv3";
                 else if (AtmosphereProperty == EDAtmosphereProperty.Rich)
                     iconName = "AMWv4"; // kindly provided by CMDR CompleteNOOB
-                else if (nLandable == true || (AtmosphereID == EDAtmosphereType.No_atmosphere && nSurfaceTemperature < 140))
+                else if (nLandable == true || (AtmosphereID == EDAtmosphereType.No && nSurfaceTemperature < 140))
                     iconName = "AMWv5"; // kindly provided by CMDR CompleteNOOB
                 else if (nSurfaceTemperature < 190)
                     iconName = "AMWv6";
@@ -522,7 +522,7 @@ namespace EliteDangerousCore
                 iconName = "HMCv3"; // fallback
 
                 // landable, atmosphere-less high metal content bodies
-                if (nLandable == true || AtmosphereID == EDAtmosphereType.No_atmosphere)
+                if (nLandable == true || AtmosphereID == EDAtmosphereType.No)
                 {
                     if (nSurfaceTemperature < 300)
                     {
@@ -559,7 +559,7 @@ namespace EliteDangerousCore
                     }
                     else if (AtmosphereID == EDAtmosphereType.Argon)
                         iconName = "HMCv26";
-                    else if (AtmosphereID == EDAtmosphereType.Carbon_dioxide)
+                    else if (AtmosphereID == EDAtmosphereType.Carbon_Dioxide)
                     {
                         if (nSurfaceTemperature < 220)
                             iconName = "HMCv9";
@@ -606,7 +606,7 @@ namespace EliteDangerousCore
                         else
                             iconName = "HMCv5";
                     }
-                    else if (AtmosphereID == EDAtmosphereType.Sulphur_dioxide)
+                    else if (AtmosphereID == EDAtmosphereType.Sulphur_Dioxide)
                     {
                         if (nSurfaceTemperature < 700)
                             iconName = "HMCv23";
@@ -766,13 +766,13 @@ namespace EliteDangerousCore
             {
                 iconName = "WTRv7"; // fallback
 
-                if (AtmosphereID == EDAtmosphereType.No_atmosphere)
+                if (AtmosphereID == EDAtmosphereType.No)
                 {
                     iconName = "WTRv10"; // kindly provided by CMDR CompleteNOOB
                 }
                 else
                 {
-                    if (AtmosphereID == EDAtmosphereType.Carbon_dioxide)
+                    if (AtmosphereID == EDAtmosphereType.Carbon_Dioxide)
                     {
                         if (nSurfaceTemperature < 260)
                             iconName = "WTRv6";

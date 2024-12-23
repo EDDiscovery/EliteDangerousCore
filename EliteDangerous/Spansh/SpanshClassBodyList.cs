@@ -124,7 +124,10 @@ namespace EliteDangerousCore.Spansh
 
                         if (so["type"].Str() == "Star")
                         {
-                            evt["StarType"] = SpanshStarNameToEDStar(so[dump ? "subType" : "subtype"].Str()).ToString();
+                            string spanshst = so[dump ? "subType" : "subtype"].Str();
+                            EDStar? startype = SpanshStarNameToEDStar(spanshst);
+                            evt["StarType"] = startype != null ? Stars.ToEnglish(startype.Value) : spanshst;        // so if we recognise it, use the text version of the enum. ToEnum should turn it back
+                            //System.Diagnostics.Debug.WriteLine($"Spansh star type {evt["StarType"].Str()}");
 
                             evt["StellarMass"] = so[dump ? "solarMasses" : "solar_masses"];
                             evt["AbsoluteMagnitude"] = so["absoluteMagnitude"];
@@ -135,7 +138,11 @@ namespace EliteDangerousCore.Spansh
                         }
                         else if (so["type"].Str() == "Planet")
                         {
-                            evt["PlanetClass"] = SpanshPlanetNameToEDPlanet(so[dump ? "subType" : "subtype"].Str()).ToString();
+                            string spanshpc = so[dump ? "subType" : "subtype"].Str();
+                            EDPlanet? planet = SpanshPlanetNameToEDPlanet(spanshpc);
+                            evt["PlanetClass"] =planet != null ? Planets.ToEnglish(planet.Value) : spanshpc;      // if recognised, turn back to string, with _ removed.
+
+                            //System.Diagnostics.Debug.WriteLine($"Spansh  planet class {spanshpc} -> {evt["PlanetClass"]}");
                         }
                         else
                         {
@@ -160,37 +167,20 @@ namespace EliteDangerousCore.Spansh
                         {
                             evt["TerraformState"] = so[dump ? "terraformingState" : "terraforming_state"];
 
-                            if (dump)
+                            evt["AtmosphereComposition"] = dump ? so["atmosphereComposition"] : so["atmosphere_composition"]; // direct object to object
+
+                            string atmostype = dump ? so["atmosphereType"].Str() : so["atmosphere"].Str();
+                            if (atmostype.IsEmpty() || atmostype.EqualsIIC("No atmosphere"))
                             {
-                                evt["AtmosphereComposition"] = so["atmosphereComposition"];
-                                evt["AtmosphereType"] = so["atmosphereType"];
+                                //System.Diagnostics.Debug.WriteLine($"Atmos {atmostype} {evt["PlanetClass"].Str()}");
+                                if (evt["PlanetClass"].Str().ContainsIIC("Earthlike"))
+                                    atmostype = "Earth Like";
                             }
-                            else
-                            {
-                                string atconsituents = "";
-                                if (so["atmosphere_composition"] != null)
-                                {
-                                    JArray ac = new JArray();
-                                    evt["AtmosphereComposition"] = ac;
-                                    foreach (var node in so["atmosphere_composition"])
-                                    {
-                                        JObject entry = new JObject
-                                        {
-                                            ["Name"] = node["name"].Str("?"),
-                                            ["Percent"] = node["share"].Double(0),
-                                        };
 
-                                        atconsituents = atconsituents.AppendPrePad(entry["Name"].Str(), ",");
-                                        ac.Add(entry);
-                                    }
-                                }
+                            else if (!atmostype.ContainsIIC("atmosphere"))
+                                atmostype += " atmosphere";
 
-                                string atmos = so["atmosphere"].Str();
-                                if (atmos == "No atmosphere" && atconsituents.HasChars())
-                                    atmos = atconsituents;
-
-                                evt["Atmosphere"] = atmos;       // only use Atmosphere - JS uses this in preference to atmosphere type
-                            }
+                            evt["Atmosphere"] = atmostype;       // only use Atmosphere - JS uses this in preference to atmosphere type
 
                             if (dump)
                             {
@@ -217,7 +207,16 @@ namespace EliteDangerousCore.Spansh
                                 }
                             }
 
-                            evt["Volcanism"] = so[dump ? "volcanismType" : "volcanism_type"];
+                            string vol = so[dump ? "volcanismType" : "volcanism_type"].StrNull();
+
+                            if (vol.HasChars())
+                            {
+                                if (!vol.ContainsIIC("volcanism"))
+                                    vol += " volcanism";
+                                evt["Volcanism"] = vol;
+                            }
+
+                            //System.Diagnostics.Debug.WriteLine($"Spansh reads {evt["BodyName"]} atmos `{evt["Atmosphere"]}` vol `{evt["Volcanism"]}`");
 
                             evt["SurfaceGravity"] = so["gravity"].Double(0) * BodyPhysicalConstants.oneGee_m_s2;        // its in G, convert back into m/s
                             evt["SurfacePressure"] = so[dump ? "surfacePressure" : "surface_pressure"].Double(0) * BodyPhysicalConstants.oneAtmosphere_Pa;
@@ -251,8 +250,6 @@ namespace EliteDangerousCore.Spansh
                         }
 
                         evt["EDDFromSpanshBody"] = true;
-
-                       // JournalScan js = new JournalScan(evt); System.Diagnostics.Debug.WriteLine($"Journal scan {js.DisplayString(0, includefront: true)}");
 
                         retresult.Add(evt);
                     }
@@ -338,7 +335,7 @@ namespace EliteDangerousCore.Spansh
 
                     // calc name of cache file
 
-                    string cachefile = EliteConfigInstance.InstanceOptions.ScanCachePath != null ?
+                    string cachefile = EliteConfigInstance.InstanceOptions.ScanCacheEnabled ?
                             System.IO.Path.Combine(EliteConfigInstance.InstanceOptions.ScanCachePath, $"spansh_{(sys.SystemAddress.HasValue ? sys.SystemAddress.Value.ToStringInvariant() : sys.Name.SafeFileString())}.json") :
                             null;
 
@@ -372,6 +369,8 @@ namespace EliteDangerousCore.Spansh
                         foreach (JObject jo in jlist)
                         {
                             JournalScan js = new JournalScan(jo.Object());
+
+                            //System.Diagnostics.Debug.WriteLine($"Spansh JS: {js.DisplayString(null, null)}");
 
                             if (jo.Contains("EDDMeanAnomalyTimestamp"))        // this name is used to carry time info which is not in the journal
                             {
@@ -412,7 +411,7 @@ namespace EliteDangerousCore.Spansh
                 return value;
             else
             {
-                System.Diagnostics.Debug.WriteLine($"SPANSH failed to decode star {name}");
+                System.Diagnostics.Trace.WriteLine($"*** SPANSH failed to decode star {name}");
                 return null;
             }
         }
@@ -486,7 +485,7 @@ namespace EliteDangerousCore.Spansh
                 return value;
             else
             {
-                System.Diagnostics.Debug.WriteLine($"SPANSH failed to decode planet {name}");
+                System.Diagnostics.Trace.WriteLine($"*** SPANSH failed to decode planet {name}");
                 return null;
             }
         }
