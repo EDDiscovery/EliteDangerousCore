@@ -499,9 +499,9 @@ SECTION JournalScan
 .NoAtmosphere: "No Atmosphere" => "Sin atmósfera"
 .LandC: "Landable" => "Aterrizable"
 .AMY: "Age: {0} my" => "Edad: {0} ma"
-.SolarMasses: "Solar Masses: {0:N2}" => "Masas solares: {0:0.00}"
+.SolarMasses: "Solar Masses: {0:N2}" => "Masas solares: {0:N2}"
 .SurfaceTemp: "Surface Temp: {0}K" => "Temperatura de la superficie: {0} K"
-.GV: "Gravity: {0:N2}g" => "Gravedad: {0:0.00} g"
+.GV: "Gravity: {0:N2}g" => "Gravedad: {0:N2} g"
 .SPA: "Surface Pressure: {0} Atmospheres" => "Presión de la superficie: {0} Atmósferas"
 .SPP: "Surface Pressure: {0} Pa" => "Presión superficial: {0} Pa"
 .Volcanism: "Volcanism: {0}" => "Vulcanismo: {0}"
@@ -1194,3 +1194,105 @@ SECTION JournalScanOrganics
 
 .Value: "Value: ; cr;N0" = JournalEntry.Value
 .PotentialValue: "Potential Value: ; cr;N0" => "Valor Potencial: ; cr;N0"
+
+SECTION AtmosphereTypes
+
+.Ammonia: "Ammonia Atmosphere" @
+.Ammonia_Hot_Thick: "Hot Thick Ammonia Atmosphere" @
+.Ammonia_Hot_Thick_Rich: "Hot Thick Ammonia Rich Atmosphere" @
+.Ammonia_Rich: "Ammonia Rich Atmosphere" @
+.Ammonia_Thick: "Thick Ammonia Atmosphere" @
+.Ammonia_Thick_Rich: "Thick Ammonia Rich Atmosphere" @
+.Ammonia_Thin: "Thin Ammonia Atmosphere" @
+.Argon: "Argon Atmosphere" @
+.Argon_Hot_Thick: "Hot Thick Argon Atmosphere" @
+.Argon_Hot_Thick_Rich: "Hot Thick Argon Rich Atmosphere" @
+.Argon_Rich: "Argon Rich Atmosphere" @
+.Argon_Thick: "Thick Argon Atmosphere" @
+.Argon_Thick_Rich: "Thick Argon Rich Atmosphere" @
+.Argon_Thin: "Thin Argon Atmosphere" @
+.Argon_Thin_Rich: "Thin Argon Rich Atmosphere" @
+.Carbon_Dioxide: "Carbon Dioxide Atmosphere" @
+.Carbon_Dioxide_Hot: "Hot Carbon Dioxide Atmosphere" @
+.Carbon_Dioxide_Hot_Rich: "Hot Carbon Dioxide Rich Atmosphere" @
+.Carbon_Dioxide_Hot_Thick: "Hot Thick Carbon Dioxide Atmosphere" @
+.Carbon_Dioxide_Hot_Thick_Rich: "Hot Thick Carbon Dioxide Rich Atmosphere" @
+.Carbon_Dioxide_Hot_Thin: "Hot Thin Carbon Dioxide Atmosphere" @
+.Carbon_Dioxide_Rich: "Carbon Dioxide Rich Atmosphere" @
+.Carbon_Dioxide_Thick: "Thick Carbon Dioxide Atmosphere" @
+.Carbon_Dioxide_Thick_Rich: "Thick Carbon Dioxide Rich Atmosphere" @
+.Carbon_Dioxide_Thin: "Thin Carbon Dioxide Atmosphere" @
+.Carbon_Dioxide_Thin_Rich: "Thin Carbon Dioxide Rich Atmosphere" @
+.Earth_Like: "Earth Like Atmosphere" @
+.Earth_Like_Thick: "Thick Earth Like Atmosphere" @
+.Helium: "Helium Atmosphere" @
+.Helium_Thick: "Thick Helium Atmosphere" @
+.Helium_Thin: "Thin Helium Atmosphere" @
+.Metallic_Vapour_Hot_Thick: "Hot Thick Metallic Vapour Atmosphere" @
+.Methane: "Methane Atmosphere" @
+.Methane_Hot_Thick: "Hot Thick Methane Atmosphere" @
+.Methane_Hot_Thick_Rich: "Hot Thick Methane Rich Atmosphere" @
+.Methane_Rich: "Methane Rich Atmosphere" @
+.Methane_Thick: "Thick Methane Atmosphere" @
+.Methane_Thick_Rich: "Thick Methane Rich Atmosphere" @
+.Methane_Thin: "Thin Methane Atmosphere" @
+.Methane_Thin_Rich: "Thin Methane Rich Atmosphere" @
+.Neon_Rich: "Neon Rich Atmosphere" @
+.Neon_Thin: "Thin Neon Atmosphere" @
+.Neon_Thin_Rich: "Thin Neon Rich Atmosphere" @
+.Nitrogen: "Nitrogen Atmosphere" @
+.Nitrogen_Hot_Thick: "Hot Thick Nitrogen Atmosphere" @
+.Nitrogen_Thick: "Thick Nitrogen Atmosphere" @
+.Nitrogen_Thin: "Thin Nitrogen Atmosphere" @
+.No: "No Atmosphere" @
+.Oxygen: "Oxygen Atmosphere" @
+.Oxygen_Thin: "Thin Oxygen Atmosphere" @
+.Silicate_Vapour_Hot: "Hot Silicate Vapour Atmosphere" @
+.Silicate_Vapour_Hot_Thick: "Hot Thick Silicate Vapour Atmosphere" @
+.Silicate_Vapour_Hot_Thin: "Hot Thin Silicate Vapour Atmosphere" @
+.Sulphur_Dioxide: "Sulphur Dioxide Atmosphere" @
+.Sulphur_Dioxide_Hot: "Hot Sulphur Dioxide Atmosphere" @
+.Sulphur_Dioxide_Hot_Thick: "Hot Thick Sulphur Dioxide Atmosphere" @
+.Sulphur_Dioxide_Hot_Thin: "Hot Thin Sulphur Dioxide Atmosphere" @
+.Sulphur_Dioxide_Thick: "Thick Sulphur Dioxide Atmosphere" @
+.Sulphur_Dioxide_Thin: "Thin Sulphur Dioxide Atmosphere" @
+.Unknown: "Unknown Atmosphere" @
+.Water: "Water Atmosphere" @
+.Water_Hot: "Hot Water Atmosphere" @
+.Water_Hot_Rich: "Hot Water Rich Atmosphere" @
+.Water_Hot_Thick: "Hot Thick Water Atmosphere" @
+.Water_Hot_Thick_Rich: "Hot Thick Water Rich Atmosphere" @
+.Water_Rich: "Water Rich Atmosphere" @
+.Water_Thick: "Thick Water Atmosphere" @
+.Water_Thick_Rich: "Thick Water Rich Atmosphere" @
+.Water_Thin: "Thin Water Atmosphere" @
+.Water_Thin_Rich: "Thin Water Rich Atmosphere" @
+.Ammonia_Thin_Rich: "Thin Ammonia Rich Atmosphere" @
+.Argon_Hot: "Hot Argon Atmosphere" @
+.Metallic_Vapour_Hot: "Hot Metallic Vapour Atmosphere" @
+.Metallic_Vapour_Hot_Thin: "Hot Thin Metallic Vapour Atmosphere" @
+
+SECTION VolcanismTypes
+
+.Ammonia_Magma_Minor: "Minor Ammonia Magma Volcanism" @
+.Carbon_Dioxide_Geysers: "Carbon Dioxide Geysers Volcanism" @
+.Carbon_Dioxide_Geysers_Minor: "Minor Carbon Dioxide Geysers Volcanism" @
+.Metallic_Magma: "Metallic Magma Volcanism" @
+.Metallic_Magma_Major: "Major Metallic Magma Volcanism" @
+.Metallic_Magma_Minor: "Minor Metallic Magma Volcanism" @
+.Methane_Magma_Minor: "Minor Methane Magma Volcanism" @
+.Nitrogen_Magma_Minor: "Minor Nitrogen Magma Volcanism" @
+.No: "No Volcanism" @
+.Rocky_Magma: "Rocky Magma Volcanism" @
+.Rocky_Magma_Major: "Major Rocky Magma Volcanism" @
+.Rocky_Magma_Minor: "Minor Rocky Magma Volcanism" @
+.Silicate_Vapour_Geysers: "Silicate Vapour Geysers Volcanism" @
+.Silicate_Vapour_Geysers_Major: "Major Silicate Vapour Geysers Volcanism" @
+.Silicate_Vapour_Geysers_Minor: "Minor Silicate Vapour Geysers Volcanism" @
+.Water_Geysers: "Water Geysers Volcanism" @
+.Water_Geysers_Major: "Major Water Geysers Volcanism" @
+.Water_Geysers_Minor: "Minor Water Geysers Volcanism" @
+.Water_Magma: "Water Magma Volcanism" @
+.Water_Magma_Major: "Major Water Magma Volcanism" @
+.Water_Magma_Minor: "Minor Water Magma Volcanism" @
+.Unknown: "Unknown Volcanism" @

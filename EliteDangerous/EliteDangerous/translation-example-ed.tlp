@@ -923,6 +923,15 @@ SECTION MaterialCommodityMicroResourceType
 .tg_structuraldata02: "Thargoid Capital Ship Data" @
 .searchrescuevoucher: "Search and Rescue Voucher" @
 .unknowncorechip: "Tactical Core Chip" @
+.EncodedGuardian: "Encoded Guardian" @
+.EncodedGuardianObelisk: "Encoded Guardian Obelisk" @
+.EncodedThargoid1: "Encoded Thargoid 1" @
+.EncodedThargoid2: "Encoded Thargoid 2" @
+.ManufacturedGuardian: "Manufactured Guardian" @
+.ManufacturedThargoid1: "Manufactured Thargoid 1" @
+.ManufacturedThargoid2: "Manufactured Thargoid 2" @
+.ManufacturedThargoid3: "Manufactured Thargoid 3" @
+.ManufacturedThargoid4: "Manufactured Thargoid 4" @
 
 SECTION EngineeringData
 
