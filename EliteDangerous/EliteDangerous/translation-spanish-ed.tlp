@@ -917,20 +917,20 @@ SECTION MaterialCommodityMicroResourceType
 .powerpropagandadata: "Power Political Data" => "Información Política de la Potencia"
 .powerclassifieddata: "Power Classified Data" => "Información Clasificada de la Potencia"
 .powermegashipdata: "Power Megaship Data" => "Datos de Meganave de Potencia"
-.biomechanicalcomponent: "Spire Refinery Compound" @
-.sabotagedcomponent: "Contaminated Spire Compound" @
-.tg_structuraldata02: "Thargoid Capital Ship Data" @
-.searchrescuevoucher: "Search and Rescue Voucher" @
-.unknowncorechip: "Tactical Core Chip" @
-.EncodedGuardian: "Encoded Guardian" @
-.EncodedGuardianObelisk: "Encoded Guardian Obelisk" @
-.EncodedThargoid1: "Encoded Thargoid 1" @
-.EncodedThargoid2: "Encoded Thargoid 2" @
-.ManufacturedGuardian: "Manufactured Guardian" @
-.ManufacturedThargoid1: "Manufactured Thargoid 1" @
-.ManufacturedThargoid2: "Manufactured Thargoid 2" @
-.ManufacturedThargoid3: "Manufactured Thargoid 3" @
-.ManufacturedThargoid4: "Manufactured Thargoid 4" @
+.biomechanicalcomponent: "Spire Refinery Compound" => "Compuesto de Refinería de Agujas"
+.sabotagedcomponent: "Contaminated Spire Compound" => "Compuesto de Agujas Contaminado"
+.tg_structuraldata02: "Thargoid Capital Ship Data" => "Datos de Nave Capital Thargoide"
+.searchrescuevoucher: "Search and Rescue Voucher" => "Bono de Búsqueda y Rescate"
+.unknowncorechip: "Tactical Core Chip" => "Chip de Núcleo Táctico"
+.EncodedGuardian: "Encoded Guardian" => "Guardián Codificado"
+.EncodedGuardianObelisk: "Encoded Guardian Obelisk" => "Obelisco Guardián Codificado"
+.EncodedThargoid1: "Encoded Thargoid 1" => "Thargoide Codificado 1"
+.EncodedThargoid2: "Encoded Thargoid 2" => "Thargoide Codificado 2"
+.ManufacturedGuardian: "Manufactured Guardian" => "Guardián Manufacturado"
+.ManufacturedThargoid1: "Manufactured Thargoid 1" => "Thargoide Manufacturado 1"
+.ManufacturedThargoid2: "Manufactured Thargoid 2" => "Thargoide Manufacturado 2"
+.ManufacturedThargoid3: "Manufactured Thargoid 3" => "Thargoide Manufacturado 3"
+.ManufacturedThargoid4: "Manufactured Thargoid 4" => "Thargoide Manufacturado 4"
 
 SECTION EngineeringData
 
