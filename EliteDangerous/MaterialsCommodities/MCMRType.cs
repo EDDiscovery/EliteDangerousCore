@@ -56,7 +56,9 @@ namespace EliteDangerousCore
             RawCategory1, RawCategory2, RawCategory3, RawCategory4, RawCategory5, RawCategory6, RawCategory7,
             EncodedEmissionData, EncodedWakeScans, EncodedShieldData, EncodedEncryptionFiles, EncodedDataArchives, EncodedFirmware,
             ManufacturedChemical, ManufacturedThermic, ManufacturedHeat, ManufacturedConductive, ManufacturedMechanicalComponents,
-            ManufacturedCapacitors, ManufacturedShielding, ManufacturedComposite, ManufacturedCrystals, ManufacturedAlloys,
+            ManufacturedCapacitors, ManufacturedShielding, ManufacturedComposite, ManufacturedCrystals, ManufacturedAlloys, EncodedGuardian,
+            EncodedGuardianObelisk, ManufacturedGuardian, EncodedThargoid1, EncodedThargoid2, ManufacturedThargoid1, ManufacturedThargoid2, ManufacturedThargoid3,
+            ManufacturedThargoid4,
         };
 
 
@@ -1118,53 +1120,53 @@ namespace EliteDangerousCore
 
             #region Other Encoded
 
-            Add(CatType.Encoded, ItemType.VeryRare, MCMR.Guardian_VesselBlueprint, "Guardian Vessel Blueprint Fragment", "GMVB");
-            Add(CatType.Encoded, ItemType.Rare, MCMR.AncientBiologicalData, "Pattern Alpha Obelisk Data", "PAOD");
-            Add(CatType.Encoded, ItemType.Rare, MCMR.AncientCulturalData, "Pattern Beta Obelisk Data", "PBOD");
-            Add(CatType.Encoded, ItemType.Rare, MCMR.AncientHistoricalData, "Pattern Gamma Obelisk Data", "PGOD");
-            Add(CatType.Encoded, ItemType.Rare, MCMR.AncientLanguageData, "Pattern Delta Obelisk Data", "PDOD");
-            Add(CatType.Encoded, ItemType.Rare, MCMR.AncientTechnologicalData, "Pattern Epsilon Obelisk Data", "PEOD");
-            Add(CatType.Encoded, ItemType.Rare, MCMR.Guardian_ModuleBlueprint, "Guardian Module Blueprint Fragment", "GMBS");
-            Add(CatType.Encoded, ItemType.Rare, MCMR.Guardian_WeaponBlueprint, "Guardian Weapon Blueprint Fragment", "GWBS");
-            Add(CatType.Encoded, ItemType.Rare, MCMR.TG_ResidueData, "Thargoid Residue Data", "URDA");
-            Add(CatType.Encoded, ItemType.Rare, MCMR.TG_ShipSystemsData, "Ship Systems Data", "SSD");
-            Add(CatType.Encoded, ItemType.Rare, MCMR.UnknownWakeData, "Thargoid Wake Data", "UWD");
-            Add(CatType.Encoded, ItemType.Common, MCMR.TG_StructuralData, "Thargoid Structural Data", "UKSD");
-            Add(CatType.Encoded, ItemType.Standard, MCMR.TG_CompositionData, "Thargoid Material Composition Data", "UMCD");
-            Add(CatType.Encoded, ItemType.Standard, MCMR.TG_ShipFlightData, "Ship Flight Data", "SFD");
-            Add(CatType.Encoded, ItemType.Standard, MCMR.UnknownShipSignature, "Thargoid Ship Signature", "USSig");
+            Add(CatType.Encoded, ItemType.VeryRare, MaterialGroupType.EncodedGuardian, MCMR.Guardian_VesselBlueprint, "Guardian Vessel Blueprint Fragment", "GMVB");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedGuardianObelisk, MCMR.AncientBiologicalData, "Pattern Alpha Obelisk Data", "PAOD");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedGuardianObelisk, MCMR.AncientCulturalData, "Pattern Beta Obelisk Data", "PBOD");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedGuardianObelisk, MCMR.AncientHistoricalData, "Pattern Gamma Obelisk Data", "PGOD");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedGuardianObelisk, MCMR.AncientLanguageData, "Pattern Delta Obelisk Data", "PDOD");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedGuardianObelisk, MCMR.AncientTechnologicalData, "Pattern Epsilon Obelisk Data", "PEOD");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedGuardian, MCMR.Guardian_ModuleBlueprint, "Guardian Module Blueprint Fragment", "GMBS");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedGuardian, MCMR.Guardian_WeaponBlueprint, "Guardian Weapon Blueprint Fragment", "GWBS");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedThargoid1, MCMR.TG_ResidueData, "Thargoid Residue Data", "URDA");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedThargoid1, MCMR.TG_ShipSystemsData, "Ship Systems Data", "SSD");
+            Add(CatType.Encoded, ItemType.Rare, MaterialGroupType.EncodedThargoid1, MCMR.UnknownWakeData, "Thargoid Wake Data", "UWD");
+            Add(CatType.Encoded, ItemType.Common, MaterialGroupType.EncodedThargoid1, MCMR.TG_StructuralData, "Thargoid Structural Data", "UKSD");
+            Add(CatType.Encoded, ItemType.Standard, MaterialGroupType.EncodedThargoid1, MCMR.TG_CompositionData, "Thargoid Material Composition Data", "UMCD");
+            Add(CatType.Encoded, ItemType.Standard, MaterialGroupType.EncodedThargoid2, MCMR.TG_ShipFlightData, "Ship Flight Data", "SFD");
+            Add(CatType.Encoded, ItemType.Standard, MaterialGroupType.EncodedThargoid2, MCMR.UnknownShipSignature, "Thargoid Ship Signature", "USSig");
+            Add(CatType.Encoded, ItemType.Standard, MaterialGroupType.EncodedThargoid2, MCMR.TG_InterdictionData, "Thargoid Interdiction Telemetry", "TIT");
+            Add(CatType.Encoded, ItemType.Standard, MaterialGroupType.EncodedThargoid2, MCMR.TG_ShutdownData, "Massive Energy Surge Analytics", "MESA");
 
             // ascendency 3/12/2024
-            Add(CatType.Encoded, ItemType.Standard, MCMR.TG_StructuralData02, "Thargoid Capital Ship Data", "TGSTRUCTD2");
+            Add(CatType.Encoded, ItemType.Standard, MaterialGroupType.EncodedThargoid2, MCMR.TG_StructuralData02, "Thargoid Capital Ship Data", "TGSTRUCTD2");
             Add(CatType.Encoded, ItemType.Standard, MCMR.SearchRescueVoucher, "Search and Rescue Voucher", "SRCHRESV");
 
             #endregion
 
             #region Other Manufactured
 
-            Add(CatType.Manufactured, ItemType.VeryCommon, MCMR.Guardian_PowerCell, "Guardian Power Cell", "GPCe");
-            Add(CatType.Manufactured, ItemType.VeryCommon, MCMR.Guardian_Sentinel_WreckageComponents, "Guardian Wreckage Components", "GSWC");
-            Add(CatType.Manufactured, ItemType.VeryCommon, MCMR.TG_Abrasion03, "Hardened Surface Fragments", "HSF");
-            Add(CatType.Manufactured, ItemType.Common, MCMR.Guardian_PowerConduit, "Guardian Power Conduit", "GPC");
-            Add(CatType.Manufactured, ItemType.Common, MCMR.UnknownCarapace, "Thargoid Carapace", "UKCP");
-            Add(CatType.Manufactured, ItemType.Common, MCMR.UnknownCoreChip, "Tactical Core Chip", "TCC");
-            Add(CatType.Manufactured, ItemType.Standard, MCMR.Guardian_Sentinel_WeaponParts, "Guardian Sentinel Weapon Parts", "GSWP");
-            Add(CatType.Manufactured, ItemType.Standard, MCMR.Guardian_TechComponent, "Guardian Technology Component", "GTC");
-            Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_Abrasion02, "Phasing Membrane Residue", "PMR");
-            Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_BioMechanicalConduits, "Bio-Mechanical Conduits", "BMC");
-            Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_CausticGeneratorParts, "Corrosive Mechanisms", "COMEC");
-            Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_CausticShard, "Caustic Shard", "CASH");
-            Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_InterdictionData, "Thargoid Interdiction Telemetry", "TIT");
-            Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_ShutdownData, "Massive Energy Surge Analytics", "MESA");
-            Add(CatType.Manufactured, ItemType.Standard, MCMR.UnknownEnergycell, "Thargoid Energy Cell", "UKEC");
-            Add(CatType.Manufactured, ItemType.Standard, MCMR.TG_WreckageComponents, "Wreckage Components", "TGWC");
-            Add(CatType.Manufactured, ItemType.Rare, MCMR.TG_CausticCrystal, "Caustic Crystal", "CACR");
-            Add(CatType.Manufactured, ItemType.Rare, MCMR.TG_WeaponParts, "Weapon Parts", "WP");
-            Add(CatType.Manufactured, ItemType.Rare, MCMR.UnknownTechnologyComponents, "Thargoid Technological Components", "UKTC");
-            Add(CatType.Manufactured, ItemType.VeryRare, MCMR.TG_Abrasion01, "Heat Exposure Specimen", "HEXS");
-            Add(CatType.Manufactured, ItemType.VeryRare, MCMR.TG_PropulsionElement, "Propulsion Elements", "PE");
-            Add(CatType.Manufactured, ItemType.VeryRare, MCMR.Unknownenergysource, "Sensor Fragment", "UES");
-            Add(CatType.Manufactured, ItemType.VeryRare, MCMR.UnknownOrganicCircuitry, "Thargoid Organic Circuitry", "UKOC");
+            Add(CatType.Manufactured, ItemType.VeryCommon, MaterialGroupType.ManufacturedGuardian, MCMR.Guardian_PowerCell, "Guardian Power Cell", "GPCe");
+            Add(CatType.Manufactured, ItemType.VeryCommon, MaterialGroupType.ManufacturedGuardian, MCMR.Guardian_Sentinel_WreckageComponents, "Guardian Wreckage Components", "GSWC");
+            Add(CatType.Manufactured, ItemType.VeryCommon, MaterialGroupType.ManufacturedThargoid1, MCMR.TG_Abrasion03, "Hardened Surface Fragments", "HSF");
+            Add(CatType.Manufactured, ItemType.Common, MaterialGroupType.ManufacturedGuardian, MCMR.Guardian_PowerConduit, "Guardian Power Conduit", "GPC");
+            Add(CatType.Manufactured, ItemType.Common, MaterialGroupType.ManufacturedThargoid1, MCMR.UnknownCarapace, "Thargoid Carapace", "UKCP");
+            Add(CatType.Manufactured, ItemType.Common, MaterialGroupType.ManufacturedThargoid1, MCMR.UnknownCoreChip, "Tactical Core Chip", "TCC");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedGuardian, MCMR.Guardian_Sentinel_WeaponParts, "Guardian Sentinel Weapon Parts", "GSWP");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedGuardian, MCMR.Guardian_TechComponent, "Guardian Technology Component", "GTC");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedThargoid1, MCMR.TG_Abrasion02, "Phasing Membrane Residue", "PMR");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedThargoid1, MCMR.TG_BioMechanicalConduits, "Bio-Mechanical Conduits", "BMC");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedThargoid2, MCMR.TG_CausticGeneratorParts, "Corrosive Mechanisms", "COMEC");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedThargoid2, MCMR.TG_CausticShard, "Caustic Shard", "CASH");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedThargoid2, MCMR.UnknownEnergycell, "Thargoid Energy Cell", "UKEC");
+            Add(CatType.Manufactured, ItemType.Standard, MaterialGroupType.ManufacturedThargoid2, MCMR.TG_WreckageComponents, "Wreckage Components", "TGWC");
+            Add(CatType.Manufactured, ItemType.Rare, MaterialGroupType.ManufacturedThargoid2, MCMR.TG_CausticCrystal, "Caustic Crystal", "CACR");
+            Add(CatType.Manufactured, ItemType.Rare, MaterialGroupType.ManufacturedThargoid3, MCMR.TG_WeaponParts, "Weapon Parts", "WP");
+            Add(CatType.Manufactured, ItemType.Rare, MaterialGroupType.ManufacturedThargoid3, MCMR.UnknownTechnologyComponents, "Thargoid Technological Components", "UKTC");
+            Add(CatType.Manufactured, ItemType.VeryRare, MaterialGroupType.ManufacturedThargoid3, MCMR.TG_Abrasion01, "Heat Exposure Specimen", "HEXS");
+            Add(CatType.Manufactured, ItemType.VeryRare, MaterialGroupType.ManufacturedThargoid3, MCMR.TG_PropulsionElement, "Propulsion Elements", "PE");
+            Add(CatType.Manufactured, ItemType.VeryRare, MaterialGroupType.ManufacturedThargoid3, MCMR.Unknownenergysource, "Sensor Fragment", "UES");
+            Add(CatType.Manufactured, ItemType.VeryRare, MaterialGroupType.ManufacturedThargoid4, MCMR.UnknownOrganicCircuitry, "Thargoid Organic Circuitry", "UKOC");
 
             #endregion
 

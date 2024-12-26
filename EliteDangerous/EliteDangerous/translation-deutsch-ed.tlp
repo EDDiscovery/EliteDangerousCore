@@ -917,7 +917,20 @@ SECTION MaterialCommodityMicroResourceType
 .powerpropagandadata: "Power Political Data" => "Macht-Politikdaten"
 .powerclassifieddata: "Power Classified Data" => "Macht-Geheimdaten"
 .powermegashipdata: "Power Megaship Data" => "Macht-Megaschiffdaten"
-.unknowncorechip: "Tactical Core Chip" @
+.biomechanicalcomponent: "Spire Refinery Compound" => "Spitzen-Raffinerie-Verbindung"
+.sabotagedcomponent: "Contaminated Spire Compound" => "Kontaminierte Spitzen-Verbindung"
+.tg_structuraldata02: "Thargoid Capital Ship Data" => "Thargoiden-Großkampfschiff-Daten"
+.searchrescuevoucher: "Search and Rescue Voucher" => "Suchen und Retten Beleg"
+.unknowncorechip: "Tactical Core Chip" = MaterialCommodityMicroResourceType.tacticalcorechip
+.EncodedGuardian: "Encoded Guardian" => "Kodiert Guardian"
+.EncodedGuardianObelisk: "Encoded Guardian Obelisk" => "Kodiert Guardian Obelisk"
+.EncodedThargoid1: "Encoded Thargoid 1" => "Kodiert Thargoid 1"
+.EncodedThargoid2: "Encoded Thargoid 2" => "Kodiert Thargoid 2"
+.ManufacturedGuardian: "Manufactured Guardian" => "Gefertigt Guardian"
+.ManufacturedThargoid1: "Manufactured Thargoid 1" => "Gefertigt Thargoid 1"
+.ManufacturedThargoid2: "Manufactured Thargoid 2" => "Gefertigt Thargoid 2"
+.ManufacturedThargoid3: "Manufactured Thargoid 3" => "Gefertigt Thargoid 3"
+.ManufacturedThargoid4: "Manufactured Thargoid 4" => "Gefertigt Thargoid 4"
 
 SECTION EngineeringData
 
@@ -1379,6 +1392,7 @@ SECTION ModulePartNames
 .Xeno_Scanner: "Xeno Scanner" => "Xeno-Scanner"
 .Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" => "Verbesserter Xenoscanner"
 .Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" => "Impulswellen-Xeno-Scanner"
+.Concord_Cannon: "Concord Cannon" => "Concord-Kanone"
 
 SECTION ShipSlots
 

@@ -7562,6 +7562,7 @@ namespace EliteDangerousCore
                 {"paintjob_viper_flag_usa_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Flag Usa 5") },
                 {"paintjob_viper_flag_usa_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Flag Usa 6") },
                 {"paintjob_viper_fullmetal_bronze", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Fullmetal Bronze") },
+                {"paintjob_viper_fullmetal_malachite", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Fullmetal Malachite") },
                 {"paintjob_viper_fullmetal_paladium", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Fullmetal Paladium") },
                 {"paintjob_viper_lrpo_azure", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Lrpo Azure") },
                 {"paintjob_viper_merc", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Merc") },
