@@ -1229,7 +1229,7 @@ SECTION AtmosphereTypes
 .Helium_Thick: "Thick Helium Atmosphere" => "Atmósfera densa de helio"
 .Helium_Thin: "Thin Helium Atmosphere" => "Atmósfera tenue de helio"
 .Metallic_Vapour_Hot_Thick: "Hot Thick Metallic Vapour Atmosphere" => "Atmósfera caliente y densa de vapor metálico"
-.Methane: "Methane Atmosphere" > "Atmósfera de metano"
+.Methane: "Methane Atmosphere" => "Atmósfera de metano"
 .Methane_Hot_Thick: "Hot Thick Methane Atmosphere" => "Atmósfera caliente y densa de metano"
 .Methane_Hot_Thick_Rich: "Hot Thick Methane Rich Atmosphere" => "Atmósfera caliente, densa y rica en metano"
 .Methane_Rich: "Methane Rich Atmosphere" => "Atmósfera rica en metano"
@@ -1269,6 +1269,7 @@ SECTION AtmosphereTypes
 .Water_Thin_Rich: "Thin Water Rich Atmosphere" => "Atmósfera tenue y rica en agua"
 .Ammonia_Thin_Rich: "Thin Ammonia Rich Atmosphere" => "Atmósfera tenue y rica en amoníaco"
 .Argon_Hot: "Hot Argon Atmosphere" => "Atmósfera caliente de argón"
+.Argon_Hot_Rich: "Hot Argon Rich Atmosphere" => "Atmósfera caliente y rica en argón"
 .Metallic_Vapour_Hot: "Hot Metallic Vapour Atmosphere" => "Atmósfera caliente de vapor metálico"
 .Metallic_Vapour_Hot_Thin: "Hot Thin Metallic Vapour Atmosphere" => "Atmósfera caliente y tenue de vapor metálico"
 
