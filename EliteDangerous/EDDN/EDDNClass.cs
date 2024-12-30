@@ -361,7 +361,7 @@ namespace EliteDangerousCore.EDDN
                     ["Type"] = true
                 }
             },
-            ["Genus"] = new JArray
+            ["Genuses"] = new JArray
             {
                 new JObject
                 {
