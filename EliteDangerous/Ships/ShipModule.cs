@@ -85,7 +85,7 @@ namespace EliteDangerousCore
         public double Mass()
         {
             var unmass = GetModuleUnengineered();
-            if (unmass.Mass != null)
+            if (unmass?.Mass != null)
             {
                 return GetModuleEngineered(out string _).Mass.Value;       
             }
