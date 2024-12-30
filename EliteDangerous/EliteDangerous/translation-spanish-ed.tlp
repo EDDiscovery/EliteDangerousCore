@@ -1,34 +1,34 @@
 ﻿
 SECTION Bodies
 
-.HMS: "Luminous Hot {0} class star" => "Estrella luminosa de secuencia principal {0}"
+.HMS: "Luminous Hot {0} class star" => "Estrella luminosa y caliente de la secuencia principal {0}"
 .BMS: "Luminous Blue {0} class star" => "Estrella {0} de secuencia principal azul luminosa"
 .BWMS: "Bluish-White {0} class star" => "Estrella {0} de secuencia principal blanco azulado"
 .WMS: "White {0} class star" => "Estrella blanca de la secuencia principal {0}"
 .YMS: "Yellow {0} class star" => "Estrella amarilla de la secuencia principal {0}"
 .OMS: "Orange {0} class star" => "Estrella naranja de la secuencia principal {0}"
 .RMS: "Red {0} class star" => "Estrella roja de la secuencia principal {0}"
-.DRNS: "Dark Red {0} class star" => "Estrella {0} de secuencia no principal roja oscura"
+.DRNS: "Dark Red {0} class star" => "Estrella {0} de la secuencia principal roja oscura"
 .MD: "Methane Dwarf T class star" => "Estrella enana de metano"
 .BD: "Brown Dwarf Y class star" => "Estrella enana marrón"
 .Herbig: "Herbig Ae/Be class star" => "Herbig Ae/Be"
 .TTauri: "T Tauri star" => "T Tauri"
-.WR: "Wolf-Rayet {0} class star" => "Wolf-Rayet {0} estrella"
+.WR: "Wolf-Rayet {0} class star" => "Estrella {0} Wolf-Rayet"
 .C: "Carbon {0} class star" => "Estrella {0} de carbono"
-.IZ: "Intermediate low Zirconium Monoxide MS class star" => "Estrella intermedia de tipo bajo de monóxido de circonio"
-.CGZ: "Cool Giant Zirconium Monoxide rich S class star" => "Estrella de tipo rico en monóxido de circonio gigante fresco"
-.WD: "White Dwarf {0} class star" => "White Dwarf {0} star"
-.NS: "Neutron Star" => "Estrella neutrón"
+.IZ: "Intermediate low Zirconium Monoxide MS class star" => "Estrella de clase MS intermedia de tipo bajo de monóxido de circonio"
+.CGZ: "Cool Giant Zirconium Monoxide rich S class star" => "Estrella fresca de clase S gigante rica en monóxido de circonio"
+.WD: "White Dwarf {0} class star" => "Estrella enana blanca de clase {0}"
+.NS: "Neutron Star" => "Estrella neutrones"
 .BH: "Black Hole" => "Agujero negro"
 .EX: "Exotic" => "Exótico"
 .SMBH: "Super Massive Black Hole" => "Agujero negro supermasivo"
-.ABSG: "A Blue White Super Giant" => "A Supergigante azul blanco"
-.BBSG: "B Blue White Super Giant" => "B Supergigante azul blanco"
-.FWSG: "F White Super Giant" => "F Super Gigante Blanco"
-.GWSG: "G White Super Giant" => "G Super Gigante Blanco"
-.MSR: "M Red Super Giant" => "M Red Super Giant"
-.MOG: "M Red Giant" => "M Red Giant"
-.KOG: "K Orange Giant" => "K Orange Giant"
+.ABSG: "A Blue White Super Giant" => "Super gigante azul blanco A"
+.BBSG: "B Blue White Super Giant" => "Super gigante azul blanco B"
+.FWSG: "F White Super Giant" => "Super Gigante Blanco F"
+.GWSG: "G White Super Giant" => "Super Gigante Blanco G"
+.MSR: "M Red Super Giant" => "Super Gigante Rojo M"
+.MOG: "M Red Giant" => "Gigante Rojo M"
+.KOG: "K Orange Giant" => "Gigante Naranja K"
 .RP: "Rogue Planet" => "Planeta pícaro"
 .Nebula: "Nebula" => "Nébula"
 .StellarRemnantNebula: "Stellar Remnant Nebula" => "Nébula de Restos Estelares"
@@ -38,25 +38,25 @@ SECTION Bodies
 SECTION EDPlanet
 
 .Metalrichbody: "Metal-rich body" => "Cuerpo rico en metales"
-.Highmetalcontentbody: "High metal content world" => "Mundo con alto contenido de metales"
+.Highmetalcontentbody: "High metal content world" => "Mundo con alto contenido en metales"
 .Rockybody: "Rocky body" => "Cuerpo rocoso"
 .Icybody: "Icy body" => "Cuerpo helado"
 .Rockyicebody: "Rocky ice world" => "Mundo rocoso de hielo"
 .Earthlikebody: "Earth-like world" => "Mundo Tipo Tierra"
 .Waterworld: "Water world" => "Mundo acuático"
 .Ammoniaworld: "Ammonia world" => "Mundo de Amoniaco"
-.Watergiant: "Water giant" => "Gigante de agua"
-.Watergiantwithlife: "Water giant with life" => "Gigante de agua con vida"
-.Gasgiantwithwaterbasedlife: "Gas giant with water-based life" => "Gigante de gas con vida acuática"
-.Gasgiantwithammoniabasedlife: "Gas giant with ammonia-based life" => "Gigante de gas con vida basada en amoniaco"
+.Watergiant: "Water giant" => "Gigante acuático"
+.Watergiantwithlife: "Water giant with life" => "Gigante acuático con vida"
+.Gasgiantwithwaterbasedlife: "Gas giant with water-based life" => "Gigante gaseoso con vida basada en el agua"
+.Gasgiantwithammoniabasedlife: "Gas giant with ammonia-based life" => "Gigante gaseoso con vida basada en amoniaco"
 .SudarskyclassIgasgiant: "Class I gas giant" => "Gigante gaseoso de clase I"
 .SudarskyclassIIgasgiant: "Class II gas giant" => "Gigante gaseoso de clase II"
 .SudarskyclassIIIgasgiant: "Class III gas giant" => "Gigante gaseoso de clase III"
 .SudarskyclassIVgasgiant: "Class IV gas giant" => "Gigante gaseoso de clase IV"
 .SudarskyclassVgasgiant: "Class V gas giant" => "Gigante gaseoso de clase V"
 .Heliumrichgasgiant: "Helium-rich gas giant" => "Gigante gaseoso rico en helio"
-.Heliumgasgiant: "Helium gas giant" => "Gigante de gas helio"
-.Unknown: "Unknown planet type" => "Tipo de planeta desconocido"
+.Heliumgasgiant: "Helium gas giant" => "Gigante gaseoso de helio"
+.Unknown: "Unknown planet type" => "Planeta de tipo desconocido"
 
 SECTION MaterialCommodityMicroResourceType
 
@@ -1202,7 +1202,7 @@ SECTION StarportStates
 SECTION StarportTypes
 
 .Unknown: "Unknown" = Allegiances.Unknown
-.AsteroidBase: "Asteroid Base" @
+.AsteroidBase: "Asteroid Base" => "Base de Asteroide"
 .Coriolis: "Coriolis" @
 .FleetCarrier: "Fleet Carrier" = GovernmentTypes.Carrier
 .Megaship: "Megaship" => "Meganave"
@@ -1301,7 +1301,7 @@ SECTION ModulePartNames
 .Advanced_Docking_Computer: "Advanced Docking Computer" => "Computadora de Aterrizaje Avanzada"
 .Fighter_Hangar: "Fighter Hangar" => "Hangar de Caza"
 .Remote_Release_Flak_Launcher: "Remote Release Flak Launcher" => "Lanzador Antiaéreo Remoto"
-.Remote_Release_Flechette_Launcher: "Remote Release Flechette Launcher" @
+.Remote_Release_Flechette_Launcher: "Remote Release Flechette Launcher" => "Lanzador de Flechettes Remoto"
 .Frame_Shift_Drive_Interdictor: "Frame Shift Drive Interdictor" => "Interdictor de MDD"
 .Fuel_Scoop: "Fuel Scoop" => "Colector de Combustible"
 .Fuel_Tank: "Fuel Tank" => "Bodega de Carga (Tanque de Combustible)"
@@ -1366,7 +1366,7 @@ SECTION ModulePartNames
 .Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" => "Hangar de Vehículo Planetario"
 .Plasma_Accelerator: "Plasma Accelerator" => "Acelerador de Plasma"
 .Advanced_Plasma_Accelerator: "Advanced Plasma Accelerator" => "Acelerador de Plasma Avanzado"
-.Shock_Cannon: "Shock Cannon" @
+.Shock_Cannon: "Shock Cannon" => "Cañón de Impacto"
 .Power_Distributor: "Power Distributor" => "Distribuidor de Energía"
 .Power_Plant: "Power Plant" => "Núcleo de Energía"
 .Pulse_Laser: "Pulse Laser" => "Láser de Pulsos"
@@ -1384,7 +1384,7 @@ SECTION ModulePartNames
 .Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" => "Neutralizador de Campo de Desactivación"
 .Thargoid_Pulse_Neutraliser: "Thargoid Pulse Neutraliser" => "Neutralizador de Pulsos Thargoide"
 .Experimental_Weapon_Stabiliser: "Experimental Weapon Stabiliser" => "Estabilizador de Armas Experimentales"
-.Supercruise_Assist: "Supercruise Assist" => "Asistencia de Supercrusero"
+.Supercruise_Assist: "Supercruise Assist" => "Asistencia de Supercrucero"
 .Stellar_Body_Discovery_Scanner: "Stellar Body Discovery Scanner" @
 .Intermediate: "Intermediate" => "Intermedio"
 .Thrusters: "Thrusters" => "Impulsores"
@@ -1392,7 +1392,7 @@ SECTION ModulePartNames
 .Xeno_Scanner: "Xeno Scanner" => "Escáner Xeno"
 .Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" => "Xenoescáner Mejorado"
 .Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" => "Xenoescáner de Onda de Pulsos"
-.Concord_Cannon: "Concord Cannon" @
+.Concord_Cannon: "Concord Cannon" => "Cañón de Concordia"
 
 SECTION ShipSlots
 
