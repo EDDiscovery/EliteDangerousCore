@@ -412,99 +412,102 @@ namespace EliteDangerousCore
 
                 foreach (var modkvp in Modules)
                 {
-                    var me = modkvp.Value.GetModuleEngineered(out string _);
+                    var me = modkvp.Value.GetModuleEngineered(out string _);        // may be null if no loadout present, due to crap journal
 
-                    if (me.HullReinforcement.HasValue)    // hull reinforcements , Guardian Hull, meta allow hulls
+                    if (me != null)
                     {
-                        hullrnf += me.HullReinforcement.Value;
-                        if (me.KineticResistance.HasValue) // hull reinforcements (ihrp = hull, guardian hull, imahrp = meta alloy)
+                        if ( me.HullReinforcement.HasValue)    // hull reinforcements , Guardian Hull, meta allow hulls
                         {
-                            double kinmod = (1 - me.KineticResistance.Value / 100.0);
-                            kinmod_ihrp *= kinmod;
-                            kinmin_ihrp = Math.Min(kinmin_ihrp, kinmod);
+                            hullrnf += me.HullReinforcement.Value;
+                            if (me.KineticResistance.HasValue) // hull reinforcements (ihrp = hull, guardian hull, imahrp = meta alloy)
+                            {
+                                double kinmod = (1 - me.KineticResistance.Value / 100.0);
+                                kinmod_ihrp *= kinmod;
+                                kinmin_ihrp = Math.Min(kinmin_ihrp, kinmod);
+                            }
+                            if (me.ThermalResistance.HasValue) // hull reinforcements, guardian hull
+                            {
+                                double thmmod = (1 - me.ThermalResistance.Value / 100.0);
+                                thmmod_ihrp *= thmmod;
+                                thmmin_ihrp = Math.Min(thmmin_ihrp, thmmod);
+                            }
+                            if (me.ExplosiveResistance.HasValue)  // hull reinforcements
+                            {
+                                double expmod = (1 - me.ExplosiveResistance.Value / 100.0);
+                                expmod_ihrp *= expmod;
+                                expmin_ihrp = Math.Min(expmin_ihrp, expmod);
+                            }
+                            if (me.CausticResistance.HasValue)  // meta allow hull , guardian hull
+                            {
+                                double caumod = (1 - me.CausticResistance.Value / 100.0);
+                                caumod_ihrp *= caumod;
+                                caumin_ihrp = Math.Min(caumin_ihrp, caumod);
+                            }
                         }
-                        if (me.ThermalResistance.HasValue) // hull reinforcements, guardian hull
+
+                        if (me.HullStrengthBonus.HasValue)      // armour
+                            hullbst += me.HullStrengthBonus.Value;
+
+                        if (me.ModType == ItemData.ShipModule.ModuleTypes.ShieldBooster) //  shieldbst
                         {
-                            double thmmod = (1 - me.ThermalResistance.Value / 100.0);
-                            thmmod_ihrp *= thmmod;
-                            thmmin_ihrp = Math.Min(thmmin_ihrp, thmmod);
+                            shieldbst += me.ShieldReinforcement.Value;
+                            kinmod_usb *= (1 - (me.KineticResistance.Value / 100));
+                            thmmod_usb *= (1 - (me.ThermalResistance.Value / 100));
+                            expmod_usb *= (1 - (me.ExplosiveResistance.Value / 100));
+                            caumod_usb *= (1 - ((me.CausticResistance ?? 0) / 100));      // not present currently
                         }
-                        if (me.ExplosiveResistance.HasValue)  // hull reinforcements
+
+                        if (me.ModType == ItemData.ShipModule.ModuleTypes.GuardianShieldReinforcement) // shieldrnf
+                            shieldrnf += me.AdditionalReinforcement.Value;
+
+                        if (me.IsHardpoint)
                         {
-                            double expmod = (1 - me.ExplosiveResistance.Value / 100.0);
-                            expmod_ihrp *= expmod;
-                            expmin_ihrp = Math.Min(expmin_ihrp, expmod);
-                        }
-                        if (me.CausticResistance.HasValue)  // meta allow hull , guardian hull
-                        {
-                            double caumod = (1 - me.CausticResistance.Value / 100.0);
-                            caumod_ihrp *= caumod;
-                            caumin_ihrp = Math.Min(caumin_ihrp, caumod);
-                        }
-                    }
+                            var thmload = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermalLoad), 1);      // should always be there
+                            var distdraw = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.DistributorDraw), 1);// should always be there
+                            var ammoclip = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.Clip), 0);       // if weapon does not have limits, is 0
+                            var ammomax = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.Ammo), 0);
+                            var eps = me.getEffectiveAttrValue("eps");
+                            var seps = me.getEffectiveAttrValue("seps");
+                            var spc = me.getEffectiveAttrValue("spc", 1);
+                            if (spc == 0)
+                                spc = 1;
+                            var sspc = me.getEffectiveAttrValue("sspc", 1);
+                            if (sspc == 0)
+                                sspc = 1;
+                            var sfpc = me.getEffectiveAttrValue("sfpc");
+                            var sdps = me.getEffectiveAttrValue("sdps");
 
-                    if (me.HullStrengthBonus.HasValue)      // armour
-                        hullbst += me.HullStrengthBonus.Value;
+                            System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: {thmload} {distdraw} {ammoclip} {ammomax} eps {eps} seps {seps} spc {spc} sspc {sspc} sfpc {sfpc} sdps {sdps}");
 
-                    if (me.ModType == ItemData.ShipModule.ModuleTypes.ShieldBooster) //  shieldbst
-                    {
-                        shieldbst += me.ShieldReinforcement.Value;
-                        kinmod_usb *= (1 - (me.KineticResistance.Value / 100));
-                        thmmod_usb *= (1 - (me.ThermalResistance.Value / 100));
-                        expmod_usb *= (1 - (me.ExplosiveResistance.Value / 100));
-                        caumod_usb *= (1 - ((me.CausticResistance ?? 0) / 100));      // not present currently
-                    }
+                            thmload *= sfpc / sspc;
+                            thmload_hardpoint_wepfull += getEffectiveWeaponThermalLoad(thmload, distdraw, wepcap, 1.0);
+                            thmload_hardpoint_wepempty += getEffectiveWeaponThermalLoad(thmload, distdraw, wepcap, 0.0);
 
-                    if (me.ModType == ItemData.ShipModule.ModuleTypes.GuardianShieldReinforcement) // shieldrnf
-                        shieldrnf += me.AdditionalReinforcement.Value;
+                            dps += sdps;
+                            var thm = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermalProportionDamage), 0);
+                            dps_abs += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.AbsoluteProportionDamage), 0) / 100.0;
+                            dps_thm += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermalProportionDamage), 0) / 100.0;
+                            dps_kin += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.KineticProportionDamage), 0) / 100.0;
+                            dps_exp += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ExplosiveProportionDamage), 0) / 100.0;
+                            dps_axe += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.AXPorportionDamage), 0) / 100.0;
+                            dps_cau += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.CausticPorportionDamage), 0) / 100.0;
 
-                    if (me.IsHardpoint)
-                    {
-                        var thmload = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermalLoad), 1);      // should always be there
-                        var distdraw = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.DistributorDraw), 1);// should always be there
-                        var ammoclip = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.Clip), 0);       // if weapon does not have limits, is 0
-                        var ammomax = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.Ammo), 0);
-                        var eps = me.getEffectiveAttrValue("eps");
-                        var seps = me.getEffectiveAttrValue("seps");
-                        var spc = me.getEffectiveAttrValue("spc", 1);
-                        if (spc == 0)
-                            spc = 1;
-                        var sspc = me.getEffectiveAttrValue("sspc",1);
-                        if (sspc == 0)
-                            sspc = 1;
-                        var sfpc = me.getEffectiveAttrValue("sfpc");
-                        var sdps = me.getEffectiveAttrValue("sdps");
+                            //System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: thmload {thmload} {thmload_hardpoint_wepfull} {thmload_hardpoint_wepempty}");
+                            //System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: dps {dps} {dps_abs} {dps_thm}");
 
-                        System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: {thmload} {distdraw} {ammoclip} {ammomax} eps {eps} seps {seps} spc {spc} sspc {sspc} sfpc {sfpc} sdps {sdps}");
+                            weapons.Add(new Tuple<double, double, double>(spc, eps, seps));
 
-                        thmload *= sfpc / sspc;
-                        thmload_hardpoint_wepfull += getEffectiveWeaponThermalLoad(thmload, distdraw, wepcap, 1.0);
-                        thmload_hardpoint_wepempty += getEffectiveWeaponThermalLoad(thmload, distdraw, wepcap, 0.0);
-
-                        dps += sdps;
-                        var thm = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermalProportionDamage), 0);
-                        dps_abs += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.AbsoluteProportionDamage), 0) / 100.0;
-                        dps_thm += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermalProportionDamage), 0) / 100.0;
-                        dps_kin += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.KineticProportionDamage), 0) / 100.0;
-                        dps_exp += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ExplosiveProportionDamage), 0) / 100.0;
-                        dps_axe += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.AXPorportionDamage), 0) / 100.0;
-                        dps_cau += sdps * me.getEffectiveAttrValue(nameof(ItemData.ShipModule.CausticPorportionDamage), 0) / 100.0;
-
-                        //System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: thmload {thmload} {thmload_hardpoint_wepfull} {thmload_hardpoint_wepempty}");
-                        //System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: dps {dps} {dps_abs} {dps_thm}");
-
-                        weapons.Add(new Tuple<double, double, double>(spc, eps, seps));
-
-                        var ammotime = ammoclip != 0 ? (sspc * ((ammoclip + ammomax) / sfpc)) : double.PositiveInfinity;
-                        if (distdraw!=0)
-                        {
-                            dps_distdraw += sdps;
-                            ammotime_wepcap = Math.Min(ammotime_wepcap, ammotime);
-                        }
-                        else
-                        {
-                            dps_nodistdraw += sdps;
-                            ammotime_nocap = Math.Min(ammotime_nocap, ammotime);
+                            var ammotime = ammoclip != 0 ? (sspc * ((ammoclip + ammomax) / sfpc)) : double.PositiveInfinity;
+                            if (distdraw != 0)
+                            {
+                                dps_distdraw += sdps;
+                                ammotime_wepcap = Math.Min(ammotime_wepcap, ammotime);
+                            }
+                            else
+                            {
+                                dps_nodistdraw += sdps;
+                                ammotime_nocap = Math.Min(ammotime_nocap, ammotime);
+                            }
                         }
 
                         //System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: nodistdraw {dps_nodistdraw} {dps_distdraw} {ammotime_wepcap} {ammotime_nocap}");
