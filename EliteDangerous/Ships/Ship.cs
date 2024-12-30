@@ -231,7 +231,7 @@ namespace EliteDangerousCore
             if (module != null)
             {
                 var spec = new EliteDangerousCalculations.FSDSpec(module.PowerConstant.Value, module.LinearConstant.Value, module.OptMass.Value, module.MaxFuelPerJump.Value);
-                var gmodules = FindShipModules(x => x.GetModuleUnengineered().ModType == ItemData.ShipModule.ModuleTypes.GuardianFSDBooster);
+                var gmodules = FindShipModules(x => x.GetModuleUnengineered()?.ModType == ItemData.ShipModule.ModuleTypes.GuardianFSDBooster);
                 if (gmodules.Length == 1)
                 {
                     spec.FSDGuardianBoosterRange = GetShipModulePropertiesEngineered(gmodules[0]).AdditionalRange.Value;
