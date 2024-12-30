@@ -214,14 +214,7 @@ namespace EliteDangerousCore.EDSM
                     toadd.Add(jfsd);
                 }
                 else
-                {                   // it is a duplicate, check if the first discovery flag is set right
-                    JournalFSDJump existingfsd = hlfsdlist[index].journalEntry as JournalFSDJump;
-
-                    if (existingfsd != null && existingfsd.EDSMFirstDiscover != jfsd.EDSMFirstDiscover)    // if we have a FSD one, and first discover is different
-                    {
-                        existingfsd.UpdateFirstDiscover(jfsd.EDSMFirstDiscover);
-                    }
-
+                {                   // it is a duplicate, update previdx to record last position
                     previdx = index;
                 }
             }
@@ -241,7 +234,8 @@ namespace EliteDangerousCore.EDSM
                     {
                         System.Diagnostics.Trace.WriteLine(string.Format("Add {0} {1}", jfsd.EventTimeUTC, jfsd.StarSystem));
                         jfsd.SetTLUCommander(tlu.ID, tlu.CommanderId.Value);        // update its TLU id to the TLU made above
-                        jfsd.Add(jfsd.CreateFSDJournalEntryJson(), cn, null);     // add it to the db with the JSON created
+                        var json = jfsd.CreateJsonOfFSDJournalEntry();
+                        jfsd.Add(json, cn, null);     // add it to the db with the JSON created
                     }
                 });
             }

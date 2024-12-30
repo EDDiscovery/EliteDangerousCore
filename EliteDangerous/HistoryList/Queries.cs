@@ -753,7 +753,7 @@ namespace EliteDangerousCore
                             if (wantbodiescount || varsbodies.Count > 0)
                             {
                                 int count = 0;
-                                foreach (var sn in he.ScanNode.SystemNode.Bodies.EmptyIfNull())
+                                foreach (var sn in he.ScanNode.SystemNode.Bodies().EmptyIfNull())
                                 {
                                     if (varsbodies.Count > 0 && sn.ScanData != null)
                                     {
@@ -772,7 +772,7 @@ namespace EliteDangerousCore
                             if (wantstarbodiescount || varsstarbodies.Count > 0)
                             {
                                 int count = 0;
-                                foreach (var sn in he.ScanNode.ParentStar.Bodies.EmptyIfNull())        // from parent star decending
+                                foreach (var sn in he.ScanNode.ParentStar.Bodies().EmptyIfNull())        // from parent star decending
                                 {
                                     if (varsstarbodies.Count > 0 && sn.ScanData != null)
                                     {
@@ -1046,7 +1046,7 @@ namespace EliteDangerousCore
 
                         lock (SystemNode)
                         {
-                            var bodies = name == "BodiesPropertyCount" ? SystemNode.Bodies : ParentStar.Bodies;
+                            var bodies = name == "BodiesPropertyCount" ? SystemNode.Bodies() : ParentStar.Bodies();
 
                             foreach (var b in bodies.EmptyIfNull())
                             {
@@ -1097,7 +1097,7 @@ namespace EliteDangerousCore
 
                             lock (SystemNode)
                             {
-                                var bodies = name == "BodiesExprCount" ? SystemNode.Bodies : ParentStar.Bodies;
+                                var bodies = name == "BodiesExprCount" ? SystemNode.Bodies() : ParentStar.Bodies();
 
                                 foreach (var b in bodies.EmptyIfNull())
                                 {

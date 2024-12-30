@@ -30,8 +30,11 @@ namespace EliteDangerousCore
 
         public string Name { get; set; }
 
+        [QuickJSON.JsonIgnore()]
         public int Xi { get; set; }
+        [QuickJSON.JsonIgnore()]
         public int Yi { get; set; }
+        [QuickJSON.JsonIgnore()]
         public int Zi { get; set; }
 
         public double X { get { return Xi >= int.MinValue ? (double)Xi / XYZScalar : double.NaN; } set { Xi = double.IsNaN(value) ? int.MinValue : (int)(value * XYZScalar); } }
@@ -40,10 +43,12 @@ namespace EliteDangerousCore
 
         public bool HasCoordinate { get { return Xi != int.MinValue; } }
 
+        [QuickJSON.JsonIgnore()]
         public int GridID { get; set; }
         public long? SystemAddress { get; set; }
         public long? EDSMID { get; set; }
 
+        [QuickJSON.JsonIgnore()]
         public object Tag { get; set; }
 
         public SystemClassBase()

@@ -84,7 +84,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public JournalSellSuit(DateTime utc, ulong id, string fdname, string locname, long price, int cmdrid) : base(utc,JournalTypeEnum.SellSuit,false)
+        public JournalSellSuit(DateTime utc, ulong id, string fdname, string locname, long price, int cmdrid) : base(utc,JournalTypeEnum.SellSuit)
         {
             SuitID = id; Name = fdname; Name_Localised = locname; price = Price;
             SetCommander(cmdrid);
@@ -425,7 +425,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (SuitID != ulong.MaxValue)
             {
-                var w = weap.Weapons.GetLast(SuitModuleID);
+                var w = weap.weapons.GetLast(SuitModuleID);
                 if (w != null && w.Sold == false)
                 {
                     shp.VerifyPresence(EventTimeUTC, LoadoutID, LoadoutName, SuitID, null);

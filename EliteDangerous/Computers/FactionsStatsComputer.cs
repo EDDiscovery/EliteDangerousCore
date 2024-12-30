@@ -182,7 +182,7 @@ namespace EliteDangerousCore
 
             if (statsinfo != null)
             {
-                foreach (var fkvp in statsinfo.GetFactionData())    // for all factions in statsinfo
+                foreach (var fkvp in statsinfo.FactionData)    // for all factions in statsinfo
                 {
                     if (!FactionList.TryGetValue(fkvp.Value.Faction, out FactionResults factionStats))   // is faction present? if not create
                         factionStats = FactionList[fkvp.Value.Faction] = new FactionResults(fkvp.Value.Faction);

@@ -262,9 +262,9 @@ namespace EliteDangerousCore.EDSM
                 json.RemoveWildcard("EDD*");        // remove any EDD specials
                 if (je.EventTypeID == JournalTypeEnum.FSDJump && json["FuelUsed"].IsNull())
                     json["_convertedNetlog"] = true;
-                if (json["StarPosFromEDSM"].Bool(false)) // Remove star pos from EDSM
+                if (json["StarPosFromEDSM"].Bool(false)) // Remove star pos from EDSM JSON send if this is set
                     json.Remove("StarPos");
-                json.Remove("StarPosFromEDSM");
+                json.Remove("StarPosFromEDSM");     // remove this from JSON send to EDSM
                 json["_systemName"] = he.System.Name;
                 json["_systemCoordinates"] = new JArray(he.System.X, he.System.Y, he.System.Z);
                 if (he.System.SystemAddress != null)
@@ -318,7 +318,6 @@ namespace EliteDangerousCore.EDSM
                                     if (systemCreated)
                                     {
                                         System.Diagnostics.Debug.WriteLine("** EDSM indicates first entry for " + he.System.Name);
-                                        (he.journalEntry as JournalFSDJump).UpdateFirstDiscover(true, cn, txn);
                                         firsts = firsts.AppendPrePad(he.System.Name, ";");
                                     }
                                 }

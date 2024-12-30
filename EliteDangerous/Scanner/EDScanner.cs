@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright 2016-2024 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -29,9 +29,8 @@ namespace EliteDangerousCore
 
     public class EDJournalUIScanner
     {
-        public Action<JournalEntry, StatusReader> OnNewRawJournalEntry;     // all journal entries before filtering
-        public Action<JournalEntry, StatusReader> OnNewFilteredJournalEntry;    // journal entries filtered out - all doing to the DB
-        public Action<UIEvent,StatusReader> OnNewUIEvent;       // ui events from status or journal entries filtered into ui events
+        public Action<JournalEntry, StatusReader> OnNewJournalEntry;    // journal entries reported goind to the DB. Only a few events don't hit the DB now. There is no merge filtering etc
+        public Action<UIEvent,StatusReader> OnNewUIEvent;               // ui events from status or journal entries converted into ui events
 
         public EDJournalUIScanner(Action<Action> invokeAsyncOnUiThread)
         {
@@ -105,7 +104,6 @@ namespace EliteDangerousCore
 
         private class Event
         {
-            public JournalEntry unfilteredje;  // holds either an unfiltered je, a filtered je, or an ui, plus its associated sr
             public JournalEntry je;        
             public UIEvent ui;
             public StatusReader sr;
@@ -126,13 +124,9 @@ namespace EliteDangerousCore
 
                 foreach (var ev in evret.Item1)
                 {
-                    events.Add(new Event() { unfilteredje = ev, sr = sw }); // feed an unfiltered event in
-                }
-                foreach (var ev in evret.Item2)
-                {
                     events.Add(new Event() { je = ev, sr = sw }); // feed an event in
                 }
-                foreach (var ev in evret.Item3)
+                foreach (var ev in evret.Item2)
                 {
                     events.Add(new Event() { ui = ev, sr = sw });   // find in an ui event
                 }
@@ -159,10 +153,8 @@ namespace EliteDangerousCore
 
             foreach (var e in entries)
             {
-                if (e.unfilteredje != null)
-                    OnNewRawJournalEntry?.Invoke(e.unfilteredje, e.sr);
                 if (e.je != null)
-                    OnNewFilteredJournalEntry?.Invoke(e.je, e.sr);
+                    OnNewJournalEntry?.Invoke(e.je, e.sr);
                 if (e.ui != null)
                     OnNewUIEvent?.Invoke(e.ui, e.sr);
                 if (StopRequested.WaitOne(0))

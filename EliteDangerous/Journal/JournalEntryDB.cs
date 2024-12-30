@@ -73,28 +73,6 @@ namespace EliteDangerousCore
             }
         }
 
-        public bool Update()
-        {
-            return UserDatabase.Instance.DBWrite<bool>(cn => { return Update(cn); });
-        }
-
-        private bool Update(SQLiteConnectionUser cn)
-        {
-            using (DbCommand cmd = cn.CreateCommand("Update JournalEntries set EventTime=@EventTime, TravelLogID=@TravelLogID, CommanderID=@CommanderID, EventTypeId=@EventTypeId, EventType=@EventStrName, Synced=@Synced where ID=@id"))
-            {
-                cmd.AddParameterWithValue("@ID", Id);
-                cmd.AddParameterWithValue("@EventTime", EventTimeUTC);  // MUST use UTC connection
-                cmd.AddParameterWithValue("@TravelLogID", TLUId);
-                cmd.AddParameterWithValue("@CommanderID", CommanderId);
-                cmd.AddParameterWithValue("@EventTypeId", EventTypeID);
-                cmd.AddParameterWithValue("@EventStrName", EventTypeStr);
-                cmd.AddParameterWithValue("@Synced", Synced);
-                cmd.ExecuteNonQuery();
-
-                return true;
-            }
-        }
-
         internal void UpdateJsonEntry(JObject jo, SQLiteConnectionUser cn, DbTransaction txn)
         {
             if ( JsonCached != null )
@@ -160,7 +138,7 @@ namespace EliteDangerousCore
             if (jo != null )
             {
                 jo["StarPos"] = new JArray() { pos.X, pos.Y, pos.Z };
-                jo["StarPosFromEDSM"] = true;
+                jo["StarPosFromEDSM"] = true;       // update star position in DB, by adding on star pos data, and mark entry as not being a journal sourced data
 
                 using (DbCommand cmd2 = cn.CreateCommand("Update JournalEntries set EventData = @EventData where ID = @ID"))
                 {
@@ -305,6 +283,7 @@ namespace EliteDangerousCore
         // ID, travellogid, commanderid, event json, sync flag
         // null if cancelled
 
+        [System.Diagnostics.DebuggerDisplay("{ID} {TLUID} {Cmdr} {Json}")]
         public class TableData
         {
             public long ID;
@@ -314,8 +293,14 @@ namespace EliteDangerousCore
             public int Syncflag;
         }
 
-        static public List<TableData> GetTableData(System.Threading.CancellationToken cancel, int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
-                             JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null)
+        static public List<TableData> GetTableData(System.Threading.CancellationToken cancel, 
+                        int commander = -999,
+                        DateTime? startdateutc = null,              // start/end date limit
+                        DateTime? enddateutc = null,
+                        JournalTypeEnum[] onlyidstoreport = null,   // ids before allidsafterutc
+                        DateTime? allidsafterutc = null,            // date where everything is loaded from
+                        JournalTypeEnum[] idstoreject = null,       // ids to ignore always
+                        long? tluid = null)                         // tluid to consider only
                              
         {
             // in the connection thread, construct the command and execute a read..
@@ -339,9 +324,14 @@ namespace EliteDangerousCore
                     condition = condition.AppendPrePad("EventTime <= @before", " and ");
                     cmd.AddParameterWithValue("@before", enddateutc.Value);
                 }
-                if (ids != null)
+                if (tluid != null)
                 {
-                    int[] array = Array.ConvertAll(ids, x => (int)x);
+                    condition = condition.AppendPrePad("TravelLogId = @tluid", " and ");
+                    cmd.AddParameterWithValue("@tluid", tluid.Value);
+                }
+                if (onlyidstoreport != null)
+                {
+                    int[] array = Array.ConvertAll(onlyidstoreport, x => (int)x);
                     if (allidsafterutc != null)
                     {
                         cmd.AddParameterWithValue("@idafter", allidsafterutc.Value);
@@ -351,6 +341,11 @@ namespace EliteDangerousCore
                     {
                         condition = condition.AppendPrePad("EventTypeId in (" + string.Join(",", array) + ")", " and ");
                     }
+                }
+                if (idstoreject != null)
+                {
+                    int[] array = Array.ConvertAll(idstoreject, x => (int)x);
+                    condition = condition.AppendPrePad("EventTypeId not in (" + string.Join(",", array) + ")", " and ");
                 }
 
                 if (condition.HasChars())
@@ -363,12 +358,12 @@ namespace EliteDangerousCore
                 int eno = 0;
                 using (var reader = cmd.ExecuteReader())
                 {
-                while (reader.Read())
-                {
-                    if (eno++ % 10000 == 0 && cancel.IsCancellationRequested)       // check every X entries
-                        return null;
+                    while (reader.Read())
+                    {
+                        if (eno++ % 10000 == 0 && cancel.IsCancellationRequested)       // check every X entries
+                            return null;
 
-                    jdata.Add(new TableData() { ID = (long)reader[0], TLUID = (long)reader[1], Cmdr = (int)(long)reader[2], Json = (string)reader[3], Syncflag = (int)(long)reader[4] });
+                        jdata.Add(new TableData() { ID = (long)reader[0], TLUID = (long)reader[1], Cmdr = (int)(long)reader[2], Json = (string)reader[3], Syncflag = (int)(long)reader[4] });
                     }
                 }
 
@@ -378,30 +373,23 @@ namespace EliteDangerousCore
 
         // Get All journals matching parameters. 
         // if cancelled, return empty array
-
         static public JournalEntry[] GetAll(System.Threading.CancellationToken cancel, 
                             int commander = -999, DateTime? startdateutc = null, DateTime? enddateutc = null,
-                            JournalTypeEnum[] ids = null, DateTime? allidsafterutc = null)
+                            JournalTypeEnum[] onlyidstoreport = null, DateTime? allidsafterutc = null)
                             
         {
-            var retlist = GetTableData(cancel, commander, startdateutc, enddateutc, ids, allidsafterutc);
+            var retlist = GetTableData(cancel, commander, startdateutc, enddateutc, onlyidstoreport, allidsafterutc);
 
             if (retlist != null)   // if not cancelled
             {
                 var jlist = CreateJournalEntries(retlist, cancel);
 
-                System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                GC.Collect();       // to try and lose the tabledata
-
                 if (jlist != null)  // if not cancelled, return it
-                {
                     return jlist;
-                }
             }
 
             return new JournalEntry[] { };  // default is empty array
         }
-
 
         public static List<JournalEntry> GetByEventType(JournalTypeEnum eventtype, int commanderid, DateTime startutc, DateTime stoputc)
         {
@@ -566,7 +554,7 @@ namespace EliteDangerousCore
         public static int RemoveDuplicateFSDEntries(int currentcmdrid)
         {
             // list of systems in journal, sorted by time
-            List<JournalFSDJump> vsSystemsEnts = GetAll(new System.Threading.CancellationToken(), currentcmdrid, ids: new[] { JournalTypeEnum.FSDJump }).OfType<JournalFSDJump>().OrderBy(j => j.EventTimeUTC).ToList();
+            List<JournalFSDJump> vsSystemsEnts = GetAll(new System.Threading.CancellationToken(), currentcmdrid, onlyidstoreport: new[] { JournalTypeEnum.FSDJump }).OfType<JournalFSDJump>().OrderBy(j => j.EventTimeUTC).ToList();
 
             int count = 0;
             UserDatabase.Instance.DBWrite(cn =>
@@ -593,6 +581,14 @@ namespace EliteDangerousCore
             return count;
         }
 
+        static public bool WriteJournals(DateTime? startdateutc, DateTime? enddateutc, string file)
+        {
+            var data = GetTableData(new System.Threading.CancellationToken(), startdateutc: startdateutc, enddateutc: enddateutc);
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            foreach (var row in data)
+                sb.AppendLine(row.Json);
+            return FileHelpers.TryWriteToFile(file, sb.ToString());
+        }
     }
 }
 

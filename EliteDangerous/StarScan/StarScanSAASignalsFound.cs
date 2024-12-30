@@ -68,7 +68,7 @@ namespace EliteDangerousCore
                     bool ringname = bodyname.EndsWith("A Ring") || bodyname.EndsWith("B Ring") || bodyname.EndsWith("C Ring") || bodyname.EndsWith("D Ring");
                     string ringcutname = ringname ? bodyname.Left(bodyname.Length - 6).TrimEnd() : null;
 
-                    foreach (var body in systemnode.Bodies)
+                    foreach (var body in systemnode.Bodies())
                     {
                         if ((body.BodyDesignator == bodyname || body.BodyName == bodyname) &&
                             (body.BodyDesignator != sys.Name || body.Level != 0))

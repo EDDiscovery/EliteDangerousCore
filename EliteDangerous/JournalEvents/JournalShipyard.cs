@@ -28,7 +28,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public JournalShipyard(DateTime utc, string sn, string sys, long mid, Tuple<long, string, long>[] list, int cmdrid, bool allowcobramkiv, bool horizons = true) :
-              base(utc, JournalTypeEnum.Shipyard, false)
+              base(utc, JournalTypeEnum.Shipyard)
         {
             MarketID = mid;
             Horizons = horizons;
@@ -250,7 +250,7 @@ namespace EliteDangerousCore.JournalEvents
             System = evt["System"].Str();
         }
 
-        public JournalShipyardSell(DateTime utc, string fdtype, ulong id, long price, int cmdrid) : base(utc, JournalTypeEnum.ShipyardSell, false)
+        public JournalShipyardSell(DateTime utc, string fdtype, ulong id, long price, int cmdrid) : base(utc, JournalTypeEnum.ShipyardSell)
         {
             ShipTypeFD = fdtype;
             SellShipId = id;

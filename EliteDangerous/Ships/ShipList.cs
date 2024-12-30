@@ -22,14 +22,14 @@ namespace EliteDangerousCore
     [System.Diagnostics.DebuggerDisplay("{currentid} ships {Ships.Count}")]
     public class ShipList
     {
-        public Dictionary<string, Ship> Ships { get; private set; }         // by shipid
+        public string CurrentShipID { get { return currentid; } }           // by shipid key
+        public Dictionary<string, Ship> Ships { get; private set; }         // by shipid key
 
-        public ShipModulesInStore StoredModules { get; private set; }                   // stored modules
+        public ShipModulesInStore StoredModules { get; private set; }       // stored modules
 
-        private Dictionary<string, string> itemlocalisation;
-
-        private string currentid;
         public bool HaveCurrentShip { get { return currentid != null; } }
+
+        [QuickJSON.JsonIgnore()]
         public Ship CurrentShip { get { return (HaveCurrentShip) ? Ships[currentid] : null; } }
 
         // IDs have been repeated, need more than just that
@@ -56,7 +56,7 @@ namespace EliteDangerousCore
             return (index >= 0) ? lst[index] : null;
         }
 
-        private ulong newsoldid = ulong.MaxValue/2;
+        private ulong newsoldid = ulong.MaxValue / 2;
 
         public ShipList()
         {
@@ -74,7 +74,7 @@ namespace EliteDangerousCore
             //System.Diagnostics.Debug.WriteLine("Loadout {0} {1} {2} {3}", id, ship, name, ident);
 
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
-            Ships[sid] = sm = sm.SetShipDetails(ship, shipfd, name, ident, 0, 0, HullValue, ModulesValue, Rebuy , unladenmass, reservefuelcap, hullhealth, Hot);     // update ship key, make a fresh one if required.
+            Ships[sid] = sm = sm.SetShipDetails(ship, shipfd, name, ident, 0, 0, HullValue, ModulesValue, Rebuy, unladenmass, reservefuelcap, hullhealth, Hot);     // update ship key, make a fresh one if required.
 
             //System.Diagnostics.Debug.WriteLine("Loadout " + sid);
 
@@ -214,8 +214,8 @@ namespace EliteDangerousCore
 
         public void ShipyardSwap(JournalShipyardSwap e, string station, string system)
         {
-            if ( e.StoreShipId.HasValue)    // if we have an old ship ID (old records do not)
-            { 
+            if (e.StoreShipId.HasValue)    // if we have an old ship ID (old records do not)
+            {
                 string oldship = Key(e.StoreOldShipFD, e.StoreShipId.Value);
 
                 if (Ships.ContainsKey(oldship))
@@ -305,9 +305,9 @@ namespace EliteDangerousCore
                 //System.Diagnostics.Debug.WriteLine(sid + " Stored info " + i.StarSystem + ":" + i.StationName + " transit" + i.InTransit);
 
                 Ship sm = EnsureShip(sid);              // this either gets current ship or makes a new one.
-                sm = sm.SetShipDetails(i.ShipType, i.ShipTypeFD,i.Name, hot:i.Hot);  // set up minimum stuff we know about it
+                sm = sm.SetShipDetails(i.ShipType, i.ShipTypeFD, i.Name, hot: i.Hot);  // set up minimum stuff we know about it
 
-                if ( !i.InTransit )                                 // if in transit, we don't know where it is, ignore
+                if (!i.InTransit)                                 // if in transit, we don't know where it is, ignore
                     sm = sm.Store(i.StationName, i.StarSystem);         // ship is not with us, its stored, so store it.
 
                 Ships[sid] = sm;
@@ -392,7 +392,7 @@ namespace EliteDangerousCore
             else
                 Ships[sid] = sm.RemoveModule(e.SlotFD, e.StoredItem);
 
-            StoredModules = StoredModules.StoreModule(e,sys);
+            StoredModules = StoredModules.StoreModule(e, sys);
             VerifyList();
         }
 
@@ -472,9 +472,9 @@ namespace EliteDangerousCore
 
         public void UIFuel(UIEvents.UIFuel e)       // called by controller if a new UI fuel is found
         {
-            if (HaveCurrentShip )
+            if (HaveCurrentShip)
             {
-                Ships[currentid] = CurrentShip.SetFuelLevel(e.Fuel,e.FuelRes);
+                Ships[currentid] = CurrentShip.SetFuelLevel(e.Fuel, e.FuelRes);
             }
             VerifyList();
         }
@@ -540,7 +540,7 @@ namespace EliteDangerousCore
         {
             //foreach( KeyValuePair<string,ShipInformation> i in Ships)
             //{
-                //System.Diagnostics.Debug.Assert(i.Value.ShipFD.HasChars());
+            //System.Diagnostics.Debug.Assert(i.Value.ShipFD.HasChars());
             //}
         }
 
@@ -566,6 +566,11 @@ namespace EliteDangerousCore
             return new Tuple<Ship, ShipModulesInStore>(CurrentShip, StoredModules);
         }
 
+        #endregion
+
+        #region vars
+        private Dictionary<string, string> itemlocalisation;
+        private string currentid;
         #endregion
     }
 

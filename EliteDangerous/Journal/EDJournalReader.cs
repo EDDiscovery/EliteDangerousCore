@@ -204,12 +204,6 @@ namespace EliteDangerousCore
 
             }
 
-            //if (Government == GovernmentDefinitions.Government.None)
-            //{
-            //    IsTrainingEvent = true;
-            //}
-
-
             // if in dynamic read during play, and its an additional file JE, and we are NOT a console commander, see if we can pick up extra info
 
             if (!inhistoryrefreshparse && (je is IAdditionalFiles) && !(EDCommander.GetCommander(cmdrid)?.ConsoleCommander ?? false) )
@@ -267,7 +261,7 @@ namespace EliteDangerousCore
         // reporting if we have read anything is important.. it causes the TLU pos to be updated 
         // add to the lists all unfiltered journal events, all events passed by the filter, and uievents generated from journal entries due to the filtering
         // historyrefreshparsing = reading from DB, else reading dynamically during play
-        public bool ReadJournal(List<JournalEntry> unfilteredjent, List<JournalEntry> filteredjent, List<UIEvent> uievents, bool historyrefreshparsing ) 
+        public bool ReadJournal(List<JournalEntry> jevents, List<UIEvent> uievents, bool historyrefreshparsing ) 
         {
             bool readanything = false;
 
@@ -298,78 +292,17 @@ namespace EliteDangerousCore
                         {
                             var dentry = StartEntries.Dequeue();
                             dentry.SetCommander(TravelLogUnit.CommanderId.Value);
-                            unfilteredjent.Add(dentry);
                             //System.Diagnostics.Debug.WriteLine("*** UnDelay " + dentry.JournalEntry.EventTypeStr);
-                            FilterEntriesGoingToDB(dentry, filteredjent, uievents);
+                            JournalEventsManagement.FilterJournalEntriesToDBUI(dentry, jevents, uievents);
                         }
 
                         //System.Diagnostics.Debug.WriteLine("*** Send  " + newentry.JournalEntry.EventTypeStr);
-                        unfilteredjent.Add(newentry);
-                        FilterEntriesGoingToDB(newentry, filteredjent, uievents);
+                        JournalEventsManagement.FilterJournalEntriesToDBUI(newentry, jevents, uievents); // add newentry to jevents and/or uievents
                     }
                 }
             }
         }
 
-        // Determine if we want an entry to be filtered out of the DB and turned into a UI event instead
-        // removes spurious useless stuff from the DB
-        private void FilterEntriesGoingToDB( JournalEntry newentry, List<JournalEntry> jent, List<UIEvent> uievents )
-        {
-            if (newentry.EventTypeID == JournalTypeEnum.Music)     // MANUALLY sync this list with ActionEventList.cs::EventList function
-            {
-                var jm = newentry as JournalEvents.JournalMusic;
-                uievents.Add(new UIEvents.UIMusic(jm.MusicTrack, jm.MusicTrackID, jm.EventTimeUTC, false));
-                return;
-            }
-            else if (newentry.EventTypeID == JournalTypeEnum.UnderAttack)
-            {
-                var ja = newentry as JournalEvents.JournalUnderAttack;
-                uievents.Add(new UIEvents.UIUnderAttack(ja.Target, ja.EventTimeUTC, false));
-                return;
-            }
-            else if (newentry.EventTypeID == JournalTypeEnum.SendText)
-            {
-                var jt = newentry as JournalEvents.JournalSendText;
-                if (jt.Command)
-                {
-                    uievents.Add(new UIEvents.UICommand(jt.Message, jt.To, jt.EventTimeUTC, false));
-                    return;
-                }
-            }
-            else if (newentry.EventTypeID == JournalTypeEnum.ShipTargeted)
-            {
-                var jst = newentry as JournalEvents.JournalShipTargeted;
-                if (jst.TargetLocked == false)
-                {
-                    uievents.Add(new UIEvents.UIShipTargeted(jst, jst.EventTimeUTC, false));
-                    return;
-                }
-
-            }
-            else if (newentry.EventTypeID == JournalTypeEnum.ReceiveText)
-            {
-                var jt = newentry as JournalEvents.JournalReceiveText;
-                if (jt.Channel == "Info")
-                {
-                    uievents.Add(new UIEvents.UIReceiveText(jt, jt.EventTimeUTC, false));
-                    return;
-                }
-            }
-            else if (newentry.EventTypeID == JournalTypeEnum.FSDTarget)
-            {
-                var jt = newentry as JournalEvents.JournalFSDTarget;
-                uievents.Add(new UIEvents.UIFSDTarget(jt, jt.EventTimeUTC, false));
-                return;
-            }
-            else if ( newentry.EventTypeID == JournalTypeEnum.NavRouteClear)
-            {
-                var jnc = newentry as JournalEvents.JournalNavRouteClear;
-                uievents.Add(new UIEvents.UINavRouteClear(jnc, jnc.EventTimeUTC, false));
-                return;
-            }
-
-            jent.Add(newentry);
-        }
     }
 }
 

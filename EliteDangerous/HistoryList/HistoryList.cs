@@ -44,10 +44,6 @@ namespace EliteDangerousCore
         public Dictionary<string, EDStar> StarClass { get; private set; } = new Dictionary<string, EDStar>();     // not in any particular order.
         public Stats Stats { get; private set; } = new Stats();               // stats on all entries, not generationally recorded
 
-        // History variables
-        public int CommanderId { get; private set; } = -999;                 // set by history load at end, indicating commander loaded
-
-
         // privates
         private List<HistoryEntry> historylist = new List<HistoryEntry>();  // oldest first here
 
@@ -138,15 +134,18 @@ namespace EliteDangerousCore
 
             List<JournalEntry.TableData> tabledata;
 
+            var idstoreject = EliteConfigInstance.InstanceOptions.DisableJournalRemoval ? null : JournalEventsManagement.NeverReadFromDBEvents;
+
             if (fullhistoryloaddaylimit > 0)            // if we are limiting 
             {
                 tabledata = JournalEntry.GetTableData(cancelRequested, commanderid, enddateutc:maxdateload,
-                    ids: loadedbeforelimitids, allidsafterutc: DateTime.UtcNow.Subtract(new TimeSpan(fullhistoryloaddaylimit, 0, 0, 0))
+                    onlyidstoreport: loadedbeforelimitids, allidsafterutc: DateTime.UtcNow.Subtract(new TimeSpan(fullhistoryloaddaylimit, 0, 0, 0)),
+                    idstoreject: idstoreject
                     );
             }
             else
             {
-                tabledata = JournalEntry.GetTableData(cancelRequested, commanderid, enddateutc:maxdateload);
+                tabledata = JournalEntry.GetTableData(cancelRequested, commanderid, enddateutc:maxdateload, idstoreject:idstoreject);
             }
  
             JournalEntry[] journalentries = new JournalEntry[0];       // default empty array so rest of code works
@@ -186,7 +185,9 @@ namespace EliteDangerousCore
                     reportProgress(100*eno/journalentries.Length, $"Creating Cmdr. {cmdname} history {(eno-1):N0}/{journalentries.Length:N0}");
                 }
 
-                if (MergeJournalEntries(hist.hlastprocessed?.journalEntry, je))        // if we merge, don't store into HE
+                // if we discard the entry, or we merge it into previous, don't add
+                if (JournalEventsManagement.DiscardHistoryReadJournalRecordsFromHistory(je) ||
+                    JournalEventsManagement.MergeJournalRecordsFromHistory(hist.hlastprocessed?.journalEntry, je))        // if we merge, don't store into HE
                 {
                     continue;
                 }
@@ -401,115 +402,11 @@ namespace EliteDangerousCore
             }
         }
 
-        // 0 = no delay, delay for attempts to merge items..  used by new entry mech only, not by historylist
-        public static int MergeTypeDelayForJournalEntries(JournalEntry je)   
-        {
-            if (je.EventTypeID == JournalTypeEnum.Friends)
-                return 2000;
-            else if (je.EventTypeID == JournalTypeEnum.FSSSignalDiscovered)
-                return 250;                                         // each one of these pushes it another 250ms into the future
-            else if (je.EventTypeID == JournalTypeEnum.FuelScoop)
-                return 10000;
-            else if (je.EventTypeID == JournalTypeEnum.ShipTargeted)
-                return 250;                                         // short, so normally does not merge unless your clicking around like mad
-            else
-                return 0;
-        }
 
-        // this allows journal entries to be merged into one before being made into a history entry
-        // true if to discard.  
-        public static bool MergeJournalEntries(JournalEntry prev, JournalEntry je)
-        {
-            if (prev != null && !EliteConfigInstance.InstanceOptions.DisableMerge)
-            {
-                bool prevsame = je.EventTypeID == prev.EventTypeID;
-
-                if (prevsame)
-                {
-                    if (je.EventTypeID == JournalTypeEnum.FuelScoop)  // merge scoops
-                    {
-                        EliteDangerousCore.JournalEvents.JournalFuelScoop jfs = je as EliteDangerousCore.JournalEvents.JournalFuelScoop;
-                        EliteDangerousCore.JournalEvents.JournalFuelScoop jfsprev = prev as EliteDangerousCore.JournalEvents.JournalFuelScoop;
-                        jfsprev.Scooped += jfs.Scooped;
-                        jfsprev.Total = jfs.Total;
-                        //System.Diagnostics.Debug.WriteLine("Merge FS " + jfsprev.EventTimeUTC);
-                        return true;
-                    }
-                    else if (je.EventTypeID == JournalTypeEnum.Friends) // merge friends
-                    {
-                        EliteDangerousCore.JournalEvents.JournalFriends jfprev = prev as EliteDangerousCore.JournalEvents.JournalFriends;
-                        EliteDangerousCore.JournalEvents.JournalFriends jf = je as EliteDangerousCore.JournalEvents.JournalFriends;
-                        jfprev.AddFriend(jf);
-                        //System.Diagnostics.Debug.WriteLine("Merge Friends " + jfprev.EventTimeUTC + " " + jfprev.NameList.Count);
-                        return true;
-                    }
-                    else if (je.EventTypeID == JournalTypeEnum.FSSSignalDiscovered)
-                    {
-                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalFSSSignalDiscovered;
-                        var jd = je as EliteDangerousCore.JournalEvents.JournalFSSSignalDiscovered;
-                        if (jdprev.Signals[0].SystemAddress == jd.Signals[0].SystemAddress)     // only if same system address
-                        {
-                            jdprev.Add(jd);
-                            return true;
-                        }
-                    }
-                    else if (je.EventTypeID == JournalTypeEnum.ShipTargeted)
-                    {
-                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalShipTargeted;
-                        var jd = je as EliteDangerousCore.JournalEvents.JournalShipTargeted;
-                        jdprev.Add(jd);
-                        return true;
-                    }
-                    else if (je.EventTypeID == JournalTypeEnum.FSSAllBodiesFound)
-                    {
-                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalFSSAllBodiesFound;
-                        var jd = je as EliteDangerousCore.JournalEvents.JournalFSSAllBodiesFound;
-                        if ( jdprev.SystemAddress == jd.SystemAddress && jdprev.Count == jd.Count)          // same system, repeat, remove.  seen instances of this
-                        {
-                          //  System.Diagnostics.Debug.WriteLine("Duplicate FSSAllBodiesFound **********");
-                            return true;
-                        }
-                    }
-                    else if (je.EventTypeID == JournalTypeEnum.ReceiveText)
-                    {
-                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalReceiveText;
-                        var jd = je as EliteDangerousCore.JournalEvents.JournalReceiveText;
-
-                        // merge if same channel 
-                        if (jd.Channel == jdprev.Channel)
-                        {
-                            jdprev.Add(jd);
-                            return true;
-                        }
-                    }
-                    else if (je.EventTypeID == JournalTypeEnum.ReservoirReplenished)
-                    {
-                        var jdprev = prev as EliteDangerousCore.JournalEvents.JournalReservoirReplenished;
-                        var jd = je as EliteDangerousCore.JournalEvents.JournalReservoirReplenished;
-
-                        if ( jd.FuelReservoir == jdprev.FuelReservoir)      // if we have the same reservior
-                        {
-                            // we are throwing away the current one (jd) and keeping jdprev.
-                            // If first time, we move into fuelstart the opening fuel main
-                            if (jdprev.FuelStart == null)           
-                                jdprev.FuelStart = jdprev.FuelMain;
-                            // move the updated fuel to jdprev.
-                            jdprev.FuelMain = jd.FuelMain;
-                            // and incremement the event count
-                            jdprev.FuelEvents = jdprev.FuelEvents == null ? 2 : jdprev.FuelEvents.Value + 1;
-                            return true;
-                        }
-                    }
-
-                }
-            }
-
-            return false;
-        }
-
+        // reorder/remove history entries to fix up some strange frontier behaviour
         private List<HistoryEntry> ReorderRemove(HistoryEntry he)
         {
-            if (EliteConfigInstance.InstanceOptions.DisableMerge)
+            if (EliteConfigInstance.InstanceOptions.DisableJournalMerge)
                 return new List<HistoryEntry> { he };
 
             if (historylist.Count > 0)

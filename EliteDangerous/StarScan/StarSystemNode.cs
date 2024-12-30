@@ -28,6 +28,8 @@ namespace EliteDangerousCore
             public ISystem System { get; set; }
 
             public SortedList<string, ScanNode> StarNodes { get; private set; } = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());   // node list
+            
+            [QuickJSON.JsonIgnore()]
             public SortedList<int, ScanNode> NodesByID { get; private set; } = new SortedList<int, ScanNode>();               // by ID list
             public SortedList<int, JournalScanBaryCentre> Barycentres { get; private set; } = new SortedList<int, JournalScanBaryCentre>();
             public int? FSSTotalBodies { get; set; }         // if we have FSSDiscoveryScan, this will be set
@@ -46,18 +48,15 @@ namespace EliteDangerousCore
                 NodesByID = new SortedList<int, ScanNode>();
             }
 
-            public IEnumerable<ScanNode> Bodies
+            public IEnumerable<ScanNode> Bodies()
             {
-                get
+                foreach (ScanNode sn in StarNodes.Values.EmptyIfNull())     // StarNodes is never empty, but defend
                 {
-                    foreach (ScanNode sn in StarNodes.Values.EmptyIfNull())     // StarNodes is never empty, but defend
-                    {
-                        yield return sn;
+                    yield return sn;
 
-                        foreach (ScanNode c in sn.Bodies)
-                        {
-                            yield return c;
-                        }
+                    foreach (ScanNode c in sn.Bodies())
+                    {
+                        yield return c;
                     }
                 }
             }
@@ -66,7 +65,7 @@ namespace EliteDangerousCore
             {
                 long value = 0;
 
-                foreach (var body in Bodies)
+                foreach (var body in Bodies())
                 {
                     if (body?.ScanData != null)
                     {
@@ -83,7 +82,7 @@ namespace EliteDangerousCore
             // first is primary star. longform means full text, else abbreviation
             public string StarTypesFound(bool bracketit = true, bool longform = false)
             {
-                var sortedset = (from x in Bodies where x.ScanData != null && x.NodeType == ScanNodeType.star orderby x.ScanData.DistanceFromArrivalLS select longform ? x.ScanData.StarTypeText : x.ScanData.StarClassificationAbv).ToList();
+                var sortedset = (from x in Bodies() where x.ScanData != null && x.NodeType == ScanNodeType.star orderby x.ScanData.DistanceFromArrivalLS select longform ? x.ScanData.StarTypeText : x.ScanData.StarClassificationAbv).ToList();
                 string s = string.Join("; ", sortedset);
                 if (bracketit && s.HasChars())
                     s = "(" + s + ")";
@@ -92,25 +91,25 @@ namespace EliteDangerousCore
 
             public int StarPlanetsWithData()      // This corresponds to FSSDiscoveryScan
             {
-                return Bodies.Where(b => (b.NodeType == ScanNodeType.star || b.NodeType == ScanNodeType.body) && b.ScanData != null).Count();
+                return Bodies().Where(b => (b.NodeType == ScanNodeType.star || b.NodeType == ScanNodeType.body) && b.ScanData != null).Count();
             }
             public int StarPlanetsWithData(bool includewebbodies)        // includewebbodies gives same total as above, false means only include ones which we have scanned
             {
-                return Bodies.Where(b => (b.NodeType == ScanNodeType.star || b.NodeType == ScanNodeType.body) && b.ScanData != null && (includewebbodies || !b.ScanData.IsWebSourced)).Count();
+                return Bodies().Where(b => (b.NodeType == ScanNodeType.star || b.NodeType == ScanNodeType.body) && b.ScanData != null && (includewebbodies || !b.ScanData.IsWebSourced)).Count();
             }
             public int StarsScanned()      // only stars
             {
-                return Bodies.Where(b => b.NodeType == ScanNodeType.star && b.ScanData != null).Count();
+                return Bodies().Where(b => b.NodeType == ScanNodeType.star && b.ScanData != null).Count();
             }
             public int BeltClusters() // number of belt clusters
             {
-                return Bodies.Where(b => b.NodeType == ScanNodeType.beltcluster && b.ScanData != null).Count();
+                return Bodies().Where(b => b.NodeType == ScanNodeType.beltcluster && b.ScanData != null).Count();
             }
 
             // finds full name "Oochorrs KP-A c16-0 2 a"
             public ScanNode Find(string fullnameinclsystemname)
             {
-                foreach (var b in Bodies)
+                foreach (var b in Bodies())
                 {
                     if (b.BodyDesignator.Equals(fullnameinclsystemname, StringComparison.InvariantCultureIgnoreCase))
                         return b;
@@ -121,7 +120,7 @@ namespace EliteDangerousCore
             // finds "Oochorrs KP-A c16-0 2 a" or "2 a" or a customname
             public ScanNode FindCustomNameOrFullname(string bodyname)
             {
-                foreach (var b in Bodies)
+                foreach (var b in Bodies())
                 {
                     if (b.BodyName.EqualsIIC(bodyname) || b.SystemBodyName.EqualsIIC(bodyname) || b.BodyDesignator.EqualsIIC(bodyname))
                         return b;
@@ -131,7 +130,7 @@ namespace EliteDangerousCore
 
             public ScanNode Find(JournalScan s)
             {
-                foreach (var b in Bodies)
+                foreach (var b in Bodies())
                 {
                     if (object.ReferenceEquals(b.ScanData,s))
                         return b;

@@ -23,11 +23,11 @@ namespace EliteDangerousCore
     {
         [System.Diagnostics.DebuggerDisplay("{ShipType_Localised} {ShipPrice}")]
         public class ShipyardItem : IEquatable<ShipyardItem>
-        {
-            public long id { get; set; }
-            public string ShipType { get; set; }             //FDName, direct from entries
-            public string ShipType_Localised { get; set; }
-            public long ShipPrice { get; set; }
+        {           
+            public long id { get; set; }                    // json from frontier shipyard.json
+            public string ShipType { get; set; }            // json, frontier, FDName, direct from entries
+            public string ShipType_Localised { get; set; }  // json, frontier
+            public long ShipPrice { get; set; }             // json, frontier
 
             public string FriendlyShipType { get; set; }   // from our database
 
@@ -51,20 +51,20 @@ namespace EliteDangerousCore
             }
         }
 
-        public ShipyardItem[] Ships { get; private set; }
         public string StationName { get; private set; }
         public string StarSystem { get; private set; }
-        public DateTime Datetime { get; private set; }
+        public DateTime DateTimeUTC { get; private set; }
+        public ShipyardItem[] Ships { get; private set; }
 
         public ShipYard()
         {
         }
 
-        public ShipYard(string st, string sy, DateTime dt , ShipyardItem[] it  )
+        public ShipYard(string st, string sy, DateTime utc , ShipyardItem[] it  )
         {
             StationName = st;
             StarSystem = sy;
-            Datetime = dt;
+            DateTimeUTC = utc;
             Ships = it;
             if ( Ships != null )
                 foreach (ShipYard.ShipyardItem i in Ships)
@@ -81,7 +81,7 @@ namespace EliteDangerousCore
 
         public string Ident()
         {
-            return StarSystem + ":" + StationName + " on " + EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Datetime).ToString();
+            return StarSystem + ":" + StationName + " on " + EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(DateTimeUTC).ToString();
         }
 
         public List<string> ShipList() { return (from x1 in Ships select x1.ShipType_Localised).ToList(); }
@@ -121,7 +121,7 @@ namespace EliteDangerousCore
                 if (!nolocrepeats || yards.Find(x => x.Location.Equals(yard.Location)) == null) // allow yard repeats or not in list
                 {
                     // if no last or different name or time is older..
-                    if (last == null || !yard.Location.Equals(last.Location) || (last.Datetime - yard.Datetime).TotalSeconds >= timeout)
+                    if (last == null || !yard.Location.Equals(last.Location) || (last.DateTimeUTC - yard.DateTimeUTC).TotalSeconds >= timeout)
                     {
                         yards.Add(yard);
                         last = yard;

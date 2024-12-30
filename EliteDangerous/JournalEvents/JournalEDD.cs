@@ -76,7 +76,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public JournalCommodityPricesBase(System.DateTime utc, JournalTypeEnum type, long? marketid, string station, string starsystem, int cmdrid)
-                                            : base(utc, type, false)
+                                            : base(utc, type)
         {
             MarketID = marketid;
             Station = station;

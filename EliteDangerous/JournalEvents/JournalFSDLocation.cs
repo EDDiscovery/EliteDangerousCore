@@ -25,7 +25,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StarSystem { get; set; }
         public EMK.LightGeometry.Vector3 StarPos { get; set; }
         public long? SystemAddress { get; set; }
-        public bool StarPosFromEDSM { get; set; }
+        public SystemSource LocOrJumpSource { get; set; } = SystemSource.FromJournal;     // this is the default..
 
         public string Faction { get; set; }         // System Faction - keep name for backwards compat.
         public FactionDefinitions.State FactionState { get; set; }       //may be null, FDName
@@ -50,7 +50,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string ControllingPower { get; set; }     // only for signal types of USS
 
-        protected JournalLocOrJump(DateTime utc, ISystem sys, JournalTypeEnum jtype, bool edsmsynced ) : base(utc, jtype, edsmsynced)
+        protected JournalLocOrJump(DateTime utc, ISystem sys, JournalTypeEnum jtype, bool edsmsynced ) : base(utc, jtype,  edsmsynced ? (int)SyncFlags.EDSM : 0)
         {
             StarSystem = sys.Name;
             SystemAddress = sys.SystemAddress;
@@ -60,7 +60,7 @@ namespace EliteDangerousCore.JournalEvents
         protected JournalLocOrJump(JObject evt, JournalTypeEnum jtype) : base(evt, jtype)
         {
             StarSystem = evt["StarSystem"].Str();
-            StarPosFromEDSM = evt["StarPosFromEDSM"].Bool(false);
+            LocOrJumpSource = evt["StarPosFromEDSM"].Bool(false) ? SystemSource.FromEDSM : SystemSource.FromJournal;
 
             EMK.LightGeometry.Vector3 pos = new EMK.LightGeometry.Vector3();
 
@@ -440,14 +440,11 @@ namespace EliteDangerousCore.JournalEvents
             MapColor = jm.Int(EDCommander.Current.MapColour);
             if (jm.IsNull())
                 evt["EDDMapColor"] = EDCommander.Current.MapColour;      // new entries get this default map colour if its not already there
-
-            EDSMFirstDiscover = evt["EDD_EDSMFirstDiscover"].Bool(false);
         }
 
-        public JournalFSDJump(DateTime utc, ISystem sys, int colour, bool first, bool edsmsynced) : base(utc, sys, JournalTypeEnum.FSDJump, edsmsynced)
+        public JournalFSDJump(DateTime utc, ISystem sys, int colour, bool edsmsynced) : base(utc, sys, JournalTypeEnum.FSDJump, edsmsynced)
         {
             MapColor = colour;
-            EDSMFirstDiscover = first;
         }
 
         public double JumpDist { get; set; }
@@ -456,7 +453,6 @@ namespace EliteDangerousCore.JournalEvents
         public int BoostUsed { get; set; }          // 1 = basic (25% x1.25), 2 = standard (50% x1.5), 3 = premium (100% x2 ), 4 = neutron (x4)
         public int MapColor { get; set; }
         public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
-        public bool EDSMFirstDiscover { get; set; }
         public string Body { get; set; }
         public int? BodyID { get; set; }
         public string BodyType { get; set; }
@@ -526,27 +522,7 @@ namespace EliteDangerousCore.JournalEvents
             });
         }
 
-        public void UpdateFirstDiscover(bool value)
-        {
-            UserDatabase.Instance.DBWrite(cn =>
-            {
-                UpdateFirstDiscover(value, cn, null);
-            });
-        }
-
-        internal void UpdateFirstDiscover(bool value, SQLiteConnectionUser cn, DbTransaction txn)
-        {
-            JObject jo = GetJson(Id, cn);
-
-            if (jo != null)
-            {
-                jo["EDD_EDSMFirstDiscover"] = value;
-                UpdateJsonEntry(jo, cn, txn);
-                EDSMFirstDiscover = value;
-            }
-        }
-
-        public JObject CreateFSDJournalEntryJson()          // minimal version, not the whole schebang
+        public JObject CreateJsonOfFSDJournalEntry()          // minimal version, not the whole schebang
         {
             JObject jo = new JObject();
             jo["timestamp"] = EventTimeUTC.ToStringZuluInvariant();
@@ -554,7 +530,7 @@ namespace EliteDangerousCore.JournalEvents
             jo["StarSystem"] = StarSystem;
             jo["StarPos"] = new JArray(StarPos.X, StarPos.Y, StarPos.Z);
             jo["EDDMapColor"] = MapColor;
-            jo["EDD_EDSMFirstDiscover"] = EDSMFirstDiscover;
+            jo["StarPosFromEDSM"] = true;       // mark as non journal sourced
             return jo;
         }
     }

@@ -30,7 +30,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public JournalOutfitting(DateTime utc, string sn, string sys, long mid, Tuple<long, string, long>[] list, int cmdrid, bool horizons = true) :
-            base(utc, JournalTypeEnum.Outfitting, false)
+            base(utc, JournalTypeEnum.Outfitting)
         {
             MarketID = mid;
             Horizons = horizons;

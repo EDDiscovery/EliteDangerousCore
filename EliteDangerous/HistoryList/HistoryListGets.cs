@@ -23,8 +23,10 @@ namespace EliteDangerousCore
     public partial class HistoryList 
     {
         #region General gets
+        public int CommanderId { get; private set; } = -999;                 // set by history load at end, indicating commander loaded
         public bool HistoryLoaded { get { return CommanderId > -999; } }      // history is loaded
         public bool IsRealCommanderId { get { return CommanderId >= 0; } }      // history is loaded with a non hidden commander log etc
+        public string CommanderName() { return EDCommander.GetCommander(CommanderId)?.Name ?? null; }
         public string LastSystem { get; private set; }                          // last system seen in
 
         public int Count { get { return historylist.Count; } }
@@ -307,7 +309,7 @@ namespace EliteDangerousCore
 
         #region Status
 
-        public HistoryEntryStatus.TravelStateType CurrentTravelState() { HistoryEntry he = GetLast; return (he != null) ? he.TravelState : HistoryEntryStatus.TravelStateType.Unknown; }     //safe methods
+        public HistoryEntryStatus.TravelStateType CurrentTravelState() { HistoryEntry he = GetLast; return (he != null) ? he.Status.TravelState : HistoryEntryStatus.TravelStateType.Unknown; }     //safe methods
         public ISystem CurrentSystem() { HistoryEntry he = GetLast; return (he != null) ? he.System : null; }  // current system
 
         public double DistanceCurrentTo(string system)          // from current, if we have one, to system, if its found.
@@ -323,7 +325,7 @@ namespace EliteDangerousCore
 
         public HistoryEntry GetByJID(long jid)
         {
-            return historylist.Find(x => x.Journalid == jid);
+            return historylist.FindLast(x => x.Journalid == jid);
         }
 
         public HistoryEntry GetByEntryNo(int entryno)
@@ -331,21 +333,12 @@ namespace EliteDangerousCore
             return (entryno >= 1 && entryno <= historylist.Count) ? historylist[entryno - 1] : null;
         }
 
-        public int GetIndex(long jid)
+        public int GetIndexOfJID(long jid)
         {
             return historylist.FindIndex(x => x.Journalid == jid);
         }
 
-        public HistoryEntry GetLast
-        {
-            get
-            {
-                if (historylist.Count > 0)
-                    return historylist[historylist.Count - 1];
-                else
-                    return null;
-            }
-        }
+        public HistoryEntry GetLast => historylist.LastOrDefault();
 
         // from athe, find where in a direction..
         // dir = 1 forward to newer, -1 backwards.  usecurrent means check athe entry.  returnlast means if we did not find it, return first or last
@@ -369,10 +362,9 @@ namespace EliteDangerousCore
         }
 
         // trilat
-
         public HistoryEntry GetLastLocation() { return historylist.FindLast(x => x.IsFSDLocationCarrierJump); }
 
-        // trippanel
+        // multiple
         public HistoryEntry GetLastHistoryEntry(Predicate<HistoryEntry> where)
         {
             return historylist.FindLast(where);
@@ -395,7 +387,7 @@ namespace EliteDangerousCore
             }
         }
 
-        // sysinfo, discoveryform
+        // sysinfo
         public HistoryEntry GetLastWithPosition() { return historylist.FindLast(x => x.System.HasCoordinate); }
 
         // everywhere

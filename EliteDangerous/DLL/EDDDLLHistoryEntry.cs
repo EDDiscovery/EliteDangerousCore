@@ -79,11 +79,11 @@ namespace EliteDangerousCore.DLL
                 y = he.System.Y,
                 z = he.System.Z,
                 travelleddistance = he.TravelledDistance,
-                travelledseconds = (long)he.TravelledSeconds.TotalSeconds,
+                travelledseconds = he.TravelledTimeSec,
                 islanded = he.Status.IsLandedInShipOrSRV,
                 isdocked = he.Status.IsDocked,
                 whereami = he.WhereAmI,
-                shiptype = he.Status.ShipType,      // 
+                shiptype = he.Status.ShipType,     
                 gamemode = he.Status.GameMode,
                 group = he.Status.Group,
                 credits = he.Credits,

@@ -149,7 +149,7 @@
     <Compile Include="Journal\EDJournalReader.cs" />
     <Compile Include="Journal\EDJournalMonitorWatcher.cs" />
     <Compile Include="JournalEvents\JournalMicroResources.cs" />
-    <Compile Include="Journal\JournalEssentialEvents.cs" />
+    <Compile Include="Journal\JournalEventsManagement.cs" />
     <Compile Include="Journal\JournalEntryDB.cs" />
     <Compile Include="Journal\JournalEnums.cs" />
     <Compile Include="Computers\JournalStatsComputer.cs" />
@@ -292,7 +292,7 @@
     </Compile>
     <Compile Include="Status\UIEvents.cs" />
     <Compile Include="Suit\SuitLoadouts.cs" />
-    <Compile Include="Suit\SuitWeapons.cs" />
+    <Compile Include="Suit\SuitWeaponsInformation.cs" />
     <Compile Include="Suit\SuitInformation.cs" />
     <Compile Include="SystemDB\EliteNameClassifier.cs" />
     <Compile Include="SystemDB\SQLiteConnectionSystem.cs" />

@@ -50,13 +50,16 @@ namespace EliteDangerousCore.JournalEvents
             Fighter = evt["Fighter"].BoolNull();
         }
 
-        public double Health { get; set; }
+        public double Health { get; set; }          // 0-1
         public bool? PlayerPilot { get; set; }      // 2.4+
         public bool? Fighter { get; set; }
+        public double? HealthPercentMax { get; set; }      // EDD addition for merging, in % 0-100
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build(";%", (int)(Health * 100));
+            return BaseUtils.FieldBuilder.Build(
+                ";% -> ", HealthPercentMax,
+                "<;%", (int)(Health * 100));
         }
     }
 

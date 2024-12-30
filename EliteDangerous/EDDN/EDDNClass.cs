@@ -431,7 +431,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from JSON Cloned
         public JObject CreateEDDNMessage(JournalFSDJump journal)
         {
-            if (!journal.HasCoordinate || journal.StarPosFromEDSM || journal.SystemAddress == null)
+            if (!journal.HasCoordinate || journal.LocOrJumpSource != SystemSource.FromJournal || journal.SystemAddress == null)
                 return null;
 
             JObject msg = new JObject();
@@ -447,9 +447,6 @@ namespace EliteDangerousCore.EDDN
             }
 
             if (message["FuelUsed"].IsNull() || message["SystemAddress"] == null)  // Old ED 2.1 messages has no Fuel used fields
-                return null;
-
-            if (message["StarPosFromEDSM"] != null)  // Reject systems recently updated with EDSM coords
                 return null;
 
             RemoveCommonKeys(message);
@@ -474,7 +471,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from JSON Cloned
         public JObject CreateEDDNMessage(JournalLocation journal)
         {
-            if (!journal.HasCoordinate || journal.StarPosFromEDSM || journal.SystemAddress == null)
+            if (!journal.HasCoordinate || journal.LocOrJumpSource != SystemSource.FromJournal|| journal.SystemAddress == null)
                 return null;
 
             JObject msg = new JObject();
@@ -488,9 +485,6 @@ namespace EliteDangerousCore.EDDN
             {
                 return null;
             }
-
-            if (message["StarPosFromEDSM"] != null)  // Reject systems recently updated with EDSM coords
-                return null;
 
             RemoveCommonKeys(message);
             RemoveFactionReputation(message);
@@ -513,7 +507,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message for journal from JSON Cloned
         public JObject CreateEDDNMessage(JournalCarrierJump journal)
         {
-            if (!journal.HasCoordinate || journal.StarPosFromEDSM || journal.SystemAddress == null)
+            if (!journal.HasCoordinate || journal.LocOrJumpSource != SystemSource.FromJournal|| journal.SystemAddress == null)
                 return null;
 
             JObject msg = new JObject();
@@ -527,9 +521,6 @@ namespace EliteDangerousCore.EDDN
             {
                 return null;
             }
-
-            if (message["StarPosFromEDSM"] != null)  // Reject systems recently updated with EDSM coords
-                return null;
 
             RemoveCommonKeys(message);
             RemoveFactionReputation(message);

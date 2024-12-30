@@ -63,7 +63,7 @@ namespace EliteDangerousCore
                     // no designation, or same designation AND not a star
                     if ((sc.BodyDesignation == null || sc.BodyDesignation == sc.Body) && (sc.Body != sc.StarSystem || sc.BodyType != "Star"))
                     {
-                        foreach (var body in systemnode.Bodies)
+                        foreach (var body in systemnode.Bodies())
                         {
                             if ((body.BodyDesignator == sc.Body || body.BodyName == sc.Body) &&
                                 (body.BodyDesignator != sc.StarSystem || (sc.BodyType == "Star" && body.Level == 0) || (sc.BodyType != "Star" && body.Level != 0)))
@@ -78,7 +78,7 @@ namespace EliteDangerousCore
                     // else just try and find any matches
                     if (scannode == null)
                     {
-                        foreach (var body in systemnode.Bodies)
+                        foreach (var body in systemnode.Bodies())
                         {
                             if ((body.BodyDesignator == sc.Body || body.BodyName == sc.Body) &&
                                 (body.BodyDesignator != sc.StarSystem || (sc.BodyType == "Star" && body.Level == 0) || (sc.BodyType != "Star" && body.Level != 0)))

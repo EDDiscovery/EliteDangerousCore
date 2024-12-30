@@ -37,37 +37,41 @@ namespace EliteDangerousCore
         public int CommanderId { get; private set; }            // commander Id of entry
 
         public JournalTypeEnum EventTypeID { get; private set; }
+        [QuickJSON.JsonIgnore()]
         public string EventTypeStr { get { return EventTypeID.ToString(); } }             // name of event. these two duplicate each other, string if for debuggin in the db view of a browser
 
-        public System.Drawing.Image Icon { get { return JournalTypeIcons.ContainsKey(this.IconEventType) ? JournalTypeIcons[this.IconEventType] : JournalTypeIcons[JournalTypeEnum.Unknown]; } }   // Icon to paint for this
-        public string GetIconPackPath { get { return "Journal." + IconEventType.ToString(); } } // its icon pack name..
+        public System.Drawing.Image Icon() { return JournalTypeIcons.ContainsKey(this.IconEventType) ? JournalTypeIcons[this.IconEventType] : JournalTypeIcons[JournalTypeEnum.Unknown]; }    // Icon to paint for this
+        public string GetIconPackPath() { return "Journal." + IconEventType.ToString(); } // its icon pack name..
 
         public DateTime EventTimeUTC { get; set; }
 
         public DateTime EventTimeLocal { get { return EventTimeUTC.ToLocalTime(); } }
 
+        [QuickJSON.JsonIgnore()]
         public bool SyncedEDSM { get { return (Synced & (int)SyncFlags.EDSM) != 0; } }
+        [QuickJSON.JsonIgnore()]
         public bool SyncedEDDN { get { return (Synced & (int)SyncFlags.EDDN) != 0; } }
+        [QuickJSON.JsonIgnore()]
         public bool StartMarker { get { return (Synced & (int)SyncFlags.StartMarker) != 0; } }
+        [QuickJSON.JsonIgnore()]
         public bool StopMarker { get { return (Synced & (int)SyncFlags.StopMarker) != 0; } }
 
         public virtual bool IsBeta { get { return TravelLogUnit.Get(TLUId)?.IsBeta ?? DefaultBetaFlag; } }        // TLUs are cached via the dictionary, no point also holding a local copy
         public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.IsHorizons ?? DefaultHorizonsFlag; } }  // horizons flag from loadgame
         public virtual bool IsOdyssey { get { return TravelLogUnit.Get(TLUId)?.IsOdyssey ?? DefaultOdysseyFlag; } } // odyseey flag from loadgame
 
-        public bool IsOdysseyEstimatedValues { get      // work out which estimated values algorithm to use
-            {
-                var tlu = TravelLogUnit.Get(TLUId);
-                if (tlu != null)
-                    return IsOdyssey || GameVersion.StartsWith("4.");       // if odyssey flag is set, OR we have a horizons 4.0 situation
-                else
-                    return DefaultOdysseyFlag;
-            } }
+        public bool IsOdysseyEstimatedValues() 
+        {
+            var tlu = TravelLogUnit.Get(TLUId);
+            if (tlu != null)
+                return IsOdyssey || GameVersion.StartsWith("4.");       // if odyssey flag is set, OR we have a horizons 4.0 situation
+            else
+                return DefaultOdysseyFlag;
+        }
 
         public virtual string GameVersion { get { return TravelLogUnit.Get(TLUId)?.GameVersion ?? ""; } }
         public virtual string Build { get { return TravelLogUnit.Get(TLUId)?.Build ?? ""; } }
         public virtual string FullPath { get { return TravelLogUnit.Get(TLUId)?.FullName ?? ""; } }
-        public virtual string FileName { get { return TravelLogUnit.Get(TLUId)?.FileName ?? ""; } }
 
         public static bool DefaultBetaFlag { get; set; } = false;
         public static bool DefaultHorizonsFlag { get; set; } = false;       // for entries without a TLU (EDSM downloaded made up ones for instance) provide default value
@@ -106,6 +110,7 @@ namespace EliteDangerousCore
         public virtual string SummaryName(ISystem sys) { return TranslatedEventNames.ContainsKey(EventTypeID) ? TranslatedEventNames[EventTypeID] : EventTypeID.ToString(); }  // entry may be overridden for specialist output
 
         // the name used to filter it.. and the filter keyword. Its normally the enum of the event.
+        [QuickJSON.JsonIgnore()]
         public virtual string EventFilterName { get { return EventTypeID.ToString(); } } // text name used in filter
 
         #endregion
@@ -287,13 +292,13 @@ namespace EliteDangerousCore
             return CreateJournalEntry(jo.ToString());
         }
 
-        static protected JournalEntry CreateJournalEntry(long id, long tluid, int cmdrid, string json, int flags)      
+        static protected JournalEntry CreateJournalEntry(long id, long tluid, int cmdrid, string json, int syncflags)      
         {
             JournalEntry jr = JournalEntry.CreateJournalEntry(json);
             jr.Id = id;
             jr.TLUId = tluid;
             jr.CommanderId = cmdrid;
-            jr.Synced = flags;
+            jr.Synced = syncflags;
             return jr;
         }
 
@@ -563,7 +568,7 @@ namespace EliteDangerousCore
 
 #region Private variables
 
-        private enum SyncFlags
+        protected enum SyncFlags
         {
             NoBit = 0,                      // for sync change func only
             EDSM = 0x01,
@@ -584,11 +589,11 @@ namespace EliteDangerousCore
 
 #region Constructors
 
-        protected JournalEntry(DateTime utc, JournalTypeEnum jtype, bool edsmsynced)       // manual creation via NEW
+        protected JournalEntry(DateTime utc, JournalTypeEnum jtype, int syncflags = 0)       // manual creation via NEW
         {
             EventTypeID = jtype;
             EventTimeUTC = utc;
-            Synced = edsmsynced ? (int)SyncFlags.EDSM : 0;
+            Synced = syncflags;
             TLUId = 0;
         }
 
@@ -682,7 +687,7 @@ namespace EliteDangerousCore
 
             foreach (var kvp in obj)
             {
-                if (kvp.Key.StartsWith("EDD") || kvp.Key.Equals("StarPosFromEDSM"))
+                if (kvp.Key.StartsWith("EDD") || kvp.Key.Equals("StarPosFromEDSM")) // remove all EDD generated keys from json
                 {
                     if (jcopy == null)      // only pay the expense if it has one of the entries in it
                         jcopy = (JObject)obj.Clone();

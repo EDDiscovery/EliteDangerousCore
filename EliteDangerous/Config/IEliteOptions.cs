@@ -21,7 +21,8 @@ namespace EliteDangerousCore
         string SystemDatabasePath { get; }
         string UserDatabasePath { get; }
         bool ForceBetaOnCommander { get; }
-        bool DisableMerge { get; }
+        bool DisableJournalMerge { get; }
+        bool DisableJournalRemoval { get; }
         bool DisableBetaCommanderCheck { get; }
         string ScanCachePath { get; }
         bool ScanCacheEnabled { get; }
