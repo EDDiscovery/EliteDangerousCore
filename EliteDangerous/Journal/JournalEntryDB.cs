@@ -581,13 +581,51 @@ namespace EliteDangerousCore
             return count;
         }
 
-        static public bool WriteJournals(DateTime? startdateutc, DateTime? enddateutc, string file)
+        static public bool WriteJournals(int cmdr, DateTime? startdateutc, DateTime? enddateutc, string dir)
         {
-            var data = GetTableData(new System.Threading.CancellationToken(), startdateutc: startdateutc, enddateutc: enddateutc);
+            var data = GetTableData(new System.Threading.CancellationToken(), cmdr, startdateutc, enddateutc);
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            long curtluid = -1;
+
             foreach (var row in data)
-                sb.AppendLine(row.Json);
-            return FileHelpers.TryWriteToFile(file, sb.ToString());
+            {
+                if ( row.TLUID != 0 && row.TLUID != curtluid )      // TLUID=0 is a EDD commodity/shipyard entry, just continue
+                {
+                    if (sb.Length > 0)
+                    {
+                        string fname = TravelLogUnit.Get(curtluid)?.FileName ?? $"TLUID-{curtluid}.log";
+                        System.Diagnostics.Debug.WriteLine($"Writing file {curtluid} = {fname}");
+                        fname = System.IO.Path.Combine(dir, fname);
+
+                        if ( System.IO.File.Exists(fname) )
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Duplicate File");
+                        }
+                        if (!FileHelpers.TryWriteToFile(fname, sb.ToString()))
+                            return false;
+
+                        sb.Clear();
+                    }
+
+                    curtluid = row.TLUID;
+                }
+                JObject jo = JObject.Parse(row.Json);
+                if (jo != null)
+                    sb.AppendLine(jo.ToString());
+                else
+                    System.Diagnostics.Debug.WriteLine($"Bad line {row.Json}");
+            }
+
+            if (sb.Length > 0)
+            {
+                string fname = TravelLogUnit.Get(curtluid)?.FileName ?? $"TLUID-{curtluid}.log";
+                System.Diagnostics.Debug.WriteLine($"Writing file {curtluid} = {fname}");
+                fname = System.IO.Path.Combine(dir, fname);
+                if (!FileHelpers.TryWriteToFile(fname, sb.ToString()))
+                    return false;
+            }
+
+            return true;
         }
     }
 }
