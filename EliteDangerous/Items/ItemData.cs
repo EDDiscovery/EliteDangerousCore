@@ -12,7 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
-//define VANITYADD
+//#define VANITYADD
 
 using System;
 using System.Collections.Generic;
@@ -41,7 +41,9 @@ namespace EliteDangerousCore
             //foreach ( StationDefinitions.StationServices x in Enum.GetValues(typeof(StationDefinitions.StationServices))) System.Diagnostics.Debug.WriteLine($".{x}: {StationDefinitions.ToEnglish(x).AlwaysQuoteString()} @");
 
 #if VANITYADD
+            string csfile = @"c:\code\eddiscovery\elitedangerouscore\elitedangerous\items\itemmodules.cs";
             string infile = @"c:\code\newvanity.lst";
+
             if (System.IO.File.Exists(infile))
             {
                 string[] toadd = System.IO.File.ReadAllLines(infile);
@@ -173,7 +175,6 @@ namespace EliteDangerousCore
 
                     // auto update cs file - this breaks the debugger note and causes it to notice text updates. Just ignore
 
-                    string csfile = @"c:\code\eddiscovery2\elitedangerouscore\elitedangerous\items\itemmodules.cs";
 
                     if (System.IO.File.Exists(csfile))
                     {
