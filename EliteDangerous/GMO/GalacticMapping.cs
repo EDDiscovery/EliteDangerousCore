@@ -27,6 +27,7 @@ namespace EliteDangerousCore.GMO
 
         // these need have have a Gal map type, a VisibleType in entry 0 AND have an associated star system
         public GalacticMapObject[] VisibleMapObjects { get { return GalacticMapObjects.Where(x => x.GalMapTypes[0] != null && x.GalMapTypes[0].VisibleType != null && x.StarSystem != null).ToArray(); } }
+        public GalacticMapObject[] AllObjects { get { return GalacticMapObjects.ToArray(); } }
 
         public bool Loaded { get { return GalacticMapObjects.Count > 0; } }
 
@@ -165,35 +166,52 @@ namespace EliteDangerousCore.GMO
             return false;
         }
 
+        // find descriptive name, first entry
         // wildcard = true, contains ignored
         // wildcard = false, either exact match or if contains = true then part of it
         public GalacticMapObject FindDescriptiveName(string descripivename, bool wildcard, bool contains)
         {
+            var list = FindDescriptiveNames(descripivename, wildcard, contains);
+            return list.Count > 0 ? list[0] : null;
+        }
+
+        // find list of descriptive names matching
+        public List<GalacticMapObject> FindDescriptiveNames(string descripivename, bool wildcard, bool contains)
+        {
+            List<GalacticMapObject> gmos = new List<GalacticMapObject>();
             if (GalacticMapObjects != null && descripivename.HasChars())
             {
                 foreach (GalacticMapObject gmo in GalacticMapObjects)
                 {
                     if (gmo.IsDescriptiveName(descripivename, wildcard, contains))
-                        return gmo;
+                        gmos.Add(gmo);
                 }
             }
 
-            return null;
+            return gmos;
         }
 
-        // find star system exact match
+        // find star system exact match, first entry
         public GalacticMapObject FindSystem(string name)
         {
+            var list = FindSystems(name);
+            return list.Count > 0 ? list[0] : null;
+        }
+
+        // find all objects with system name set to this - since we now merge systems, should be only 1.
+        public List<GalacticMapObject> FindSystems(string name)
+        {
+            List<GalacticMapObject> gmos = new List<GalacticMapObject>();
             if (GalacticMapObjects != null && name.HasChars())
             {
                 foreach (GalacticMapObject gmo in GalacticMapObjects)
                 {
                     if (gmo.StarSystem?.Name.EqualsIIC(name) ?? false)      // if it has an associated star system, and its name matches, return
-                        return gmo;
+                        gmos.Add(gmo);
                 }
             }
 
-            return null;
+            return gmos;
         }
 
         public GalacticMapObject FindDescriptiveNameOrSystem(string descripivenameorsystem, bool wildcard = false)

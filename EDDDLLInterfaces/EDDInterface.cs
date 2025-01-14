@@ -159,6 +159,9 @@ namespace EDDDLLInterfaces
         // transparent change 15/1/25 the bool now means spansh then edsm
         public delegate void EDDRequestScanData(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, bool spanshthenedsmlookup);
 
+        // requesttype = All, Visible, Name=<wildcard name>, SystemName=<name>, Types=<typelist>
+        public delegate string EDDRequestGMOs(string requestype);
+
         [StructLayout(LayoutKind.Explicit)]
         public struct EDDCallBacks
         {
@@ -213,9 +216,14 @@ namespace EDDDLLInterfaces
             [FieldOffset(104)] public EDDReturnString GetOutfitting;
 
             // Version 3 Ends here (16.0.4 Dec 22)
+
+            // Get GMO Objects 
+            [FieldOffset(112)] public EDDRequestGMOs GetGMOs;
+
+            // Version 4 Ends here (19.0 Jan 24)
         }
 
-        public const int DLLCallBackVersion = 3;
+        public const int DLLCallBackVersion = 4;
 
         // This class is passed to panel on Init.
         public class EDDPanelCallbacks      // Must be fixed once released.  Use an EDDPanelCallBacks2 etc interface to expand later, and you'll need to add a new ExtPanel host
