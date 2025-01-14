@@ -156,7 +156,8 @@ namespace EDDDLLInterfaces
         [return: MarshalAs(UnmanagedType.BStr)]
         public delegate string EDDVisitedList(int number);
 
-        public delegate void EDDRequestScanData(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, bool edsmlookup);
+        // transparent change 15/1/25 the bool now means spansh then edsm
+        public delegate void EDDRequestScanData(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, bool spanshthenedsmlookup);
 
         [StructLayout(LayoutKind.Explicit)]
         public struct EDDCallBacks
