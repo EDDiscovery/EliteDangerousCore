@@ -969,7 +969,7 @@ namespace EliteDangerousCore.EDSM
                             }
                         }
 
-                        if (cachefile != null)      // note its cached in EDSM format.. Spansh caches it in journal format
+                        if (cachefile != null && fromcache == false)      // note its cached in EDSM format.. Spansh caches it in journal format
                             BaseUtils.FileHelpers.TryWriteToFile(cachefile, jlist.ToString(true));      // save to file so we don't have to reload
                         
                         BodyCache[sys.Name] = bodies;

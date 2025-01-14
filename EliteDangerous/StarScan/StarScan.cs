@@ -97,15 +97,18 @@ namespace EliteDangerousCore
 
                 if ( usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys.Name))
                 {
-                    var jl = Spansh.SpanshClass.GetBodiesList(sys, usespansh);          // see if spansh has it cached or optionally look it up
-                    if (jl != null)
+                    var lookupres = Spansh.SpanshClass.GetBodiesList(sys, usespansh);          // see if spansh has it cached or optionally look it up
+                    if (lookupres != null)
                     {
-                        foreach (JournalScan js in jl.Bodies)
+                        foreach (JournalScan js in lookupres.Bodies)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
                             //System.Diagnostics.Debug.WriteLine($"FindSystemSync spansh add {sys.Name} {js.BodyName}");
                             ProcessJournalScan(js, sys, true);
                         }
+
+                        if (lookupres.BodyCount.HasValue)
+                            SetFSSDiscoveryScan(lookupres.BodyCount, null, sys);
 
                         if (weblookup == WebExternalDataLookup.SpanshThenEDSM)      // we got something, for this option, we are fine, don't use edsm
                             useedsm = false;
@@ -114,10 +117,10 @@ namespace EliteDangerousCore
 
                 if (useedsm && !EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))
                 {
-                    var jl = EDSM.EDSMClass.GetBodiesList(sys, useedsm);            // see if edsm has it cached or optionally look it up
-                    if (jl != null)
+                    var lookupres = EDSM.EDSMClass.GetBodiesList(sys, useedsm);            // see if edsm has it cached or optionally look it up
+                    if (lookupres != null)
                     {
-                        foreach (JournalScan js in jl.Bodies)
+                        foreach (JournalScan js in lookupres.Bodies)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
                             //System.Diagnostics.Debug.WriteLine($"FindSystemSync edsn add {sys.Name} {js.BodyName}");
@@ -144,16 +147,19 @@ namespace EliteDangerousCore
 
                 if (usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys.Name))
                 {
-                    var jl = await Spansh.SpanshClass.GetBodiesListAsync(sys, usespansh);          // see if spansh has it cached or optionally look it up
+                    var lookupres = await Spansh.SpanshClass.GetBodiesListAsync(sys, usespansh);          // see if spansh has it cached or optionally look it up
 
-                    if (jl != null)
+                    if (lookupres != null)
                     {
-                        foreach (JournalScan js in jl.Bodies)
+                        foreach (JournalScan js in lookupres.Bodies)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
                            // System.Diagnostics.Debug.WriteLine($"FindSystemASync spansh add {sys.Name} {js.BodyName}");
                             ProcessJournalScan(js, sys, true);
                         }
+
+                        if (lookupres.BodyCount.HasValue)
+                            SetFSSDiscoveryScan(lookupres.BodyCount, null, sys);
 
                         if (weblookup == WebExternalDataLookup.SpanshThenEDSM)      // we got something, for this option, we are fine, don't use edsm
                             useedsm = false;
@@ -162,7 +168,7 @@ namespace EliteDangerousCore
 
                 if (useedsm && !EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))     // using edsm, no lookup, go
                 {
-                    var jl = await EliteDangerousCore.EDSM.EDSMClass.GetBodiesListAsync(sys, useedsm);
+                    var lookupres = await EliteDangerousCore.EDSM.EDSMClass.GetBodiesListAsync(sys, useedsm);
 
                     // return bodies and a flag indicating if from cache.
                     // Scenario: Three panels are asking for data, one at a time, since its the foreground thread
@@ -175,9 +181,9 @@ namespace EliteDangerousCore
                     // for now, i can't guarantee that the task which gives back the bodies first runs on the foreground task.  It may be task2 gets the bodies.
                     // so we will just add them in again
 
-                    if (jl != null)
+                    if (lookupres != null)
                     {
-                        foreach (JournalScan js in jl.Bodies)
+                        foreach (JournalScan js in lookupres.Bodies)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
                          //   System.Diagnostics.Debug.WriteLine($"FindSystemASync edsm add {sys.Name} {js.BodyName}");

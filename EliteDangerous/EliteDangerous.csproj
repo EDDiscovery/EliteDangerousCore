@@ -118,6 +118,7 @@
     <Compile Include="EliteDangerous\FrontierFolder.cs" />
     <Compile Include="EliteDangerous\Translations.cs" />
     <Compile Include="Journal\JournalTest.cs" />
+    <Compile Include="StarScan\StarScanFSSDiscoveryScan.cs" />
     <Compile Include="Stats\EngineerCrafting.cs" />
     <Compile Include="Forms\CommanderForm.cs">
       <SubType>Form</SubType>

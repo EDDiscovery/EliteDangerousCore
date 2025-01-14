@@ -94,21 +94,5 @@ namespace EliteDangerousCore
 
             return false;
         }
-
-
-        #region FSS DISCOVERY *************************************************************
-
-        public void SetFSSDiscoveryScan(JournalFSSDiscoveryScan je, ISystem sys)
-        {
-            SystemNode systemnode = GetOrCreateSystemNode(sys);
-            lock (systemnode )
-            {
-                systemnode.FSSTotalBodies = je.BodyCount;
-                systemnode.FSSTotalNonBodies = je.NonBodyCount;
-            }
-        }
-
-        #endregion
-
     }
 }

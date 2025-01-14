@@ -60,7 +60,7 @@ namespace EliteDangerousCore.JournalEvents
         public long? SystemAddress { get; set; }
         public void AddStarScan(StarScan s, ISystem system)
         {
-            s.SetFSSDiscoveryScan(this, system);
+            s.SetFSSDiscoveryScan(BodyCount, NonBodyCount, system);
         }
 
         public override string GetInfo(FillInformationData fid)
