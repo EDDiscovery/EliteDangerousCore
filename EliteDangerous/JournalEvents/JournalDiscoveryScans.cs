@@ -92,22 +92,33 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("List of FSS signals")]
         public List<FSSSignal> Signals { get; set; }            // name used in action packs not changeable. Never null 
 
+        // JSON export ZMQ, DLL, Web via JournalScan
+
+        [JsonIgnore]
         public ISystem EDDNSystem { get; set; }                 // set if FSS has been detected in the wrong system                  
 
+        [JsonIgnore]
         [PropertyNameAttribute("Count of station signals")]
         public int CountStationSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Station).Count() ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of installation signals")]
         public int CountInstallationSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Installation).Count() ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of NSP signals")]
         public int CountNotableStellarPhenomenaSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.NotableStellarPhenomena).Count() ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of conflict zone signals")]
         public int CountConflictZoneSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.ConflictZone).Count() ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of extraction zone signals")]
         public int CountResourceExtractionZoneSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.ResourceExtraction).Count() ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of carrier signals")]
         public int CountCarrierSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Carrier).Count() ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of USS signals")]
         public int CountUSSSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.USS).Count() ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of other signals")]
         public int CountOtherSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Other).Count() ?? 0; } }
 
@@ -344,18 +355,27 @@ namespace EliteDangerousCore.JournalEvents
             [PropertyNameAttribute("Count of signals")]
             public int Count { get; set; }
 
+            // JSON export ZMQ, DLL, Web via JournalScan
+
+            [JsonIgnore]
             [PropertyNameAttribute("Is geo signal")]
             public bool IsGeo { get { return Type.Contains("$SAA_SignalType_Geological;"); } }
+            [JsonIgnore]
             [PropertyNameAttribute("Is bio signal")]
             public bool IsBio { get { return Type.Contains("$SAA_SignalType_Biological;"); } }
+            [JsonIgnore]
             [PropertyNameAttribute("Is thargoid signal")]           // note Anonmaly is associated with thargoid interactions
             public bool IsThargoid { get { return Type.Contains("$SAA_SignalType_Thargoid;") || Type.Contains("$SAA_SignalType_PlanetAnomaly;"); } }
+            [JsonIgnore]
             [PropertyNameAttribute("Is guardian signal")]
             public bool IsGuardian { get { return Type.Contains("$SAA_SignalType_Guardian;"); } }
+            [JsonIgnore]
             [PropertyNameAttribute("Is human signal")]
             public bool IsHuman { get { return Type.Contains("$SAA_SignalType_Human;"); } }
+            [JsonIgnore]
             [PropertyNameAttribute("Is other signal")]
             public bool IsOther { get { return Type.Contains("$SAA_SignalType_Other;"); } }
+            [JsonIgnore]
             [PropertyNameAttribute("Is uncategorised signal")]
             public bool IsUncategorised { get { return !Type.Contains("$SAA_SignalType"); } }       // probably a material, but you can never tell with FD
         }
@@ -523,6 +543,8 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
+        // JSON export ZMQ, DLL, Web via JournalScan
+
         [PropertyNameAttribute("Frontier system address")]
         public long SystemAddress { get; set; }
         [PropertyNameAttribute("Body name")]
@@ -532,33 +554,47 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("List of signals")]
         public List<JournalSAASignalsFound.SAASignal> Signals { get; set; }
 
+        [JsonIgnore]
         [PropertyNameAttribute("Does it have geo signals")]
         public bool ContainsGeoSignals { get { return Signals?.Count(x => x.IsGeo) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Does it have bio signals")]
         public bool ContainsBioSignals { get { return Signals?.Count(x => x.IsBio) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Does it have thargoid signals")]
         public bool ContainsThargoidSignals { get { return Signals?.Count(x => x.IsThargoid) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Does it have guardian signals")]
         public bool ContainsGuardianSignals { get { return Signals?.Count(x => x.IsGuardian) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Does it have human signals")]
         public bool ContainsHumanSignals { get { return Signals?.Count(x => x.IsHuman) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Does it have other signals")]
         public bool ContainsOtherSignals { get { return Signals?.Count(x => x.IsOther) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Does it have uncategorised signals")]
         public bool ContainsUncategorisedSignals { get { return Signals?.Count(x => x.IsUncategorised) > 0 ? true : false; } }
 
+        [JsonIgnore]
         [PropertyNameAttribute("Count of geo signals")]
         public int CountGeoSignals { get { return Signals?.Where(x => x.IsGeo).Sum(y => y.Count) ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of bio signals")]
         public int CountBioSignals { get { return Signals?.Where(x => x.IsBio).Sum(y => y.Count) ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of thargoid signals")]
         public int CountThargoidSignals { get { return Signals?.Where(x => x.IsThargoid).Sum(y => y.Count) ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of guardian signals")]
         public int CountGuardianSignals { get { return Signals?.Where(x => x.IsGuardian).Sum(y => y.Count) ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of human signals")]
         public int CountHumanSignals { get { return Signals?.Where(x => x.IsHuman).Sum(y => y.Count) ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of other signals")]
         public int CountOtherSignals { get { return Signals?.Where(x => x.IsOther).Sum(y => y.Count) ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of uncategorised signals")]
         public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
 

@@ -22,6 +22,8 @@ using static BaseUtils.TypeHelpers;
 
 namespace EliteDangerousCore.JournalEvents
 {
+    // JSON export thru ZMQ/DLLs/Web
+
     [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} {BodyDesignation} s{IsStar} p{IsPlanet}")]
     [JournalEntryType(JournalTypeEnum.Scan)]
     public partial class JournalScan : JournalEntry, IStarScan, IBodyNameIDOnly
@@ -195,20 +197,28 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Localised Name")]
         public string PlanetTypeText { get { return IsPlanet ? Planets.PlanetNameTranslated(PlanetTypeID) : ""; } }   // Use in preference to planet class for display
 
+        [JsonIgnore]
         [PropertyNameAttribute("Is it an ammonia world")]
         public bool AmmoniaWorld { get { return Planets.AmmoniaWorld(PlanetTypeID); } }
+        [JsonIgnore]
         [PropertyNameAttribute("Is it an earth like world")]
         public bool Earthlike { get { return Planets.Earthlike(PlanetTypeID); } }
+        [JsonIgnore]
         [PropertyNameAttribute("Is it a water world")]
         public bool WaterWorld { get { return Planets.WaterWorld(PlanetTypeID); } }
+        [JsonIgnore]
         [PropertyNameAttribute("Is it a sudarsky gas giant world")]
         public bool SudarskyGasGiant { get { return Planets.SudarskyGasGiant(PlanetTypeID); } }
+        [JsonIgnore]
         [PropertyNameAttribute("Is it a gas giant world")]
         public bool GasGiant { get { return Planets.GasGiant(PlanetTypeID); } }
+        [JsonIgnore]
         [PropertyNameAttribute("Is it a water giant world")]
         public bool WaterGiant { get { return Planets.WaterGiant(PlanetTypeID); } }
+        [JsonIgnore]
         [PropertyNameAttribute("Is it an helium gas world")]
         public bool HeliumGasGiant { get { return Planets.HeliumGasGiant(PlanetTypeID); } }
+        [JsonIgnore]
         [PropertyNameAttribute("Is it an gas world")]
         public bool GasWorld { get { return Planets.GasWorld(PlanetTypeID); } }          // any type of gas world
 
@@ -341,32 +351,46 @@ namespace EliteDangerousCore.JournalEvents
 
         [PropertyNameAttribute("Signal information")]
         public List<JournalSAASignalsFound.SAASignal> Signals { get; set; }          // can be null if no signals for this node, else its a list of signals.  set up by StarScan
+        [JsonIgnore]
         [PropertyNameAttribute("Does it contain geo signals")]
         public bool ContainsGeoSignals { get { return Signals?.Count(x => x.IsGeo) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Does it contain bio signals")]
         public bool ContainsBioSignals { get { return Signals?.Count(x => x.IsBio) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Does it contain thargoid signals")]
         public bool ContainsThargoidSignals { get { return Signals?.Count(x => x.IsThargoid) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Does it contain guardian signals")]
         public bool ContainsGuardianSignals { get { return Signals?.Count(x => x.IsGuardian) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Does it contain human signals")]
         public bool ContainsHumanSignals { get { return Signals?.Count(x => x.IsHuman) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Does it contain other signals")]
         public bool ContainsOtherSignals { get { return Signals?.Count(x => x.IsOther) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Does it contain uncategorised signals")]
         public bool ContainsUncategorisedSignals { get { return Signals?.Count(x => x.IsUncategorised) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of geo signals")]
         public int CountGeoSignals { get { return Signals?.Where(x => x.IsGeo).Sum(y => y.Count) ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of bio signals")]
         public int CountBioSignals { get { return Signals?.Where(x => x.IsBio).Sum(y => y.Count) ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of thargoid signals")]
         public int CountThargoidSignals { get { return Signals?.Where(x => x.IsThargoid).Sum(y => y.Count) ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of guardian signals")]
         public int CountGuardianSignals { get { return Signals?.Where(x => x.IsGuardian).Sum(y => y.Count) ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of human signals")]
         public int CountHumanSignals { get { return Signals?.Where(x => x.IsHuman).Sum(y => y.Count) ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of other signals")]
         public int CountOtherSignals { get { return Signals?.Where(x => x.IsOther).Sum(y => y.Count) ?? 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of uncategorised signals")]
         public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
 
@@ -374,13 +398,16 @@ namespace EliteDangerousCore.JournalEvents
         public List<JournalSAASignalsFound.SAAGenus> Genuses { get; set; }          // can be null if no genusus for this node, else its a list of genusus.  set up by StarScan
         [PropertyNameAttribute("Any Genuses")]
         public bool ContainsGenusus { get { return (Genuses?.Count ?? 0) > 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of all genuses")]
         public int CountGenusus { get { return Genuses?.Count ?? 0; } }
 
         [PropertyNameAttribute("Organics information")]
         public List<JournalScanOrganic> Organics { get; set; }  // can be null if nothing for this node, else a list of organics. Set up by StarScan
+        [JsonIgnore]
         [PropertyNameAttribute("Any organic scans")]
         public bool ContainsOrganicsScans { get { return (Organics?.Count ?? 0) > 0; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Count of all organic scans")]
         public int CountOrganicsScans { get { return Organics?.Count ?? 0; } }
         [PropertyNameAttribute("Count of fully analysed scans")]

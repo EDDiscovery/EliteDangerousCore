@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using QuickJSON;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -222,6 +223,7 @@ namespace EliteDangerousCore.JournalEvents
             return EstimatedValues;
         }
 
+        [JsonIgnore]
         public bool PR31State { get { return IsNotPreviouslyDiscovered && IsPreviouslyMapped; } }         // condition of bodies in the bubble, marked not discovered, but mapped
 
         // work out what is possible now
