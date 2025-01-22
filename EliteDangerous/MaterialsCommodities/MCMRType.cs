@@ -1424,6 +1424,12 @@ namespace EliteDangerousCore
                 x.TranslatedName = x.TranslatedName.TxID(typeof(MaterialCommodityMicroResourceType), x.FDName);
             }
 
+            //foreach( var x in mcmrlist)
+            //{
+            //    if (x.Value.IsRareCommodity)
+            //        System.Diagnostics.Debug.WriteLine($"{x.Value.FDName},");
+            //}
+
         }
 
 
