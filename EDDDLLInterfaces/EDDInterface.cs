@@ -162,7 +162,7 @@ namespace EDDDLLInterfaces
 
         // New interfaces for version 4. 
 
-        public delegate void EDDRequestScanData2(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, long systemaddress, 
+        public delegate void EDDRequestScanDataExt(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, long systemaddress, 
                                         int weblookup, [MarshalAs(UnmanagedType.BStr)] string otheroptions);
 
         public delegate string EDDRequestGMOs(string requestype);
@@ -234,7 +234,7 @@ namespace EDDDLLInterfaces
             // web lookup = 3 SpanshThenEDSM 2 = Spansh 1 = EDSM 0 = None
             // otheroptions is unused as of now.
 
-            [FieldOffset(120)] public EDDRequestScanData2 RequestScanDataExt;
+            [FieldOffset(120)] public EDDRequestScanDataExt RequestScanDataExt;
 
             // Version 4 Ends here (19.0 Jan 24)
         }
