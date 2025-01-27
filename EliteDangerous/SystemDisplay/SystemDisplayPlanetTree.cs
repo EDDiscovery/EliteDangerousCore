@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace EliteDangerousCore
 {
@@ -27,7 +28,7 @@ namespace EliteDangerousCore
         // return right bottom of area used from curpos
         Point CreatePlanetTree(List<ExtPictureBox.ImageElement> pc, StarScan.ScanNode planetnode,
                                         List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats,
-                                         Point leftmiddle, string[] filter, bool habzone, out int planetcentrex, Random rnd)
+                                         Point leftmiddle, string[] filter, bool habzone, out int planetcentrex, Random rnd, ContextMenuStrip rightclickplanet, ContextMenuStrip rightclickmats)
         {
            // System.Diagnostics.Debug.WriteLine($"DrawPlanetTree {planetnode.OwnName} at leftmiddle {leftmiddle}");
 
@@ -41,7 +42,7 @@ namespace EliteDangerousCore
 
             Point maxtreepos = DrawNode(pc, planetnode, historicmats, curmats,
                                 (planetnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetPlanetImageNotScanned(),
-                                leftmiddle, false, true, out Rectangle imagerect, out planetcentrex, planetsize, DrawLevel.PlanetLevel, rnd, backwash: backwash);        // offset passes in the suggested offset, returns the centre offset
+                                leftmiddle, false, true, out Rectangle imagerect, out planetcentrex, planetsize, DrawLevel.PlanetLevel, rnd, rightclickplanet, rightclickmats, backwash: backwash);        // offset passes in the suggested offset, returns the centre offset
 
             if (planetnode.Children != null && ShowMoons)
             {
@@ -69,7 +70,7 @@ namespace EliteDangerousCore
 
                         Point mmax = DrawNode(pc, moonnode, historicmats, curmats,
                                 (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetMoonImageNotScanned(),
-                                moonposcentremid, true, false, out Rectangle moonimagepos, out int mooncentrex, moonsize, DrawLevel.MoonLevel, rnd);
+                                moonposcentremid, true, false, out Rectangle moonimagepos, out int mooncentrex, moonsize, DrawLevel.MoonLevel, rnd, rightclickplanet, rightclickmats);
 
                         maxtreepos = new Point(Math.Max(maxtreepos.X, mmax.X), Math.Max(maxtreepos.Y, mmax.Y));
 
@@ -91,7 +92,7 @@ namespace EliteDangerousCore
 
                                     Point sbmax = DrawNode(pc, submoonnode, historicmats, curmats,
                                             (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetMoonImageNotScanned(),
-                                            submoonpos, xiscentre, xiscentre == false, out Rectangle submoonimagepos, out int xsubmooncentre, moonsize, DrawLevel.MoonLevel, rnd);
+                                            submoonpos, xiscentre, xiscentre == false, out Rectangle submoonimagepos, out int xsubmooncentre, moonsize, DrawLevel.MoonLevel, rnd, rightclickplanet, rightclickmats);
 
                                     if (xiscentre)
                                     {

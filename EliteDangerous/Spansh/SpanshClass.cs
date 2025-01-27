@@ -118,14 +118,38 @@ namespace EliteDangerousCore.Spansh
 
             return null;
         }
+        // find system info of address case insensitive
+        public ISystem GetSystem(long address)
+        {
+            var response = RequestGet($"dump/{address}");
+
+            if (response.Error)
+                return null;
+
+            var data = response.Body;
+            var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
+            if (json != null)
+            {
+               // BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\getsystem.json", json?.ToString(true));
+                if (json.Contains("system"))
+                    return new SystemClass(json["system"].I("name").Str(),json["system"].I("id64").Long(), SystemSource.FromSpansh);
+            }
+
+            return null;
+        }
 
         // ensure we have a valid system address from a sys, null if can't
-        public ISystem EnsureSystemAddress(ISystem sys)
+        public ISystem EnsureSystemAddressAndName(ISystem sys)
         {
             if (sys.SystemAddress == null)
             {
                 SpanshClass sp = new SpanshClass();
-                sys = sp.GetSystem(sys.Name);
+                sys = sp.GetSystem(sys.Name);       // name and system address filled
+            }
+            else if ( sys.Name.IsEmpty())
+            {
+                SpanshClass sp = new SpanshClass();
+                sys = sp.GetSystem(sys.SystemAddress.Value);       // name and system address filled
             }
 
             return sys;

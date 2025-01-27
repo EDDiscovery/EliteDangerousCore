@@ -23,18 +23,21 @@ namespace EliteDangerousCore.Spansh
     {
         // return dump of bodies in journal scan format
         // use https://spansh.co.uk/api/dump/<systemid64> 
-        public JArray GetBodies(ISystem sys, out int? bodycount)
+        public JArray GetBodies(ISystem searchsystem, out int? bodycount, out ISystem foundsystem)
         {
             bodycount = null;
+            foundsystem = null;
 
             bool dump = true;       // previously, we supported search. Now lets always use dump, but for now, keep search code below for safety
 
-            sys = EnsureSystemAddress(sys);
+            foundsystem = EnsureSystemAddressAndName(searchsystem);     // find the full system details incl name and system address
 
-            if (sys == null)
+            if (foundsystem == null)        // if failed, return nothing
                 return null;
 
-            BaseUtils.HttpCom.Response response = RequestGet("dump/" + sys.SystemAddress.ToStringInvariant());
+            //System.Diagnostics.Debug.WriteLine($"Spansh bodies found {foundsystem.Name} {foundsystem.SystemAddress}");
+
+            BaseUtils.HttpCom.Response response = RequestGet("dump/" + foundsystem.SystemAddress.ToStringInvariant());
 
             if (response.Error)
                 return null;
@@ -42,7 +45,7 @@ namespace EliteDangerousCore.Spansh
             var data = response.Body;
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
 
-            BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshbodies.txt", json?.ToString(true));
+            BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshbodies.json", json?.ToString(true));
 
             JArray resultsarray;
 
@@ -75,8 +78,8 @@ namespace EliteDangerousCore.Spansh
                         evt["BodyName"] = so["name"];
 
                         evt["BodyID"] = so[dump ? "bodyId" : "body_id"];
-                        evt["StarSystem"] = sys.Name;
-                        evt["SystemAddress"] = sys.SystemAddress.HasValue ? sys.SystemAddress.Value : json["reference"]["id64"].Long();
+                        evt["StarSystem"] = foundsystem.Name;
+                        evt["SystemAddress"] = foundsystem.SystemAddress.HasValue ? foundsystem.SystemAddress.Value : json["reference"]["id64"].Long();
                         evt["DistanceFromArrivalLS"] = so[dump ? "distanceToArrival" : "distance_to_arrival"];
                         evt["WasDiscovered"] = true;        // obv, since spansh has the data
                         evt["WasMapped"] = false;
@@ -270,18 +273,17 @@ namespace EliteDangerousCore.Spansh
             return null;
         }
 
-        public class GetBodiesResults
+        public class BodiesResults
         {
+            public ISystem System { get; set; }
             public List<JournalScan> Bodies { get; set; }
             public int? BodyCount { get; set; }
-            public bool FromCache { get; set; }
-
-            public GetBodiesResults(List<JournalScan> list, int? bodycount, bool fromcache) { Bodies = list; BodyCount = bodycount;  FromCache = fromcache; }
+            public BodiesResults(ISystem sys, List<JournalScan> list, int? bodycount) { System = sys; Bodies = list; BodyCount = bodycount; }
         }
 
 
         // BodyCache gets either the body list, or null marking no server data
-        static private Dictionary<string, Tuple<int?,List<JournalScan>>> BodyCache = new Dictionary<string, Tuple<int?,List<JournalScan>>>();
+        static private Dictionary<string, BodiesResults> BodyCache = new Dictionary<string, BodiesResults>();
 
         public static void ClearBodyCache()
         {
@@ -292,24 +294,24 @@ namespace EliteDangerousCore.Spansh
         }
 
         // only one request at a time going, this is to prevent multiple requests for the same body
-        public static bool HasBodyLookupOccurred(string name)
+        public static bool HasBodyLookupOccurred(ISystem sys)
         {
             lock (BodyCache) 
             {
-                return BodyCache.ContainsKey(name);
+                return BodyCache.ContainsKey(sys.Key);
             }
         }
         // true if lookup occurred, but no data. false otherwise
-        public static bool HasNoDataBeenStoredOnBody(string name)      
+        public static bool HasNoDataBeenStoredOnBody(ISystem sys)      
         {
             lock (BodyCache) // only one request at a time going, this is to prevent multiple requests for the same body
             {
-                return BodyCache.TryGetValue(name, out Tuple<int?, List<JournalScan>> d) && d == null;
+                return BodyCache.TryGetValue(sys.Key, out BodiesResults d) && d == null;
             }
         }
 
         // return list, if from cache, if web lookup occurred
-        public async static System.Threading.Tasks.Task<GetBodiesResults> GetBodiesListAsync(ISystem sys, bool weblookup = true)
+        public async static System.Threading.Tasks.Task<BodiesResults> GetBodiesListAsync(ISystem sys, bool weblookup = true)
         {
             return await System.Threading.Tasks.Task.Run(() =>
             {
@@ -317,7 +319,8 @@ namespace EliteDangerousCore.Spansh
             });
         }
 
-        static public GetBodiesResults GetBodiesList(ISystem sys, bool weblookup = true)
+        // System can be name, name and systemaddress, or systemaddress only (from jan 25)
+        static public BodiesResults GetBodiesList(ISystem sys, bool weblookup = true)
         {
             try
             {
@@ -326,13 +329,11 @@ namespace EliteDangerousCore.Spansh
                     // System.Threading.Thread.Sleep(2000); //debug - delay to show its happening 
                     // System.Diagnostics.Debug.WriteLine("EDSM Cache check " + sys.EDSMID + " " + sys.SystemAddress + " " + sys.Name);
 
-                    if (BodyCache.TryGetValue(sys.Name, out Tuple<int?,List<JournalScan>> we))
+                    if (BodyCache.TryGetValue(sys.Key, out BodiesResults we))
                     {
-                        System.Diagnostics.Debug.WriteLine($"Spansh Body Cache hit on {sys.Name} {we != null}");
-                        if (we == null) // lookedup but not found
-                            return null;
-                        else
-                            return new GetBodiesResults(we.Item2, we.Item1, true);        // mark from cache
+                        System.Diagnostics.Debug.WriteLine($"Spansh Body Cache hit on {sys.Name} {sys.SystemAddress} {we != null}");
+                        // will return null, looked up not found, or bodies results found
+                        return we;
                     }
 
                     JArray jlist = null;
@@ -341,7 +342,7 @@ namespace EliteDangerousCore.Spansh
                     // calc name of cache file (14 jan 25 changed to v2)
 
                     string cachefile = EliteConfigInstance.InstanceOptions.ScanCacheEnabled ?
-                            System.IO.Path.Combine(EliteConfigInstance.InstanceOptions.ScanCachePath, $"spansh_{(sys.SystemAddress.HasValue ? sys.SystemAddress.Value.ToStringInvariant() : sys.Name.SafeFileString())}_v2.json") :
+                            System.IO.Path.Combine(EliteConfigInstance.InstanceOptions.ScanCachePath, $"spansh_{sys.Key.SafeFileString()}_v2.json") :
                             null;
 
                     int? bodycount = null;      // we may get this set from cache, from file or from lookup
@@ -355,9 +356,15 @@ namespace EliteDangerousCore.Spansh
                             JObject jo = JObject.Parse(cachedata, JToken.ParseOptions.CheckEOL);  // if so, try a conversion
                             if (jo != null && jo.Contains("Bodies"))
                             {
-                                jlist = jo["Bodies"].Array();               //v2 write an object with bodies array and bodycount int
-                                bodycount = jo["BodyCount"].IntNull();
-                                fromcache = true;
+                                jlist = jo["Bodies"].Array();               // v2 write an object with bodies array and bodycount int
+                                if (jlist?.Count > 0)                       // if we have a valid list of bodies..
+                                {
+                                    bodycount = jo["BodyCount"].IntNull();
+                                    fromcache = true;
+                                    sys = new SystemClass(jlist[0].I("StarSystem").Str(), jlist[0].I("SystemAddress").LongNull(), SystemSource.FromSpansh);
+                                }
+                                else
+                                    jlist = null;
                             }
                         }
                     }
@@ -367,11 +374,15 @@ namespace EliteDangerousCore.Spansh
                         if (!weblookup)         // must be set for a web lookup
                             return null;
 
-                       // System.Diagnostics.Debug.WriteLine($"Spansh Web lookup on {sys.Name} {sys.SystemAddress}");
+                        //System.Diagnostics.Debug.WriteLine($"Spansh Web lookup on {sys.Name} {sys.SystemAddress}");
 
                         SpanshClass sp = new SpanshClass();
 
-                        jlist = sp.GetBodies(sys , out bodycount);          // get by id64, or name if required
+                        // get by id64, or name if required. sys will be replaced by the one from spansh
+                        jlist = sp.GetBodies(sys , out bodycount, out ISystem foundsystem);
+
+                        if (jlist != null)          // if we got a hit, the found system holds the full details
+                            sys = foundsystem;
                     }
 
                     if (jlist != null)         // we have data from file or from web
@@ -395,22 +406,35 @@ namespace EliteDangerousCore.Spansh
 
                         if (cachefile != null && fromcache == false)        // if write file back..
                         {
+                            // give the finalised name to the cache file. If we have name only, we should be saving it under systemaddress
+                            cachefile = System.IO.Path.Combine(EliteConfigInstance.InstanceOptions.ScanCachePath, $"spansh_{(sys.Key.SafeFileString())}_v2.json");
+
                             JObject jo = new JObject();         // object with Bodies and BodyCount (v2)
                             jo["Bodies"] = jlist;   
                             if ( bodycount!=null)
                                 jo["BodyCount"] = bodycount;
+
                             BaseUtils.FileHelpers.TryWriteToFile(cachefile, jo.ToString(true));      // save to file so we don't have to reload
                         }
 
-                        BodyCache[sys.Name] = new Tuple<int?,List<JournalScan>>(bodycount,bodies);
+                        // place the body in the cache under both its name and its system address. We return system normalised, bodies and bodycount (if known)
+                        var cdata = new BodiesResults(sys, bodies, bodycount);
+                        if (sys.Name.HasChars())
+                            BodyCache[sys.Name] = cdata;
+                        if (sys.SystemAddress.HasValue)
+                            BodyCache[sys.SystemAddress.Value.ToStringInvariant()] = cdata;
 
-                       // System.Diagnostics.Debug.WriteLine($"Spansh Web/File Lookup complete {sys.Name} {bodies.Count} cache {fromcache}");
-                        return new GetBodiesResults(bodies, bodycount, fromcache);
+                        // System.Diagnostics.Debug.WriteLine($"Spansh Web/File Lookup complete {sys.Name} {sys.SystemAddress} {bodies.Count} cache {fromcache}");
+                        return cdata;
                     }
                     else
                     {
-                        BodyCache[sys.Name] = null;
-                       // System.Diagnostics.Debug.WriteLine($"Spansh Web Lookup complete no info {sys.Name}");
+                        // System.Diagnostics.Debug.WriteLine($"Spansh Web Lookup complete no info {sys.Name} {sys.SystemAddress}");
+
+                        if (sys.Name.HasChars())
+                            BodyCache[sys.Name] = null;
+                        if (sys.SystemAddress.HasValue)
+                            BodyCache[sys.SystemAddress.Value.ToStringInvariant()] = null;
                     }
                 }
             }

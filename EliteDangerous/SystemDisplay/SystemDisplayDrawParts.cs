@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace EliteDangerousCore
 {
@@ -26,7 +27,7 @@ namespace EliteDangerousCore
     {
         // curmats may be null
         private Point CreateMaterialNodes(List<ExtPictureBox.ImageElement> pc, JournalScan sn, List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats,
-                                Point matpos, Size matsize)
+                                Point matpos, Size matsize, ContextMenuStrip rightclickmenu)
         {
             Point startpos = matpos;
             Point maximum = matpos;
@@ -77,6 +78,8 @@ namespace EliteDangerousCore
                 ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(
                                 new Rectangle(matpos.X, matpos.Y, matsize.Width, matsize.Height), mat, tooltip + "\n\n" + "All " + matclicktext.ToString(), tooltip.ToString());
 
+                ie.ContextMenuStrip = rightclickmenu;
+
                 pc.Add(ie);
 
                 maximum = new Point(Math.Max(maximum.X, matpos.X + matsize.Width), Math.Max(maximum.Y, matpos.Y + matsize.Height));
@@ -96,7 +99,7 @@ namespace EliteDangerousCore
         // Create a signals list
         private Point DrawSignals(List<ExtPictureBox.ImageElement> pc, Point leftmiddle,
                                 List<JournalFSSSignalDiscovered> listfsd, List<JournalCodexEntry> codex,
-                                int height, int shiftrightifreq)
+                                int height, int shiftrightifreq, ContextMenuStrip rightclickmenu)
         {
             const int maxicons = 5;
             int iconsize = height / maxicons;
@@ -193,7 +196,7 @@ namespace EliteDangerousCore
             if (icons > 4)
                 leftmiddle.X += shiftrightifreq;
 
-            return CreateImageAndLabel(pc, bmp, leftmiddle, bmp.Size, false, out Rectangle _, new string[] { "" }, tip, false);
+            return CreateImageAndLabel(pc, bmp, leftmiddle, bmp.Size, false, out Rectangle _, new string[] { "" }, tip, rightclickmenu, false);
         }
 
 
@@ -208,10 +211,16 @@ namespace EliteDangerousCore
                                     bool shiftrightifneeded, 
                                     out Rectangle imageloc,
                                     string[] labels,  // may be null, no labels
-                                    string ttext, bool imgowned = true, Color? backwash = null)
+                                    string ttext,
+                                    ContextMenuStrip rightclickmenu,
+                                    bool imgowned = true, 
+                                    Color? backwash = null
+                                    )
         {
 
             ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(new Rectangle(leftmiddle.X, leftmiddle.Y - size.Height / 2, size.Width, size.Height), image, ttext, ttext, imgowned);
+
+            ie.ContextMenuStrip = rightclickmenu;
 
             if (backwash.HasValue)  // this is dodgy as its filling source bitmap but it shows rect
             {

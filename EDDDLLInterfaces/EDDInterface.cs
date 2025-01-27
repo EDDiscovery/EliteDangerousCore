@@ -15,6 +15,7 @@
 using System.Drawing;
 using System;
 using System.Runtime.InteropServices;
+using static EDDDLLInterfaces.EDDDLLIF;
 
 namespace EDDDLLInterfaces
 {
@@ -159,7 +160,11 @@ namespace EDDDLLInterfaces
         // transparent change 15/1/25 the bool now means spansh then edsm
         public delegate void EDDRequestScanData(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, bool spanshthenedsmlookup);
 
-        // requesttype = All, Visible, Name=<wildcard name>, SystemName=<name>, Types=<typelist>
+        // New interfaces for version 4. 
+
+        public delegate void EDDRequestScanData2(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, long systemaddress, 
+                                        int weblookup, [MarshalAs(UnmanagedType.BStr)] string otheroptions);
+
         public delegate string EDDRequestGMOs(string requestype);
 
         [StructLayout(LayoutKind.Explicit)]
@@ -218,7 +223,18 @@ namespace EDDDLLInterfaces
             // Version 3 Ends here (16.0.4 Dec 22)
 
             // Get GMO Objects 
+            // requesttype = All, Visible, Name=<wildcard name>, SystemName=<name>, Types=<typelist>
             [FieldOffset(112)] public EDDRequestGMOs GetGMOs;
+
+            // Get Scan Data
+            // System = "name" systemaddress=0 valid
+            // System = "" systemaddress=N valid
+            // System = "name" systemaddress=N valid with systemaddress preferred as the lookup source
+            // System = "" systemaddress = 0 get current system information
+            // web lookup = 3 SpanshThenEDSM 2 = Spansh 1 = EDSM 0 = None
+            // otheroptions is unused as of now.
+
+            [FieldOffset(120)] public EDDRequestScanData2 RequestScanDataExt;
 
             // Version 4 Ends here (19.0 Jan 24)
         }

@@ -43,9 +43,10 @@ namespace EliteDangerousCore
                             Size size,                      // nominal size
                             DrawLevel drawtype,             // drawing.. determines text printed mostly
                             Random random,                  // for random placements
+                            System.Windows.Forms.ContextMenuStrip rightclickmenubody,  // any right click CMS to assign
+                            System.Windows.Forms.ContextMenuStrip rightclickmenumats,  // any right click CMS to assign
                             Color? backwash = null,         // optional back wash on image 
-                            string appendlabeltext = ""     // any label text to append
-                            
+                            string appendlabeltext = ""    // any label text to append
                 )
         {
             //System.Diagnostics.Debug.WriteLine($"DrawNode {sn.OwnName} at {position} xiscentre {xiscentre} : size {size} type {drawtype}");
@@ -334,7 +335,7 @@ namespace EliteDangerousCore
                         nodelabels = null;
 
                     //System.Diagnostics.Debug.WriteLine("Body " + sc.BodyName + " plot at "  + postoplot + " " + bmp.Size + " " + (postoplot.X+imageleft) + "," + (postoplot.Y-bmp.Height/2+imagetop));
-                    endpoint = CreateImageAndLabel(pc, bmp, postoplot, bmp.Size, shiftrightifneeded, out imagepos, nodelabels, sc.DisplayString(historicmats,curmats));
+                    endpoint = CreateImageAndLabel(pc, bmp, postoplot, bmp.Size, shiftrightifneeded, out imagepos, nodelabels, sc.DisplayString(historicmats,curmats), rightclickmenubody);
 
                     int xshift = imagepos.X - postoplot.X;          // we may have shifted right if shiftrightifneeded is on, need to take account in imagexcentre
 
@@ -345,7 +346,7 @@ namespace EliteDangerousCore
                     if (sc.HasMaterials && ShowMaterials)
                     {
                         Point matpos = new Point(endpoint.X + 4, position.Y);
-                        Point endmat = CreateMaterialNodes(pc, sc, historicmats, curmats, matpos, materialsize);
+                        Point endmat = CreateMaterialNodes(pc, sc, historicmats, curmats, matpos, materialsize, rightclickmenumats);
                         endpoint = new Point(Math.Max(endpoint.X, endmat.X), Math.Max(endpoint.Y, endmat.Y)); // record new right point..
                     }
                 }
@@ -381,7 +382,7 @@ namespace EliteDangerousCore
                     nodelabels = null;
 
                 endpoint = CreateImageAndLabel(pc, BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt"), postoplot, bmpsize, shiftrightifneeded, out imagepos, nodelabels, 
-                                    tooltip.ToString(), false, backwash);
+                                    tooltip.ToString(), rightclickmenubody, false, backwash);
 
                 imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the belt is
             }
@@ -441,7 +442,7 @@ namespace EliteDangerousCore
 
                 Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
 
-                endpoint = CreateImageAndLabel(pc, notscanned, postoplot, size, shiftrightifneeded, out imagepos, nodelabels, tooltip.ToString(), false, backwash);
+                endpoint = CreateImageAndLabel(pc, notscanned, postoplot, size, shiftrightifneeded, out imagepos, nodelabels, tooltip.ToString(), rightclickmenubody, false, backwash);
 
                 imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the not scanned thing is
             }

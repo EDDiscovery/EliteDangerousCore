@@ -51,6 +51,9 @@ namespace EliteDangerousCore
         [QuickJSON.JsonIgnore()]
         public object Tag { get; set; }
 
+        [QuickJSON.JsonIgnore()]
+        public string Key { get { return SystemAddress != null ? SystemAddress.ToStringInvariant() : Name; } }
+
         public SystemClassBase()
         {
             Xi = int.MinValue;
@@ -156,6 +159,11 @@ namespace EliteDangerousCore
         public SystemClass(string name) : base()
         {
             Name = name;
+        }
+        public SystemClass(long addr) : base()
+        {
+            Name = "";
+            SystemAddress = addr;
         }
 
         // with no co-ords

@@ -38,7 +38,7 @@ namespace EliteDangerousCore.Spansh
 
         public List<StationInfo> GetStationsByDump(ISystem sys)
         {
-            sys = EnsureSystemAddress(sys);
+            sys = EnsureSystemAddressAndName(sys);
 
             if (sys == null)
                 return null;
