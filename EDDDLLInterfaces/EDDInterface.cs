@@ -167,6 +167,8 @@ namespace EDDDLLInterfaces
 
         public delegate string EDDRequestGMOs(string requestype);
 
+        // ALL CALLBACKS must be called on UI thread.
+
         [StructLayout(LayoutKind.Explicit)]
         public struct EDDCallBacks
         {
@@ -241,8 +243,11 @@ namespace EDDDLLInterfaces
 
         public const int DLLCallBackVersion = 4;
 
+        // ALL CALLBACKS must be called on UI thread.
         // This class is passed to panel on Init.
-        public class EDDPanelCallbacks      // Must be fixed once released.  Use an EDDPanelCallBacks2 etc interface to expand later, and you'll need to add a new ExtPanel host
+        // Must be fixed once released.  Use an EDDPanelCallBacks2 etc interface to expand later, and you'll need to add a new ExtPanel host
+
+        public class EDDPanelCallbacks      
         {
             public int ver;
 
@@ -257,30 +262,29 @@ namespace EDDDLLInterfaces
             public delegate bool PanelPushStarsList(string panelname, System.Collections.Generic.List<string> stars);
             public delegate bool PanelPushCSV(string filename);
 
-            public PanelSave<string> SaveString;
-            public PanelSave<double> SaveDouble;
-            public PanelSave<long> SaveLong;
-            public PanelSave<int> SaveInt;
-            public PanelGet<string> GetString;
-            public PanelGet<double> GetDouble;
-            public PanelGet<long> GetLong;
-            public PanelGet<int> GetInt;
-            public PanelSaveGridLayout SaveGridLayout;
-            public PanelLoadGridLayout LoadGridLayout;
-            public PanelString SetControlText;
-            public PanelBool HasControlTextArea;
-            public PanelBool IsControlTextVisible;
-            public PanelBool IsTransparentModeOn;       // is transparent mode allowed? (does not mean its currently transparent)
-            public PanelBool IsFloatingWindow;          // is it a floating window outside (in a form)
-            public PanelBool IsClosed;                  // very important if your doing async programming - the window may have closed when the async returns!
-            public PanelDGVTransparent DGVTransparent;  // Theme the DGV with transparency or not
-            public PanelBool RequestTravelGridPosition;    // ask for the travel grid position to be sent via CursorChanged
-            public PanelPushStarsList PushStars;        // push a star list to "triwanted","trisystems" or "expedition".
-            public PanelPushCSV PushCSVToExpedition;    // push a CSV file to the expedition panel
+            public PanelSave<string> SaveString;        // thread safe
+            public PanelSave<double> SaveDouble;        // thread safe
+            public PanelSave<long> SaveLong;            // thread safe
+            public PanelSave<int> SaveInt;              // thread safe
+            public PanelGet<string> GetString;          // thread safe
+            public PanelGet<double> GetDouble;          // thread safe
+            public PanelGet<long> GetLong;              // thread safe
+            public PanelGet<int> GetInt;                // thread safe
+            public PanelSaveGridLayout SaveGridLayout;  // UI Thread only
+            public PanelLoadGridLayout LoadGridLayout;  // UI Thread only
+            public PanelString SetControlText;          // UI Thread only
+            public PanelBool HasControlTextArea;        // thread safe
+            public PanelBool IsControlTextVisible;      // thread safe
+            public PanelBool IsTransparentModeOn;       // thread safe : is transparent mode allowed? (does not mean its currently transparent)
+            public PanelBool IsFloatingWindow;          // thread safe : is it a floating window outside (in a form)
+            public PanelBool IsClosed;                  // thread safe : very important if your doing async programming - the window may have closed when the async returns!
+            public PanelDGVTransparent DGVTransparent;  // UI Thread only : Theme the DGV with transparency or not
+            public PanelBool RequestTravelGridPosition;    // UI Thread only : ask for the travel grid position to be sent via CursorChanged
+            public PanelPushStarsList PushStars;        // UI Thread only : push a star list to "triwanted","trisystems" or "expedition".
+            public PanelPushCSV PushCSVToExpedition;    // UI Thread only : push a CSV file to the expedition panel
 
             // ver 1 ends
         };
-
 
 
         public const int PanelCallBackVersion = 1;
