@@ -174,7 +174,8 @@ namespace EDDDLLInterfaces
         {
             [FieldOffset(0)] public int ver;                        // version (same as CALLBACKVERSION)
 
-            // DLL get history entry by index or jid. If program does not have history or out of range, return false
+            // DLL get history entry by entry number (1..N) or by jid. If program does not have history or out of range, return false
+            // JID is expensive.
             [FieldOffset(8)] public EDDRequestHistory RequestHistory;
 
             // DLL run an action script. If program does not have action, return false.
