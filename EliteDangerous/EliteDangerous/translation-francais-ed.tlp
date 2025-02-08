@@ -1,4 +1,4 @@
-
+﻿
 SECTION Bodies
 
 .HMS: "Luminous Hot {0} class star" => "Étoile chaude {0}"
@@ -1225,8 +1225,8 @@ SECTION PowerPlayStates
 .Controlled: "Controlled" => "Contrôlé"
 .Turmoil: "In turmoil" => "Menacé"
 .HomeSystem: "Home system" =>  "Quartier général"
-.Fortified: "Fortified" => "Fortifé"
-.Stronghold: "Stronghold" => "Bastion"
+.Fortified: "Fortified" => "Consolidé"
+.Stronghold: "Stronghold" => "Défendu"
 
 SECTION ModuleTypeNames
 
@@ -1392,7 +1392,7 @@ SECTION ModulePartNames
 .Xeno_Scanner: "Xeno Scanner" => "Détecteur de xénomorphes"
 .Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" => "Détecteur de xénomorphes amélioré"
 .Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" => "Détecteur de xénomorphes à onde pulsée"
-.Concord_Cannon: "Concord Cannon" => "Canon Concord"
+.Concord_Cannon: "Concord Cannon" => "Canon Concorde"
 
 SECTION ShipSlots
 
