@@ -1,4 +1,4 @@
-﻿
+
 SECTION Bodies
 
 .HMS: "Luminous Hot {0} class star" => "Étoile chaude {0}"
@@ -934,18 +934,18 @@ SECTION MaterialCommodityMicroResourceType
 
 SECTION EngineeringData
 
-.Engineer: "Engineer:" => "Ingénieur: "
-.Blueprint: "Blueprint:" => "Plan: "
-.Level: "Level:" => "Niveau: "
-.Quality: "Quality:" => "Qualité: "
-.ExperimentalEffect: "Experimental Effect:" => "Effet expérimental: "
+.Engineer: "Engineer:" => "Ingénieur : "
+.Blueprint: "Blueprint:" => "Plan : "
+.Level: "Level:" => "Niveau : "
+.Quality: "Quality:" => "Qualité : "
+.ExperimentalEffect: "Experimental Effect:" => "Effet expérimental : "
 .Original: "Original: ;;0.###" @
 .Worse: "< (Worse); (Better)" => "< (Pire); (Meilleur)"
 
 SECTION MissionState
 
-.ToGo: "To Go:" => "Reste: "
-.Progress: "Progress:;%;N1" => "Progression:;%;N1"
+.ToGo: "To Go:" => "Reste : "
+.Progress: "Progress:;%;N1" => "Progression : ;%;N1"
 
 SECTION CommanderForm
 

@@ -280,38 +280,38 @@ SECTION JournalCodexEntry
 
 SECTION CommunityGoal
 
-.Title: "Title: " => "Titre: "
-.System: "System: " => "Système: "
-.At: "At: " => "À: "
-.Expires: "Expires: " => "Expire: "
+.Title: "Title: " => "Titre : "
+.System: "System: " => "Système : "
+.At: "At: " => "À : "
+.Expires: "Expires: " => "Expire : "
 .NotComplete: "Not Complete;Complete" => "Pas terminé;Terminé"
-.CurrentTotal: "Current Total: " => "Total actuel: "
+.CurrentTotal: "Current Total: " => "Total actuel : "
 .Contribution: "Contribution: " @
-.NumContributors: "Num Contributors: " => "Nb Contributeurs: "
-.Player: "Player % Band: " => "Joueur % bande: "
-.TopRank: "Top Rank: " => "Rang dans le top: "
+.NumContributors: "Num Contributors: " => "Nb Contributeurs : "
+.Player: "Player % Band: " => "Joueur % bande : "
+.TopRank: "Top Rank: " => "Rang dans le top : "
 .NotInTopRank: "Not In Top Rank;In Top Rank" => "Pas dans le top;Dans le top"
-.TierReached: "Tier Reached: " => "Niveau atteint: "
+.TierReached: "Tier Reached: " => "Niveau atteint : "
 .Bonus: "Bonus: " @
 .TopTierName: "Top Tier Name" => "Nom du top niveau"
 .TT: "TT. Bonus" @
 
 SECTION FSSSignal
 
-.State: "State: " => "Statut: "
+.State: "State: " => "Statut : "
 .Faction: "Faction: " @
-.ThreatLevel: "Threat Level: " => "Niveau de menace: "
+.ThreatLevel: "Threat Level: " => "Niveau de menace : "
 .StationBool: ";Station: " @
-.CarrierBool: ";Carrier: " => ";Porte-vaisseaux: "
-.MegashipBool: ";Megaship: " => ";Méga-vaisseaux: "
+.CarrierBool: ";Carrier: " => ";Porte-vaisseaux : "
+.MegashipBool: ";Megaship: " => ";Méga-vaisseaux : "
 .InstallationBool: ";Installation: " @
-.LastSeen: "Last Seen: " => "Dernière vue: "
+.LastSeen: "Last Seen: " => "Dernière vue : "
 
 SECTION JournalFSSDiscoveryScan
 
-.Progress: "Progress: ;%;N1" => "Progression: ;%;N1"
-.Bodies: "Bodies: " => "Corps: "
-.Others: "Others: " => "Autres: "
+.Progress: "Progress: ;%;N1" => "Progression : ;%;N1"
+.Bodies: "Bodies: " => "Corps : "
+.Others: "Others: " => "Autres : "
 
 SECTION JournalFSSSignalDiscovered
 
@@ -326,22 +326,22 @@ SECTION JournalCommodityPricesBase
 .PON: "Prices on ; items" => "Prix de ; marchandises"
 .CPBat: "< at " => "< à "
 .CPBin: "< in " => "< dans "
-.Itemstobuy: "Items to buy: " => "Marchandises à acheter: "
-.CPBBuySell: "{0}: {1} sell {2} Diff {3} {4}%  " => "{0}: {1} vend {2} Diff {3} {4}%  "
+.Itemstobuy: "Items to buy: " => "Marchandises à acheter : "
+.CPBBuySell: "{0}: {1} sell {2} Diff {3} {4}%  " => "{0} : {1} vend {2} Diff {3} {4} %  "
 .CPBBuy: "{0}: {1}  " @
-.SO: "Sell only Items: " => "Marchandises uniquement vendables: "
+.SO: "Sell only Items: " => "Marchandises uniquement vendables : "
 
 SECTION JournalEngineerProgress
 
 .Progresson: "Progress on ; Engineers" => "Progression sur ; ingénieurs"
-.Rank: "Rank: " => "Rang: "
+.Rank: "Rank: " => "Rang : "
 
 SECTION JournalFSDJump
 
 .Jumpto: "Jump to {0}" => "Saut vers {0}"
 .Distance: "; ly;N2" => "; al;N2"
-.FuelUsed: "Fuel used: ; t;N2" => "Carburant utilisé: ; t;N2"
-.FuelLeft: "Fuel left: ; t;N2" => "Reste du carburant: ; t;N2"
+.FuelUsed: "Fuel used: ; t;N2" => "Carburant utilisé : ; t;N2"
+.FuelLeft: "Fuel left: ; t;N2" => "Reste du carburant : ; t;N2"
 
 SECTION JournalLeaveBody
 
@@ -352,13 +352,13 @@ SECTION JournalLocOrJump
 .Faction: "Faction: " @
 .Wanted: "<;(Wanted) " => "<;(recherché) "
 .State: "State: " = FSSSignal.State
-.Allegiance: "Allegiance: " => "Allégeance: "
-.Economy: "Economy: " => "Économie: "
+.Allegiance: "Allegiance: " => "Allégeance : "
+.Economy: "Economy: " => "Économie : "
 .Population: "Population: " @
-.Government: "Government: " => "Gouvernement: "
+.Government: "Government: " => "Gouvernement : "
 .Inf: "Inf: ;%" @
-.PendingState: "Pending State: " => "Statut imminent: "
-.RecoveringState: "Recovering State: " => "Récupération de statut: "
+.PendingState: "Pending State: " => "Statut imminent : "
+.RecoveringState: "Recovering State: " => "Récupération de statut : "
 
 SECTION JournalFuelScoop
 
@@ -378,27 +378,27 @@ SECTION JournalLocOrJump
 
 .Type: "Type " @
 .insystem: "< in system " => "< dans le système "
-.Security: "Security: " => "Sécurité: "
-.Happiness: "Happiness: " => "Bonheur: "
-.Reputation: "Reputation: ;%;N1" => "Réputation: ;%;N1"
+.Security: "Security: " => "Sécurité : "
+.Happiness: "Happiness: " => "Bonheur : "
+.Reputation: "Reputation: ;%;N1" => "Réputation : ;%;N1"
 .SquadronSystem: ";Squadron System" => ";Système d'escadron"
 .HappiestSystem: ";Happiest System" => ";Système le plus heureux"
 .HomeSystem: ";Home System" => ";Système de base"
-.ActiveState: "Active State: " => "Statut courant: "
+.ActiveState: "Active State: " => "Statut courant : "
 
 SECTION JournalMissionAccepted
 
 .from: "< from " => "< de "
-.Expiry: "Expiry: " => "Expiration: "
+.Expiry: "Expiry: " => "Expiration : "
 .Influence: "Influence: " @
-.Reputation: "Reputation: " => "Réputation: "
-.Reward: "Reward: ; cr;N0" => "Récompense: ; cr;N0"
+.Reputation: "Reputation: " => "Réputation : "
+.Reward: "Reward: ; cr;N0" => "Récompense : ; cr;N0"
 .Wing: "; (Wing)" => "; (Escadrille)"
-.Deliver: "Deliver: " => "Livraison: "
-.TargetType: "Target Type: " => "Type de cible: "
-.KillCount: "Kill Count: " => "Nb de mort: "
-.Passengers: "Passengers: " => "Passagers: "
-.Count: "Count: " => "Nb: "
+.Deliver: "Deliver: " => "Livraison : "
+.TargetType: "Target Type: " => "Type de cible : "
+.KillCount: "Kill Count: " => "Nb de mort : "
+.Passengers: "Passengers: " => "Passagers : "
+.Count: "Count: " => "Nb : "
 
 SECTION JournalMaterialDiscovered
 
@@ -406,14 +406,14 @@ SECTION JournalMaterialDiscovered
 
 SECTION JournalMaterials
 
-.Raw: "Raw: " => "Brut: "
-.Manufactured: "Manufactured: " => "Fabriqué: "
-.Encoded: "Encoded: " => "Encodé: "
+.Raw: "Raw: " => "Brut : "
+.Manufactured: "Manufactured: " => "Fabriqué : "
+.Encoded: "Encoded: " => "Encodé : "
 
 SECTION JournalMissionRedirected
 
-.From: "From: " => "De: "
-.To: "To: " => "Vers: "
+.From: "From: " => "De : "
+.To: "To: " => "Vers : "
 
 SECTION MissionItem
 
@@ -430,7 +430,7 @@ SECTION JournalMultiSellExplorationData
 
 SECTION JournalProspectedAsteroid
 
-.Remaining: "Remaining: ;%;N1" => "Reste: ;%;N1"
+.Remaining: "Remaining: ;%;N1" => "Reste : ;%;N1"
 
 SECTION JournalPromotion
 
@@ -445,34 +445,34 @@ SECTION JournalPromotion
 
 SECTION JournalReceiveText
 
-.From: "From: " => "Depuis: "
+.From: "From: " => "Depuis : "
 .Text: " Texts" => " messages"
 .FC: "from " => "de "
 .on: "< on " = JournalCommodityPricesBase.CPBat
 
 SECTION JournalRepairDrone
 
-.Hull: "Hull: " => "Coque: "
+.Hull: "Hull: " => "Coque : "
 
 SECTION JournalReputation
 
-.Federation: "Federation: ;;0.#" => "Fédération: ;;0.#"
+.Federation: "Federation: ;;0.#" => "Fédération : ;;0.#"
 .Empire: "Empire: ;;0.#" @
-.Independent: "Independent: ;;0.#" => "Indépendants: ;;0.#"
+.Independent: "Independent: ;;0.#" => "Indépendants : ;;0.#"
 .Alliance: "Alliance: ;;0.#" @
 
 SECTION JournalReservoirReplenished
 
-.Main: "Main: ;t;0.0" => "Principal: ;t;0.0"
-.Reservoir: "Reservoir: ;t;0.0" => "Réservoir: ;t;0.0"
+.Main: "Main: ;t;0.0" => "Principal : ;t;0.0"
+.Reservoir: "Reservoir: ;t;0.0" => "Réservoir : ;t;0.0"
 
 SECTION StarPlanetRing
 
-.Mass: "Mass: {0:N4}{1}" => "  Masse: {0:N4}{1}"
-.InnerRadius: "Inner Radius: {0:0.00}ls" => "  Rayon Interne: {0:0.00}sl"
-.OuterRadius: "Outer Radius: {0:0.00}ls" => "  Rayon Externe: {0:0.00}sl"
-.IK: "Inner Radius: {0}km" => "  Rayon Interne: {0}km"
-.OK: "Outer Radius: {0}km" => "  Rayon Externe: {0}km"
+.Mass: "Mass: {0:N4}{1}" => "  Masse : {0:N4}{1}"
+.InnerRadius: "Inner Radius: {0:0.00}ls" => "  Rayon Interne : {0:0.00} sl"
+.OuterRadius: "Outer Radius: {0:0.00}ls" => "  Rayon Externe : {0:0.00} sl"
+.IK: "Inner Radius: {0}km" => "  Rayon Interne : {0} km"
+.OK: "Outer Radius: {0}km" => "  Rayon Externe : {0} km"
 .Icy: "Icy" => "Glacé"
 .Rocky: "Rocky" => "Rocheux"
 .MetalRich: "Metal Rich" => "Riche en métaux"
@@ -480,8 +480,8 @@ SECTION StarPlanetRing
 
 SECTION JournalScan
 
-.CV: "Current value: {0:N0}" => "Valeur actuelle: {0:N0}"
-.FDV: "First Discovered value: {0:N0}" => "Valeur de première découverte: {0:N0}"
+.CV: "Current value: {0:N0}" => "Valeur actuelle : {0:N0}"
+.FDV: "First Discovered value: {0:N0}" => "Valeur de première découverte : {0:N0}"
 .Autoscanof: "Autoscan of {0}" => "Scan auto de {0}"
 .Detailedscanof: "Detailed scan of {0}" => "Scan détaillé de {0}"
 .Basicscanof: "Basic scan of {0}" => "Scan basique de {0}"
@@ -490,32 +490,32 @@ SECTION JournalScan
 .ScanBasic: "Scan Basic" => "Scan basique"
 .ScanNav: "Scan Nav" => "Scan de navigation"
 .Scanof: "Scan of {0}" => "Scan de {0}"
-.MSM: "Mass: ;SM;0.00" => "Masse: ;MS;0.00"
-.Age: "Age: ;my;0.0" => "Age: ;ma;0.0"
-.RS: "Radius: " => "Rayon: "
+.MSM: "Mass: ;SM;0.00" => "Masse : ;MS;0.00"
+.Age: "Age: ;my;0.0" => "Age : ;ma;0.0"
+.RS: "Radius: " => "Rayon : "
 .Landable: "<;, Landable" => "<;, Atterrissable"
 .Terraformable: "<;, Terraformable" @
-.Gravity: "Gravity: ;G;0.00" => "Gravité: ;G;0.00"
+.Gravity: "Gravity: ;G;0.00" => "Gravité : ;G;0.00"
 .NoAtmosphere: "No Atmosphere" => "Pas d'atmosphère"
 .LandC: "Landable" => "Atterrissable"
-.AMY: "Age: {0} my" => "Age: {0} ma"
-.SolarMasses: "Solar Masses: {0:N2}" => "Masses solaires: {0:N2}"
-.SurfaceTemp: "Surface Temp: {0}K" => "Temp. de surface: {0}K"
-.GV: "Gravity: {0:N2}g" => "Gravité: {0:N2}g"
-.SPA: "Surface Pressure: {0} Atmospheres" => "Pression de surface: {0} Atmosphères"
-.SPP: "Surface Pressure: {0} Pa" => "Pression de surface: {0} Pa"
-.Volcanism: "Volcanism: {0}" => "Volcanisme: {0}"
+.AMY: "Age: {0} my" => "Age : {0} ma"
+.SolarMasses: "Solar Masses: {0:N2}" => "Masses solaires : {0:N2}"
+.SurfaceTemp: "Surface Temp: {0}K" => "Temp. de surface : {0} K"
+.GV: "Gravity: {0:N2}g" => "Gravité : {0:N2} g"
+.SPA: "Surface Pressure: {0} Atmospheres" => "Pression de surface : {0} Atmosphères"
+.SPP: "Surface Pressure: {0} Pa" => "Pression de surface : {0} Pa"
+.Volcanism: "Volcanism: {0}" => "Volcanisme : {0}"
 .NoVolcanism: "No Volcanism" => "Pas d'activité volcanique"
-.DistancefromArrivalPoint: "Distance from Arrival Point {0:N1}ls" => "Distance du point d'arrivée {0:N1}sl"
-.OrbitalPeriod: "Orbital Period: {0} days" => "Période de révolution: {0} jours"
-.SMA: "Semi Major Axis: {0:0.00}AU" => "Demi-grand axe : {0:0.00}UA"
-.SMK: "Semi Major Axis: {0}km" => "Demi-grand axe : {0}km"
-.OrbitalEccentricity: "Orbital Eccentricity: " => "Excentricité orbitale: "
-.OrbitalInclination: "Orbital Inclination: {0:0.000}°" => "Inclinaison orbitale: {0:0.000}°"
-.ArgOfPeriapsis: "Arg Of Periapsis: {0:0.000}°" => "Argument du périastre: {0:0.000}°"
-.AbsoluteMagnitude: "Absolute Magnitude: {0:0.00}" => "Magnitude absolue: {0:0.00}"
-.Axialtilt: "Axial tilt: {0:0.00}°" => "Inclinaison de l'axe: {0:0.00}°"
-.RotationPeriod: "Rotation Period: {0} days" => "Période de rotation: {0} jours"
+.DistancefromArrivalPoint: "Distance from Arrival Point {0:N1}ls" => "Distance du point d'arrivée {0:N1} sl"
+.OrbitalPeriod: "Orbital Period: {0} days" => "Période de révolution : {0} jours"
+.SMA: "Semi Major Axis: {0:0.00}AU" => "Demi-grand axe : {0:0.00} UA"
+.SMK: "Semi Major Axis: {0}km" => "Demi-grand axe : {0} km"
+.OrbitalEccentricity: "Orbital Eccentricity: " => "Excentricité orbitale : "
+.OrbitalInclination: "Orbital Inclination: {0:0.000}°" => "Inclinaison orbitale : {0:0.000}°"
+.ArgOfPeriapsis: "Arg Of Periapsis: {0:0.000}°" => "Argument du périastre : {0:0.000}°"
+.AbsoluteMagnitude: "Absolute Magnitude: {0:0.00}" => "Magnitude absolue : {0:0.00}"
+.Axialtilt: "Axial tilt: {0:0.00}°" => "Inclinaison de l'axe : {0:0.00}°"
+.RotationPeriod: "Rotation Period: {0} days" => "Période de rotation : {0} jours"
 .Tidallylocked: "Tidally locked" => "Rotation synchrone"
 .Candidateforterraforming: "Candidate for terraforming" => "Candidat à la terraformation"
 .Moons: " Moons" => " Lunes"
@@ -523,51 +523,51 @@ SECTION JournalScan
 .Belts: "Belts" => "Ceintures"
 .Ring: "Ring" => "Anneau"
 .Rings: "Rings" => "Anneaux"
-.EV: "Base Estimated value: {0:N0}" => "Valeur de base estimée: {0:N0}"
-.EVM: "Mapped value: {0:N0}/{1:N0}e" => "Valeur cartographié estimée: {0:N0}/{1:N0}e"
+.EV: "Base Estimated value: {0:N0}" => "Valeur de base estimée : {0:N0}"
+.EVM: "Mapped value: {0:N0}/{1:N0}e" => "Valeur cartographié estimée : {0:N0}/{1:N0} e"
 .DB: "Discovered by {0} on {1}" => "Découvert par {0} le {1}"
 .Othersstarsnotconsidered: " - Others stars not considered" => " - autres étoiles non prises en compte"
-.Materials: "Materials:" => "Matériaux:"
-.AtmosphericComposition: "Atmospheric Composition:" => "Atmosphère:"
-.PlanetaryComposition: "Planetary Composition:" => "Composition:"
+.Materials: "Materials:" => "Matériaux :"
+.AtmosphericComposition: "Atmospheric Composition:" => "Atmosphère :"
+.PlanetaryComposition: "Planetary Composition:" => "Composition :"
 .HabitableZone: " - Habitable Zone, {0} ({1}-{2} AU)," => " - Zone habitable, {0} ({1}-{2} UA),"
-.MetalRichplanets: " - Metal Rich planets, {0} ({1}-{2} AU)," => " - Planètes riches en métaux:, {0} ({1}-{2} UA),"
-.WaterWorlds: " - Water Worlds, {0} ({1}-{2} AU)," => " - Mondes aquatiques: {0} ({1}-{2} UA)"
-.EarthLikeWorlds: " - Earth Like Worlds, {0} ({1}-{2} AU)," => " - Mondes telluriques: {0} ({1}-{2} UA)"
-.AmmoniaWorlds: " - Ammonia Worlds, {0} ({1}-{2} AU)," => " - Mondes ammoniacs: {0} ({1}-{2} UA)"
-.IcyPlanets: " - Icy Planets, {0} (from {1} AU)" => " - Planètes glacées: {0} (de {1} AU)"
-.DISTA: "Dist: ;ls;0.0" => "Dist: ;sl;0.0"
+.MetalRichplanets: " - Metal Rich planets, {0} ({1}-{2} AU)," => " - Planètes riches en métaux :, {0} ({1}-{2} UA),"
+.WaterWorlds: " - Water Worlds, {0} ({1}-{2} AU)," => " - Mondes aquatiques : {0} ({1}-{2} UA)"
+.EarthLikeWorlds: " - Earth Like Worlds, {0} ({1}-{2} AU)," => " - Mondes telluriques : {0} ({1}-{2} UA)"
+.AmmoniaWorlds: " - Ammonia Worlds, {0} ({1}-{2} AU)," => " - Mondes ammoniacs : {0} ({1}-{2} UA)"
+.IcyPlanets: " - Icy Planets, {0} (from {1} AU)" => " - Planètes glacées : {0} (de {1} AU)"
+.DISTA: "Dist: ;ls;0.0" => "Dist : ;sl;0.0"
 .DIST: "Dist: " @
-.BNME: "Name: " => "Nom: "
+.BNME: "Name: " => "Nom : "
 .SNME: "Name: " = JournalScan.BNME
 .MPI: "Mapped" => "Cartographié"
 .MPIE: "Efficiently" => "Efficacement"
-.EVFD: "First Discovered+Mapped value: {0:N0}/{1:N0}e" => "Valeur de première découverte + carto: {0:N0}/{1:N0}e"
-.EVFM: "First Mapped value: {0:N0}/{1:N0}e" => "Valeur de première carto : {0:N0}/{1:N0}e"
-.SCNT: "Scan Type: {0}" => "Type de scan: {0}"
+.EVFD: "First Discovered+Mapped value: {0:N0}/{1:N0}e" => "Valeur de première découverte + carto : {0:N0}/{1:N0} e"
+.EVFM: "First Mapped value: {0:N0}/{1:N0}e" => "Valeur de première carto : {0:N0}/{1:N0} e"
+.SCNT: "Scan Type: {0}" => "Type de scan : {0}"
 .EVAD: "Already Discovered" => "Déjà découvert"
 .EVAM: "Already Mapped" => "Déjà cartographié"
-.InferredCircumstellarzones: "Inferred Circumstellar zones:" => "Zones habitable:"
-.MASS: "Mass: " => "Masse: "
-.AscendingNode: "Ascending Node: {0:0.000}°" => "Nœud ascendant: {0:0.000}°"
-.MeanAnomaly: "Mean Anomaly: {0:0.000}°" => "Anomalie moyenne: {0:0.000}°"
+.InferredCircumstellarzones: "Inferred Circumstellar zones:" => "Zones habitable :"
+.MASS: "Mass: " => "Masse : "
+.AscendingNode: "Ascending Node: {0:0.000}°" => "Nœud ascendant : {0:0.000}°"
+.MeanAnomaly: "Mean Anomaly: {0:0.000}°" => "Anomalie moyenne : {0:0.000}°"
 
 SECTION JournalSAAScanComplete
 
-.Probes: "Probes: " => "Sondes: "
-.EfficiencyTarget: "Efficiency Target: " => "Bonus d'efficacité: "
+.Probes: "Probes: " => "Sondes : "
+.EfficiencyTarget: "Efficiency Target: " => "Bonus d'efficacité : "
 
 SECTION JournalScreenshot
 
 .At: "At " => "A "
 .in: "< in " = JournalCommodityPricesBase.CPBin
-.File: "File: " => "Fichier: "
-.Width: "Width: " => "Largeur: "
-.Height: "Height: " => "Hauteur: "
+.File: "File: " => "Fichier : "
+.Width: "Width: " => "Largeur : "
+.Height: "Height: " => "Hauteur : "
 
 SECTION JournalSearchAndRescue
 
-.Reward: "Reward: " => "Récompense: "
+.Reward: "Reward: " => "Récompense : "
 
 SECTION JournalSellExplorationData
 
@@ -580,7 +580,7 @@ SECTION JournalSendText
 
 SECTION JournalSetUserShipName
 
-.On: "On: " => "Pour: "
+.On: "On: " => "Pour : "
 
 SECTION JournalShipTargeted
 
@@ -628,245 +628,245 @@ SECTION JournalStatistics
 
 SECTION BankAccountClass
 
-.Wealth: "Wealth: ; cr;N0" => "Fortune: ; cr;N0"
-.SpentonShips: "Spent on Ships: ; cr;N0" => "Dépensé en vaisseaux: ; cr;N0"
-.SpentonOutfitting: "Spent on Outfitting: ; cr;N0" => "Dépensé en équipements: ; cr;N0"
-.SpentonRepairs: "Spent on Repairs: ; cr;N0" => "Dépensé en réparation: ; cr;N0"
-.SpentonFuel: "Spent on Fuel: ; cr;N0" => "Dépensé en carburant: ; cr;N0"
-.SpendonAmmo: "Spent on Ammo: ; cr;N0" => "Dépensé en munitions: ; cr;N0"
-.InsuranceClaims: "Insurance Claims: ;;N0" => "Droits à l'assurance: ;;N0"
-.SpentonInsurance: "Spent on Insurance: ; cr;N0" => "Dépensé en assurance: ; cr;N0"
-.OwnedShipCount: "Owned ships: ;;N0" => "Vaisseaux possédés: ;;N0"
-.SpentOnSuits: "Spent on Suits: ; cr;N0" => "Dépensé en combinaisons: ; cr;N0"
-.SpentOnWeapons: "Spent on Weapons: ; cr;N0" => "Dépensé en armes de poing: ; cr;N0"
-.SpentOnSuitConsumables: "Spent on Suit Consumables: ; cr;N0" => "Dépensé en consommables: ; cr;N0"
-.SuitsOwned: "Suits Owned: ;;N0" => "Combinaisons possédés: ;;N0"
-.WeaponsOwned: "WeaponsOwned: ;;N0" => "Armes de poing possédés: ;;N0"
-.SpentOnPremiumStock: "Spent on Premium Stock: ; cr;N0" => "Dépensé en articles premium: ; cr;N0"
-.PremiumStockBought: "Premium Stock bought: ;;N0" => "Articles premium achetés: ;;N0"
+.Wealth: "Wealth: ; cr;N0" => "Fortune : ; cr;N0"
+.SpentonShips: "Spent on Ships: ; cr;N0" => "Dépensé en vaisseaux : ; cr;N0"
+.SpentonOutfitting: "Spent on Outfitting: ; cr;N0" => "Dépensé en équipements : ; cr;N0"
+.SpentonRepairs: "Spent on Repairs: ; cr;N0" => "Dépensé en réparation : ; cr;N0"
+.SpentonFuel: "Spent on Fuel: ; cr;N0" => "Dépensé en carburant : ; cr;N0"
+.SpendonAmmo: "Spent on Ammo: ; cr;N0" => "Dépensé en munitions : ; cr;N0"
+.InsuranceClaims: "Insurance Claims: ;;N0" => "Droits à l'assurance : ;;N0"
+.SpentonInsurance: "Spent on Insurance: ; cr;N0" => "Dépensé en assurance : ; cr;N0"
+.OwnedShipCount: "Owned ships: ;;N0" => "Vaisseaux possédés : ;;N0"
+.SpentOnSuits: "Spent on Suits: ; cr;N0" => "Dépensé en combinaisons : ; cr;N0"
+.SpentOnWeapons: "Spent on Weapons: ; cr;N0" => "Dépensé en armes de poing : ; cr;N0"
+.SpentOnSuitConsumables: "Spent on Suit Consumables: ; cr;N0" => "Dépensé en consommables : ; cr;N0"
+.SuitsOwned: "Suits Owned: ;;N0" => "Combinaisons possédés : ;;N0"
+.WeaponsOwned: "WeaponsOwned: ;;N0" => "Armes de poing possédés : ;;N0"
+.SpentOnPremiumStock: "Spent on Premium Stock: ; cr;N0" => "Dépensé en articles premium : ; cr;N0"
+.PremiumStockBought: "Premium Stock bought: ;;N0" => "Articles premium achetés : ;;N0"
 
 SECTION CombatClass
 
 .Bounties: "Bounties: ;;N0" => "Primes : ;;N0"
-.BountyProfits: "Bounty Profits: ; cr;N0" => "Gains des primes: ; cr;N0"
-.CombatBonds: "Combat Bonds: ;;N0" => "Récompenses de combat: ;;N0"
-.CombatBondProfits: "Combat Bond Profits: ; cr;N0" => "Gains des récompenses de combat: ; cr;N0"
-.Assassinations: "Assassinations: ;;N0" => "Assassinats: ;;N0"
-.AssassinationProfits: "Assassination Profits: ; cr;N0" => "Gains des assassinats: ; cr;N0"
-.HighestReward: "Highest Reward: ; cr;N0" => "Récompense la plus élevée: ; cr;N0"
-.SkimmersKilled: "Skimmers Killed: ;;N0" => "Drones sentinelles détruits: ;;N0"
-.OnFootCombatBonds: "Surface Combat Bonds: ;;N0" => "Récompenses de combat de surface: ;;N0"
-.OnFootCombatBondsProfits: "Surface Combat Bonds Profits: ; cr;N0" => "Gains des récompenses de combat de surface: ; cr;N0"
-.OnFootVehiclesDestroyed: "Vehicles Destroyed on Foot: ;;N0" => "Véhicules détruits à pied: ;;N0"
-.OnFootShipsDestroyed: "Ships Destroyed on Foot: ;;N0" => "Vaisseaux détruits à pied: ;;N0"
-.DropshipsTaken: "Dropships Taken: ;;N0" => "Transport de troupes pris: ;;N0"
-.DropshipsBooked: "Dropships Booked: ;;N0" => "Transport de troupes réservés: ;;N0"
-.DropshipsCancelled: "Dropships Cancelled: ;;N0" => "Transport de troupes annulés: ;;N0"
-.ConflictZoneHigh: "High Intensity Conflict Zones fought: ;;N0" => "Zones de conflit de forte intensité: ;;N0"
-.ConflictZoneMedium: "Medium Intensity Conflict Zones fought: ;;N0" => "Zones de conflit d'intensité moyenne: ;;N0"
-.ConflictZoneLow: "Low Intensity Conflict Zones fought: ;;N0" => "Zones de conflit de faible intensité: ;;N0"
-.ConflictZoneTotal: "Total Conflict Zones fought: ;;N0" => "Zones de conflit au total: ;;N0"
-.ConflictZoneHighWins: "High Intensity Conflict Zones won: ;;N0" => "Victoires de zones de conflit de forte: ;;N0"
-.ConflictZoneMediumWins: "Medium Intensity ConflictZones won: ;;N0" => "Victoires de zones de conflit d'intensité moyenne: ;;N0"
-.ConflictZoneLowWins: "Low Intensity Conflict Zones won: ;;N0" => "Victoires de zones de conflit de faible intensité: ;;N0"
-.ConflictZoneTotalWins: "Total Conflict Zones won: ;;N0" => "Victoires de zones de conflit au total: ;;N0"
-.SettlementDefended: "Settlements Defended: ;;N0" => "Installations défendues: ;;N0"
-.SettlementConquered: "Settlements Conquered: ;;N0" => "Installations conquises: ;;N0"
-.OnFootSkimmersKilled: "Skimmers Killed on Foot: ;;N0" => "Drones sentinelles détruits à pied: ;;N0"
-.OnFootScavsKilled: "Scavengers Killed on Foot: ;;N0" => "Charognards détruits à pied: ;;N0"
+.BountyProfits: "Bounty Profits: ; cr;N0" => "Gains des primes : ; cr;N0"
+.CombatBonds: "Combat Bonds: ;;N0" => "Récompenses de combat : ;;N0"
+.CombatBondProfits: "Combat Bond Profits: ; cr;N0" => "Gains des récompenses de combat : ; cr;N0"
+.Assassinations: "Assassinations: ;;N0" => "Assassinats : ;;N0"
+.AssassinationProfits: "Assassination Profits: ; cr;N0" => "Gains des assassinats : ; cr;N0"
+.HighestReward: "Highest Reward: ; cr;N0" => "Récompense la plus élevée : ; cr;N0"
+.SkimmersKilled: "Skimmers Killed: ;;N0" => "Drones sentinelles détruits : ;;N0"
+.OnFootCombatBonds: "Surface Combat Bonds: ;;N0" => "Récompenses de combat de surface : ;;N0"
+.OnFootCombatBondsProfits: "Surface Combat Bonds Profits: ; cr;N0" => "Gains des récompenses de combat de surface : ; cr;N0"
+.OnFootVehiclesDestroyed: "Vehicles Destroyed on Foot: ;;N0" => "Véhicules détruits à pied : ;;N0"
+.OnFootShipsDestroyed: "Ships Destroyed on Foot: ;;N0" => "Vaisseaux détruits à pied : ;;N0"
+.DropshipsTaken: "Dropships Taken: ;;N0" => "Transport de troupes pris : ;;N0"
+.DropshipsBooked: "Dropships Booked: ;;N0" => "Transport de troupes réservés : ;;N0"
+.DropshipsCancelled: "Dropships Cancelled: ;;N0" => "Transport de troupes annulés : ;;N0"
+.ConflictZoneHigh: "High Intensity Conflict Zones fought: ;;N0" => "Zones de conflit de forte intensité : ;;N0"
+.ConflictZoneMedium: "Medium Intensity Conflict Zones fought: ;;N0" => "Zones de conflit d'intensité moyenne : ;;N0"
+.ConflictZoneLow: "Low Intensity Conflict Zones fought: ;;N0" => "Zones de conflit de faible intensité : ;;N0"
+.ConflictZoneTotal: "Total Conflict Zones fought: ;;N0" => "Zones de conflit au total : ;;N0"
+.ConflictZoneHighWins: "High Intensity Conflict Zones won: ;;N0" => "Victoires de zones de conflit de forte : ;;N0"
+.ConflictZoneMediumWins: "Medium Intensity ConflictZones won: ;;N0" => "Victoires de zones de conflit d'intensité moyenne : ;;N0"
+.ConflictZoneLowWins: "Low Intensity Conflict Zones won: ;;N0" => "Victoires de zones de conflit de faible intensité : ;;N0"
+.ConflictZoneTotalWins: "Total Conflict Zones won: ;;N0" => "Victoires de zones de conflit au total : ;;N0"
+.SettlementDefended: "Settlements Defended: ;;N0" => "Installations défendues : ;;N0"
+.SettlementConquered: "Settlements Conquered: ;;N0" => "Installations conquises : ;;N0"
+.OnFootSkimmersKilled: "Skimmers Killed on Foot: ;;N0" => "Drones sentinelles détruits à pied : ;;N0"
+.OnFootScavsKilled: "Scavengers Killed on Foot: ;;N0" => "Charognards détruits à pied : ;;N0"
 
 SECTION CrimeClass
 
-.NotorietyIndex: "Notoriety Index: ;;N0" => "Indice de notoriété: ;;N0"
-.Fines: "Fines: ;;N0" => "Amendes: ;;N0"
-.TotalFines: "Total Fines: ; cr;N0" => "Total des amendes: ; cr;N0"
-.Bounties: "Bounties: ;;N0" => "Primes: ;;N0"
-.TotalBounties: "Total Bounties: ; cr;N0" => "Total des primes: ; cr;N0"
-.HighestBounty: "Highest Bounty: ; cr;N0" => "Prime la plus élevée: ; cr;N0"
-.MalwareUploaded: "Malware Uploaded: ;;N0" => "Programme malveillant chargé: ;;N0"
-.SettlementsStateShutdown: "Settlements shut down: ;;N0" => "Alimentation d'installation coupées: ;;N0"
-.ProductionSabotage: "Production Sabotaged: ;;N0" => "Sabotages de production: ;;N0"
-.ProductionTheft: "Production Thefts: ;;N0" => "Vols de production: ;;N0"
-.TotalMurders: "Total Murders: ;;N0" => "Meurtres au total: ;;N0"
-.CitizensMurdered: "Citizens Murdered: ;;N0" => "Citoyens abattus: ;;N0"
-.OmnipolMurdered: "Omnipol Murdered: ;;N0" => "Agents d'Omnipol abattus: ;;N0"
-.GuardsMurdered: "Guards Murdered: ;;N0" => "Gardes abattus: ;;N0"
-.DataStolen: "Data Stolen: ;;N0" => "Données volées: ;;N0"
-.GoodsStolen: "Goods Stolen: ;;N0" => "Marchandises volées: ;;N0"
-.TotalStolen: "Total Inventory Items Stolen: ;;N0" => "Objets volés au total: ;;N0"
-.TurretsDestroyed: "Turrets Destroyed: ;;N0" => "Tourelles détruites: ;;N0"
-.TurretsOverloaded: "Turrets Overloaded: ;;N0" => "Tourelles surchargées: ;;N0"
-.TurretsTotal: "Total Turrets shut down: ;;N0" => "Tourelles neutralisées au total: ;;N0"
-.ValueStolenStateChange: "Stolen Items Value: ; cr;N0" => "Total des objets volés: ; cr;N0"
-.ProfilesCloned: "ProfilesCloned: ;;N0" => "Profiles clonés: ;;N0"
+.NotorietyIndex: "Notoriety Index: ;;N0" => "Indice de notoriété : ;;N0"
+.Fines: "Fines: ;;N0" => "Amendes : ;;N0"
+.TotalFines: "Total Fines: ; cr;N0" => "Total des amendes : ; cr;N0"
+.Bounties: "Bounties: ;;N0" => "Primes : ;;N0"
+.TotalBounties: "Total Bounties: ; cr;N0" => "Total des primes : ; cr;N0"
+.HighestBounty: "Highest Bounty: ; cr;N0" => "Prime la plus élevée : ; cr;N0"
+.MalwareUploaded: "Malware Uploaded: ;;N0" => "Programme malveillant chargé : ;;N0"
+.SettlementsStateShutdown: "Settlements shut down: ;;N0" => "Alimentation d'installation coupées : ;;N0"
+.ProductionSabotage: "Production Sabotaged: ;;N0" => "Sabotages de production : ;;N0"
+.ProductionTheft: "Production Thefts: ;;N0" => "Vols de production : ;;N0"
+.TotalMurders: "Total Murders: ;;N0" => "Meurtres au total : ;;N0"
+.CitizensMurdered: "Citizens Murdered: ;;N0" => "Citoyens abattus : ;;N0"
+.OmnipolMurdered: "Omnipol Murdered: ;;N0" => "Agents d'Omnipol abattus : ;;N0"
+.GuardsMurdered: "Guards Murdered: ;;N0" => "Gardes abattus : ;;N0"
+.DataStolen: "Data Stolen: ;;N0" => "Données volées : ;;N0"
+.GoodsStolen: "Goods Stolen: ;;N0" => "Marchandises volées : ;;N0"
+.TotalStolen: "Total Inventory Items Stolen: ;;N0" => "Objets volés au total : ;;N0"
+.TurretsDestroyed: "Turrets Destroyed: ;;N0" => "Tourelles détruites : ;;N0"
+.TurretsOverloaded: "Turrets Overloaded: ;;N0" => "Tourelles surchargées : ;;N0"
+.TurretsTotal: "Total Turrets shut down: ;;N0" => "Tourelles neutralisées au total : ;;N0"
+.ValueStolenStateChange: "Stolen Items Value: ; cr;N0" => "Total des objets volés : ; cr;N0"
+.ProfilesCloned: "ProfilesCloned: ;;N0" => "Profiles clonés : ;;N0"
 
 SECTION SmugglingClass
 
-.BlackMarkets: "Black Markets: ;;N0" => "Marchés noir: ;;N0"
-.BlackMarketProfits: "Black Market Profits: ; cr;N0" => "Gain aux marchés noir: ; cr;N0"
-.ResourcesSmuggled: "Resources Smuggled: ;;N0" => "Ressources passées en contrebande: ;;N0"
-.AverageProfit: "Average Profit: ; cr;N0" => "Gain moyen: ; cr;N0"
-.HighestSingleTransaction: "Highest Single Transaction: ; cr;N0" => "Meilleure transaction unique: ; cr;N0"
+.BlackMarkets: "Black Markets: ;;N0" => "Marchés noir : ;;N0"
+.BlackMarketProfits: "Black Market Profits: ; cr;N0" => "Gain aux marchés noir : ; cr;N0"
+.ResourcesSmuggled: "Resources Smuggled: ;;N0" => "Ressources passées en contrebande : ;;N0"
+.AverageProfit: "Average Profit: ; cr;N0" => "Gain moyen : ; cr;N0"
+.HighestSingleTransaction: "Highest Single Transaction: ; cr;N0" => "Meilleure transaction unique : ; cr;N0"
 
 SECTION TradingClass
 
-.MarketsTraded: "Markets Traded: ;;N0" => "Nombre de marché utilisé: ;;N0"
-.Profits: "Profits: ; cr;N0" => "Gains: ; cr;N0"
-.No: "No. of Resources: ;;N0" => "Nb. de ressources: ;;N0"
+.MarketsTraded: "Markets Traded: ;;N0" => "Nombre de marché utilisé : ;;N0"
+.Profits: "Profits: ; cr;N0" => "Gains : ; cr;N0"
+.No: "No. of Resources: ;;N0" => "Nb. de ressources : ;;N0"
 .AverageProfit: "Average Profit: ; cr;N0" = SmugglingClass.AverageProfit
 .HighestSingleTransaction: "Highest Single Transaction: ; cr;N0" = SmugglingClass.HighestSingleTransaction
-.DataSold: "Data Sold: ;;N0" => "Données vendus: ;;N0"
-.GoodsSold: "Goods Sold: ;;N0" => "Marchandises vendues: ;;N0"
-.AssetsSold: "Assets Sold: ;;N0" => "Actifs vendus: ;;N0"
+.DataSold: "Data Sold: ;;N0" => "Données vendus : ;;N0"
+.GoodsSold: "Goods Sold: ;;N0" => "Marchandises vendues : ;;N0"
+.AssetsSold: "Assets Sold: ;;N0" => "Actifs vendus : ;;N0"
 
 SECTION MiningClass
 
 .Profits: "Profits: ; cr;N0" = TradingClass.Profits
-.Quantity: "Quantity: ;;N0" => "Quantité: ;;N0"
-.MaterialsTypesCollected: "Materials Collected: ;;N0" => "Types de matériaux collecté: ;;N0"
+.Quantity: "Quantity: ;;N0" => "Quantité : ;;N0"
+.MaterialsTypesCollected: "Materials Collected: ;;N0" => "Types de matériaux collecté : ;;N0"
 
 SECTION ExplorationClass
 
-.SystemsVisited: "Systems Visited: ;;N0" => "Systèmes Visités: ;;N0"
+.SystemsVisited: "Systems Visited: ;;N0" => "Systèmes Visités : ;;N0"
 .Profits: "Profits: ; cr;N0" = TradingClass.Profits
-.Level2Scans: "Level 2 Scans: ;;N0" => "Scans de niveau 2: ;;N0"
-.Level3Scans: "Level 3 Scans: ;;N0" => "Scans de niveau 3: ;;N0"
-.HighestPayout: "Highest Payout: ; cr;N0" => "Paiement le plus élevé: ; cr;N0"
-.TotalDistance: "Total Distance: ; ly;N0" => "Distance totale: ; al;N0"
-.NoofJumps: "No of Jumps: ;;N0" => "Nb de sauts: ;;N0"
-.GreatestDistance: "Greatest Distance: ; ly;N0" => "Plus grande distance: ; al;N0"
-.TimePlayed: "Time Played: " => "Temps de jeu: "
-.OnFootDistanceTravelled: "Distance Travelled on Foot: ; m;N0" => "Distance parcourue à pied: ; m;N0"
-.EfficientScans: "Efficient Scans: ;;N0" => "Scans efficace: ;;N0"
-.ShuttleJourneys: "Shuttle Journeys: ;;N0" => "Trajets en navette: ;;N0"
-.ShuttleDistanceTravelled: "Shuttle Distance Travelled: ; ly;N0" => "Distance parcourue en navette: ; al;N0"
-.SpentOnShuttles: "Credits Spent on Shuttles: ; cr;N0" => "Dépensé en navette: ; cr;N0"
-.FirstFootfalls: "First Footfalls: ;;N0" => "Premiers débarquements: ;;N0"
-.PlanetFootfalls: "Planets walked on: ;;N0" => "Planètes foulées à pied: ;;N0"
-.SettlementsVisited: "Settlements docked at: ;;N0" => "Installations visitées: ;;N0"
+.Level2Scans: "Level 2 Scans: ;;N0" => "Scans de niveau 2 : ;;N0"
+.Level3Scans: "Level 3 Scans: ;;N0" => "Scans de niveau 3 : ;;N0"
+.HighestPayout: "Highest Payout: ; cr;N0" => "Paiement le plus élevé : ; cr;N0"
+.TotalDistance: "Total Distance: ; ly;N0" => "Distance totale : ; al;N0"
+.NoofJumps: "No of Jumps: ;;N0" => "Nb de sauts : ;;N0"
+.GreatestDistance: "Greatest Distance: ; ly;N0" => "Plus grande distance : ; al;N0"
+.TimePlayed: "Time Played: " => "Temps de jeu : "
+.OnFootDistanceTravelled: "Distance Travelled on Foot: ; m;N0" => "Distance parcourue à pied : ; m;N0"
+.EfficientScans: "Efficient Scans: ;;N0" => "Scans efficace : ;;N0"
+.ShuttleJourneys: "Shuttle Journeys: ;;N0" => "Trajets en navette : ;;N0"
+.ShuttleDistanceTravelled: "Shuttle Distance Travelled: ; ly;N0" => "Distance parcourue en navette : ; al;N0"
+.SpentOnShuttles: "Credits Spent on Shuttles: ; cr;N0" => "Dépensé en navette : ; cr;N0"
+.FirstFootfalls: "First Footfalls: ;;N0" => "Premiers débarquements : ;;N0"
+.PlanetFootfalls: "Planets walked on: ;;N0" => "Planètes foulées à pied : ;;N0"
+.SettlementsVisited: "Settlements docked at: ;;N0" => "Installations visitées : ;;N0"
 
 SECTION PassengerMissionsClass
 
-.Accepted: "Accepted Passenger Missions: ;;N0" => "Missions de passagers acceptées: ;;N0"
-.PassengersDisgrunted: "Passengers Disgruntled: ;;N0" => "Passagers mécontents: ;;N0"
-.BulkMissionPassengers: "Total Bulk Passengers Delivered: ;;N0" => "Mission de passagers classique: ;;N0"
-.VIPMissionPassengers: "Total VIPs Delivered: ;;N0" => "Mission de passagers VIP: ;;N0"
-.PassengersDelivered: "Total Delivered: ;;N0" => "Passagers déposés: ;;N0"
-.PassengersEjected: "Total Ejected: ;;N0" => "Passagers éjectés: ;;N0"
+.Accepted: "Accepted Passenger Missions: ;;N0" => "Missions de passagers acceptées : ;;N0"
+.PassengersDisgrunted: "Passengers Disgruntled: ;;N0" => "Passagers mécontents : ;;N0"
+.BulkMissionPassengers: "Total Bulk Passengers Delivered: ;;N0" => "Mission de passagers classique : ;;N0"
+.VIPMissionPassengers: "Total VIPs Delivered: ;;N0" => "Mission de passagers VIP : ;;N0"
+.PassengersDelivered: "Total Delivered: ;;N0" => "Passagers déposés : ;;N0"
+.PassengersEjected: "Total Ejected: ;;N0" => "Passagers éjectés : ;;N0"
 
 SECTION SearchAndRescueClass
 
-.TotalItemsRescued: "Total Items Rescued: ;;N0" => "Nb d'objets secourus: ;;N0"
-.Profit: "Profit: ; cr;N0" => "Gain: ; cr;N0"
-.TotalRescueTransactions: "Total Rescue Transactions: ;;N0" => "Nb de transaction de rescousse: ;;N0"
-.SalvageLegalPOI: "Legal Salvage Value - Surface: ; cr;N0" => "Valeur des récupérations légales en surface: ; cr;N0"
-.SalvageLegalSettlements: "Legal Salvage Value - Settlements: ; cr;N0" => "Valeur des récupérations légales dans les installations: ; cr;N0"
-.SalvageIllegalPOI: "Illegal Salvage Value - Surface: ; cr;N0" => "Valeur des récupérations illégales en surface: ; cr;N0"
-.SalvageIllegalSettlements: "Illegal Salvage Value - Settlements: ; cr;N0" => "Valeur des récupérations illégales dans les installations: ; cr;N0"
-.MaglocksOpened: "Maglocks cut: ;;N0" => "Verrous magnétiques brisés: ;;N0"
-.PanelsOpened: "Panels cut: ;;N0" => "Panneaux découpés: ;;N0"
-.SettlementsStateFireOut: "Settlement Fires extinguished: ;;N0" => "Incendies d'installations éteints: ;;N0"
-.SettlementsStateReboot: "Settlements rebooted: ;;N0" => "Alimentation d'installation redémarrées: ;;N0"
+.TotalItemsRescued: "Total Items Rescued: ;;N0" => "Nb d'objets secourus : ;;N0"
+.Profit: "Profit: ; cr;N0" => "Gain : ; cr;N0"
+.TotalRescueTransactions: "Total Rescue Transactions: ;;N0" => "Nb de transaction de rescousse : ;;N0"
+.SalvageLegalPOI: "Legal Salvage Value - Surface: ; cr;N0" => "Valeur des récupérations légales en surface : ; cr;N0"
+.SalvageLegalSettlements: "Legal Salvage Value - Settlements: ; cr;N0" => "Valeur des récupérations légales dans les installations : ; cr;N0"
+.SalvageIllegalPOI: "Illegal Salvage Value - Surface: ; cr;N0" => "Valeur des récupérations illégales en surface : ; cr;N0"
+.SalvageIllegalSettlements: "Illegal Salvage Value - Settlements: ; cr;N0" => "Valeur des récupérations illégales dans les installations : ; cr;N0"
+.MaglocksOpened: "Maglocks cut: ;;N0" => "Verrous magnétiques brisés : ;;N0"
+.PanelsOpened: "Panels cut: ;;N0" => "Panneaux découpés : ;;N0"
+.SettlementsStateFireOut: "Settlement Fires extinguished: ;;N0" => "Incendies d'installations éteints : ;;N0"
+.SettlementsStateReboot: "Settlements rebooted: ;;N0" => "Alimentation d'installation redémarrées : ;;N0"
 
 SECTION CraftingClass
 
-.EngineersUsed: "Engineers Used: ;;N0" => "Ingénieurs utilisés: ;;N0"
-.Blueprints: "Blueprints: ;;N0" => "Plans: ;;N0"
-.AtLevel1: "At Level 1: ;;N0" => "Au niveau 1: ;;N0"
-.AtLevel2: "At Level 2: ;;N0" => "Au niveau 2: ;;N0"
-.AtLevel3: "At Level 3: ;;N0" => "Au niveau 3: ;;N0"
-.AtLevel4: "At Level 4: ;;N0" => "Au niveau 4: ;;N0"
-.AtLevel5: "At Level 5: ;;N0" => "Au niveau 5: ;;N0"
-.SuitModsApplied: "Suit Modifications Applied: ;;N0" => "Modifications de combinaison installées: ;;N0"
-.WeaponModsApplied: "Weapon Modifications Applied: ;;N0" => "Modifications d'arme installées: ;;N0"
-.SuitsUpgraded: "Suit Upgrades Applied: ;;N0" => "Améliorations de combinaison installées: ;;N0"
-.WeaponsUpgraded: "Weapon Upgrades Applied: ;;N0" => "Améliorations d'arme installées: ;;N0"
-.SuitsUpgradedFull: "Suits fully Upgraded: ;;N0" => "Combinaisons entièrement améliorées: ;;N0"
-.WeaponsUpgradedFull: "Weapons fully Upgraded: ;;N0" => "Armes entièrement améliorées: ;;N0"
-.SuitModsAppliedFull: "Suits fully Modified: ;;N0" => "Combinaisons entièrement modifiées: ;;N0"
-.WeaponModsAppliedFull: "Weapons fully Modified: ;;N0" => "Armes entièrement modifiées: ;;N0"
+.EngineersUsed: "Engineers Used: ;;N0" => "Ingénieurs utilisés : ;;N0"
+.Blueprints: "Blueprints: ;;N0" => "Plans : ;;N0"
+.AtLevel1: "At Level 1: ;;N0" => "Au niveau 1 : ;;N0"
+.AtLevel2: "At Level 2: ;;N0" => "Au niveau 2 : ;;N0"
+.AtLevel3: "At Level 3: ;;N0" => "Au niveau 3 : ;;N0"
+.AtLevel4: "At Level 4: ;;N0" => "Au niveau 4 : ;;N0"
+.AtLevel5: "At Level 5: ;;N0" => "Au niveau 5 : ;;N0"
+.SuitModsApplied: "Suit Modifications Applied: ;;N0" => "Modifications de combinaison installées : ;;N0"
+.WeaponModsApplied: "Weapon Modifications Applied: ;;N0" => "Modifications d'arme installées : ;;N0"
+.SuitsUpgraded: "Suit Upgrades Applied: ;;N0" => "Améliorations de combinaison installées : ;;N0"
+.WeaponsUpgraded: "Weapon Upgrades Applied: ;;N0" => "Améliorations d'arme installées : ;;N0"
+.SuitsUpgradedFull: "Suits fully Upgraded: ;;N0" => "Combinaisons entièrement améliorées : ;;N0"
+.WeaponsUpgradedFull: "Weapons fully Upgraded: ;;N0" => "Armes entièrement améliorées : ;;N0"
+.SuitModsAppliedFull: "Suits fully Modified: ;;N0" => "Combinaisons entièrement modifiées : ;;N0"
+.WeaponModsAppliedFull: "Weapons fully Modified: ;;N0" => "Armes entièrement modifiées : ;;N0"
 
 SECTION CrewClass
 
-.TotalWages: "Total Wages: ; cr;N0" => "Total salaires: ; cr;N0"
-.Hired: "Hired: ;;N0" => "Embauchés: ;;N0"
-.Fired: "Fired: ;;N0" => "Licenciés: ;;N0"
-.KilledinAction: "Killed in Action: ;;N0" => "Morts au combat: ;;N0"
+.TotalWages: "Total Wages: ; cr;N0" => "Total salaires : ; cr;N0"
+.Hired: "Hired: ;;N0" => "Embauchés : ;;N0"
+.Fired: "Fired: ;;N0" => "Licenciés : ;;N0"
+.KilledinAction: "Killed in Action: ;;N0" => "Morts au combat : ;;N0"
 
 SECTION MulticrewClass
 
-.TotalTime: "Total Time: " => "Temps total: "
-.GunnerTime: "Gunner Time: " => "Temps en artilleur: "
-.FighterTime: "Fighter Time: " => "Temps en chasseur: "
-.Credits: "Credits: ; cr;N0" => "Crédits: ; cr;N0"
-.Fines: "Fines: ; cr;N0" => "Amendes: ; cr;N0"
+.TotalTime: "Total Time: " => "Temps total : "
+.GunnerTime: "Gunner Time: " => "Temps en artilleur : "
+.FighterTime: "Fighter Time: " => "Temps en chasseur : "
+.Credits: "Credits: ; cr;N0" => "Crédits : ; cr;N0"
+.Fines: "Fines: ; cr;N0" => "Amendes : ; cr;N0"
 
 SECTION MaterialTraderStatsClass
 
-.CommodityTrades: "Material Trades Completed: ;;N0" => "Commerce de marchandises: ;;N0"
-.MaterialTraded: "Material Traded: ;;N0" => "Commerce de matériaux: ;;N0"
-.EncodedMaterialsTraded: "Encoded Materials traded: ;;N0" => "Matériaux encodés: ;;N0"
-.RawMaterialsTraded: "Raw Materials traded: ;;N0" => "Matériaux bruts: ;;N0"
-.G1MaterialsTraded: "Grade 1 Materials Traded: ;;N0" => "Matériaux de niveau 1: ;;N0"
-.G2MaterialsTraded: "Grade 2 Materials Traded: ;;N0" => "Matériaux de niveau 2: ;;N0"
-.G3MaterialsTraded: "Grade 3 Materials Traded: ;;N0" => "Matériaux de niveau 3: ;;N0"
-.G4MaterialsTraded: "Grade 4 Materials Traded: ;;N0" => "Matériaux de niveau 4: ;;N0"
-.G5MaterialsTraded: "Grade 5 Materials Traded: ;;N0" => "Matériaux de niveau 5: ;;N0"
-.AssetsTradedIn: "Assets Gained in Trade: ;;N0" => "Actifs obtenus: ;;N0"
-.AssetsTradedOut: "Assets Spent in Trade: ;;N0" => "Actifs dépensés: ;;N0"
+.CommodityTrades: "Material Trades Completed: ;;N0" => "Commerce de marchandises : ;;N0"
+.MaterialTraded: "Material Traded: ;;N0" => "Commerce de matériaux : ;;N0"
+.EncodedMaterialsTraded: "Encoded Materials traded: ;;N0" => "Matériaux encodés : ;;N0"
+.RawMaterialsTraded: "Raw Materials traded: ;;N0" => "Matériaux bruts : ;;N0"
+.G1MaterialsTraded: "Grade 1 Materials Traded: ;;N0" => "Matériaux de niveau 1 : ;;N0"
+.G2MaterialsTraded: "Grade 2 Materials Traded: ;;N0" => "Matériaux de niveau 2 : ;;N0"
+.G3MaterialsTraded: "Grade 3 Materials Traded: ;;N0" => "Matériaux de niveau 3 : ;;N0"
+.G4MaterialsTraded: "Grade 4 Materials Traded: ;;N0" => "Matériaux de niveau 4 : ;;N0"
+.G5MaterialsTraded: "Grade 5 Materials Traded: ;;N0" => "Matériaux de niveau 5 : ;;N0"
+.AssetsTradedIn: "Assets Gained in Trade: ;;N0" => "Actifs obtenus : ;;N0"
+.AssetsTradedOut: "Assets Spent in Trade: ;;N0" => "Actifs dépensés : ;;N0"
 
 SECTION CQCClass
 
 .CreditsEarned: "Profits from CQC: ; cr;N0" = TradingClass.Profits
 .TimePlayed: "Time Played: " = MulticrewClass.TotalTime
-.KDRatio: "K/D Ratio: ;;N2" => "Ratio KD (Tué/Mort): ;;N2"
-.Kills: "Kills: ;;N0" => "Tués: ;;N0"
-.Win: "Win/Loss Ratio: ;;N2" => "Victoire/Défaite: ;;N2"
+.KDRatio: "K/D Ratio: ;;N2" => "Ratio KD (Tué/Mort) : ;;N2"
+.Kills: "Kills: ;;N0" => "Tués : ;;N0"
+.Win: "Win/Loss Ratio: ;;N2" => "Victoire/Défaite : ;;N2"
 
 SECTION FLEETCARRIERClass
 
-.EXPORTTOTAL: "Total Commodities Exported: ;;N0" => "Marchandises exportées au total: ;;N0"
-.IMPORTTOTAL: "Total Commodities Imported: ;;N0" => "Marchandises importées au total: ;;N0"
-.TRADEPROFITTOTAL: "Credits earned from Commodities: ; cr;N0" => "Crédits gagnés en marchandises: ; cr;N0"
-.TRADESPENDTOTAL: "Credits spent on Commodities: ; cr;N0" => "Crédits dépensés en marchandises: ; cr;N0"
-.STOLENPROFITTOTAL: "Credits earned from Stolen Goods: ; cr;N0" => "Crédits gagnés en marchandises volées: ; cr;N0"
-.STOLENSPENDTOTAL: "Credits spent on Stolen Goods: ; cr;N0" => "Crédits dépensés en marchandises volées: ; cr;N0"
-.DISTANCETRAVELLED: "Total Travel Distance: ; ly;N0" => "Distance parcourue au total: ; al;N0"
-.TOTALJUMPS: "Number of Carrier Jumps: ;;N0" => "Sauts de porte-vaisseaux: ;;N0"
-.SHIPYARDSOLD: "Total Ships Sold: ;;N0" => "Vaisseaux vendus au total: ;;N0"
-.SHIPYARDPROFIT: "Credits earned from Shipyard: ; cr;N0" => "Crédits gagnés par le chantier naval: ; cr;N0"
-.OUTFITTINGSOLD: "Total Modules Sold: ;;N0" => "Modules vendus au total: ;;N0"
-.OUTFITTINGPROFIT: "Credits earned from Outfitting: ; cr;N0" => "Crédits gagnés par les équipements: ; cr;N0"
-.REARMTOTAL: "Total Ships Restocked: ;;N0" => "Réarmement de vaisseaux au total: ;;N0"
-.REFUELTOTAL: "Total Ships Refuelled: ;;N0" => "Ravitaillement en carburant au total: ;;N0"
-.REFUELPROFIT: "Credits earned from Refuelling: ; cr;N0" => "Crédits gagnés par le ravitaillement en carburant: ; cr;N0"
-.REPAIRSTOTAL: "Total Ships Repaired: ;;N0" => "Vaisseaux réparés au total: ;;N0"
-.VOUCHERSREDEEMED: "Redemption Office Exchanges: ;;N0" => "Transactions bureau récompenses: ;;N0"
-.VOUCHERSPROFIT: "Redemption Office Payouts: ; cr;N0" => "Paiements bureau récompenses: ; cr;N0"
+.EXPORTTOTAL: "Total Commodities Exported: ;;N0" => "Marchandises exportées au total : ;;N0"
+.IMPORTTOTAL: "Total Commodities Imported: ;;N0" => "Marchandises importées au total : ;;N0"
+.TRADEPROFITTOTAL: "Credits earned from Commodities: ; cr;N0" => "Crédits gagnés en marchandises : ; cr;N0"
+.TRADESPENDTOTAL: "Credits spent on Commodities: ; cr;N0" => "Crédits dépensés en marchandises : ; cr;N0"
+.STOLENPROFITTOTAL: "Credits earned from Stolen Goods: ; cr;N0" => "Crédits gagnés en marchandises volées : ; cr;N0"
+.STOLENSPENDTOTAL: "Credits spent on Stolen Goods: ; cr;N0" => "Crédits dépensés en marchandises volées : ; cr;N0"
+.DISTANCETRAVELLED: "Total Travel Distance: ; ly;N0" => "Distance parcourue au total : ; al;N0"
+.TOTALJUMPS: "Number of Carrier Jumps: ;;N0" => "Sauts de porte-vaisseaux : ;;N0"
+.SHIPYARDSOLD: "Total Ships Sold: ;;N0" => "Vaisseaux vendus au total : ;;N0"
+.SHIPYARDPROFIT: "Credits earned from Shipyard: ; cr;N0" => "Crédits gagnés par le chantier naval : ; cr;N0"
+.OUTFITTINGSOLD: "Total Modules Sold: ;;N0" => "Modules vendus au total : ;;N0"
+.OUTFITTINGPROFIT: "Credits earned from Outfitting: ; cr;N0" => "Crédits gagnés par les équipements : ; cr;N0"
+.REARMTOTAL: "Total Ships Restocked: ;;N0" => "Réarmement de vaisseaux au total : ;;N0"
+.REFUELTOTAL: "Total Ships Refuelled: ;;N0" => "Ravitaillement en carburant au total : ;;N0"
+.REFUELPROFIT: "Credits earned from Refuelling: ; cr;N0" => "Crédits gagnés par le ravitaillement en carburant : ; cr;N0"
+.REPAIRSTOTAL: "Total Ships Repaired: ;;N0" => "Vaisseaux réparés au total : ;;N0"
+.VOUCHERSREDEEMED: "Redemption Office Exchanges: ;;N0" => "Transactions bureau récompenses : ;;N0"
+.VOUCHERSPROFIT: "Redemption Office Payouts: ; cr;N0" => "Paiements bureau récompenses : ; cr;N0"
 
 SECTION ExobiologyClass
 
-.OrganicGenusEncountered: "Unique Genus Encountered: ;;N0" => "Genres uniques découvertes: ;;N0"
-.OrganicSpeciesEncountered: "Unique Species Encountered: ;;N0" => "Espèces uniques découvertes: ;;N0"
-.OrganicVariantEncountered: "Unique Variants Encountered: ;;N0" => "Variantes uniques découvertes: ;;N0"
-.OrganicDataProfits: "Profit from Organic Data: ; cr;N0" => "Gains en données organiques: ; cr;N0"
-.OrganicData: "Organic Data Registered: ;;N0" => "Données organiques enregistrées: ;;N0"
-.FirstLoggedProfits: "Profit from First Logged: ; cr;N0" => "Gains de premiers enregistrements: ; cr;N0"
-.FirstLogged: "First Logged: ;;N0" => "Premiers enregistrements: ;;N0"
-.OrganicSystems: "Systems with Organic Life: ;;N0" => "Systèmes dotés de formes de vie organique: ;;N0"
-.OrganicPlanets: "Planets with Organic Life: ;;N0" => "Planètes dotés de formes de vie organique: ;;N0"
-.OrganicGenus: "Unique Genus Data Logged: ;;N0" => "Genres uniques enregistrés: ;;N0"
-.OrganicSpecies: "Unique Species Data Logged: ;;N0" => "Espèces uniques enregistrées: ;;N0"
+.OrganicGenusEncountered: "Unique Genus Encountered: ;;N0" => "Genres uniques découvertes : ;;N0"
+.OrganicSpeciesEncountered: "Unique Species Encountered: ;;N0" => "Espèces uniques découvertes : ;;N0"
+.OrganicVariantEncountered: "Unique Variants Encountered: ;;N0" => "Variantes uniques découvertes : ;;N0"
+.OrganicDataProfits: "Profit from Organic Data: ; cr;N0" => "Gains en données organiques : ; cr;N0"
+.OrganicData: "Organic Data Registered: ;;N0" => "Données organiques enregistrées : ;;N0"
+.FirstLoggedProfits: "Profit from First Logged: ; cr;N0" => "Gains de premiers enregistrements : ; cr;N0"
+.FirstLogged: "First Logged: ;;N0" => "Premiers enregistrements : ;;N0"
+.OrganicSystems: "Systems with Organic Life: ;;N0" => "Systèmes dotés de formes de vie organique : ;;N0"
+.OrganicPlanets: "Planets with Organic Life: ;;N0" => "Planètes dotés de formes de vie organique : ;;N0"
+.OrganicGenus: "Unique Genus Data Logged: ;;N0" => "Genres uniques enregistrés : ;;N0"
+.OrganicSpecies: "Unique Species Data Logged: ;;N0" => "Espèces uniques enregistrées : ;;N0"
 
 SECTION ThargoidsClass
 
-.EncounterWakes: "Thargoid wakes scanned: ;;N0" => "Sillages Thargoid scannés: ;;N0"
-.EncounterKilled: "Thargoids killed: ;;N0" => "Thargoids abattus: ;;N0"
-.EncounterImprint: "Thargoid structures: ;;N0" => "Structures Thargoids: ;;N0"
-.EncounterTotal: "Total encounters: ;;N0" => "Rencontres au total: ;;N0"
-.LastSystem: "Last seen in: " => "Dernier aperçu: "
-.LastTime: "Last seen on: " => "Date: "
-.LastShip: "Last ship involved: " => "Dernier vaisseau: "
+.EncounterWakes: "Thargoid wakes scanned: ;;N0" => "Sillages Thargoid scannés : ;;N0"
+.EncounterKilled: "Thargoids killed: ;;N0" => "Thargoids abattus : ;;N0"
+.EncounterImprint: "Thargoid structures: ;;N0" => "Structures Thargoids : ;;N0"
+.EncounterTotal: "Total encounters: ;;N0" => "Rencontres au total : ;;N0"
+.LastSystem: "Last seen in: " => "Dernier aperçu : "
+.LastTime: "Last seen on: " => "Date : "
+.LastShip: "Last ship involved: " => "Dernier vaisseau : "
 
 SECTION JournalStoredModules
 
@@ -879,10 +879,10 @@ SECTION JournalSupercruiseExit
 
 SECTION JournalStoredShips
 
-.Atstarport: "At starport: " => "Dans ce spatioport: "
-.Otherlocations: "Other locations: " => "Ailleurs: "
+.Atstarport: "At starport: " => "Dans ce spatioport : "
+.Otherlocations: "Other locations: " => "Ailleurs : "
 .SSP: "; cr;N0" @
-.Remote: "Remote: " => "Distant: "
+.Remote: "Remote: " => "Distant : "
 .intransit: "<; in transit" => "<; en transit"
 .at: "< at " => JournalCommodityPricesBase.CPBin
 
@@ -896,7 +896,7 @@ SECTION JournalUnderAttack
 
 SECTION JournalNavRoute
 
-.Jumps: "{0} jumps: " => "{0} sauts: "
+.Jumps: "{0} jumps: " => "{0} sauts : "
 
 SECTION JournalApproachBody
 
@@ -908,115 +908,115 @@ SECTION JournalEntry
 .TME: "{0} days {1} hours {2} minutes" => "{0} jours {1} heures {2} minutes"
 .Hyperspace: "Hyperspace" => "Hyperespace"
 .Supercruise: "Supercruise" => "Super-navigation"
-.Target: "Target: " => "Cible: "
-.Victimfaction: "Victim faction: " => "Faction de la victime: "
+.Target: "Target: " => "Cible : "
+.Victimfaction: "Victim faction: " => "Faction de la victime : "
 .Faction: "Faction: " @
 .from: "< from " = JournalMissionAccepted.from
 .dueto: "<, due to " => "<, attendu à "
 .onfaction: "< on faction " => "< à la faction "
 .Against: "Against " => "Contre "
-.Cost: "Cost: ; cr;N0" => "Coût: ; cr;N0"
-.Bounty: "Bounty: ; cr;N0" => "Prime: ; cr;N0"
-.BountyOnly: "Bounty" => "Prime:"
+.Cost: "Cost: ; cr;N0" => "Coût : ; cr;N0"
+.Bounty: "Bounty: ; cr;N0" => "Prime : ; cr;N0"
+.BountyOnly: "Bounty" => "Prime :"
 .Offender: "Offender " => "Assaillant "
-.Reward: "Reward: ; cr;N0" => "Récompense: ; cr;N0"
+.Reward: "Reward: ; cr;N0" => "Récompense : ; cr;N0"
 .to: "< to " => "< vers "
-.Brokertook: ", Broker took {0:N0}%" => ", le marchand a pris {0:N0}%"
+.Brokertook: ", Broker took {0:N0}%" => ", le marchand a pris {0:N0} %"
 .Type: "Type: " @
-.Amount: "Amount: ; cr;N0" => "Montant: ; cr;N0"
+.Amount: "Amount: ; cr;N0" => "Montant : ; cr;N0"
 .System: "System: " = CommunityGoal.System
 .NoCargo: "No Cargo" => "Pas de chargement"
 .Cargo: "Cargo, {0} items" => "Chargement, {0} marchandises"
 .items: "; items" => "; marchandises"
 .MissionCargo: "<; (Mission Cargo)" => "<; (Cargaison  de mission)"
-.Count: "Count: " => "Quantité: "
+.Count: "Count: " => "Quantité : "
 .Abandoned: ";Abandoned" => ";Abandonné"
 .PowerPlay: "PowerPlay: " @
-.Collected: "Collected: " => "Récupéré: "
+.Collected: "Collected: " => "Récupéré : "
 .of: "< of " = JournalMissionAccepted.from
 .ofa: "of " = JournalReceiveText.FC
 .Total: "Total: " @
 .Progress: "Progress: ;%;N1" = JournalFSSDiscoveryScan.Progress
-.Delivered: "Delivered: " => "Livré: "
-.Update: "Update, Collected: " => "Mise à jour, Récupéré: "
-.ToGo: "To Go:" => "Reste: "
-.ProgressLeft: "Progress Left: ;%;N1" => "Reste à faire: ;%;;N1"
+.Delivered: "Delivered: " => "Livré : "
+.Update: "Update, Collected: " => "Mise à jour, Récupéré : "
+.ToGo: "To Go:" => "Reste : "
+.ProgressLeft: "Progress Left: ;%;N1" => "Reste à faire : ;%;;N1"
 .Stolen: ";Stolen" => ";Volé"
 .StartingPackage: "Starting Package: " => "Paquet de démarrage"
 .CGS: "< at ; Star System" => "< au système ;"
 .torole: "< to role ;" => "< au rôle ;"
 .fired: "; fired" => "; viré"
-.Hired: "Hired: ;" => "Embauche: ;"
+.Hired: "Hired: ;" => "Embauche : ;"
 .offaction: "< of faction " => "< de la faction"
 .Rank: "Rank: " = JournalEngineerProgress.Rank
-.Crew: "Crew: " => "Équipage: "
+.Crew: "Crew: " => "Équipage : "
 .Telepresence: ";Telepresence" => ";Téléprésence"
-.Role: "Role: " => "Rôle: "
-.CrewMember: "Crew Member: " => "Membre d'équipage: "
+.Role: "Role: " => "Rôle : "
+.CrewMember: "Crew Member: " => "Membre d'équipage : "
 .DuetoCrime: ";Due to Crime" => "; à cause du crime"
-.Captain: "Captain: " => "Capitaine: "
+.Captain: "Captain: " => "Capitaine : "
 .fromfaction: "< from faction " = JournalEntry.offaction
 .Died: "{0} in ship type {1} rank {2}" => "{0} dans le vaisseau type {1} rang {2}"
 .Killedby: "Killed by " => "Tué par "
 .Boom: "Boom!" => "Boom !"
 .Option: "Option: " @
 .Bankrupt: ";Bankrupt" => ";Banqueroute"
-.Dscan: "New bodies discovered: " => "Nouveaux corps découverts: "
-.Bodies: "Bodies: " => "Corps: "
+.Dscan: "New bodies discovered: " => "Nouveaux corps découverts : "
+.Bodies: "Bodies: " => "Corps : "
 .insystem: "< in system " = JournalLocOrJump.insystem
 .Wanted: ";(Wanted)" => ";(Recherché)"
 .ActiveFine: ";Active Fine" => ";Amende impayée"
 .instate: "< in state " => "< dans le statut "
-.Allegiance: "Allegiance: " => "Allégeance: "
+.Allegiance: "Allegiance: " => "Allégeance : "
 .Economy: "Economy: " = JournalLocOrJump.Economy
 .Government: "Government: " = JournalLocOrJump.Government
-.Stationservices: "Station services: " => "Services de la station: "
-.Economies: "Economies: " => "Économies: "
+.Stationservices: "Station services: " => "Services de la station : "
+.Economies: "Economies: " => "Économies : "
 .onpad: "< on pad " => "< sur la plate-forme "
 .Cockpit: "Cockpit: " @
 .Corrosion: "Corrosion: " @
-.TotalCost: "Total Cost: ; cr;N0" => "Coût total: ; cr;N0"
-.TotalSale: "Total Sale: ; cr;N0" => "Vente totale: ; cr;N0"
-.each: "each: ; cr;N0" => "chaque: ; cr;N0"
+.TotalCost: "Total Cost: ; cr;N0" => "Coût total : ; cr;N0"
+.TotalSale: "Total Sale: ; cr;N0" => "Vente totale : ; cr;N0"
+.each: "each: ; cr;N0" => "chaque : ; cr;N0"
 .Drones: "Drones" @
-.Price: "Price: ; cr;N0" => "Prix: ; cr;N0"
+.Price: "Price: ; cr;N0" => "Prix : ; cr;N0"
 .Name: "Name: " = JournalScan.BNME
-.Blueprint: "Blueprint: " => "Plan: "
-.Level: "Level: " => "Niveau: "
-.Override: "Override: " => "Écrasement: "
-.Commodity: "Commodity: " => "Marchandise: "
-.Material: "Material: " => "Matériau: "
+.Blueprint: "Blueprint: " => "Plan : "
+.Level: "Level: " => "Niveau : "
+.Override: "Override: " => "Écrasement : "
+.Commodity: "Commodity: " => "Marchandise : "
+.Material: "Material: " => "Matériau : "
 .Quantity: "Quantity: " = JournalEntry.Count
-.TotalQuantity: "TotalQuantity: " => "Quantité Totale: "
-.InSlot: "In Slot: " => "Dans l'emplacement: "
-.By: "By: " => "Par: "
+.TotalQuantity: "TotalQuantity: " => "Quantité Totale : "
+.InSlot: "In Slot: " => "Dans l'emplacement : "
+.By: "By: " => "Par : "
 .Bonus: "Bonus: ; cr;N0" @
-.Scanned: "Scanned: " => "Scanné: "
-.Discovered: "Discovered: " => "Découvert: "
-.Loadout: "Loadout: " => "Équipement: "
+.Scanned: "Scanned: " => "Scanné : "
+.Discovered: "Discovered: " => "Découvert : "
+.Loadout: "Loadout: " => "Équipement : "
 .NPCControlled: "NPC Controlled;" => ", contrôlé par des PNJ;"
 .Version: "Version: " @
 .Build: "Build: " @
-.Part: "Part: " => "Partie: "
-.Ship: "Ship: " => "Vaisseau: "
+.Part: "Part: " => "Partie : "
+.Ship: "Ship: " => "Vaisseau : "
 .Ident: "Ident: " @
-.Credits: "Credits: ;;N0" => "Crédits: ;;N0"
+.Credits: "Credits: ;;N0" => "Crédits : ;;N0"
 .Mode: "Mode: " @
-.Group: "Group: " => "Groupe: "
+.Group: "Group: " => "Groupe : "
 .NotLanded: "Not Landed;Landed" => "En vol;Apponté"
-.FuelLevel: "Fuel Level: ;;0.0" => "Niveau de carburant: ;;0.0"
-.Capacity: "Capacity: ;;0.0" => "Capacité: ;;0.0"
+.FuelLevel: "Fuel Level: ;;0.0" => "Niveau de carburant : ;;0.0"
+.Capacity: "Capacity: ;;0.0" => "Capacité : ;;0.0"
 .Cashtotaldiffers: "Cash total differs, adjustment" => "Total d'argent différent, ajustement"
-.NumberofStatuses: "Number of Statuses: " => "Nombre de statuts: "
-.Online: "Online: " => "En ligne: "
-.Offline: "Offline: " => "Hors ligne: "
-.Unfriended: "Unfriended: " => "Plus amis: "
-.Declined: "Declined: " => "Refus: "
-.RequestedFriend: "Requested Friend: " => "Demande d'amis: "
-.AddedFriend: "Added Friend: " => "Amis ajouté: "
+.NumberofStatuses: "Number of Statuses: " => "Nombre de statuts : "
+.Online: "Online: " => "En ligne : "
+.Offline: "Offline: " => "Hors ligne : "
+.Unfriended: "Unfriended: " => "Plus amis : "
+.Declined: "Declined: " => "Refus : "
+.RequestedFriend: "Requested Friend: " => "Demande d'amis : "
+.AddedFriend: "Added Friend: " => "Amis ajouté : "
 .Submitted: ";Submitted" => ";Soumis"
 .NPC: "< (NPC);(Player)" => "< (PNJ);(Joueur)"
-.Power: "Power: " => "Puissance: "
+.Power: "Power: " => "Puissance : "
 .Failedtointerdict: "Failed to interdict;Interdicted" => "Échec de l'interdiction;Interdiction"
 .Boost: "Boost: ;;0.0" @
 .buyprice: "< buy price ; cr;N0" => "< prix d'achat ; cr;N0"
@@ -1026,48 +1026,48 @@ SECTION JournalEntry
 .NotStolen: "Not Stolen;Stolen" => "Non volé;Volé"
 .Market: "Market;BlackMarket" => "Marché;Marché noir"
 .MatC: "< ; items" => "< ; marchandises"
-.Sold: "Sold: " => "Vendu: "
-.Received: "Received: " => "Reçu: "
-.Active: "Active: " => "Actif: "
-.Failed: "Failed: " => "Échoué: "
-.Completed: "Completed: " => "Terminé: "
+.Sold: "Sold: " => "Vendu : "
+.Received: "Received: " => "Reçu : "
+.Active: "Active: " => "Actif : "
+.Failed: "Failed: " => "Échoué : "
+.Completed: "Completed: " => "Terminé : "
 .Station: "Station: " @
-.Settlement: "Settlement: " => "Installation: "
-.TargetFaction: "Target Faction: " => "Faction cible: "
-.Donation: "Donation: " => "Don: "
-.Permits: "Permits: " => "Permis: "
-.Rewards: "Rewards: " => "Récompenses: "
-.Fine: "Fine: " => "Amende: "
+.Settlement: "Settlement: " => "Installation : "
+.TargetFaction: "Target Faction: " => "Faction cible : "
+.Donation: "Donation: " => "Don : "
+.Permits: "Permits: " => "Permis : "
+.Rewards: "Rewards: " => "Récompenses : "
+.Fine: "Fine: " => "Amende : "
 .Missionname: "Mission name: " => "Nom de la mission"
 .Hot: ";(Hot)" => ";(Chaud)"
-.HullHealth: "Hull Health: ;%;N1" => "Intég. Coque: ;%;N1"
-.Hull: "Hull: ; cr;N0" => "Coque: ; cr;N0"
+.HullHealth: "Hull Health: ;%;N1" => "Intég. Coque : ;%;N1"
+.Hull: "Hull: ; cr;N0" => "Coque : ; cr;N0"
 .Modules: "Modules: ; cr;N0" @
-.Rebuy: "Rebuy: ; cr;N0" => "Rachat: ; cr;N0"
+.Rebuy: "Rebuy: ; cr;N0" => "Rachat : ; cr;N0"
 .into: "< into " = JournalCommodityPricesBase.CPBin
-.Stored: "Stored: " => "Stocké: "
+.Stored: "Stored: " => "Stocké : "
 .Item: "Item: " = JournalEntry.Commodity
 .on: " on " => " sur "
-.Replacedby: "Replaced by: " => "Remplacé par: "
+.Replacedby: "Replaced by: " => "Remplacé par : "
 .Modifications: "Modifications: " @
-.Slot: "Slot: " => "Emplacement: "
+.Slot: "Slot: " => "Emplacement : "
 .Swappedwith: ", Swapped with " => ", Échangé avec "
-.TransferCost: "Transfer Cost: ; cr;N0" => "Coût de transfert: ; cr;N0"
-.Time: "Time: " => "Temps: "
-.Value: "Value: ; cr;N0" => "Valeur: ; cr;N0"
-.Totalmodules: "Total modules: " => "Total des modules: "
-.Intoship: "Into ship: " => "Dans le vaisseau: "
-.TransferTime: "Transfer Time: " => "Temps de transfert: "
-.MusicTrack: "Music Track: " => "Piste musicale: "
+.TransferCost: "Transfer Cost: ; cr;N0" => "Coût de transfert : ; cr;N0"
+.Time: "Time: " => "Temps : "
+.Value: "Value: ; cr;N0" => "Valeur : ; cr;N0"
+.Totalmodules: "Total modules: " => "Total des modules : "
+.Intoship: "Into ship: " => "Dans le vaisseau : "
+.TransferTime: "Transfer Time: " => "Temps de transfert : "
+.MusicTrack: "Music Track: " => "Piste musicale : "
 .Wagesfor: "Wages for " => "Salaires pour "
 .itemsavailable: " items available" => " équipements disponibles"
 .NoPassengers: "No Passengers" => "Pas de passagers"
-.Merits: "Merits: " => "Mérites: "
+.Merits: "Merits: " => "Mérites : "
 .Votes: "Votes: " @
-.Pledged: "Pledged: " => "Engagé: "
-.FromPower: "From Power: " => "De la puissance: "
-.ToPower: "To Power: " => "à la puissance: "
-.Systems: ", Systems: " => ", systèmes: "
+.Pledged: "Pledged: " => "Engagé : "
+.FromPower: "From Power: " => "De la puissance : "
+.ToPower: "To Power: " => "à la puissance : "
+.Systems: ", Systems: " => ", systèmes : "
 .Shield: "Shield ;;N1" => "Bouclier ;;N1"
 .LostTarget: "Lost Target" => "Cible perdue"
 .ShieldsDown: "Shields Down;Shields Up" => "Bouclier KO;Bouclier OK"
@@ -1076,21 +1076,21 @@ SECTION JournalEntry
 .Longitude: "Longitude: ;°;F4" @
 .Num: "Num: " @
 .Ships: "Ships" => "Vaisseaux"
-.Distance: "Distance: ; ly;0.0" => "Distance: ; al;0.0"
-.Threat: "Threat: " => "Menace: "
+.Distance: "Distance: ; ly;0.0" => "Distance : ; al;0.0"
+.Threat: "Threat: " => "Menace : "
 .RemainingJumps: "Remaining Jumps" => "Sauts restants"
-.Nearest: "Nearest: " => "Plus proche: "
-.Old: "Old: " => "Vieux: "
-.New: "New: " => "Nouveau: "
-.Near: "Near: " => "Proche: "
+.Nearest: "Nearest: " => "Plus proche : "
+.Old: "Old: " => "Vieux : "
+.New: "New: " => "Nouveau : "
+.Near: "Near: " => "Proche : "
 .OnFootAt: "On Foot at {0}" => "À pied sur {0}"
 .Wealth: "Wealth: ; cr;N0" = BankAccountClass.Wealth
 .NotorietyIndex: "Notoriety Index: ;;N0" = CrimeClass.NotorietyIndex
-.Fuel: "Fuel: ; tons;0.0" => "Carburant: ; t;0.0"
+.Fuel: "Fuel: ; tons;0.0" => "Carburant : ; t;0.0"
 .Taxi: "Taxi" @
 .Mods: "Mods: " @
-.Class: "Class: " => "Classe: "
-.Pilot: "Pilot: " => "Pilote: "
+.Class: "Class: " => "Classe : "
+.Pilot: "Pilot: " => "Pilote : "
 .ShipRedeem: "Redeemed and deployed ship {0} at {1} into shipyard" => "Vaisseau {0} racheté et déployé au chantier naval {1}"
 .ShipyardRedeem: "Redeem ship {0} at {1}, available to deploy" => "Rachat du vaisseau {0} à {1}, disponible au déploiement"
 
@@ -1101,41 +1101,41 @@ SECTION JournalCarrierJump
 SECTION JournalCarrier
 
 .At: "At " => "À "
-.Callsign: "Call Sign: " => "Ident: "
-.Name: "Name: " => "Nom: "
-.JumpRange: "Jump Range: ; ly;0.0" => "Portée de saut: ; al;0.0"
-.Balance: "Carrier Balance: ; cr;N0" => "Solde du porte-vaisseaux: ; cr;N0"
-.ReserveBalance: "Reserve Balance: ; cr;N0" => "Allocation hebdomadaire: ; cr;N0"
-.AvailableBalance: "Available Balance: ; cr;N0" => "Disponible: ; cr;N0"
-.ReservePercent: "Reserve Percent: ;;N1" => "Pourcentage d'allocation hebdomadaire: ;;N1"
-.TaxRatePioneersupplies: "Tax Rate Pioneersupplies: ;;N1" => "Taxes Pioneer Supplies: ;;N1"
-.TaxRateShipyard: "Tax Rate Shipyard: ;;N1" => "Taxes chantier naval: ;;N1"
-.TaxRateRearm: "Tax Rate Rearm: ;;N1" => "Taxes armurerie: ;;N1"
-.TaxRateOutfitting: "Tax Rate Outfitting: ;;N1" => "Taxes équipement: ;;N1"
-.TaxRateRefuel: "Tax Rate Refuel: ;;N1" => "Taxes ravitaillement en carburant: ;;N1"
-.TaxRateRepair: "Tax Rate Repair: ;;N1" => "Taxes réparation: ;;N1"
-.TotalCapacity: "Total Capacity: " => "Capacité totale: "
-.Crew: "Crew: " => "Équipage: "
-.Cargo: "Cargo: " => "Cargaison: "
-.CargoReserved: "Cargo Space Reserved: " => "Espace cargaison réservé: "
-.ShipPacks: "Ship Packs: " => "Pack de vaisseaux: "
-.ModulePacks: "Module Packs: " => "Pack de modules: "
-.FreeSpace: "Free Space: " => "Espace libre: "
+.Callsign: "Call Sign: " => "Ident : "
+.Name: "Name: " => "Nom : "
+.JumpRange: "Jump Range: ; ly;0.0" => "Portée de saut : ; al;0.0"
+.Balance: "Carrier Balance: ; cr;N0" => "Solde du porte-vaisseaux : ; cr;N0"
+.ReserveBalance: "Reserve Balance: ; cr;N0" => "Allocation hebdomadaire : ; cr;N0"
+.AvailableBalance: "Available Balance: ; cr;N0" => "Disponible : ; cr;N0"
+.ReservePercent: "Reserve Percent: ;;N1" => "Pourcentage d'allocation hebdomadaire : ;;N1"
+.TaxRatePioneersupplies: "Tax Rate Pioneersupplies: ;;N1" => "Taxes Pioneer Supplies : ;;N1"
+.TaxRateShipyard: "Tax Rate Shipyard: ;;N1" => "Taxes chantier naval : ;;N1"
+.TaxRateRearm: "Tax Rate Rearm: ;;N1" => "Taxes armurerie : ;;N1"
+.TaxRateOutfitting: "Tax Rate Outfitting: ;;N1" => "Taxes équipement : ;;N1"
+.TaxRateRefuel: "Tax Rate Refuel: ;;N1" => "Taxes ravitaillement en carburant : ;;N1"
+.TaxRateRepair: "Tax Rate Repair: ;;N1" => "Taxes réparation : ;;N1"
+.TotalCapacity: "Total Capacity: " => "Capacité totale : "
+.Crew: "Crew: " => "Équipage : "
+.Cargo: "Cargo: " => "Cargaison : "
+.CargoReserved: "Cargo Space Reserved: " => "Espace cargaison réservé : "
+.ShipPacks: "Ship Packs: " => "Pack de vaisseaux : "
+.ModulePacks: "Module Packs: " => "Pack de modules : "
+.FreeSpace: "Free Space: " => "Espace libre : "
 .ToSystem: "To " => "Vers "
 .Body: "Body " => "Corps "
-.Refund: "Refund: ; cr;N0" => "Remboursement: ; cr;N0"
+.Refund: "Refund: ; cr;N0" => "Remboursement : ; cr;N0"
 .RefundTime: "at UTC " => "à UTC "
-.Deposit: "Deposit: ; cr;N0" => "Dépôt: ; cr;N0"
-.Withdraw: "Withdraw: ; cr;N0" => "Retrait: ; cr;N0"
-.Operation: "Operation: " => "Opération: "
+.Deposit: "Deposit: ; cr;N0" => "Dépôt : ; cr;N0"
+.Withdraw: "Withdraw: ; cr;N0" => "Retrait : ; cr;N0"
+.Operation: "Operation: " => "Opération : "
 .Tier: "Tier: " @
-.Purchase: "Purchase: " => "Achat: "
-.Sell: "Sell: " => "Vente: "
-.CancelSell: "Cancel Sell of: " => "Annulation de vente: "
-.Access: "Access: " => "Accès: "
+.Purchase: "Purchase: " => "Achat : "
+.Sell: "Sell: " => "Vente : "
+.CancelSell: "Cancel Sell of: " => "Annulation de vente : "
+.Access: "Access: " => "Accès : "
 .AllowNotorious: ";Allow Notorious" => ";Autorise notoriété"
-.Amount: "Amount: ;;N0" => "Quantité: ;;N0"
-.FuelLevel: "Fuel Level: ;;N0" => "Niveau de carburant: ;;N0"
+.Amount: "Amount: ;;N0" => "Quantité : ;;N0"
+.FuelLevel: "Fuel Level: ;;N0" => "Niveau de carburant : ;;N0"
 
 SECTION JournalMicroResources
 
@@ -1147,18 +1147,18 @@ SECTION JournalMicroResources
 SECTION JournalScanInfo
 
 .isa: " is a " => " est un(e) "
-.Atmosphere: " Atmosphere: " => "Atmosphère: "
-.SurfaceTemperature: " Surface temperature: {0} K." => " Température de surface: {0} K."
+.Atmosphere: " Atmosphere: " => "Atmosphère : "
+.SurfaceTemperature: " Surface temperature: {0} K." => " Température de surface : {0} K."
 .terraformable: "terraformable " @
 .LowRadius: " Is tiny " => " Est minuscule(e)"
 .LargeRadius: " Is large." => " Est large."
 .Signals: " Has mining signals." => " A des signaux."
-.BioSignals: " Biological signals: {0}." => " Signaux biologique: {0}."
-.GeoSignals: " Geological signals: {0}." => " Signaux géologique: {0}."
-.ThargoidSignals: " Thargoid signals: {0}." => " Signaux Thargoid: {0}."
-.GuardianSignals: " Guardian signals: {0}." => " Signaux Guardian: {0}."
-.HumanSignals: " Human signals: {0}." => " Signaux humain: {0}."
-.OtherSignals: " 'Other' signals: {0}." => " Autre signaux: {0}."
+.BioSignals: " Biological signals: {0}." => " Signaux biologique : {0}."
+.GeoSignals: " Geological signals: {0}." => " Signaux géologique : {0}."
+.ThargoidSignals: " Thargoid signals: {0}." => " Signaux Thargoid : {0}."
+.GuardianSignals: " Guardian signals: {0}." => " Signaux Guardian : {0}."
+.HumanSignals: " Human signals: {0}." => " Signaux humain : {0}."
+.OtherSignals: " 'Other' signals: {0}." => " Autre signaux : {0}."
 .MandD: " (Mapped & Discovered)" => " (cartographiée & découverte)"
 .MP: " (Mapped)" => " (cartographiée)"
 .DIS: " (Discovered)" => " (découverte)"
@@ -1193,7 +1193,7 @@ SECTION Services
 SECTION JournalScanOrganics
 
 .Value: "Value: ; cr;N0" = JournalEntry.Value
-.PotentialValue: "Potential Value: ; cr;N0" => "Valeur potentielle: ; cr;N0"
+.PotentialValue: "Potential Value: ; cr;N0" => "Valeur potentielle : ; cr;N0"
 
 SECTION AtmosphereTypes
 
