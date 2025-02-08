@@ -884,7 +884,7 @@ SECTION JournalStoredShips
 .SSP: "; cr;N0" @
 .Remote: "Remote: " => "Distant : "
 .intransit: "<; in transit" => "<; en transit"
-.at: "< at " => JournalCommodityPricesBase.CPBin
+.at: "< at " = JournalCommodityPricesBase.CPBin
 
 SECTION JournalSuperCruiseEntry
 
