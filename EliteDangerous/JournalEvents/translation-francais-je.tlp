@@ -468,11 +468,11 @@ SECTION JournalReservoirReplenished
 
 SECTION StarPlanetRing
 
-.Mass: "Mass: {0:N4}{1}" => "  Masse : {0:N4}{1}"
-.InnerRadius: "Inner Radius: {0:0.00}ls" => "  Rayon Interne : {0:0.00} sl"
-.OuterRadius: "Outer Radius: {0:0.00}ls" => "  Rayon Externe : {0:0.00} sl"
-.IK: "Inner Radius: {0}km" => "  Rayon Interne : {0} km"
-.OK: "Outer Radius: {0}km" => "  Rayon Externe : {0} km"
+.Mass: "Mass: {0:N4}{1}" => "Masse : {0:N4}{1}"
+.InnerRadius: "Inner Radius: {0:0.00}ls" => "Rayon Interne : {0:0.00} sl"
+.OuterRadius: "Outer Radius: {0:0.00}ls" => "Rayon Externe : {0:0.00} sl"
+.IK: "Inner Radius: {0}km" => "Rayon Interne : {0} km"
+.OK: "Outer Radius: {0}km" => "Rayon Externe : {0} km"
 .Icy: "Icy" => "Glacé"
 .Rocky: "Rocky" => "Rocheux"
 .MetalRich: "Metal Rich" => "Riche en métaux"
@@ -928,7 +928,7 @@ SECTION JournalEntry
 .NoCargo: "No Cargo" => "Pas de chargement"
 .Cargo: "Cargo, {0} items" => "Chargement, {0} marchandises"
 .items: "; items" => "; marchandises"
-.MissionCargo: "<; (Mission Cargo)" => "<; (Cargaison  de mission)"
+.MissionCargo: "<; (Mission Cargo)" => "<; (Cargaison de mission)"
 .Count: "Count: " => "Quantité : "
 .Abandoned: ";Abandoned" => ";Abandonné"
 .PowerPlay: "PowerPlay: " @
