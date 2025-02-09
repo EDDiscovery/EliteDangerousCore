@@ -945,7 +945,7 @@ SECTION EngineeringData
 SECTION MissionState
 
 .ToGo: "To Go:" => "Reste : "
-.Progress: "Progress:;%;N1" => "Progression : ;%;N1"
+.Progress: "Progress:;%;N1" => "Progression : ; %;N1"
 
 SECTION CommanderForm
 

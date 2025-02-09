@@ -286,30 +286,30 @@ SECTION CommunityGoal
 .Expires: "Expires: " => "Expire : "
 .NotComplete: "Not Complete;Complete" => "Pas terminé;Terminé"
 .CurrentTotal: "Current Total: " => "Total actuel : "
-.Contribution: "Contribution: " @
+.Contribution: "Contribution: " => "Contribution : "
 .NumContributors: "Num Contributors: " => "Nb Contributeurs : "
 .Player: "Player % Band: " => "Joueur % bande : "
 .TopRank: "Top Rank: " => "Rang dans le top : "
 .NotInTopRank: "Not In Top Rank;In Top Rank" => "Pas dans le top;Dans le top"
 .TierReached: "Tier Reached: " => "Niveau atteint : "
-.Bonus: "Bonus: " @
+.Bonus: "Bonus: " => "Bonus : "
 .TopTierName: "Top Tier Name" => "Nom du top niveau"
 .TT: "TT. Bonus" @
 
 SECTION FSSSignal
 
 .State: "State: " => "Statut : "
-.Faction: "Faction: " @
+.Faction: "Faction: " => "Faction : "
 .ThreatLevel: "Threat Level: " => "Niveau de menace : "
-.StationBool: ";Station: " @
+.StationBool: ";Station: " => ";Station : "
 .CarrierBool: ";Carrier: " => ";Porte-vaisseaux : "
 .MegashipBool: ";Megaship: " => ";Méga-vaisseaux : "
-.InstallationBool: ";Installation: " @
+.InstallationBool: ";Installation: " => ";Installation : "
 .LastSeen: "Last Seen: " => "Dernière vue : "
 
 SECTION JournalFSSDiscoveryScan
 
-.Progress: "Progress: ;%;N1" => "Progression : ;%;N1"
+.Progress: "Progress: ;%;N1" => "Progression : ; %;N1"
 .Bodies: "Bodies: " => "Corps : "
 .Others: "Others: " => "Autres : "
 
@@ -349,24 +349,24 @@ SECTION JournalLeaveBody
 
 SECTION JournalLocOrJump
 
-.Faction: "Faction: " @
+.Faction: "Faction: " => "Faction : "
 .Wanted: "<;(Wanted) " => "<;(recherché) "
 .State: "State: " = FSSSignal.State
 .Allegiance: "Allegiance: " => "Allégeance : "
 .Economy: "Economy: " => "Économie : "
-.Population: "Population: " @
+.Population: "Population: " => "Population : "
 .Government: "Government: " => "Gouvernement : "
-.Inf: "Inf: ;%" @
+.Inf: "Inf: ;%" => "Influence : ; %"
 .PendingState: "Pending State: " => "Statut imminent : "
 .RecoveringState: "Recovering State: " => "Récupération de statut : "
 
 SECTION JournalFuelScoop
 
-.Total: "Total: ;t;0.0" @
+.Total: "Total: ;t;0.0" => "Total: ; t;0.0"
 
 SECTION JournalLoadout
 
-.Modules: "Modules: " @
+.Modules: "Modules: " => "Modules : "
 
 SECTION JournalLocation
 
@@ -380,7 +380,7 @@ SECTION JournalLocOrJump
 .insystem: "< in system " => "< dans le système "
 .Security: "Security: " => "Sécurité : "
 .Happiness: "Happiness: " => "Bonheur : "
-.Reputation: "Reputation: ;%;N1" => "Réputation : ;%;N1"
+.Reputation: "Reputation: ;%;N1" => "Réputation : ; %;N1"
 .SquadronSystem: ";Squadron System" => ";Système d'escadron"
 .HappiestSystem: ";Happiest System" => ";Système le plus heureux"
 .HomeSystem: ";Home System" => ";Système de base"
@@ -390,7 +390,7 @@ SECTION JournalMissionAccepted
 
 .from: "< from " => "< de "
 .Expiry: "Expiry: " => "Expiration : "
-.Influence: "Influence: " @
+.Influence: "Influence: " => "Influence : "
 .Reputation: "Reputation: " => "Réputation : "
 .Reward: "Reward: ; cr;N0" => "Récompense : ; cr;N0"
 .Wing: "; (Wing)" => "; (Escadrille)"
@@ -422,7 +422,7 @@ SECTION MissionItem
 
 SECTION JournalModuleInfo
 
-.Modules: "Modules: " @
+.Modules: "Modules: " => "Modules : "
 
 SECTION JournalMultiSellExplorationData
 
@@ -430,7 +430,7 @@ SECTION JournalMultiSellExplorationData
 
 SECTION JournalProspectedAsteroid
 
-.Remaining: "Remaining: ;%;N1" => "Reste : ;%;N1"
+.Remaining: "Remaining: ;%;N1" => "Reste : ; %;N1"
 
 SECTION JournalPromotion
 
@@ -463,8 +463,8 @@ SECTION JournalReputation
 
 SECTION JournalReservoirReplenished
 
-.Main: "Main: ;t;0.0" => "Principal : ;t;0.0"
-.Reservoir: "Reservoir: ;t;0.0" => "Réservoir : ;t;0.0"
+.Main: "Main: ;t;0.0" => "Principal : ; t;0.0"
+.Reservoir: "Reservoir: ;t;0.0" => "Réservoir : ; t;0.0"
 
 SECTION StarPlanetRing
 
@@ -490,12 +490,12 @@ SECTION JournalScan
 .ScanBasic: "Scan Basic" => "Scan basique"
 .ScanNav: "Scan Nav" => "Scan de navigation"
 .Scanof: "Scan of {0}" => "Scan de {0}"
-.MSM: "Mass: ;SM;0.00" => "Masse : ;MS;0.00"
-.Age: "Age: ;my;0.0" => "Age : ;ma;0.0"
+.MSM: "Mass: ;SM;0.00" => "Masse : ; MS;0.00"
+.Age: "Age: ;my;0.0" => "Age : ; ma;0.0"
 .RS: "Radius: " => "Rayon : "
 .Landable: "<;, Landable" => "<;, Atterrissable"
 .Terraformable: "<;, Terraformable" @
-.Gravity: "Gravity: ;G;0.00" => "Gravité : ;G;0.00"
+.Gravity: "Gravity: ;G;0.00" => "Gravité : ; G;0.00"
 .NoAtmosphere: "No Atmosphere" => "Pas d'atmosphère"
 .LandC: "Landable" => "Atterrissable"
 .AMY: "Age: {0} my" => "Age : {0} ma"
@@ -536,8 +536,8 @@ SECTION JournalScan
 .EarthLikeWorlds: " - Earth Like Worlds, {0} ({1}-{2} AU)," => " - Mondes telluriques : {0} ({1}-{2} UA)"
 .AmmoniaWorlds: " - Ammonia Worlds, {0} ({1}-{2} AU)," => " - Mondes ammoniacs : {0} ({1}-{2} UA)"
 .IcyPlanets: " - Icy Planets, {0} (from {1} AU)" => " - Planètes glacées : {0} (de {1} AU)"
-.DISTA: "Dist: ;ls;0.0" => "Dist : ;sl;0.0"
-.DIST: "Dist: " @
+.DISTA: "Dist: ;ls;0.0" => "Dist : ; sl;0.0"
+.DIST: "Dist: " => "Dist : "
 .BNME: "Name: " => "Nom : "
 .SNME: "Name: " = JournalScan.BNME
 .MPI: "Mapped" => "Cartographié"
@@ -576,7 +576,7 @@ SECTION JournalSellExplorationData
 SECTION JournalSendText
 
 .To: "To: " = CommunityGoal.At
-.Msg: "Msg: " @
+.Msg: "Msg: " => "Msg : "
 
 SECTION JournalSetUserShipName
 
@@ -910,7 +910,7 @@ SECTION JournalEntry
 .Supercruise: "Supercruise" => "Super-navigation"
 .Target: "Target: " => "Cible : "
 .Victimfaction: "Victim faction: " => "Faction de la victime : "
-.Faction: "Faction: " @
+.Faction: "Faction: " => "Faction : "
 .from: "< from " = JournalMissionAccepted.from
 .dueto: "<, due to " => "<, attendu à "
 .onfaction: "< on faction " => "< à la faction "
@@ -922,7 +922,7 @@ SECTION JournalEntry
 .Reward: "Reward: ; cr;N0" => "Récompense : ; cr;N0"
 .to: "< to " => "< vers "
 .Brokertook: ", Broker took {0:N0}%" => ", le marchand a pris {0:N0} %"
-.Type: "Type: " @
+.Type: "Type: " => "Type : "
 .Amount: "Amount: ; cr;N0" => "Montant : ; cr;N0"
 .System: "System: " = CommunityGoal.System
 .NoCargo: "No Cargo" => "Pas de chargement"
@@ -931,16 +931,16 @@ SECTION JournalEntry
 .MissionCargo: "<; (Mission Cargo)" => "<; (Cargaison de mission)"
 .Count: "Count: " => "Quantité : "
 .Abandoned: ";Abandoned" => ";Abandonné"
-.PowerPlay: "PowerPlay: " @
+.PowerPlay: "PowerPlay: " => "PowerPlay : "
 .Collected: "Collected: " => "Récupéré : "
 .of: "< of " = JournalMissionAccepted.from
 .ofa: "of " = JournalReceiveText.FC
-.Total: "Total: " @
+.Total: "Total: " => "Total : "
 .Progress: "Progress: ;%;N1" = JournalFSSDiscoveryScan.Progress
 .Delivered: "Delivered: " => "Livré : "
 .Update: "Update, Collected: " => "Mise à jour, Récupéré : "
 .ToGo: "To Go:" => "Reste : "
-.ProgressLeft: "Progress Left: ;%;N1" => "Reste à faire : ;%;;N1"
+.ProgressLeft: "Progress Left: ;%;N1" => "Reste à faire : ; %;N1"
 .Stolen: ";Stolen" => ";Volé"
 .StartingPackage: "Starting Package: " => "Paquet de démarrage"
 .CGS: "< at ; Star System" => "< au système ;"
@@ -959,7 +959,7 @@ SECTION JournalEntry
 .Died: "{0} in ship type {1} rank {2}" => "{0} dans le vaisseau type {1} rang {2}"
 .Killedby: "Killed by " => "Tué par "
 .Boom: "Boom!" => "Boom !"
-.Option: "Option: " @
+.Option: "Option: " => "Option : "
 .Bankrupt: ";Bankrupt" => ";Banqueroute"
 .Dscan: "New bodies discovered: " => "Nouveaux corps découverts : "
 .Bodies: "Bodies: " => "Corps : "
@@ -973,8 +973,8 @@ SECTION JournalEntry
 .Stationservices: "Station services: " => "Services de la station : "
 .Economies: "Economies: " => "Économies : "
 .onpad: "< on pad " => "< sur la plate-forme "
-.Cockpit: "Cockpit: " @
-.Corrosion: "Corrosion: " @
+.Cockpit: "Cockpit: " => "Cockpit : "
+.Corrosion: "Corrosion: " => "Corrosion : "
 .TotalCost: "Total Cost: ; cr;N0" => "Coût total : ; cr;N0"
 .TotalSale: "Total Sale: ; cr;N0" => "Vente totale : ; cr;N0"
 .each: "each: ; cr;N0" => "chaque : ; cr;N0"
@@ -995,13 +995,13 @@ SECTION JournalEntry
 .Discovered: "Discovered: " => "Découvert : "
 .Loadout: "Loadout: " => "Équipement : "
 .NPCControlled: "NPC Controlled;" => ", contrôlé par des PNJ;"
-.Version: "Version: " @
-.Build: "Build: " @
+.Version: "Version: " => "Version : "
+.Build: "Build: " => "Build : "
 .Part: "Part: " => "Partie : "
 .Ship: "Ship: " => "Vaisseau : "
-.Ident: "Ident: " @
+.Ident: "Ident: " => "Ident : "
 .Credits: "Credits: ;;N0" => "Crédits : ;;N0"
-.Mode: "Mode: " @
+.Mode: "Mode: " => "Mode : "
 .Group: "Group: " => "Groupe : "
 .NotLanded: "Not Landed;Landed" => "En vol;Apponté"
 .FuelLevel: "Fuel Level: ;;0.0" => "Niveau de carburant : ;;0.0"
@@ -1031,7 +1031,7 @@ SECTION JournalEntry
 .Active: "Active: " => "Actif : "
 .Failed: "Failed: " => "Échoué : "
 .Completed: "Completed: " => "Terminé : "
-.Station: "Station: " @
+.Station: "Station: " => "Station : "
 .Settlement: "Settlement: " => "Installation : "
 .TargetFaction: "Target Faction: " => "Faction cible : "
 .Donation: "Donation: " => "Don : "
@@ -1040,7 +1040,7 @@ SECTION JournalEntry
 .Fine: "Fine: " => "Amende : "
 .Missionname: "Mission name: " => "Nom de la mission"
 .Hot: ";(Hot)" => ";(Chaud)"
-.HullHealth: "Hull Health: ;%;N1" => "Intég. Coque : ;%;N1"
+.HullHealth: "Hull Health: ;%;N1" => "Intég. Coque : ; %;N1"
 .Hull: "Hull: ; cr;N0" => "Coque : ; cr;N0"
 .Modules: "Modules: ; cr;N0" @
 .Rebuy: "Rebuy: ; cr;N0" => "Rachat : ; cr;N0"
@@ -1049,7 +1049,7 @@ SECTION JournalEntry
 .Item: "Item: " = JournalEntry.Commodity
 .on: " on " => " sur "
 .Replacedby: "Replaced by: " => "Remplacé par : "
-.Modifications: "Modifications: " @
+.Modifications: "Modifications: " => "Modifications : "
 .Slot: "Slot: " => "Emplacement : "
 .Swappedwith: ", Swapped with " => ", Échangé avec "
 .TransferCost: "Transfer Cost: ; cr;N0" => "Coût de transfert : ; cr;N0"
@@ -1063,7 +1063,7 @@ SECTION JournalEntry
 .itemsavailable: " items available" => " équipements disponibles"
 .NoPassengers: "No Passengers" => "Pas de passagers"
 .Merits: "Merits: " => "Mérites : "
-.Votes: "Votes: " @
+.Votes: "Votes: " => "Votes : "
 .Pledged: "Pledged: " => "Engagé : "
 .FromPower: "From Power: " => "De la puissance : "
 .ToPower: "To Power: " => "à la puissance : "
@@ -1074,7 +1074,7 @@ SECTION JournalEntry
 .Category: "Category: " => "Catégorie"
 .Latitude: "Latitude: ;°;F4" @
 .Longitude: "Longitude: ;°;F4" @
-.Num: "Num: " @
+.Num: "Num: " => "Num : "
 .Ships: "Ships" => "Vaisseaux"
 .Distance: "Distance: ; ly;0.0" => "Distance : ; al;0.0"
 .Threat: "Threat: " => "Menace : "
@@ -1088,7 +1088,7 @@ SECTION JournalEntry
 .NotorietyIndex: "Notoriety Index: ;;N0" = CrimeClass.NotorietyIndex
 .Fuel: "Fuel: ; tons;0.0" => "Carburant : ; t;0.0"
 .Taxi: "Taxi" @
-.Mods: "Mods: " @
+.Mods: "Mods: " => "Mods : "
 .Class: "Class: " => "Classe : "
 .Pilot: "Pilot: " => "Pilote : "
 .ShipRedeem: "Redeemed and deployed ship {0} at {1} into shipyard" => "Vaisseau {0} racheté et déployé au chantier naval {1}"
@@ -1128,7 +1128,7 @@ SECTION JournalCarrier
 .Deposit: "Deposit: ; cr;N0" => "Dépôt : ; cr;N0"
 .Withdraw: "Withdraw: ; cr;N0" => "Retrait : ; cr;N0"
 .Operation: "Operation: " => "Opération : "
-.Tier: "Tier: " @
+.Tier: "Tier: " => "Tier : "
 .Purchase: "Purchase: " => "Achat : "
 .Sell: "Sell: " => "Vente : "
 .CancelSell: "Cancel Sell of: " => "Annulation de vente : "
