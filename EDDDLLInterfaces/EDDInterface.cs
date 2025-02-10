@@ -293,7 +293,8 @@ namespace EDDDLLInterfaces
         // an external panel implements this interface.  You need to match your DLL to this interface
         public interface IEDDPanelExtension
         {
-            // Theme is json per ExtendedControls.Theme.  Make sure you cope with any changes we make - don't presume a key is there. Be defensive
+            // Theme is json per ExtendedControls.Theme with altfmt, the same as if you saved the theme to file.
+            // Make sure you cope with any changes we make - don't presume a key is there. Be defensive
             // displayid is a number given to identify an unique panel - just use it if your going to store per window configuration
             // outside of the callback Get functions. Do not derive any other info from it - the meaning of number may change in future
             // configuration is for future use
