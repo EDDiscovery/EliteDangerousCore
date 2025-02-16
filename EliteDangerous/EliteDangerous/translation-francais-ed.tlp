@@ -30,9 +30,9 @@ SECTION Bodies
 .MOG: "M Red Giant" => "Naine rouge M"
 .KOG: "K Orange Giant" => "Géante jaune-orange K"
 .RP: "Rogue Planet" => "Objet libre de masse planétaire"
-.Nebula: "Nebula" @
-.StellarRemnantNebula: "Stellar Remnant Nebula" @
-.SUnknown: "Unknown star class" @
+.Nebula: "Nebula" => "Nébuleuse"
+.StellarRemnantNebula: "Stellar Remnant Nebula" => "Rémanent de nébuleuse"
+.SUnknown: "Unknown star class" => "Étoile de classe inconnue"
 .UNK: "Class {0} star" => "Étoile {0}"
 
 SECTION EDPlanet
@@ -44,11 +44,11 @@ SECTION EDPlanet
 .Rockyicebody: "Rocky ice world" => "Monde rocheux gelé"
 .Earthlikebody: "Earth-like world" => "Monde Tellurique"
 .Waterworld: "Water world" => "Monde aquatique"
-.Ammoniaworld: "Ammonia world" => "Monde amoniaque"
+.Ammoniaworld: "Ammonia world" => "Monde ammoniac"
 .Watergiant: "Water giant" => "Géante aquatique"
 .Watergiantwithlife: "Water giant with life" => "Géante aquatique avec de la vie"
 .Gasgiantwithwaterbasedlife: "Gas giant with water-based life" => "Géante gazeuse avec de la vie basée sur l'eau"
-.Gasgiantwithammoniabasedlife: "Gas giant with ammonia-based life" => "Géante gazeuse à la vie basée sur l'amoniaque"
+.Gasgiantwithammoniabasedlife: "Gas giant with ammonia-based life" => "Géante gazeuse à la vie basée sur l'ammoniac"
 .SudarskyclassIgasgiant: "Class I gas giant" => "Géante gazeuse de classe I"
 .SudarskyclassIIgasgiant: "Class II gas giant" => "Géante gazeuse de classe II"
 .SudarskyclassIIIgasgiant: "Class III gas giant" => "Géante gazeuse de classe III"
@@ -60,11 +60,11 @@ SECTION EDPlanet
 
 SECTION MaterialCommodityMicroResourceType
 
-.Consumable: "Consumable" @
-.Unknown: "Unknown" @
-.Goods: "Goods" @
-.Assets: "Assets" @
-.Data: "Data" @
+.Consumable: "Consumable" => "Consommable"
+.Unknown: "Unknown" = Unknown
+.Goods: "Goods" => "Marchandises"
+.Assets: "Assets" => "Ressources"
+.Data: "Data" => "Données"
 .Raw: "Raw" => "Brut"
 .VeryCommon: "Very Common" => "Très courant"
 .Common: "Common" => "Courant"
@@ -76,16 +76,16 @@ SECTION MaterialCommodityMicroResourceType
 .Commodity: "Commodity" => "Marchandise"
 .Salvage: "Salvage" => "Ferraille"
 .Chemicals: "Chemicals" => "Produits chimiques"
-.ConsumerItems: "Consumer Items" => "Produits de consommation"
+.ConsumerItems: "Consumer Items" => "Biens de consommation"
 .Foods: "Foods" => "Alimentation"
 .IndustrialMaterials: "Industrial Materials" => "Matériaux industriels"
 .LegalDrugs: "Legal Drugs" => "Drogues légales"
 .Machinery: "Machinery" => "Machines"
 .Medicines: "Medicines" => "Médicaments"
 .Metals: "Metals" => "Métaux"
-.Minerals: "Minerals" => "Minéraux"
+.Minerals: "Minerals" => "Minerais"
 .Narcotics: "Narcotics" => "Narcotiques"
-.Slaves: "Slaves" => "Esclaves"
+.Slaves: "Slaves" => "Esclavage"
 .Technology: "Technology" => "Technologie"
 .Textiles: "Textiles" @
 .Waste: "Waste" => "Déchets"
@@ -96,7 +96,7 @@ SECTION MaterialCommodityMicroResourceType
 .iron: "Iron" => "Fer"
 .nickel: "Nickel" @
 .phosphorus: "Phosphorus" => "Phosphore"
-.sulphur: "Sulphur" => "Souffre"
+.sulphur: "Sulphur" => "Soufre"
 .lead: "Lead" => "Plomb"
 .rhenium: "Rhenium" => "Rhénium"
 .chromium: "Chromium" => "Chrome"
@@ -116,45 +116,45 @@ SECTION MaterialCommodityMicroResourceType
 .selenium: "Selenium" => "Sélénium"
 .yttrium: "Yttrium" @
 .technetium: "Technetium" => "Technétium"
-.tellurium: "Tellurium" @
-.ruthenium: "Ruthenium" => "Rhuténium"
+.tellurium: "Tellurium" => "Tellure"
+.ruthenium: "Ruthenium" => "Ruthénium"
 .polonium: "Polonium" @
 .antimony: "Antimony" => "Antimoine"
-.bulkscandata: "Anomalous Bulk Scan Data" => "Fichier volumineux de données d’analyse anormal"
+.bulkscandata: "Anomalous Bulk Scan Data" => "Fichier volumineux de données d'analyse anormal"
 .disruptedwakeechoes: "Atypical Disrupted Wake Echoes" => "Échos de sillages perturbés atypiques"
 .shieldcyclerecordings: "Distorted Shield Cycle Recordings" => "Enregistrements de cycles de bouclier déformés"
-.scrambledemissiondata: "Exceptional Scrambled Emission Data" => "Données d’émissions brouillées exceptionnelles"
+.scrambledemissiondata: "Exceptional Scrambled Emission Data" => "Données d'émissions brouillées exceptionnelles"
 .legacyfirmware: "Specialised Legacy Firmware" => "Micrologiciel spécialisé périmé"
 .encryptedfiles: "Unusual Encrypted Files" => "Fichiers cryptés inhabituels"
 .fsdtelemetry: "Anomalous FSD Telemetry" => "Télémétrie FSD anormale"
-.shieldsoakanalysis: "Inconsistent Shield Soak Analysis" => "Analyse d’absorption de bouclier incohérente"
-.archivedemissiondata: "Irregular Emission Data" => "Données d’émissions aberrantes"
+.shieldsoakanalysis: "Inconsistent Shield Soak Analysis" => "Analyse d'absorption de bouclier incohérente"
+.archivedemissiondata: "Irregular Emission Data" => "Données d'émissions aberrantes"
 .consumerfirmware: "Modified Consumer Firmware" => "Micrologiciel consommateur modifié"
 .encryptioncodes: "Tagged Encryption Codes" => "Clés de cryptage balisées"
-.scanarchives: "Unidentified Scan Archives" => "Données d’analyse archivées non identifiées"
-.ancientculturaldata: "Pattern Beta Obelisk Data" => "Données d’obélisque de type bêta"
-.ancienthistoricaldata: "Pattern Gamma Obelisk Data" => "Données d’obélisque de type gamma"
-.scandatabanks: "Classified Scan Databanks" => "Banques de données d’analyse classifiées"
+.scanarchives: "Unidentified Scan Archives" => "Données d'analyse archivées non identifiées"
+.ancientculturaldata: "Pattern Beta Obelisk Data" => "Données d'obélisque de type bêta"
+.ancienthistoricaldata: "Pattern Gamma Obelisk Data" => "Données d'obélisque de type gamma"
+.scandatabanks: "Classified Scan Databanks" => "Banques de données d'analyse classifiées"
 .industrialfirmware: "Cracked Industrial Firmware" => "Micrologiciel industriel piraté"
 .symmetrickeys: "Open Symmetric Keys" => "Clés symétriques ouvertes"
 .wakesolutions: "Strange Wake Solutions" => "Solutions de sillage anormales"
-.emissiondata: "Unexpected Emission Data" => "Données d’émissions inattendues"
+.emissiondata: "Unexpected Emission Data" => "Données d'émissions inattendues"
 .shielddensityreports: "Untypical Shield Scans" => "Analyses de bouclier atypiques"
-.compactemissionsdata: "Abnormal Compact Emissions Data" => "Données d’émissions compactes anormales"
-.ancientbiologicaldata: "Pattern Alpha Obelisk Data" => "Données d’obélisque de type alpha"
+.compactemissionsdata: "Abnormal Compact Emissions Data" => "Données d'émissions compactes anormales"
+.ancientbiologicaldata: "Pattern Alpha Obelisk Data" => "Données d'obélisque de type alpha"
 .shieldpatternanalysis: "Aberrant Shield Pattern Analysis" => "Analyse de modèle de bouclier aberrante"
 .encryptionarchives: "Atypical Encryption Archives" => "Archives cryptées atypiques"
-.decodedemissiondata: "Decoded Emission Data" => "Données d’émissions décodées"
-.encodedscandata: "Divergent Scan Data" => "Données d’analyse divergentes"
-.hyperspacetrajectories: "Eccentric Hyperspace Trajectories" => "Trajectoires d’hyperespace excentriques"
+.decodedemissiondata: "Decoded Emission Data" => "Données d'émissions décodées"
+.encodedscandata: "Divergent Scan Data" => "Données d'analyse divergentes"
+.hyperspacetrajectories: "Eccentric Hyperspace Trajectories" => "Trajectoires d'hyperespace excentriques"
 .securityfirmware: "Security Firmware Patch" => "Mise à jour de micrologiciel de sécurité"
-.ancientlanguagedata: "Pattern Delta Obelisk Data" => "Données d’obélisque de type delta"
-.classifiedscandata: "Classified Scan Fragment" => "Données d’analyse classifiées parcellaires"
+.ancientlanguagedata: "Pattern Delta Obelisk Data" => "Données d'obélisque de type delta"
+.classifiedscandata: "Classified Scan Fragment" => "Données d'analyse classifiées parcellaires"
 .embeddedfirmware: "Modified Embedded Firmware" => "Micrologiciel intégré modifié"
 .adaptiveencryptors: "Adaptive Encryptors Capture" => "Capture de cryptage évolutif"
 .dataminedwake: "Datamined Wake Exceptions" => "Explorations de données de sillages anormales"
 .shieldfrequencydata: "Peculiar Shield Frequency Data" => "Données de fréquences de bouclier singulières"
-.ancienttechnologicaldata: "Pattern Epsilon Obelisk Data" => "Données d’obélisque de type epsilon"
+.ancienttechnologicaldata: "Pattern Epsilon Obelisk Data" => "Données d'obélisque de type epsilon"
 .basicconductors: "Basic Conductors" => "Conducteurs simples"
 .chemicalstorageunits: "Chemical Storage Units" => "Unités de stockage chimique"
 .compactcomposites: "Compact Composites" => "Composites compacts"
@@ -185,17 +185,17 @@ SECTION MaterialCommodityMicroResourceType
 .phasealloys: "Phase Alloys" => "Alliages de phase"
 .precipitatedalloys: "Precipitated Alloys" => "Alliages précipités"
 .shieldingsensors: "Shielding Sensors" => "Capteurs de bouclier"
-.guardian_powercell: "Guardian Power Cell" => "Cellule d’énergie – Guardians"
-.guardian_powerconduit: "Guardian Power Conduit" => "Conduit d’énergie – Guardians"
-.guardian_techcomponent: "Guardian Technology Component" => "Composant technologique – Guardians"
-.guardian_sentinel_weaponparts: "Guardian Sentinel Weapon Parts" => "Pièce d’armement de sentinelle – Guardians"
-.guardian_sentinel_wreckagecomponents: "Guardian Wreckage Components" => "Débris de sentinelle – Guardians"
-.guardian_weaponblueprint: "Guardian Weapon Blueprint Fragment" => "Morceau de plan d’arme – Guardians"
-.guardian_moduleblueprint: "Guardian Module Blueprint Fragment" => "Morceau de plan de module – Guardians"
+.guardian_powercell: "Guardian Power Cell" => "Cellule d'énergie - Guardians"
+.guardian_powerconduit: "Guardian Power Conduit" => "Conduit d'énergie - Guardians"
+.guardian_techcomponent: "Guardian Technology Component" => "Composant technologique - Guardians"
+.guardian_sentinel_weaponparts: "Guardian Sentinel Weapon Parts" => "Pièce d'armement de sentinelle - Guardians"
+.guardian_sentinel_wreckagecomponents: "Guardian Wreckage Components" => "Débris d'épave - Guardians"
+.guardian_weaponblueprint: "Guardian Weapon Blueprint Fragment" => "Fragment de plan d'arme - Guardians"
+.guardian_moduleblueprint: "Guardian Module Blueprint Fragment" => "Fragment de plan de module - Guardians"
 .tg_biomechanicalconduits: "Bio-Mechanical Conduits" => "Conduits biomécaniques"
 .tg_propulsionelement: "Propulsion Elements" => "Éléments de propulsion"
-.tg_weaponparts: "Weapon Parts" => "Pièces d’armement"
-.tg_wreckagecomponents: "Wreckage Components" => "Débris d’épave"
+.tg_weaponparts: "Weapon Parts" => "Pièces d'armement"
+.tg_wreckagecomponents: "Wreckage Components" => "Débris d'épave"
 .tg_shipflightdata: "Ship Flight Data" => "Données de vol de vaisseau"
 .tg_shipsystemsdata: "Ship Systems Data" => "Données de systèmes de vaisseau"
 .chemicalmanipulators: "Chemical Manipulators" => "Manipulateurs chimiques"
@@ -225,7 +225,7 @@ SECTION MaterialCommodityMicroResourceType
 .unknownbiologicalmatter: "Thargoid Biological Matter" => "Matière biologique thargoid"
 .unknowntechnologysamples: "Thargoid Technology Samples" => "Échantillons de technologie thargoid"
 .unknowncarapace: "Thargoid Carapace" => "Carapace thargoid"
-.unknownenergycell: "Thargoid Energy Cell" => "Cellule d’énergie thargoid"
+.unknownenergycell: "Thargoid Energy Cell" => "Cellule d'énergie thargoid"
 .unknownorganiccircuitry: "Thargoid Organic Circuitry" => "Circuits organiques thargoids"
 .unknowntechnologycomponents: "Thargoid Technological Components" => "Composants technologiques thargoids"
 .unknownenergysource: "Sensor Fragment" => "Fragment de capteur"
@@ -235,16 +235,16 @@ SECTION MaterialCommodityMicroResourceType
 .unknownshipsignature: "Thargoid Ship Signature" => "Signature de vaisseau thargoid"
 .unknownwakedata: "Thargoid Wake Data" => "Données de sillage thargoid"
 .explosives: "Explosives" => "Explosif(s)"
-.hydrogenfuel: "Hydrogen Fuel" => "Carburant à base d’hydrogène"
+.hydrogenfuel: "Hydrogen Fuel" => "Carburant à base d'hydrogène"
 .hydrogenperoxide: "Hydrogen Peroxide" => "Peroxyde d'hydrogène"
 .liquidoxygen: "Liquid Oxygen" => "Oxygène liquide"
 .mineraloil: "Mineral Oil" => "Huile(s) minérale(s)"
 .nerveagents: "Nerve Agents" => "Agents neurotoxiques"
-.pesticides: "Pesticides" @
+.pesticides: "Pesticides" => "Pesticide(s)"
 .surfacestabilisers: "Surface Stabilisers" => "Stabilisateurs de surface"
 .syntheticreagents: "Synthetic Reagents" => "Réactifs synthétiques"
 .water: "Water" => "Eau"
-.clothing: "Clothing" => "Vétements"
+.clothing: "Clothing" => "Vêtements"
 .consumertechnology: "Consumer Technology" => "Électronique grand public"
 .domesticappliances: "Domestic Appliances" => "Équipement ménager"
 .evacuationshelter: "Evacuation Shelter" => "Abri d'urgence"
@@ -297,11 +297,11 @@ SECTION MaterialCommodityMicroResourceType
 .powerconverter: "Power Converter" => "Convertisseur d'énergie"
 .iondistributor: "Ion Distributor" => "Distributeurs d'ions"
 .advancedmedicines: "Advanced Medicines" => "Médicaments complexes"
-.basicmedicines: "Basic Medicines" => "Médicaments simples"
+.basicmedicines: "Basic Medicines" => "Médicament(s) simple(s)"
 .combatstabilisers: "Combat Stabilisers" => "Stabilisateurs de combat"
-.performanceenhancers: "Performance Enhancers" => "Produits dopants"
+.performanceenhancers: "Performance Enhancers" => "Produit(s) dopant(s)"
 .progenitorcells: "Progenitor Cells" => "Cellules souches"
-.agriculturalmedicines: "Agri-Medicines" => "Agri-médicaments"
+.agriculturalmedicines: "Agri-Medicines" => "Agri-médicament(s)"
 .aluminium: "Aluminium" @
 .beryllium: "Beryllium" => "Béryllium"
 .bismuth: "Bismuth" @
@@ -341,19 +341,19 @@ SECTION MaterialCommodityMicroResourceType
 .painite: "Painite" @
 .pyrophyllite: "Pyrophyllite" @
 .rutile: "Rutile" @
-.taaffeite: "Taaffeite" => "Taaféite"
+.taaffeite: "Taaffeite" => "Taafféite"
 .uraninite: "Uraninite" @
-.methanolmonohydratecrystals: "Methanol Monohydrate Crystals" => "Crystaux de méthanol monohydraté"
+.methanolmonohydratecrystals: "Methanol Monohydrate Crystals" => "Cristaux de méthanol monohydraté"
 .lowtemperaturediamond: "Low Temperature Diamonds" => "Diamants basse température"
 .trinketsoffortune: "Trinkets of Hidden Fortune" => "Amulettes porte-bonheur"
 .genebank: "Gene Bank" => "Banque de gènes"
 .timecapsule: "Time Capsule" => "Capsule temporelle"
 .damagedescapepod: "Damaged Escape Pod" => "Nacelle d'évacuation endommagée"
-.thargoidheart: "Thargoid Heart" => "Coeur thargoid"
-.thargoidtissuesampletype1: "Thargoid Cyclops Tissue Sample" => "Échantillon de tissu targoid - Cyclops"
-.thargoidtissuesampletype2: "Thargoid Basilisk Tissue Sample" => "Échantillon de tissu thargoid - Basilisk"
-.thargoidtissuesampletype3: "Thargoid Medusa Tissue Sample" => "Échantillon de tissu thargoid - Medusa"
-.thargoidscouttissuesample: "Thargoid Scout Tissue Sample" => "Échantillon de tissu thargoid - Éclaireur"
+.thargoidheart: "Thargoid Heart" => "Cœur thargoid"
+.thargoidtissuesampletype1: "Thargoid Cyclops Tissue Sample" => "Échantillon de tissu d'un Cyclops thargoid"
+.thargoidtissuesampletype2: "Thargoid Basilisk Tissue Sample" => "Échantillon de tissu d'un Basilisk thargoid"
+.thargoidtissuesampletype3: "Thargoid Medusa Tissue Sample" => "Échantillon de tissu d'un Medusa thargoid"
+.thargoidscouttissuesample: "Thargoid Scout Tissue Sample" => "Échantillon de tissu d'un éclaireur thargoid"
 .wreckagecomponents: "Wreckage Components" => "Débris d'épave"
 .antiquejewellery: "Antique Jewellery" => "Bijoux antiques"
 .airelics: "Ai Relics" => "Reliquats d'IA"
@@ -361,7 +361,7 @@ SECTION MaterialCommodityMicroResourceType
 .antiquities: "Antiquities" => "Antiquités"
 .assaultplans: "Assault Plans" => "Plans d'assaut"
 .datacore: "Data Core" => "Centre de données"
-.diplomaticbag: "Diplomatic Bag" => "Malette diplomatique"
+.diplomaticbag: "Diplomatic Bag" => "Mallette(s) diplomatique(s)"
 .encryptedcorrespondence: "Encrypted Correspondence" => "Correspondance cryptée"
 .fossilremnants: "Fossil Remnants" => "Fossiles"
 .geologicalsamples: "Geological Samples" => "Échantillons géologiques"
@@ -370,10 +370,10 @@ SECTION MaterialCommodityMicroResourceType
 .mysteriousidol: "Mysterious Idol" => "Idole mystérieuse"
 .occupiedcryopod: "Occupied Escape Pod" => "Nacelle d'évacuation occupée"
 .personaleffects: "Personal Effects" => "Effets personnels"
-.politicalprisoner: "Political Prisoners" => "Prisonnier politique"
+.politicalprisoner: "Political Prisoners" => "Prisonniers politiques"
 .preciousgems: "Precious Gems" => "Pierres précieuses"
 .prohibitedresearchmaterials: "Prohibited Research Materials" => "Matériaux de recherches interdits"
-.sap8corecontainer: "Sap 8 Core Container" => "Conteneur fusion SAP 8"
+.sap8corecontainer: "Sap 8 Core Container" => "Conteneur fusion SAP 8"
 .scientificresearch: "Scientific Research" => "Recherches scientifiques"
 .scientificsamples: "Scientific Samples" => "Échantillons scientifiques"
 .spacepioneerrelics: "Space Pioneer Relics" => "Reliques des pionniers de l'espace"
@@ -388,45 +388,45 @@ SECTION MaterialCommodityMicroResourceType
 .usscargoexperimentalchemicals: "Experimental Chemicals" => "Produits chimiques expérimentaux"
 .usscargomilitaryplans: "Military Plans" => "Plans militaires"
 .usscargoprototypetech: "Prototype Tech" => "Prototype technologique"
-.usscargorareartwork: "Rare Artwork" => "Oeuvre d'art"
+.usscargorareartwork: "Rare Artwork" => "Œuvre d'art"
 .usscargorebeltransmissions: "Rebel Transmissions" => "Transmissions rebelles"
 .usscargotechnicalblueprints: "Technical Blueprints" => "Plans industriels"
 .usscargotradedata: "Trade Data" => "Données commerciales"
-.ancientrelic: "Guardian Relic" = MaterialCommodityMicroResourceType.usscargoancientartefact
-.ancientorb: "Guardian Orb" => "Orbe antique"
-.ancientcasket: "Guardian Casket" => "Coffret antique"
-.ancienttablet: "Guardian Tablet" => "Tablette antique"
-.ancienturn: "Guardian Urn" => "Urne antique"
-.ancienttotem: "Guardian Totem" => "Totem antique"
+.ancientrelic: "Guardian Relic" => "Relique des Guardians"
+.ancientorb: "Guardian Orb" => "Orbe des Guardians"
+.ancientcasket: "Guardian Casket" => "Coffret des Guardians"
+.ancienttablet: "Guardian Tablet" => "Tablette des Guardians"
+.ancienturn: "Guardian Urn" => "Urne des Guardians"
+.ancienttotem: "Guardian Totem" => "Totem des Guardians"
 .basicnarcotics: "Narcotics" => "Narcotique(s)"
 .imperialslaves: "Imperial Slaves" => "Esclaves impériaux"
-.slaves: "Slaves" = MaterialCommodityMicroResourceType.Slaves
+.slaves: "Slaves" => "Esclaves"
 .advancedcatalysers: "Advanced Catalysers" => "Catalyseurs complexes"
 .animalmonitors: "Animal Monitors" => "Sys. surveillance animale"
 .aquaponicsystems: "Aquaponic Systems" => "Systèmes aquaponiques"
 .bioreducinglichen: "Bioreducing Lichen" => "Lichen bioréducteur"
-.computercomponents: "Computer Components" => "Composants d'ordinateur"
+.computercomponents: "Computer Components" => "Composants d'Ordinateur"
 .autofabricators: "Auto-Fabricators" => "Dispositifs d'autofabrication"
 .microcontrollers: "Micro Controllers" => "Microcontrôleurs"
 .medicaldiagnosticequipment: "Medical Diagnostic Equipment" => "Équipement de diagnostic médical"
 .nanobreakers: "Nanobreakers" => "Nanodestructeurs"
 .resonatingseparators: "Resonating Separators" => "Séparateurs à résonance"
 .robotics: "Robotics" => "Robots"
-.structuralregulators: "Structural Regulators" => "Régulateurs structurel"
+.structuralregulators: "Structural Regulators" => "Régulateur(s) structurel(s)"
 .telemetrysuite: "Telemetry Suite" => "Système de télémétrie"
 .hazardousenvironmentsuits: "H.E. Suits" => "Combinaisons de protection"
-.diagnosticsensor: "Hardware Diagnostic Sensor" => "Capteur diagnostique d'équipement"
+.diagnosticsensor: "Hardware Diagnostic Sensor" => "Capteur diagnostic d'équipement"
 .mutomimager: "Muon Imager" => "Dispositif d'imagerie muonique"
 .terrainenrichmentsystems: "Land Enrichment Systems" => "Sys. enrichissement sols"
 .conductivefabrics: "Conductive Fabrics" => "Tissus conducteurs"
 .leather: "Leather" => "Cuir"
 .militarygradefabrics: "Military Grade Fabrics" => "Tissus militaires"
-.naturalfabrics: "Natural Fabrics" => "Fibres tectiles naturelle"
-.syntheticfabrics: "Synthetic Fabrics" => "Tissus synthétique"
+.naturalfabrics: "Natural Fabrics" => "Fibre(s) textile(s) naturelle(s)"
+.syntheticfabrics: "Synthetic Fabrics" => "Tissu(s) synthétique(s)"
 .biowaste: "Biowaste" => "Biodéchets"
-.chemicalwaste: "Chemical Waste" => "Matériaux radioactifs"
+.chemicalwaste: "Chemical Waste" => "Déchets chimiques"
 .scrap: "Scrap" = MaterialCommodityMicroResourceType.Salvage
-.toxicwaste: "Toxic Waste" => "Déchats toxiques"
+.toxicwaste: "Toxic Waste" => "Déchets toxiques"
 .battleweapons: "Battle Weapons" => "Armes militaires"
 .landmines: "Landmines" => "Mines terrestres"
 .personalweapons: "Personal Weapons" => "Armes de poing"
@@ -435,7 +435,7 @@ SECTION MaterialCommodityMicroResourceType
 .thehuttonmug: "The Hutton Mug" => "La tasse Hutton"
 .eraninpearlwhisky: "Eranin Pearl Whisky" => "Whisky Eranin Pearl"
 .lavianbrandy: "Lavian Brandy" => "Brandy lavien"
-.hip10175bushmeat: "HIP 10175 Bush Meat" => "Viande de gibier de HIP 10175"
+.hip10175bushmeat: "HIP 10175 Bush Meat" => "Viande de gibier de HIP 10175"
 .albinoquechuamammoth: "Albino Quechua Mammoth Meat" => "Viande de mammouth albino quechuan"
 .utgaroarmillenialeggs: "Utgaroar Millennial Eggs" => "Œufs millénaires d'Utgaroar"
 .witchhaulkobebeef: "Witchhaul Kobe Beef" => "Bœuf de Kobe de Witchhaul"
@@ -454,7 +454,7 @@ SECTION MaterialCommodityMicroResourceType
 .wuthielokufroth: "Wuthielo Ku Froth" => "Mousse de Wuthielo Ku"
 .alacarakmoskinart: "Alacarakmo Skin Art" => "Art épidermique d'Alacarakmo"
 .eleuthermals: "Eleu Thermals" => "Sous-vêtements thermiques d'Eleu"
-.eshuumbrellas: "Eshu Umbrellas" => "Ombrelles d'Eshu"
+.eshuumbrellas: "Eshu Umbrellas" => "Ombrelles eshu"
 .karetiicouture: "Karetii Couture" => "Haute couture karetii"
 .njangarisaddles: "Njangari Saddles" => "Selles de Njangari"
 .anynacoffee: "Any Na Coffee" => "Café Any Na"
@@ -464,44 +464,44 @@ SECTION MaterialCommodityMicroResourceType
 .kinagoinstruments: "Kinago Violins" => "Violons de Kinago"
 .ngunamodernantiques: "Nguna Modern Antiques" => "Antiquités modernes de Nguna"
 .rajukrustoves: "Rajukru Multi-Stoves" => "Réchaud universel de Rajukru"
-.tiolcewaste2pasteunits: "Tiolce Waste2Paste Units" => "Pâte 2 déchets de Tiolce"
+.tiolcewaste2pasteunits: "Tiolce Waste2Paste Units" => "Pâte 2 Déchets de Tiolce"
 .chieridanimarinepaste: "Chi Eridani Marine Paste" => "Pâte marine de Chi Eridani"
 .esusekucaviar: "Esuseku Caviar" => "Caviar d'Esuseku"
 .livehecateseaworms: "Live Hecate Sea Worms" => "Vers marins vivants d'Hecate"
 .helvetitjpearls: "Helvetitj Pearls" => "Perles de Helvetitj"
 .hip41181squid: "HIP Proto-Squid" => "Proto-calamar de HIP"
 .coquimspongiformvictuals: "Coquim Spongiform Victuals" => "Rations spongiformes de Coquim"
-.aerialedenapple: "Eden Apples Of Aerial" => "Pommes d'Eden d'Aerial"
+.aerialedenapple: "Eden Apples Of Aerial" => "Pommes d'eden d'Aerial"
 .neritusberries: "Neritus Berries" => "Baies de Neritus"
 .ochoengchillies: "Ochoeng Chillies" => "Piments d'Ochoeng"
 .deuringastruffles: "Deuringas Truffles" => "Truffes de Deuringas"
-.hr7221wheat: "HR 7221 Wheat" => "Blé de HR 7221"
-.jarouarice: "Jaroua Rice" => "Riz de Jaroua"
+.hr7221wheat: "HR 7221 Wheat" => "Blé de HR 7221"
+.jarouarice: "Jaroua Rice" => "Riz jarouan"
 .belalansrayleather: "Belalans Ray Leather" => "Cuir de raie de Belalans"
 .damnacarapaces: "Damna Carapaces" => "Carapaces de Damna"
-.rapabaosnakeskins: "Rapa Bao Snake Skins" => "Peaux de serpent de Rapa Bao"
-.vanayequirhinofur: "Vanayequi Ceratomorpha Fur" => "Fourrure de ceratomorphe de Vanayequi"
+.rapabaosnakeskins: "Rapa Bao Snake Skins" => "Peau de serpent Rapa Bao"
+.vanayequirhinofur: "Vanayequi Ceratomorpha Fur" => "Fourrure de cératomorphe de Vanayequi"
 .bastsnakegin: "Bast Snake Gin" => "Gin de serpent Bast"
 .thrutiscream: "Thrutis Cream" => "Crème de Thrutis"
-.wulpahyperboresystems: "Wulpa Hyperbore Systems" => "Système hyperbore de Wulpa"
+.wulpahyperboresystems: "Wulpa Hyperbore Systems" => "Système hyperbore Wulpa"
 .aganipperush: "Aganippe Rush" => "Rush d'Aganippe"
 .terramaterbloodbores: "Terra Mater Blood Bores" => "Plasma sanguin de Terra Mater"
 .holvaduellingblades: "Holva Duelling Blades" => "Lame de duel de Holva"
 .kamorinhistoricweapons: "Kamorin Historic Weapons" => "Armes historiques de Kamorin"
-.gilyasignatureweapons: "Gilya Signature Weapons" => "Armes personnalisées de Gilya"
+.gilyasignatureweapons: "Gilya Signature Weapons" => "Armes personnalisées Gilyanes"
 .deltaphoenicispalms: "Delta Phoenicis Palms" => "Palmiers de Delta Phoenicis"
-.toxandjivirocide: "Toxandji Virocide" => "Virocide Toandji"
+.toxandjivirocide: "Toxandji Virocide" => "Virocide Toxandji"
 .xihecompanions: "Xihe Biomorphic Companions" => "Compagnons biomorphiques de Xihe"
 .sanumameat: "Sanuma Decorative Meat" => "Viande ornementale de Sanuma"
 .ethgrezeteabuds: "Ethgreze Tea Buds" => "Bourgeons de thé d'Ethgreze"
 .ceremonialheiketea: "Ceremonial Heike Tea" => "Thé de cérémonie de Heike"
-.tanmarktranquiltea: "Tanmark Tranquil Tea" => "Thé de la tranquilité de Tanmark"
-.azcancriformula42: "AZ Cancri Formula 42" => "Formule 42 d'AZ Cancri"
+.tanmarktranquiltea: "Tanmark Tranquil Tea" => "Thé de la tranquillité de Tanmark"
+.azcancriformula42: "AZ Cancri Formula 42" => "Formule 42 d'AZ Cancri"
 .sothiscrystallinegold: "Sothis Crystalline Gold" => "Or cristallin de Sothis"
 .kamitracigars: "Kamitra Cigars" => "Cigares de Kamitra"
 .rusanioldsmokey: "Rusani Old Smokey" @
 .yasokondileaf: "Yaso Kondi Leaf" => "Feuille de Yaso Kondi"
-.chateaudeaegaeon: "Chateau De Aegaeon" => "Chateau Aegaeon"
+.chateaudeaegaeon: "Chateau De Aegaeon" => "Château Aegaeon"
 .watersofshintara: "The Waters Of Shintara" => "Eau de Shintara"
 .ophiuchiexinoartefacts: "Ophiuch Exino Artefacts" => "Artefacts Ophiuch Exino"
 .bakedgreebles: "Baked Greebles" => "Greebles cuites"
@@ -517,22 +517,22 @@ SECTION MaterialCommodityMicroResourceType
 .haidneblackbrew: "Haiden Black Brew" => "Tisane noire de Haiden"
 .havasupaidreamcatcher: "Havasupai Dream Catcher" => "Attrape-rêves Havasupai"
 .burnhambiledistillate: "Burnham Bile Distillate" => "Distillé bileux de Burnham"
-.hiporganophosphates: "Hip Organophosphates" => "Organophosphates de HIP"
+.hiporganophosphates: "Hip Organophosphates" => "Organophosphates de Hip"
 .jaradharrepuzzlebox: "Jaradharre Puzzle Box" => "Boîte de jeux de Jaradharre"
-.korrokungpellets: "Koro Kung Pellets" => "Boulettes Koro Kung"
+.korrokungpellets: "Koro Kung Pellets" => "Boulettes Korro Kung"
 .lftvoidextractcoffee: "Void Extract Coffee" => "Café du néant"
-.honestypills: "Honesty Pills" => "Pillules d'honnêteté"
+.honestypills: "Honesty Pills" => "Pilules d'honnêteté"
 .noneuclidianexotanks: "Non Euclidian Exotanks" => "Vivariums non euclidiens"
 .ltthypersweet: "LTT Hyper Sweet" => "Hyper sucre LTT"
 .mechucoshightea: "Mechucos High Tea" => "Haut thé de Mechucos"
-.medbstarlube: "Medb Starlube" => "Lubbrifiant stellaire Medb"
+.medbstarlube: "Medb Starlube" => "Lubrifiant stellaire Medb"
 .mokojingbeastfeast: "Mokojing Beast Feast" => "Céréanimales de Mokojing"
 .mukusubiichitinos: "Mukusubii Chitin-os" => "Os chitineux de Mukusubii"
 .mulachigiantfungus: "Mulachi Giant Fungus" => "Champignons géants de Mulachi"
 .ngadandarifireopals: "Ngadandari Fire Opals" => "Opales de feu de Ngadandari"
 .tiegfriessynthsilk: "Tiegfries Synth Silk" => "Soie synthétique de Tiegfries"
 .uzumokulowgwings: "Uzumoku Low-G Wings" => "Ailes à faible gravité Uzumoku"
-.vherculisbodyrub: "V Herculis Body Rub" => "Lotion de soir V Herculis"
+.vherculisbodyrub: "V Herculis Body Rub" => "Lotion de soin V Herculis"
 .wheemetewheatcakes: "Wheemete Wheat Cakes" => "Gâteaux de blé Wheemete"
 .vegaslimweed: "Vega Slimweed" => "Algues amincissantes de Vega"
 .altairianskin: "Altairian Skin" => "Peau d'Altaïr"
@@ -540,10 +540,10 @@ SECTION MaterialCommodityMicroResourceType
 .jotunmookah: "Jotun Mookah" => "Mookah de Jotun"
 .giantverrix: "Giant Verrix" => "Verrix géant"
 .indibourbon: "Indi Bourbon" => "Bourbon Indi"
-.aroucaconventualsweets: "Arouca Conventual Sweets" => "Bonbons monastiques d'Aruca"
+.aroucaconventualsweets: "Arouca Conventual Sweets" => "Bonbons monastiques d'Arouca"
 .taurichimes: "Tauri Chimes" => "Carillons taurins"
 .zeesszeantglue: "Zeessze Ant Grub Glue" => "Colle de larve de fourmi de Zeessze"
-.pantaaprayersticks: "Pantaa Prayer Sticks" => "Bâtonnets d'encens de Pantaa"
+.pantaaprayersticks: "Pantaa Prayer Sticks" => "Bâtonnets d'encens de Panta"
 .fujintea: "Fujin Tea" => "Thé de Fujin"
 .chameleoncloth: "Chameleon Cloth" => "Tissu caméléon"
 .orrerianviciousbrew: "Orrerian Vicious Brew" => "Vicieuse d'Orrere"
@@ -565,9 +565,9 @@ SECTION MaterialCommodityMicroResourceType
 .shanscharisorchid: "Shan's Charis Orchid" => "Orchidée Shan Charis"
 .buckyballbeermats: "Buckyball Beer Mats" => "Sous-bocks Buckyball"
 .masterchefs: "Master Chefs" => "Spartan-chefs"
-.personalgifts: "Personal Gifts" => "Cadeaux personnels"
+.personalgifts: "Personal Gifts" => "Cadeaux festifs"
 .crystallinespheres: "Crystalline Spheres" => "Sphères cristallines"
-.advert1: "Ultra-Compact Processor Prototypes" => "Prototypes de Processeurs ultra-compacts"
+.advert1: "Ultra-Compact Processor Prototypes" => "Prototypes de processeurs ultra-compacts"
 .harmasilversearum: "Harma Silver Sea Rum" => "Rhum marin Harma Silver"
 .earthrelics: "Earth Relics" => "Reliques de la Terre"
 .aislingmediamaterials: "Aisling Media Materials" => "Dossiers de presse d'Aisling"
@@ -608,292 +608,292 @@ SECTION MaterialCommodityMicroResourceType
 .gromwartrophies: "Yuri Grom's Military Supplies" => "Fournitures militaires de Yuri Grom"
 .markedslaves: "Marked Slaves" => "Esclaves marqués"
 .torvaldeeds: "Torval Deeds" => "Actes juridiques de Torval"
-.drones: "Drones" @
-.guardian_vesselblueprint: "Guardian Vessel Blueprint Fragment" => "Morceau de plan de vaisseau – Guardians"
+.drones: "Drones" => "Drone"
+.guardian_vesselblueprint: "Guardian Vessel Blueprint Fragment" => "Fragment de plan de vaisseau - Guardians"
 .duradrives: "Duradrives" @
 .nanomedicines: "Nanomedicines" => "Nanomédicaments"
 .rhodplumsite: "Rhodplumsite" @
 .serendibite: "Serendibite" @
 .monazite: "Monazite" @
 .musgravite: "Musgravite" @
-.benitoite: "Benitoite" @
-.grandidierite: "Grandidierite" @
+.benitoite: "Benitoite" => "Bénitoïte"
+.grandidierite: "Grandidierite" => "Grandidiérite"
 .alexandrite: "Alexandrite" @
 .opal: "Void Opal" => "Opale du vide"
-.thargoidtissuesampletype4: "Thargoid Hydra Tissue Sample" => "Échantillon de tissu thargoid – Hydra"
+.thargoidtissuesampletype4: "Thargoid Hydra Tissue Sample" => "Échantillon de tissu d'un Hydra thargoid"
 .ancientkey: "Ancient Key" => "Clé antique"
-.rockforthfertiliser: "Rockforth Fertiliser" => "Fertilisant Rockforth"
-.agronomictreatment: "Agronomic Treatment" => "Traitement agronnomique"
-.m_tissuesample_soft: "Mollusc Soft Tissue" @
-.s_tissuesample_cells: "Pod Core Tissue" @
-.s_tissuesample_surface: "Pod Dead Tissue" @
-.s_tissuesample_core: "Pod Surface Tissue" @
-.m3_tissuesample_membrane: "Mollusc Membrane" @
-.m3_tissuesample_mycelium: "Mollusc Mycelium" @
-.m3_tissuesample_spores: "Mollusc Spores" @
-.s6_tissuesample_coenosarc: "Pod Shell Tissue" @
+.rockforthfertiliser: "Rockforth Fertiliser" => "Engrais Rockforth"
+.agronomictreatment: "Agronomic Treatment" => "Traitement agronomique"
+.m_tissuesample_soft: "Mollusc Soft Tissue" => "Tissu mou de mollusque"
+.s_tissuesample_cells: "Pod Core Tissue" => "Tissu de noyau de cosse"
+.s_tissuesample_surface: "Pod Dead Tissue" => "Tissu mort de cosse"
+.s_tissuesample_core: "Pod Surface Tissue" => "Tissu de surface de cosse"
+.m3_tissuesample_membrane: "Mollusc Membrane" => "Membrane de mollusque"
+.m3_tissuesample_mycelium: "Mollusc Mycelium" => "Mycélium de mollusque"
+.m3_tissuesample_spores: "Mollusc Spores" => "Spores de mollusque"
+.s6_tissuesample_coenosarc: "Pod Shell Tissue" => "Tissu de coque de cosse"
 .apavietii: "Apa Vietii" @
-.RawCategory1: "Raw Category 1" => "Cat. Brut 1"
-.RawCategory2: "Raw Category 2" => "Cat. Brut 2"
-.RawCategory3: "Raw Category 3" => "Cat. Brut 3"
-.RawCategory4: "Raw Category 4" => "Cat. Brut 4"
-.RawCategory5: "Raw Category 5" => "Cat. Brut 5"
-.RawCategory6: "Raw Category 6" => "Cat. Brut 6"
-.RawCategory7: "Raw Category 7" => "Cat. Brut 7"
-.EncodedEmissionData: "Encoded Emission Data" => "Données d'émission encodées"
-.EncodedWakeScans: "Encoded Wake Scans" => "Scans de sillage encodés"
-.EncodedShieldData: "Encoded Shield Data" => "Données de bouclier encodées"
-.EncodedEncryptionFiles: "Encoded Encryption Files" => "Fichiers cryptés encodés"
-.EncodedDataArchives: "Encoded Data Archives" => "Archives encodées"
-.EncodedFirmware: "Encoded Firmware" => "Micrologiciel encodé"
-.ManufacturedChemical: "Manufactured Chemical" => "Produit chimique manufacturé"
-.ManufacturedThermic: "Manufactured Thermic" @
-.ManufacturedHeat: "Manufactured Heat" @
-.ManufacturedConductive: "Manufactured Conductive" => "Conducteur manufacturé"
-.ManufacturedMechanicalComponents: "Manufactured Mechanical Components" => "Composants mécaniques manufacturés"
-.ManufacturedCapacitors: "Manufactured Capacitors" => "Condensateurs manufacturés"
-.ManufacturedShielding: "Manufactured Shielding" => "Protection manufacturée"
-.ManufacturedComposite: "Manufactured Composite" => "Composite manufacturé"
-.ManufacturedCrystals: "Manufactured Crystals" => "Cristaux manufacturés"
-.ManufacturedAlloys: "Manufactured Alloys" => "Alliages mannufacturés"
+.RawCategory1: "Raw Category 1" => "Brut Matériaux bruts - Catégorie 1"
+.RawCategory2: "Raw Category 2" => "Brut Matériaux bruts - Catégorie 2"
+.RawCategory3: "Raw Category 3" => "Brut Matériaux bruts - Catégorie 3"
+.RawCategory4: "Raw Category 4" => "Brut Matériaux bruts - Catégorie 4"
+.RawCategory5: "Raw Category 5" => "Brut Matériaux bruts - Catégorie 5"
+.RawCategory6: "Raw Category 6" => "Brut Matériaux bruts - Catégorie 6"
+.RawCategory7: "Raw Category 7" => "Brut Matériaux bruts - Catégorie 7"
+.EncodedEmissionData: "Encoded Emission Data" => "Encodé Données d'émission"
+.EncodedWakeScans: "Encoded Wake Scans" => "Encodé Données de sillage"
+.EncodedShieldData: "Encoded Shield Data" => "Encodé Données de bouclier"
+.EncodedEncryptionFiles: "Encoded Encryption Files" => "Encodé Fichiers cryptés"
+.EncodedDataArchives: "Encoded Data Archives" => "Encodé Archives de données"
+.EncodedFirmware: "Encoded Firmware" => "Encodé Micrologiciels encodés"
+.ManufacturedChemical: "Manufactured Chemical" => "Fabriqué Produits chimiques"
+.ManufacturedThermic: "Manufactured Thermic" => "Fabriqué Thermiques"
+.ManufacturedHeat: "Manufactured Heat" => "Fabriqué Chaleur"
+.ManufacturedConductive: "Manufactured Conductive" => "Fabriqué Conducteurs"
+.ManufacturedMechanicalComponents: "Manufactured Mechanical Components" => "Fabriqué Composants mécaniques"
+.ManufacturedCapacitors: "Manufactured Capacitors" => "Fabriqué Condensateurs"
+.ManufacturedShielding: "Manufactured Shielding" => "Fabriqué Protection"
+.ManufacturedComposite: "Manufactured Composite" => "Fabriqué Composites"
+.ManufacturedCrystals: "Manufactured Crystals" => "Fabriqué Cristaux"
+.ManufacturedAlloys: "Manufactured Alloys" => "Fabriqué Alliages"
 .NA: "NA" @
 .tritium: "Tritium" @
-.s6_tissuesample_mesoglea: "Pod Mesoglea" @
-.s6_tissuesample_cells: "Pod Outer Tissue" @
-.bypass: "E-Breach" @
-.energycell: "Energy Cell" @
-.healthpack: "Medkit" @
-.amm_grenade_frag: "Frag Grenade" @
-.amm_grenade_emp: "Shield Disruptor" @
-.amm_grenade_shield: "Shield Projector" @
-.largecapacitypowerregulator: "Power Regulator" @
-.compactlibrary: "Compact Library" @
-.infinity: "Infinity" @
-.insightentertainmentsuite: "Insight Entertainment Suite" @
-.lazarus: "Lazarus" @
-.universaltranslator: "Universal Translator" @
-.biochemicalagent: "Biochemical Agent" @
-.degradedpowerregulator: "Degraded Power Regulator" @
-.hush: "Hush" @
-.push: "Push" @
-.syntheticpathogen: "Synthetic Pathogen" @
-.buildingschematic: "Building Schematic" @
+.s6_tissuesample_mesoglea: "Pod Mesoglea" => "Mésoglée de cosse"
+.s6_tissuesample_cells: "Pod Outer Tissue" => "Tissu extérieur de cosse"
+.bypass: "E-Breach" => "Omnipasse"
+.energycell: "Energy Cell" => "Cellule d'énergie"
+.healthpack: "Medkit" => "Médikit"
+.amm_grenade_frag: "Frag Grenade" => "Grenade à fragmentation"
+.amm_grenade_emp: "Shield Disruptor" => "Neutralisat. de bouclier"
+.amm_grenade_shield: "Shield Projector" => "Générateur de bouclier"
+.largecapacitypowerregulator: "Power Regulator" => "Régulateur de puissance"
+.compactlibrary: "Compact Library" => "Bibliothèque de poche"
+.infinity: "Infinity" => "Infini"
+.insightentertainmentsuite: "Insight Entertainment Suite" => "Divertissements Insight"
+.lazarus: "Lazarus" => "Lazare"
+.universaltranslator: "Universal Translator" => "Traducteur universel"
+.biochemicalagent: "Biochemical Agent" => "Agent biochimique"
+.degradedpowerregulator: "Degraded Power Regulator" => "Régulateur de puissance endommagé"
+.hush: "Hush" => "Chut"
+.push: "Push" => "Boost"
+.syntheticpathogen: "Synthetic Pathogen" => "Pathogène de synthèse"
+.buildingschematic: "Building Schematic" => "Plan de bâtiment"
 .insight: "Insight" @
-.compressionliquefiedgas: "Compression-Liquefied Gas" @
-.healthmonitor: "Health Monitor" @
-.inertiacanister: "Inertia Canister" @
-.ionisedgas: "Ionised Gas" @
-.shipschematic: "Ship Schematic" @
-.suitschematic: "Suit Schematic" @
-.vehicleschematic: "Vehicle Schematic" @
-.weaponschematic: "Weapon Schematic" @
-.trueformfossil: "True Form Fossil" @
-.carbonfibreplating: "Carbon Fibre Plating" @
-.encryptedmemorychip: "Encrypted Memory Chip" @
-.epoxyadhesive: "Epoxy Adhesive" @
-.graphene: "Graphene" @
-.memorychip: "Memory Chip" @
-.microelectrode: "Microelectrode" @
-.microhydraulics: "Micro Hydraulics" @
-.microthrusters: "Micro Thrusters" @
-.opticalfibre: "Optical Fibre" @
-.opticallens: "Optical Lens" @
+.compressionliquefiedgas: "Compression-Liquefied Gas" => "Gaz liquéfié"
+.healthmonitor: "Health Monitor" => "Moniteur médical"
+.inertiacanister: "Inertia Canister" => "Conteneur inertiel"
+.ionisedgas: "Ionised Gas" => "Gaz ionisé"
+.shipschematic: "Ship Schematic" => "Plan de vaisseau"
+.suitschematic: "Suit Schematic" => "Plan de combinaison"
+.vehicleschematic: "Vehicle Schematic" => "Plan de véhicule"
+.weaponschematic: "Weapon Schematic" => "Plan d'arme"
+.trueformfossil: "True Form Fossil" => "Fossile intact"
+.carbonfibreplating: "Carbon Fibre Plating" => "Plaques en fibres de carbone"
+.encryptedmemorychip: "Encrypted Memory Chip" => "Puce mémoire cryptée"
+.epoxyadhesive: "Epoxy Adhesive" => "Colle époxy"
+.graphene: "Graphene" => "Graphène"
+.memorychip: "Memory Chip" => "Puce mémoire"
+.microelectrode: "Microelectrode" => "Microélectrode"
+.microhydraulics: "Micro Hydraulics" => "Micro hydraulique"
+.microthrusters: "Micro Thrusters" => "Micropropulseurs"
+.opticalfibre: "Optical Fibre" => "Fibre optique"
+.opticallens: "Optical Lens" => "Lentille optique"
 .rdx: "RDX" @
-.titaniumplating: "Titanium Plating" @
-.tungstencarbide: "Tungsten Carbide" @
-.weaponcomponent: "Weapon Component" @
-.aerogel: "Aerogel" @
-.chemicalsuperbase: "Chemical Superbase" @
-.circuitboard: "Circuit Board" @
-.circuitswitch: "Circuit Switch" @
-.electricalwiring: "Electrical Wiring" @
-.electromagnet: "Electromagnet" @
-.metalcoil: "Metal Coil" @
-.motor: "Motor" @
-.chemicalcatalyst: "Chemical Catalyst" @
-.microtransformer: "Micro Transformer" @
-.electricalfuse: "Electrical Fuse" @
-.microsupercapacitor: "Micro Supercapacitor" @
-.viscoelasticpolymer: "Viscoelastic Polymer" @
-.ionbattery: "Ion Battery" @
-.scrambler: "Scrambler" @
-.chemicalinventory: "Chemical Inventory" @
-.dutyrota: "Duty Rota" @
-.evacuationprotocols: "Evacuation Protocols" @
-.explorationjournals: "Exploration Journals" @
-.factionnews: "Faction News" @
-.financialprojections: "Financial Projections" @
-.salesrecords: "Sales Records" @
-.unionmembership: "Union Membership" @
-.maintenancelogs: "Maintenance Logs" @
-.patrolroutes: "Patrol Routes" @
-.settlementdefenceplans: "Settlement Defence Plans" @
-.surveilleancelogs: "Surveillance Logs" @
-.operationalmanual: "Operational Manual" @
-.blacklistdata: "Blacklist Data" @
-.airqualityreports: "Air Quality Reports" @
-.employeedirectory: "Employee Directory" @
-.factionassociates: "Faction Associates" @
-.meetingminutes: "Meeting Minutes" @
-.multimediaentertainment: "Multimedia Entertainment" @
-.networkaccesshistory: "Network Access History" @
-.purchaserecords: "Purchase Records" @
-.radioactivitydata: "Radioactivity Data" @
-.residentialdirectory: "Residential Directory" @
-.shareholderinformation: "Shareholder Information" @
-.travelpermits: "Travel Permits" @
-.accidentlogs: "Accident Logs" @
-.campaignplans: "Campaign Plans" @
-.combattrainingmaterial: "Combat Training Material" @
-.internalcorrespondence: "Internal Correspondence" @
-.payrollinformation: "Payroll Information" @
-.personallogs: "Personal Logs" @
-.weaponinventory: "Weapon Inventory" @
-.atmosphericdata: "Atmospheric Data" @
-.topographicalsurveys: "Topographical Surveys" @
-.literaryfiction: "Literary Fiction" @
-.reactoroutputreview: "Reactor Output Review" @
-.nextofkinrecords: "Next of Kin Records" @
-.purchaserequests: "Purchase Requests" @
-.taxrecords: "Tax Records" @
-.visitorregister: "Visitor Register" @
-.pharmaceuticalpatents: "Pharmaceutical Patents" @
-.vaccineresearch: "Vaccine Research" @
-.virologydata: "Virology Data" @
-.vaccinationrecords: "Vaccination Records" @
-.censusdata: "Census Data" @
-.geographicaldata: "Geographical Data" @
-.mineralsurvey: "Mineral Survey" @
-.chemicalformulae: "Chemical Formulae" @
-.chemicalexperimentdata: "Chemical Experiment Data" @
-.chemicalpatents: "Chemical Patents" @
-.productionreports: "Production Reports" @
-.productionschedule: "Production Schedule" @
-.bloodtestresults: "Blood Test Results" @
-.combatantperformance: "Combatant Performance" @
-.troopdeploymentrecords: "Troop Deployment Records" @
-.catmedia: "Cat Media" @
-.employeegeneticdata: "Employee Genetic Data" @
-.factiondonatorlist: "Faction Donator List" @
-.nocdata: "NOC Data" @
-.manufacturinginstructions: "Manufacturing Instructions" @
-.m_tissuesample_fluid: "Mollusc Fluid" @
-.m_tissuesample_nerves: "Mollusc Brain Tissue" @
-.s9_tissuesample_shell: "Pod Tissue" @
-.agriculturalprocesssample: "Agricultural Process Sample" @
-.geneticsample: "Biological Sample" @
+.titaniumplating: "Titanium Plating" => "Plaques en titane"
+.tungstencarbide: "Tungsten Carbide" => "Carbure de tungstène"
+.weaponcomponent: "Weapon Component" => "Composant d'arme"
+.aerogel: "Aerogel" => "Aérogel"
+.chemicalsuperbase: "Chemical Superbase" => "Superbase chimique"
+.circuitboard: "Circuit Board" => "Circuit imprimé"
+.circuitswitch: "Circuit Switch" => "Commutateur"
+.electricalwiring: "Electrical Wiring" => "Câblage électrique"
+.electromagnet: "Electromagnet" => "Électroaimant"
+.metalcoil: "Metal Coil" => "Bobine métallique"
+.motor: "Motor" => "Moteur"
+.chemicalcatalyst: "Chemical Catalyst" => "Catalyseur chimique"
+.microtransformer: "Micro Transformer" => "Microtransformateur"
+.electricalfuse: "Electrical Fuse" => "Fusible électrique"
+.microsupercapacitor: "Micro Supercapacitor" => "Microsupercondensateur"
+.viscoelasticpolymer: "Viscoelastic Polymer" => "Polymère viscoélastique"
+.ionbattery: "Ion Battery" => "Batterie ionique"
+.scrambler: "Scrambler" => "Brouilleur"
+.chemicalinventory: "Chemical Inventory" => "Inventaire chimique"
+.dutyrota: "Duty Rota" => "Planning professionnel"
+.evacuationprotocols: "Evacuation Protocols" => "Protocoles d'évacuation"
+.explorationjournals: "Exploration Journals" => "Journaux d'exploration"
+.factionnews: "Faction News" => "Actualité d'une faction"
+.financialprojections: "Financial Projections" => "Projections financières"
+.salesrecords: "Sales Records" => "Historique des ventes"
+.unionmembership: "Union Membership" => "Liste d'adhérents"
+.maintenancelogs: "Maintenance Logs" => "Journaux de maintenance"
+.patrolroutes: "Patrol Routes" => "Itinéraires de patrouille"
+.settlementdefenceplans: "Settlement Defence Plans" => "Plans de défense d'une installation"
+.surveilleancelogs: "Surveillance Logs" => "Journaux de surveillance"
+.operationalmanual: "Operational Manual" => "Mode d'emploi"
+.blacklistdata: "Blacklist Data" => "Liste noire"
+.airqualityreports: "Air Quality Reports" => "Rapports de qualité de l'air"
+.employeedirectory: "Employee Directory" => "Registre des employés"
+.factionassociates: "Faction Associates" => "Affiliations d'une faction"
+.meetingminutes: "Meeting Minutes" => "Compte-rendu de réunion"
+.multimediaentertainment: "Multimedia Entertainment" => "Médiathèque"
+.networkaccesshistory: "Network Access History" => "Historique réseau"
+.purchaserecords: "Purchase Records" => "Registre d'acquisitions"
+.radioactivitydata: "Radioactivity Data" => "Relevés de radioactivité"
+.residentialdirectory: "Residential Directory" => "Annuaire résidentiel"
+.shareholderinformation: "Shareholder Information" => "Actionnariat"
+.travelpermits: "Travel Permits" => "Autorisations de déplacement"
+.accidentlogs: "Accident Logs" => "Journaux d'accidents"
+.campaignplans: "Campaign Plans" => "Plans de campagne"
+.combattrainingmaterial: "Combat Training Material" => "Méthodes d'entraînement au combat"
+.internalcorrespondence: "Internal Correspondence" => "Mémo interne"
+.payrollinformation: "Payroll Information" => "Informations salariales"
+.personallogs: "Personal Logs" => "Journaux personnels"
+.weaponinventory: "Weapon Inventory" => "Inventaire d'armement"
+.atmosphericdata: "Atmospheric Data" => "Données atmosphériques"
+.topographicalsurveys: "Topographical Surveys" => "Levés topographiques"
+.literaryfiction: "Literary Fiction" => "Romans"
+.reactoroutputreview: "Reactor Output Review" => "Évaluation énergétique"
+.nextofkinrecords: "Next of Kin Records" => "Liste de proches"
+.purchaserequests: "Purchase Requests" => "Demandes d'achats"
+.taxrecords: "Tax Records" => "Dossiers fiscaux"
+.visitorregister: "Visitor Register" => "Registre de visites"
+.pharmaceuticalpatents: "Pharmaceutical Patents" => "Brevets pharmaceutiques"
+.vaccineresearch: "Vaccine Research" => "Recherches vaccinales"
+.virologydata: "Virology Data" => "Données de virologie"
+.vaccinationrecords: "Vaccination Records" => "Dossiers de vaccination"
+.censusdata: "Census Data" => "Données de recensement"
+.geographicaldata: "Geographical Data" => "Données géographiques"
+.mineralsurvey: "Mineral Survey" => "Rapport de prospection"
+.chemicalformulae: "Chemical Formulae" => "Formules chimiques"
+.chemicalexperimentdata: "Chemical Experiment Data" => "Données d'expériences chimiques"
+.chemicalpatents: "Chemical Patents" => "Brevets chimiques"
+.productionreports: "Production Reports" => "Rapports de production"
+.productionschedule: "Production Schedule" => "Planning de production"
+.bloodtestresults: "Blood Test Results" => "Résultats de tests sanguins"
+.combatantperformance: "Combatant Performance" => "Performances de combat"
+.troopdeploymentrecords: "Troop Deployment Records" => "Comptes-rendus opérationnels"
+.catmedia: "Cat Media" => "Médiathèque féline"
+.employeegeneticdata: "Employee Genetic Data" => "Données génétiques d'employés"
+.factiondonatorlist: "Faction Donator List" => "Liste des donateurs d'une faction"
+.nocdata: "NOC Data" => "Données d'agent clandestin"
+.manufacturinginstructions: "Manufacturing Instructions" => "Guides industriels"
+.m_tissuesample_fluid: "Mollusc Fluid" => "Fluides de mollusque"
+.m_tissuesample_nerves: "Mollusc Brain Tissue" => "Matière cérébrale de mollusque"
+.s9_tissuesample_shell: "Pod Tissue" => "Tissu de cosse"
+.agriculturalprocesssample: "Agricultural Process Sample" => "Échantillon de production agricole"
+.geneticsample: "Biological Sample" => "Échantillons biologiques"
 .californium: "Californium" @
-.castfossil: "Cast Fossil" @
-.chemicalprocesssample: "Chemical Process Sample" @
-.chemicalsample: "Chemical Sample" @
-.deepmantlesample: "Deep Mantle Sample" @
-.geneticrepairmeds: "Genetic Repair Meds" @
-.gmeds: "G-Meds" @
-.inorganiccontaminant: "Inorganic Contaminant" @
-.insightdatabank: "Insight Data Bank" @
-.microbialinhibitor: "Microbial Inhibitor" @
-.mutageniccatalyst: "Mutagenic Catalyst" @
-.nutritionalconcentrate: "Nutritional Concentrate" @
-.personalcomputer: "Personal Computer" @
-.personaldocuments: "Personal Documents" @
-.petrifiedfossil: "Petrified Fossil" @
-.pyrolyticcatalyst: "Pyrolytic Catalyst" @
-.refinementprocesssample: "Refinement Process Sample" @
-.surveillanceequipment: "Surveillance Equipment" @
-.syntheticgenome: "Synthetic Genome" @
-.oxygenicbacteria: "Oxygenic Bacteria" @
-.epinephrine: "Epinephrine" @
-.phneutraliser: "pH Neutraliser" @
-.transmitter: "Transmitter" @
-.propaganda: "Propaganda" @
-.securityexpenses: "Security Expenses" @
-.weapontestdata: "Weapon Test Data" @
-.audiologs: "Audio Logs" @
-.axcombatlogs: "AX Combat Logs" @
-.ballisticsdata: "Ballistics Data" @
-.biologicalweapondata: "Biological Weapon Data" @
-.biometricdata: "Biometric Data" @
-.chemicalweapondata: "Chemical Weapon Data" @
-.classicentertainment: "Classic Entertainment" @
-.cocktailrecipes: "Cocktail Recipes" @
-.conflicthistory: "Conflict History" @
-.criminalrecords: "Criminal Records" @
-.cropyieldanalysis: "Crop Yield Analysis" @
-.culinaryrecipes: "Culinary Recipes" @
-.digitaldesigns: "Digital Designs" @
-.employeeexpenses: "Employee Expenses" @
-.employmenthistory: "Employment History" @
-.enhancedinterrogationrecordings: "Enhanced Interrogation Recordings" @
-.espionagematerial: "Espionage Material" @
-.extractionyielddata: "Extraction Yield Data" @
-.fleetregistry: "Fleet Registry" @
-.genesequencingdata: "Gene Sequencing Data" @
-.geneticresearch: "Genetic Research" @
-.geologicaldata: "Geological Data" @
-.hydroponicdata: "Hydroponic Data" @
-.incidentlogs: "Incident Logs" @
-.influenceprojections: "Influence Projections" @
-.interrogationrecordings: "Interrogation Recordings" @
-.interviewrecordings: "Interview Recordings" @
-.jobapplications: "Job Applications" @
+.castfossil: "Cast Fossil" => "Moulage de fossile"
+.chemicalprocesssample: "Chemical Process Sample" => "Échantillon de production chimique"
+.chemicalsample: "Chemical Sample" => "Échantillon chimique"
+.deepmantlesample: "Deep Mantle Sample" => "Échantillon de manteau inférieur"
+.geneticrepairmeds: "Genetic Repair Meds" => "Traitements génétiques"
+.gmeds: "G-Meds" => "Traitement gravitationnel"
+.inorganiccontaminant: "Inorganic Contaminant" => "Contaminant inorganique"
+.insightdatabank: "Insight Data Bank" => "Banque de données d'Insight"
+.microbialinhibitor: "Microbial Inhibitor" => "Inhibiteur microbien"
+.mutageniccatalyst: "Mutagenic Catalyst" => "Catalyseur mutagène"
+.nutritionalconcentrate: "Nutritional Concentrate" => "Concentré nutritif"
+.personalcomputer: "Personal Computer" => "Ordinateur personnel"
+.personaldocuments: "Personal Documents" => "Documents personnels"
+.petrifiedfossil: "Petrified Fossil" => "Fossile pétrifié"
+.pyrolyticcatalyst: "Pyrolytic Catalyst" => "Catalyseur pyrolytique"
+.refinementprocesssample: "Refinement Process Sample" => "Échantillon de production de raffinage"
+.surveillanceequipment: "Surveillance Equipment" => "Équipement de surveillance"
+.syntheticgenome: "Synthetic Genome" => "Génome de synthèse"
+.oxygenicbacteria: "Oxygenic Bacteria" => "Bactérie oxygénique"
+.epinephrine: "Epinephrine" => "Épinéphrine"
+.phneutraliser: "pH Neutraliser" => "Neutralisateur de pH"
+.transmitter: "Transmitter" => "Transmetteur"
+.propaganda: "Propaganda" => "Propagande"
+.securityexpenses: "Security Expenses" => "Dépenses de sécurité"
+.weapontestdata: "Weapon Test Data" => "Données de test d'armes"
+.audiologs: "Audio Logs" => "Journaux audio"
+.axcombatlogs: "AX Combat Logs" => "Journaux de combat AX"
+.ballisticsdata: "Ballistics Data" => "Données balistiques"
+.biologicalweapondata: "Biological Weapon Data" => "Données d'arme biologique"
+.biometricdata: "Biometric Data" => "Données biométriques"
+.chemicalweapondata: "Chemical Weapon Data" => "Données d'armes chimiques"
+.classicentertainment: "Classic Entertainment" => "Médiathèque classique"
+.cocktailrecipes: "Cocktail Recipes" => "Recettes de cocktails"
+.conflicthistory: "Conflict History" => "Historique de conflit"
+.criminalrecords: "Criminal Records" => "Casiers judiciaires"
+.cropyieldanalysis: "Crop Yield Analysis" => "Analyse de rendement agricole"
+.culinaryrecipes: "Culinary Recipes" => "Recettes culinaires"
+.digitaldesigns: "Digital Designs" => "Plans numériques"
+.employeeexpenses: "Employee Expenses" => "Notes de frais"
+.employmenthistory: "Employment History" => "Expérience professionnelle"
+.enhancedinterrogationrecordings: "Enhanced Interrogation Recordings" => "Enregistrements d'interrogatoires poussés"
+.espionagematerial: "Espionage Material" => "Documents confidentiels"
+.extractionyielddata: "Extraction Yield Data" => "Données de rendement minier"
+.fleetregistry: "Fleet Registry" => "Registre de flotte"
+.genesequencingdata: "Gene Sequencing Data" => "Données de séquençage génétique"
+.geneticresearch: "Genetic Research" => "Recherches génétiques"
+.geologicaldata: "Geological Data" => "Données géologiques"
+.hydroponicdata: "Hydroponic Data" => "Données hydroponiques"
+.incidentlogs: "Incident Logs" => "Journaux d'incidents"
+.influenceprojections: "Influence Projections" => "Perspectives"
+.interrogationrecordings: "Interrogation Recordings" => "Enregistrements d'interrogatoires"
+.interviewrecordings: "Interview Recordings" => "Enregistrements d'entretiens"
+.jobapplications: "Job Applications" => "Candidatures professionnelles"
 .kompromat: "Kompromat" @
-.medicalrecords: "Medical Records" @
-.medicaltrialrecords: "Clinical Trial Records" @
-.mininganalytics: "Mining Analytics" @
-.networksecurityprotocols: "Network Security Protocols" @
-.opinionpolls: "Opinion Polls" @
-.patienthistory: "Patient History" @
-.photoalbums: "Photo Albums" @
-.plantgrowthcharts: "Plant Growth Charts" @
-.politicalaffiliations: "Political Affiliations" @
-.prisonerlogs: "Prisoner Logs" @
-.recyclinglogs: "Recycling Logs" @
-.riskassessments: "Risk Assessments" @
-.seedgeneaology: "Seed Geneaology" @
-.settlementassaultplans: "Settlement Assault Plans" @
-.slushfundlogs: "Slush Fund Logs" @
-.smearcampaignplans: "Smear Campaign Plans" @
-.spectralanalysisdata: "Spectral Analysis Data" @
-.spyware: "Spyware" @
-.stellaractivitylogs: "Stellar Activity Logs" @
-.tacticalplans: "Tactical Plans" @
-.vipsecuritydetail: "VIP Security Detail" @
+.medicalrecords: "Medical Records" => "Dossiers médicaux"
+.medicaltrialrecords: "Clinical Trial Records" => "Essais cliniques"
+.mininganalytics: "Mining Analytics" => "Analyses minières"
+.networksecurityprotocols: "Network Security Protocols" => "Protocoles de sécurité réseau"
+.opinionpolls: "Opinion Polls" => "Sondages"
+.patienthistory: "Patient History" => "Antécédents médicaux"
+.photoalbums: "Photo Albums" => "Albums photo"
+.plantgrowthcharts: "Plant Growth Charts" => "Courbes de croissance végétale"
+.politicalaffiliations: "Political Affiliations" => "Affiliations politiques"
+.prisonerlogs: "Prisoner Logs" => "Dossiers pénitentiaires"
+.recyclinglogs: "Recycling Logs" => "Journaux de recyclage"
+.riskassessments: "Risk Assessments" => "Évaluation des risques"
+.seedgeneaology: "Seed Geneaology" => "Patrimoine génétique de semences"
+.settlementassaultplans: "Settlement Assault Plans" => "Plans d'assaut d'une installation"
+.slushfundlogs: "Slush Fund Logs" => "Caisse noire"
+.smearcampaignplans: "Smear Campaign Plans" => "Campagne de calomnie"
+.spectralanalysisdata: "Spectral Analysis Data" => "Données d'analyse spectrale"
+.spyware: "Spyware" => "Programme-espion"
+.stellaractivitylogs: "Stellar Activity Logs" => "Journaux d'activité stellaire"
+.tacticalplans: "Tactical Plans" => "Plans stratégiques"
+.vipsecuritydetail: "VIP Security Detail" => "Protection rapprochée de VIP"
 .virus: "Virus" @
-.xenodefenceprotocols: "Xeno-Defence Protocols" @
-.tg_abrasion03: "Hardened Surface Fragments" @
-.tg_abrasion02: "Phasing Membrane Residue" @
-.heatexposurespecimen: "Heat Exposure Specimen" @
-.tg_causticcrystal: "Caustic Crystal" @
-.tg_causticshard: "Caustic Shard" @
-.tg_causticgeneratorparts: "Corrosive Mechanisms" @
-.tg_shutdowndata: "Massive Energy Surge Analytics" @
-.tg_interdictiondata: "Thargoid Interdiction Telemetry" @
-.ancientrelictg: "Unclassified Relic" @
-.p_particulatesample: "Anomaly Particles" @
-.thargoidtissuesampletype10c: "Titan Maw Partial Tissue Sample" @
-.thargoidtissuesampletype5: "Thargoid Orthrus Tissue Sample" @
-.thargoidgeneratortissuesample: "Caustic Tissue Sample" @
-.unocuppiedescapepod: "Unoccupied Escape Pod" @
-.thargoidtissuesampletype6: "Thargoid Glaive Tissue Sample" @
-.thargoidtissuesampletype9a: "Titan Deep Tissue Sample" @
-.thargoidtissuesampletype9b: "Titan Tissue Sample" @
-.thargoidtissuesampletype9c: "Titan Partial Tissue Sample" @
-.thargoidtissuesampletype10a: "Titan Maw Deep Tissue Sample" @
-.thargoidtissuesampletype10b: "Titan Maw Tissue Sample" @
-.thargoidtissuesampletype7: "Thargoid Scythe Tissue Sample" @
-.unknownsack: "Protective Membrane Scrap" @
-.thargoidpod: "Xenobiological Prison Pod" @
-.coralsap: "Coral Sap" @
-.onionheadc: "Onionhead Gamma Strain" @
-.classifiedexperimentalequipment: "Classified Experimental Equipment" @
-.unknownmineral: "Impure Spire Mineral" @
-.unknownrefinedmineral: "Semi-Refined Spire Mineral" @
-.thargoidtitandrivecomponent: "Titan Drive Component" @
-.thargoidcystspecimen: "Cyst Specimen" @
-.thargoidbonefragments: "Bone Fragments" @
-.thargoidorgansample: "Organ Sample" @
-.tg_abrasion01: "Heat Exposure Specimen" @
-.tacticalcorechip: "Tactical Core Chip" @
+.xenodefenceprotocols: "Xeno-Defence Protocols" => "Protocoles anti-xénomorphes"
+.tg_abrasion03: "Hardened Surface Fragments" => "Fragments superficiels durcis"
+.tg_abrasion02: "Phasing Membrane Residue" => "Résidu de membrane de phase"
+.heatexposurespecimen: "Heat Exposure Specimen" => "Spécimen exposé à la chaleur"
+.tg_causticcrystal: "Caustic Crystal" => "Cristal caustique"
+.tg_causticshard: "Caustic Shard" => "Éclat caustique"
+.tg_causticgeneratorparts: "Corrosive Mechanisms" => "Mécanismes corrosifs"
+.tg_shutdowndata: "Massive Energy Surge Analytics" => "Analyse de surcharge d'énergie massive"
+.tg_interdictiondata: "Thargoid Interdiction Telemetry" => "Télémétrie d'interception Thargoid"
+.ancientrelictg: "Unclassified Relic" => "Relique non classée"
+.p_particulatesample: "Anomaly Particles" => "Particules d'anomalie"
+.thargoidtissuesampletype10c: "Titan Maw Partial Tissue Sample" => "Échantillon de tissu de gueule partiel - Titan"
+.thargoidtissuesampletype5: "Thargoid Orthrus Tissue Sample" => "Échantillon de tissu d'un Orthrus thargoid"
+.thargoidgeneratortissuesample: "Caustic Tissue Sample" => "Échantillon de tissu caustique"
+.unocuppiedescapepod: "Unoccupied Escape Pod" => "Nacelle d'évacuation inoccupée"
+.thargoidtissuesampletype6: "Thargoid Glaive Tissue Sample" => "Échantillon de tissu thargoid - Glaive"
+.thargoidtissuesampletype9a: "Titan Deep Tissue Sample" => "Échantillon de tissu profond - Titan"
+.thargoidtissuesampletype9b: "Titan Tissue Sample" => "Échantillon de tissu - Titan"
+.thargoidtissuesampletype9c: "Titan Partial Tissue Sample" => "Échantillon de tissu partiel - Titan"
+.thargoidtissuesampletype10a: "Titan Maw Deep Tissue Sample" => "Échantillon de tissu profond de gueule - Titan"
+.thargoidtissuesampletype10b: "Titan Maw Tissue Sample" => "Échantillon de tissu de gueule - Titan"
+.thargoidtissuesampletype7: "Thargoid Scythe Tissue Sample" => "Échantillon de tissu thargoid - Scythe"
+.unknownsack: "Protective Membrane Scrap" => "Morceau de membrane protectrice"
+.thargoidpod: "Xenobiological Prison Pod" => "Capsule de bioconfinement thargoid"
+.coralsap: "Coral Sap" => "Sève corallienne"
+.onionheadc: "Onionhead Gamma Strain" => "Variété gamma de tête d'oignon"
+.classifiedexperimentalequipment: "Classified Experimental Equipment" => "Équipement expérimental top secret"
+.unknownmineral: "Impure Spire Mineral" => "Minerai de flèche impur"
+.unknownrefinedmineral: "Semi-Refined Spire Mineral" => "Minerai de flèche à moitié raffiné"
+.thargoidtitandrivecomponent: "Titan Drive Component" => "Composant de réacteur de Titan"
+.thargoidcystspecimen: "Cyst Specimen" => "Spécimen de kyste"
+.thargoidbonefragments: "Bone Fragments" => "Fragments d'os"
+.thargoidorgansample: "Organ Sample" => "Échantillon d'organe"
+.tg_abrasion01: "Heat Exposure Specimen" => "Spécimen exposé à la chaleur"
+.tacticalcorechip: "Tactical Core Chip" => "Puce tactique principale"
 .powerindustrial: "Industrial Component" @
 .powermiscindust: "Industrial Machinery" @
 .powerinventory: "Inventory Record" @
@@ -920,32 +920,32 @@ SECTION MaterialCommodityMicroResourceType
 .biomechanicalcomponent: "Spire Refinery Compound" @
 .sabotagedcomponent: "Contaminated Spire Compound" @
 .tg_structuraldata02: "Thargoid Capital Ship Data" @
-.searchrescuevoucher: "Search and Rescue Voucher" @
+.searchrescuevoucher: "Search and Rescue Voucher" => "Coupon de recherche et sauvetage"
 .unknowncorechip: "Tactical Core Chip" @
-.EncodedGuardian: "Encoded Guardian" @
-.EncodedGuardianObelisk: "Encoded Guardian Obelisk" @
-.EncodedThargoid1: "Encoded Thargoid 1" @
-.EncodedThargoid2: "Encoded Thargoid 2" @
-.ManufacturedGuardian: "Manufactured Guardian" @
-.ManufacturedThargoid1: "Manufactured Thargoid 1" @
-.ManufacturedThargoid2: "Manufactured Thargoid 2" @
-.ManufacturedThargoid3: "Manufactured Thargoid 3" @
-.ManufacturedThargoid4: "Manufactured Thargoid 4" @
+.EncodedGuardian: "Encoded Guardian" => "Encodé Guardian"
+.EncodedGuardianObelisk: "Encoded Guardian Obelisk" => "Encodé obélisque Guardian"
+.EncodedThargoid1: "Encoded Thargoid 1" => "Encodé Thargoid 1"
+.EncodedThargoid2: "Encoded Thargoid 2" => "Encodé Thargoid 2"
+.ManufacturedGuardian: "Manufactured Guardian" => "Fabriqué Guardian"
+.ManufacturedThargoid1: "Manufactured Thargoid 1" => "Fabriqué Thargoid 1"
+.ManufacturedThargoid2: "Manufactured Thargoid 2" => "Fabriqué Thargoid 2"
+.ManufacturedThargoid3: "Manufactured Thargoid 3" => "Fabriqué Thargoid 3"
+.ManufacturedThargoid4: "Manufactured Thargoid 4" => "Fabriqué Thargoid 4"
 
 SECTION EngineeringData
 
-.Engineer: "Engineer:" => "Ingénieur: "
-.Blueprint: "Blueprint:" => "Plan: "
-.Level: "Level:" => "Niveau: "
-.Quality: "Quality:" => "Qualité: "
-.ExperimentalEffect: "Experimental Effect:" => "Effet expérimental: "
+.Engineer: "Engineer:" => "Ingénieur : "
+.Blueprint: "Blueprint:" => "Plan : "
+.Level: "Level:" => "Niveau : "
+.Quality: "Quality:" => "Qualité : "
+.ExperimentalEffect: "Experimental Effect:" => "Effet expérimental : "
 .Original: "Original: ;;0.###" @
 .Worse: "< (Worse); (Better)" => "< (Pire); (Meilleur)"
 
 SECTION MissionState
 
-.ToGo: "To Go:" => "Reste: "
-.Progress: "Progress:;%;N1" => "Progression:;%;N1"
+.ToGo: "To Go:" => "Reste : "
+.Progress: "Progress:;%;N1" => "Progression : ; %;N1"
 
 SECTION CommanderForm
 
@@ -959,7 +959,7 @@ CommanderForm: "CommanderForm" @
 .checkBoxCustomInara: "Sync to Inara" => "Synchroniser avec Inara"
 .groupBoxCustomEDDN: "EDDN" @
 .checkBoxCustomEDDNTo: "Send Event Information to EDDN" => "Envoyer les événements à EDDN"
-.groupBoxCustomEDSM: "EDSM Information (optional)" => "Information EDSM (optionnnel)"
+.groupBoxCustomEDSM: "EDSM Information (optional)" => "Information EDSM (optionnel)"
 .checkBoxCustomEDSMFrom: "Sync From EDSM" => "Synchroniser avec EDSM"
 .labelEDSMAPI: "EDSM API Key:" => "Clé API EDSM"
 .labelEDSMN: "EDSM Name:" => "Nom sur EDSM"
@@ -971,27 +971,27 @@ CommanderForm: "CommanderForm" @
 .panel_defaultmapcolor.ToolTip: "New travel entries get this colour on the map" => "Les nouvelles entrées ont cette couleur sur la carte"
 .textBoxBorderInaraName.ToolTip: "Give the user name for this commander on Inara" => "Entrer le nom d'utilisateur Inara pour ce commandant"
 .checkBoxCustomInara.ToolTip: "Sync with Inara" = CommanderForm.checkBoxCustomInara
-.textBoxBorderInaraAPIKey.ToolTip: "Enter the API key from the Inara Website\r\nGet an Inara API key from https://inara.cz" => "Entrer la clé d'API obbtenue sur le site d'Inara\r\nhttps://inara.cz"
+.textBoxBorderInaraAPIKey.ToolTip: "Enter the API key from the Inara Website\r\nGet an Inara API key from https://inara.cz" => "Entrer la clé d'API obtenue sur le site d'Inara\r\nhttps://inara.cz"
 .checkBoxCustomEDDNTo.ToolTip: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Cocher pour envoyer les informations du journal à EDDN.\r\nEDDN sert à alimenter les outils tels que EDDB, EDSM, Inara avec les données des commandants. Toutes les données sont anonymisées."
 .checkBoxCustomEDSMFrom.ToolTip: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Recevoir les données de sauts FSD d'EDSM qui sont sur leur base de données mais pas dans EDDiscovery"
 .checkBoxCustomEDSMTo.ToolTip: "Send your travel and ship data to EDSM" => "Envoyer vos voyages et données de vaisseau à EDSM"
-.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\r\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" @
+.textBoxBorderEDSMAPI.ToolTip: "Enter the API key from the EDSM Website\r\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" => "Entrer la clé d'API obtenue sur le site d'EDSM\r\nhttps://www.edsm.net and le menu \"Mon compte\""
 .textBoxBorderEDSMName.ToolTip: "Give the name this commander is known as in EDSM" => "Indiquer le nom de ce commandant tel qu'il est connu sur EDSM"
-.buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "Selectionner le fichier de journal sur l'ordinateur"
+.buttonExtBrowse.ToolTip: "Browse to the the journal folder" => "Sélectionner le fichier de journal sur l'ordinateur"
 .textBoxBorderCmdr.ToolTip: "Enter commander name as used in Elite Dangerous" => "Entrer le nom de commandant utilisé dans Elite Dangerous"
-.textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\r\nLeave override journal location blank to use the standard Frontier location for journals" => "En principe il faut laisser ce champs vide, sauf si vous jouez depuis un autre ordinateur que celui ci. Si vous laissez vite, le répertoire standard d'Elite Dangerous sera utilisé."
+.textBoxBorderJournal.ToolTip: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\r\nLeave override journal location blank to use the standard Frontier location for journals" => "En principe il faut laisser ce champs vide, sauf si vous jouez depuis un autre ordinateur que celui-ci. Si vous laissez vite, le répertoire standard d'Elite Dangerous sera utilisé."
 .LF: "Select folder where Journal*.log files are stored by Frontier in" => "Choisir le répertoire ou les fichiers journal*.log sont stockés"
-.ND: "Folder does not exist" @
-.extCheckBoxConsoleCommander: "Console Commander" @
+.ND: "Folder does not exist" => "Le dossier n'existe pas"
+.extCheckBoxConsoleCommander: "Console Commander" => "Commandant console"
 .extGroupBoxEDAstro: "EDAstro" @
-.extCheckBoxEDAstro: "Send Events to EDAstro" @
-.extCheckBoxIncludeSubfolders: "Include Subfolders" @
+.extCheckBoxEDAstro: "Send Events to EDAstro" => "Envoyer les événements à EDAstro"
+.extCheckBoxIncludeSubfolders: "Include Subfolders" => "Inclure les sous-dossiers"
 
 SECTION ScreenshotDirectoryWatcher
 
 .Scan: "Scanning for {0} screenshots in {1}" => "Analyse de {0} captures d'écran dans {1}"
 .NOF: "Folder specified for image conversion does not exist, check screenshot settings in the settings panel" => "Le dossier spécifié pour la conversion d'image n'existe pas, vérifiez les paramètres dans l'onglet Captures d'écran."
-.Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Erreur dans l'éxécution de la conversion d'image, essayez avec une autre capture d'écran, vérifiez le paramètre de dossier de sortie. (Exception)"
+.Excp: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Erreur dans l'exécution de la conversion d'image, essayez avec une autre capture d'écran, vérifiez le paramètre de dossier de sortie. (Exception)"
 
 SECTION ScreenShotImageConverter
 
@@ -1016,567 +1016,567 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Configuration des captures 
 .labelFileNameFormat: "In Filename format" => "Dans le format de nom de fichier"
 .labelStoreFolder: "Store Converted pictures" => "Stocker les images converties"
 .buttonEDChangeOutputFolder: "Browse" = CommanderForm.buttonExtBrowse
-.labelScanFor: "Scan for" @
-.labelSaveAs: "Save as" => "Sauvegarder sous"
+.labelScanFor: "Scan for" => "Scan de"
+.labelSaveAs: "Save as" => "Sauvegarder en"
 .extCheckBoxKeepMasterConvertedImage: "Keep master converted image" => "Conserver la capture originale"
 .labelImage2: "Image 2" @
 .labelImage1: "Image 1" @
-.labelCropResizeOptions: "Crop/Resize Options" => "Options de rognage/redimensionnnement"
-.extCheckBoxEnabled: "Conversion Enabled" @
-.extCheckBoxHiRes: "Mark HiRes Files" @
-.extButtonBrowseMoveOrg: "Browse" @
-.labelClipboard: "Clipboard" @
-.labelOriginal: "Original Image" @
-.labelEnabled: "Enable" @
-.labelQuality: "JPEG Quality" @
+.labelCropResizeOptions: "Crop/Resize Options" => "Options de rognage/redimensionnement"
+.extCheckBoxEnabled: "Conversion Enabled" => "Conversion activée"
+.extCheckBoxHiRes: "Mark HiRes Files" => "Ajouter \"(HighRes)\" aux fichiers haute résolution"
+.extButtonBrowseMoveOrg: "Browse" => "Parcourir"
+.labelClipboard: "Clipboard" => "Presse-papier"
+.labelOriginal: "Original Image" => "Image originale"
+.labelEnabled: "Enable" => "Activer"
+.labelQuality: "JPEG Quality" => "Qualité JPEG"
 
 SECTION Screenshot
 
-.FolderNotExist: "Folder specified does not exist" @
-.Folder: "Select screenshot folder" @
-.Identical: "Cannot set input and output to identical types and the same folder" @
+.FolderNotExist: "Folder specified does not exist" => "Le dossier spécifié n'existe pas"
+.Folder: "Select screenshot folder" => "Sélectionner le dossier des captures d'écran"
+.Identical: "Cannot set input and output to identical types and the same folder" => "Ne peux pas configurer les fichiers d'entrée et sortie avec des types identiques et dans le même dossier"
 
 SECTION ScanDisplayUserControl
 
 .NSD: "No scan data available" => "Pas de données de scan disponibles"
 .BC: "Barycentre of {0}" => "Barycentre de {0}"
-.SurfaceFeatures: "Surface features" @
+.SurfaceFeatures: "Surface features" => "Eléments de surface"
 .Signals: "Signals" => "Signaux"
 .Codex: "Codex" @
-.Organics: "Organics" @
-.Genuses: "Genuses" @
+.Organics: "Organics" => "Formes de vie organique"
+.Genuses: "Genuses" => "Genres"
 
 SECTION Signals
 
-.RingHotSpot: "Ring Hot Spot of type " @
+.RingHotSpot: "Ring Hot Spot of type " => "Concentration de type "
 
 SECTION Crimes
 
-.assault: "Assault" @
-.collidedatspeedinnofirezone: "Collided at speed in a no fire zone" @
-.collidedatspeedinnofirezone_hulldamage: "Collided at speed in a no fire zone resulting in hull damage" @
-.disobeypolice: "Disobeyed a order from the police" @
-.dockingmajorblockingairlock: "Blocking an airlock" @
-.dockingmajorblockinglandingpad: "Blocking a landing pad" @
-.dockingmajortresspass: "Tresspass" @
-.dockingminorblockingairlock: "Minor blocking of an airlock" @
-.dockingminorblockinglandingpad: "Minor blocking of a landing pad" @
-.dockingminortresspass: "Minor tresspass" @
-.dumpingdangerous: "Ejecting goods in a dangerous place" @
-.dumpingnearstation: "Ejecting goods near station" @
-.fireinnofirezone: "Firing weapons in a no fire zone" @
-.fireinstation: "Firing inside station" @
-.illegalcargo: "Carrying illegal cargo" @
+.assault: "Assault" => "Agression"
+.collidedatspeedinnofirezone: "Collided at speed in a no fire zone" => "Collision à grande vitesse dans une zone neutre"
+.collidedatspeedinnofirezone_hulldamage: "Collided at speed in a no fire zone resulting in hull damage" => "Collision à grande vitesse dans une zone neutre entraînant des dommages à la coque"
+.disobeypolice: "Disobeyed a order from the police" => "A désobéi à un ordre de la police"
+.dockingmajorblockingairlock: "Blocking an airlock" => "Blocage d'un sas"
+.dockingmajorblockinglandingpad: "Blocking a landing pad" => "Blocage d'une plate-forme d'atterrissage"
+.dockingmajortresspass: "Tresspass" => "Intrusion"
+.dockingminorblockingairlock: "Minor blocking of an airlock" => "Blocage mineur d'un sas"
+.dockingminorblockinglandingpad: "Minor blocking of a landing pad" => "Blocage mineur d'une plate-forme d'atterrissage"
+.dockingminortresspass: "Minor tresspass" => "Intrusion mineure"
+.dumpingdangerous: "Ejecting goods in a dangerous place" => "Éjection de marchandises dans un endroit dangereux"
+.dumpingnearstation: "Ejecting goods near station" => "Éjection de marchandises à proximité d'une station"
+.fireinnofirezone: "Firing weapons in a no fire zone" => "Tirs dans une zone neutre"
+.fireinstation: "Firing inside station" => "Tirs à l'intérieur d'une station"
+.illegalcargo: "Carrying illegal cargo" => "Transport de marchandises illégales"
 .interdiction: "Interdiction" @
-.murder: "Murder of pilot on ship" @
-.onfoot_arccutteruse: "Using an arc cutter" @
-.onfoot_breakingandentering: "Illegal Entry" @
-.onfoot_carryingillegaldata: "Carrying illegal data" @
-.onfoot_carryingillegalgoods: "Carrying illegal goods" @
-.onfoot_carryingstolengoods: "Carrying stolen goods" @
-.onfoot_damagingdefences: "Damaging station defenses" @
-.onfoot_datatransfer: "Illegal transfer of data" @
-.onfoot_detectionofweapon: "Carrying a weapon in violation of rules" @
-.onfoot_ebreachuse: "Using an E Breach" @
-.onfoot_failuretosubmittopolice: "Failure to submit to scan" @
-.onfoot_identitytheft: "Identity theft" @
-.onfoot_murder: "Murder of a person" @
-.onfoot_overchargeintent: "Intending to overcharge an access port" @
-.onfoot_overchargedport: "Illegal Overcharging an access port" @
-.onfoot_profilecloningintent: "Cloning a persons security profile" @
-.onfoot_propertytheft: "Theft of station property" @
-.onfoot_recklessendangerment: "Reckless Endangerment" @
-.onfoot_theft: "Theft of items" @
-.onfoot_trespass: "Tresspass on station" @
-.passengerwanted: "Wanted passenger" @
-.piracy: "Piracy" @
-.recklessweaponsdischarge: "Discharging a weapon" @
-.shuttledestruction: "Destroying an APEX Shuttle" @
-.stationtamperingminor: "Tampering with a station" @
+.murder: "Murder of pilot on ship" => "Meurtre d'un pilote à bord d'un vaisseau"
+.onfoot_arccutteruse: "Using an arc cutter" => "Utilisation d'un arc cutter"
+.onfoot_breakingandentering: "Illegal Entry" => "Entrée illégale"
+.onfoot_carryingillegaldata: "Carrying illegal data" => "Transport de données illégales"
+.onfoot_carryingillegalgoods: "Carrying illegal goods" => "Transport de marchandises illégales"
+.onfoot_carryingstolengoods: "Carrying stolen goods" => "Transport de marchandises volées"
+.onfoot_damagingdefences: "Damaging station defenses" => "Endommagement des défenses de la station"
+.onfoot_datatransfer: "Illegal transfer of data" => "Transfert illégal de données"
+.onfoot_detectionofweapon: "Carrying a weapon in violation of rules" => "Porter une arme en violation des règles"
+.onfoot_ebreachuse: "Using an E Breach" => "Utilisation d'un Omnipasse"
+.onfoot_failuretosubmittopolice: "Failure to submit to scan" => "Échec de soumission à l'analyse"
+.onfoot_identitytheft: "Identity theft" => "Vol d'identité"
+.onfoot_murder: "Murder of a person" => "Meurtre d'une personne"
+.onfoot_overchargeintent: "Intending to overcharge an access port" => "Intention de surcharger un port d'accès"
+.onfoot_overchargedport: "Illegal Overcharging an access port" => "Surcharge illégale d'un port d'accès"
+.onfoot_profilecloningintent: "Cloning a persons security profile" => "Cloner le profil de sécurité d'une personne"
+.onfoot_propertytheft: "Theft of station property" => "Vol de biens de la station"
+.onfoot_recklessendangerment: "Reckless Endangerment" => "Mise en danger imprudente"
+.onfoot_theft: "Theft of items" => "Vol d'objets"
+.onfoot_trespass: "Tresspass on station" => "Intrusion sur la station"
+.passengerwanted: "Wanted passenger" => "Passager recherché"
+.piracy: "Piracy" => "Piraterie"
+.recklessweaponsdischarge: "Discharging a weapon" => "Décharge d'une arme"
+.shuttledestruction: "Destroying an APEX Shuttle" => "Destruction d'une navette APEX"
+.stationtamperingminor: "Tampering with a station" => "Altération d'une station"
 
 SECTION FactionStates
 
-.Unknown: "Unknown" @
-.UnknownSpansh: "Unknown Spansh" @
-.None: "None" @
-.Boom: "Boom" @
-.Bust: "Bust" @
-.CivilUnrest: "Civil Unrest" @
-.CivilWar: "Civil War" @
-.Election: "Election" @
+.Unknown: "Unknown" = Unknown
+.UnknownSpansh: "Unknown Spansh" => "Inconnu sur Spansh"
+.None: "None" = None
+.Boom: "Boom" => "Essor économique"
+.Bust: "Bust" => "Faillite"
+.CivilUnrest: "Civil Unrest" => "Émeutes"
+.CivilWar: "Civil War" => "Guerre civile"
+.Election: "Election" => "Élections"
 .Expansion: "Expansion" @
 .Famine: "Famine" @
-.Investment: "Investment" @
-.Lockdown: "Lockdown" @
-.Outbreak: "Outbreak" @
-.Retreat: "Retreat" @
-.War: "War" @
-.CivilLiberty: "Civil Liberty" @
-.PirateAttack: "Pirate Attack" @
-.Blight: "Blight" @
-.Drought: "Drought" @
-.InfrastructureFailure: "Infrastructure Failure" @
-.NaturalDisaster: "Natural Disaster" @
-.PublicHoliday: "Public Holiday" @
-.Terrorism: "Terrorism" @
-.ColdWar: "Cold War" @
-.Colonisation: "Colonisation" @
-.HistoricEvent: "Historic Event" @
-.Revolution: "Revolution" @
-.TechnologicalLeap: "Technological Leap" @
-.TradeWar: "Trade War" @
-.Exploited: "Exploited" @
+.Investment: "Investment" => "Investissements"
+.Lockdown: "Lockdown" => "Loi martiale"
+.Outbreak: "Outbreak" => "Épidémie"
+.Retreat: "Retreat" => "Retraite"
+.War: "War" => "Guerre"
+.CivilLiberty: "Civil Liberty" => "Liberté civile"
+.PirateAttack: "Pirate Attack" => "Attaque pirate"
+.Blight: "Blight" => "Fléau"
+.Drought: "Drought" => "Sécheresse"
+.InfrastructureFailure: "Infrastructure Failure" => "Infrastructure défaillante"
+.NaturalDisaster: "Natural Disaster" => "Catastrophe naturelle"
+.PublicHoliday: "Public Holiday" => "Jour férié"
+.Terrorism: "Terrorism" => "Attaque terroriste"
+.ColdWar: "Cold War" => "Guerre froide"
+.Colonisation: "Colonisation" => "Colonisation"
+.HistoricEvent: "Historic Event" => "Évènement historique"
+.Revolution: "Revolution" => "Révolution"
+.TechnologicalLeap: "Technological Leap" => "Avancée technologique"
+.TradeWar: "Trade War" => "Guerre économique"
+.Exploited: "Exploited" => "Exploité"
 
 SECTION Allegiances
 
-.Unknown: "Unknown" @
-.None: "None" @
-.Federation: "Federation" @
+.Unknown: "Unknown" = Unknown
+.None: "None" => "Aucune"
+.Federation: "Federation" => "Fédération"
 .Empire: "Empire" @
-.Independent: "Independent" @
+.Independent: "Independent" => "Indépendants"
 .Alliance: "Alliance" @
-.Guardian: "Guardian" @
-.Thargoid: "Thargoid" @
-.PilotsFederation: "Pilots Federation" @
-.PlayerPilots: "Player Pilots Federation" @
+.Guardian: "Guardian" => "Guardians"
+.Thargoid: "Thargoid" => "Thargoids"
+.PilotsFederation: "Pilots Federation" => "Cercle des pilotes"
+.PlayerPilots: "Player Pilots Federation" => "Joueur du Cercle des pilotes"
 
 SECTION GovernmentTypes
 
-.Unknown: "Unknown" @
-.Anarchy: "Anarchy" @
-.Communism: "Communism" @
-.Confederacy: "Confederacy" @
-.Cooperative: "Cooperative" @
-.Corporate: "Corporate" @
-.Democracy: "Democracy" @
-.Dictatorship: "Dictatorship" @
-.Feudal: "Feudal" @
-.Imperial: "Imperial" @
-.None: "None" @
-.Patronage: "Patronage" @
-.Prison: "Prison" @
-.PrisonColony: "Prison Colony" @
-.Theocracy: "Theocracy" @
-.Engineer: "Engineer" @
-.Carrier: "Carrier" @
+.Unknown: "Unknown" = Unknown
+.Anarchy: "Anarchy" => "Anarchie"
+.Communism: "Communism" => "Communiste"
+.Confederacy: "Confederacy" => "Confédération"
+.Cooperative: "Cooperative" => "Coopérative"
+.Corporate: "Corporate" => "Corporation"
+.Democracy: "Democracy" => "Démocratie"
+.Dictatorship: "Dictatorship" => "Dictature"
+.Feudal: "Feudal" => "Société féodale"
+.Imperial: "Imperial" => "Empire"
+.None: "None" => "Aucune"
+.Patronage: "Patronage" => "Société clientéliste"
+.Prison: "Prison" => "Centre de détention"
+.PrisonColony: "Prison Colony" => "Colonie pénitentiaire"
+.Theocracy: "Theocracy" => "Théocratie"
+.Engineer: "Engineer" => "Atelier"
+.Carrier: "Carrier" => "Propriétaire privé"
 
 SECTION EconomyTypes
 
-.Unknown: "Unknown" @
-.Agri: "Agri" @
-.Colony: "Colony" @
-.Extraction: "Extraction" @
-.High_Tech: "High Tech" @
-.Industrial: "Industrial" @
-.Military: "Military" @
-.None: "None" @
-.Refinery: "Refinery" @
-.Service: "Service" @
-.Terraforming: "Terraforming" @
-.Tourism: "Tourism" @
-.Prison: "Prison" @
-.Damaged: "Damaged" @
-.Rescue: "Rescue" @
-.Repair: "Repair" @
-.Carrier: "Carrier" @
-.Engineer: "Engineer" @
-.Undefined: "Undefined" @
+.Unknown: "Unknown" = Unknown
+.Agri: "Agri" => "Agriculture"
+.Colony: "Colony" => "Colonie"
+.Extraction: "Extraction" => "Exploitation minière"
+.High_Tech: "High Tech" => "Haute Technologie"
+.Industrial: "Industrial" => "Industrie"
+.Military: "Military" => "Militaire"
+.None: "None" => "Aucune"
+.Refinery: "Refinery" => "Raffinage"
+.Service: "Service" => "Services"
+.Terraforming: "Terraforming" => "Terraformation"
+.Tourism: "Tourism" => "Tourisme"
+.Prison: "Prison" => "Pénitentiaire"
+.Damaged: "Damaged" => "Endommagée"
+.Rescue: "Rescue" => "Sauvetage"
+.Repair: "Repair" => "Réparations"
+.Carrier: "Carrier" => "Entreprise privée"
+.Engineer: "Engineer" => "Ingénieur"
+.Undefined: "Undefined" => "Non défini"
 
 SECTION SecurityTypes
 
-.Low: "Low" @
-.Medium: "Medium" @
-.High: "High" @
-.Anarchy: "Anarchy" @
-.Lawless: "Lawless" @
+.Low: "Low" => "Faible"
+.Medium: "Medium" => "Moyenne"
+.High: "High" => "Élevée"
+.Anarchy: "Anarchy" => "Anarchie"
+.Lawless: "Lawless" => "Sans-loi"
 
 SECTION StarportStates
 
-.Unknown: "Unknown" @
-.None: "None" @
-.UnderRepairs: "Under Repairs" @
-.Damaged: "Damaged" @
-.Abandoned: "Abandoned" @
-.UnderAttack: "Under Attack" @
+.Unknown: "Unknown" = Unknown
+.None: "None" = None
+.UnderRepairs: "Under Repairs" => "En cours de réparation"
+.Damaged: "Damaged" => "Endommagé"
+.Abandoned: "Abandoned" => "Abandonné"
+.UnderAttack: "Under Attack" => "Attaqué"
 
 SECTION StarportTypes
 
-.Unknown: "Unknown" @
-.AsteroidBase: "Asteroid Base" @
-.Coriolis: "Coriolis" @
-.FleetCarrier: "Fleet Carrier" @
-.Megaship: "Megaship" @
-.Ocellus: "Ocellus" @
-.Bernal: "Bernal" @
-.Orbis: "Orbis" @
-.Outpost: "Outpost" @
-.OnFootSettlement: "On Foot Settlement" @
-.SurfaceStation: "Surface Station" @
-.CraterOutpost: "Crater Outpost" @
-.CraterPort: "Crater Port" @
+.Unknown: "Unknown" = Unknown
+.AsteroidBase: "Asteroid Base" => "Base d'astéroïde"
+.Coriolis: "Coriolis" => "Spatioport Coriolis"
+.FleetCarrier: "Fleet Carrier" => "Porte-vaisseaux"
+.Megaship: "Megaship" => "Méga-vaisseau"
+.Ocellus: "Ocellus" => "Spatioport Ocellus"
+.Bernal: "Bernal" => "Spatioport Bernal"
+.Orbis: "Orbis" => "Spatioport Orbis"
+.Outpost: "Outpost" => "Avant-poste"
+.OnFootSettlement: "On Foot Settlement" => "Installation de surface"
+.SurfaceStation: "Surface Station" => "Port planétaire"
+.CraterOutpost: "Crater Outpost" => "Avant-poste de cratère"
+.CraterPort: "Crater Port" => "Port planétaire de cratère"
 
 SECTION PowerPlayStates
 
-.Unknown: "Unknown" @
-.InPrepareRadius: "In prepare radius" @
-.Prepared: "Prepared" @
-.Exploited: "Exploited" @
-.Contested: "Contested" @
-.Controlled: "Controlled" @
-.Turmoil: "In turmoil" @
-.HomeSystem: "Home system" @
-.Fortified: "Fortified" @
-.Stronghold: "Stronghold" @
+.Unknown: "Unknown" = Unknown
+.InPrepareRadius: "In prepare radius" => "Dans le rayon de préparation"
+.Prepared: "Prepared" => "Préparé"
+.Exploited: "Exploited" => "Exploité"
+.Contested: "Contested" => "Contesté"
+.Controlled: "Controlled" => "Contrôlé"
+.Turmoil: "In turmoil" => "Menacé"
+.HomeSystem: "Home system" => "Quartier général"
+.Fortified: "Fortified" => "Consolidé"
+.Stronghold: "Stronghold" => "Défendu"
 
 SECTION ModuleTypeNames
 
-.Pacifier_Frag_Cannon: "Pacifier Frag Cannon" @
-.Cargo_Scanner: "Cargo Scanner" @
-.Guardian_Module_Reinforcement: "Guardian Module Reinforcement" @
-.Guardian_Shield_Reinforcement: "Guardian Shield Reinforcement" @
-.Guardian_FSD_Booster: "Guardian FSD Booster" @
-.Guardian_Hull_Reinforcement: "Guardian Hull Reinforcement" @
-.Meta_Alloy_Hull_Reinforcement: "Meta Alloy Hull Reinforcement" @
-.Operations_Multi_Limpet_Controller: "Operations Multi Limpet Controller" @
-.Rescue_Multi_Limpet_Controller: "Rescue Multi Limpet Controller" @
-.Xeno_Multi_Limpet_Controller: "Xeno Multi Limpet Controller" @
-.Mining_Lance: "Mining Lance" @
-.Torpedo_Pylon: "Torpedo Pylon" @
-.Rocket_Propelled_FSD_Disruptor: "Rocket Propelled FSD Disruptor" @
-.Economy_Class_Passenger_Cabin: "Economy Class Passenger Cabin" @
-.Business_Class_Passenger_Cabin: "Business Class Passenger Cabin" @
-.First_Class_Passenger_Cabin: "First Class Passenger Cabin" @
-.Luxury_Class_Passenger_Cabin: "Luxury Class Passenger Cabin" @
-.Advanced_Planetary_Approach_Suite: "Advanced Planetary Approach Suite" @
-.Planetary_Approach_Suite: "Planetary Approach Suite" @
-.Discovery_Scanner: "Discovery Scanner" @
-.Cockpit_Type: "Cockpit Type" @
+.Pacifier_Frag_Cannon: "Pacifier Frag Cannon" => "Pacificateur à fragmentation"
+.Cargo_Scanner: "Cargo Scanner" => "Détecteur de manifeste"
+.Guardian_Module_Reinforcement: "Guardian Module Reinforcement" => "Renforcement de modules - Guardians"
+.Guardian_Shield_Reinforcement: "Guardian Shield Reinforcement" => "Renforcement de bouclier - Guardians"
+.Guardian_FSD_Booster: "Guardian FSD Booster" => "Survolteur FSD"
+.Guardian_Hull_Reinforcement: "Guardian Hull Reinforcement" => "Renforcement de coque - Guardians"
+.Meta_Alloy_Hull_Reinforcement: "Meta Alloy Hull Reinforcement" => "Renforcement de coque en méta-alliage"
+.Operations_Multi_Limpet_Controller: "Operations Multi Limpet Controller" => "Contrôleur de drones d'opérations"
+.Rescue_Multi_Limpet_Controller: "Rescue Multi Limpet Controller" => "Contrôleur de drones de sauvetage"
+.Xeno_Multi_Limpet_Controller: "Xeno Multi Limpet Controller" => "Contrôleur de drones xéno"
+.Mining_Lance: "Mining Lance" => "Lance de minage laser"
+.Torpedo_Pylon: "Torpedo Pylon" => "Tube lance-torpille"
+.Rocket_Propelled_FSD_Disruptor: "Rocket Propelled FSD Disruptor" => "Missile de confinement à propulsion"
+.Economy_Class_Passenger_Cabin: "Economy Class Passenger Cabin" => "Cabine passagers économie"
+.Business_Class_Passenger_Cabin: "Business Class Passenger Cabin" => "Cabine passagers affaires"
+.First_Class_Passenger_Cabin: "First Class Passenger Cabin" => "Cabine passagers 1re"
+.Luxury_Class_Passenger_Cabin: "Luxury Class Passenger Cabin" => "Cabine passagers de luxe"
+.Advanced_Planetary_Approach_Suite: "Advanced Planetary Approach Suite" => "Inst. approche planétaire perfectionnés"
+.Planetary_Approach_Suite: "Planetary Approach Suite" => "Inst. approche planétaire"
+.Discovery_Scanner: "Discovery Scanner" => "Détecteur découvertes"
+.Cockpit_Type: "Cockpit Type" => "Type de cockpit"
 .Codex: "Codex" @
-.Data_Link_Scanner: "Data Link Scanner" @
+.Data_Link_Scanner: "Data Link Scanner" => "Détecteur de liaison de données"
 .Prison_Cells: "Prison Cells" @
-.Cargo_Bay_Door_Type: "Cargo Bay Door Type" @
+.Cargo_Bay_Door_Type: "Cargo Bay Door Type" => "Type d'écoutille de soute"
 .Fighter_Weapon: "Fighter Weapon" @
 .Wear_And_Tear_Type: "Wear And Tear Type" @
-.Vanity_Type: "Vanity Type" @
-.Unknown_Type: "Unknown Type" @
+.Vanity_Type: "Vanity Type" => "Livrée"
+.Unknown_Type: "Unknown Type" => "Type inconnu"
 
 SECTION ModulePartNames
 
-.Class: "Class" @
-.Rating: "Rating" @
-.Gimbal: "Gimbal" @
-.Fixed: "Fixed" @
-.Turret: "Turret" @
-.Small: "Small" @
-.Medium: "Medium" @
+.Class: "Class" => "Classe"
+.Rating: "Rating" => "Note"
+.Gimbal: "Gimbal" => "Rotatif"
+.Fixed: "Fixed" => "Fixe"
+.Turret: "Turret" => "Tourelle"
+.Small: "Small" => "Petit"
+.Medium: "Medium" => "Moyen"
 .Large: "Large" @
-.Huge: "Huge" @
-.Tiny: "Tiny" @
+.Huge: "Huge" => "Énorme"
+.Tiny: "Tiny" => "Minuscule"
 .Standard: "Standard" @
-.Advanced: "Advanced" @
-.Lightweight_Alloy: "Lightweight Alloy" @
-.Reinforced_Alloy: "Reinforced Alloy" @
-.Military_Grade_Composite: "Military Grade Composite" @
-.Mirrored_Surface_Composite: "Mirrored Surface Composite" @
-.Reactive_Surface_Composite: "Reactive Surface Composite" @
-.Auto_Field_Maintenance_Unit: "Auto Field Maintenance Unit" @
-.Beam_Laser: "Beam Laser" @
-.Retributor_Beam_Laser: "Retributor Beam Laser" @
-.Burst_Laser: "Burst Laser" @
-.Cytoscrambler_Burst_Laser: "Cytoscrambler Burst Laser" @
-.Cannon: "Cannon" @
-.Fragment_Cannon: "Fragment Cannon" @
-.Pacifier_Fragment_Cannon: "Pacifier Fragment Cannon" @
-.Cargo_Rack: "Cargo Rack" @
-.Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" @
-.Manifest_Scanner: "Manifest Scanner" @
-.Chaff_Launcher: "Chaff Launcher" @
-.Electronic_Countermeasure: "Electronic Countermeasure" @
-.Heat_Sink_Launcher: "Heat Sink Launcher" @
-.Caustic_Sink_Launcher: "Caustic Sink Launcher" @
-.Point_Defence: "Point Defence" @
-.Kill_Warrant_Scanner: "Kill Warrant Scanner" @
-.Detailed_Surface_Scanner: "Detailed Surface Scanner" @
-.Standard_Docking_Computer: "Standard Docking Computer" @
-.Advanced_Docking_Computer: "Advanced Docking Computer" @
-.Fighter_Hangar: "Fighter Hangar" @
-.Remote_Release_Flak_Launcher: "Remote Release Flak Launcher" @
-.Remote_Release_Flechette_Launcher: "Remote Release Flechette Launcher" @
-.Frame_Shift_Drive_Interdictor: "Frame Shift Drive Interdictor" @
-.Fuel_Scoop: "Fuel Scoop" @
-.Fuel_Tank: "Fuel Tank" @
-.Guardian_Plasma_Charger: "Guardian Plasma Charger" @
-.Guardian_Shard_Cannon: "Guardian Shard Cannon" @
-.Guardian_Gauss_Cannon: "Guardian Gauss Cannon" @
-.Guardian_Module_Reinforcement_Package: "Guardian Module Reinforcement Package" @
-.Guardian_Shield_Reinforcement_Package: "Guardian Shield Reinforcement Package" @
-.Guardian_Frame_Shift_Drive_Booster: "Guardian Frame Shift Drive Booster" @
-.Guardian_Hybrid_Power_Distributor: "Guardian Hybrid Power Distributor" @
-.Guardian_Hybrid_Power_Plant: "Guardian Hybrid Power Plant" @
-.Hull_Reinforcement_Package: "Hull Reinforcement Package" @
-.Guardian_Hull_Reinforcement_Package: "Guardian Hull Reinforcement Package" @
-.Meta_Alloy_Hull_Reinforcement_Package: "Meta Alloy Hull Reinforcement Package" @
-.Frame_Shift_Drive: "Frame Shift Drive" @
-.Frame_Shift_Drive_(SCO): "Frame Shift Drive (SCO)" @
-.Frame_Shift_Wake_Scanner: "Frame Shift Wake Scanner" @
-.Life_Support: "Life Support" @
-.Collector_Limpet_Controller: "Collector Limpet Controller" @
-.Fuel_Transfer_Limpet_Controller: "Fuel Transfer Limpet Controller" @
-.Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" @
-.Prospector_Limpet_Controller: "Prospector Limpet Controller" @
-.Repair_Limpet_Controller: "Repair Limpet Controller" @
-.Research_Limpet_Controller: "Research Limpet Controller" @
-.Decontamination_Limpet_Controller: "Decontamination Limpet Controller" @
-.Recon_Limpet_Controller: "Recon Limpet Controller" @
-.Mining_Multi_Limpet_Controller: "Mining Multi Limpet Controller" @
-.Operations_Limpet_Controller: "Operations Limpet Controller" @
-.Rescue_Limpet_Controller: "Rescue Limpet Controller" @
-.Xeno_Limpet_Controller: "Xeno Limpet Controller" @
-.Universal_Multi_Limpet_Controller: "Universal Multi Limpet Controller" @
-.Mine_Launcher: "Mine Launcher" @
-.Shock_Mine_Launcher: "Shock Mine Launcher" @
-.Abrasion_Blaster: "Abrasion Blaster" @
-.Seismic_Charge_Launcher: "Seismic Charge Launcher" @
-.Sub_Surface_Displacement_Missile: "Sub Surface Displacement Missile" @
-.Mining_Laser: "Mining Laser" @
-.Mining_Lance_Beam_Laser: "Mining Lance Beam Laser" @
-.AX_Missile_Rack: "AX Missile Rack" @
-.Enhanced_AX_Missile_Rack: "Enhanced AX Missile Rack" @
-.Guardian_Nanite_Torpedo_Pylon: "Guardian Nanite Torpedo Pylon" @
-.Seeker_Missile_Rack: "Seeker Missile Rack" @
-.Missile_Rack: "Missile Rack" @
-.Rocket_Propelled_FSD_Disrupter: "Rocket Propelled FSD Disrupter" @
-.Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" @
+.Advanced: "Advanced" => "Avancé"
+.Lightweight_Alloy: "Lightweight Alloy" => "Alliage léger"
+.Reinforced_Alloy: "Reinforced Alloy" => "Alliage renforcé"
+.Military_Grade_Composite: "Military Grade Composite" => "Composite militaire"
+.Mirrored_Surface_Composite: "Mirrored Surface Composite" => "Composite à surface miroir"
+.Reactive_Surface_Composite: "Reactive Surface Composite" => "Composite à surface réactive"
+.Auto_Field_Maintenance_Unit: "Auto Field Maintenance Unit" => "Unité maintenance terrain auto"
+.Beam_Laser: "Beam Laser" => "Rayon laser"
+.Retributor_Beam_Laser: "Retributor Beam Laser" => "Rayon laser calorifique"
+.Burst_Laser: "Burst Laser" => "Laser à rafale"
+.Cytoscrambler_Burst_Laser: "Cytoscrambler Burst Laser" => "Laser à rafale cytobrouilleur"
+.Cannon: "Cannon" => "Canon"
+.Fragment_Cannon: "Fragment Cannon" => "Canon à fragmentation"
+.Pacifier_Fragment_Cannon: "Pacifier Fragment Cannon" => "Pacificateur à fragmentation"
+.Cargo_Rack: "Cargo Rack" => "Compartiment soute"
+.Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" => "Compartiment de soute anticorrosion"
+.Manifest_Scanner: "Manifest Scanner" => "Détecteur de manifeste"
+.Chaff_Launcher: "Chaff Launcher" => "Lanceur de paillettes"
+.Electronic_Countermeasure: "Electronic Countermeasure" => "Contre-mesures électronique"
+.Heat_Sink_Launcher: "Heat Sink Launcher" => "Éjecteur de dissipateur thermique"
+.Caustic_Sink_Launcher: "Caustic Sink Launcher" => "Lanceur de siphon caustique"
+.Point_Defence: "Point Defence" => "Tourelle de défense ponctuelle"
+.Kill_Warrant_Scanner: "Kill Warrant Scanner" => "Détecteur d'avis de recherche"
+.Detailed_Surface_Scanner: "Detailed Surface Scanner" => "Détecteur de surface détaillé"
+.Standard_Docking_Computer: "Standard Docking Computer" => "Ordinateur d'appontage standard"
+.Advanced_Docking_Computer: "Advanced Docking Computer" => "Ordinateur d'appontage avancé"
+.Fighter_Hangar: "Fighter Hangar" => "Hangar pour chasseur"
+.Remote_Release_Flak_Launcher: "Remote Release Flak Launcher" => "Lanceur antiaérien déclenché à distance"
+.Remote_Release_Flechette_Launcher: "Remote Release Flechette Launcher" => "Lanceur de fléchettes déclenchées à distance"
+.Frame_Shift_Drive_Interdictor: "Frame Shift Drive Interdictor" => "Intercepteur de réacteur FSD"
+.Fuel_Scoop: "Fuel Scoop" => "Récupérateur de carburant"
+.Fuel_Tank: "Fuel Tank" => "Réservoir"
+.Guardian_Plasma_Charger: "Guardian Plasma Charger" => "Chargeur à plasma - Guardians"
+.Guardian_Shard_Cannon: "Guardian Shard Cannon" => "Canon à éclats - Guardians"
+.Guardian_Gauss_Cannon: "Guardian Gauss Cannon" => "Canon de Gauss - Guardians"
+.Guardian_Module_Reinforcement_Package: "Guardian Module Reinforcement Package" => "Pack de renforcement de modules - Guardians"
+.Guardian_Shield_Reinforcement_Package: "Guardian Shield Reinforcement Package" => "Pack de renforcement de bouclier - Guardians"
+.Guardian_Frame_Shift_Drive_Booster: "Guardian Frame Shift Drive Booster" => "Survolteur de réacteur FSD - Guardians"
+.Guardian_Hybrid_Power_Distributor: "Guardian Hybrid Power Distributor" => "Répartiteur de puissance hybride - Guardians"
+.Guardian_Hybrid_Power_Plant: "Guardian Hybrid Power Plant" => "Générateur hybride - Guardians"
+.Hull_Reinforcement_Package: "Hull Reinforcement Package" => "Renforcement de coque"
+.Guardian_Hull_Reinforcement_Package: "Guardian Hull Reinforcement Package" => "Pack de renforcement de coque - Guardians"
+.Meta_Alloy_Hull_Reinforcement_Package: "Meta Alloy Hull Reinforcement Package" => "Renforcement de coque en méta-alliage"
+.Frame_Shift_Drive: "Frame Shift Drive" => "Réacteur FSD"
+.Frame_Shift_Drive_(SCO): "Frame Shift Drive (SCO)" => "Réacteur FSD (SSN)"
+.Frame_Shift_Wake_Scanner: "Frame Shift Wake Scanner" => "Détecteur de sillage FSD"
+.Life_Support: "Life Support" => "Systèmes de survie"
+.Collector_Limpet_Controller: "Collector Limpet Controller" => "Contrôleur de collecteurs"
+.Fuel_Transfer_Limpet_Controller: "Fuel Transfer Limpet Controller" => "Contrôleur de ravitailleur"
+.Hatch_Breaker_Limpet_Controller: "Hatch Breaker Limpet Controller" => "Contrôleur de drone perce-soute"
+.Prospector_Limpet_Controller: "Prospector Limpet Controller" => "Contrôleur de prospecteur"
+.Repair_Limpet_Controller: "Repair Limpet Controller" => "Contrôleur de drone réparateur"
+.Research_Limpet_Controller: "Research Limpet Controller" => "Contrôleur de drone de recherche"
+.Decontamination_Limpet_Controller: "Decontamination Limpet Controller" => "Contrôleur de drone de décontamination"
+.Recon_Limpet_Controller: "Recon Limpet Controller" => "Contrôleur de drone de reconnaissance"
+.Mining_Multi_Limpet_Controller: "Mining Multi Limpet Controller" => "Contrôleur multi-drones de minage"
+.Operations_Limpet_Controller: "Operations Limpet Controller" => "Contrôleur de drones d'opérations"
+.Rescue_Limpet_Controller: "Rescue Limpet Controller" => "Contrôleur de drones de sauvetage"
+.Xeno_Limpet_Controller: "Xeno Limpet Controller" => "Contrôleur de drones xéno"
+.Universal_Multi_Limpet_Controller: "Universal Multi Limpet Controller" => "Contrôleur multi-drones universel"
+.Mine_Launcher: "Mine Launcher" => "Lance-mines"
+.Shock_Mine_Launcher: "Shock Mine Launcher" => "Lance-mines électriques"
+.Abrasion_Blaster: "Abrasion Blaster" => "Surfaceur abrasif"
+.Seismic_Charge_Launcher: "Seismic Charge Launcher" => "Lanceur à charge sismique"
+.Sub_Surface_Displacement_Missile: "Sub Surface Displacement Missile" => "Missile à charge pénétrante souterraine"
+.Mining_Laser: "Mining Laser" => "Laser minier"
+.Mining_Lance_Beam_Laser: "Mining Lance Beam Laser" => "Lance de minage laser"
+.AX_Missile_Rack: "AX Missile Rack" => "Batterie de missiles AX"
+.Enhanced_AX_Missile_Rack: "Enhanced AX Missile Rack" => "Batterie missiles AX améliorée"
+.Guardian_Nanite_Torpedo_Pylon: "Guardian Nanite Torpedo Pylon" => "Tube lance-torpille à nanites - Guardians"
+.Seeker_Missile_Rack: "Seeker Missile Rack" => "Missiles TC"
+.Missile_Rack: "Missile Rack" => "Batterie de missiles"
+.Rocket_Propelled_FSD_Disrupter: "Rocket Propelled FSD Disrupter" => "Missile de confinement à propulsion"
+.Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" => "Batterie de missiles essaim"
 .Advanced_Torp_Pylon: "Advanced Torp Pylon" @
-.Advanced_Missile_Rack: "Advanced Missile Rack" @
-.Human_Extraction_Missile: "Human Extraction Missile" @
-.Enzyme_Missile_Rack: "Enzyme Missile Rack" @
-.Module_Reinforcement_Package: "Module Reinforcement Package" @
-.AX_Multi_Cannon: "AX Multi Cannon" @
-.Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" @
-.Multi_Cannon: "Multi Cannon" @
-.Enforcer_Cannon: "Enforcer Cannon" @
-.Advanced_Multi_Cannon: "Advanced Multi Cannon" @
-.Economy: "Economy" @
-.Business: "Business" @
-.First: "First" @
-.Luxury: "Luxury" @
-.Advanced_Planet_Approach_Suite: "Advanced Planet Approach Suite" @
-.Planet_Approach_Suite: "Planet Approach Suite" @
-.Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" @
-.Plasma_Accelerator: "Plasma Accelerator" @
-.Advanced_Plasma_Accelerator: "Advanced Plasma Accelerator" @
-.Shock_Cannon: "Shock Cannon" @
-.Power_Distributor: "Power Distributor" @
-.Power_Plant: "Power Plant" @
-.Pulse_Laser: "Pulse Laser" @
-.Pulse_Disruptor_Laser: "Pulse Disruptor Laser" @
-.Pulse_Wave_Analyser: "Pulse Wave Analyser" @
-.Rail_Gun: "Rail Gun" @
-.Imperial_Hammer_Rail_Gun: "Imperial Hammer Rail Gun" @
-.Refinery: "Refinery" @
-.Sensors: "Sensors" @
-.Shield_Booster: "Shield Booster" @
-.Shield_Cell_Bank: "Shield Cell Bank" @
-.Shield_Generator: "Shield Generator" @
-.Prismatic_Shield_Generator: "Prismatic Shield Generator" @
-.Bi_Weave_Shield_Generator: "Bi Weave Shield Generator" @
-.Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" @
-.Thargoid_Pulse_Neutraliser: "Thargoid Pulse Neutraliser" @
-.Experimental_Weapon_Stabiliser: "Experimental Weapon Stabiliser" @
-.Supercruise_Assist: "Supercruise Assist" @
+.Advanced_Missile_Rack: "Advanced Missile Rack" => "Batterie de missiles perfectionnée"
+.Human_Extraction_Missile: "Human Extraction Missile" => "Missile d'extraction interne"
+.Enzyme_Missile_Rack: "Enzyme Missile Rack" => "Batterie de missiles enzymatiques"
+.Module_Reinforcement_Package: "Module Reinforcement Package" => "Pack de renforcement de modules"
+.AX_Multi_Cannon: "AX Multi Cannon" => "Multi-canon AX"
+.Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" => "Multi-canon AX amélioré"
+.Multi_Cannon: "Multi Cannon" => "Multi-canon"
+.Enforcer_Cannon: "Enforcer Cannon" => "Canon exécuteur"
+.Advanced_Multi_Cannon: "Advanced Multi Cannon" => "Multi-canon perfectionné"
+.Economy: "Economy" => "Economie"
+.Business: "Business" => "Affaire"
+.First: "First" => "1re"
+.Luxury: "Luxury" => "Luxe"
+.Advanced_Planet_Approach_Suite: "Advanced Planet Approach Suite" => "Inst. approche planétaire perfectionnés"
+.Planet_Approach_Suite: "Planet Approach Suite" => "Inst. approche planétaire"
+.Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" => "Hangar des véhicules planétaires"
+.Plasma_Accelerator: "Plasma Accelerator" => "Accélérateur à plasma"
+.Advanced_Plasma_Accelerator: "Advanced Plasma Accelerator" => "Accélérateur à plasma perfectionné"
+.Shock_Cannon: "Shock Cannon" => "Canon de choc"
+.Power_Distributor: "Power Distributor" => "Répartiteur de puissance"
+.Power_Plant: "Power Plant" => "Générateur"
+.Pulse_Laser: "Pulse Laser" => "Laser à impulsion"
+.Pulse_Disruptor_Laser: "Pulse Disruptor Laser" => "Laser à impulsion foudroyant"
+.Pulse_Wave_Analyser: "Pulse Wave Analyser" => "Analyseur à onde pulsée"
+.Rail_Gun: "Rail Gun" => "Canon électrique"
+.Imperial_Hammer_Rail_Gun: "Imperial Hammer Rail Gun" => "Canon électrique marteleur impérial"
+.Refinery: "Refinery" => "Raffinerie"
+.Sensors: "Sensors" => "Capteurs"
+.Shield_Booster: "Shield Booster" => "Survolteur de bouclier"
+.Shield_Cell_Bank: "Shield Cell Bank" => "Réserve de cellules d'énergie"
+.Shield_Generator: "Shield Generator" => "Générateur de bouclier"
+.Prismatic_Shield_Generator: "Prismatic Shield Generator" => "Générateur de bouclier prismatique"
+.Bi_Weave_Shield_Generator: "Bi Weave Shield Generator" => "Générateur de bouclier entrelacé"
+.Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" => "Neutralisateur de champ incapacitant"
+.Thargoid_Pulse_Neutraliser: "Thargoid Pulse Neutraliser" => "Neutralisateur d'impulsion Thargoid"
+.Experimental_Weapon_Stabiliser: "Experimental Weapon Stabiliser" => "Stabilisateur d'armes expérimentales"
+.Supercruise_Assist: "Supercruise Assist" => "Super-navigation assistée"
 .Stellar_Body_Discovery_Scanner: "Stellar Body Discovery Scanner" @
 .Intermediate: "Intermediate" @
-.Thrusters: "Thrusters" @
-.Enhanced_Performance_Thrusters: "Enhanced Performance Thrusters" @
-.Xeno_Scanner: "Xeno Scanner" @
-.Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" @
-.Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" @
-.Concord_Cannon: "Concord Cannon" @
+.Thrusters: "Thrusters" => "Propulseurs"
+.Enhanced_Performance_Thrusters: "Enhanced Performance Thrusters" => "Propulseurs à performances améliorées"
+.Xeno_Scanner: "Xeno Scanner" => "Détecteur de xénomorphes"
+.Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" => "Détecteur de xénomorphes amélioré"
+.Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" => "Détecteur de xénomorphes à onde pulsée"
+.Concord_Cannon: "Concord Cannon" => "Canon Concorde"
 
 SECTION ShipSlots
 
-.Unknown: "Unknown" @
-.Armour: "Armour" @
-.Bobble01: "Bobble Position 1" @
-.Bobble02: "Bobble Position 2" @
-.Bobble03: "Bobble Position 3" @
-.Bobble04: "Bobble Position 4" @
-.Bobble05: "Bobble Position 5" @
-.Bobble06: "Bobble Position 6" @
-.Bobble07: "Bobble Position 7" @
-.Bobble08: "Bobble Position 8" @
-.Bobble09: "Bobble Position 9" @
-.Bobble10: "Bobble Position 10" @
-.CargoHatch: "Cargo Hatch" @
-.CodexScanner: "Codex Scanner" @
-.DataLinkScanner: "Data Link Scanner" @
-.DiscoveryScanner: "Discovery Scanner" @
-.Decal1: "Decal Front" @
-.Decal2: "Decal Right" @
-.Decal3: "Decal Left" @
-.EngineColour: "Engine Colour" @
+.Unknown: "Unknown" = Unknown
+.Armour: "Armour" => "Blindage"
+.Bobble01: "Bobble Position 1" => "Tableau de bord 1"
+.Bobble02: "Bobble Position 2" => "Tableau de bord 2"
+.Bobble03: "Bobble Position 3" => "Tableau de bord 3"
+.Bobble04: "Bobble Position 4" => "Tableau de bord 4"
+.Bobble05: "Bobble Position 5" => "Tableau de bord 5"
+.Bobble06: "Bobble Position 6" => "Tableau de bord 6"
+.Bobble07: "Bobble Position 7" => "Tableau de bord 7"
+.Bobble08: "Bobble Position 8" => "Tableau de bord 8"
+.Bobble09: "Bobble Position 9" => "Tableau de bord 9"
+.Bobble10: "Bobble Position 10" => "Tableau de bord 10"
+.CargoHatch: "Cargo Hatch" => "Écoutille de soute"
+.CodexScanner: "Codex Scanner" => "Détecteur de comp."
+.DataLinkScanner: "Data Link Scanner" => "Détecteur de liaison de données"
+.DiscoveryScanner: "Discovery Scanner" => "Détecteur découvertes"
+.Decal1: "Decal Front" => "Sticker avant"
+.Decal2: "Decal Right" => "Sticker droit"
+.Decal3: "Decal Left" => "Sticker gauche"
+.EngineColour: "Engine Colour" => "Détails du moteur"
 .Federation_Fighter_Shield: "Federation Fighter Shield" @
-.FrameShiftDrive: "Frame Shift Drive" @
-.FuelTank: "Fuel Tank" @
+.FrameShiftDrive: "Frame Shift Drive" => "Réacteur FSD"
+.FuelTank: "Fuel Tank" => "Réservoir"
 .GDN_Hybrid_Fighter_V1_Shield: "GDN Hybrid Fighter V 1 Shield" @
 .GDN_Hybrid_Fighter_V2_Shield: "GDN Hybrid Fighter V 2 Shield" @
 .GDN_Hybrid_Fighter_V3_Shield: "GDN Hybrid Fighter V 3 Shield" @
-.HugeHardpoint1: "Huge Hardpoint 1" @
-.HugeHardpoint2: "Huge Hardpoint 2" @
+.HugeHardpoint1: "Huge Hardpoint 1" => "Point d'emport énomre 1"
+.HugeHardpoint2: "Huge Hardpoint 2" => "Point d'emport énomre 2"
 .Independent_Fighter_Shield: "Independent Fighter Shield" @
-.LargeHardpoint1: "Large Hardpoint 1" @
-.LargeHardpoint2: "Large Hardpoint 2" @
-.LargeHardpoint3: "Large Hardpoint 3" @
-.LargeHardpoint4: "Large Hardpoint 4" @
-.LifeSupport: "Life Support" @
-.MainEngines: "Thrusters" @
-.MediumHardpoint1: "Medium Hardpoint 1" @
-.MediumHardpoint2: "Medium Hardpoint 2" @
-.MediumHardpoint3: "Medium Hardpoint 3" @
-.MediumHardpoint4: "Medium Hardpoint 4" @
-.MediumHardpoint5: "Medium Hardpoint 5" @
-.Military01: "Military Slot 1" @
-.Military02: "Military Slot 2" @
-.Military03: "Military Slot 3" @
-.PaintJob: "Paint Job" @
-.PlanetaryApproachSuite: "Planetary Approach Suite" @
-.PowerDistributor: "Power Distributor" @
-.PowerPlant: "Power Plant" @
-.Radar: "Sensors" @
-.ShieldGenerator: "Shield Generator" @
-.ShipCockpit: "Ship Cockpit" @
-.ShipID0: "Ship ID Right" @
-.ShipID1: "Ship ID Left" @
-.ShipKitBumper: "Ship Kit Bumper" @
-.ShipKitSpoiler: "Ship Kit Spoiler" @
-.ShipKitTail: "Ship Kit Tail" @
-.ShipKitWings: "Ship Kit Wings" @
-.ShipName0: "Nameplate Right" @
-.ShipName1: "Nameplate Left" @
-.Slot00_Size8: "Optional Slot 0 Class 8" @
-.Slot01_Size2: "Optional Slot 1 Class 2" @
-.Slot01_Size3: "Optional Slot 1 Class 3" @
-.Slot01_Size4: "Optional Slot 1 Class 4" @
-.Slot01_Size5: "Optional Slot 1 Class 5" @
-.Slot01_Size6: "Optional Slot 1 Class 6" @
-.Slot01_Size7: "Optional Slot 1 Class 7" @
-.Slot01_Size8: "Optional Slot 1 Class 8" @
-.Slot02_Size2: "Optional Slot 2 Class 2" @
-.Slot02_Size3: "Optional Slot 2 Class 3" @
-.Slot02_Size4: "Optional Slot 2 Class 4" @
-.Slot02_Size5: "Optional Slot 2 Class 5" @
-.Slot02_Size6: "Optional Slot 2 Class 6" @
-.Slot02_Size7: "Optional Slot 2 Class 7" @
-.Slot02_Size8: "Optional Slot 2 Class 8" @
-.Slot03_Size1: "Optional Slot 3 Class 1" @
-.Slot03_Size2: "Optional Slot 3 Class 2" @
-.Slot03_Size3: "Optional Slot 3 Class 3" @
-.Slot03_Size4: "Optional Slot 3 Class 4" @
-.Slot03_Size5: "Optional Slot 3 Class 5" @
-.Slot03_Size6: "Optional Slot 3 Class 6" @
-.Slot03_Size7: "Optional Slot 3 Class 7" @
-.Slot04_Size1: "Optional Slot 4 Class 1" @
-.Slot04_Size2: "Optional Slot 4 Class 2" @
-.Slot04_Size3: "Optional Slot 4 Class 3" @
-.Slot04_Size4: "Optional Slot 4 Class 4" @
-.Slot04_Size5: "Optional Slot 4 Class 5" @
-.Slot04_Size6: "Optional Slot 4 Class 6" @
-.Slot05_Size1: "Optional Slot 5 Class 1" @
-.Slot05_Size2: "Optional Slot 5 Class 2" @
-.Slot05_Size3: "Optional Slot 5 Class 3" @
-.Slot05_Size4: "Optional Slot 5 Class 4" @
-.Slot05_Size5: "Optional Slot 5 Class 5" @
-.Slot05_Size6: "Optional Slot 5 Class 6" @
-.Slot06_Size1: "Optional Slot 6 Class 1" @
-.Slot06_Size2: "Optional Slot 6 Class 2" @
-.Slot06_Size3: "Optional Slot 6 Class 3" @
-.Slot06_Size4: "Optional Slot 6 Class 4" @
-.Slot06_Size5: "Optional Slot 6 Class 5" @
-.Slot07_Size1: "Optional Slot 7 Class 1" @
-.Slot07_Size2: "Optional Slot 7 Class 2" @
-.Slot07_Size3: "Optional Slot 7 Class 3" @
-.Slot07_Size4: "Optional Slot 7 Class 4" @
-.Slot07_Size5: "Optional Slot 7 Class 5" @
-.Slot08_Size1: "Optional Slot 8 Class 1" @
-.Slot08_Size2: "Optional Slot 8 Class 2" @
-.Slot08_Size3: "Optional Slot 8 Class 3" @
-.Slot08_Size4: "Optional Slot 8 Class 4" @
-.Slot09_Size1: "Optional Slot 9 Class 1" @
-.Slot09_Size2: "Optional Slot 9 Class 2" @
-.Slot09_Size3: "Optional Slot 9 Class 3" @
-.Slot09_Size4: "Optional Slot 9 Class 4" @
-.Slot10_Size1: "Optional Slot 10 Class 1" @
-.Slot10_Size2: "Optional Slot 10 Class 2" @
-.Slot10_Size3: "Optional Slot 10 Class 3" @
-.Slot10_Size4: "Optional Slot 10 Class 4" @
-.Slot11_Size1: "Optional Slot 11 Class 1" @
-.Slot11_Size2: "Optional Slot 11 Class 2" @
-.Slot11_Size3: "Optional Slot 11 Class 3" @
-.Slot12_Size1: "Optional Slot 12 Class 1" @
-.Slot13_Size2: "Optional Slot 13 Class 2" @
-.Slot14_Size1: "Optional Slot 14 Class 1" @
-.SmallHardpoint1: "Small Hardpoint 1" @
-.SmallHardpoint2: "Small Hardpoint 2" @
-.SmallHardpoint3: "Small Hardpoint 3" @
-.SmallHardpoint4: "Small Hardpoint 4" @
-.SmallHardpoint5: "Small Hardpoint 5" @
-.SmallHardpoint6: "Small Hardpoint 6" @
-.StringLights: "String Lights" @
-.TinyHardpoint1: "Utility Mount 1" @
-.TinyHardpoint2: "Utility Mount 2" @
-.TinyHardpoint3: "Utility Mount 3" @
-.TinyHardpoint4: "Utility Mount 4" @
-.TinyHardpoint5: "Utility Mount 5" @
-.TinyHardpoint6: "Utility Mount 6" @
-.TinyHardpoint7: "Utility Mount 7" @
-.TinyHardpoint8: "Utility Mount 8" @
-.VesselVoice: "Vessel Voice" @
-.WeaponColour: "Weapon Colour" @
+.LargeHardpoint1: "Large Hardpoint 1" => "Point d'emport large 1"
+.LargeHardpoint2: "Large Hardpoint 2" => "Point d'emport large 2"
+.LargeHardpoint3: "Large Hardpoint 3" => "Point d'emport large 3"
+.LargeHardpoint4: "Large Hardpoint 4" => "Point d'emport large 4"
+.LifeSupport: "Life Support" => "Systèmes de survie"
+.MainEngines: "Thrusters" => "Propulseurs"
+.MediumHardpoint1: "Medium Hardpoint 1" => "Point d'emport moyen 1"
+.MediumHardpoint2: "Medium Hardpoint 2" => "Point d'emport moyen 2"
+.MediumHardpoint3: "Medium Hardpoint 3" => "Point d'emport moyen 3"
+.MediumHardpoint4: "Medium Hardpoint 4" => "Point d'emport moyen 4"
+.MediumHardpoint5: "Medium Hardpoint 5" => "Point d'emport moyen 5"
+.Military01: "Military Slot 1" => "Emplacement militaire 1"
+.Military02: "Military Slot 2" => "Emplacement militaire 2"
+.Military03: "Military Slot 3" => "Emplacement militaire 3"
+.PaintJob: "Paint Job" => "Peinture"
+.PlanetaryApproachSuite: "Planetary Approach Suite" => "Inst. approche planétaire"
+.PowerDistributor: "Power Distributor" => "Répartiteur de puissance"
+.PowerPlant: "Power Plant" => "Générateur"
+.Radar: "Sensors" => "Capteurs"
+.ShieldGenerator: "Shield Generator" => "Générateur de bouclier"
+.ShipCockpit: "Ship Cockpit" => "Cockpit du vaisseau"
+.ShipID0: "Ship ID Right" => "Identifiant droit"
+.ShipID1: "Ship ID Left" => "Identifiant gauche"
+.ShipKitBumper: "Ship Kit Bumper" => "Kit de vaisseau - Pare-chocs"
+.ShipKitSpoiler: "Ship Kit Spoiler" => "Kit de vaisseau - Dérive"
+.ShipKitTail: "Ship Kit Tail" => "Kit de vaisseau - Déporteur"
+.ShipKitWings: "Ship Kit Wings" => "Kit de vaisseau - Ailes"
+.ShipName0: "Nameplate Right" => "Plaque signalétique droite"
+.ShipName1: "Nameplate Left" => "Plaque signalétique gauche"
+.Slot00_Size8: "Optional Slot 0 Class 8" => "Emplacement optionnel 0 Classe 8"
+.Slot01_Size2: "Optional Slot 1 Class 2" => "Emplacement optionnel 1 Classe 2"
+.Slot01_Size3: "Optional Slot 1 Class 3" => "Emplacement optionnel 1 Classe 3"
+.Slot01_Size4: "Optional Slot 1 Class 4" => "Emplacement optionnel 1 Classe 4"
+.Slot01_Size5: "Optional Slot 1 Class 5" => "Emplacement optionnel 1 Classe 5"
+.Slot01_Size6: "Optional Slot 1 Class 6" => "Emplacement optionnel 1 Classe 6"
+.Slot01_Size7: "Optional Slot 1 Class 7" => "Emplacement optionnel 1 Classe 7"
+.Slot01_Size8: "Optional Slot 1 Class 8" => "Emplacement optionnel 1 Classe 8"
+.Slot02_Size2: "Optional Slot 2 Class 2" => "Emplacement optionnel 2 Classe 2"
+.Slot02_Size3: "Optional Slot 2 Class 3" => "Emplacement optionnel 2 Classe 3"
+.Slot02_Size4: "Optional Slot 2 Class 4" => "Emplacement optionnel 2 Classe 4"
+.Slot02_Size5: "Optional Slot 2 Class 5" => "Emplacement optionnel 2 Classe 5"
+.Slot02_Size6: "Optional Slot 2 Class 6" => "Emplacement optionnel 2 Classe 6"
+.Slot02_Size7: "Optional Slot 2 Class 7" => "Emplacement optionnel 2 Classe 7"
+.Slot02_Size8: "Optional Slot 2 Class 8" => "Emplacement optionnel 2 Classe 8"
+.Slot03_Size1: "Optional Slot 3 Class 1" => "Emplacement optionnel 3 Classe 1"
+.Slot03_Size2: "Optional Slot 3 Class 2" => "Emplacement optionnel 3 Classe 2"
+.Slot03_Size3: "Optional Slot 3 Class 3" => "Emplacement optionnel 3 Classe 3"
+.Slot03_Size4: "Optional Slot 3 Class 4" => "Emplacement optionnel 3 Classe 4"
+.Slot03_Size5: "Optional Slot 3 Class 5" => "Emplacement optionnel 3 Classe 5"
+.Slot03_Size6: "Optional Slot 3 Class 6" => "Emplacement optionnel 3 Classe 6"
+.Slot03_Size7: "Optional Slot 3 Class 7" => "Emplacement optionnel 3 Classe 7"
+.Slot04_Size1: "Optional Slot 4 Class 1" => "Emplacement optionnel 4 Classe 1"
+.Slot04_Size2: "Optional Slot 4 Class 2" => "Emplacement optionnel 4 Classe 2"
+.Slot04_Size3: "Optional Slot 4 Class 3" => "Emplacement optionnel 4 Classe 3"
+.Slot04_Size4: "Optional Slot 4 Class 4" => "Emplacement optionnel 4 Classe 4"
+.Slot04_Size5: "Optional Slot 4 Class 5" => "Emplacement optionnel 4 Classe 5"
+.Slot04_Size6: "Optional Slot 4 Class 6" => "Emplacement optionnel 4 Classe 6"
+.Slot05_Size1: "Optional Slot 5 Class 1" => "Emplacement optionnel 5 Classe 1"
+.Slot05_Size2: "Optional Slot 5 Class 2" => "Emplacement optionnel 5 Classe 2"
+.Slot05_Size3: "Optional Slot 5 Class 3" => "Emplacement optionnel 5 Classe 3"
+.Slot05_Size4: "Optional Slot 5 Class 4" => "Emplacement optionnel 5 Classe 4"
+.Slot05_Size5: "Optional Slot 5 Class 5" => "Emplacement optionnel 5 Classe 5"
+.Slot05_Size6: "Optional Slot 5 Class 6" => "Emplacement optionnel 5 Classe 6"
+.Slot06_Size1: "Optional Slot 6 Class 1" => "Emplacement optionnel 6 Classe 1"
+.Slot06_Size2: "Optional Slot 6 Class 2" => "Emplacement optionnel 6 Classe 2"
+.Slot06_Size3: "Optional Slot 6 Class 3" => "Emplacement optionnel 6 Classe 3"
+.Slot06_Size4: "Optional Slot 6 Class 4" => "Emplacement optionnel 6 Classe 4"
+.Slot06_Size5: "Optional Slot 6 Class 5" => "Emplacement optionnel 6 Classe 5"
+.Slot07_Size1: "Optional Slot 7 Class 1" => "Emplacement optionnel 7 Classe 1"
+.Slot07_Size2: "Optional Slot 7 Class 2" => "Emplacement optionnel 7 Classe 2"
+.Slot07_Size3: "Optional Slot 7 Class 3" => "Emplacement optionnel 7 Classe 3"
+.Slot07_Size4: "Optional Slot 7 Class 4" => "Emplacement optionnel 7 Classe 4"
+.Slot07_Size5: "Optional Slot 7 Class 5" => "Emplacement optionnel 7 Classe 5"
+.Slot08_Size1: "Optional Slot 8 Class 1" => "Emplacement optionnel 8 Classe 1"
+.Slot08_Size2: "Optional Slot 8 Class 2" => "Emplacement optionnel 8 Classe 2"
+.Slot08_Size3: "Optional Slot 8 Class 3" => "Emplacement optionnel 8 Classe 3"
+.Slot08_Size4: "Optional Slot 8 Class 4" => "Emplacement optionnel 8 Classe 4"
+.Slot09_Size1: "Optional Slot 9 Class 1" => "Emplacement optionnel 9 Classe 1"
+.Slot09_Size2: "Optional Slot 9 Class 2" => "Emplacement optionnel 9 Classe 2"
+.Slot09_Size3: "Optional Slot 9 Class 3" => "Emplacement optionnel 9 Classe 3"
+.Slot09_Size4: "Optional Slot 9 Class 4" => "Emplacement optionnel 9 Classe 4"
+.Slot10_Size1: "Optional Slot 10 Class 1" => "Emplacement optionnel 10 Classe 1"
+.Slot10_Size2: "Optional Slot 10 Class 2" => "Emplacement optionnel 10 Classe 2"
+.Slot10_Size3: "Optional Slot 10 Class 3" => "Emplacement optionnel 10 Classe 3"
+.Slot10_Size4: "Optional Slot 10 Class 4" => "Emplacement optionnel 10 Classe 4"
+.Slot11_Size1: "Optional Slot 11 Class 1" => "Emplacement optionnel 11 Classe 1"
+.Slot11_Size2: "Optional Slot 11 Class 2" => "Emplacement optionnel 11 Classe 2"
+.Slot11_Size3: "Optional Slot 11 Class 3" => "Emplacement optionnel 11 Classe 3"
+.Slot12_Size1: "Optional Slot 12 Class 1" => "Emplacement optionnel 12 Classe 1"
+.Slot13_Size2: "Optional Slot 13 Class 2" => "Emplacement optionnel 13 Classe 2"
+.Slot14_Size1: "Optional Slot 14 Class 1" => "Emplacement optionnel 14 Classe 1"
+.SmallHardpoint1: "Small Hardpoint 1" => "Point d'emport petit 1"
+.SmallHardpoint2: "Small Hardpoint 2" => "Point d'emport petit 2"
+.SmallHardpoint3: "Small Hardpoint 3" => "Point d'emport petit 3"
+.SmallHardpoint4: "Small Hardpoint 4" => "Point d'emport petit 4"
+.SmallHardpoint5: "Small Hardpoint 5" => "Point d'emport petit 5"
+.SmallHardpoint6: "Small Hardpoint 6" => "Point d'emport petit 6"
+.StringLights: "String Lights" => "Guirlande lumineuse"
+.TinyHardpoint1: "Utility Mount 1" => "Support utilitaire 1"
+.TinyHardpoint2: "Utility Mount 2" => "Support utilitaire 2"
+.TinyHardpoint3: "Utility Mount 3" => "Support utilitaire 3"
+.TinyHardpoint4: "Utility Mount 4" => "Support utilitaire 4"
+.TinyHardpoint5: "Utility Mount 5" => "Support utilitaire 5"
+.TinyHardpoint6: "Utility Mount 6" => "Support utilitaire 6"
+.TinyHardpoint7: "Utility Mount 7" => "Support utilitaire 7"
+.TinyHardpoint8: "Utility Mount 8" => "Support utilitaire 8"
+.VesselVoice: "Vessel Voice" => "Voix du vaisseau"
+.WeaponColour: "Weapon Colour" => "Détails des armes"
 .Turret: "Turret" @
 .Turret2: "Turret Type 2" @
 .SineWaveScanner: "Sine Wave Scanner" @
-.BuggyCargoHatch: "Cargo Hatch" @
+.BuggyCargoHatch: "Cargo Hatch" => "Ecoutille de soute"
 
 SECTION StationServices
 
-.Unknown: "Unknown" @
+.Unknown: "Unknown" = Unknown
 .ApexInterstellar: "Apex Interstellar" @
-.Autodock: "Autodock" @
-.Bartender: "Bartender" @
-.BlackMarket: "Black Market" @
+.Autodock: "Autodock" => "Appontage automatique"
+.Bartender: "Bartender" => "Négociant"
+.BlackMarket: "Black Market" => "Marché noir"
 .Contacts: "Contacts" @
-.CrewLounge: "Crew Lounge" @
-.Dock: "Dock" @
-.Workshop: "Workshop" @
-.FleetCarrierAdministration: "Fleet Carrier Administration" @
+.CrewLounge: "Crew Lounge" => "Salle d'attente de l'équipage"
+.Dock: "Dock" => "Appontage"
+.Workshop: "Workshop" => "Atelier"
+.FleetCarrierAdministration: "Fleet Carrier Administration" => "Administration - Porte-vaisseaux"
 .FleetCarrierFuel: "Fleet Carrier Fuel" @
 .FleetCarrierManagement: "Fleet Carrier Management" @
-.FleetCarrierVendor: "Fleet Carrier Vendor" @
+.FleetCarrierVendor: "Fleet Carrier Vendor" => "Vendeur de porte-vaisseaux"
 .FlightController: "Flight Controller" @
 .FrontlineSolutions: "Frontline Solutions" @
-.InterstellarFactorsContact: "Interstellar Factors Contact" @
+.InterstellarFactorsContact: "Interstellar Factors Contact" => "Interstellar Factors"
 .Initiatives: "Initiatives" @
-.Livery: "Livery" @
-.Market: "Market" @
-.MaterialTrader: "Material Trader" @
+.Livery: "Livery" => "Livrée"
+.Market: "Market" => "Marchandises"
+.MaterialTrader: "Material Trader" => "Commerce de matériaux"
 .Missions: "Missions" @
 .MissionsGenerated: "Missions Generated" @
 .OnDockMission: "On Dock Mission" @
-.Outfitting: "Outfitting" @
+.Outfitting: "Outfitting" => "Équipement"
 .PioneerSupplies: "Pioneer Supplies" @
-.Powerplay: "Powerplay" @
-.RedemptionOffice: "Redemption Office" @
-.Refuel: "Refuel" @
-.Repair: "Repair" @
-.Restock: "Restock" @
-.SearchAndRescue: "Search And Rescue" @
-.Shipyard: "Shipyard" @
-.Shop: "Shop" @
-.SocialSpace: "Social Space" @
+.Powerplay: "Powerplay" => "Contact au sein de la puissance"
+.RedemptionOffice: "Redemption Office" => "Bureau des récompenses"
+.Refuel: "Refuel" => "Carburant"
+.Repair: "Repair" => "Réparations"
+.Restock: "Restock" => "Ravitaillement"
+.SearchAndRescue: "Search And Rescue" => "Opérations de sauvetage"
+.Shipyard: "Shipyard" => "Chantier naval"
+.Shop: "Shop" => "Vendeur"
+.SocialSpace: "Social Space" => "Hall principal"
 .StationMenu: "Station Menu" @
 .StationOperations: "Station Operations" @
-.TechnologyBroker: "Technology Broker" @
+.TechnologyBroker: "Technology Broker" => "Courtier en technologie"
 .Tuning: "Tuning" @
 .UniversalCartographics: "Universal Cartographics" @
 .VistaGenomics: "Vista Genomics" @
