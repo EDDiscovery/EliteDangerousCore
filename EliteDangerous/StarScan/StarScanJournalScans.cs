@@ -36,7 +36,7 @@ namespace EliteDangerousCore
             {
                 he = hl[j];
 
-                if (he.IsLocOrJump)
+                if (he.IsFSDLocationCarrierJump)
                 {
                     jl = (JournalLocOrJump)he.journalEntry;
 

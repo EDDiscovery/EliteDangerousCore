@@ -483,7 +483,7 @@ namespace EliteDangerousCore
             {
                 HistoryEntry pos = historylist[i];
 
-                if (pos.IsLocOrJump && pos.System.HasCoordinate && !listnames.Contains(pos.System.Name))
+                if (pos.IsFSDLocationCarrierJump && pos.System.HasCoordinate && !listnames.Contains(pos.System.Name))
                 {
                     double dx = (pos.System.X - x);
                     double dy = (pos.System.Y - y);

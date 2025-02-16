@@ -100,7 +100,7 @@ namespace EliteDangerousCore
             {
                 HistoryEntry he = hl[j];
 
-                if (he.IsLocOrJump)
+                if (he.IsFSDLocationCarrierJump)
                 {
                     JournalLocOrJump jl = (JournalLocOrJump)he.journalEntry;
 
