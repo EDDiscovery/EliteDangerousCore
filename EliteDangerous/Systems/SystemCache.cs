@@ -86,7 +86,11 @@ namespace EliteDangerousCore
                     if (lookup == WebExternalDataLookup.SpanshThenEDSM || lookup == WebExternalDataLookup.Spansh)
                     {
                         Spansh.SpanshClass sp = new Spansh.SpanshClass();       // proven 31 oct
-                        found = sp.GetSystem(find.Name);
+
+                        if (find.SystemAddress.HasValue)
+                            found = sp.GetSystem(find.SystemAddress.Value);
+                        else
+                            found = sp.GetSystem(find.Name);
                     }
 
                     if (found == null && (lookup == WebExternalDataLookup.SpanshThenEDSM || lookup == WebExternalDataLookup.EDSM))
