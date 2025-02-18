@@ -162,8 +162,10 @@ namespace EDDDLLInterfaces
 
         // New interfaces for version 4. 
 
-        public delegate void EDDRequestScanDataExt(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, long systemaddress, 
+        public delegate void EDDRequestScanDataExt(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, long systemaddress,
                                         int weblookup, [MarshalAs(UnmanagedType.BStr)] string otheroptions);
+        public delegate void EDDRequestSpanshDump(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, long systemaddress,
+                                        bool weblookup, bool cacheloopup, [MarshalAs(UnmanagedType.BStr)] string otheroptions);
 
         public delegate string EDDRequestGMOs(string requestype);
 
@@ -203,9 +205,8 @@ namespace EDDDLLInterfaces
 
             // the following are JSON outputs of EDD structures - structures may change. DLLs will have to keep up. Be defensive.
 
-            // c# only Request a Scan Data
-            // Get StarNode structure with ScanData on all bodies in a system. Empty string for current, else star system.  
-            // when ready, you will receive a EDDDataResult
+            // Request a Scan Data
+            // See Ext version.
             [FieldOffset(64)] public EDDRequestScanData RequestScanData;
 
             // Get suit, weapons and loadout structures, current state.
@@ -230,16 +231,27 @@ namespace EDDDLLInterfaces
             [FieldOffset(112)] public EDDRequestGMOs GetGMOs;
 
             // Get Scan Data
+            // System = "" systemaddress=0 current system at top of history
             // System = "name" systemaddress=0 valid
             // System = "" systemaddress=N valid
             // System = "name" systemaddress=N valid with systemaddress preferred as the lookup source
             // System = "" systemaddress = 0 get current system information
             // web lookup = 3 SpanshThenEDSM 2 = Spansh 1 = EDSM 0 = None
             // otheroptions is unused as of now.
-
+            // result is async and passed back on EDDDataResult
             [FieldOffset(120)] public EDDRequestScanDataExt RequestScanDataExt;
 
-            // Version 4 Ends here (19.0 Jan 24)
+            // Get Spansh dump file
+            // System = "" systemaddress=0 current system at top of history
+            // System = "name" systemaddress=0 valid
+            // System = "" systemaddress=N valid
+            // System = "name" systemaddress=N valid with systemaddress preferred as the lookup source
+            // must set either weblookup or cachelookup or both to get a result
+            // otheroptions is unused as of now.
+            // result is async and passed back on EDDDataResult
+            [FieldOffset(128)] public EDDRequestSpanshDump RequestSpanshDump;
+
+            // Version 4 Ends here (19.0 Mar 25)
         }
 
         public const int DLLCallBackVersion = 4;
