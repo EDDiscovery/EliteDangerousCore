@@ -1212,8 +1212,8 @@ SECTION StarportTypes
 .Outpost: "Outpost" => "Base Espacial"
 .OnFootSettlement: "On Foot Settlement" => "Asentamiento a Pie"
 .SurfaceStation: "Surface Station" => "Estación de Superficie"
-.CraterOutpost: "Crater Outpost" @
-.CraterPort: "Crater Port" @
+.CraterOutpost: "Crater Outpost" => "Asentamiento de Cráter"
+.CraterPort: "Crater Port" => "Puerto de Cráter"
 
 SECTION PowerPlayStates
 
