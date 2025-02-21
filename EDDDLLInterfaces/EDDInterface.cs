@@ -167,6 +167,7 @@ namespace EDDDLLInterfaces
         public delegate void EDDRequestSpanshDump(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, long systemaddress,
                                         bool weblookup, bool cacheloopup, [MarshalAs(UnmanagedType.BStr)] string otheroptions);
 
+        // 'all' 'visible' 'name=name' 'systemname=name' are your options
         public delegate string EDDRequestGMOs(string requestype);
 
         // ALL CALLBACKS must be called on UI thread.
