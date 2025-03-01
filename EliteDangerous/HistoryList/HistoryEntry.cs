@@ -62,8 +62,6 @@ namespace EliteDangerousCore
         [QuickJSON.JsonIgnore()]
         public bool IsFSD { get { return journalEntry.EventTypeID == JournalTypeEnum.FSDJump; } }
         [QuickJSON.JsonIgnore()]
-        public bool IsLocOrJump { get { return journalEntry.EventTypeID == JournalTypeEnum.FSDJump || journalEntry.EventTypeID == JournalTypeEnum.Location || journalEntry.EventTypeID == JournalTypeEnum.CarrierJump; } }
-        [QuickJSON.JsonIgnore()]
         public bool IsFuelScoop { get { return journalEntry.EventTypeID == JournalTypeEnum.FuelScoop; } }
 
         public bool isTravelling { get { return travelStatus.IsTravelling; } }

@@ -50,6 +50,7 @@ namespace EliteDangerousCore
         long? EDSMID { get; set; }      // if sourced from EDSM DB or web
         object Tag { get; set; }        // Aux data on this isystem. Normally a string containing information on it
 
+        string Key { get; }             // Primary Key for looking up an Isystem .  Systemaddress is preferred
         double Distance(ISystemBase other);
         double Distance(double x, double y, double z);
         double DistanceSq(double x, double y, double z);

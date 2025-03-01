@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016-2024 EDDiscovery development team
+ * Copyright 2016-2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -91,8 +91,10 @@ namespace EliteDangerousCore
                             System.Diagnostics.Debug.WriteLine($"Bad line missing {{ {line}");
                         }
                     }
-                    else if ( line.Trim().Length>0)
+                    else if (line.Trim().Length > 0)
+                    {
                         System.Diagnostics.Debug.WriteLine($"No data on this line {line}");
+                    }
 
                 }
 

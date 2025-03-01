@@ -85,6 +85,7 @@ namespace EliteDangerousCore
         }
 
         // ONLY use this if you must because the async await won't work in the call stack.  
+        // Sys can be an address, a name, or a name and address. address takes precedence
         public SystemNode FindSystemSynchronous(ISystem sys, WebExternalDataLookup weblookup = WebExternalDataLookup.None)    // Find the system. Optionally do a EDSM web lookup
         {
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
@@ -95,36 +96,36 @@ namespace EliteDangerousCore
                 bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
                 bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
 
-                if ( usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys.Name))
+                if ( usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys))
                 {
                     var lookupres = Spansh.SpanshClass.GetBodiesList(sys, usespansh);          // see if spansh has it cached or optionally look it up
                     if (lookupres != null)
                     {
                         foreach (JournalScan js in lookupres.Bodies)
                         {
-                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
-                            //System.Diagnostics.Debug.WriteLine($"FindSystemSync spansh add {sys.Name} {js.BodyName}");
-                            ProcessJournalScan(js, sys, true);
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, lookupres.System.Name);
+                            //System.Diagnostics.Debug.WriteLine($"FindSystemSync spansh add {lookupres.System.Name} {js.BodyName}");
+                            ProcessJournalScan(js, lookupres.System, true);
                         }
 
                         if (lookupres.BodyCount.HasValue)
-                            SetFSSDiscoveryScan(lookupres.BodyCount, null, sys);
+                            SetFSSDiscoveryScan(lookupres.BodyCount, null, lookupres.System);
 
                         if (weblookup == WebExternalDataLookup.SpanshThenEDSM)      // we got something, for this option, we are fine, don't use edsm
                             useedsm = false;
                     }
                 }
 
-                if (useedsm && !EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))
+                if (useedsm && !EDSM.EDSMClass.HasBodyLookupOccurred(sys))
                 {
                     var lookupres = EDSM.EDSMClass.GetBodiesList(sys, useedsm);            // see if edsm has it cached or optionally look it up
                     if (lookupres != null)
                     {
                         foreach (JournalScan js in lookupres.Bodies)
                         {
-                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
-                            //System.Diagnostics.Debug.WriteLine($"FindSystemSync edsn add {sys.Name} {js.BodyName}");
-                            ProcessJournalScan(js, sys, true);
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, lookupres.System.Name);
+                            //System.Diagnostics.Debug.WriteLine($"FindSystemSync edsn add {lookupres.System.Name} {lookupres.System.SystemAddress} {js.BodyName}");
+                            ProcessJournalScan(js, lookupres.System, true);
                         }
                     }
                 }
@@ -135,6 +136,7 @@ namespace EliteDangerousCore
         }
 
         // you must be returning void to use this..
+        // Sys can be an address, a name, or a name and address. address takes precedence
         public async System.Threading.Tasks.Task<SystemNode> FindSystemAsync(ISystem sys, WebExternalDataLookup weblookup = WebExternalDataLookup.None)    // Find the system. Optionally do a EDSM web lookup
         {
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
@@ -145,7 +147,7 @@ namespace EliteDangerousCore
                 bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
                 bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
 
-                if (usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys.Name))
+                if (usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys))
                 {
                     var lookupres = await Spansh.SpanshClass.GetBodiesListAsync(sys, usespansh);          // see if spansh has it cached or optionally look it up
 
@@ -153,41 +155,30 @@ namespace EliteDangerousCore
                     {
                         foreach (JournalScan js in lookupres.Bodies)
                         {
-                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
-                           // System.Diagnostics.Debug.WriteLine($"FindSystemASync spansh add {sys.Name} {js.BodyName}");
-                            ProcessJournalScan(js, sys, true);
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, lookupres.System.Name);
+                            System.Diagnostics.Debug.WriteLine($"FindSystemASync spansh add {lookupres.System.Name} {lookupres.System.SystemAddress} {js.BodyName}");
+                            ProcessJournalScan(js, lookupres.System, true);
                         }
 
                         if (lookupres.BodyCount.HasValue)
-                            SetFSSDiscoveryScan(lookupres.BodyCount, null, sys);
+                            SetFSSDiscoveryScan(lookupres.BodyCount, null, lookupres.System);
 
                         if (weblookup == WebExternalDataLookup.SpanshThenEDSM)      // we got something, for this option, we are fine, don't use edsm
                             useedsm = false;
                     }
                 }
 
-                if (useedsm && !EDSM.EDSMClass.HasBodyLookupOccurred(sys.Name))     // using edsm, no lookup, go
+                if (useedsm && !EDSM.EDSMClass.HasBodyLookupOccurred(sys))     // using edsm, no lookup, go
                 {
                     var lookupres = await EliteDangerousCore.EDSM.EDSMClass.GetBodiesListAsync(sys, useedsm);
-
-                    // return bodies and a flag indicating if from cache.
-                    // Scenario: Three panels are asking for data, one at a time, since its the foreground thread
-                    // each one awaits, sets and runs a task, blocks until tasks completes, foreground continues to next panel where it does the same
-                    // we have three tasks, any which could run in any order. 
-                    // The tasks all go thru GetBodiesListAsync, which locks.  Only 1 task gets to do the lookup, the one which got there first, because it did not see
-                    // a cached version
-                    // once that task completes the lookups, and it unlocks, the other tasks can run, and they will see the cache setup.  They won't do an EDSM web access
-                    // since the body is in the cache.  
-                    // for now, i can't guarantee that the task which gives back the bodies first runs on the foreground task.  It may be task2 gets the bodies.
-                    // so we will just add them in again
 
                     if (lookupres != null)
                     {
                         foreach (JournalScan js in lookupres.Bodies)
                         {
-                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, sys.Name);
-                         //   System.Diagnostics.Debug.WriteLine($"FindSystemASync edsm add {sys.Name} {js.BodyName}");
-                            ProcessJournalScan(js, sys, true);
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, lookupres.System.Name);
+                            //System.Diagnostics.Debug.WriteLine($"FindSystemSync edsn add {lookupres.System.Name} {lookupres.System.SystemAddress} {js.BodyName}");
+                            ProcessJournalScan(js, lookupres.System, true);
                         }
                     }
                 }

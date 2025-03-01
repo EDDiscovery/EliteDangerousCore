@@ -28,7 +28,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             public string Name { get; set; }            // FDNAME
             public string Name_Localised { get; set; }
-            public string FriendlyName { get; set; }            // FDNAME
+            public string FriendlyName { get; set; }            
             public int Count { get; set; }
             public int Stolen { get; set; }
             public ulong? MissionID { get; set; }             // if applicable

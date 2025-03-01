@@ -38,7 +38,7 @@ namespace EliteDangerousCore.Spansh
 
         public List<StationInfo> GetStationsByDump(ISystem sys)
         {
-            sys = EnsureSystemAddress(sys);
+            sys = EnsureSystemAddressAndName(sys);
 
             if (sys == null)
                 return null;
@@ -770,6 +770,9 @@ namespace EliteDangerousCore.Spansh
             [StationServices.UniversalCartographics] = "Universal Cartographics",
             [StationServices.VistaGenomics] = "Vista Genomics",
             [StationServices.Workshop] = "Workshop",
+            [StationServices.ConstructionServices] = "Colonisation Services",
+            [StationServices.SystemColonisation] = "Registering Colonisation",
+            [StationServices.RefineryContact] = "Refinery Contact",
         };
 
         private static StationServices StationServiceNameToEnum(string fdname)

@@ -75,7 +75,8 @@ namespace EliteDangerousCore.DB
             return DBRead(db => db.RegisterClass.keyExists(key));
         }
 
-        public bool DeleteKey(string key)
+        // number of keys deleted
+        public int DeleteKey(string key)
         {
             return DBWrite(db =>  db.RegisterClass.DeleteKey(key));
         }

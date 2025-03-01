@@ -15,6 +15,7 @@
 using System.Drawing;
 using System;
 using System.Runtime.InteropServices;
+using static EDDDLLInterfaces.EDDDLLIF;
 
 namespace EDDDLLInterfaces
 {
@@ -159,15 +160,25 @@ namespace EDDDLLInterfaces
         // transparent change 15/1/25 the bool now means spansh then edsm
         public delegate void EDDRequestScanData(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, bool spanshthenedsmlookup);
 
-        // requesttype = All, Visible, Name=<wildcard name>, SystemName=<name>, Types=<typelist>
+        // New interfaces for version 4. 
+
+        public delegate void EDDRequestScanDataExt(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, long systemaddress,
+                                        int weblookup, [MarshalAs(UnmanagedType.BStr)] string otheroptions);
+        public delegate void EDDRequestSpanshDump(object requesttag, object usertag, [MarshalAs(UnmanagedType.BStr)] string system, long systemaddress,
+                                        bool weblookup, bool cacheloopup, [MarshalAs(UnmanagedType.BStr)] string otheroptions);
+
+        // 'all' 'visible' 'name=name' 'systemname=name' are your options
         public delegate string EDDRequestGMOs(string requestype);
+
+        // ALL CALLBACKS must be called on UI thread.
 
         [StructLayout(LayoutKind.Explicit)]
         public struct EDDCallBacks
         {
             [FieldOffset(0)] public int ver;                        // version (same as CALLBACKVERSION)
 
-            // DLL get history entry by index or jid. If program does not have history or out of range, return false
+            // DLL get history entry by entry number (1..N) or by jid. If program does not have history or out of range, return false
+            // JID is expensive.
             [FieldOffset(8)] public EDDRequestHistory RequestHistory;
 
             // DLL run an action script. If program does not have action, return false.
@@ -195,9 +206,8 @@ namespace EDDDLLInterfaces
 
             // the following are JSON outputs of EDD structures - structures may change. DLLs will have to keep up. Be defensive.
 
-            // c# only Request a Scan Data
-            // Get StarNode structure with ScanData on all bodies in a system. Empty string for current, else star system.  
-            // when ready, you will receive a EDDDataResult
+            // Request a Scan Data
+            // See Ext version.
             [FieldOffset(64)] public EDDRequestScanData RequestScanData;
 
             // Get suit, weapons and loadout structures, current state.
@@ -218,15 +228,40 @@ namespace EDDDLLInterfaces
             // Version 3 Ends here (16.0.4 Dec 22)
 
             // Get GMO Objects 
+            // requesttype = All, Visible, Name=<wildcard name>, SystemName=<name>, Types=<typelist>
             [FieldOffset(112)] public EDDRequestGMOs GetGMOs;
 
-            // Version 4 Ends here (19.0 Jan 24)
+            // Get Scan Data
+            // System = "" systemaddress=0 current system at top of history
+            // System = "name" systemaddress=0 valid
+            // System = "" systemaddress=N valid
+            // System = "name" systemaddress=N valid with systemaddress preferred as the lookup source
+            // System = "" systemaddress = 0 get current system information
+            // web lookup = 3 SpanshThenEDSM 2 = Spansh 1 = EDSM 0 = None
+            // otheroptions is unused as of now.
+            // result is async and passed back on EDDDataResult
+            [FieldOffset(120)] public EDDRequestScanDataExt RequestScanDataExt;
+
+            // Get Spansh dump file
+            // System = "" systemaddress=0 current system at top of history
+            // System = "name" systemaddress=0 valid
+            // System = "" systemaddress=N valid
+            // System = "name" systemaddress=N valid with systemaddress preferred as the lookup source
+            // must set either weblookup or cachelookup or both to get a result
+            // otheroptions is unused as of now.
+            // result is async and passed back on EDDDataResult
+            [FieldOffset(128)] public EDDRequestSpanshDump RequestSpanshDump;
+
+            // Version 4 Ends here (19.0 Mar 25)
         }
 
         public const int DLLCallBackVersion = 4;
 
+        // ALL CALLBACKS must be called on UI thread.
         // This class is passed to panel on Init.
-        public class EDDPanelCallbacks      // Must be fixed once released.  Use an EDDPanelCallBacks2 etc interface to expand later, and you'll need to add a new ExtPanel host
+        // Must be fixed once released.  Use an EDDPanelCallBacks2 etc interface to expand later, and you'll need to add a new ExtPanel host
+
+        public class EDDPanelCallbacks      
         {
             public int ver;
 
@@ -241,30 +276,29 @@ namespace EDDDLLInterfaces
             public delegate bool PanelPushStarsList(string panelname, System.Collections.Generic.List<string> stars);
             public delegate bool PanelPushCSV(string filename);
 
-            public PanelSave<string> SaveString;
-            public PanelSave<double> SaveDouble;
-            public PanelSave<long> SaveLong;
-            public PanelSave<int> SaveInt;
-            public PanelGet<string> GetString;
-            public PanelGet<double> GetDouble;
-            public PanelGet<long> GetLong;
-            public PanelGet<int> GetInt;
-            public PanelSaveGridLayout SaveGridLayout;
-            public PanelLoadGridLayout LoadGridLayout;
-            public PanelString SetControlText;
-            public PanelBool HasControlTextArea;
-            public PanelBool IsControlTextVisible;
-            public PanelBool IsTransparentModeOn;       // is transparent mode allowed? (does not mean its currently transparent)
-            public PanelBool IsFloatingWindow;          // is it a floating window outside (in a form)
-            public PanelBool IsClosed;                  // very important if your doing async programming - the window may have closed when the async returns!
-            public PanelDGVTransparent DGVTransparent;  // Theme the DGV with transparency or not
-            public PanelBool RequestTravelGridPosition;    // ask for the travel grid position to be sent via CursorChanged
-            public PanelPushStarsList PushStars;        // push a star list to "triwanted","trisystems" or "expedition".
-            public PanelPushCSV PushCSVToExpedition;    // push a CSV file to the expedition panel
+            public PanelSave<string> SaveString;        // thread safe
+            public PanelSave<double> SaveDouble;        // thread safe
+            public PanelSave<long> SaveLong;            // thread safe
+            public PanelSave<int> SaveInt;              // thread safe
+            public PanelGet<string> GetString;          // thread safe
+            public PanelGet<double> GetDouble;          // thread safe
+            public PanelGet<long> GetLong;              // thread safe
+            public PanelGet<int> GetInt;                // thread safe
+            public PanelSaveGridLayout SaveGridLayout;  // UI Thread only
+            public PanelLoadGridLayout LoadGridLayout;  // UI Thread only
+            public PanelString SetControlText;          // UI Thread only
+            public PanelBool HasControlTextArea;        // thread safe
+            public PanelBool IsControlTextVisible;      // thread safe
+            public PanelBool IsTransparentModeOn;       // thread safe : is transparent mode allowed? (does not mean its currently transparent)
+            public PanelBool IsFloatingWindow;          // thread safe : is it a floating window outside (in a form)
+            public PanelBool IsClosed;                  // thread safe : very important if your doing async programming - the window may have closed when the async returns!
+            public PanelDGVTransparent DGVTransparent;  // UI Thread only : Theme the DGV with transparency or not
+            public PanelBool RequestTravelGridPosition;    // UI Thread only : ask for the travel grid position to be sent via CursorChanged
+            public PanelPushStarsList PushStars;        // UI Thread only : push a star list to "triwanted","trisystems" or "expedition".
+            public PanelPushCSV PushCSVToExpedition;    // UI Thread only : push a CSV file to the expedition panel
 
             // ver 1 ends
         };
-
 
 
         public const int PanelCallBackVersion = 1;
@@ -272,7 +306,8 @@ namespace EDDDLLInterfaces
         // an external panel implements this interface.  You need to match your DLL to this interface
         public interface IEDDPanelExtension
         {
-            // Theme is json per ExtendedControls.Theme.  Make sure you cope with any changes we make - don't presume a key is there. Be defensive
+            // Theme is json per ExtendedControls.Theme with altfmt, the same as if you saved the theme to file.
+            // Make sure you cope with any changes we make - don't presume a key is there. Be defensive
             // displayid is a number given to identify an unique panel - just use it if your going to store per window configuration
             // outside of the callback Get functions. Do not derive any other info from it - the meaning of number may change in future
             // configuration is for future use

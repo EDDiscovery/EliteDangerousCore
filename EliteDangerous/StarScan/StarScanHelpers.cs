@@ -74,6 +74,7 @@ namespace EliteDangerousCore
             return sn;
         }
 
+        // Find system node. sys can be an address, a name, or a name and address (address takes precedence).
         private SystemNode FindSystemNode(ISystem sys)
         {
             if (sys.SystemAddress.HasValue && ScanDataBySysaddr.TryGetValue(sys.SystemAddress.Value, out SystemNode sn))
@@ -99,7 +100,7 @@ namespace EliteDangerousCore
             {
                 HistoryEntry he = hl[j];
 
-                if (he.IsLocOrJump)
+                if (he.IsFSDLocationCarrierJump)
                 {
                     JournalLocOrJump jl = (JournalLocOrJump)he.journalEntry;
 

@@ -66,6 +66,10 @@ namespace EliteDangerousCore
                 Tuning,
             UniversalCartographics,     // exploration
                 VistaGenomics,
+
+            ConstructionServices,   // trailblazers feb 25 in game names, see mapping below to fdnames
+            RefineryContact,
+            SystemColonisation,
         }
 
         public static StationServices StationServicesToEnum(string fdname)
@@ -98,6 +102,10 @@ namespace EliteDangerousCore
             ["searchrescue"] = StationServices.SearchAndRescue,
             ["techbroker"] = StationServices.TechnologyBroker,
             ["exploration"] = StationServices.UniversalCartographics,
+            ["colonisationcontribution"] = StationServices.ConstructionServices,
+            ["refinery"] = StationServices.RefineryContact,
+            ["registeringcolonisation"] = StationServices.SystemColonisation,
+
         };
 
 
@@ -175,6 +183,8 @@ namespace EliteDangerousCore
             SurfaceStation,
             CraterOutpost,
             CraterPort,
+            SpaceConstructionDepot,
+            PlanetaryConstructionDepot,
         }
 
         // maps the StationType field to an enum.
@@ -197,7 +207,12 @@ namespace EliteDangerousCore
 
         public static string ToEnglish(StarportTypes starporttype)
         {
-            return starporttype.ToString().SplitCapsWordFull();
+            if (starporttype == StarportTypes.SpaceConstructionDepot)
+                return "Orbital Construction Site";
+            else if (starporttype == StarportTypes.PlanetaryConstructionDepot)
+                return "Planetary Construction Site";
+            else
+                return starporttype.ToString().SplitCapsWordFull();
         }
 
         public static string ToLocalisedLanguage(StarportTypes sc)
