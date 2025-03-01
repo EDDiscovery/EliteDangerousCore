@@ -32,6 +32,8 @@ namespace EliteDangerousCore
             Consumable,                                     // odyssey 4.0. 
         };
         public CatType Category { get; private set; }               // see above
+
+        [QuickJSON.JsonIgnore()]
         public string TranslatedCategory { get; private set; }      // translation of above..
 
         public enum ItemType
@@ -43,6 +45,8 @@ namespace EliteDangerousCore
         };
 
         public ItemType Type { get; private set; }                  // and its type, for materials its commonality, for commodities its group ("Metals" etc), for microresources Unknown
+
+        [QuickJSON.JsonIgnore()]
         public string TranslatedType { get; private set; }          // translation of above..        
 
 
@@ -59,6 +63,8 @@ namespace EliteDangerousCore
 
 
         public MaterialGroupType MaterialGroup { get; private set; } // only for materials, grouping
+
+        [QuickJSON.JsonIgnore()]
         public string TranslatedMaterialGroup { get; private set; }
 
         // DO NOT REORDER, add new ones to category END
@@ -124,6 +130,8 @@ namespace EliteDangerousCore
             UnknownMineral, UnknownRefinedMineral,
             // march 15 2024
             ThargoidTitanDriveComponent, ThargoidCystSpecimen, ThargoidBoneFragments, ThargoidOrganSample,
+            // trailblazers feb 25
+            Haematite, Steel,
 
             //---------------------------------------------------------- Raw
             Carbon = 1000, Iron, Lead, Nickel, Phosphorus, Rhenium, Sulphur, Arsenic,
@@ -164,7 +172,7 @@ namespace EliteDangerousCore
             UniversalTranslator, VehicleSchematic, WeaponSchematic,
 
             // new Ascendency 3/11/2024
-            PowerIndustrial,PowerMiscIndust, PowerInventory, PowerPlayMilitary, PowerElectronics, PowerComputer, PowerExperiment,
+            PowerIndustrial, PowerMiscIndust, PowerInventory, PowerPlayMilitary, PowerElectronics, PowerComputer, PowerExperiment,
             PowerAgriculture, PowerExtraction, PowerEquipment, PowerMedical, PowerMiscComputer, PowerSecurity, PowerPower, PowerReasearch,
 
             // new Ascendency 3/12/2024
@@ -201,31 +209,33 @@ namespace EliteDangerousCore
             AMM_Grenade_EMP = 7000, AMM_Grenade_Frag, AMM_Grenade_Shield, Bypass, EnergyCell, HealthPack,
         }
 
-        public MCMR FDType { get; private set; }                    // the enum
+        [QuickJSON.JsonIgnore()] public MCMR FDType { get; private set; }                    // the enum
         public string FDName { get; private set; }                  // fdname, lower case..
 
-        public string TranslatedName { get; private set; }          // name of it in nice text. This gets translated
+        [QuickJSON.JsonIgnore()] public string TranslatedName { get; private set; }          // name of it in nice text. This gets translated
+
         public string EnglishName { get; private set; }             // name of it in English
 
         public string Shortname { get; private set; }               // short abv. name
-        public Color Colour { get; private set; }                   // colour if its associated with one
+
+        [QuickJSON.JsonIgnore()] public Color Colour { get; private set; }                   // colour if its associated with one
         public bool Rarity { get; private set; }                    // if it is a rare commodity
 
-        public bool IsCommodity { get { return Category == CatType.Commodity; } }
-        public bool IsMaterial { get { return Category == CatType.Encoded || Category == CatType.Manufactured || Category == CatType.Raw; } }
-        public bool IsRaw { get { return Category == CatType.Raw; } }
-        public bool IsEncoded { get { return Category == CatType.Encoded; } }
-        public bool IsManufactured { get { return Category == CatType.Manufactured; } }
-        public bool IsEncodedOrManufactured { get { return Category == CatType.Encoded || Category == CatType.Manufactured; } }
-        public bool IsRareCommodity { get { return Rarity && IsCommodity; } }
-        public bool IsNormalCommodity { get { return !Rarity && IsCommodity; } }
-        public bool IsCommonMaterial { get { return Type == ItemType.Common || Type == ItemType.VeryCommon; } }
+        [QuickJSON.JsonIgnore()] public bool IsCommodity { get { return Category == CatType.Commodity; } }
+        [QuickJSON.JsonIgnore()] public bool IsMaterial { get { return Category == CatType.Encoded || Category == CatType.Manufactured || Category == CatType.Raw; } }
+        [QuickJSON.JsonIgnore()] public bool IsRaw { get { return Category == CatType.Raw; } }
+        [QuickJSON.JsonIgnore()] public bool IsEncoded { get { return Category == CatType.Encoded; } }
+        [QuickJSON.JsonIgnore()] public bool IsManufactured { get { return Category == CatType.Manufactured; } }
+        [QuickJSON.JsonIgnore()] public bool IsEncodedOrManufactured { get { return Category == CatType.Encoded || Category == CatType.Manufactured; } }
+        [QuickJSON.JsonIgnore()] public bool IsRareCommodity { get { return Rarity && IsCommodity; } }
+        [QuickJSON.JsonIgnore()] public bool IsNormalCommodity { get { return !Rarity && IsCommodity; } }
+        [QuickJSON.JsonIgnore()] public bool IsCommonMaterial { get { return Type == ItemType.Common || Type == ItemType.VeryCommon; } }
 
-        public bool IsMicroResources { get { return Category >= CatType.Item; } }     // odyssey 4.0
-        public bool IsConsumable { get { return Category == CatType.Consumable; } }     // odyssey 4.0
-        public bool IsData { get { return Category == CatType.Data; } }
-        public bool IsItem { get { return Category == CatType.Item; } }
-        public bool IsComponent { get { return Category == CatType.Component; } }
+        [QuickJSON.JsonIgnore()] public bool IsMicroResources { get { return Category >= CatType.Item; } }     // odyssey 4.0
+        [QuickJSON.JsonIgnore()] public bool IsConsumable { get { return Category == CatType.Consumable; } }     // odyssey 4.0
+        [QuickJSON.JsonIgnore()] public bool IsData { get { return Category == CatType.Data; } }
+        [QuickJSON.JsonIgnore()] public bool IsItem { get { return Category == CatType.Item; } }
+        [QuickJSON.JsonIgnore()] public bool IsComponent { get { return Category == CatType.Component; } }
 
         public bool IsJumponium
         {
@@ -450,8 +460,8 @@ namespace EliteDangerousCore
                     bool material = cat == CatType.Raw || cat == CatType.Encoded || cat == CatType.Manufactured;
 
                     // base itemtype on cat type - materials get common, commodities are assigned to waste!, MCMRs to Unknown
-                    ItemType it = material ? ItemType.Common : cat == CatType.Commodity ? ItemType.Waste :  ItemType.Unknown;
-                    
+                    ItemType it = material ? ItemType.Common : cat == CatType.Commodity ? ItemType.Waste : ItemType.Unknown;
+
                     // we could base it on type, but the problem it messes up the material group display
                     // assign it to MGT NA. prev code cat == CatType.Raw ? MaterialGroupType.RawCategory1 : cat == CatType.Encoded ? MaterialGroupType.EncodedDataArchives : cat == CatType.Manufactured ? MaterialGroupType.ManufacturedChemical : MaterialGroupType.NA;
                     MaterialGroupType mgt = MaterialGroupType.NA;
@@ -630,6 +640,7 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.Metals, MCMR.Praseodymium, "Praseodymium");
             Add(CatType.Commodity, ItemType.Metals, MCMR.Samarium, "Samarium");
             Add(CatType.Commodity, ItemType.Metals, MCMR.Silver, "Silver");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Steel, "Steel");
             Add(CatType.Commodity, ItemType.Metals, MCMR.Tantalum, "Tantalum");
             Add(CatType.Commodity, ItemType.Metals, MCMR.Thallium, "Thallium");
             Add(CatType.Commodity, ItemType.Metals, MCMR.Thorium, "Thorium");
@@ -645,6 +656,7 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Gallite, "Gallite");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Goslarite, "Goslarite");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Grandidierite, "Grandidierite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Haematite, "Haematite");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Indite, "Indite");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Jadeite, "Jadeite");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Lepidolite, "Lepidolite");
@@ -755,7 +767,7 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.Salvage, MCMR.SpacePioneerRelics, "Space Pioneer Relics");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.TacticalData, "Tactical Data");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidGeneratorTissueSample, "Caustic Tissue Sample");
-            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidHeart, "Thargoid Heart","THH");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidHeart, "Thargoid Heart", "THH");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidPod, "Xenobiological Prison Pod");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidScoutTissueSample, "Thargoid Scout Tissue Sample");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTissueSampleType1, "Thargoid Cyclops Tissue Sample");
@@ -1210,7 +1222,7 @@ namespace EliteDangerousCore
 
             // ascendency 3/11/24
             Add(CatType.Item, MCMR.PowerIndustrial, "Industrial Component", "MRINCP");
-            Add(CatType.Item, MCMR.PowerMiscIndust, "Industrial Machinery", "MRINM");  
+            Add(CatType.Item, MCMR.PowerMiscIndust, "Industrial Machinery", "MRINM");
             Add(CatType.Item, MCMR.PowerInventory, "Inventory Record", "MRPIR");
             Add(CatType.Item, MCMR.PowerPlayMilitary, "Military Schematic", "MRPPM");
             Add(CatType.Item, MCMR.PowerElectronics, "Electronics Package", "MRPPE");
@@ -1220,7 +1232,7 @@ namespace EliteDangerousCore
             Add(CatType.Item, MCMR.PowerExtraction, "Extraction Sample", "MRPPES");
             Add(CatType.Item, MCMR.PowerEquipment, "Personal Protective Equipment", "MRPEM");
             Add(CatType.Item, MCMR.PowerMedical, "Medical sample", "MRPME");
-            Add(CatType.Item, MCMR.PowerMiscComputer, "Data Storage Device","MRPMC");
+            Add(CatType.Item, MCMR.PowerMiscComputer, "Data Storage Device", "MRPMC");
             Add(CatType.Item, MCMR.PowerSecurity, "Security Logs", "MRPSL");
             Add(CatType.Item, MCMR.PowerPower, "Energy Regulator", "MRPPP");
             Add(CatType.Item, MCMR.PowerReasearch, "Research Notes", "MRPRD");
@@ -1391,9 +1403,9 @@ namespace EliteDangerousCore
             Add(CatType.Data, MCMR.PowerFinancialRecords, "Power Industrial Data", "MRDPID");
             Add(CatType.Data, MCMR.PowerPropagandaData, "Power Political Data", "MRDPPD");
             Add(CatType.Data, MCMR.PowerClassifiedData, "Power Classified Data", "MRDPCD");
-            Add(CatType.Data, MCMR.PowerMegashipData,"Power Megaship Data", "MRDPMD");
+            Add(CatType.Data, MCMR.PowerMegashipData, "Power Megaship Data", "MRDPMD");
 
-            
+
 
             // consumable
 
@@ -1415,6 +1427,12 @@ namespace EliteDangerousCore
             {
                 x.TranslatedName = x.TranslatedName.TxID(typeof(MaterialCommodityMicroResourceType), x.FDName);
             }
+
+            //foreach( var x in mcmrlist)
+            //{
+            //    if (x.Value.IsRareCommodity)
+            //        System.Diagnostics.Debug.WriteLine($"{x.Value.FDName},");
+            //}
 
         }
 
