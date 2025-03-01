@@ -130,6 +130,8 @@ namespace EliteDangerousCore
             UnknownMineral, UnknownRefinedMineral,
             // march 15 2024
             ThargoidTitanDriveComponent, ThargoidCystSpecimen, ThargoidBoneFragments, ThargoidOrganSample,
+            // trailblazers feb 25
+            Haematite, Steel,
 
             //---------------------------------------------------------- Raw
             Carbon = 1000, Iron, Lead, Nickel, Phosphorus, Rhenium, Sulphur, Arsenic,
@@ -638,6 +640,7 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.Metals, MCMR.Praseodymium, "Praseodymium");
             Add(CatType.Commodity, ItemType.Metals, MCMR.Samarium, "Samarium");
             Add(CatType.Commodity, ItemType.Metals, MCMR.Silver, "Silver");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.Steel, "Steel");
             Add(CatType.Commodity, ItemType.Metals, MCMR.Tantalum, "Tantalum");
             Add(CatType.Commodity, ItemType.Metals, MCMR.Thallium, "Thallium");
             Add(CatType.Commodity, ItemType.Metals, MCMR.Thorium, "Thorium");
@@ -653,6 +656,7 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Gallite, "Gallite");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Goslarite, "Goslarite");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Grandidierite, "Grandidierite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.Haematite, "Haematite");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Indite, "Indite");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Jadeite, "Jadeite");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Lepidolite, "Lepidolite");

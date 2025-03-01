@@ -770,6 +770,9 @@ namespace EliteDangerousCore.Spansh
             [StationServices.UniversalCartographics] = "Universal Cartographics",
             [StationServices.VistaGenomics] = "Vista Genomics",
             [StationServices.Workshop] = "Workshop",
+            [StationServices.ConstructionServices] = "Colonisation Services",
+            [StationServices.SystemColonisation] = "Registering Colonisation",
+            [StationServices.RefineryContact] = "Refinery Contact",
         };
 
         private static StationServices StationServiceNameToEnum(string fdname)

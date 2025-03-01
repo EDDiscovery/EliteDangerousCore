@@ -162,6 +162,7 @@ namespace EliteDangerousCore
             Turret2,        // reported by users
             SineWaveScanner,
             BuggyCargoHatch,
+            ColonisationSuite,  // trailblazers feb 25
         }
 
 
@@ -324,6 +325,7 @@ namespace EliteDangerousCore
             [Slot.Turret2] = "Turret Type 2",
             [Slot.SineWaveScanner] = "Sine Wave Scanner",
             [Slot.BuggyCargoHatch] = "Cargo Hatch",
+            [Slot.ColonisationSuite] = "Colonisation Suite",
         };
 
         // maps the slot fdname to an enum

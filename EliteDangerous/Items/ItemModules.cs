@@ -300,6 +300,7 @@ namespace EliteDangerousCore
                 CausticSinkLauncher,
                 ChaffLauncher,
                 CollectorLimpetController,
+                Colonisation,
                 CorrosionResistantCargoRack,
                 CytoscramblerBurstLaser,
                 DecontaminationLimpetController,
@@ -1145,6 +1146,11 @@ namespace EliteDangerousCore
                 { "hpt_slugshot_turret_large", new ShipModule(128671322,ShipModule.ModuleTypes.FragmentCannon,"Fragment Cannon Turret Large"){ Cost = 5836800, Mount = "T", Class = 3, Rating = "C", Mass = 8, Integrity = 64, PowerDraw = 1.29, BootTime = 0, DPS = 143.28, Damage = 2.985, DistributorDraw = 0.37, ThermalLoad = 0.74, ArmourPiercing = 45, Range = 2000, Speed = 667, RateOfFire = 4, BurstInterval = 0.25, Clip = 3, Ammo = 180, Rounds = 12, ReloadTime = 5, BreachDamage = 2.7, BreachMin = 40, BreachMax = 80, Jitter = 5, KineticProportionDamage = 100, ThermalProportionDamage = 0, Falloff = 1800, AmmoCost = 17, BurstRateOfFire = 1, BurstSize = 1 } },
 
                 { "hpt_slugshot_fixed_large_range", new ShipModule(128671343,ShipModule.ModuleTypes.PacifierFrag_Cannon,"Pacifier Fragment Cannon Fixed Large"){ Cost = 1751040, Mount = "F", Class = 3, Rating = "C", Mass = 8, Integrity = 64, PowerDraw = 1.02, BootTime = 0, DPS = 216, Damage = 3.96, DistributorDraw = 0.57, ThermalLoad = 1.13, ArmourPiercing = 45, Range = 3000, Speed = 1000, RateOfFire = 4.545, BurstInterval = 0.22, Clip = 3, Ammo = 180, Rounds = 12, ReloadTime = 5, BreachDamage = 3.6, BreachMin = 40, BreachMax = 80, Jitter = 1.7, KineticProportionDamage = 100, ThermalProportionDamage = 0, Falloff = 2800, AmmoCost = 17, BurstRateOfFire = 1, BurstSize = 1 } },
+
+
+                // Colonisation
+
+                { "int_colonisation", new ShipModule(-1,ShipModule.ModuleTypes.Colonisation,"Colonisation Module") }, 
 
                 // Cargo racks
 
@@ -2731,6 +2737,7 @@ namespace EliteDangerousCore
                 {"bobble_trophy_combat_b", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Trophy Combat B") },
                 {"bobble_trophy_combat_s", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Trophy Combat S") },
                 {"bobble_trophy_community", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Trophy Community") },
+                {"bobble_trophy_cqc", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Trophy Cqc") },
                 {"bobble_trophy_cqc_b", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Trophy Cqc B") },
                 {"bobble_trophy_cqc_s", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Trophy Cqc S") },
                 {"bobble_trophy_exploration", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Trophy Exploration") },
@@ -3479,6 +3486,14 @@ namespace EliteDangerousCore
                 {"mamba_ppaisling_spoiler2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba PP Aisling Spoiler 2") },
                 {"mamba_ppaisling_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba PP Aisling Spoiler 3") },
                 {"mamba_ppaisling_spoiler4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba PP Aisling Spoiler 4") },
+                {"mamba_racer1_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Racer 1 Spoiler 1") },
+                {"mamba_racer1_spoiler2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Racer 1 Spoiler 2") },
+                {"mamba_racer1_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Racer 1 Spoiler 3") },
+                {"mamba_racer1_spoiler4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Racer 1 Spoiler 4") },
+                {"mamba_racer1_wings1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Racer 1 Wings 1") },
+                {"mamba_racer1_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Racer 1 Wings 2") },
+                {"mamba_racer1_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Racer 1 Wings 3") },
+                {"mamba_racer1_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Racer 1 Wings 4") },
                 {"mamba_shipkit1_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Shipkit 1 Bumper 1") },
                 {"mamba_shipkit1_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Shipkit 1 Bumper 2") },
                 {"mamba_shipkit1_bumper3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Shipkit 1 Bumper 3") },
@@ -4283,6 +4298,7 @@ namespace EliteDangerousCore
                 {"paintjob_asp_stripe1_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Stripe 1 4") },
                 {"paintjob_asp_stripe1_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Stripe 1 5") },
                 {"paintjob_asp_stripe1_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Stripe 1 6") },
+                {"paintjob_asp_synth_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Synth Blue") },
                 {"paintjob_asp_synth_lime", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Synth Lime") },
                 {"paintjob_asp_synth_orange", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Synth Orange") },
                 {"paintjob_asp_synth_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Synth Red") },

@@ -66,6 +66,10 @@ namespace EliteDangerousCore
                 Tuning,
             UniversalCartographics,     // exploration
                 VistaGenomics,
+
+            ConstructionServices,   // trailblazers feb 25 in game names, see mapping below to fdnames
+            RefineryContact,
+            SystemColonisation,
         }
 
         public static StationServices StationServicesToEnum(string fdname)
@@ -98,6 +102,10 @@ namespace EliteDangerousCore
             ["searchrescue"] = StationServices.SearchAndRescue,
             ["techbroker"] = StationServices.TechnologyBroker,
             ["exploration"] = StationServices.UniversalCartographics,
+            ["colonisationcontribution"] = StationServices.ConstructionServices,
+            ["refinery"] = StationServices.RefineryContact,
+            ["registeringcolonisation"] = StationServices.SystemColonisation,
+
         };
 
 
