@@ -770,8 +770,8 @@ namespace EliteDangerousCore.Spansh
             [StationServices.UniversalCartographics] = "Universal Cartographics",
             [StationServices.VistaGenomics] = "Vista Genomics",
             [StationServices.Workshop] = "Workshop",
-            [StationServices.ConstructionServices] = "Colonisation Services",
-            [StationServices.SystemColonisation] = "Registering Colonisation",
+            [StationServices.ConstructionServices] = "Construction Services",
+            [StationServices.SystemColonisation] = "System Colonisation",
             [StationServices.RefineryContact] = "Refinery Contact",
         };
 

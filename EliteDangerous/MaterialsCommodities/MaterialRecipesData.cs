@@ -1222,6 +1222,15 @@ namespace EliteDangerousCore
             new EngineeringRecipe("Anti-Guardian Zone Resistance Hull", "guardian_hull_unknown", "Guardian", "Hull Reinforcement", "2HSF,1CACR,1TCC" ),
             new EngineeringRecipe("Anti-Guardian Zone Resistance Modules", "guardian_modules_unknown", "Guardian", "Module", "2HSF,1CACR,1TCC" ),
 
+            // Pre-engineered SCO FSDs
+
+            new EngineeringRecipe("Engineered FSD (SCO) V1 (Class 2)", "int_hyperdrive_overcharge_size2_class5", "Human", "FSD (SCO)", "10DWEx,14Te,6EA,9CP,4PE,1TDC"),
+            new EngineeringRecipe("Engineered FSD (SCO) V1 (Class 3)", "int_hyperdrive_overcharge_size3_class5", "Human", "FSD (SCO)", "12DWEx,16Te,9EA,11CP,5PE,1TDC"),
+            new EngineeringRecipe("Engineered FSD (SCO) V1 (Class 4)", "int_hyperdrive_overcharge_size4_class5", "Human", "FSD (SCO)", "13DWEx,20Te,9EA,13CP,6PE,1TDC"),
+            new EngineeringRecipe("Engineered FSD (SCO) V1 (Class 5)", "int_hyperdrive_overcharge_size5_class5", "Human", "FSD (SCO)", "15DWEx,24Te,12EA,14CP,7PE,1TDC"),
+            new EngineeringRecipe("Engineered FSD (SCO) V1 (Class 6)", "int_hyperdrive_overcharge_size6_class5", "Human", "FSD (SCO)", "15DWEx,28Te,12EA,16CP,8PE,1TDC"),
+            new EngineeringRecipe("Engineered FSD (SCO) V1 (Class 7)", "int_hyperdrive_overcharge_size7_class5", "Human", "FSD (SCO)", "16DWEx,28Te,14EA,18CP,12PE,1TDC"),
+
             #endregion
 
             #region Special Effects
