@@ -1244,7 +1244,7 @@ SECTION AtmosphereTypes
 .Nitrogen_Hot_Thick: "Hot Thick Nitrogen Atmosphere" => "Atmósfera caliente y densa de nitrógeno"
 .Nitrogen_Thick: "Thick Nitrogen Atmosphere" => "Atmósfera densa de nitrógeno"
 .Nitrogen_Thin: "Thin Nitrogen Atmosphere" => "Atmósfera tenue de nitrógeno"
-.No: "No Atmosphere" => "Sin atmósfera"
+.No: "No Atmosphere" = JournalScan.NoAtmosphere
 .Oxygen: "Oxygen Atmosphere" => "Atmósfera de oxígeno"
 .Oxygen_Thin: "Thin Oxygen Atmosphere" => "Atmósfera tenue de oxígeno"
 .Silicate_Vapour_Hot: "Hot Silicate Vapour Atmosphere" => "Atmósfera caliente de vapor de silicato"
