@@ -806,7 +806,7 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.Salvage, MCMR.USSCargoTechnicalBlueprints, "Technical Blueprints");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.USSCargoTradeData, "Trade Data");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.WreckageComponents, "Wreckage Components");
-            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTitanDriveComponent, "Titan Drive Component");
+            Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidTitanDriveComponent, "Titan Drive Component","TDC");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidCystSpecimen, "Cyst Specimen");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidBoneFragments, "Bone Fragments");
             Add(CatType.Commodity, ItemType.Salvage, MCMR.ThargoidOrganSample, "Organ Sample");
