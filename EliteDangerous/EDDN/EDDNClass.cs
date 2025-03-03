@@ -1195,6 +1195,7 @@ namespace EliteDangerousCore.EDDN
             if (message["SystemAddress"].Long() != system.SystemAddress)        // double check not being 'frontiered'
                 return null;
 
+            RemoveCommonKeys(message);
             message["horizons"] = journal.IsHorizons;
             message["odyssey"] = journal.IsOdyssey;
             message["StarSystem"] = system.Name;
