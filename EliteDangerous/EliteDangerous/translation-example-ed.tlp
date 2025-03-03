@@ -932,6 +932,8 @@ SECTION MaterialCommodityMicroResourceType
 .ManufacturedThargoid2: "Manufactured Thargoid 2" @
 .ManufacturedThargoid3: "Manufactured Thargoid 3" @
 .ManufacturedThargoid4: "Manufactured Thargoid 4" @
+.Steel: "Steel" @
+.Haematite: "Haematite" @
 
 SECTION EngineeringData
 
@@ -1199,6 +1201,7 @@ SECTION StarportStates
 .Damaged: "Damaged" @
 .Abandoned: "Abandoned" @
 .UnderAttack: "Under Attack" @
+.Construction: "Construction" @
 
 SECTION StarportTypes
 .Unknown: "Unknown" @
@@ -1214,6 +1217,8 @@ SECTION StarportTypes
 .SurfaceStation: "Surface Station" @
 .CraterOutpost: "Crater Outpost" @
 .CraterPort: "Crater Port" @
+.SpaceConstructionDepot : "Space Construction Depot" @
+.PlanetaryConstructionDepot: "Planetary Construction Depot" @
 
 SECTION PowerPlayStates
 
@@ -1397,7 +1402,7 @@ SECTION ModulePartNames
 .Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" @
 .Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" @
 .Concord_Cannon: "Concord Cannon" @
-
+.Colonisation_Module: "Colonisation Module" @
 
 SECTION ShipSlots
 
@@ -1542,6 +1547,7 @@ SECTION ShipSlots
 .Turret2: "Turret Type 2" @
 .SineWaveScanner: "Sine Wave Scanner" @
 .BuggyCargoHatch: "Cargo Hatch" @
+.ColonisationSuite: "Colonisation Suite" @
 
 Section StationServices
 
@@ -1585,4 +1591,6 @@ Section StationServices
 .Tuning: "Tuning" @
 .UniversalCartographics: "Universal Cartographics" @
 .VistaGenomics: "Vista Genomics" @
-
+.ConstructionServices: "Construction Services" @
+.RefineryContact: "Refinery Contact" @
+.SystemColonisation: "System Colonisation" @
