@@ -238,6 +238,7 @@ namespace EliteDangerousCore
             Damaged,
             Abandoned,
             UnderAttack,
+            Construction,
         }
 
         // maps the StationType field to an enum
