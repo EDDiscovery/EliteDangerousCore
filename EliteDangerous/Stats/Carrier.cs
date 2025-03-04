@@ -33,7 +33,7 @@ namespace EliteDangerousCore
         public int BodyID { get; private set; } = 0;                             
         public long SystemAddress { get; private set; }                          // its ID
 
-        public string CurrentPositionText { get { return StarSystem.Name + (Body.Equals(StarSystem.Name, StringComparison.InvariantCultureIgnoreCase) || Body.IsEmpty() ? "" : (": " + Body)); } }
+        public string CurrentPositionText { get { return StarSystem.Name + (Body.Equals(StarSystem.Name, StringComparison.InvariantCultureIgnoreCase) || Body.IsEmpty() ? "" : (": " + Body.ReplaceIfStartsWith(StarSystem.Name).Trim())); } }
 
         // CarrierBuy
         public long Cost { get; private set; }                                   // cost to buy
@@ -54,7 +54,7 @@ namespace EliteDangerousCore
         public bool IsJumping { get { return EstimatedJumpTimeUTC.HasValue; } }
         public TimeSpan TimeTillJump { get { return IsJumping ? (EstimatedJumpTimeUTC.Value - DateTime.UtcNow) : new TimeSpan(0); } }
 
-        public string NextDestinationText { get { return IsJumping ? (NextStarSystem + (NextBody.Equals(NextStarSystem,StringComparison.InvariantCultureIgnoreCase) ? "" : (": " + NextBody))) : ""; } }
+        public string NextDestinationText { get { return IsJumping ? (NextStarSystem + (NextBody.Equals(NextStarSystem, StringComparison.InvariantCultureIgnoreCase) ? "" : (": " + NextBody.ReplaceIfStartsWith(NextStarSystem).Trim()))) : ""; } }
 
 
         const int CarrierNormalJumpTimeSeconds = 15*60;            // normal jump time..
