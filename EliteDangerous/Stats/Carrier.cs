@@ -49,7 +49,7 @@ namespace EliteDangerousCore
         public long NextSystemAddress { get; private set; }
         public string NextBody { get; private set; }            // null if not jumping. If jumping, its empty or the body name
         public int NextBodyID { get; private set; }             // 0 or the body id
-        public DateTime? EstimatedJumpTimeUTC { get; private set; }               // we set this up from carrier jump request
+        public DateTime? EstimatedJumpTimeUTC { get; private set; }               // we set this up from carrier jump request so we can count out the jump even if no carrier jump
 
         public bool IsJumping { get { return EstimatedJumpTimeUTC.HasValue; } }
         public TimeSpan TimeTillJump { get { return IsJumping ? (EstimatedJumpTimeUTC.Value - DateTime.UtcNow) : new TimeSpan(0); } }
@@ -58,7 +58,7 @@ namespace EliteDangerousCore
 
 
         const int CarrierNormalJumpTimeSeconds = 15*60;            // normal jump time..
-        const int CarrierJumpTimeMarginSeconds = 60;         // Lets leave a margin so we let the normal events pass thru first
+        const int CarrierJumpTimeMarginSeconds = 180;         // Lets leave a margin so we let the normal events pass thru first
 
         // from CarrierDecommision
 
@@ -80,7 +80,7 @@ namespace EliteDangerousCore
             public string Body { get; private set; }        // may be null, may be empty.
             public int BodyID { get; private set; }
             public DateTime JumpTime { get; private set; }
-            public string PositionText { get { return StarSystem.Name + (Body.IsEmpty() || Body.Equals(StarSystem.Name, StringComparison.InvariantCultureIgnoreCase) ? "" : (": " + Body)); } }
+            public string PositionText { get { return StarSystem.Name + (Body.IsEmpty() || Body.Equals(StarSystem.Name, StringComparison.InvariantCultureIgnoreCase) ? "" : (": " + Body.ReplaceIfStartsWith(StarSystem.Name).Trim())); } }
 
             public void SetSystem(ISystem sys)
             {
@@ -140,13 +140,13 @@ namespace EliteDangerousCore
         {
             if (EstimatedJumpTimeUTC.HasValue && EstimatedJumpTimeUTC.Value.AddSeconds(CarrierJumpTimeMarginSeconds) < curtime)
             {
-                //System.Diagnostics.Debug.WriteLine($"Carrier presumed jumped at {EstimatedJumpTimeUTC} curtime {curtime} to {NextStarSystem}");
                 StarSystem = new SystemClass(NextStarSystem);       // don't have position..
                 SystemAddress = NextSystemAddress;
                 Body = NextBody;
                 BodyID = NextBodyID;
+               // System.Diagnostics.Debug.WriteLine($"Carrier presumed jumped at {EstimatedJumpTimeUTC} curtime {curtime} to `{StarSystem}` `{Body}`");
                 JumpHistory.Add(new Jumps(StarSystem, Body, BodyID, EstimatedJumpTimeUTC.Value));
-                ClearNextJump();
+                EstimatedJumpTimeUTC = null;        // we just cancel the time, not clear the body/system (this is so we can check for a carrier jump after presumed jump and not double add)
                 return true;
             }
             else
@@ -185,13 +185,11 @@ namespace EliteDangerousCore
             SystemAddress = j.SystemAddress;
             Cost = j.Price;
             Variant = j.Variant;
-            ClearNextJump();            // clear jump
+            CancelJumpTimer();  // the jump timer is off
             ClearDecommisioning();      // clear decommisioning
             TradeOrders = new List<JournalCarrierTradeOrder.TradeOrder>();  // reset order list
-            JumpHistory = new List<Jumps>();
-            JumpHistory.Add(new Jumps(StarSystem, Body, BodyID, j.EventTimeUTC));
+            JumpHistory = new List<Jumps>() { new Jumps(StarSystem, Body, BodyID, j.EventTimeUTC) };        // create new jump history
             Ledger.Add(new LedgerEntry(j, StarSystem, Body, 0, ""));
-
             // DecommisionTimeUTC = new DateTime(2022, 12, 12, 0, 0, 0); 
         }
 
@@ -212,35 +210,40 @@ namespace EliteDangerousCore
             if (State.HaveCarrier)                     // must have a carrier
             {
                 State.CarrierID = j.CarrierID;
-                SetCarrierJump(j.SystemName, j.SystemAddress, j.Body, j.BodyID, j.EventTimeUTC,j.DepartureTime);
+                NextStarSystem = j.SystemName;
+                NextSystemAddress = j.SystemAddress;
+                NextBody = j.Body;
+                NextBodyID = j.BodyID;
+                EstimatedJumpTimeUTC = j.DepartureTime ?? j.EventTimeUTC.AddSeconds(CarrierNormalJumpTimeSeconds);
+                //System.Diagnostics.Debug.WriteLine($"Carrier jump request at {j.EventTimeUTC} to `{NextStarSystem}` `{NextBody}` arrival {EstimatedJumpTimeUTC}");
             }
             else
                 System.Diagnostics.Debug.WriteLine($"Carrier Jump Request but no carrier!");
         }
 
-        public void SetCarrierJump(string system, long sysaddr, string body, int bodyid, DateTime utcjt, DateTime? esttime)
-        {
-            System.Diagnostics.Debug.Assert(body != null && system != null);
-            NextStarSystem = system;
-            NextSystemAddress = sysaddr;
-            NextBody = body;
-            NextBodyID = bodyid;
-            EstimatedJumpTimeUTC = esttime ?? utcjt.AddSeconds(CarrierNormalJumpTimeSeconds);
-        }
-
         public void Update(JournalCarrierJumpCancelled junused)
         {
-            ClearNextJump();
+            CancelJumpTimer();  // the jump timer is now off
         }
 
         public void Update(JournalCarrierJump j)
         {
-            StarSystem = new SystemClass(j.StarSystem, null, j.StarPos.X, j.StarPos.Y, j.StarPos.Z);                  // set new location with position
-            SystemAddress = j.SystemAddress ?? 0;
-            Body = NextBody ?? j.StarSystem;        // you should always have a nextbody, but if debugging.. 
-            BodyID = NextBodyID;
-            JumpHistory.Add(new Jumps(StarSystem, Body, BodyID, j.EventTimeUTC));
-            ClearNextJump();
+            // if we are still running down the timer, OR we ran down the timer but we are not in the timer system body, we accept the jump
+            if (EstimatedJumpTimeUTC != null || j.StarSystem != NextStarSystem || j.Body != NextBody)
+            {
+                StarSystem = new SystemClass(j.StarSystem, null, j.StarPos.X, j.StarPos.Y, j.StarPos.Z);                  // set new location with position
+                SystemAddress = j.SystemAddress ?? 0;
+                Body = NextBody ?? j.Body ?? j.StarSystem;        // you should always have a nextbody, but if debugging.. 
+                BodyID = NextBodyID;
+               // System.Diagnostics.Debug.WriteLine($"Carrier jumped at {j.EventTimeUTC} to `{StarSystem}` `{Body}`");
+                JumpHistory.Add(new Jumps(StarSystem, Body, BodyID, j.EventTimeUTC));
+            }
+            else
+            {
+               // System.Diagnostics.Debug.WriteLine($"Carrier already was presumed jumped to `{NextStarSystem}` `{NextBody}`");
+            }
+
+            CancelJumpTimer();  // either way the jump timer is now off
         }
 
         public void Update(JournalLocation j, bool onfootfleetcarrier)            
@@ -254,8 +257,9 @@ namespace EliteDangerousCore
                 SystemAddress = NextSystemAddress;
                 Body = NextBody;
                 BodyID = NextBodyID;
+                //System.Diagnostics.Debug.WriteLine($"Carrier Location presumed jumped at {j.EventTimeUTC} to `{StarSystem}` `{Body}`");
                 JumpHistory.Add(new Jumps(StarSystem, Body, BodyID, j.EventTimeUTC));
-                ClearNextJump();
+                CancelJumpTimer();
             }
         }
 
@@ -510,12 +514,10 @@ namespace EliteDangerousCore
             DecommissionRefund = 0;
         }
 
-        private void ClearNextJump()
+        private void CancelJumpTimer()
         {
-            NextStarSystem = NextBody = null;       // clear next info
-            NextBodyID = -1;
-            NextSystemAddress = 0;
             EstimatedJumpTimeUTC = null;
+            NextStarSystem = NextBody = null;
         }
 
         #endregion
