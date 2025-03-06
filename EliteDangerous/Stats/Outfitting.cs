@@ -107,11 +107,14 @@ namespace EliteDangerousCore
     [System.Diagnostics.DebuggerDisplay("Yards {OutfittingYards.Count}")]
     public class OutfittingList
     {
-        public List<Outfitting> OutfittingYards { get; private set; }
-
         public OutfittingList()
         {
-            OutfittingYards = new List<Outfitting>();
+            outfittingyards = new List<Outfitting>();
+        }
+
+        public Outfitting Get(string name)
+        {
+            return outfittingyards.Find(x => x.StationName.EqualsIIC(name));
         }
 
         // return, latest first, a list of outfitting from all years, latest yards first
@@ -120,7 +123,7 @@ namespace EliteDangerousCore
             Outfitting last = null;
             List<Outfitting> outfittings = new List<Outfitting>();
 
-            foreach (var yard in OutfittingYards.AsEnumerable().Reverse())        // give it to me in lastest one first..
+            foreach (var yard in outfittingyards.AsEnumerable().Reverse())        // give it to me in lastest one first..
             {
                 if (!nolocrepeats || outfittings.Find(x => x.Location.Equals(yard.Location)) == null) // allow yard repeats or not in list
                 {
@@ -161,10 +164,12 @@ namespace EliteDangerousCore
                 JournalEvents.JournalOutfitting js = je as JournalEvents.JournalOutfitting;
                 if (js.YardInfo.Items != null)     // just in case we get a bad Outfitting with no data or its one which was not caught by the EDD at the time
                 {
-                    OutfittingYards.Add(js.YardInfo);
+                    outfittingyards.Add(js.YardInfo);
                 }
             }
         }
+
+        private List<Outfitting> outfittingyards;
     }
 }
 

@@ -93,30 +93,36 @@ namespace EliteDangerousCore
     [System.Diagnostics.DebuggerDisplay("Yards {ShipYards.Count}")]
     public class ShipYardList
     {
-        public List<ShipYard> ShipYards { get; private set; }
         public bool? AllowCobraMkIV { get; private set; } = null;         // set when we get a shipyard
 
         public ShipYardList()
         {
-            ShipYards = new List<ShipYard>();
+            shipyards = new List<ShipYard>();
         }
 
-        public List<string> ShipList()
+        public ShipYard Get(string name)
+        {
+            return shipyards.Find(x => x.StationName.EqualsIIC(name));
+        }
+
+        // a list, sorted in date ascending order, with all repeats removed.
+        public List<string> ShipListDistinctSorted()
         {
             List<string> ships = new List<string>();
-            foreach (ShipYard yard in ShipYards)
+            foreach (ShipYard yard in shipyards)
                 ships.AddRange(yard.ShipList());
-            var dislist = (from x in ships select x).Distinct().ToList();
+            var dislist = (from x in ships select x).Distinct().ToList();   // tbd? bet this is pointless
             dislist.Sort();
             return dislist;
         }
 
+        // get a filtered list with optional no location repeats and no repeates withing timeout
         public List<ShipYard> GetFilteredList(bool nolocrepeats = false, int timeout = 60*5 )           // latest first..
         {
             ShipYard last = null;
             List<ShipYard> yards = new List<ShipYard>();
 
-            foreach (var yard in ShipYards.AsEnumerable().Reverse())        // give it to me in lastest one first..
+            foreach (var yard in shipyards.AsEnumerable().Reverse())        // give it to me in lastest one first..
             {
                 if (!nolocrepeats || yards.Find(x => x.Location.Equals(yard.Location)) == null) // allow yard repeats or not in list
                 {
@@ -160,9 +166,11 @@ namespace EliteDangerousCore
                         AllowCobraMkIV = js.AllowCobraMkIV;     // set the shipyard flag
 
                     //System.Diagnostics.Debug.WriteLine("Add yard data for " + js.Yard.StarSystem + ":" + js.Yard.StationName);
-                    ShipYards.Add(js.Yard);
+                    shipyards.Add(js.Yard);
                 }
             }
         }
+
+        private List<ShipYard> shipyards;
     }
 }
