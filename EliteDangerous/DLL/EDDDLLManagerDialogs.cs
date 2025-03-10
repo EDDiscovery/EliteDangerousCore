@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2021 EDDiscovery development team
+ * Copyright © 2015 - 2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,12 +10,9 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
-
-using System;
+using EliteDangerousCore.DB;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -25,24 +22,18 @@ namespace EliteDangerousCore.DLL
     public partial class EDDDLLManager
     {
         // present and allow alloweddisallowed string to be edited. null if cancel
-        public static string DLLPermissionManager(Form form, Icon icon, string alloweddisallowed)
+        public void DLLPermissionManager(Form form, Icon icon)
         {
-            string[] allowedfiles = alloweddisallowed.Split(',');
-
             ExtendedControls.ConfigurableForm f = new ExtendedControls.ConfigurableForm();
 
             int width = 400;
             int margin = 20;
             int vpos = 40;
 
-            foreach (string setting in allowedfiles)
+            foreach (string name in DLLPermissions.Keys)
             {
-                if (setting.Length >= 2)    // double check
-                {
-                    string name = setting.Substring(1);
-                    f.Add(new ExtendedControls.ConfigurableEntryList.Entry(name, typeof(ExtendedControls.ExtCheckBox), name, new Point(margin, vpos), new Size(width - margin - 20, 20), null) { CheckBoxChecked = setting[0] == '+' });
-                    vpos += 30;
-                }
+                f.Add(new ExtendedControls.ConfigurableEntryList.Entry(name, typeof(ExtendedControls.ExtCheckBox), name, new Point(margin, vpos), new Size(width - margin - 20, 20), null) { CheckBoxChecked = DLLPermissions[name] });
+                vpos += 30;
             }
 
             vpos += 20;
@@ -58,7 +49,8 @@ namespace EliteDangerousCore.DLL
                 }
                 else if (controlname == "CALL")
                 {
-                    f.ReturnResult(DialogResult.Abort);
+                    RemoveAllDLLPermissions();
+                    f.ReturnResult(DialogResult.Cancel);
                 }
                 else if (controlname == "Cancel" || controlname == "Close")
                 {
@@ -69,22 +61,15 @@ namespace EliteDangerousCore.DLL
             var res = f.ShowDialogCentred(form, icon, "DLL - applies at next restart", closeicon: true);
             if (res == DialogResult.OK)
             {
-                alloweddisallowed = "";
                 foreach (var e in f.Entries.Entries.Where(x => x.ControlType == typeof(ExtendedControls.ExtCheckBox)))
-                    alloweddisallowed = alloweddisallowed.AppendPrePad((f.Get(e.Name) == "1" ? "+" : "-") + e.Name, ",");
-
-                return alloweddisallowed;
+                {
+                    SetDLLPermission(e.Name, f.Get(e.Name) == "1");
+                }
             }
-            else if (res == DialogResult.Abort)
-            {
-                return "";
-            }
-            else
-                return null;
         }
 
         // present and allow alloweddisallowed string to be edited. null if cancel
-        public void DLLConfigure(Form form, Icon icon, Func<string, string> getconfig, Action<string, string> setconfig)
+        public void DLLConfigure(Form form, Icon icon)
         {
             ExtendedControls.ConfigurableForm f = new ExtendedControls.ConfigurableForm();
 
@@ -126,8 +111,8 @@ namespace EliteDangerousCore.DLL
                 else
                 {
                     var dllcaller = FindCaller(controlname);
-                    string res = dllcaller.Config(getconfig(controlname),true);     // edit config
-                    setconfig(controlname, res);
+                    string res = dllcaller.Config(UserDatabase.Instance.GetSettingString("DLLConfig_" + controlname,""),true);     // edit config
+                    UserDatabase.Instance.PutSettingString("DLLConfig_" + controlname, res);
                     f.ReturnResult(DialogResult.Cancel);
                 }
             };

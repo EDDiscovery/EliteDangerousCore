@@ -27,14 +27,44 @@ namespace EliteDangerousCore.DLL
         public int Count { get { return DLLs.Count; } }
         public List<EDDDLLCaller> DLLs { get; private set; } = new List<EDDDLLCaller>();
 
+        private Dictionary<string, bool> DLLPermissions;
+
+        public EDDDLLManager()
+        {
+            DLLPermissions = new Dictionary<string, bool>();
+            var stringlist = DB.UserDatabase.Instance.GetSettingString("DLLAllowed", "").Split(',');
+            foreach( var x in stringlist)
+            {
+                if (x.Length > 2 && (x.StartsWith("+") || x.StartsWith("-")))       // check before set in case broken save
+                    DLLPermissions[x.Substring(1)] = x[0] == '+';
+            }
+        }
+
+        public void SetDLLPermission(string dll, bool on)
+        {
+            DLLPermissions[dll] = on;
+            Save();
+        }
+
+        public void RemoveDLLPermission(string dll)
+        {
+            DLLPermissions.Remove(dll);
+            Save();
+        }
+
+        public void RemoveAllDLLPermissions()
+        {
+            DLLPermissions.Clear();
+            DB.UserDatabase.Instance.PutSettingString("DLLAllowed", "");
+        }
+
         // search directory for *.dll, 
         // return loaded, failed, new dlls not in the allowed/disallowed list, disabled
-        // alloweddisallowed list is +allowed,-disallowed.. 
         // all Csharp assembly DLLs are loaded - only ones implementing *EDDClass class causes it to be added to the DLL list
         // only normal DLLs implementing EDDInitialise are kept loaded
 
         public Tuple<string, string, string, string> Load(string[] dlldirectories, bool[] disallowautomatically, string ourversion, string[] inoptions,
-                                EDDDLLInterfaces.EDDDLLIF.EDDCallBacks callbacks, ref string alloweddisallowed,
+                                EDDDLLInterfaces.EDDDLLIF.EDDCallBacks callbacks,
                                 Func<string, string> getconfig, Action<string, string> setconfig
                                 )
         {
@@ -58,8 +88,6 @@ namespace EliteDangerousCore.DLL
                         FileInfo[] allFiles = Directory.EnumerateFiles(dlldirectory, "*.dll", SearchOption.TopDirectoryOnly).Where(x=>Path.GetExtension(x)==".dll") 
                                             .Select(f => new FileInfo(f)).OrderBy(p => p.LastWriteTime).ToArray();
 
-                        string[] allowedfiles = alloweddisallowed.Split(',');
-
                         foreach (FileInfo f in allFiles)
                         {
                             EDDDLLCaller caller = new EDDDLLCaller();
@@ -68,18 +96,32 @@ namespace EliteDangerousCore.DLL
 
                             string filename = System.IO.Path.GetFileNameWithoutExtension(f.FullName);
 
-                            bool isallowed = alloweddisallowed.Equals("All", StringComparison.InvariantCultureIgnoreCase) ||
-                                             allowedfiles.Contains("+" + f.FullName, StringComparer.InvariantCultureIgnoreCase) ||      // full name is now used
-                                             allowedfiles.Contains("+" + filename, StringComparer.InvariantCultureIgnoreCase);              // filename previously used
+                            bool? allowed = null;
+                            if (DLLPermissions.TryGetValue(f.FullName, out bool a))
+                                allowed = a;
 
-                            bool isdisallowed = allowedfiles.Contains("-" + f.FullName, StringComparer.InvariantCultureIgnoreCase) ||      // full name is now used
-                                                allowedfiles.Contains("-" + filename, StringComparer.InvariantCultureIgnoreCase);              // filename previously used
+                            if ( allowed == null )
+                            {
+                                // not known..
 
-                            if (isdisallowed)     // disallowed
+                                bool alreadydone = newdlls.Contains(f.FullName) || disabled.Contains(f.FullName);
+
+                                if (!alreadydone)   // if not already in one of the lists
+                                {
+                                    if (disallowautomatically[i])   // if folder has a disallow automatically for DLLs found in it
+                                    {
+                                        DLLPermissions[f.FullName] = false;
+                                        disabled = disabled.AppendPrePad(f.FullName, ",");
+                                    }
+                                    else
+                                        newdlls = newdlls.AppendPrePad(f.FullName, ",");
+                                }
+                            }
+                            else if (allowed == false)     // if mentioned disallowed
                             {
                                 disabled = disabled.AppendPrePad(f.FullName, ",");
                             }
-                            else if (isallowed)    // if allowed..
+                            else 
                             {
                                 if (caller.Load(f.FullName))        // if loaded okay
                                 {
@@ -99,26 +141,6 @@ namespace EliteDangerousCore.DLL
                                     {
                                         string errstr = caller.Version.HasChars() ? (": " + caller.Version.Substring(1)) : "";
                                         failed = failed.AppendPrePad(f.FullName + errstr, ","); // long name for failure
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                bool innewdlls = newdlls.Contains(f.FullName);
-
-                                if (disallowautomatically[i])
-                                {
-                                    if (!innewdlls)     // Ealhstan special - if we are scanning the same folder multiple times, it may have already been added to newdlls
-                                    {
-                                        alloweddisallowed = alloweddisallowed.AppendPrePad("-" + f.FullName, ",");
-                                        disabled = disabled.AppendPrePad(f.FullName, ",");
-                                    }
-                                }
-                                else
-                                {
-                                    if (!innewdlls)      // Eahlstan special - don't add twice to the newdlls in case we are scanning the same folder twice
-                                    {
-                                        newdlls = newdlls.AppendPrePad(f.FullName, ",");
                                     }
                                 }
                             }
@@ -256,6 +278,11 @@ namespace EliteDangerousCore.DLL
                 return new Tuple<bool, string, string>(true, caller.Name, r.Mid(1));
             else
                 return new Tuple<bool, string, string>(false, caller.Name, r.Mid(1));
+        }
+        private void Save()
+        {
+            var x = string.Join(",", DLLPermissions.Select(kvp => (kvp.Value ? "+" : "-") + kvp.Key));
+            DB.UserDatabase.Instance.PutSettingString("DLLAllowed", string.Join(",", x));
         }
 
     }
