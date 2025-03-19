@@ -9,16 +9,16 @@ SECTION Bodies
 .OMS: "Orange {0} class star" => "Estrella naranja de la secuencia principal {0}"
 .RMS: "Red {0} class star" => "Estrella roja de la secuencia principal {0}"
 .DRNS: "Dark Red {0} class star" => "Estrella {0} de la secuencia principal roja oscura"
-.MD: "Methane Dwarf T class star" => "Estrella enana de metano"
-.BD: "Brown Dwarf Y class star" => "Estrella enana marrón"
-.Herbig: "Herbig Ae/Be class star" => "Herbig Ae/Be"
-.TTauri: "T Tauri star" => "T Tauri"
+.MD: "Methane Dwarf T class star" => "Estrella enana de metano de clase T"
+.BD: "Brown Dwarf Y class star" => "Estrella enana marrón de clase Y"
+.Herbig: "Herbig Ae/Be class star" => "Estrella Herbig Ae/Be"
+.TTauri: "T Tauri star" => "Estrella T Tauri"
 .WR: "Wolf-Rayet {0} class star" => "Estrella {0} Wolf-Rayet"
-.C: "Carbon {0} class star" => "Estrella {0} de carbono"
+.C: "Carbon {0} class star" => "Estrella clase {0} de carbono"
 .IZ: "Intermediate low Zirconium Monoxide MS class star" => "Estrella de clase MS intermedia de tipo bajo de monóxido de circonio"
 .CGZ: "Cool Giant Zirconium Monoxide rich S class star" => "Estrella fresca de clase S gigante rica en monóxido de circonio"
 .WD: "White Dwarf {0} class star" => "Estrella enana blanca de clase {0}"
-.NS: "Neutron Star" => "Estrella neutrones"
+.NS: "Neutron Star" => "Estrella de neutrones"
 .BH: "Black Hole" => "Agujero negro"
 .EX: "Exotic" => "Exótico"
 .SMBH: "Super Massive Black Hole" => "Agujero negro supermasivo"
@@ -33,7 +33,7 @@ SECTION Bodies
 .Nebula: "Nebula" => "Nébula"
 .StellarRemnantNebula: "Stellar Remnant Nebula" => "Nébula de Restos Estelares"
 .SUnknown: "Unknown star class" => "Estrella de clase desconocida"
-.UNK: "Class {0} star" => "Estrella clase {0}"
+.UNK: "Class {0} star" => "Estrella de clase {0}"
 
 SECTION EDPlanet
 
@@ -62,7 +62,7 @@ SECTION MaterialCommodityMicroResourceType
 
 .Consumable: "Consumable" => "Consumible"
 .Unknown: "Unknown" = Unknown
-.Goods: "Goods" => "Bienes"
+.Goods: "Goods" => "Mercancías"
 .Assets: "Assets" => "Recursos"
 .Data: "Data" => "Datos"
 .Raw: "Raw" => "Elemento"
@@ -1120,7 +1120,7 @@ SECTION FactionStates
 .PublicHoliday: "Public Holiday" => "Día Festivo"
 .Terrorism: "Terrorism" => "Ataque Terrorista"
 .ColdWar: "Cold War" @
-.Colonisation: "Colonisation" @
+.Colonisation: "Colonisation" => "Colonización"
 .HistoricEvent: "Historic Event" @
 .Revolution: "Revolution" @
 .TechnologicalLeap: "Technological Leap" @
@@ -1296,7 +1296,7 @@ SECTION ModulePartNames
 .Caustic_Sink_Launcher: "Caustic Sink Launcher" => "Eyector Cáustico"
 .Point_Defence: "Point Defence" => "Torreta de Defensa de Punto"
 .Kill_Warrant_Scanner: "Kill Warrant Scanner" => "Escáner de Registro Criminal"
-.Detailed_Surface_Scanner: "Detailed Surface Scanner" => "Escáner de Analisis de Superficie"
+.Detailed_Surface_Scanner: "Detailed Surface Scanner" => "Escáner de Análisis de Superficie"
 .Standard_Docking_Computer: "Standard Docking Computer" => "Computadora de Aterrizaje Asistido"
 .Advanced_Docking_Computer: "Advanced Docking Computer" => "Computadora de Aterrizaje Avanzada"
 .Fighter_Hangar: "Fighter Hangar" => "Hangar de Caza"
@@ -1349,7 +1349,7 @@ SECTION ModulePartNames
 .Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" => "Lanzamisiles Jauría de Sabuesos"
 .Advanced_Torp_Pylon: "Advanced Torp Pylon" => "Lanzatorpedos Avanzado"
 .Advanced_Missile_Rack: "Advanced Missile Rack" => "Lanzamisiles Avanzado"
-.Human_Extraction_Missile: "Human Extraction Missile" @
+.Human_Extraction_Missile: "Human Extraction Missile" => "Lanzamisiles de Extracción"
 .Enzyme_Missile_Rack: "Enzyme Missile Rack" @
 .Module_Reinforcement_Package: "Module Reinforcement Package" => "Paquete de Refuerzo de Módulo"
 .AX_Multi_Cannon: "AX Multi Cannon" => "Multicañón AX"
