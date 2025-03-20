@@ -107,7 +107,7 @@ namespace EliteDangerousCore.EDSM
                         lastCommentFetch = DateTime.UtcNow;
                     }
 
-                    DateTime lastqueryendtime = UserDatabase.Instance.GetSettingDate(KeyName(), EliteReleaseDates.EDSMRelease);
+                    DateTime lastqueryendtime = UserDatabase.Instance.GetSetting(KeyName(), EliteReleaseDates.EDSMRelease);
                     //DateTime lastqueryendtime = UserDatabase.Instance.GetSettingDate(KeyName(), new DateTime(2023,6,12));
                     //lastqueryendtime = new DateTime(2016, 1, 12);
 
@@ -134,7 +134,7 @@ namespace EliteDangerousCore.EDSM
 
                             displayedstatus = true;
 
-                            UserDatabase.Instance.PutSettingDate(KeyName(), lastqueryendtime);      // save back for now in case it did not move it past
+                            UserDatabase.Instance.PutSetting(KeyName(), lastqueryendtime);      // save back for now in case it did not move it past
                         }
                         else if (res != -1)
                         {
@@ -160,7 +160,7 @@ namespace EliteDangerousCore.EDSM
                         if (lastqueryendtime > DateTime.UtcNow)                                 // we have asked beyond our date, so we are at the end of the game
                         {
                             lastqueryendtime = DateTime.UtcNow;                                 // limit to now
-                            UserDatabase.Instance.PutSettingDate(KeyName(), lastqueryendtime);  // and save back
+                            UserDatabase.Instance.PutSetting(KeyName(), lastqueryendtime);  // and save back
 
                             if (logscollected > 0)                                              // if we collected logs, invoke the call back    
                             {

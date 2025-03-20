@@ -32,7 +32,7 @@ namespace EliteDangerousCore.DLL
         public EDDDLLManager()
         {
             DLLPermissions = new Dictionary<string, bool>();
-            var stringlist = DB.UserDatabase.Instance.GetSettingString("DLLAllowed", "").Split(',');
+            var stringlist = DB.UserDatabase.Instance.GetSetting("DLLAllowed", "").Split(',');
             foreach( var x in stringlist)
             {
                 if (x.Length > 2 && (x.StartsWith("+") || x.StartsWith("-")))       // check before set in case broken save
@@ -55,7 +55,7 @@ namespace EliteDangerousCore.DLL
         public void RemoveAllDLLPermissions()
         {
             DLLPermissions.Clear();
-            DB.UserDatabase.Instance.PutSettingString("DLLAllowed", "");
+            DB.UserDatabase.Instance.PutSetting("DLLAllowed", "");
         }
 
         // search directory for *.dll, 
@@ -282,7 +282,7 @@ namespace EliteDangerousCore.DLL
         private void Save()
         {
             var x = string.Join(",", DLLPermissions.Select(kvp => (kvp.Value ? "+" : "-") + kvp.Key));
-            DB.UserDatabase.Instance.PutSettingString("DLLAllowed", string.Join(",", x));
+            DB.UserDatabase.Instance.PutSetting("DLLAllowed", string.Join(",", x));
         }
 
     }

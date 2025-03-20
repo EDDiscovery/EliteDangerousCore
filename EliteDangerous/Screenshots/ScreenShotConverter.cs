@@ -42,97 +42,97 @@ namespace EliteDangerousCore.ScreenShots
             string screenshotsDirdefault = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Frontier Developments", "Elite Dangerous");
             string outputDirdefault = Path.Combine(screenshotsDirdefault, "Converted");
 
-            InputFolder = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingString("ImageHandlerScreenshotsDir", screenshotsDirdefault );
+            InputFolder = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerScreenshotsDir", screenshotsDirdefault );
             if (!Directory.Exists(InputFolder))
                 InputFolder = screenshotsDirdefault;
 
-            OutputFolder = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingString("ImageHandlerOutputDir", outputDirdefault);
+            OutputFolder = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerOutputDir", outputDirdefault);
             if (!Directory.Exists(OutputFolder))
                 OutputFolder = outputDirdefault;
 
-            AutoConvert = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("ImageHandlerAutoconvert", false);
+            AutoConvert = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerAutoconvert", false);
 
 
             try
             {       // just in case
-                if (EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("checkBoxRemove", false))    // backward compatible
+                if (EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("checkBoxRemove", false))    // backward compatible
                 {
                     converter.OriginalImageOption = ScreenShotImageConverter.OriginalImageOptions.Delete;
                 }
                 else
-                    converter.OriginalImageOption = (ScreenShotImageConverter.OriginalImageOptions)EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerOriginalImageOption", 0);
+                    converter.OriginalImageOption = (ScreenShotImageConverter.OriginalImageOptions)EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerOriginalImageOption", 0);
 
                 EliteDangerousCore.DB.UserDatabase.Instance.DeleteKey("checkBoxRemove");
 
-                converter.OriginalImageOptionDirectory = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingString("ImageHandlerOriginalDirectory", @"c:\");
+                converter.OriginalImageOptionDirectory = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerOriginalDirectory", @"c:\");
 
-                if (EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("ImageHandlerClipboard", false))    // backward compatible
+                if (EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerClipboard", false))    // backward compatible
                 {
                     converter.ClipboardOption = ScreenShotImageConverter.ClipboardOptions.CopyMaster;
                 }
                 else
-                    converter.ClipboardOption = (ScreenShotImageConverter.ClipboardOptions)EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerClipboardOption", 0);
+                    converter.ClipboardOption = (ScreenShotImageConverter.ClipboardOptions)EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerClipboardOption", 0);
 
                 EliteDangerousCore.DB.UserDatabase.Instance.DeleteKey("ImageHandlerClipboard");
 
-                converter.HighRes = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("checkBoxHires", false);
+                converter.HighRes = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("checkBoxHires", false);
                 if (EliteDangerousCore.DB.UserDatabase.Instance.KeyExists("ImageHandlerCropImage"))
                 {
-                    converter.CropResizeImage1 = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("ImageHandlerCropImage", false) ? ScreenShotImageConverter.CropResizeOptions.Crop : ScreenShotImageConverter.CropResizeOptions.Off;
+                    converter.CropResizeImage1 = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerCropImage", false) ? ScreenShotImageConverter.CropResizeOptions.Crop : ScreenShotImageConverter.CropResizeOptions.Off;
                     EliteDangerousCore.DB.UserDatabase.Instance.DeleteKey("ImageHandlerCropImage");
                 }
                 else
-                    converter.CropResizeImage1 = (ScreenShotImageConverter.CropResizeOptions)EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerCropResizeImage1", 0);
+                    converter.CropResizeImage1 = (ScreenShotImageConverter.CropResizeOptions)EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerCropResizeImage1", 0);
 
-                converter.CropResizeImage2 = (ScreenShotImageConverter.CropResizeOptions)EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerCropResizeImage2", 0);
-                converter.CropResizeArea1 = new Rectangle(EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerCropLeft", 0), EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerCropTop", 0),
-                                        EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerCropWidth", 1920), EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerCropHeight", 1024));
-                converter.CropResizeArea2 = new Rectangle(EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerCropLeft2", 0), EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerCropTop2", 0),
-                                        EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerCropWidth2", 1920), EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerCropHeight2", 1024));
+                converter.CropResizeImage2 = (ScreenShotImageConverter.CropResizeOptions)EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerCropResizeImage2", 0);
+                converter.CropResizeArea1 = new Rectangle(EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerCropLeft", 0), EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerCropTop", 0),
+                                        EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerCropWidth", 1920), EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerCropHeight", 1024));
+                converter.CropResizeArea2 = new Rectangle(EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerCropLeft2", 0), EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerCropTop2", 0),
+                                        EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerCropWidth2", 1920), EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerCropHeight2", 1024));
 
-                InputFileExtension = (InputTypes)EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("comboBoxScanFor", 0);
-                converter.OutputFileExtension = (ScreenShotImageConverter.OutputTypes)EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerFormatNr", 0);
+                InputFileExtension = (InputTypes)EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("comboBoxScanFor", 0);
+                converter.OutputFileExtension = (ScreenShotImageConverter.OutputTypes)EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerFormatNr", 0);
 
-                converter.KeepMasterConvertedImage = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingBool("ImageHandlerKeepFullSized", false);
-                converter.Quality = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("ImageHandlerQuality", 85);
+                converter.KeepMasterConvertedImage = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerKeepFullSized", false);
+                converter.Quality = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ImageHandlerQuality", 85);
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("Exception " + ex.ToString());
             }
 
-            converter.FileNameFormat = Math.Min(Math.Max(0, EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("comboBoxFileNameFormat", 0)), ScreenShotImageConverter.FileNameFormats.Length - 1);
-            converter.FolderNameFormat = Math.Min(Math.Max(0, EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("comboBoxSubFolder", 0)), ScreenShotImageConverter.SubFolderSelections.Length - 1);
+            converter.FileNameFormat = Math.Min(Math.Max(0, EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("comboBoxFileNameFormat", 0)), ScreenShotImageConverter.FileNameFormats.Length - 1);
+            converter.FolderNameFormat = Math.Min(Math.Max(0, EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("comboBoxSubFolder", 0)), ScreenShotImageConverter.SubFolderSelections.Length - 1);
         }
 
         public void SaveSettings()
         {
-            DB.UserDatabase.Instance.PutSettingString("ImageHandlerOutputDir", OutputFolder);
-            DB.UserDatabase.Instance.PutSettingString("ImageHandlerScreenshotsDir", InputFolder);
-            DB.UserDatabase.Instance.PutSettingBool("ImageHandlerAutoconvert", AutoConvert );      // names are all over the place.. historical
-            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerOriginalImageOption", (int)converter.OriginalImageOption);
-            EliteDangerousCore.DB.UserDatabase.Instance.PutSettingString("ImageHandlerOriginalDirectory", converter.OriginalImageOptionDirectory);
-            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerClipboardOption", (int)converter.ClipboardOption);
-            DB.UserDatabase.Instance.PutSettingBool("checkBoxHires", converter.HighRes );
-            DB.UserDatabase.Instance.PutSettingBool("ImageHandlerKeepFullSized", converter.KeepMasterConvertedImage);
-            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerQuality", converter.Quality);
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerOutputDir", OutputFolder);
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerScreenshotsDir", InputFolder);
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerAutoconvert", AutoConvert );      // names are all over the place.. historical
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerOriginalImageOption", (int)converter.OriginalImageOption);
+            EliteDangerousCore.DB.UserDatabase.Instance.PutSetting("ImageHandlerOriginalDirectory", converter.OriginalImageOptionDirectory);
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerClipboardOption", (int)converter.ClipboardOption);
+            DB.UserDatabase.Instance.PutSetting("checkBoxHires", converter.HighRes );
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerKeepFullSized", converter.KeepMasterConvertedImage);
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerQuality", converter.Quality);
 
-            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerCropResizeImage1", (int)converter.CropResizeImage1);      // fires the checked handler which sets the readonly mode of the controls
-            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerCropTop", converter.CropResizeArea1.Top);
-            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerCropLeft", converter.CropResizeArea1.Left);
-            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerCropWidth", converter.CropResizeArea1.Width);
-            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerCropHeight", converter.CropResizeArea1.Height);
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerCropResizeImage1", (int)converter.CropResizeImage1);      // fires the checked handler which sets the readonly mode of the controls
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerCropTop", converter.CropResizeArea1.Top);
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerCropLeft", converter.CropResizeArea1.Left);
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerCropWidth", converter.CropResizeArea1.Width);
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerCropHeight", converter.CropResizeArea1.Height);
 
-            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerCropResizeImage2", (int)converter.CropResizeImage2);      // fires the checked handler which sets the readonly mode of the controls
-            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerCropTop2", converter.CropResizeArea2.Top);
-            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerCropLeft2", converter.CropResizeArea2.Left);
-            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerCropWidth2", converter.CropResizeArea2.Width);
-            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerCropHeight2", converter.CropResizeArea2.Height);
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerCropResizeImage2", (int)converter.CropResizeImage2);      // fires the checked handler which sets the readonly mode of the controls
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerCropTop2", converter.CropResizeArea2.Top);
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerCropLeft2", converter.CropResizeArea2.Left);
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerCropWidth2", converter.CropResizeArea2.Width);
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerCropHeight2", converter.CropResizeArea2.Height);
 
-            DB.UserDatabase.Instance.PutSettingInt("comboBoxScanFor", (int)InputFileExtension);
-            DB.UserDatabase.Instance.PutSettingInt("ImageHandlerFormatNr", (int)converter.OutputFileExtension);
-            DB.UserDatabase.Instance.PutSettingInt("comboBoxFileNameFormat", converter.FileNameFormat);
-            DB.UserDatabase.Instance.PutSettingInt("comboBoxSubFolder", converter.FolderNameFormat);
+            DB.UserDatabase.Instance.PutSetting("comboBoxScanFor", (int)InputFileExtension);
+            DB.UserDatabase.Instance.PutSetting("ImageHandlerFormatNr", (int)converter.OutputFileExtension);
+            DB.UserDatabase.Instance.PutSetting("comboBoxFileNameFormat", converter.FileNameFormat);
+            DB.UserDatabase.Instance.PutSetting("comboBoxSubFolder", converter.FolderNameFormat);
 
         }
 

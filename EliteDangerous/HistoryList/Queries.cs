@@ -216,7 +216,7 @@ namespace EliteDangerousCore
 
         private HistoryListQueries()
         {
-            JArray json = JArray.Parse(DB.UserDatabase.Instance.GetSettingString(DbUserQueries, ""));
+            JArray json = JArray.Parse(DB.UserDatabase.Instance.GetSetting(DbUserQueries, ""));
             if (json != null)
             {
                 foreach (var t in json)
@@ -255,7 +255,7 @@ namespace EliteDangerousCore
         {
             var list = Searches.Where(x => x.QueryType == QueryType.User).ToArray();
             JToken json = JToken.FromObject(list);
-            DB.UserDatabase.Instance.PutSettingString(DbUserQueries, json.ToString()); // allowed use
+            DB.UserDatabase.Instance.PutSetting(DbUserQueries, json.ToString()); // allowed use
             //System.IO.File.WriteAllText(@"c:\code\json.txt", json.ToString(true));
         }
 

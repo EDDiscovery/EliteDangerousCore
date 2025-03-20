@@ -502,7 +502,7 @@ namespace EliteDangerousCore
                 EDCommander hidden = new EDCommander(-1, "Hidden Log");     // -1 is the hidden commander, add to list
                 commanders[-1] = hidden;                                    // so we give back a valid entry when its selected
 
-                currentid = UserDatabase.Instance.GetSettingInt("ActiveCommander", 1);
+                currentid = UserDatabase.Instance.GetSetting("ActiveCommander", 1);
 
                 if (!commanders.ContainsKey(currentid) || commanders[currentid].Deleted)              // if not in list, or deleted (somehow without changing commander)
                 {
@@ -536,7 +536,7 @@ namespace EliteDangerousCore
             if (value != currentid && commanders.ContainsKey(value) && commanders[value].Deleted == false)  // must be there and not deleted
             {
                 currentid = value;
-                UserDatabase.Instance.PutSettingInt("ActiveCommander", value);
+                UserDatabase.Instance.PutSetting("ActiveCommander", value);
             }
         }
 
