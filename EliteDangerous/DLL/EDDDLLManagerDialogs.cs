@@ -111,8 +111,8 @@ namespace EliteDangerousCore.DLL
                 else
                 {
                     var dllcaller = FindCaller(controlname);
-                    string res = dllcaller.Config(UserDatabase.Instance.GetSettingString("DLLConfig_" + controlname,""),true);     // edit config
-                    UserDatabase.Instance.PutSettingString("DLLConfig_" + controlname, res);
+                    string res = dllcaller.Config(UserDatabase.Instance.GetSetting("DLLConfig_" + controlname,""),true);     // edit config
+                    UserDatabase.Instance.PutSetting("DLLConfig_" + controlname, res);
                     f.ReturnResult(DialogResult.Cancel);
                 }
             };

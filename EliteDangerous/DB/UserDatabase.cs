@@ -21,7 +21,7 @@ namespace EliteDangerousCore.DB
     // basic access to get and put settings
     public interface IUserDatabaseSettingsSaver
     {
-        T GetSetting<T>(string key, T defaultvalue);
+        T GetSetting<T>(string key, T defaultvalue, bool writebackifdefault = false);
         bool PutSetting<T>(string key, T value);
 
         bool DGVLoadColumnLayout(System.Windows.Forms.DataGridView dgv, string auxname = "", bool rowheaderselection = false);
@@ -81,64 +81,22 @@ namespace EliteDangerousCore.DB
             return DBWrite(db =>  db.RegisterClass.DeleteKey(key));
         }
 
-        public T GetSetting<T>(string key, T defaultvalue)
+        public T GetSetting<T>(string key, T defaultvalue, bool writebackifdefault = false)
         {
-            return DBRead(db => db.RegisterClass.GetSetting(key, defaultvalue));
+            bool usedef = false;
+
+            T value = DBRead(db => { return db.RegisterClass.GetSetting(key, defaultvalue, out usedef); });
+
+            if ( usedef && writebackifdefault )
+            {
+                DBWrite(db => db.RegisterClass.PutSetting(key, defaultvalue));
+            }
+            return value;
         }
 
-        public bool PutSetting<T>(string key, T defaultvalue)
+        public bool PutSetting<T>(string key, T value)
         {
-            return DBWrite(db => db.RegisterClass.PutSetting(key, defaultvalue));
-        }
-
-        public int GetSettingInt(string key, int defaultvalue)
-        {
-            return DBRead(db => db.RegisterClass.GetSetting(key, defaultvalue));
-        }
-
-        public bool PutSettingInt(string key, int intvalue)
-        {
-            return DBWrite(db =>  db.RegisterClass.PutSetting(key, intvalue));
-        }
-
-        public double GetSettingDouble(string key, double defaultvalue)
-        {
-            return DBRead(db =>  db.RegisterClass.GetSetting(key, defaultvalue));
-        }
-
-        public bool PutSettingDouble(string key, double doublevalue)
-        {
-            return DBWrite(db =>  db.RegisterClass.PutSetting(key, doublevalue));
-        }
-
-        public bool GetSettingBool(string key, bool defaultvalue)
-        {
-            return DBRead(db =>  db.RegisterClass.GetSetting(key, defaultvalue));
-        }
-
-        public bool PutSettingBool(string key, bool boolvalue)
-        {
-            return DBWrite(db =>  db.RegisterClass.PutSetting(key, boolvalue));
-        }
-
-        public string GetSettingString(string key, string defaultvalue)
-        {
-            return DBRead(db =>  db.RegisterClass.GetSetting(key, defaultvalue));
-        }
-
-        public bool PutSettingString(string key, string strvalue)
-        {
-            return DBWrite(db =>  db.RegisterClass.PutSetting(key, strvalue));
-        }
-
-        public DateTime GetSettingDate(string key, DateTime defaultvalue)
-        {
-            return DBRead(db =>  db.RegisterClass.GetSetting(key, defaultvalue));
-        }
-
-        public bool PutSettingDate(string key, DateTime value)
-        {
-            return DBWrite(db =>  db.RegisterClass.PutSetting(key, value));
+            return DBWrite(db => db.RegisterClass.PutSetting(key, value));
         }
 
         public void RebuildIndexes(Action<string> logger)
@@ -195,9 +153,9 @@ namespace EliteDangerousCore.DB
             root = rootname;
             ba = b;
         }
-        public T GetSetting<T>(string key, T defaultvalue)
+        public T GetSetting<T>(string key, T defaultvalue, bool writebackifdefault = false)
         {
-            return ba.GetSetting(root + key, defaultvalue);
+            return ba.GetSetting(root + key, defaultvalue, writebackifdefault);
         }
 
         public bool PutSetting<T>(string key, T value)
@@ -208,16 +166,16 @@ namespace EliteDangerousCore.DB
         public bool DGVLoadColumnLayout(DataGridView dgv, string auxname = "", bool rowheaderselection = false)
         {
             return dgv.LoadColumnSettings(root + "_DGV_" + auxname, rowheaderselection,
-                                        (a) => EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt(a, int.MinValue),
-                                        (b) => EliteDangerousCore.DB.UserDatabase.Instance.GetSettingDouble(b, double.MinValue));
+                                        (a) => EliteDangerousCore.DB.UserDatabase.Instance.GetSetting(a, int.MinValue),
+                                        (b) => EliteDangerousCore.DB.UserDatabase.Instance.GetSetting(b, double.MinValue));
         }
 
 
         public void DGVSaveColumnLayout(DataGridView dgv, string auxname = "")
         {
             dgv.SaveColumnSettings(root + "_DGV_" + auxname,
-                                        (a, b) => EliteDangerousCore.DB.UserDatabase.Instance.PutSettingInt(a, b),
-                                        (c, d) => EliteDangerousCore.DB.UserDatabase.Instance.PutSettingDouble(c, d));
+                                        (a, b) => EliteDangerousCore.DB.UserDatabase.Instance.PutSetting(a, b),
+                                        (c, d) => EliteDangerousCore.DB.UserDatabase.Instance.PutSetting(c, d));
         }
 
 

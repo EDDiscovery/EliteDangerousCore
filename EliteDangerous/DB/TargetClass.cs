@@ -21,28 +21,28 @@ namespace EliteDangerousCore.DB
 
         public static void SetTargetOnBookmark(string name, long id, double x, double y, double z)
         {
-            UserDatabase.Instance.PutSettingString("TargetPositionName", name);
-            UserDatabase.Instance.PutSettingInt("TargetPositionType", (int)TargetType.Bookmark);
-            UserDatabase.Instance.PutSettingInt("TargetPositionID", (int)id);
-            UserDatabase.Instance.PutSettingDouble("TargetPositionX", x);
-            UserDatabase.Instance.PutSettingDouble("TargetPositionY", y);
-            UserDatabase.Instance.PutSettingDouble("TargetPositionZ", z);
+            UserDatabase.Instance.PutSetting("TargetPositionName", name);
+            UserDatabase.Instance.PutSetting("TargetPositionType", (int)TargetType.Bookmark);
+            UserDatabase.Instance.PutSetting("TargetPositionID", (int)id);
+            UserDatabase.Instance.PutSetting("TargetPositionX", x);
+            UserDatabase.Instance.PutSetting("TargetPositionY", y);
+            UserDatabase.Instance.PutSetting("TargetPositionZ", z);
         }
 
         public static void SetTargetOnSystem(string name, double x, double y, double z)
         {
-            UserDatabase.Instance.PutSettingString("TargetPositionName", name);
-            UserDatabase.Instance.PutSettingInt("TargetPositionType", (int)TargetType.Star);
-            UserDatabase.Instance.PutSettingInt("TargetPositionID", -1);
-            UserDatabase.Instance.PutSettingDouble("TargetPositionX", x);
-            UserDatabase.Instance.PutSettingDouble("TargetPositionY", y);
-            UserDatabase.Instance.PutSettingDouble("TargetPositionZ", z);
+            UserDatabase.Instance.PutSetting("TargetPositionName", name);
+            UserDatabase.Instance.PutSetting("TargetPositionType", (int)TargetType.Star);
+            UserDatabase.Instance.PutSetting("TargetPositionID", (int)-1);
+            UserDatabase.Instance.PutSetting("TargetPositionX", x);
+            UserDatabase.Instance.PutSetting("TargetPositionY", y);
+            UserDatabase.Instance.PutSetting("TargetPositionZ", z);
         }
 
         public static bool SetTargetOnSystemConditional(string name, double x, double y, double z)
         {
-            string tname = EliteDangerousCore.DB.UserDatabase.Instance.GetSettingString("TargetPositionName", "");
-            TargetType tt = (TargetType)EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("TargetPositionType", (int)TargetType.None);
+            string tname = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("TargetPositionName", "");
+            TargetType tt = (TargetType)EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("TargetPositionType", (int)TargetType.None);
             if (tt != TargetType.Star || tname != name)
             {
                 SetTargetOnSystem(name, x, y, z);
@@ -54,23 +54,23 @@ namespace EliteDangerousCore.DB
 
         public static void SetTargetOnGMO(string name, long id, double x, double y, double z) 
         {
-            UserDatabase.Instance.PutSettingString("TargetPositionName", name);
-            UserDatabase.Instance.PutSettingInt("TargetPositionType", (int)TargetType.GMO);
-            UserDatabase.Instance.PutSettingInt("TargetPositionID", (int)id);
-            UserDatabase.Instance.PutSettingDouble("TargetPositionX", x);
-            UserDatabase.Instance.PutSettingDouble("TargetPositionY", y);
-            UserDatabase.Instance.PutSettingDouble("TargetPositionZ", z);
+            UserDatabase.Instance.PutSetting("TargetPositionName", name);
+            UserDatabase.Instance.PutSetting("TargetPositionType", (int)TargetType.GMO);
+            UserDatabase.Instance.PutSetting("TargetPositionID", (int)id);
+            UserDatabase.Instance.PutSetting("TargetPositionX", x);
+            UserDatabase.Instance.PutSetting("TargetPositionY", y);
+            UserDatabase.Instance.PutSetting("TargetPositionZ", z);
         }
 
         public static void ClearTarget()
         {
-            EliteDangerousCore.DB.UserDatabase.Instance.PutSettingInt("TargetPositionType", (int)TargetType.None);
+            EliteDangerousCore.DB.UserDatabase.Instance.PutSetting("TargetPositionType", (int)TargetType.None);
         }
 
         public static long GetTargetBookmarkID()      // -1 if not a bookmark or not set.
         {
-            TargetType tt = (TargetType)EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("TargetPositionType", (int)TargetType.None);
-            return (tt == TargetType.Bookmark) ? EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("TargetPositionID", 0) : -1;
+            TargetType tt = (TargetType)EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("TargetPositionType", (int)TargetType.None);
+            return (tt == TargetType.Bookmark) ? EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("TargetPositionID", 0) : -1;
         }
 
         // true if target set with its name, x/y/z.  if not set, name is null, xyz is nan
@@ -81,10 +81,10 @@ namespace EliteDangerousCore.DB
 
             if (IsTargetSet())      // use the interface
             {
-                name = UserDatabase.Instance.GetSettingString("TargetPositionName", "");
-                x = UserDatabase.Instance.GetSettingDouble("TargetPositionX", double.NaN);
-                y = UserDatabase.Instance.GetSettingDouble("TargetPositionY", double.NaN);
-                z = UserDatabase.Instance.GetSettingDouble("TargetPositionZ", double.NaN);
+                name = UserDatabase.Instance.GetSetting("TargetPositionName", "");
+                x = UserDatabase.Instance.GetSetting("TargetPositionX", double.NaN);
+                y = UserDatabase.Instance.GetSetting("TargetPositionY", double.NaN);
+                z = UserDatabase.Instance.GetSetting("TargetPositionZ", double.NaN);
                 return true;
             }
             else
@@ -93,13 +93,13 @@ namespace EliteDangerousCore.DB
 
         public static bool IsTargetSet()
         {
-            TargetType tt = (TargetType)EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("TargetPositionType", (int)TargetType.None);
+            TargetType tt = (TargetType)EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("TargetPositionType", (int)TargetType.None);
             return tt == TargetType.Star || tt == TargetType.GMO || tt == TargetType.Bookmark;          // some are now depreciated, so explicity check types allowed
         }
 
         public static TargetType GetTargetType()
         {
-            TargetType tt = (TargetType)EliteDangerousCore.DB.UserDatabase.Instance.GetSettingInt("TargetPositionType", (int)TargetType.None);
+            TargetType tt = (TargetType)EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("TargetPositionType", (int)TargetType.None);
             return tt;
         }
     }
