@@ -40,6 +40,10 @@ namespace EliteDangerousCore.JournalEvents
         public string Security_Localised { get; set; }
         public long? Population { get; set; }
         public PowerPlayDefinitions.State PowerplayState { get; set; }      // seen in CarrierJump, Location and FSDJump.  Not in docked
+        public double? PowerplayStateControlProgress { get; set; }          // update march 25
+        public double? PowerplayStateReinforcement { get; set; }            // update march 25
+        public double? PowerplayStateUndermining { get; set; }              // update march 25
+        public PowerPlayDefinitions.PowerplayConflictProgress[] PowerplayConflictProgress {get;set;}                       // update march 25
         public string[] PowerplayPowers { get; set; }
         public bool Wanted { get; set; }
         public FactionDefinitions.FactionInformation[] Factions { get; set; }      // may be null for older entries
@@ -47,8 +51,6 @@ namespace EliteDangerousCore.JournalEvents
         public ThargoidDefinitions.ThargoidWar ThargoidSystemState { get; set; }    // may be null for older entries or systems without thargoid war
         public bool HasCoordinate { get { return !float.IsNaN(StarPos.X); } }
         public bool IsTrainingEvent { get; private set; } // True if detected to be in training
-
-        public string ControllingPower { get; set; }     // only for signal types of USS
 
         protected JournalLocOrJump(DateTime utc, ISystem sys, JournalTypeEnum jtype, bool edsmsynced ) : base(utc, jtype,  edsmsynced ? (int)SyncFlags.EDSM : 0)
         {
@@ -125,6 +127,11 @@ namespace EliteDangerousCore.JournalEvents
             PowerplayState = PowerPlayDefinitions.ToEnum(evt["PowerplayState"].StrNull()); 
             PowerplayPowers = evt["Powers"]?.ToObjectQ<string[]>();
 
+            PowerplayStateControlProgress = evt["PowerplayStateControlProgress"].DoubleNull();      // update march 25
+            PowerplayStateReinforcement = evt["PowerplayStateReinforcement"].DoubleNull();
+            PowerplayStateUndermining = evt["PowerplayStateUndermining"].DoubleNull();
+            PowerplayConflictProgress = evt["PowerplayConflictProgress"]?.ToObjectQ<PowerPlayDefinitions.PowerplayConflictProgress[]>();
+
             Wanted = evt["Wanted"].Bool();      // if absence, your not wanted, by definition of frontier in journal (only present if wanted, see docked)
 
             if (evt.Contains("Conflicts"))      // if contains conflicts
@@ -134,8 +141,25 @@ namespace EliteDangerousCore.JournalEvents
                 ThargoidSystemState = ThargoidDefinitions.ThargoidWar.ReadJSON(evt, EventTimeUTC);
 
         }
+        public bool HasFactionPowerPlayInfo { get {
+                return PowerplayState != PowerPlayDefinitions.State.Unknown || PowerplayPowers != null ||
+                     PowerplayStateControlProgress != null || PowerplayStateReinforcement != null || PowerplayStateUndermining != null; } }
 
-        public void FillFactionConflictThargoidInfo(StringBuilder sb)
+        public void FillPowerInfo(StringBuilder sb)
+        {
+            string powerplaystr = PowerplayPowers != null ? string.Join(",", PowerplayPowers) : null;
+
+            sb.Build("Power play State: ".T(EDCTx.JournalEntry_Power), PowerplayState,
+                     "Power play Powers: " , powerplaystr,
+                     "Power Control Progress: ", PowerplayStateControlProgress,
+                     "Power Reinforcement: ", PowerplayStateReinforcement,
+                     "Power Undermining: ", PowerplayStateUndermining
+                    );
+        }
+
+        public bool HasFactionConflictThargoidPowerPlayInfo { get { return Factions != null || Conflicts != null || ThargoidSystemState != null || PowerplayConflictProgress != null; } }
+
+        public void FillFactionConflictThargoidPowerPlayConflictInfo(StringBuilder sb)
         {
             if (Factions != null)
             {
@@ -147,15 +171,21 @@ namespace EliteDangerousCore.JournalEvents
 
             if ( Conflicts != null )
             {
-                foreach( var cf in Conflicts)
+                foreach ( var cf in Conflicts)
                 {
                     cf.ToString(sb);
                 }
             }
 
-            if ( ThargoidSystemState != null )
+            if (ThargoidSystemState != null)
             {
                 ThargoidSystemState.ToString(sb);
+            }
+
+            if (PowerplayConflictProgress != null)
+            {
+                foreach (var pcp in PowerplayConflictProgress)
+                    pcp.ToString(sb);
             }
         }
 
@@ -264,7 +294,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? InSRV { get; set; }
         public bool? OnFoot { get; set; }
 
-        public override string SummaryName(ISystem sys) 
+        public override string SummaryName(ISystem sys)     // Location
         {
             if (Docked)
                 return string.Format("At {0}".T(EDCTx.JournalLocation_AtStat), StationName);
@@ -281,7 +311,7 @@ namespace EliteDangerousCore.JournalEvents
 
         }
 
-        public override string GetInfo()
+        public override string GetInfo()        // Location
         {
             if (Docked)
             {
@@ -298,29 +328,34 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public override string GetDetailed()
+        public override string GetDetailed() // Location
         {
+            StringBuilder sb = new StringBuilder();
+
             if (Docked)
             {
-                StringBuilder sb = new StringBuilder();
                 sb.Build("<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted,
-                            "Faction: ".T(EDCTx.JournalLocOrJump_Faction), StationFaction,
-                            "State: ".T(EDCTx.JournalLocOrJump_State), StationFactionStateTranslated,
-                            "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance),
-                            "Economy: ".T(EDCTx.JournalLocOrJump_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),
-                            "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(Government),
-                            "Security: ".T(EDCTx.JournalLocOrJump_Security), SecurityDefinitions.ToLocalisedLanguage(Security),
-                            "Power: ".T(EDCTx.JournalEntry_Power), ControllingPower);
-
-                if (Factions != null)
-                {
-                    sb.AppendCR();
-                    FillFactionConflictThargoidInfo(sb);
-                }
-                return sb.ToString();
+                        "Faction: ".T(EDCTx.JournalLocOrJump_Faction), StationFaction,
+                        "State: ".T(EDCTx.JournalLocOrJump_State), StationFactionStateTranslated,
+                        "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance),
+                        "Economy: ".T(EDCTx.JournalLocOrJump_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),
+                        "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(Government),
+                        "Security: ".T(EDCTx.JournalLocOrJump_Security), SecurityDefinitions.ToLocalisedLanguage(Security));
             }
-            else
-                return null;
+
+            if (HasFactionPowerPlayInfo)
+            {
+                sb.AppendCR();
+                FillPowerInfo(sb);
+            }
+
+            if (HasFactionConflictThargoidPowerPlayInfo)
+            {
+                sb.AppendCR();
+                FillFactionConflictThargoidPowerPlayConflictInfo(sb);
+            }
+
+            return sb.Length>0 ? sb.ToString() : null;
         }
 
         public void AddStarScan(StarScan s, ISystem system)
@@ -392,21 +427,27 @@ namespace EliteDangerousCore.JournalEvents
             s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
-        public override string GetInfo()
+        public override string GetInfo()        // carrier jump
         {
             return BaseUtils.FieldBuilder.Build("Type ".T(EDCTx.JournalLocOrJump_Type), StationDefinitions.ToLocalisedLanguage(FDStationType),
                                                     "< in system ".T(EDCTx.JournalLocOrJump_insystem), StarSystem);
         }
 
-        public override string GetDetailed()
+        public override string GetDetailed()    // carrier jump
         {
             StringBuilder sb = new StringBuilder();
             sb.Build("<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted);
 
-            if (Factions != null)
+            if (HasFactionPowerPlayInfo)
             {
-                sb.AppendCR(); 
-                FillFactionConflictThargoidInfo(sb);
+                sb.AppendCR();
+                FillPowerInfo(sb);
+            }
+
+            if (HasFactionConflictThargoidPowerPlayInfo)
+            {
+                sb.AppendCR();
+                FillFactionConflictThargoidPowerPlayConflictInfo(sb);
             }
 
             return sb.ToString();
@@ -466,7 +507,7 @@ namespace EliteDangerousCore.JournalEvents
             s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
-        public override string GetInfo()
+        public override string GetInfo()        // fsdjump
         {
             double? tempdist = JumpDist > 0 ? JumpDist : default(double?);
             double? tempused = FuelUsed > 0 ? FuelUsed : default(double?);
@@ -483,23 +524,23 @@ namespace EliteDangerousCore.JournalEvents
                     "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(FactionState),
                     "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
                     "Economy: ".T(EDCTx.JournalLocOrJump_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),
-                    "Population: ".T(EDCTx.JournalLocOrJump_Population), Population,
-                    "Power: ".T(EDCTx.JournalEntry_Power), ControllingPower);
+                    "Population: ".T(EDCTx.JournalLocOrJump_Population), Population);
+            }
+            
+            if (HasFactionPowerPlayInfo)
+            {
+                sb.AppendCR();
+                FillPowerInfo(sb);
             }
 
             return sb.ToString();
         }
 
-        public override string GetDetailed()
+        public override string GetDetailed()        // fsdjump
         {
-            if (Factions != null)
-            {
-                StringBuilder sb = new StringBuilder();
-                FillFactionConflictThargoidInfo(sb);
-                return sb.ToString();
-            }
-            else
-                return null;
+            StringBuilder sb = new StringBuilder();
+            FillFactionConflictThargoidPowerPlayConflictInfo(sb);
+            return sb.Length>0 ? sb.ToString() : null;
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
