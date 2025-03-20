@@ -27,6 +27,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalDocked(JObject evt ) : base(evt, JournalTypeEnum.Docked)
         {
             StationName = evt["StationName"].Str();
+            StationName_Localised = JournalFieldNaming.CheckLocalisation(evt["StationName_Localised"].Str(), evt["StationName"].Str());
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());  // may not be there
             StationType = StationDefinitions.ToEnglish(FDStationType);
             StationState = StationDefinitions.StarportStateToEnum( evt["StationState"].Str("None") );    // missed, added, nov 22, only on bad starports.  Default None
@@ -71,6 +72,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StationName { get; set; }
+        public string StationName_Localised { get; set; }
         public string StationType { get; set; } // english, only on later events, else Unknown
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public StationDefinitions.StarportState StationState { get; set; }            // fdname, only present in stations not normal - UnderAttack, Damaged, UnderRepairs. None otherwise
@@ -116,7 +118,7 @@ namespace EliteDangerousCore.JournalEvents
             public int Large;
         };
 
-        public override string SummaryName(ISystem sys) { return string.Format("At {0}".T(EDCTx.JournalDocked_At), StationName); }
+        public override string SummaryName(ISystem sys) { return string.Format("At {0}".T(EDCTx.JournalDocked_At), StationName_Localised); }
 
         public override string GetInfo()
         {
@@ -167,19 +169,21 @@ namespace EliteDangerousCore.JournalEvents
         public JournalDockingCancelled(JObject evt) : base(evt, JournalTypeEnum.DockingCancelled)
         {
             StationName = evt["StationName"].Str();
+            StationName_Localised = JournalFieldNaming.CheckLocalisation(evt["StationName_Localised"].Str(), evt["StationName"].Str());
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());  // may not be there
             StationType = StationDefinitions.ToEnglish(FDStationType);
             MarketID = evt["MarketID"].LongNull();
         }
 
         public string StationName { get; set; }
+        public string StationName_Localised { get; set; }
         public string StationType { get; set; } // english, only on later events, else Unknown
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
         public override string GetInfo()
         {
-            return StationName;
+            return StationName_Localised;
         }
     }
 
@@ -189,6 +193,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalDockingDenied(JObject evt) : base(evt, JournalTypeEnum.DockingDenied)
         {
             StationName = evt["StationName"].Str();
+            StationName_Localised = JournalFieldNaming.CheckLocalisation(evt["StationName_Localised"].Str(), evt["StationName"].Str());
             FDReason = evt["Reason"].Str();
             Reason = JournalFieldNaming.DockingDeniedReason(FDReason);
             FDStationType = StationDefinitions.StarportTypeToEnum( evt["StationType"].StrNull());  // may not be there
@@ -196,7 +201,8 @@ namespace EliteDangerousCore.JournalEvents
             MarketID = evt["MarketID"].LongNull();
         }
 
-        public string StationName { get; set; } 
+        public string StationName { get; set; }
+        public string StationName_Localised { get; set; }
         public string Reason { get; set; }      // friendly reason make cleaner
         public string FDReason { get; set; }    // frontier ID
         public string StationType { get; set; } // english, only on later events, else Unknown
@@ -205,7 +211,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", StationName, "", Reason);
+            return BaseUtils.FieldBuilder.Build("", StationName_Localised, "", Reason);
         }
     }
 
@@ -215,6 +221,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalDockingGranted(JObject evt) : base(evt, JournalTypeEnum.DockingGranted)
         {
             StationName = evt["StationName"].Str();
+            StationName_Localised = JournalFieldNaming.CheckLocalisation(evt["StationName_Localised"].Str(), evt["StationName"].Str());
             LandingPad = evt["LandingPad"].Int();
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());    // may not be there
             StationType = StationDefinitions.ToEnglish(FDStationType);
@@ -222,6 +229,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StationName { get; set; }
+        public string StationName_Localised { get; set; }
         public int LandingPad { get; set; }
         public string StationType { get; set; } // english, only on later events, else Unknown
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
@@ -229,7 +237,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", StationName, "< on pad ".T(EDCTx.JournalEntry_onpad), LandingPad, "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType));
+            return BaseUtils.FieldBuilder.Build("", StationName_Localised, "< on pad ".T(EDCTx.JournalEntry_onpad), LandingPad, "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType));
         }
     }
 
@@ -239,6 +247,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalDockingRequested(JObject evt) : base(evt, JournalTypeEnum.DockingRequested)
         {
             StationName = evt["StationName"].Str();
+            StationName_Localised = JournalFieldNaming.CheckLocalisation(evt["StationName_Localised"].Str(), evt["StationName"].Str());
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());        // may not be there in earlier ones
             StationType = StationDefinitions.ToEnglish(FDStationType);
             MarketID = evt["MarketID"].LongNull();
@@ -246,6 +255,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StationName { get; set; }
+        public string StationName_Localised { get; set; }
         public string StationType { get; set; } // english, only on later events, else Unknown
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
@@ -253,7 +263,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return StationName;
+            return StationName_Localised;
         }
     }
 
@@ -263,19 +273,21 @@ namespace EliteDangerousCore.JournalEvents
         public JournalDockingTimeout(JObject evt) : base(evt, JournalTypeEnum.DockingTimeout)
         {
             StationName = evt["StationName"].Str();
+            StationName_Localised = JournalFieldNaming.CheckLocalisation(evt["StationName_Localised"].Str(), evt["StationName"].Str());
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull()); // may not be present
             StationType = StationDefinitions.ToEnglish(FDStationType);
             MarketID = evt["MarketID"].LongNull();
         }
 
         public string StationName { get; set; }
+        public string StationName_Localised { get; set; }
         public string StationType { get; set; } // english, only on later events, else Unknown
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
 
         public override string GetInfo()
         {
-            return StationName;
+            return StationName_Localised;
         }
     }
 
@@ -286,6 +298,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalUndocked(JObject evt) : base(evt, JournalTypeEnum.Undocked)
         {
             StationName = evt["StationName"].Str();
+            StationName_Localised = JournalFieldNaming.CheckLocalisation(evt["StationName_Localised"].Str(), evt["StationName"].Str());
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());  // may not be there
             StationType = StationDefinitions.ToEnglish(FDStationType);
             MarketID = evt["MarketID"].LongNull();
@@ -294,6 +307,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StationName { get; set; }
+        public string StationName_Localised { get; set; }
         public string StationType { get; set; } // english, only on later events, else Unknown
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }
@@ -303,7 +317,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", StationName, "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType));
+            return BaseUtils.FieldBuilder.Build("", StationName_Localised, "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType));
         }
     }
 
