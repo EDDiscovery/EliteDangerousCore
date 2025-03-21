@@ -304,7 +304,9 @@ namespace EliteDangerousCore
             {
                 public string Name { get; set; }        // faction name
                 public string Stake { get; set; }
+                public string Stake_Localised { get; set; }
                 public int WonDays { get; set; }
+                public string StakeLoc { get { return Stake_Localised.HasChars() ? Stake_Localised : Stake; } }
             }
 
 
@@ -343,9 +345,22 @@ namespace EliteDangerousCore
             {
                 sb.AppendLine($"Conflict: {WarType.ToString().SplitCapsWordFull()}, {Status.ToString().SplitCapsWordFull()} : {Faction1.Name} vs {Faction2.Name}");
                 sb.AppendLine($"  Won days: {Faction1.WonDays} vs {Faction2.WonDays}");
-                string s = BaseUtils.FieldBuilder.Build($"  Stake: ", Faction1.Stake, "< vs ", Faction2.Stake);
-                if (s != null)
-                    sb.AppendLine(s);
+                if ( Faction1.StakeLoc.HasChars() )
+                {
+                    sb.Append("  Stake: ");
+                    sb.Append(Faction1.StakeLoc);
+
+                    if (Faction2.StakeLoc.HasChars())
+                    {
+                        sb.Append(" vs ");
+                        sb.Append(Faction2.StakeLoc);
+                    }
+                }
+                else if (Faction2.StakeLoc.HasChars())
+                {
+                    sb.Append("  Stake: ");
+                    sb.Append(Faction2.StakeLoc);
+                }
             }
         }
     }

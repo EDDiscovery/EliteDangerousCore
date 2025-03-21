@@ -191,6 +191,8 @@ namespace EliteDangerousCore
         PowerplayFastTrack = 600,
         PowerplayJoin = 610,
         PowerplayLeave = 620,
+        PowerplayMerits = 625,
+        PowerplayRank = 627,
         PowerplaySalary = 630,
         PowerplayVote = 640,
         PowerplayVoucher = 650,

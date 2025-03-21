@@ -25,7 +25,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalEDDCommodityPrices(JObject evt) : base(evt, JournalTypeEnum.EDDCommodityPrices)
         {
-            Station = evt["station"].Str();         
+            Station = evt["station"].Str();
+            Station_Localised = JournalFieldNaming.CheckLocalisation(evt["station_localised"].Str(), Station);
             StarSystem = evt["starsystem"].Str();
             MarketID = evt["MarketID"].LongNull();
             Rescan(evt["commodities"].Array());
@@ -47,8 +48,8 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public JournalEDDCommodityPrices(System.DateTime utc, long? marketid, string station, string starsystem, int cmdrid, JArray commds) :
-                                        base(utc, JournalTypeEnum.EDDCommodityPrices, marketid, station, starsystem, cmdrid)
+        public JournalEDDCommodityPrices(System.DateTime utc, long? marketid, string station, string station_localised, string starsystem, int cmdrid, JArray commds) :
+                                        base(utc, JournalTypeEnum.EDDCommodityPrices, marketid, station, station_localised, starsystem, cmdrid)
         {
             Rescan(commds);
         }
@@ -61,6 +62,7 @@ namespace EliteDangerousCore.JournalEvents
                 ["event"] = EventTypeStr,
                 ["starsystem"] = StarSystem,
                 ["station"] = Station,
+                ["station_localised"] = Station_Localised,
                 ["MarketID"] = MarketID,
                 ["commodities"] = JToken.FromObject(Commodities, true)
             };
@@ -75,17 +77,19 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public JournalCommodityPricesBase(System.DateTime utc, JournalTypeEnum type, long? marketid, string station, string starsystem, int cmdrid)
+        public JournalCommodityPricesBase(System.DateTime utc, JournalTypeEnum type, long? marketid, string station, string station_localised, string starsystem, int cmdrid)
                                             : base(utc, type)
         {
             MarketID = marketid;
             Station = station;
+            Station_Localised = station_localised;
             StarSystem = starsystem;
             Commodities = new List<CCommodities>(); // always made..
             SetCommander(cmdrid);
         }
 
         public string Station { get; protected set; }
+        public string Station_Localised { get; set; }
         public string StationType { get; protected set; } // may be "Unknown" on older events, and from CAPI
         public StationDefinitions.StarportTypes FDStationType { get; protected set; }         // FDName, may be null on older events, and from CAPI
         public string CarrierDockingAccess { get; protected set; }  // will be null when not in carrier or from CAPI
@@ -99,7 +103,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("Prices on ; items".T(EDCTx.JournalCommodityPricesBase_PON), Commodities.Count,
-                                                "< at ".T(EDCTx.JournalCommodityPricesBase_CPBat), Station,
+                                                "< at ".T(EDCTx.JournalCommodityPricesBase_CPBat), Station_Localised ?? Station,
                                                 "< in ".T(EDCTx.JournalCommodityPricesBase_CPBin), StarSystem);
         }
 
