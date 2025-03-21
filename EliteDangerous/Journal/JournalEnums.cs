@@ -51,6 +51,7 @@ namespace EliteDangerousCore
         CarrierFinance = 1335,
         CarrierJumpRequest = 1340,
         CarrierJump = 1345,
+        CarrierLocation = 1346,
         CarrierModulePack = 1350,
         CarrierShipPack = 1355,
         CarrierStats = 1360,
