@@ -45,6 +45,7 @@ namespace EliteDangerousCore.JournalEvents
         public double? PowerplayStateUndermining { get; set; }              // update march 25
         public PowerPlayDefinitions.PowerplayConflictProgress[] PowerplayConflictProgress {get;set;}                       // update march 25
         public string[] PowerplayPowers { get; set; }
+        public string ControllingPower { get; set; }
         public bool Wanted { get; set; }
         public FactionDefinitions.FactionInformation[] Factions { get; set; }      // may be null for older entries
         public FactionDefinitions.ConflictInfo[] Conflicts { get; set; }           // may be null for older entries
@@ -124,6 +125,8 @@ namespace EliteDangerousCore.JournalEvents
 
             Population = evt["Population"].LongNull();
 
+            ControllingPower = evt["ControllingPower"].StrNull();
+
             PowerplayState = PowerPlayDefinitions.ToEnum(evt["PowerplayState"].StrNull()); 
             PowerplayPowers = evt["Powers"]?.ToObjectQ<string[]>();
 
@@ -141,23 +144,36 @@ namespace EliteDangerousCore.JournalEvents
                 ThargoidSystemState = ThargoidDefinitions.ThargoidWar.ReadJSON(evt, EventTimeUTC);
 
         }
-        public bool HasFactionPowerPlayInfo { get {
-                return PowerplayState != PowerPlayDefinitions.State.Unknown || PowerplayPowers != null ||
-                     PowerplayStateControlProgress != null || PowerplayStateReinforcement != null || PowerplayStateUndermining != null; } }
+        public bool HasPowerPlayInfo { get {
+                return ControllingPower != null ||  PowerplayState != PowerPlayDefinitions.State.Unknown || PowerplayPowers != null ||
+                     PowerplayStateControlProgress != null || PowerplayStateReinforcement != null || PowerplayStateUndermining != null || PowerplayConflictProgress != null; } }
 
         public void FillPowerInfo(StringBuilder sb)
         {
-            string powerplaystr = PowerplayPowers != null ? string.Join(",", PowerplayPowers) : null;
+            string powerplaystr = PowerplayPowers != null ? string.Join(", ", PowerplayPowers) : null;
 
-            sb.Build("Power play State: ".T(EDCTx.JournalEntry_Power), PowerplayState,
+            sb.Build("Power: ".T(EDCTx.JournalEntry_Power), ControllingPower,
+                    "Power play State: ".T(EDCTx.JournalEntry_Power), PowerplayState,
                      "Power play Powers: " , powerplaystr,
                      "Power Control Progress: ", PowerplayStateControlProgress,
                      "Power Reinforcement: ", PowerplayStateReinforcement,
                      "Power Undermining: ", PowerplayStateUndermining
                     );
+
+            if (PowerplayConflictProgress != null)
+            {
+                sb.AppendCR();
+                sb.Append("Powerplay Conflict Progress: ");
+                for(int i = 0; i < PowerplayConflictProgress.Length; i++)
+                {
+                    PowerplayConflictProgress[i].ToString(sb);
+                    if (i < PowerplayConflictProgress.Length - 1)
+                        sb.AppendCS();
+                }
+            }
         }
 
-        public bool HasFactionConflictThargoidPowerPlayInfo { get { return Factions != null || Conflicts != null || ThargoidSystemState != null || PowerplayConflictProgress != null; } }
+        public bool HasFactionConflictThargoidInfo { get { return Factions != null || Conflicts != null || ThargoidSystemState != null; } }
 
         public void FillFactionConflictThargoidPowerPlayConflictInfo(StringBuilder sb)
         {
@@ -182,11 +198,6 @@ namespace EliteDangerousCore.JournalEvents
                 ThargoidSystemState.ToString(sb);
             }
 
-            if (PowerplayConflictProgress != null)
-            {
-                foreach (var pcp in PowerplayConflictProgress)
-                    pcp.ToString(sb);
-            }
         }
 
         public void UpdateStats(Stats stats, ISystem system, string stationfaction)
@@ -343,13 +354,13 @@ namespace EliteDangerousCore.JournalEvents
                         "Security: ".T(EDCTx.JournalLocOrJump_Security), SecurityDefinitions.ToLocalisedLanguage(Security));
             }
 
-            if (HasFactionPowerPlayInfo)
+            if (HasPowerPlayInfo)
             {
                 sb.AppendCR();
                 FillPowerInfo(sb);
             }
 
-            if (HasFactionConflictThargoidPowerPlayInfo)
+            if (HasFactionConflictThargoidInfo)
             {
                 sb.AppendCR();
                 FillFactionConflictThargoidPowerPlayConflictInfo(sb);
@@ -438,13 +449,13 @@ namespace EliteDangerousCore.JournalEvents
             StringBuilder sb = new StringBuilder();
             sb.Build("<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted);
 
-            if (HasFactionPowerPlayInfo)
+            if (HasPowerPlayInfo)
             {
                 sb.AppendCR();
                 FillPowerInfo(sb);
             }
 
-            if (HasFactionConflictThargoidPowerPlayInfo)
+            if (HasFactionConflictThargoidInfo)
             {
                 sb.AppendCR();
                 FillFactionConflictThargoidPowerPlayConflictInfo(sb);
@@ -527,7 +538,7 @@ namespace EliteDangerousCore.JournalEvents
                     "Population: ".T(EDCTx.JournalLocOrJump_Population), Population);
             }
             
-            if (HasFactionPowerPlayInfo)
+            if (HasPowerPlayInfo)
             {
                 sb.AppendCR();
                 FillPowerInfo(sb);

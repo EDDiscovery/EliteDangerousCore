@@ -68,11 +68,9 @@ namespace EliteDangerousCore
 
             public void ToString(System.Text.StringBuilder sb)
             {
-                sb.Append("Powerplay Conflict Progress: ");
                 sb.Append(Power);
                 sb.Append('=');
                 sb.Append(ConflictProgress);
-                sb.AppendCR();
             }
         }
 
