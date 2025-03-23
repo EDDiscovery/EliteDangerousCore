@@ -61,6 +61,19 @@ namespace EliteDangerousCore
             return BaseUtils.Translator.Instance.Translate(ToEnglish(sc), id);
         }
 
+        public class PowerplayConflictProgress
+        {
+            public string Power { get; set; }
+            public double ConflictProgress { get; set; }
+
+            public void ToString(System.Text.StringBuilder sb)
+            {
+                sb.Append(Power);
+                sb.Append('=');
+                sb.Append(ConflictProgress);
+            }
+        }
+
     }
 }
 
