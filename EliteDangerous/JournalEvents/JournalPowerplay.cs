@@ -251,5 +251,54 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [JournalEntryType(JournalTypeEnum.PowerplayMerits)]
+    public class JournalPowerplayMerits : JournalEntry
+    {
+        public JournalPowerplayMerits(JObject evt) : base(evt, JournalTypeEnum.PowerplayMerits)
+        {
+            Power = evt["Power"].Str();
+            MeritsGained = evt["MeritsGained"].Double();
+            TotalMerits = evt["TotalMerits"].Double();
+        }
+
+        public string Power { get; set; }
+        public double MeritsGained { get; set; }
+        public double TotalMerits { get; set; }
+
+        public override string GetInfo()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append(Power);
+            sb.Append(" + ");
+            sb.Append(MeritsGained);
+            sb.Append(" = ");
+            sb.Append(TotalMerits);
+            return sb.ToString();
+        }
+    }
+
+
+    [JournalEntryType(JournalTypeEnum.PowerplayRank)]
+    public class JournalPowerplayRank : JournalEntry
+    {
+        public JournalPowerplayRank(JObject evt) : base(evt, JournalTypeEnum.PowerplayRank)
+        {
+            Power = evt["Power"].Str();
+            Rank = evt["Rank"].Int();
+        }
+
+        public string Power { get; set; }
+        public int Rank { get; set; }
+
+        public override string GetInfo()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append(Power);
+            sb.Append(" ");
+            sb.Append(Rank);
+            return sb.ToString();
+        }
+    }
+
 
 }

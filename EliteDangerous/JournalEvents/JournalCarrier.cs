@@ -1004,5 +1004,32 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasItemToBuy(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.HasStock) >= 0; }
         public bool HasItemToSell(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.HasDemandAndPrice) >= 0; }
     }
+
+    [JournalEntryType(JournalTypeEnum.CarrierLocation)]
+    public class JournalCarrierLocation : JournalEntry, ICarrierStats
+    {
+        public long CarrierID { get; set; }
+        public string StarSystem { get; set; }
+        public long SystemAddress { get; set; }
+        public int BodyID { get; set; }         // will be 0 or the body id
+
+        public JournalCarrierLocation(JObject evt) : base(evt, JournalTypeEnum.CarrierLocation)
+        {
+            CarrierID = evt["CarrierID"].Long();
+            StarSystem = evt["StarSystem"].Str("Unknown");
+            SystemAddress = evt["SystemAddress"].Long();
+            BodyID = evt["BodyID"].Int();
+        }
+
+        public override string GetInfo()
+        {
+            return "@ " + StarSystem;
+        }
+
+        public void UpdateCarrierStats(CarrierStats s, bool _)
+        {
+        }
+    }
+
 }
 

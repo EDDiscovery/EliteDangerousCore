@@ -118,7 +118,19 @@ namespace EliteDangerousCore.EDDN
             ["Population"] = true,
             ["PowerplayState"] = true,
             ["ControllingPower"] = true,
+            ["PowerplayState"] = true,
             ["Powers"] = "[]",
+            ["PowerplayStateControlProgress"] = true,
+            ["PowerplayStateReinforcement"] = true,
+            ["PowerplayStateUndermining"] = true,
+            ["PowerplayConflictProgress"] = new JArray
+            {
+                new JObject
+                {
+                    ["Power"] = true,
+                    ["ConflictProgress"] = true,
+                }
+            },
             ["Factions"] = new JArray
             {
                 new JObject
