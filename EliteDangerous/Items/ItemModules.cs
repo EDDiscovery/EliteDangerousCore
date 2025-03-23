@@ -6677,6 +6677,7 @@ namespace EliteDangerousCore
                 {"paintjob_mandalay_blackfriday_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay Black Friday 4") },
                 {"paintjob_mandalay_blackfriday_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay Black Friday 5") },
                 {"paintjob_mandalay_blackfriday_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay Black Friday 6") },
+                {"paintjob_mandalay_metallic_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay Metallic Chrome") },
                 {"paintjob_mandalay_metallic_gold", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay Metallic Gold") },
                 {"paintjob_mandalay_metallic2_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay Metallic 2 Chrome") },
                 {"paintjob_mandalay_metallic2_gold", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay Metallic 2 Gold") },

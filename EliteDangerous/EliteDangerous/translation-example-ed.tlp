@@ -92,6 +92,40 @@ SECTION MaterialCommodityMicroResourceType
 .Weapons: "Weapons" @
 .PowerPlay: "Power Play" @
 .Drones: "Drones" @
+.EncodedGuardian: "Encoded Guardian" @
+.EncodedGuardianObelisk: "Encoded Guardian Obelisk" @
+.EncodedThargoid1: "Encoded Thargoid 1" @
+.EncodedThargoid2: "Encoded Thargoid 2" @
+.ManufacturedGuardian: "Manufactured Guardian" @
+.ManufacturedThargoid1: "Manufactured Thargoid 1" @
+.ManufacturedThargoid2: "Manufactured Thargoid 2" @
+.ManufacturedThargoid3: "Manufactured Thargoid 3" @
+.ManufacturedThargoid4: "Manufactured Thargoid 4" @
+.RawCategory1: "Raw Category 1" @
+.RawCategory2: "Raw Category 2" @
+.RawCategory3: "Raw Category 3" @
+.RawCategory4: "Raw Category 4" @
+.RawCategory5: "Raw Category 5" @
+.RawCategory6: "Raw Category 6" @
+.RawCategory7: "Raw Category 7" @
+.EncodedEmissionData: "Encoded Emission Data" @
+.EncodedWakeScans: "Encoded Wake Scans" @
+.EncodedShieldData: "Encoded Shield Data" @
+.EncodedEncryptionFiles: "Encoded Encryption Files" @
+.EncodedDataArchives: "Encoded Data Archives" @
+.EncodedFirmware: "Encoded Firmware" @
+.ManufacturedChemical: "Manufactured Chemical" @
+.ManufacturedThermic: "Manufactured Thermic" @
+.ManufacturedHeat: "Manufactured Heat" @
+.ManufacturedConductive: "Manufactured Conductive" @
+.ManufacturedMechanicalComponents: "Manufactured Mechanical Components" @
+.ManufacturedCapacitors: "Manufactured Capacitors" @
+.ManufacturedShielding: "Manufactured Shielding" @
+.ManufacturedComposite: "Manufactured Composite" @
+.ManufacturedCrystals: "Manufactured Crystals" @
+.ManufacturedAlloys: "Manufactured Alloys" @
+.NA: "NA" @
+
 .carbon: "Carbon" @
 .iron: "Iron" @
 .nickel: "Nickel" @
@@ -633,30 +667,6 @@ SECTION MaterialCommodityMicroResourceType
 .m3_tissuesample_spores: "Mollusc Spores" @
 .s6_tissuesample_coenosarc: "Pod Shell Tissue" @
 .apavietii: "Apa Vietii" @
-.RawCategory1: "Raw Category 1" @
-.RawCategory2: "Raw Category 2" @
-.RawCategory3: "Raw Category 3" @
-.RawCategory4: "Raw Category 4" @
-.RawCategory5: "Raw Category 5" @
-.RawCategory6: "Raw Category 6" @
-.RawCategory7: "Raw Category 7" @
-.EncodedEmissionData: "Encoded Emission Data" @
-.EncodedWakeScans: "Encoded Wake Scans" @
-.EncodedShieldData: "Encoded Shield Data" @
-.EncodedEncryptionFiles: "Encoded Encryption Files" @
-.EncodedDataArchives: "Encoded Data Archives" @
-.EncodedFirmware: "Encoded Firmware" @
-.ManufacturedChemical: "Manufactured Chemical" @
-.ManufacturedThermic: "Manufactured Thermic" @
-.ManufacturedHeat: "Manufactured Heat" @
-.ManufacturedConductive: "Manufactured Conductive" @
-.ManufacturedMechanicalComponents: "Manufactured Mechanical Components" @
-.ManufacturedCapacitors: "Manufactured Capacitors" @
-.ManufacturedShielding: "Manufactured Shielding" @
-.ManufacturedComposite: "Manufactured Composite" @
-.ManufacturedCrystals: "Manufactured Crystals" @
-.ManufacturedAlloys: "Manufactured Alloys" @
-.NA: "NA" @
 .tritium: "Tritium" @
 .s6_tissuesample_mesoglea: "Pod Mesoglea" @
 .s6_tissuesample_cells: "Pod Outer Tissue" @
@@ -923,17 +933,8 @@ SECTION MaterialCommodityMicroResourceType
 .tg_structuraldata02: "Thargoid Capital Ship Data" @
 .searchrescuevoucher: "Search and Rescue Voucher" @
 .unknowncorechip: "Tactical Core Chip" @
-.EncodedGuardian: "Encoded Guardian" @
-.EncodedGuardianObelisk: "Encoded Guardian Obelisk" @
-.EncodedThargoid1: "Encoded Thargoid 1" @
-.EncodedThargoid2: "Encoded Thargoid 2" @
-.ManufacturedGuardian: "Manufactured Guardian" @
-.ManufacturedThargoid1: "Manufactured Thargoid 1" @
-.ManufacturedThargoid2: "Manufactured Thargoid 2" @
-.ManufacturedThargoid3: "Manufactured Thargoid 3" @
-.ManufacturedThargoid4: "Manufactured Thargoid 4" @
-.Steel: "Steel" @
-.Haematite: "Haematite" @
+.steel: "Steel" @
+.haematite: "Haematite" @
 
 SECTION EngineeringData
 

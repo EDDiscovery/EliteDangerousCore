@@ -265,6 +265,9 @@ SECTION JournalTypeEnum
 .NavRouteClear: "Nav Route Clear" @
 .ShipRedeemed: "Ship Redeemed" @
 .ShipyardRedeem: "Shipyard Redeem" @
+.PowerplayMerits: "Powerplay Merits" @
+.PowerplayRank: "Powerplay Rank" @
+.CarrierLocation: "Carrier location" @
 
 
 SECTION JournalCargo
