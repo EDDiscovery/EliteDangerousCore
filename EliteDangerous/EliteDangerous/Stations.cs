@@ -105,6 +105,7 @@ namespace EliteDangerousCore
             ["colonisationcontribution"] = StationServices.ConstructionServices,
             ["refinery"] = StationServices.RefineryContact,
             ["registeringcolonisation"] = StationServices.SystemColonisation,
+
         };
 
 
@@ -184,6 +185,7 @@ namespace EliteDangerousCore
             CraterPort,
             SpaceConstructionDepot,
             PlanetaryConstructionDepot,
+            DockablePlanetStation,
         }
 
         // maps the StationType field to an enum.
