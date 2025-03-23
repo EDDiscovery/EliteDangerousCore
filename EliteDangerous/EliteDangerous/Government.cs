@@ -38,6 +38,7 @@ namespace EliteDangerousCore
             Theocracy,
             Engineer,
             Carrier,
+            Undefined,
         }
 
         // maps the $government_id; to an enum

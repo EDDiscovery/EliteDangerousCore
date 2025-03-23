@@ -1162,6 +1162,7 @@ SECTION GovernmentTypes
 .Theocracy: "Theocracy" @
 .Engineer: "Engineer" @
 .Carrier: "Carrier" @
+.Undefined: "Undefined" @
 
 SECTION EconomyTypes
 
@@ -1219,6 +1220,7 @@ SECTION StarportTypes
 .CraterPort: "Crater Port" @
 .SpaceConstructionDepot : "Space Construction Depot" @
 .PlanetaryConstructionDepot: "Planetary Construction Depot" @
+.DockablePlanetStation: "Dockable Planet Station" @
 
 SECTION PowerPlayStates
 

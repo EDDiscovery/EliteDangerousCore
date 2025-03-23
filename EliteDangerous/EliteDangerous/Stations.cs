@@ -185,6 +185,7 @@ namespace EliteDangerousCore
             CraterPort,
             SpaceConstructionDepot,
             PlanetaryConstructionDepot,
+            DockablePlanetStation,
         }
 
         // maps the StationType field to an enum.
