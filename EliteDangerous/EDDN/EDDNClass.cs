@@ -116,9 +116,22 @@ namespace EliteDangerousCore.EDDN
             ["SystemGovernment"] = true,
             ["SystemSecurity"] = true,
             ["Population"] = true,
-            ["PowerplayState"] = true,
+
             ["ControllingPower"] = true,
+            ["PowerplayState"] = true,
             ["Powers"] = "[]",
+            ["PowerplayStateControlProgress"] = true,
+            ["PowerplayStateReinforcement"] = true,
+            ["PowerplayStateUndermining"] = true,
+            ["PowerplayConflictProgress"] = new JArray
+            {
+                new JObject
+                {
+                    ["Power"] = true,
+                    ["ConflictProgress"] = true,
+                }
+            },
+            // Not Wanted - PII
             ["Factions"] = new JArray
             {
                 new JObject
