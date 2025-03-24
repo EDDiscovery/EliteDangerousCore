@@ -13,6 +13,7 @@
  * 
  *
  */
+using EliteDangerousCore;
 using System;
 
 namespace EliteDangerousCore.UIEvents
@@ -33,6 +34,44 @@ namespace EliteDangerousCore.UIEvents
         public override string ToString()
         {
             return $"{Supercruise}";
+        }
+    }
+
+    public class UISupercruiseAssist : UIEvent
+    {
+        public UISupercruiseAssist(DateTime time, bool refresh) : base(UITypeEnum.SupercruiseAssist, time, refresh)
+        {
+        }
+
+        public UISupercruiseAssist(bool state, DateTime time, bool refresh) : this(time, refresh)
+        {
+            SupercruiseAssist = state;
+        }
+
+        public bool SupercruiseAssist { get; private set; }
+
+        public override string ToString()
+        {
+            return $"{SupercruiseAssist}";
+        }
+
+    }
+    public class UISupercruiseOverdrive : UIEvent
+    {
+        public UISupercruiseOverdrive(DateTime time, bool refresh) : base(UITypeEnum.SupercruiseOverdrive, time, refresh)
+        {
+        }
+
+        public UISupercruiseOverdrive(bool state, DateTime time, bool refresh) : this(time, refresh)
+        {
+            SupercruiseOverdrive = state;
+        }
+
+        public bool SupercruiseOverdrive { get; private set; }
+
+        public override string ToString()
+        {
+            return $"{SupercruiseOverdrive}";
         }
 
     }
