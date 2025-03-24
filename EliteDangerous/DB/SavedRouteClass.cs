@@ -476,7 +476,7 @@ namespace EliteDangerousCore.DB
 
         // given the system list, which is the next waypoint to go to.  return the system (or null if not available or past end) and the waypoint.. (0 based) and the distance on the path left..
 
-        [System.Diagnostics.DebuggerDisplay("{system.Name} w {waypoint} d {deviation} cwpd {cumulativewpdist} distto {disttowaypoint}")]
+        [System.Diagnostics.DebuggerDisplay("ls {lastsystem.Name} ns {nextsystem.Name} w {waypoint} d {deviation} cwpd {cumulativewpdist} distto {disttowaypoint}")]
         public class ClosestInfo
         {
             public ISystem lastsystem;              // from
@@ -484,12 +484,14 @@ namespace EliteDangerousCore.DB
             public ISystem firstsystem;
             public ISystem finalsystem;
             public int waypoint;                    // index of Systems
-            public string waypointnote;             // note on waypoint
+            public string lastsystemwaypointnote;   // note on waypoint
+            public string nextsystemwaypointnote;   // note on waypoint
             public double deviation;                // -1 if not on path
             public double cumulativewpdist;         // distance to end, 0 means no more WPs after this
             public double disttowaypoint;           // distance to WP
-            public ClosestInfo(ISystem s, ISystem p, ISystem first, ISystem final, int w, string wpnote, double dv, double wdl, double dtwp)
-            { lastsystem = s; nextsystem = p; firstsystem = first; finalsystem = final; waypoint = w; waypointnote = wpnote;  
+            public ClosestInfo(ISystem s, ISystem p, ISystem first, ISystem final, int w, string lastwpnote, string nextwpnote, double dv, double wdl, double dtwp)
+            { lastsystem = s; nextsystem = p; firstsystem = first; finalsystem = final; waypoint = w;
+                lastsystemwaypointnote = lastwpnote; nextsystemwaypointnote = nextwpnote;  
                 deviation = dv; cumulativewpdist = wdl; disttowaypoint = dtwp; }
         }
 
@@ -566,6 +568,7 @@ namespace EliteDangerousCore.DB
                                     knownsystems[0].Item1,
                                     knownsystems.Last().Item1,
                                     knownsystems[wpto].Item2,
+                                    wpto > 0 ? knownsystems[wpto - 1].Item3.Note : "",
                                     knownsystems[wpto].Item3.Note,
                                     mininterceptdist,       // deviation from path
                                     cumldist,
