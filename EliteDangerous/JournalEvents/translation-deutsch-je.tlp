@@ -265,9 +265,9 @@ SECTION JournalTypeEnum
 .NavRouteClear: "Nav Route Clear" => "Navroute leeren"
 .ShipRedeemed: "Ship Redeemed" => "Schiff eingelöst"
 .ShipyardRedeem: "Shipyard Redeem" => "Werft Einlösung"
-.PowerplayMerits: "Powerplay Merits" @
-.PowerplayRank: "Powerplay Rank" @
-.CarrierLocation: "Carrier location" @
+.PowerplayMerits: "Powerplay Merits" => "Machtspielverdienst"
+.PowerplayRank: "Powerplay Rank" => "Machtspielrang"
+.CarrierLocation: "Carrier location" => "Carrierstandort"
 
 
 SECTION JournalCargo
