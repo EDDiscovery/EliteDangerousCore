@@ -2,7 +2,7 @@
 SECTION JournalTypeEnum
 
 .Unknown: "Unknown" = Unknown
-.AfmuRepairs: "Afmu Repairs" => "Reparaciones Afmu"
+.AfmuRepairs: "Afmu Repairs" => "Reparaciones UAM"
 .ApproachBody: "Approach Body" => "Aproximación al cuerpo"
 .ApproachSettlement: "Approach Settlement" => "Aproximación al Asentamiento"
 .Bounty: "Bounty" => "Recompensa"
@@ -265,9 +265,9 @@ SECTION JournalTypeEnum
 .NavRouteClear: "Nav Route Clear" => "Limpiar Ruta de Navegación"
 .ShipRedeemed: "Ship Redeemed" => "Nave reclamada"
 .ShipyardRedeem: "Shipyard Redeem" => "Reclamar Astillero"
-.PowerplayMerits: "Powerplay Merits" @
-.PowerplayRank: "Powerplay Rank" @
-.CarrierLocation: "Carrier location" @
+.PowerplayMerits: "Powerplay Merits" => "Méritos de Powerplay"
+.PowerplayRank: "Powerplay Rank" => "Rango de Powerplay"
+.CarrierLocation: "Carrier location" => "Ubicación del portanaves"
 
 
 SECTION JournalCargo

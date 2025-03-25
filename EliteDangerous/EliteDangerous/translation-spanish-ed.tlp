@@ -933,8 +933,8 @@ SECTION MaterialCommodityMicroResourceType
 .tg_structuraldata02: "Thargoid Capital Ship Data" => "Datos de Nave Capital Thargoide"
 .searchrescuevoucher: "Search and Rescue Voucher" => "Bono de Búsqueda y Rescate"
 .unknowncorechip: "Tactical Core Chip" = MaterialCommodityMicroResourceType.tacticalcorechip
-.steel: "Steel" @
-.haematite: "Haematite" @
+.steel: "Steel" => "Acero"
+.haematite: "Haematite" => "Hematita"
 
 SECTION EngineeringData
 
@@ -1123,10 +1123,10 @@ SECTION FactionStates
 .NaturalDisaster: "Natural Disaster" => "Desastre Natural"
 .PublicHoliday: "Public Holiday" => "Día Festivo"
 .Terrorism: "Terrorism" => "Ataque Terrorista"
-.ColdWar: "Cold War" @
+.ColdWar: "Cold War" => "Guerra Fría"
 .Colonisation: "Colonisation" => "Colonización"
-.HistoricEvent: "Historic Event" @
-.Revolution: "Revolution" @
+.HistoricEvent: "Historic Event" => "Evento Histórico"
+.Revolution: "Revolution" => "Revolución"
 .TechnologicalLeap: "Technological Leap" @
 .TradeWar: "Trade War" @
 .Exploited: "Exploited" => "Explotado"
@@ -1163,7 +1163,7 @@ SECTION GovernmentTypes
 .Theocracy: "Theocracy" => "Teocracia"
 .Engineer: "Engineer" => "Ingenieros"
 .Carrier: "Carrier" => "Portanaves"
-.Undefined: "Undefined" @
+.Undefined: "Undefined" => "Sin Definir"
 
 SECTION EconomyTypes
 
@@ -1203,7 +1203,7 @@ SECTION StarportStates
 .Damaged: "Damaged" => "Dañadas"
 .Abandoned: "Abandoned" => "Abandonadas"
 .UnderAttack: "Under Attack" => "Bajo Ataque"
-.Construction: "Construction" @
+.Construction: "Construction" => "En Construcción"
 
 SECTION StarportTypes
 
@@ -1220,9 +1220,9 @@ SECTION StarportTypes
 .SurfaceStation: "Surface Station" => "Estación de Superficie"
 .CraterOutpost: "Crater Outpost" => "Asentamiento de Cráter"
 .CraterPort: "Crater Port" => "Puerto de Cráter"
-.SpaceConstructionDepot: "Space Construction Depot" @
-.PlanetaryConstructionDepot: "Planetary Construction Depot" @
-.DockablePlanetStation: "Dockable Planet Station" @
+.SpaceConstructionDepot: "Space Construction Depot" => "Depósito de Construcción Espacial"
+.PlanetaryConstructionDepot: "Planetary Construction Depot" => "Depósito de Construcción Planetaria"
+.DockablePlanetStation: "Dockable Planet Station" => "Estación Planetaria Atracable"
 
 SECTION PowerPlayStates
 
@@ -1406,7 +1406,7 @@ SECTION ModulePartNames
 .Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" => "Xenoescáner Mejorado"
 .Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" => "Xenoescáner de Onda de Pulsos"
 .Concord_Cannon: "Concord Cannon" => "Cañón de Concordia"
-.Colonisation_Module: "Colonisation Module" @
+.Colonisation_Module: "Colonisation Module" => "Módulo de Colonización"
 
 SECTION ShipSlots
 
@@ -1551,7 +1551,7 @@ SECTION ShipSlots
 .Turret2: "Turret Type 2" => "Torreta tipo 2"
 .SineWaveScanner: "Sine Wave Scanner" @
 .BuggyCargoHatch: "Cargo Hatch" => "Escotilla de carga"
-.ColonisationSuite: "Colonisation Suite" @
+.ColonisationSuite: "Colonisation Suite" => "Equipo de Colonización"
 
 SECTION StationServices
 
@@ -1596,5 +1596,5 @@ SECTION StationServices
 .UniversalCartographics: "Universal Cartographics" @
 .VistaGenomics: "Vista Genomics" @
 .ConstructionServices: "Construction Services" @
-.RefineryContact: "Refinery Contact" @
-.SystemColonisation: "System Colonisation" @
+.RefineryContact: "Refinery Contact" => "Contacto de Refinería"
+.SystemColonisation: "System Colonisation" => "Colonización del Sistema"
