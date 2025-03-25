@@ -92,6 +92,40 @@ SECTION MaterialCommodityMicroResourceType
 .Weapons: "Weapons" @
 .PowerPlay: "Power Play" @
 .Drones: "Drones" @
+.EncodedGuardian: "Encoded Guardian" @
+.EncodedGuardianObelisk: "Encoded Guardian Obelisk" @
+.EncodedThargoid1: "Encoded Thargoid 1" @
+.EncodedThargoid2: "Encoded Thargoid 2" @
+.ManufacturedGuardian: "Manufactured Guardian" @
+.ManufacturedThargoid1: "Manufactured Thargoid 1" @
+.ManufacturedThargoid2: "Manufactured Thargoid 2" @
+.ManufacturedThargoid3: "Manufactured Thargoid 3" @
+.ManufacturedThargoid4: "Manufactured Thargoid 4" @
+.RawCategory1: "Raw Category 1" @
+.RawCategory2: "Raw Category 2" @
+.RawCategory3: "Raw Category 3" @
+.RawCategory4: "Raw Category 4" @
+.RawCategory5: "Raw Category 5" @
+.RawCategory6: "Raw Category 6" @
+.RawCategory7: "Raw Category 7" @
+.EncodedEmissionData: "Encoded Emission Data" @
+.EncodedWakeScans: "Encoded Wake Scans" @
+.EncodedShieldData: "Encoded Shield Data" @
+.EncodedEncryptionFiles: "Encoded Encryption Files" @
+.EncodedDataArchives: "Encoded Data Archives" @
+.EncodedFirmware: "Encoded Firmware" @
+.ManufacturedChemical: "Manufactured Chemical" @
+.ManufacturedThermic: "Manufactured Thermic" @
+.ManufacturedHeat: "Manufactured Heat" @
+.ManufacturedConductive: "Manufactured Conductive" @
+.ManufacturedMechanicalComponents: "Manufactured Mechanical Components" @
+.ManufacturedCapacitors: "Manufactured Capacitors" @
+.ManufacturedShielding: "Manufactured Shielding" @
+.ManufacturedComposite: "Manufactured Composite" @
+.ManufacturedCrystals: "Manufactured Crystals" @
+.ManufacturedAlloys: "Manufactured Alloys" @
+.NA: "NA" @
+
 .carbon: "Carbon" @
 .iron: "Iron" @
 .nickel: "Nickel" @
@@ -633,30 +667,6 @@ SECTION MaterialCommodityMicroResourceType
 .m3_tissuesample_spores: "Mollusc Spores" @
 .s6_tissuesample_coenosarc: "Pod Shell Tissue" @
 .apavietii: "Apa Vietii" @
-.RawCategory1: "Raw Category 1" @
-.RawCategory2: "Raw Category 2" @
-.RawCategory3: "Raw Category 3" @
-.RawCategory4: "Raw Category 4" @
-.RawCategory5: "Raw Category 5" @
-.RawCategory6: "Raw Category 6" @
-.RawCategory7: "Raw Category 7" @
-.EncodedEmissionData: "Encoded Emission Data" @
-.EncodedWakeScans: "Encoded Wake Scans" @
-.EncodedShieldData: "Encoded Shield Data" @
-.EncodedEncryptionFiles: "Encoded Encryption Files" @
-.EncodedDataArchives: "Encoded Data Archives" @
-.EncodedFirmware: "Encoded Firmware" @
-.ManufacturedChemical: "Manufactured Chemical" @
-.ManufacturedThermic: "Manufactured Thermic" @
-.ManufacturedHeat: "Manufactured Heat" @
-.ManufacturedConductive: "Manufactured Conductive" @
-.ManufacturedMechanicalComponents: "Manufactured Mechanical Components" @
-.ManufacturedCapacitors: "Manufactured Capacitors" @
-.ManufacturedShielding: "Manufactured Shielding" @
-.ManufacturedComposite: "Manufactured Composite" @
-.ManufacturedCrystals: "Manufactured Crystals" @
-.ManufacturedAlloys: "Manufactured Alloys" @
-.NA: "NA" @
 .tritium: "Tritium" @
 .s6_tissuesample_mesoglea: "Pod Mesoglea" @
 .s6_tissuesample_cells: "Pod Outer Tissue" @
@@ -894,6 +904,7 @@ SECTION MaterialCommodityMicroResourceType
 .thargoidorgansample: "Organ Sample" @
 .tg_abrasion01: "Heat Exposure Specimen" @
 .tacticalcorechip: "Tactical Core Chip" @
+
 .powerindustrial: "Industrial Component" @
 .powermiscindust: "Industrial Machinery" @
 .powerinventory: "Inventory Record" @
@@ -922,15 +933,8 @@ SECTION MaterialCommodityMicroResourceType
 .tg_structuraldata02: "Thargoid Capital Ship Data" @
 .searchrescuevoucher: "Search and Rescue Voucher" @
 .unknowncorechip: "Tactical Core Chip" @
-.EncodedGuardian: "Encoded Guardian" @
-.EncodedGuardianObelisk: "Encoded Guardian Obelisk" @
-.EncodedThargoid1: "Encoded Thargoid 1" @
-.EncodedThargoid2: "Encoded Thargoid 2" @
-.ManufacturedGuardian: "Manufactured Guardian" @
-.ManufacturedThargoid1: "Manufactured Thargoid 1" @
-.ManufacturedThargoid2: "Manufactured Thargoid 2" @
-.ManufacturedThargoid3: "Manufactured Thargoid 3" @
-.ManufacturedThargoid4: "Manufactured Thargoid 4" @
+.steel: "Steel" @
+.haematite: "Haematite" @
 
 SECTION EngineeringData
 
@@ -1159,6 +1163,7 @@ SECTION GovernmentTypes
 .Theocracy: "Theocracy" @
 .Engineer: "Engineer" @
 .Carrier: "Carrier" @
+.Undefined: "Undefined" @
 
 SECTION EconomyTypes
 
@@ -1198,6 +1203,7 @@ SECTION StarportStates
 .Damaged: "Damaged" @
 .Abandoned: "Abandoned" @
 .UnderAttack: "Under Attack" @
+.Construction: "Construction" @
 
 SECTION StarportTypes
 
@@ -1214,6 +1220,9 @@ SECTION StarportTypes
 .SurfaceStation: "Surface Station" @
 .CraterOutpost: "Crater Outpost" @
 .CraterPort: "Crater Port" @
+.SpaceConstructionDepot: "Space Construction Depot" @
+.PlanetaryConstructionDepot: "Planetary Construction Depot" @
+.DockablePlanetStation: "Dockable Planet Station" @
 
 SECTION PowerPlayStates
 
@@ -1227,6 +1236,9 @@ SECTION PowerPlayStates
 .HomeSystem: "Home system" @
 .Fortified: "Fortified" @
 .Stronghold: "Stronghold" @
+
+
+// these are the ones which can't be satisfied from ModulePartNames
 
 SECTION ModuleTypeNames
 
@@ -1274,6 +1286,7 @@ SECTION ModulePartNames
 .Tiny: "Tiny" @
 .Standard: "Standard" @
 .Advanced: "Advanced" @
+
 .Lightweight_Alloy: "Lightweight Alloy" @
 .Reinforced_Alloy: "Reinforced Alloy" @
 .Military_Grade_Composite: "Military Grade Composite" @
@@ -1393,6 +1406,7 @@ SECTION ModulePartNames
 .Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" @
 .Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" @
 .Concord_Cannon: "Concord Cannon" @
+.Colonisation_Module: "Colonisation Module" @
 
 SECTION ShipSlots
 
@@ -1537,6 +1551,7 @@ SECTION ShipSlots
 .Turret2: "Turret Type 2" @
 .SineWaveScanner: "Sine Wave Scanner" @
 .BuggyCargoHatch: "Cargo Hatch" @
+.ColonisationSuite: "Colonisation Suite" @
 
 SECTION StationServices
 
@@ -1580,3 +1595,6 @@ SECTION StationServices
 .Tuning: "Tuning" @
 .UniversalCartographics: "Universal Cartographics" @
 .VistaGenomics: "Vista Genomics" @
+.ConstructionServices: "Construction Services" @
+.RefineryContact: "Refinery Contact" @
+.SystemColonisation: "System Colonisation" @

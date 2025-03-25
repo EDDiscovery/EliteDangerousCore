@@ -265,6 +265,10 @@ SECTION JournalTypeEnum
 .NavRouteClear: "Nav Route Clear" => "Navroute leeren"
 .ShipRedeemed: "Ship Redeemed" => "Schiff eingelöst"
 .ShipyardRedeem: "Shipyard Redeem" => "Werft Einlösung"
+.PowerplayMerits: "Powerplay Merits" @
+.PowerplayRank: "Powerplay Rank" @
+.CarrierLocation: "Carrier location" @
+
 
 SECTION JournalCargo
 
@@ -427,6 +431,7 @@ SECTION JournalModuleInfo
 SECTION JournalMultiSellExplorationData
 
 .Total: "Total: ; cr;N0" => "Gesamt: ; Cr;N0"
+
 
 SECTION JournalProspectedAsteroid
 
@@ -1222,7 +1227,7 @@ SECTION AtmosphereTypes
 .Carbon_Dioxide_Thick: "Thick Carbon Dioxide Atmosphere" => "Dichte Kohlendioxidatmosphäre"
 .Carbon_Dioxide_Thick_Rich: "Thick Carbon Dioxide Rich Atmosphere" => "Dichte kohlendioxidreiche Atmosphäre"
 .Carbon_Dioxide_Thin: "Thin Carbon Dioxide Atmosphere" => "Dünne Kohlendioxidatmosphäre"
-.Carbon_Dioxide_Thin_Rich: "Thin Carbon Dioxide Rich Atmosphere"=> "Dünne kohlendioxidreiche Atmosphäre"
+.Carbon_Dioxide_Thin_Rich: "Thin Carbon Dioxide Rich Atmosphere" => "Dünne kohlendioxidreiche Atmosphäre"
 .Earth_Like: "Earth Like Atmosphere" => "Erdähnliche Atmosphäre"
 .Earth_Like_Thick: "Thick Earth Like Atmosphere" => "Dichte erdähnliche Atmosphäre"
 .Helium: "Helium Atmosphere" => "Heliumatmosphäre"
@@ -1244,7 +1249,7 @@ SECTION AtmosphereTypes
 .Nitrogen_Hot_Thick: "Hot Thick Nitrogen Atmosphere" => "Heiße dichte Stickstoffatmosphäre"
 .Nitrogen_Thick: "Thick Nitrogen Atmosphere" => "Dichte Stickstoffatmosphäre"
 .Nitrogen_Thin: "Thin Nitrogen Atmosphere" => "Dünne Stickstoffatmosphäre"
-.No: "No Atmosphere" => "Keine Atmosphäre"
+.No: "No Atmosphere" = JournalScan.NoAtmosphere
 .Oxygen: "Oxygen Atmosphere" => "Sauerstoffatmosphäre"
 .Oxygen_Thin: "Thin Oxygen Atmosphere" => "Dünne Sauerstoffatmosphäre"
 .Silicate_Vapour_Hot: "Hot Silicate Vapour Atmosphere" => "Heiße Silikatdampfatmosphäre"
@@ -1267,6 +1272,9 @@ SECTION AtmosphereTypes
 .Water_Thick_Rich: "Thick Water Rich Atmosphere" => "Dichte wasserreiche Atmosphäre"
 .Water_Thin: "Thin Water Atmosphere" => "Dünne Wasseratmosphäre"
 .Water_Thin_Rich: "Thin Water Rich Atmosphere" => "Dünne wasserreiche Atmosphäre"
+
+// added
+
 .Ammonia_Thin_Rich: "Thin Ammonia Rich Atmosphere" => "Dünne ammoniakreiche Atmosphäre"
 .Argon_Hot: "Hot Argon Atmosphere" => "Heiße Argonatmosphäre"
 .Argon_Hot_Rich: "Hot Argon Rich Atmosphere" => "Heiße argonreiche Atmosphäre"
@@ -1283,7 +1291,7 @@ SECTION VolcanismTypes
 .Metallic_Magma_Minor: "Minor Metallic Magma Volcanism" => "Geringer metallischer Magma-Vulkanismus"
 .Methane_Magma_Minor: "Minor Methane Magma Volcanism" => "Geringer Methanmagma-Vulkanismus"
 .Nitrogen_Magma_Minor: "Minor Nitrogen Magma Volcanism" => "Geringer stickstoffmagma-Vulkanismus"
-.No: "No Volcanism" => "Kein Vulkanismus"
+.No: "No Volcanism" = JournalScan.NoVolcanism
 .Rocky_Magma: "Rocky Magma Volcanism" => "Gesteinsmagma-Vulkanismus"
 .Rocky_Magma_Major: "Major Rocky Magma Volcanism" => "Bedeutender Gesteinsmagma-Vulkanismus"
 .Rocky_Magma_Minor: "Minor Rocky Magma Volcanism" => "Geringer Gesteinsmagma-Vulkanismus"
@@ -1296,4 +1304,8 @@ SECTION VolcanismTypes
 .Water_Magma: "Water Magma Volcanism" => "Wassermagma-Vulkanismus"
 .Water_Magma_Major: "Major Water Magma Volcanism" => "Bedeutender Wassermagma-Vulkanismus"
 .Water_Magma_Minor: "Minor Water Magma Volcanism" => "Geringer Wassermagma-Vulkanismus"
+
+// added
+
 .Unknown: "Unknown Volcanism" => "Unbekannter Vulkanismus"
+

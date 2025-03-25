@@ -1,7 +1,7 @@
 ﻿
 SECTION JournalTypeEnum
 
-.Unknown: "Unknown" => "Inconnu"
+.Unknown: "Unknown" = Unknown
 .AfmuRepairs: "Afmu Repairs" => "Réparation UMTA"
 .ApproachBody: "Approach Body" => "Approche du corps"
 .ApproachSettlement: "Approach Settlement" => "Approche d'avant-poste planétaire"
@@ -265,6 +265,10 @@ SECTION JournalTypeEnum
 .NavRouteClear: "Nav Route Clear" => "Effacement d'itinéraire de navigation"
 .ShipRedeemed: "Ship Redeemed" => "Vaisseau racheté"
 .ShipyardRedeem: "Shipyard Redeem" => "Chantier Naval : Rachat"
+.PowerplayMerits: "Powerplay Merits" @
+.PowerplayRank: "Powerplay Rank" @
+.CarrierLocation: "Carrier location" @
+
 
 SECTION JournalCargo
 
@@ -349,7 +353,7 @@ SECTION JournalLeaveBody
 
 SECTION JournalLocOrJump
 
-.Faction: "Faction: " => "Faction : "
+.Faction: "Faction: " = FSSSignal.Faction
 .Wanted: "<;(Wanted) " => "<;(recherché) "
 .State: "State: " = FSSSignal.State
 .Allegiance: "Allegiance: " => "Allégeance : "
@@ -422,11 +426,12 @@ SECTION MissionItem
 
 SECTION JournalModuleInfo
 
-.Modules: "Modules: " => "Modules : "
+.Modules: "Modules: " = JournalLoadout.Modules
 
 SECTION JournalMultiSellExplorationData
 
 .Total: "Total: ; cr;N0" @
+
 
 SECTION JournalProspectedAsteroid
 
@@ -486,7 +491,7 @@ SECTION JournalScan
 .Detailedscanof: "Detailed scan of {0}" => "Scan détaillé de {0}"
 .Basicscanof: "Basic scan of {0}" => "Scan basique de {0}"
 .Navscanof: "Nav scan of {0}" => "Scan de navigation de {0}"
-.ScanAuto: "Scan auto" @
+.ScanAuto: "Scan Auto" @
 .ScanBasic: "Scan Basic" => "Scan basique"
 .ScanNav: "Scan Nav" => "Scan de navigation"
 .Scanof: "Scan of {0}" => "Scan de {0}"
@@ -641,7 +646,7 @@ SECTION BankAccountClass
 .SpentOnWeapons: "Spent on Weapons: ; cr;N0" => "Dépensé en armes de poing : ; cr;N0"
 .SpentOnSuitConsumables: "Spent on Suit Consumables: ; cr;N0" => "Dépensé en consommables : ; cr;N0"
 .SuitsOwned: "Suits Owned: ;;N0" => "Combinaisons possédés : ;;N0"
-.WeaponsOwned: "WeaponsOwned: ;;N0" => "Armes de poing possédés : ;;N0"
+.WeaponsOwned: "Weapons Owned: ;;N0" => "Armes de poing possédés : ;;N0"
 .SpentOnPremiumStock: "Spent on Premium Stock: ; cr;N0" => "Dépensé en articles premium : ; cr;N0"
 .PremiumStockBought: "Premium Stock bought: ;;N0" => "Articles premium achetés : ;;N0"
 
@@ -667,7 +672,7 @@ SECTION CombatClass
 .ConflictZoneLow: "Low Intensity Conflict Zones fought: ;;N0" => "Zones de conflit de faible intensité : ;;N0"
 .ConflictZoneTotal: "Total Conflict Zones fought: ;;N0" => "Zones de conflit au total : ;;N0"
 .ConflictZoneHighWins: "High Intensity Conflict Zones won: ;;N0" => "Victoires de zones de conflit de forte : ;;N0"
-.ConflictZoneMediumWins: "Medium Intensity ConflictZones won: ;;N0" => "Victoires de zones de conflit d'intensité moyenne : ;;N0"
+.ConflictZoneMediumWins: "Medium Intensity Conflict Zones won: ;;N0" => "Victoires de zones de conflit d'intensité moyenne : ;;N0"
 .ConflictZoneLowWins: "Low Intensity Conflict Zones won: ;;N0" => "Victoires de zones de conflit de faible intensité : ;;N0"
 .ConflictZoneTotalWins: "Total Conflict Zones won: ;;N0" => "Victoires de zones de conflit au total : ;;N0"
 .SettlementDefended: "Settlements Defended: ;;N0" => "Installations défendues : ;;N0"
@@ -680,7 +685,7 @@ SECTION CrimeClass
 .NotorietyIndex: "Notoriety Index: ;;N0" => "Indice de notoriété : ;;N0"
 .Fines: "Fines: ;;N0" => "Amendes : ;;N0"
 .TotalFines: "Total Fines: ; cr;N0" => "Total des amendes : ; cr;N0"
-.Bounties: "Bounties: ;;N0" => "Primes : ;;N0"
+.Bounties: "Bounties: ;;N0" = CombatClass.Bounties
 .TotalBounties: "Total Bounties: ; cr;N0" => "Total des primes : ; cr;N0"
 .HighestBounty: "Highest Bounty: ; cr;N0" => "Prime la plus élevée : ; cr;N0"
 .MalwareUploaded: "Malware Uploaded: ;;N0" => "Programme malveillant chargé : ;;N0"
@@ -698,7 +703,7 @@ SECTION CrimeClass
 .TurretsOverloaded: "Turrets Overloaded: ;;N0" => "Tourelles surchargées : ;;N0"
 .TurretsTotal: "Total Turrets shut down: ;;N0" => "Tourelles neutralisées au total : ;;N0"
 .ValueStolenStateChange: "Stolen Items Value: ; cr;N0" => "Total des objets volés : ; cr;N0"
-.ProfilesCloned: "ProfilesCloned: ;;N0" => "Profiles clonés : ;;N0"
+.ProfilesCloned: "Profiles Cloned: ;;N0" => "Profiles clonés : ;;N0"
 
 SECTION SmugglingClass
 
@@ -875,7 +880,7 @@ SECTION JournalStoredModules
 SECTION JournalSupercruiseExit
 
 .in: "< in " = JournalCommodityPricesBase.CPBin
-.At: "At " => "A "
+.At: "At " = JournalScreenshot.At
 
 SECTION JournalStoredShips
 
@@ -904,13 +909,13 @@ SECTION JournalApproachBody
 
 SECTION JournalEntry
 
-.BartenderMaterials: "Bartender Materials" => "Barman : matériaux"
+.BartenderMaterials: "Bartender Materials" = JournalTypeEnum.FCMaterials
 .TME: "{0} days {1} hours {2} minutes" => "{0} jours {1} heures {2} minutes"
 .Hyperspace: "Hyperspace" => "Hyperespace"
 .Supercruise: "Supercruise" => "Super-navigation"
 .Target: "Target: " => "Cible : "
 .Victimfaction: "Victim faction: " => "Faction de la victime : "
-.Faction: "Faction: " => "Faction : "
+.Faction: "Faction: " = FSSSignal.Faction
 .from: "< from " = JournalMissionAccepted.from
 .dueto: "<, due to " => "<, attendu à "
 .onfaction: "< on faction " => "< à la faction "
@@ -919,7 +924,7 @@ SECTION JournalEntry
 .Bounty: "Bounty: ; cr;N0" => "Prime : ; cr;N0"
 .BountyOnly: "Bounty" => "Prime :"
 .Offender: "Offender " => "Assaillant "
-.Reward: "Reward: ; cr;N0" => "Récompense : ; cr;N0"
+.Reward: "Reward: ; cr;N0" = JournalMissionAccepted.Reward
 .to: "< to " => "< vers "
 .Brokertook: ", Broker took {0:N0}%" => ", le marchand a pris {0:N0} %"
 .Type: "Type: " => "Type : "
@@ -962,12 +967,12 @@ SECTION JournalEntry
 .Option: "Option: " => "Option : "
 .Bankrupt: ";Bankrupt" => ";Banqueroute"
 .Dscan: "New bodies discovered: " => "Nouveaux corps découverts : "
-.Bodies: "Bodies: " => "Corps : "
+.Bodies: "Bodies: " = JournalFSSDiscoveryScan.Bodies
 .insystem: "< in system " = JournalLocOrJump.insystem
 .Wanted: ";(Wanted)" => ";(Recherché)"
 .ActiveFine: ";Active Fine" => ";Amende impayée"
 .instate: "< in state " => "< dans le statut "
-.Allegiance: "Allegiance: " => "Allégeance : "
+.Allegiance: "Allegiance: " = JournalLocOrJump.Allegiance
 .Economy: "Economy: " = JournalLocOrJump.Economy
 .Government: "Government: " = JournalLocOrJump.Government
 .Stationservices: "Station services: " => "Services de la station : "
@@ -1101,8 +1106,8 @@ SECTION JournalCarrierJump
 SECTION JournalCarrier
 
 .At: "At " => "À "
-.Callsign: "Call Sign: " => "Ident : "
-.Name: "Name: " => "Nom : "
+.Callsign: "Call Sign: " = JournalEntry.Ident
+.Name: "Name: " = JournalScan.BNME
 .JumpRange: "Jump Range: ; ly;0.0" => "Portée de saut : ; al;0.0"
 .Balance: "Carrier Balance: ; cr;N0" => "Solde du porte-vaisseaux : ; cr;N0"
 .ReserveBalance: "Reserve Balance: ; cr;N0" => "Allocation hebdomadaire : ; cr;N0"
@@ -1115,7 +1120,7 @@ SECTION JournalCarrier
 .TaxRateRefuel: "Tax Rate Refuel: ;;N1" => "Taxes ravitaillement en carburant : ;;N1"
 .TaxRateRepair: "Tax Rate Repair: ;;N1" => "Taxes réparation : ;;N1"
 .TotalCapacity: "Total Capacity: " => "Capacité totale : "
-.Crew: "Crew: " => "Équipage : "
+.Crew: "Crew: " = JournalEntry.Crew
 .Cargo: "Cargo: " => "Cargaison : "
 .CargoReserved: "Cargo Space Reserved: " => "Espace cargaison réservé : "
 .ShipPacks: "Ship Packs: " => "Pack de vaisseaux : "
@@ -1134,7 +1139,7 @@ SECTION JournalCarrier
 .CancelSell: "Cancel Sell of: " => "Annulation de vente : "
 .Access: "Access: " => "Accès : "
 .AllowNotorious: ";Allow Notorious" => ";Autorise notoriété"
-.Amount: "Amount: ;;N0" => "Quantité : ;;N0"
+.Amount: "Amount: ;;N0" = MiningClass.Quantity
 .FuelLevel: "Fuel Level: ;;N0" => "Niveau de carburant : ;;N0"
 
 SECTION JournalMicroResources
@@ -1182,8 +1187,8 @@ SECTION Services
 .Repair: "Repair Crews" => "Équipes de réparation"
 .Rearm: "Armoury" => "Armurerie"
 .VoucherRedemption: "Redemption Office" => "Bureau des récompenses"
-.Shipyard: "Shipyard" => "Chantier naval"
-.Outfitting: "Outfitting" => "Équipement"
+.Shipyard: "Shipyard" = JournalTypeEnum.Shipyard
+.Outfitting: "Outfitting" = JournalTypeEnum.Loadout
 .BlackMarket: "Secure Warehouse" => "Entrepôt sécurisé"
 .Exploration: "Universal Cartographics" @
 .Bartender: "Concourse Bar" => "Bar du hall principal"
@@ -1267,8 +1272,12 @@ SECTION AtmosphereTypes
 .Water_Thick_Rich: "Thick Water Rich Atmosphere" => "Atmosphère épaisse riche en eau"
 .Water_Thin: "Thin Water Atmosphere" => "Atmosphère fine d'eau"
 .Water_Thin_Rich: "Thin Water Rich Atmosphere" => "Atmosphère fine riche en eau"
+
+// added
+
 .Ammonia_Thin_Rich: "Thin Ammonia Rich Atmosphere" => "Atmosphère fine riche en ammoniac"
 .Argon_Hot: "Hot Argon Atmosphere" => "Atmosphère chaude d'argon"
+.Argon_Hot_Rich: "Hot Argon Rich Atmosphere" @
 .Metallic_Vapour_Hot: "Hot Metallic Vapour Atmosphere" => "Atmosphère chaude de vapeurs métalliques"
 .Metallic_Vapour_Hot_Thin: "Hot Thin Metallic Vapour Atmosphere" => "Atmosphère chaude et fine de vapeurs métalliques"
 
@@ -1295,4 +1304,8 @@ SECTION VolcanismTypes
 .Water_Magma: "Water Magma Volcanism" => "Volcanisme magma d'eau"
 .Water_Magma_Major: "Major Water Magma Volcanism" => "Volcanisme majeur magma d'eau"
 .Water_Magma_Minor: "Minor Water Magma Volcanism" => "Volcanisme mineur magma d'eau"
+
+// added
+
 .Unknown: "Unknown Volcanism" => "Volcanisme inconnu"
+

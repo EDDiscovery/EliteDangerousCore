@@ -265,6 +265,10 @@ SECTION JournalTypeEnum
 .NavRouteClear: "Nav Route Clear" => "Limpiar Ruta de Navegación"
 .ShipRedeemed: "Ship Redeemed" => "Nave reclamada"
 .ShipyardRedeem: "Shipyard Redeem" => "Reclamar Astillero"
+.PowerplayMerits: "Powerplay Merits" @
+.PowerplayRank: "Powerplay Rank" @
+.CarrierLocation: "Carrier location" @
+
 
 SECTION JournalCargo
 
@@ -427,6 +431,7 @@ SECTION JournalModuleInfo
 SECTION JournalMultiSellExplorationData
 
 .Total: "Total: ; cr;N0" => "Total: ; cr;N0"
+
 
 SECTION JournalProspectedAsteroid
 
@@ -1244,7 +1249,7 @@ SECTION AtmosphereTypes
 .Nitrogen_Hot_Thick: "Hot Thick Nitrogen Atmosphere" => "Atmósfera caliente y densa de nitrógeno"
 .Nitrogen_Thick: "Thick Nitrogen Atmosphere" => "Atmósfera densa de nitrógeno"
 .Nitrogen_Thin: "Thin Nitrogen Atmosphere" => "Atmósfera tenue de nitrógeno"
-.No: "No Atmosphere" => "Sin atmósfera"
+.No: "No Atmosphere" = JournalScan.NoAtmosphere
 .Oxygen: "Oxygen Atmosphere" => "Atmósfera de oxígeno"
 .Oxygen_Thin: "Thin Oxygen Atmosphere" => "Atmósfera tenue de oxígeno"
 .Silicate_Vapour_Hot: "Hot Silicate Vapour Atmosphere" => "Atmósfera caliente de vapor de silicato"
@@ -1267,6 +1272,9 @@ SECTION AtmosphereTypes
 .Water_Thick_Rich: "Thick Water Rich Atmosphere" => "Atmósfera densa y rica en agua"
 .Water_Thin: "Thin Water Atmosphere" => "Atmósfera tenue de agua"
 .Water_Thin_Rich: "Thin Water Rich Atmosphere" => "Atmósfera tenue y rica en agua"
+
+// added
+
 .Ammonia_Thin_Rich: "Thin Ammonia Rich Atmosphere" => "Atmósfera tenue y rica en amoníaco"
 .Argon_Hot: "Hot Argon Atmosphere" => "Atmósfera caliente de argón"
 .Argon_Hot_Rich: "Hot Argon Rich Atmosphere" => "Atmósfera caliente y rica en argón"
@@ -1296,4 +1304,8 @@ SECTION VolcanismTypes
 .Water_Magma: "Water Magma Volcanism" => "Vulcanismo de magma de agua"
 .Water_Magma_Major: "Major Water Magma Volcanism" => "Vulcanismo mayor de magma de agua"
 .Water_Magma_Minor: "Minor Water Magma Volcanism" => "Vulcanismo menor de magma de agua"
+
+// added
+
 .Unknown: "Unknown Volcanism" => "Vulcanismo desconocido"
+

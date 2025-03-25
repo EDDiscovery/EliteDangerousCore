@@ -92,6 +92,40 @@ SECTION MaterialCommodityMicroResourceType
 .Weapons: "Weapons" => "Armes"
 .PowerPlay: "Power Play" @
 .Drones: "Drones" @
+.EncodedGuardian: "Encoded Guardian" => "Encodé Guardian"
+.EncodedGuardianObelisk: "Encoded Guardian Obelisk" => "Encodé obélisque Guardian"
+.EncodedThargoid1: "Encoded Thargoid 1" => "Encodé Thargoid 1"
+.EncodedThargoid2: "Encoded Thargoid 2" => "Encodé Thargoid 2"
+.ManufacturedGuardian: "Manufactured Guardian" => "Fabriqué Guardian"
+.ManufacturedThargoid1: "Manufactured Thargoid 1" => "Fabriqué Thargoid 1"
+.ManufacturedThargoid2: "Manufactured Thargoid 2" => "Fabriqué Thargoid 2"
+.ManufacturedThargoid3: "Manufactured Thargoid 3" => "Fabriqué Thargoid 3"
+.ManufacturedThargoid4: "Manufactured Thargoid 4" => "Fabriqué Thargoid 4"
+.RawCategory1: "Raw Category 1" => "Brut Matériaux bruts - Catégorie 1"
+.RawCategory2: "Raw Category 2" => "Brut Matériaux bruts - Catégorie 2"
+.RawCategory3: "Raw Category 3" => "Brut Matériaux bruts - Catégorie 3"
+.RawCategory4: "Raw Category 4" => "Brut Matériaux bruts - Catégorie 4"
+.RawCategory5: "Raw Category 5" => "Brut Matériaux bruts - Catégorie 5"
+.RawCategory6: "Raw Category 6" => "Brut Matériaux bruts - Catégorie 6"
+.RawCategory7: "Raw Category 7" => "Brut Matériaux bruts - Catégorie 7"
+.EncodedEmissionData: "Encoded Emission Data" => "Encodé Données d'émission"
+.EncodedWakeScans: "Encoded Wake Scans" => "Encodé Données de sillage"
+.EncodedShieldData: "Encoded Shield Data" => "Encodé Données de bouclier"
+.EncodedEncryptionFiles: "Encoded Encryption Files" => "Encodé Fichiers cryptés"
+.EncodedDataArchives: "Encoded Data Archives" => "Encodé Archives de données"
+.EncodedFirmware: "Encoded Firmware" => "Encodé Micrologiciels encodés"
+.ManufacturedChemical: "Manufactured Chemical" => "Fabriqué Produits chimiques"
+.ManufacturedThermic: "Manufactured Thermic" => "Fabriqué Thermiques"
+.ManufacturedHeat: "Manufactured Heat" => "Fabriqué Chaleur"
+.ManufacturedConductive: "Manufactured Conductive" => "Fabriqué Conducteurs"
+.ManufacturedMechanicalComponents: "Manufactured Mechanical Components" => "Fabriqué Composants mécaniques"
+.ManufacturedCapacitors: "Manufactured Capacitors" => "Fabriqué Condensateurs"
+.ManufacturedShielding: "Manufactured Shielding" => "Fabriqué Protection"
+.ManufacturedComposite: "Manufactured Composite" => "Fabriqué Composites"
+.ManufacturedCrystals: "Manufactured Crystals" => "Fabriqué Cristaux"
+.ManufacturedAlloys: "Manufactured Alloys" => "Fabriqué Alliages"
+.NA: "NA" @
+
 .carbon: "Carbon" => "Carbone"
 .iron: "Iron" => "Fer"
 .nickel: "Nickel" @
@@ -354,7 +388,7 @@ SECTION MaterialCommodityMicroResourceType
 .thargoidtissuesampletype2: "Thargoid Basilisk Tissue Sample" => "Échantillon de tissu d'un Basilisk thargoid"
 .thargoidtissuesampletype3: "Thargoid Medusa Tissue Sample" => "Échantillon de tissu d'un Medusa thargoid"
 .thargoidscouttissuesample: "Thargoid Scout Tissue Sample" => "Échantillon de tissu d'un éclaireur thargoid"
-.wreckagecomponents: "Wreckage Components" => "Débris d'épave"
+.wreckagecomponents: "Wreckage Components" = MaterialCommodityMicroResourceType.tg_wreckagecomponents
 .antiquejewellery: "Antique Jewellery" => "Bijoux antiques"
 .airelics: "Ai Relics" => "Reliquats d'IA"
 .antimattercontainmentunit: "Antimatter Containment Unit" => "Unité de confinement d'antimatière"
@@ -633,30 +667,6 @@ SECTION MaterialCommodityMicroResourceType
 .m3_tissuesample_spores: "Mollusc Spores" => "Spores de mollusque"
 .s6_tissuesample_coenosarc: "Pod Shell Tissue" => "Tissu de coque de cosse"
 .apavietii: "Apa Vietii" @
-.RawCategory1: "Raw Category 1" => "Brut Matériaux bruts - Catégorie 1"
-.RawCategory2: "Raw Category 2" => "Brut Matériaux bruts - Catégorie 2"
-.RawCategory3: "Raw Category 3" => "Brut Matériaux bruts - Catégorie 3"
-.RawCategory4: "Raw Category 4" => "Brut Matériaux bruts - Catégorie 4"
-.RawCategory5: "Raw Category 5" => "Brut Matériaux bruts - Catégorie 5"
-.RawCategory6: "Raw Category 6" => "Brut Matériaux bruts - Catégorie 6"
-.RawCategory7: "Raw Category 7" => "Brut Matériaux bruts - Catégorie 7"
-.EncodedEmissionData: "Encoded Emission Data" => "Encodé Données d'émission"
-.EncodedWakeScans: "Encoded Wake Scans" => "Encodé Données de sillage"
-.EncodedShieldData: "Encoded Shield Data" => "Encodé Données de bouclier"
-.EncodedEncryptionFiles: "Encoded Encryption Files" => "Encodé Fichiers cryptés"
-.EncodedDataArchives: "Encoded Data Archives" => "Encodé Archives de données"
-.EncodedFirmware: "Encoded Firmware" => "Encodé Micrologiciels encodés"
-.ManufacturedChemical: "Manufactured Chemical" => "Fabriqué Produits chimiques"
-.ManufacturedThermic: "Manufactured Thermic" => "Fabriqué Thermiques"
-.ManufacturedHeat: "Manufactured Heat" => "Fabriqué Chaleur"
-.ManufacturedConductive: "Manufactured Conductive" => "Fabriqué Conducteurs"
-.ManufacturedMechanicalComponents: "Manufactured Mechanical Components" => "Fabriqué Composants mécaniques"
-.ManufacturedCapacitors: "Manufactured Capacitors" => "Fabriqué Condensateurs"
-.ManufacturedShielding: "Manufactured Shielding" => "Fabriqué Protection"
-.ManufacturedComposite: "Manufactured Composite" => "Fabriqué Composites"
-.ManufacturedCrystals: "Manufactured Crystals" => "Fabriqué Cristaux"
-.ManufacturedAlloys: "Manufactured Alloys" => "Fabriqué Alliages"
-.NA: "NA" @
 .tritium: "Tritium" @
 .s6_tissuesample_mesoglea: "Pod Mesoglea" => "Mésoglée de cosse"
 .s6_tissuesample_cells: "Pod Outer Tissue" => "Tissu extérieur de cosse"
@@ -892,8 +902,9 @@ SECTION MaterialCommodityMicroResourceType
 .thargoidcystspecimen: "Cyst Specimen" => "Spécimen de kyste"
 .thargoidbonefragments: "Bone Fragments" => "Fragments d'os"
 .thargoidorgansample: "Organ Sample" => "Échantillon d'organe"
-.tg_abrasion01: "Heat Exposure Specimen" => "Spécimen exposé à la chaleur"
+.tg_abrasion01: "Heat Exposure Specimen" = MaterialCommodityMicroResourceType.heatexposurespecimen
 .tacticalcorechip: "Tactical Core Chip" => "Puce tactique principale"
+
 .powerindustrial: "Industrial Component" @
 .powermiscindust: "Industrial Machinery" @
 .powerinventory: "Inventory Record" @
@@ -922,15 +933,8 @@ SECTION MaterialCommodityMicroResourceType
 .tg_structuraldata02: "Thargoid Capital Ship Data" @
 .searchrescuevoucher: "Search and Rescue Voucher" => "Coupon de recherche et sauvetage"
 .unknowncorechip: "Tactical Core Chip" @
-.EncodedGuardian: "Encoded Guardian" => "Encodé Guardian"
-.EncodedGuardianObelisk: "Encoded Guardian Obelisk" => "Encodé obélisque Guardian"
-.EncodedThargoid1: "Encoded Thargoid 1" => "Encodé Thargoid 1"
-.EncodedThargoid2: "Encoded Thargoid 2" => "Encodé Thargoid 2"
-.ManufacturedGuardian: "Manufactured Guardian" => "Fabriqué Guardian"
-.ManufacturedThargoid1: "Manufactured Thargoid 1" => "Fabriqué Thargoid 1"
-.ManufacturedThargoid2: "Manufactured Thargoid 2" => "Fabriqué Thargoid 2"
-.ManufacturedThargoid3: "Manufactured Thargoid 3" => "Fabriqué Thargoid 3"
-.ManufacturedThargoid4: "Manufactured Thargoid 4" => "Fabriqué Thargoid 4"
+.steel: "Steel" @
+.haematite: "Haematite" @
 
 SECTION EngineeringData
 
@@ -1024,7 +1028,7 @@ ScreenShotConfigureForm: "Screen Shot Configure" => "Configuration des captures 
 .labelCropResizeOptions: "Crop/Resize Options" => "Options de rognage/redimensionnement"
 .extCheckBoxEnabled: "Conversion Enabled" => "Conversion activée"
 .extCheckBoxHiRes: "Mark HiRes Files" => "Ajouter \"(HighRes)\" aux fichiers haute résolution"
-.extButtonBrowseMoveOrg: "Browse" => "Parcourir"
+.extButtonBrowseMoveOrg: "Browse" = CommanderForm.buttonExtBrowse
 .labelClipboard: "Clipboard" => "Presse-papier"
 .labelOriginal: "Original Image" => "Image originale"
 .labelEnabled: "Enable" => "Activer"
@@ -1072,7 +1076,7 @@ SECTION Crimes
 .onfoot_arccutteruse: "Using an arc cutter" => "Utilisation d'un arc cutter"
 .onfoot_breakingandentering: "Illegal Entry" => "Entrée illégale"
 .onfoot_carryingillegaldata: "Carrying illegal data" => "Transport de données illégales"
-.onfoot_carryingillegalgoods: "Carrying illegal goods" => "Transport de marchandises illégales"
+.onfoot_carryingillegalgoods: "Carrying illegal goods" = Crimes.illegalcargo
 .onfoot_carryingstolengoods: "Carrying stolen goods" => "Transport de marchandises volées"
 .onfoot_damagingdefences: "Damaging station defenses" => "Endommagement des défenses de la station"
 .onfoot_datatransfer: "Illegal transfer of data" => "Transfert illégal de données"
@@ -1152,13 +1156,14 @@ SECTION GovernmentTypes
 .Dictatorship: "Dictatorship" => "Dictature"
 .Feudal: "Feudal" => "Société féodale"
 .Imperial: "Imperial" => "Empire"
-.None: "None" => "Aucune"
+.None: "None" = Allegiances.None
 .Patronage: "Patronage" => "Société clientéliste"
 .Prison: "Prison" => "Centre de détention"
 .PrisonColony: "Prison Colony" => "Colonie pénitentiaire"
 .Theocracy: "Theocracy" => "Théocratie"
 .Engineer: "Engineer" => "Atelier"
 .Carrier: "Carrier" => "Propriétaire privé"
+.Undefined: "Undefined" @
 
 SECTION EconomyTypes
 
@@ -1169,7 +1174,7 @@ SECTION EconomyTypes
 .High_Tech: "High Tech" => "Haute Technologie"
 .Industrial: "Industrial" => "Industrie"
 .Military: "Military" => "Militaire"
-.None: "None" => "Aucune"
+.None: "None" = Allegiances.None
 .Refinery: "Refinery" => "Raffinage"
 .Service: "Service" => "Services"
 .Terraforming: "Terraforming" => "Terraformation"
@@ -1187,7 +1192,7 @@ SECTION SecurityTypes
 .Low: "Low" => "Faible"
 .Medium: "Medium" => "Moyenne"
 .High: "High" => "Élevée"
-.Anarchy: "Anarchy" => "Anarchie"
+.Anarchy: "Anarchy" = GovernmentTypes.Anarchy
 .Lawless: "Lawless" => "Sans-loi"
 
 SECTION StarportStates
@@ -1198,6 +1203,7 @@ SECTION StarportStates
 .Damaged: "Damaged" => "Endommagé"
 .Abandoned: "Abandoned" => "Abandonné"
 .UnderAttack: "Under Attack" => "Attaqué"
+.Construction: "Construction" @
 
 SECTION StarportTypes
 
@@ -1214,19 +1220,25 @@ SECTION StarportTypes
 .SurfaceStation: "Surface Station" => "Port planétaire"
 .CraterOutpost: "Crater Outpost" => "Avant-poste de cratère"
 .CraterPort: "Crater Port" => "Port planétaire de cratère"
+.SpaceConstructionDepot: "Space Construction Depot" @
+.PlanetaryConstructionDepot: "Planetary Construction Depot" @
+.DockablePlanetStation: "Dockable Planet Station" @
 
 SECTION PowerPlayStates
 
 .Unknown: "Unknown" = Unknown
 .InPrepareRadius: "In prepare radius" => "Dans le rayon de préparation"
 .Prepared: "Prepared" => "Préparé"
-.Exploited: "Exploited" => "Exploité"
+.Exploited: "Exploited" = FactionStates.Exploited
 .Contested: "Contested" => "Contesté"
 .Controlled: "Controlled" => "Contrôlé"
 .Turmoil: "In turmoil" => "Menacé"
 .HomeSystem: "Home system" => "Quartier général"
 .Fortified: "Fortified" => "Consolidé"
 .Stronghold: "Stronghold" => "Défendu"
+
+
+// these are the ones which can't be satisfied from ModulePartNames
 
 SECTION ModuleTypeNames
 
@@ -1274,6 +1286,7 @@ SECTION ModulePartNames
 .Tiny: "Tiny" => "Minuscule"
 .Standard: "Standard" @
 .Advanced: "Advanced" => "Avancé"
+
 .Lightweight_Alloy: "Lightweight Alloy" => "Alliage léger"
 .Reinforced_Alloy: "Reinforced Alloy" => "Alliage renforcé"
 .Military_Grade_Composite: "Military Grade Composite" => "Composite militaire"
@@ -1286,10 +1299,10 @@ SECTION ModulePartNames
 .Cytoscrambler_Burst_Laser: "Cytoscrambler Burst Laser" => "Laser à rafale cytobrouilleur"
 .Cannon: "Cannon" => "Canon"
 .Fragment_Cannon: "Fragment Cannon" => "Canon à fragmentation"
-.Pacifier_Fragment_Cannon: "Pacifier Fragment Cannon" => "Pacificateur à fragmentation"
+.Pacifier_Fragment_Cannon: "Pacifier Fragment Cannon" = ModuleTypeNames.Pacifier_Frag_Cannon
 .Cargo_Rack: "Cargo Rack" => "Compartiment soute"
 .Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" => "Compartiment de soute anticorrosion"
-.Manifest_Scanner: "Manifest Scanner" => "Détecteur de manifeste"
+.Manifest_Scanner: "Manifest Scanner" = ModuleTypeNames.Cargo_Scanner
 .Chaff_Launcher: "Chaff Launcher" => "Lanceur de paillettes"
 .Electronic_Countermeasure: "Electronic Countermeasure" => "Contre-mesures électronique"
 .Heat_Sink_Launcher: "Heat Sink Launcher" => "Éjecteur de dissipateur thermique"
@@ -1315,7 +1328,7 @@ SECTION ModulePartNames
 .Guardian_Hybrid_Power_Plant: "Guardian Hybrid Power Plant" => "Générateur hybride - Guardians"
 .Hull_Reinforcement_Package: "Hull Reinforcement Package" => "Renforcement de coque"
 .Guardian_Hull_Reinforcement_Package: "Guardian Hull Reinforcement Package" => "Pack de renforcement de coque - Guardians"
-.Meta_Alloy_Hull_Reinforcement_Package: "Meta Alloy Hull Reinforcement Package" => "Renforcement de coque en méta-alliage"
+.Meta_Alloy_Hull_Reinforcement_Package: "Meta Alloy Hull Reinforcement Package" = ModuleTypeNames.Meta_Alloy_Hull_Reinforcement
 .Frame_Shift_Drive: "Frame Shift Drive" => "Réacteur FSD"
 .Frame_Shift_Drive_(SCO): "Frame Shift Drive (SCO)" => "Réacteur FSD (SSN)"
 .Frame_Shift_Wake_Scanner: "Frame Shift Wake Scanner" => "Détecteur de sillage FSD"
@@ -1329,9 +1342,9 @@ SECTION ModulePartNames
 .Decontamination_Limpet_Controller: "Decontamination Limpet Controller" => "Contrôleur de drone de décontamination"
 .Recon_Limpet_Controller: "Recon Limpet Controller" => "Contrôleur de drone de reconnaissance"
 .Mining_Multi_Limpet_Controller: "Mining Multi Limpet Controller" => "Contrôleur multi-drones de minage"
-.Operations_Limpet_Controller: "Operations Limpet Controller" => "Contrôleur de drones d'opérations"
-.Rescue_Limpet_Controller: "Rescue Limpet Controller" => "Contrôleur de drones de sauvetage"
-.Xeno_Limpet_Controller: "Xeno Limpet Controller" => "Contrôleur de drones xéno"
+.Operations_Limpet_Controller: "Operations Limpet Controller" = ModuleTypeNames.Operations_Multi_Limpet_Controller
+.Rescue_Limpet_Controller: "Rescue Limpet Controller" = ModuleTypeNames.Rescue_Multi_Limpet_Controller
+.Xeno_Limpet_Controller: "Xeno Limpet Controller" = ModuleTypeNames.Xeno_Multi_Limpet_Controller
 .Universal_Multi_Limpet_Controller: "Universal Multi Limpet Controller" => "Contrôleur multi-drones universel"
 .Mine_Launcher: "Mine Launcher" => "Lance-mines"
 .Shock_Mine_Launcher: "Shock Mine Launcher" => "Lance-mines électriques"
@@ -1339,13 +1352,13 @@ SECTION ModulePartNames
 .Seismic_Charge_Launcher: "Seismic Charge Launcher" => "Lanceur à charge sismique"
 .Sub_Surface_Displacement_Missile: "Sub Surface Displacement Missile" => "Missile à charge pénétrante souterraine"
 .Mining_Laser: "Mining Laser" => "Laser minier"
-.Mining_Lance_Beam_Laser: "Mining Lance Beam Laser" => "Lance de minage laser"
+.Mining_Lance_Beam_Laser: "Mining Lance Beam Laser" = ModuleTypeNames.Mining_Lance
 .AX_Missile_Rack: "AX Missile Rack" => "Batterie de missiles AX"
 .Enhanced_AX_Missile_Rack: "Enhanced AX Missile Rack" => "Batterie missiles AX améliorée"
 .Guardian_Nanite_Torpedo_Pylon: "Guardian Nanite Torpedo Pylon" => "Tube lance-torpille à nanites - Guardians"
 .Seeker_Missile_Rack: "Seeker Missile Rack" => "Missiles TC"
 .Missile_Rack: "Missile Rack" => "Batterie de missiles"
-.Rocket_Propelled_FSD_Disrupter: "Rocket Propelled FSD Disrupter" => "Missile de confinement à propulsion"
+.Rocket_Propelled_FSD_Disrupter: "Rocket Propelled FSD Disrupter" = ModuleTypeNames.Rocket_Propelled_FSD_Disruptor
 .Pack_Hound_Missile_Rack: "Pack Hound Missile Rack" => "Batterie de missiles essaim"
 .Advanced_Torp_Pylon: "Advanced Torp Pylon" @
 .Advanced_Missile_Rack: "Advanced Missile Rack" => "Batterie de missiles perfectionnée"
@@ -1361,8 +1374,8 @@ SECTION ModulePartNames
 .Business: "Business" => "Affaire"
 .First: "First" => "1re"
 .Luxury: "Luxury" => "Luxe"
-.Advanced_Planet_Approach_Suite: "Advanced Planet Approach Suite" => "Inst. approche planétaire perfectionnés"
-.Planet_Approach_Suite: "Planet Approach Suite" => "Inst. approche planétaire"
+.Advanced_Planet_Approach_Suite: "Advanced Planet Approach Suite" = ModuleTypeNames.Advanced_Planetary_Approach_Suite
+.Planet_Approach_Suite: "Planet Approach Suite" = ModuleTypeNames.Planetary_Approach_Suite
 .Planetary_Vehicle_Hangar: "Planetary Vehicle Hangar" => "Hangar des véhicules planétaires"
 .Plasma_Accelerator: "Plasma Accelerator" => "Accélérateur à plasma"
 .Advanced_Plasma_Accelerator: "Advanced Plasma Accelerator" => "Accélérateur à plasma perfectionné"
@@ -1378,7 +1391,7 @@ SECTION ModulePartNames
 .Sensors: "Sensors" => "Capteurs"
 .Shield_Booster: "Shield Booster" => "Survolteur de bouclier"
 .Shield_Cell_Bank: "Shield Cell Bank" => "Réserve de cellules d'énergie"
-.Shield_Generator: "Shield Generator" => "Générateur de bouclier"
+.Shield_Generator: "Shield Generator" = MaterialCommodityMicroResourceType.amm_grenade_shield
 .Prismatic_Shield_Generator: "Prismatic Shield Generator" => "Générateur de bouclier prismatique"
 .Bi_Weave_Shield_Generator: "Bi Weave Shield Generator" => "Générateur de bouclier entrelacé"
 .Shutdown_Field_Neutraliser: "Shutdown Field Neutraliser" => "Neutralisateur de champ incapacitant"
@@ -1393,6 +1406,7 @@ SECTION ModulePartNames
 .Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" => "Détecteur de xénomorphes amélioré"
 .Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" => "Détecteur de xénomorphes à onde pulsée"
 .Concord_Cannon: "Concord Cannon" => "Canon Concorde"
+.Colonisation_Module: "Colonisation Module" @
 
 SECTION ShipSlots
 
@@ -1410,15 +1424,15 @@ SECTION ShipSlots
 .Bobble10: "Bobble Position 10" => "Tableau de bord 10"
 .CargoHatch: "Cargo Hatch" => "Écoutille de soute"
 .CodexScanner: "Codex Scanner" => "Détecteur de comp."
-.DataLinkScanner: "Data Link Scanner" => "Détecteur de liaison de données"
-.DiscoveryScanner: "Discovery Scanner" => "Détecteur découvertes"
+.DataLinkScanner: "Data Link Scanner" = ModuleTypeNames.Data_Link_Scanner
+.DiscoveryScanner: "Discovery Scanner" = ModuleTypeNames.Discovery_Scanner
 .Decal1: "Decal Front" => "Sticker avant"
 .Decal2: "Decal Right" => "Sticker droit"
 .Decal3: "Decal Left" => "Sticker gauche"
 .EngineColour: "Engine Colour" => "Détails du moteur"
 .Federation_Fighter_Shield: "Federation Fighter Shield" @
-.FrameShiftDrive: "Frame Shift Drive" => "Réacteur FSD"
-.FuelTank: "Fuel Tank" => "Réservoir"
+.FrameShiftDrive: "Frame Shift Drive" = ModulePartNames.Frame_Shift_Drive
+.FuelTank: "Fuel Tank" = ModulePartNames.Fuel_Tank
 .GDN_Hybrid_Fighter_V1_Shield: "GDN Hybrid Fighter V 1 Shield" @
 .GDN_Hybrid_Fighter_V2_Shield: "GDN Hybrid Fighter V 2 Shield" @
 .GDN_Hybrid_Fighter_V3_Shield: "GDN Hybrid Fighter V 3 Shield" @
@@ -1429,8 +1443,8 @@ SECTION ShipSlots
 .LargeHardpoint2: "Large Hardpoint 2" => "Point d'emport large 2"
 .LargeHardpoint3: "Large Hardpoint 3" => "Point d'emport large 3"
 .LargeHardpoint4: "Large Hardpoint 4" => "Point d'emport large 4"
-.LifeSupport: "Life Support" => "Systèmes de survie"
-.MainEngines: "Thrusters" => "Propulseurs"
+.LifeSupport: "Life Support" = ModulePartNames.Life_Support
+.MainEngines: "Thrusters" = ModulePartNames.Thrusters
 .MediumHardpoint1: "Medium Hardpoint 1" => "Point d'emport moyen 1"
 .MediumHardpoint2: "Medium Hardpoint 2" => "Point d'emport moyen 2"
 .MediumHardpoint3: "Medium Hardpoint 3" => "Point d'emport moyen 3"
@@ -1440,11 +1454,11 @@ SECTION ShipSlots
 .Military02: "Military Slot 2" => "Emplacement militaire 2"
 .Military03: "Military Slot 3" => "Emplacement militaire 3"
 .PaintJob: "Paint Job" => "Peinture"
-.PlanetaryApproachSuite: "Planetary Approach Suite" => "Inst. approche planétaire"
-.PowerDistributor: "Power Distributor" => "Répartiteur de puissance"
-.PowerPlant: "Power Plant" => "Générateur"
-.Radar: "Sensors" => "Capteurs"
-.ShieldGenerator: "Shield Generator" => "Générateur de bouclier"
+.PlanetaryApproachSuite: "Planetary Approach Suite" = ModuleTypeNames.Planetary_Approach_Suite
+.PowerDistributor: "Power Distributor" = ModulePartNames.Power_Distributor
+.PowerPlant: "Power Plant" = ModulePartNames.Power_Plant
+.Radar: "Sensors" = ModulePartNames.Sensors
+.ShieldGenerator: "Shield Generator" = MaterialCommodityMicroResourceType.amm_grenade_shield
 .ShipCockpit: "Ship Cockpit" => "Cockpit du vaisseau"
 .ShipID0: "Ship ID Right" => "Identifiant droit"
 .ShipID1: "Ship ID Left" => "Identifiant gauche"
@@ -1537,6 +1551,7 @@ SECTION ShipSlots
 .Turret2: "Turret Type 2" @
 .SineWaveScanner: "Sine Wave Scanner" @
 .BuggyCargoHatch: "Cargo Hatch" => "Ecoutille de soute"
+.ColonisationSuite: "Colonisation Suite" @
 
 SECTION StationServices
 
@@ -1548,7 +1563,7 @@ SECTION StationServices
 .Contacts: "Contacts" @
 .CrewLounge: "Crew Lounge" => "Salle d'attente de l'équipage"
 .Dock: "Dock" => "Appontage"
-.Workshop: "Workshop" => "Atelier"
+.Workshop: "Workshop" = GovernmentTypes.Engineer
 .FleetCarrierAdministration: "Fleet Carrier Administration" => "Administration - Porte-vaisseaux"
 .FleetCarrierFuel: "Fleet Carrier Fuel" @
 .FleetCarrierManagement: "Fleet Carrier Management" @
@@ -1557,8 +1572,8 @@ SECTION StationServices
 .FrontlineSolutions: "Frontline Solutions" @
 .InterstellarFactorsContact: "Interstellar Factors Contact" => "Interstellar Factors"
 .Initiatives: "Initiatives" @
-.Livery: "Livery" => "Livrée"
-.Market: "Market" => "Marchandises"
+.Livery: "Livery" = ModuleTypeNames.Vanity_Type
+.Market: "Market" = MaterialCommodityMicroResourceType.Goods
 .MaterialTrader: "Material Trader" => "Commerce de matériaux"
 .Missions: "Missions" @
 .MissionsGenerated: "Missions Generated" @
@@ -1568,7 +1583,7 @@ SECTION StationServices
 .Powerplay: "Powerplay" => "Contact au sein de la puissance"
 .RedemptionOffice: "Redemption Office" => "Bureau des récompenses"
 .Refuel: "Refuel" => "Carburant"
-.Repair: "Repair" => "Réparations"
+.Repair: "Repair" = EconomyTypes.Repair
 .Restock: "Restock" => "Ravitaillement"
 .SearchAndRescue: "Search And Rescue" => "Opérations de sauvetage"
 .Shipyard: "Shipyard" => "Chantier naval"
@@ -1580,3 +1595,6 @@ SECTION StationServices
 .Tuning: "Tuning" @
 .UniversalCartographics: "Universal Cartographics" @
 .VistaGenomics: "Vista Genomics" @
+.ConstructionServices: "Construction Services" @
+.RefineryContact: "Refinery Contact" @
+.SystemColonisation: "System Colonisation" @
