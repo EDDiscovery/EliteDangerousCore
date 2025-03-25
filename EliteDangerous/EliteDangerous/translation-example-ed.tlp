@@ -1206,6 +1206,7 @@ SECTION StarportStates
 .Construction: "Construction" @
 
 SECTION StarportTypes
+
 .Unknown: "Unknown" @
 .AsteroidBase: "Asteroid Base" @
 .Coriolis: "Coriolis" @
@@ -1219,7 +1220,7 @@ SECTION StarportTypes
 .SurfaceStation: "Surface Station" @
 .CraterOutpost: "Crater Outpost" @
 .CraterPort: "Crater Port" @
-.SpaceConstructionDepot : "Space Construction Depot" @
+.SpaceConstructionDepot: "Space Construction Depot" @
 .PlanetaryConstructionDepot: "Planetary Construction Depot" @
 .DockablePlanetStation: "Dockable Planet Station" @
 
@@ -1552,7 +1553,7 @@ SECTION ShipSlots
 .BuggyCargoHatch: "Cargo Hatch" @
 .ColonisationSuite: "Colonisation Suite" @
 
-Section StationServices
+SECTION StationServices
 
 .Unknown: "Unknown" @
 .ApexInterstellar: "Apex Interstellar" @
