@@ -1363,7 +1363,7 @@ SECTION ModulePartNames
 .Advanced_Torp_Pylon: "Advanced Torp Pylon" => "Lanzatorpedos Avanzado"
 .Advanced_Missile_Rack: "Advanced Missile Rack" => "Lanzamisiles Avanzado"
 .Human_Extraction_Missile: "Human Extraction Missile" => "Lanzamisiles de Extracción"
-.Enzyme_Missile_Rack: "Enzyme Missile Rack" @
+.Enzyme_Missile_Rack: "Enzyme Missile Rack" => "Lanzamisiles de Enzimas"
 .Module_Reinforcement_Package: "Module Reinforcement Package" => "Paquete de Refuerzo de Módulo"
 .AX_Multi_Cannon: "AX Multi Cannon" => "Multicañón AX"
 .Enhanced_AX_Multi_Cannon: "Enhanced AX Multi Cannon" => "Multicañón AX Mejorado"
