@@ -922,9 +922,9 @@ SECTION MaterialCommodityMicroResourceType
 .powerreasearch: "Research Notes" @
 .powerpreparationspyware: "Power Injection Malware" @
 .powerspyware: "Power Tracker Malware" @
-.powerresearchdata: "Power Research Data" @
-.poweremployeedata: "Power Association Data" @
-.powerfinancialrecords: "Power Industrial Data" @
+.powerresearchdata: "Power Research Data" => "Données de recherche de puissance"
+.poweremployeedata: "Power Association Data" => "Données d'association de puissance"
+.powerfinancialrecords: "Power Industrial Data" => "Données industrielles de puissance"
 .powerpropagandadata: "Power Political Data" @
 .powerclassifieddata: "Power Classified Data" @
 .powermegashipdata: "Power Megaship Data" @
@@ -933,8 +933,8 @@ SECTION MaterialCommodityMicroResourceType
 .tg_structuraldata02: "Thargoid Capital Ship Data" @
 .searchrescuevoucher: "Search and Rescue Voucher" => "Coupon de recherche et sauvetage"
 .unknowncorechip: "Tactical Core Chip" @
-.steel: "Steel" @
-.haematite: "Haematite" @
+.steel: "Steel" => "Acier"
+.haematite: "Haematite" => "Hématite"
 
 SECTION EngineeringData
 
@@ -1203,7 +1203,7 @@ SECTION StarportStates
 .Damaged: "Damaged" => "Endommagé"
 .Abandoned: "Abandoned" => "Abandonné"
 .UnderAttack: "Under Attack" => "Attaqué"
-.Construction: "Construction" @
+.Construction: "Construction" => "En construction"
 
 SECTION StarportTypes
 
@@ -1220,9 +1220,9 @@ SECTION StarportTypes
 .SurfaceStation: "Surface Station" => "Port planétaire"
 .CraterOutpost: "Crater Outpost" => "Avant-poste de cratère"
 .CraterPort: "Crater Port" => "Port planétaire de cratère"
-.SpaceConstructionDepot: "Space Construction Depot" @
-.PlanetaryConstructionDepot: "Planetary Construction Depot" @
-.DockablePlanetStation: "Dockable Planet Station" @
+.SpaceConstructionDepot: "Space Construction Depot" => "Dépôt de construction spatiale"
+.PlanetaryConstructionDepot: "Planetary Construction Depot" => "Dépôt de construction planétaire"
+.DockablePlanetStation: "Dockable Planet Station" => "Station planétaire amarrable"
 
 SECTION PowerPlayStates
 
@@ -1406,7 +1406,7 @@ SECTION ModulePartNames
 .Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" => "Détecteur de xénomorphes amélioré"
 .Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" => "Détecteur de xénomorphes à onde pulsée"
 .Concord_Cannon: "Concord Cannon" => "Canon Concorde"
-.Colonisation_Module: "Colonisation Module" @
+.Colonisation_Module: "Colonisation Module" => "Module de colonisation de système"
 
 SECTION ShipSlots
 
@@ -1547,11 +1547,11 @@ SECTION ShipSlots
 .TinyHardpoint8: "Utility Mount 8" => "Support utilitaire 8"
 .VesselVoice: "Vessel Voice" => "Voix du vaisseau"
 .WeaponColour: "Weapon Colour" => "Détails des armes"
-.Turret: "Turret" @
-.Turret2: "Turret Type 2" @
-.SineWaveScanner: "Sine Wave Scanner" @
+.Turret: "Turret" => "Tourelle"
+.Turret2: "Turret Type 2" => "Tourelle Type 2"
+.SineWaveScanner: "Sine Wave Scanner" => "Scanner à onde sinusoïdale"
 .BuggyCargoHatch: "Cargo Hatch" => "Ecoutille de soute"
-.ColonisationSuite: "Colonisation Suite" @
+.ColonisationSuite: "Colonisation Suite" => "Instruments de colonisation de système"
 
 SECTION StationServices
 
@@ -1565,10 +1565,10 @@ SECTION StationServices
 .Dock: "Dock" => "Appontage"
 .Workshop: "Workshop" = GovernmentTypes.Engineer
 .FleetCarrierAdministration: "Fleet Carrier Administration" => "Administration - Porte-vaisseaux"
-.FleetCarrierFuel: "Fleet Carrier Fuel" @
-.FleetCarrierManagement: "Fleet Carrier Management" @
+.FleetCarrierFuel: "Fleet Carrier Fuel" => "Dépôt de tritium"
+.FleetCarrierManagement: "Fleet Carrier Management" => "Porte-vaisseaux - Vue d'ensemble"
 .FleetCarrierVendor: "Fleet Carrier Vendor" => "Vendeur de porte-vaisseaux"
-.FlightController: "Flight Controller" @
+.FlightController: "Flight Controller" => "Contrôleur de vol"
 .FrontlineSolutions: "Frontline Solutions" @
 .InterstellarFactorsContact: "Interstellar Factors Contact" => "Interstellar Factors"
 .Initiatives: "Initiatives" @
@@ -1576,8 +1576,8 @@ SECTION StationServices
 .Market: "Market" = MaterialCommodityMicroResourceType.Goods
 .MaterialTrader: "Material Trader" => "Commerce de matériaux"
 .Missions: "Missions" @
-.MissionsGenerated: "Missions Generated" @
-.OnDockMission: "On Dock Mission" @
+.MissionsGenerated: "Missions Generated" => "Missions générées"
+.OnDockMission: "On Dock Mission" => "Mission à quai"
 .Outfitting: "Outfitting" => "Équipement"
 .PioneerSupplies: "Pioneer Supplies" @
 .Powerplay: "Powerplay" => "Contact au sein de la puissance"
@@ -1589,12 +1589,12 @@ SECTION StationServices
 .Shipyard: "Shipyard" => "Chantier naval"
 .Shop: "Shop" => "Vendeur"
 .SocialSpace: "Social Space" => "Hall principal"
-.StationMenu: "Station Menu" @
-.StationOperations: "Station Operations" @
+.StationMenu: "Station Menu" => Services"
+.StationOperations: "Station Operations" => "Opérations de station"
 .TechnologyBroker: "Technology Broker" => "Courtier en technologie"
-.Tuning: "Tuning" @
+.Tuning: "Tuning" => "Réglages"
 .UniversalCartographics: "Universal Cartographics" @
 .VistaGenomics: "Vista Genomics" @
-.ConstructionServices: "Construction Services" @
-.RefineryContact: "Refinery Contact" @
-.SystemColonisation: "System Colonisation" @
+.ConstructionServices: "Construction Services" => "Dépôt de construction"
+.RefineryContact: "Refinery Contact" => "Contact de raffinage"
+.SystemColonisation: "System Colonisation" => "Colonisation de système"
