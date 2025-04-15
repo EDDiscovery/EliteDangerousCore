@@ -145,7 +145,6 @@
             this.extScrollBar.AlwaysHideScrollBar = false;
             this.extScrollBar.ArrowBorderColor = System.Drawing.Color.LightBlue;
             this.extScrollBar.ArrowButtonColor = System.Drawing.Color.LightGray;
-            this.extScrollBar.ArrowColorScaling = 0.5F;
             this.extScrollBar.ArrowDownDrawAngle = 270F;
             this.extScrollBar.ArrowUpDrawAngle = 90F;
             this.extScrollBar.BorderColor = System.Drawing.Color.White;
@@ -165,7 +164,6 @@
             this.extScrollBar.Text = "extScrollBar1";
             this.extScrollBar.ThumbBorderColor = System.Drawing.Color.Yellow;
             this.extScrollBar.ThumbButtonColor = System.Drawing.Color.DarkBlue;
-            this.extScrollBar.ThumbColorScaling = 0.5F;
             this.extScrollBar.ThumbDrawAngle = 0F;
             this.extScrollBar.Value = -6;
             this.extScrollBar.ValueLimited = -6;
@@ -184,7 +182,6 @@
             // 
             this.numericUpDownQuality.AutoSizeTextBox = true;
             this.numericUpDownQuality.BorderColor = System.Drawing.Color.Transparent;
-            this.numericUpDownQuality.BorderColorScaling = 0.5F;
             this.numericUpDownQuality.Location = new System.Drawing.Point(539, 171);
             this.numericUpDownQuality.Maximum = 100;
             this.numericUpDownQuality.Minimum = 0;
@@ -201,15 +198,12 @@
             // 
             this.extCheckBoxEnabled.AutoSize = true;
             this.extCheckBoxEnabled.CheckBoxColor = System.Drawing.Color.Gray;
-            this.extCheckBoxEnabled.CheckBoxDisabledScaling = 0.5F;
             this.extCheckBoxEnabled.CheckBoxInnerColor = System.Drawing.Color.White;
             this.extCheckBoxEnabled.CheckColor = System.Drawing.Color.DarkBlue;
-            this.extCheckBoxEnabled.ImageButtonDisabledScaling = 0.5F;
             this.extCheckBoxEnabled.ImageIndeterminate = null;
             this.extCheckBoxEnabled.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.extCheckBoxEnabled.ImageUnchecked = null;
             this.extCheckBoxEnabled.Location = new System.Drawing.Point(216, 14);
-            this.extCheckBoxEnabled.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.extCheckBoxEnabled.Name = "extCheckBoxEnabled";
             this.extCheckBoxEnabled.Size = new System.Drawing.Size(121, 17);
             this.extCheckBoxEnabled.TabIndex = 35;
@@ -221,15 +215,12 @@
             // 
             this.extCheckBoxHiRes.AutoSize = true;
             this.extCheckBoxHiRes.CheckBoxColor = System.Drawing.Color.Gray;
-            this.extCheckBoxHiRes.CheckBoxDisabledScaling = 0.5F;
             this.extCheckBoxHiRes.CheckBoxInnerColor = System.Drawing.Color.White;
             this.extCheckBoxHiRes.CheckColor = System.Drawing.Color.DarkBlue;
-            this.extCheckBoxHiRes.ImageButtonDisabledScaling = 0.5F;
             this.extCheckBoxHiRes.ImageIndeterminate = null;
             this.extCheckBoxHiRes.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.extCheckBoxHiRes.ImageUnchecked = null;
             this.extCheckBoxHiRes.Location = new System.Drawing.Point(216, 269);
-            this.extCheckBoxHiRes.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.extCheckBoxHiRes.Name = "extCheckBoxHiRes";
             this.extCheckBoxHiRes.Size = new System.Drawing.Size(106, 17);
             this.extCheckBoxHiRes.TabIndex = 34;
@@ -242,15 +233,12 @@
             // 
             this.extCheckBoxKeepMasterConvertedImage.AutoSize = true;
             this.extCheckBoxKeepMasterConvertedImage.CheckBoxColor = System.Drawing.Color.Gray;
-            this.extCheckBoxKeepMasterConvertedImage.CheckBoxDisabledScaling = 0.5F;
             this.extCheckBoxKeepMasterConvertedImage.CheckBoxInnerColor = System.Drawing.Color.White;
             this.extCheckBoxKeepMasterConvertedImage.CheckColor = System.Drawing.Color.DarkBlue;
-            this.extCheckBoxKeepMasterConvertedImage.ImageButtonDisabledScaling = 0.5F;
             this.extCheckBoxKeepMasterConvertedImage.ImageIndeterminate = null;
             this.extCheckBoxKeepMasterConvertedImage.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.extCheckBoxKeepMasterConvertedImage.ImageUnchecked = null;
             this.extCheckBoxKeepMasterConvertedImage.Location = new System.Drawing.Point(217, 596);
-            this.extCheckBoxKeepMasterConvertedImage.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.extCheckBoxKeepMasterConvertedImage.Name = "extCheckBoxKeepMasterConvertedImage";
             this.extCheckBoxKeepMasterConvertedImage.Size = new System.Drawing.Size(167, 17);
             this.extCheckBoxKeepMasterConvertedImage.TabIndex = 34;
@@ -261,13 +249,11 @@
             // extComboBoxConvert2
             // 
             this.extComboBoxConvert2.BorderColor = System.Drawing.Color.White;
-            this.extComboBoxConvert2.ButtonColorScaling = 0.5F;
             this.extComboBoxConvert2.DataSource = null;
             this.extComboBoxConvert2.DisableBackgroundDisabledShadingGradient = false;
             this.extComboBoxConvert2.DisplayMember = "";
             this.extComboBoxConvert2.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.extComboBoxConvert2.Location = new System.Drawing.Point(429, 408);
-            this.extComboBoxConvert2.MouseOverBackgroundColor = System.Drawing.Color.Silver;
             this.extComboBoxConvert2.Name = "extComboBoxConvert2";
             this.extComboBoxConvert2.SelectedIndex = -1;
             this.extComboBoxConvert2.SelectedItem = null;
@@ -281,13 +267,11 @@
             // extComboBoxConvert1
             // 
             this.extComboBoxConvert1.BorderColor = System.Drawing.Color.White;
-            this.extComboBoxConvert1.ButtonColorScaling = 0.5F;
             this.extComboBoxConvert1.DataSource = null;
             this.extComboBoxConvert1.DisableBackgroundDisabledShadingGradient = false;
             this.extComboBoxConvert1.DisplayMember = "";
             this.extComboBoxConvert1.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.extComboBoxConvert1.Location = new System.Drawing.Point(216, 408);
-            this.extComboBoxConvert1.MouseOverBackgroundColor = System.Drawing.Color.Silver;
             this.extComboBoxConvert1.Name = "extComboBoxConvert1";
             this.extComboBoxConvert1.SelectedIndex = -1;
             this.extComboBoxConvert1.SelectedItem = null;
@@ -310,9 +294,7 @@
             // 
             // extGroupBox1
             // 
-            this.extGroupBox1.BackColorScaling = 0.5F;
             this.extGroupBox1.BorderColor = System.Drawing.Color.LightGray;
-            this.extGroupBox1.BorderColorScaling = 0.5F;
             this.extGroupBox1.Controls.Add(this.extNumericUpDownHeight2);
             this.extGroupBox1.Controls.Add(this.extNumericUpDownWidth2);
             this.extGroupBox1.Controls.Add(this.extNumericUpDownLeft2);
@@ -334,7 +316,6 @@
             // 
             this.extNumericUpDownHeight2.AutoSizeTextBox = false;
             this.extNumericUpDownHeight2.BorderColor = System.Drawing.Color.Transparent;
-            this.extNumericUpDownHeight2.BorderColorScaling = 0.5F;
             this.extNumericUpDownHeight2.Location = new System.Drawing.Point(122, 110);
             this.extNumericUpDownHeight2.Maximum = 10000;
             this.extNumericUpDownHeight2.Minimum = 0;
@@ -350,7 +331,6 @@
             // 
             this.extNumericUpDownWidth2.AutoSizeTextBox = false;
             this.extNumericUpDownWidth2.BorderColor = System.Drawing.Color.Transparent;
-            this.extNumericUpDownWidth2.BorderColorScaling = 0.5F;
             this.extNumericUpDownWidth2.Location = new System.Drawing.Point(122, 80);
             this.extNumericUpDownWidth2.Maximum = 10000;
             this.extNumericUpDownWidth2.Minimum = 0;
@@ -366,7 +346,6 @@
             // 
             this.extNumericUpDownLeft2.AutoSizeTextBox = false;
             this.extNumericUpDownLeft2.BorderColor = System.Drawing.Color.Transparent;
-            this.extNumericUpDownLeft2.BorderColorScaling = 0.5F;
             this.extNumericUpDownLeft2.Location = new System.Drawing.Point(122, 50);
             this.extNumericUpDownLeft2.Maximum = 10000;
             this.extNumericUpDownLeft2.Minimum = 0;
@@ -382,7 +361,6 @@
             // 
             this.extNumericUpDownTop2.AutoSizeTextBox = false;
             this.extNumericUpDownTop2.BorderColor = System.Drawing.Color.Transparent;
-            this.extNumericUpDownTop2.BorderColorScaling = 0.5F;
             this.extNumericUpDownTop2.Location = new System.Drawing.Point(122, 20);
             this.extNumericUpDownTop2.Maximum = 10000;
             this.extNumericUpDownTop2.Minimum = 0;
@@ -442,9 +420,7 @@
             // 
             // groupBoxCropSettings
             // 
-            this.groupBoxCropSettings.BackColorScaling = 0.5F;
             this.groupBoxCropSettings.BorderColor = System.Drawing.Color.LightGray;
-            this.groupBoxCropSettings.BorderColorScaling = 0.5F;
             this.groupBoxCropSettings.Controls.Add(this.numericUpDownHeight1);
             this.groupBoxCropSettings.Controls.Add(this.numericUpDownWidth1);
             this.groupBoxCropSettings.Controls.Add(this.numericUpDownLeft1);
@@ -466,7 +442,6 @@
             // 
             this.numericUpDownHeight1.AutoSizeTextBox = false;
             this.numericUpDownHeight1.BorderColor = System.Drawing.Color.Transparent;
-            this.numericUpDownHeight1.BorderColorScaling = 0.5F;
             this.numericUpDownHeight1.Location = new System.Drawing.Point(122, 110);
             this.numericUpDownHeight1.Maximum = 10000;
             this.numericUpDownHeight1.Minimum = 0;
@@ -482,7 +457,6 @@
             // 
             this.numericUpDownWidth1.AutoSizeTextBox = false;
             this.numericUpDownWidth1.BorderColor = System.Drawing.Color.Transparent;
-            this.numericUpDownWidth1.BorderColorScaling = 0.5F;
             this.numericUpDownWidth1.Location = new System.Drawing.Point(122, 80);
             this.numericUpDownWidth1.Maximum = 10000;
             this.numericUpDownWidth1.Minimum = 0;
@@ -498,7 +472,6 @@
             // 
             this.numericUpDownLeft1.AutoSizeTextBox = false;
             this.numericUpDownLeft1.BorderColor = System.Drawing.Color.Transparent;
-            this.numericUpDownLeft1.BorderColorScaling = 0.5F;
             this.numericUpDownLeft1.Location = new System.Drawing.Point(122, 50);
             this.numericUpDownLeft1.Maximum = 10000;
             this.numericUpDownLeft1.Minimum = 0;
@@ -514,7 +487,6 @@
             // 
             this.numericUpDownTop1.AutoSizeTextBox = false;
             this.numericUpDownTop1.BorderColor = System.Drawing.Color.Transparent;
-            this.numericUpDownTop1.BorderColorScaling = 0.5F;
             this.numericUpDownTop1.Location = new System.Drawing.Point(122, 20);
             this.numericUpDownTop1.Maximum = 10000;
             this.numericUpDownTop1.Minimum = 0;
@@ -569,7 +541,6 @@
             this.textBoxScreenshotsDir.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
             this.textBoxScreenshotsDir.BackErrorColor = System.Drawing.Color.Red;
             this.textBoxScreenshotsDir.BorderColor = System.Drawing.Color.Transparent;
-            this.textBoxScreenshotsDir.BorderColorScaling = 0.5F;
             this.textBoxScreenshotsDir.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxScreenshotsDir.ClearOnFirstChar = false;
             this.textBoxScreenshotsDir.ControlBackground = System.Drawing.SystemColors.Control;
@@ -609,7 +580,6 @@
             this.textBoxFileNameExample.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
             this.textBoxFileNameExample.BackErrorColor = System.Drawing.Color.Red;
             this.textBoxFileNameExample.BorderColor = System.Drawing.Color.Transparent;
-            this.textBoxFileNameExample.BorderColorScaling = 0.5F;
             this.textBoxFileNameExample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxFileNameExample.ClearOnFirstChar = false;
             this.textBoxFileNameExample.ControlBackground = System.Drawing.SystemColors.Control;
@@ -694,7 +664,6 @@
             this.textBoxOutputDir.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
             this.textBoxOutputDir.BackErrorColor = System.Drawing.Color.Red;
             this.textBoxOutputDir.BorderColor = System.Drawing.Color.Transparent;
-            this.textBoxOutputDir.BorderColorScaling = 0.5F;
             this.textBoxOutputDir.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxOutputDir.ClearOnFirstChar = false;
             this.textBoxOutputDir.ControlBackground = System.Drawing.SystemColors.Control;
@@ -720,13 +689,11 @@
             // comboBoxSubFolder
             // 
             this.comboBoxSubFolder.BorderColor = System.Drawing.Color.Red;
-            this.comboBoxSubFolder.ButtonColorScaling = 0.5F;
             this.comboBoxSubFolder.DataSource = null;
             this.comboBoxSubFolder.DisableBackgroundDisabledShadingGradient = false;
             this.comboBoxSubFolder.DisplayMember = "";
             this.comboBoxSubFolder.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.comboBoxSubFolder.Location = new System.Drawing.Point(217, 205);
-            this.comboBoxSubFolder.MouseOverBackgroundColor = System.Drawing.Color.Silver;
             this.comboBoxSubFolder.Name = "comboBoxSubFolder";
             this.comboBoxSubFolder.SelectedIndex = -1;
             this.comboBoxSubFolder.SelectedItem = null;
@@ -740,13 +707,11 @@
             // comboBoxFileNameFormat
             // 
             this.comboBoxFileNameFormat.BorderColor = System.Drawing.Color.Red;
-            this.comboBoxFileNameFormat.ButtonColorScaling = 0.5F;
             this.comboBoxFileNameFormat.DataSource = null;
             this.comboBoxFileNameFormat.DisableBackgroundDisabledShadingGradient = false;
             this.comboBoxFileNameFormat.DisplayMember = "";
             this.comboBoxFileNameFormat.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.comboBoxFileNameFormat.Location = new System.Drawing.Point(217, 240);
-            this.comboBoxFileNameFormat.MouseOverBackgroundColor = System.Drawing.Color.Silver;
             this.comboBoxFileNameFormat.Name = "comboBoxFileNameFormat";
             this.comboBoxFileNameFormat.SelectedIndex = -1;
             this.comboBoxFileNameFormat.SelectedItem = null;
@@ -834,13 +799,11 @@
             // extComboBoxClipboard
             // 
             this.extComboBoxClipboard.BorderColor = System.Drawing.Color.Red;
-            this.extComboBoxClipboard.ButtonColorScaling = 0.5F;
             this.extComboBoxClipboard.DataSource = null;
             this.extComboBoxClipboard.DisableBackgroundDisabledShadingGradient = false;
             this.extComboBoxClipboard.DisplayMember = "";
             this.extComboBoxClipboard.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.extComboBoxClipboard.Location = new System.Drawing.Point(217, 349);
-            this.extComboBoxClipboard.MouseOverBackgroundColor = System.Drawing.Color.Silver;
             this.extComboBoxClipboard.Name = "extComboBoxClipboard";
             this.extComboBoxClipboard.SelectedIndex = -1;
             this.extComboBoxClipboard.SelectedItem = null;
@@ -853,13 +816,11 @@
             // extComboBoxOriginalImageSel
             // 
             this.extComboBoxOriginalImageSel.BorderColor = System.Drawing.Color.Red;
-            this.extComboBoxOriginalImageSel.ButtonColorScaling = 0.5F;
             this.extComboBoxOriginalImageSel.DataSource = null;
             this.extComboBoxOriginalImageSel.DisableBackgroundDisabledShadingGradient = false;
             this.extComboBoxOriginalImageSel.DisplayMember = "";
             this.extComboBoxOriginalImageSel.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.extComboBoxOriginalImageSel.Location = new System.Drawing.Point(216, 98);
-            this.extComboBoxOriginalImageSel.MouseOverBackgroundColor = System.Drawing.Color.Silver;
             this.extComboBoxOriginalImageSel.Name = "extComboBoxOriginalImageSel";
             this.extComboBoxOriginalImageSel.SelectedIndex = -1;
             this.extComboBoxOriginalImageSel.SelectedItem = null;
@@ -872,13 +833,11 @@
             // comboBoxScanFor
             // 
             this.comboBoxScanFor.BorderColor = System.Drawing.Color.Red;
-            this.comboBoxScanFor.ButtonColorScaling = 0.5F;
             this.comboBoxScanFor.DataSource = null;
             this.comboBoxScanFor.DisableBackgroundDisabledShadingGradient = false;
             this.comboBoxScanFor.DisplayMember = "";
             this.comboBoxScanFor.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.comboBoxScanFor.Location = new System.Drawing.Point(216, 65);
-            this.comboBoxScanFor.MouseOverBackgroundColor = System.Drawing.Color.Silver;
             this.comboBoxScanFor.Name = "comboBoxScanFor";
             this.comboBoxScanFor.SelectedIndex = -1;
             this.comboBoxScanFor.SelectedItem = null;
@@ -891,13 +850,11 @@
             // comboBoxOutputAs
             // 
             this.comboBoxOutputAs.BorderColor = System.Drawing.Color.Red;
-            this.comboBoxOutputAs.ButtonColorScaling = 0.5F;
             this.comboBoxOutputAs.DataSource = null;
             this.comboBoxOutputAs.DisableBackgroundDisabledShadingGradient = false;
             this.comboBoxOutputAs.DisplayMember = "";
             this.comboBoxOutputAs.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.comboBoxOutputAs.Location = new System.Drawing.Point(216, 171);
-            this.comboBoxOutputAs.MouseOverBackgroundColor = System.Drawing.Color.Silver;
             this.comboBoxOutputAs.Name = "comboBoxOutputAs";
             this.comboBoxOutputAs.SelectedIndex = -1;
             this.comboBoxOutputAs.SelectedItem = null;
@@ -929,7 +886,6 @@
             this.panel_close.Image = null;
             this.panel_close.ImageSelected = ExtendedControls.ExtButtonDrawn.ImageType.Close;
             this.panel_close.Location = new System.Drawing.Point(635, 0);
-            this.panel_close.MouseOverColor = System.Drawing.Color.White;
             this.panel_close.MouseSelectedColor = System.Drawing.Color.Green;
             this.panel_close.MouseSelectedColorEnable = true;
             this.panel_close.Name = "panel_close";
@@ -950,7 +906,6 @@
             this.panel_minimize.Image = null;
             this.panel_minimize.ImageSelected = ExtendedControls.ExtButtonDrawn.ImageType.Minimize;
             this.panel_minimize.Location = new System.Drawing.Point(605, 0);
-            this.panel_minimize.MouseOverColor = System.Drawing.Color.White;
             this.panel_minimize.MouseSelectedColor = System.Drawing.Color.Green;
             this.panel_minimize.MouseSelectedColorEnable = true;
             this.panel_minimize.Name = "panel_minimize";

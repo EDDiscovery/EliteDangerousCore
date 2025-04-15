@@ -38,7 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="QuickJSON, Version=2.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)\packages\RJKJSoft.QuickJSON.2.7.0\lib\net48\QuickJSON.dll</HintPath>
+      <HintPath>..\..\packages\RJKJSoft.QuickJSON.2.7.0\lib\net48\QuickJSON.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -121,10 +121,10 @@
     <Compile Include="Journal\JournalTest.cs" />
     <Compile Include="StarScan\StarScanFSSDiscoveryScan.cs" />
     <Compile Include="Stats\EngineerCrafting.cs" />
-    <Compile Include="Forms\CommanderForm.cs">
+    <Compile Include="DB\CommanderForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\CommanderForm.Designer.cs">
+    <Compile Include="DB\CommanderForm.Designer.cs">
       <DependentUpon>CommanderForm.cs</DependentUpon>
     </Compile>
     <Compile Include="HistoryList\HistoryList.cs" />
@@ -191,7 +191,7 @@
     <Compile Include="Items\Identifiers.cs" />
     <Compile Include="Stats\Carrier.cs" />
     <Compile Include="Stats\Stats.cs" />
-    <Compile Include="Status\EDStatusReader.cs" />
+    <Compile Include="UIEvents\EDStatusReader.cs" />
     <Compile Include="Bindings\FrontierToVKey.cs" />
     <Compile Include="SystemDB\SystemsPermitSystems.cs" />
     <Compile Include="Systems\ISystem.cs" />
@@ -292,7 +292,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Status\UIEvents.cs" />
+    <Compile Include="UIEvents\UIEvents.cs" />
     <Compile Include="Suit\SuitLoadouts.cs" />
     <Compile Include="Suit\SuitWeaponsInformation.cs" />
     <Compile Include="Suit\SuitInformation.cs" />
@@ -371,7 +371,7 @@
     <EmbeddedResource Include="DLL\DemonstrationUserControl.resx">
       <DependentUpon>DemonstrationUserControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CommanderForm.resx">
+    <EmbeddedResource Include="DB\CommanderForm.resx">
       <DependentUpon>CommanderForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

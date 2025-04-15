@@ -46,7 +46,7 @@
             this.checkBoxCustomInara = new ExtendedControls.ExtCheckBox();
             this.textBoxBorderInaraName = new ExtendedControls.ExtTextBox();
             this.textBoxBorderInaraAPIKey = new ExtendedControls.ExtTextBox();
-            this.panel_defaultmapcolor = new ExtendedControls.PanelNoTheme();
+            this.panel_defaultmapcolor = new ExtendedControls.ExtPanelChildThemeControl();
             this.groupBoxCustomEDDN = new ExtendedControls.ExtGroupBox();
             this.groupBoxCustomEDSM = new ExtendedControls.ExtGroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -113,7 +113,6 @@
             this.panel_close.Image = null;
             this.panel_close.ImageSelected = ExtendedControls.ExtButtonDrawn.ImageType.Close;
             this.panel_close.Location = new System.Drawing.Point(697, 0);
-            this.panel_close.MouseOverColor = System.Drawing.Color.White;
             this.panel_close.MouseSelectedColor = System.Drawing.Color.Green;
             this.panel_close.MouseSelectedColorEnable = true;
             this.panel_close.Name = "panel_close";
@@ -134,7 +133,6 @@
             this.panel_minimize.Image = null;
             this.panel_minimize.ImageSelected = ExtendedControls.ExtButtonDrawn.ImageType.Minimize;
             this.panel_minimize.Location = new System.Drawing.Point(667, 0);
-            this.panel_minimize.MouseOverColor = System.Drawing.Color.White;
             this.panel_minimize.MouseSelectedColor = System.Drawing.Color.Green;
             this.panel_minimize.MouseSelectedColorEnable = true;
             this.panel_minimize.Name = "panel_minimize";
@@ -165,15 +163,12 @@
             // 
             this.checkBoxCustomEDDNTo.AutoSize = true;
             this.checkBoxCustomEDDNTo.CheckBoxColor = System.Drawing.Color.Gray;
-            this.checkBoxCustomEDDNTo.CheckBoxDisabledScaling = 0.5F;
             this.checkBoxCustomEDDNTo.CheckBoxInnerColor = System.Drawing.Color.White;
             this.checkBoxCustomEDDNTo.CheckColor = System.Drawing.Color.DarkBlue;
-            this.checkBoxCustomEDDNTo.ImageButtonDisabledScaling = 0.5F;
             this.checkBoxCustomEDDNTo.ImageIndeterminate = null;
             this.checkBoxCustomEDDNTo.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.checkBoxCustomEDDNTo.ImageUnchecked = null;
             this.checkBoxCustomEDDNTo.Location = new System.Drawing.Point(9, 19);
-            this.checkBoxCustomEDDNTo.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.checkBoxCustomEDDNTo.Name = "checkBoxCustomEDDNTo";
             this.checkBoxCustomEDDNTo.Size = new System.Drawing.Size(183, 17);
             this.checkBoxCustomEDDNTo.TabIndex = 0;
@@ -187,15 +182,12 @@
             // 
             this.checkBoxCustomEDSMFrom.AutoSize = true;
             this.checkBoxCustomEDSMFrom.CheckBoxColor = System.Drawing.Color.Gray;
-            this.checkBoxCustomEDSMFrom.CheckBoxDisabledScaling = 0.5F;
             this.checkBoxCustomEDSMFrom.CheckBoxInnerColor = System.Drawing.Color.White;
             this.checkBoxCustomEDSMFrom.CheckColor = System.Drawing.Color.DarkBlue;
-            this.checkBoxCustomEDSMFrom.ImageButtonDisabledScaling = 0.5F;
             this.checkBoxCustomEDSMFrom.ImageIndeterminate = null;
             this.checkBoxCustomEDSMFrom.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.checkBoxCustomEDSMFrom.ImageUnchecked = null;
             this.checkBoxCustomEDSMFrom.Location = new System.Drawing.Point(459, 32);
-            this.checkBoxCustomEDSMFrom.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.checkBoxCustomEDSMFrom.Name = "checkBoxCustomEDSMFrom";
             this.checkBoxCustomEDSMFrom.Size = new System.Drawing.Size(110, 17);
             this.checkBoxCustomEDSMFrom.TabIndex = 3;
@@ -209,15 +201,12 @@
             // 
             this.checkBoxCustomEDSMTo.AutoSize = true;
             this.checkBoxCustomEDSMTo.CheckBoxColor = System.Drawing.Color.Gray;
-            this.checkBoxCustomEDSMTo.CheckBoxDisabledScaling = 0.5F;
             this.checkBoxCustomEDSMTo.CheckBoxInnerColor = System.Drawing.Color.White;
             this.checkBoxCustomEDSMTo.CheckColor = System.Drawing.Color.DarkBlue;
-            this.checkBoxCustomEDSMTo.ImageButtonDisabledScaling = 0.5F;
             this.checkBoxCustomEDSMTo.ImageIndeterminate = null;
             this.checkBoxCustomEDSMTo.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.checkBoxCustomEDSMTo.ImageUnchecked = null;
             this.checkBoxCustomEDSMTo.Location = new System.Drawing.Point(459, 3);
-            this.checkBoxCustomEDSMTo.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.checkBoxCustomEDSMTo.Name = "checkBoxCustomEDSMTo";
             this.checkBoxCustomEDSMTo.Size = new System.Drawing.Size(96, 17);
             this.checkBoxCustomEDSMTo.TabIndex = 2;
@@ -243,7 +232,6 @@
             this.textBoxBorderEDSMName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
             this.textBoxBorderEDSMName.BackErrorColor = System.Drawing.Color.Red;
             this.textBoxBorderEDSMName.BorderColor = System.Drawing.Color.Transparent;
-            this.textBoxBorderEDSMName.BorderColorScaling = 0.5F;
             this.textBoxBorderEDSMName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxBorderEDSMName.ClearOnFirstChar = false;
             this.textBoxBorderEDSMName.ControlBackground = System.Drawing.SystemColors.Control;
@@ -272,7 +260,6 @@
             this.textBoxBorderEDSMAPI.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
             this.textBoxBorderEDSMAPI.BackErrorColor = System.Drawing.Color.Red;
             this.textBoxBorderEDSMAPI.BorderColor = System.Drawing.Color.Transparent;
-            this.textBoxBorderEDSMAPI.BorderColorScaling = 0.5F;
             this.textBoxBorderEDSMAPI.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxBorderEDSMAPI.ClearOnFirstChar = false;
             this.textBoxBorderEDSMAPI.ControlBackground = System.Drawing.SystemColors.Control;
@@ -302,7 +289,6 @@
             this.textBoxBorderJournal.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
             this.textBoxBorderJournal.BackErrorColor = System.Drawing.Color.Red;
             this.textBoxBorderJournal.BorderColor = System.Drawing.Color.Transparent;
-            this.textBoxBorderJournal.BorderColorScaling = 0.5F;
             this.textBoxBorderJournal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxBorderJournal.ClearOnFirstChar = false;
             this.textBoxBorderJournal.ControlBackground = System.Drawing.SystemColors.Control;
@@ -331,7 +317,6 @@
             this.textBoxBorderCmdr.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
             this.textBoxBorderCmdr.BackErrorColor = System.Drawing.Color.Red;
             this.textBoxBorderCmdr.BorderColor = System.Drawing.Color.Transparent;
-            this.textBoxBorderCmdr.BorderColorScaling = 0.5F;
             this.textBoxBorderCmdr.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxBorderCmdr.ClearOnFirstChar = false;
             this.textBoxBorderCmdr.ControlBackground = System.Drawing.SystemColors.Control;
@@ -358,15 +343,12 @@
             // 
             this.checkBoxCustomInara.AutoSize = true;
             this.checkBoxCustomInara.CheckBoxColor = System.Drawing.Color.Gray;
-            this.checkBoxCustomInara.CheckBoxDisabledScaling = 0.5F;
             this.checkBoxCustomInara.CheckBoxInnerColor = System.Drawing.Color.White;
             this.checkBoxCustomInara.CheckColor = System.Drawing.Color.DarkBlue;
-            this.checkBoxCustomInara.ImageButtonDisabledScaling = 0.5F;
             this.checkBoxCustomInara.ImageIndeterminate = null;
             this.checkBoxCustomInara.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.checkBoxCustomInara.ImageUnchecked = null;
             this.checkBoxCustomInara.Location = new System.Drawing.Point(459, 3);
-            this.checkBoxCustomInara.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.checkBoxCustomInara.Name = "checkBoxCustomInara";
             this.checkBoxCustomInara.Size = new System.Drawing.Size(89, 17);
             this.checkBoxCustomInara.TabIndex = 2;
@@ -381,7 +363,6 @@
             this.textBoxBorderInaraName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
             this.textBoxBorderInaraName.BackErrorColor = System.Drawing.Color.Red;
             this.textBoxBorderInaraName.BorderColor = System.Drawing.Color.Transparent;
-            this.textBoxBorderInaraName.BorderColorScaling = 0.5F;
             this.textBoxBorderInaraName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxBorderInaraName.ClearOnFirstChar = false;
             this.textBoxBorderInaraName.ControlBackground = System.Drawing.SystemColors.Control;
@@ -410,7 +391,6 @@
             this.textBoxBorderInaraAPIKey.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
             this.textBoxBorderInaraAPIKey.BackErrorColor = System.Drawing.Color.Red;
             this.textBoxBorderInaraAPIKey.BorderColor = System.Drawing.Color.Transparent;
-            this.textBoxBorderInaraAPIKey.BorderColorScaling = 0.5F;
             this.textBoxBorderInaraAPIKey.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxBorderInaraAPIKey.ClearOnFirstChar = false;
             this.textBoxBorderInaraAPIKey.ControlBackground = System.Drawing.SystemColors.Control;
@@ -448,9 +428,7 @@
             // groupBoxCustomEDDN
             // 
             this.groupBoxCustomEDDN.AutoSize = true;
-            this.groupBoxCustomEDDN.BackColorScaling = 0.5F;
             this.groupBoxCustomEDDN.BorderColor = System.Drawing.Color.LightGray;
-            this.groupBoxCustomEDDN.BorderColorScaling = 0.5F;
             this.groupBoxCustomEDDN.Controls.Add(this.checkBoxCustomEDDNTo);
             this.groupBoxCustomEDDN.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBoxCustomEDDN.Location = new System.Drawing.Point(0, 107);
@@ -465,9 +443,7 @@
             // groupBoxCustomEDSM
             // 
             this.groupBoxCustomEDSM.AutoSize = true;
-            this.groupBoxCustomEDSM.BackColorScaling = 0.5F;
             this.groupBoxCustomEDSM.BorderColor = System.Drawing.Color.LightGray;
-            this.groupBoxCustomEDSM.BorderColorScaling = 0.5F;
             this.groupBoxCustomEDSM.Controls.Add(this.tableLayoutPanel2);
             this.groupBoxCustomEDSM.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBoxCustomEDSM.Location = new System.Drawing.Point(0, 162);
@@ -525,9 +501,7 @@
             // groupBoxCustomJournal
             // 
             this.groupBoxCustomJournal.AutoSize = true;
-            this.groupBoxCustomJournal.BackColorScaling = 0.5F;
             this.groupBoxCustomJournal.BorderColor = System.Drawing.Color.LightGray;
-            this.groupBoxCustomJournal.BorderColorScaling = 0.5F;
             this.groupBoxCustomJournal.Controls.Add(this.tableLayoutPanel1);
             this.groupBoxCustomJournal.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBoxCustomJournal.Location = new System.Drawing.Point(0, 0);
@@ -587,15 +561,12 @@
             // 
             this.extCheckBoxConsoleCommander.AutoSize = true;
             this.extCheckBoxConsoleCommander.CheckBoxColor = System.Drawing.Color.Gray;
-            this.extCheckBoxConsoleCommander.CheckBoxDisabledScaling = 0.5F;
             this.extCheckBoxConsoleCommander.CheckBoxInnerColor = System.Drawing.Color.White;
             this.extCheckBoxConsoleCommander.CheckColor = System.Drawing.Color.DarkBlue;
-            this.extCheckBoxConsoleCommander.ImageButtonDisabledScaling = 0.5F;
             this.extCheckBoxConsoleCommander.ImageIndeterminate = null;
             this.extCheckBoxConsoleCommander.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.extCheckBoxConsoleCommander.ImageUnchecked = null;
             this.extCheckBoxConsoleCommander.Location = new System.Drawing.Point(459, 3);
-            this.extCheckBoxConsoleCommander.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.extCheckBoxConsoleCommander.Name = "extCheckBoxConsoleCommander";
             this.extCheckBoxConsoleCommander.Size = new System.Drawing.Size(123, 17);
             this.extCheckBoxConsoleCommander.TabIndex = 5;
@@ -607,15 +578,12 @@
             // 
             this.extCheckBoxIncludeSubfolders.AutoSize = true;
             this.extCheckBoxIncludeSubfolders.CheckBoxColor = System.Drawing.Color.Gray;
-            this.extCheckBoxIncludeSubfolders.CheckBoxDisabledScaling = 0.5F;
             this.extCheckBoxIncludeSubfolders.CheckBoxInnerColor = System.Drawing.Color.White;
             this.extCheckBoxIncludeSubfolders.CheckColor = System.Drawing.Color.DarkBlue;
-            this.extCheckBoxIncludeSubfolders.ImageButtonDisabledScaling = 0.5F;
             this.extCheckBoxIncludeSubfolders.ImageIndeterminate = null;
             this.extCheckBoxIncludeSubfolders.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.extCheckBoxIncludeSubfolders.ImageUnchecked = null;
             this.extCheckBoxIncludeSubfolders.Location = new System.Drawing.Point(231, 61);
-            this.extCheckBoxIncludeSubfolders.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.extCheckBoxIncludeSubfolders.Name = "extCheckBoxIncludeSubfolders";
             this.extCheckBoxIncludeSubfolders.Size = new System.Drawing.Size(114, 17);
             this.extCheckBoxIncludeSubfolders.TabIndex = 5;
@@ -648,9 +616,7 @@
             // groupBoxCustomInara
             // 
             this.groupBoxCustomInara.AutoSize = true;
-            this.groupBoxCustomInara.BackColorScaling = 0.5F;
             this.groupBoxCustomInara.BorderColor = System.Drawing.Color.LightGray;
-            this.groupBoxCustomInara.BorderColorScaling = 0.5F;
             this.groupBoxCustomInara.Controls.Add(this.tableLayoutPanelInara);
             this.groupBoxCustomInara.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBoxCustomInara.Location = new System.Drawing.Point(0, 239);
@@ -725,9 +691,7 @@
             // 
             // extGroupBoxCommanderInfo
             // 
-            this.extGroupBoxCommanderInfo.BackColorScaling = 0.5F;
             this.extGroupBoxCommanderInfo.BorderColor = System.Drawing.Color.LightGray;
-            this.extGroupBoxCommanderInfo.BorderColorScaling = 0.5F;
             this.extGroupBoxCommanderInfo.Controls.Add(this.tableLayoutPanelCommanderInfo);
             this.extGroupBoxCommanderInfo.Dock = System.Windows.Forms.DockStyle.Top;
             this.extGroupBoxCommanderInfo.Location = new System.Drawing.Point(0, 368);
@@ -768,11 +732,9 @@
             this.extTextBoxAutoCompleteHomeSystem.AutoCompleteTimeout = 500;
             this.extTextBoxAutoCompleteHomeSystem.BackErrorColor = System.Drawing.Color.Red;
             this.extTextBoxAutoCompleteHomeSystem.BorderColor = System.Drawing.Color.Transparent;
-            this.extTextBoxAutoCompleteHomeSystem.BorderColorScaling = 0.5F;
             this.extTextBoxAutoCompleteHomeSystem.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.extTextBoxAutoCompleteHomeSystem.ClearOnFirstChar = false;
             this.extTextBoxAutoCompleteHomeSystem.ControlBackground = System.Drawing.SystemColors.Control;
-            this.extTextBoxAutoCompleteHomeSystem.DropDownBorderColor = System.Drawing.Color.Green;
             this.extTextBoxAutoCompleteHomeSystem.EndButtonEnable = false;
             this.extTextBoxAutoCompleteHomeSystem.EndButtonSize16ths = 10;
             this.extTextBoxAutoCompleteHomeSystem.EndButtonVisible = false;
@@ -829,7 +791,6 @@
             this.extScrollBar.AlwaysHideScrollBar = false;
             this.extScrollBar.ArrowBorderColor = System.Drawing.Color.LightBlue;
             this.extScrollBar.ArrowButtonColor = System.Drawing.Color.LightGray;
-            this.extScrollBar.ArrowColorScaling = 0.5F;
             this.extScrollBar.ArrowDownDrawAngle = 270F;
             this.extScrollBar.ArrowUpDrawAngle = 90F;
             this.extScrollBar.BorderColor = System.Drawing.Color.White;
@@ -849,7 +810,6 @@
             this.extScrollBar.Text = "extScrollBar1";
             this.extScrollBar.ThumbBorderColor = System.Drawing.Color.Yellow;
             this.extScrollBar.ThumbButtonColor = System.Drawing.Color.DarkBlue;
-            this.extScrollBar.ThumbColorScaling = 0.5F;
             this.extScrollBar.ThumbDrawAngle = 0F;
             this.extScrollBar.Value = -96;
             this.extScrollBar.ValueLimited = -96;
@@ -870,9 +830,7 @@
             // 
             // extGroupBoxEDAstro
             // 
-            this.extGroupBoxEDAstro.BackColorScaling = 0.5F;
             this.extGroupBoxEDAstro.BorderColor = System.Drawing.Color.LightGray;
-            this.extGroupBoxEDAstro.BorderColorScaling = 0.5F;
             this.extGroupBoxEDAstro.Controls.Add(this.extCheckBoxEDAstro);
             this.extGroupBoxEDAstro.Dock = System.Windows.Forms.DockStyle.Top;
             this.extGroupBoxEDAstro.Location = new System.Drawing.Point(0, 315);
@@ -888,15 +846,12 @@
             // 
             this.extCheckBoxEDAstro.AutoSize = true;
             this.extCheckBoxEDAstro.CheckBoxColor = System.Drawing.Color.Gray;
-            this.extCheckBoxEDAstro.CheckBoxDisabledScaling = 0.5F;
             this.extCheckBoxEDAstro.CheckBoxInnerColor = System.Drawing.Color.White;
             this.extCheckBoxEDAstro.CheckColor = System.Drawing.Color.DarkBlue;
-            this.extCheckBoxEDAstro.ImageButtonDisabledScaling = 0.5F;
             this.extCheckBoxEDAstro.ImageIndeterminate = null;
             this.extCheckBoxEDAstro.ImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.extCheckBoxEDAstro.ImageUnchecked = null;
             this.extCheckBoxEDAstro.Location = new System.Drawing.Point(9, 19);
-            this.extCheckBoxEDAstro.MouseOverColor = System.Drawing.Color.CornflowerBlue;
             this.extCheckBoxEDAstro.Name = "extCheckBoxEDAstro";
             this.extCheckBoxEDAstro.Size = new System.Drawing.Size(141, 17);
             this.extCheckBoxEDAstro.TabIndex = 0;
@@ -986,7 +941,7 @@
         private ExtendedControls.ExtTextBoxAutoComplete extTextBoxAutoCompleteHomeSystem;
         private System.Windows.Forms.Label HomeSys;
         private System.Windows.Forms.Label labelMapCol;
-        private ExtendedControls.PanelNoTheme panel_defaultmapcolor;
+        private ExtendedControls.ExtPanelChildThemeControl panel_defaultmapcolor;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelCommanderInfo;
         private ExtendedControls.ExtCheckBox extCheckBoxConsoleCommander;
         private ExtendedControls.ExtPanelScroll extPanelScroll;
