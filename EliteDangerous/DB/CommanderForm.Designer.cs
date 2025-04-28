@@ -46,7 +46,7 @@
             this.checkBoxCustomInara = new ExtendedControls.ExtCheckBox();
             this.textBoxBorderInaraName = new ExtendedControls.ExtTextBox();
             this.textBoxBorderInaraAPIKey = new ExtendedControls.ExtTextBox();
-            this.panel_defaultmapcolor = new ExtendedControls.ExtPanelChildThemeControl();
+            this.panel_defaultmapcolor = new ExtendedControls.ExtPanelNoChildThemed();
             this.groupBoxCustomEDDN = new ExtendedControls.ExtGroupBox();
             this.groupBoxCustomEDSM = new ExtendedControls.ExtGroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -941,7 +941,7 @@
         private ExtendedControls.ExtTextBoxAutoComplete extTextBoxAutoCompleteHomeSystem;
         private System.Windows.Forms.Label HomeSys;
         private System.Windows.Forms.Label labelMapCol;
-        private ExtendedControls.ExtPanelChildThemeControl panel_defaultmapcolor;
+        private ExtendedControls.ExtPanelNoChildThemed panel_defaultmapcolor;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelCommanderInfo;
         private ExtendedControls.ExtCheckBox extCheckBoxConsoleCommander;
         private ExtendedControls.ExtPanelScroll extPanelScroll;
