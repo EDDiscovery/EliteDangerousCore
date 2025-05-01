@@ -121,6 +121,7 @@ namespace EliteDangerousCore
              { "planetportg", new Actor("Planet Port") },           // seen g, presuming at least a-f
              { "planetporth", new Actor("Planet Port") },
              { "planetporti", new Actor("Planet Port") },           // seen up to i now july 24
+             { "planetportj", new Actor("Planet Port") },           // seen may 25
 
              { "diamondback_taxi", new Actor("Taxi (Diamondback)") },
              { "viper_taxi", new Actor("Taxi (Viper)") },
@@ -134,7 +135,6 @@ namespace EliteDangerousCore
              { "outpostcriminal", new Actor("Criminal Outpost") },
              { "outpostcommercial", new Actor("Commercial Outpost") },
              { "outpostscientific", new Actor("Scientific Outpost") },
-             { "outpost_weaponsplatform_depot", new Actor("Weapons Platform in depot") },
              { "megashipdockrehab", new Actor("Mega Ship Prison") },
              { "megashipdocka", new Actor("Mega Ship Dock A") },
              { "asteroidbase", new Actor("Asteroid Base") },
@@ -146,7 +146,6 @@ namespace EliteDangerousCore
 
              { "lizryder", new Actor("Engineer Liz Ryder") },
              { "heratani", new Actor("Engineer Hera Tani") },
-             { "felicityfarseer", new Actor("Engineer Felicity Farseer") },
 
              { "thedweller", new Actor("The Dweller") },
 

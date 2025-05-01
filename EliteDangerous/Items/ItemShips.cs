@@ -1341,6 +1341,32 @@ namespace EliteDangerousCore
             LatAcc = 0
         };
 
+        private static ShipProperties corsair = new ShipProperties()
+        {
+            FDID = "Corsair",
+            EDCDID = "Corsair",
+            Manufacturer = "<code>",
+            HullMass = 265F,
+            Name = "Corsair",
+            Speed = 280,
+            Boost = 355,
+            HullCost = 76884160,
+            Class = 2,
+            Shields = 235,
+            Armour = 270,
+            MinThrust = 65,
+            BoostCost = 19,
+            FuelReserve = 0.41,
+            HeatCap = 230,
+            HeatDispMin = 1.62,
+            HeatDispMax = 52.05,
+            FuelCost = 50,
+            Hardness = 65,
+            Crew = 2,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0
+        };
 
         // MUST be after ship definitions else they are not constructed
 
@@ -1357,6 +1383,7 @@ namespace EliteDangerousCore
             { "cobramkiii",cobramkiii},
             { "cobramkiv",cobramkiv},
             { "cobramkv",cobramkv},
+            { "corsair",corsair},
             { "diamondbackxl",diamondbackxl},
             { "diamondback",diamondback},
             { "dolphin",dolphin},
@@ -1392,7 +1419,7 @@ namespace EliteDangerousCore
 
         #endregion
 
-        #region Not in Corolis Data
+        #region Other types of ships
 
         private static ShipProperties imperial_fighter = new ShipProperties()
         {
