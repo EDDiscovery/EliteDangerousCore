@@ -118,6 +118,7 @@
     <Compile Include="EliteDangerous\EstimatedValues.cs" />
     <Compile Include="EliteDangerous\FrontierFolder.cs" />
     <Compile Include="EliteDangerous\Translations.cs" />
+    <Compile Include="JournalEvents\JournalColonisation.cs" />
     <Compile Include="Journal\JournalTest.cs" />
     <Compile Include="StarScan\StarScanFSSDiscoveryScan.cs" />
     <Compile Include="Stats\EngineerCrafting.cs" />

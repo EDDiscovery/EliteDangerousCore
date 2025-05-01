@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016-2024 EDDiscovery development team
+ * Copyright 2016-2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -65,6 +65,11 @@ namespace EliteDangerousCore
         CodexEntry = 85,
         CollectCargo = 90,
         CollectItems = 4008,
+        ColonisationConstructionDepot = 4100,
+        ColonisationContribution = 4101,
+        ColonisationSystemClaim = 4102,
+        ColonisationBeaconDeployed = 4103,
+        ColonisationSystemClaimRelease = 4104,
         Commander = 95,
         CommitCrime = 100,
         CommunityGoal = 109,

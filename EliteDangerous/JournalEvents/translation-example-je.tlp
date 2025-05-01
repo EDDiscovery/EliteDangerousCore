@@ -25,6 +25,12 @@ SECTION JournalTypeEnum
 .CrewAssign: "Crew Assign" @
 .CrewFire: "Crew Fire" @
 .CrewHire: "Crew Hire" @
+.ColonisationConstructionDepot: "Colonisation Construction Depot" @
+.ColonisationContribution: "Colonisation Contribution" @
+.ColonisationSystemClaim: "Colonisation System Claim" @
+.ColonisationBeaconDeployed: "Colonisation Beacon Deployed" @
+.ColonisationSystemClaimRelease: "Colonisation System Claim Release" @
+.Splitter Make Scan tag 1 dno 1051
 .ClearImpound: "Clear Impound" @
 .DatalinkScan: "Datalink Scan" @
 .DeliverPowerMicroResources: "Deliver Power Micro Resources" @
