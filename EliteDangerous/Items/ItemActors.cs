@@ -121,6 +121,7 @@ namespace EliteDangerousCore
              { "planetportg", new Actor("Planet Port") },           // seen g, presuming at least a-f
              { "planetporth", new Actor("Planet Port") },
              { "planetporti", new Actor("Planet Port") },           // seen up to i now july 24
+             { "planetportj", new Actor("Planet Port") },           // seen may 25
 
              { "diamondback_taxi", new Actor("Taxi (Diamondback)") },
              { "viper_taxi", new Actor("Taxi (Viper)") },
