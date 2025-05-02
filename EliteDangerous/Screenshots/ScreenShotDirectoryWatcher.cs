@@ -217,9 +217,15 @@ namespace EliteDangerousCore.ScreenShots
 
             var r = getcurinfo();
 
-            string sysname = (ss == null ? r.Item1 : ss.System) ?? "Unknown";
-            string bodyname = (ss == null ? r.Item2 : ss.Body) ?? "Unknown";
-            string cmdrname = (ss == null ? r.Item3 : EDCommander.GetCommander(ss.CommanderId)?.Name) ?? "Unknown";
+            string sysname = ss == null ? r.Item1 : ss.System;
+            if (sysname.IsEmpty())      // ss.system may be "" when dead
+                sysname = "Unknown";
+            string bodyname = ss == null ? r.Item2 : ss.Body;
+            if (bodyname.IsEmpty())     // same with body
+                bodyname = "Unknown";
+            string cmdrname = ss == null ? r.Item3 : EDCommander.GetCommander(ss.CommanderId)?.Name;
+            if (cmdrname.IsEmpty())
+                cmdrname = "Unknown Commander";
 
             System.Diagnostics.Debug.WriteLine("..Screenshot Process {0} s={1} b={2} c={3}", filepath, sysname, bodyname, cmdrname);
 
