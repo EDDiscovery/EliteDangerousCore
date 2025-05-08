@@ -15,6 +15,7 @@
 using EliteDangerousCore.JournalEvents;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 
 namespace EliteDangerousCore
 {
@@ -160,7 +161,7 @@ namespace EliteDangerousCore
         };
 
         // These are discarded from history during reading database
-        // During history read, NeverReadFromDBEvents rejects the majority of events, but these need more processing to determine if to reject
+        // During history read, NeverReadFromDBEvents above rejects the majority of events, but these need more processing to determine if to reject
         // this allows journal entries to be discarded when creating history during history read
         // true if to discard the current
         public static bool DiscardHistoryReadJournalRecordsFromHistory(JournalEntry je)
@@ -176,7 +177,7 @@ namespace EliteDangerousCore
             return false;
         }
 
-        // this allows journal entries to be discarded when creating history dynamically 
+        // this allows journal entries to be discarded when creating history dynamically during play
         // true if to discard the current
         public static bool DiscardDynamicJournalRecordsFromHistory(JournalEntry je)
         {
@@ -198,6 +199,31 @@ namespace EliteDangerousCore
             return false;
         }
 
+        // this allows journal entries to be discarded from history entry both during history read and dynamic play if its present in the list before
+        public static bool DiscardJournalRecordDueToRepeat(JournalEntry je, List<HistoryEntry> list)
+        {
+            if (je.EventTypeID == JournalTypeEnum.ColonisationConstructionDepot)
+            {
+                JournalColonisationConstructionDepot cur = je as JournalColonisationConstructionDepot;
+
+                // deep lookback 100 entries to see if another one is present before last dock etc.
+                HistoryEntry helastconstruction = HistoryList.FindBeforeLastDockLoadGameShutdown(list, 100, JournalTypeEnum.ColonisationConstructionDepot);
+
+                if (helastconstruction != null)
+                {
+                    JournalColonisationConstructionDepot prev = helastconstruction.journalEntry as JournalColonisationConstructionDepot;
+                    bool same = prev.Equals(cur);
+                   // System.Diagnostics.Debug.WriteLine($"Journal Colonisation Depot Discard={same} {cur.EventTimeUTC} {cur.ConstructionProgress} with {helastconstruction.EventTimeUTC}");
+                    return same;
+                }
+                else
+                {
+                    //System.Diagnostics.Debug.WriteLine($"Journal Colonisation Depot No matching entry {cur.EventTimeUTC} {cur.ConstructionProgress}");
+                }
+
+            }
+            return false;
+        }
 
         // this allows journal entries to be merged when creating history dynamically or during history read
         // data is merged into the prev entry
@@ -319,13 +345,12 @@ namespace EliteDangerousCore
                         var jd = je as JournalHullDamage;
 
                         //System.Diagnostics.Debug.Write($"{jdprev.HealthPercentMax} {jdprev.Health} with {jd.Health} -> ");
-                        jdprev.HealthPercentMax = System.Math.Max(jdprev.HealthPercentMax ?? (jdprev.Health*100), jd.Health * 100);     // pick the maximum value
+                        jdprev.HealthPercentMax = System.Math.Max(jdprev.HealthPercentMax ?? (jdprev.Health * 100), jd.Health * 100);     // pick the maximum value
                         jdprev.Health = jd.Health;  // set to the current value
                         //System.Diagnostics.Debug.WriteLine($"{jdprev.HealthPercentMax} {jdprev.Health}");
 
                         return true;
                     }
-
                 }
             }
 
@@ -344,10 +369,11 @@ namespace EliteDangerousCore
                 return 10000;
             else if (je.EventTypeID == JournalTypeEnum.ShipTargeted)
                 return 250;                                         // short, so normally does not merge unless your clicking around like mad
+            else if (je.EventTypeID == JournalTypeEnum.ColonisationConstructionDepot)
+                return 16000;                                         // short, so normally does not merge unless your clicking around like mad
             else
                 return 0;
         }
-
 
     }
 }

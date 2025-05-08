@@ -22,7 +22,7 @@ using System.Text;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.ColonisationConstructionDepot)]
-    public class JournalColonisationConstructionDepot : JournalEntry
+    public class JournalColonisationConstructionDepot : JournalEntry, IEquatable<JournalColonisationConstructionDepot>
     {
         public JournalColonisationConstructionDepot(JObject evt) : base(evt, JournalTypeEnum.ColonisationConstructionDepot)
         {
@@ -37,7 +37,8 @@ namespace EliteDangerousCore.JournalEvents
         public bool ConstructionComplete { get; set; }
         public bool ConstructionFailed { get; set; }
 
-        public class ResourcesList
+        [System.Diagnostics.DebuggerDisplay("{Name_Localised} {RequiredAmount} {ProvidedAmount} {Payment}")]
+        public class ResourcesList : IEquatable<ResourcesList>
         {
             [JsonCustomFormat]
             public string Name { get; set; }        // fdname
@@ -45,9 +46,24 @@ namespace EliteDangerousCore.JournalEvents
             public int RequiredAmount { get; set; }
             public int ProvidedAmount { get; set; }
             public long Payment { get; set; }
+
+            public bool Equals(ResourcesList other)
+            {
+                return Name == other.Name && RequiredAmount == other.RequiredAmount && ProvidedAmount == other.ProvidedAmount &&
+                        Payment == other.Payment;
+            }
         }
 
         public ResourcesList[] ResourcesRequired { get; set; }
+
+        public bool Equals(JournalColonisationConstructionDepot other)
+        {
+            return other.MarketID == MarketID &&
+                 other.ConstructionProgress == ConstructionProgress &&
+                 other.ConstructionComplete == ConstructionComplete &&
+                other.ConstructionFailed == ConstructionFailed &&
+                other.ResourcesRequired.SequenceEqual(ResourcesRequired);
+        }
 
         public override string GetInfo()
         {
@@ -105,7 +121,7 @@ namespace EliteDangerousCore.JournalEvents
                 sb.Append(MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(x.Name));
                 sb.Append(": ");
                 sb.Append(x.Amount);
-                sb.AppendCR();
+                sb.Append(" \r\n"); // space for non word wrapped
             }
 
             return sb.ToString();

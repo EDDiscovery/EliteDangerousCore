@@ -448,7 +448,7 @@ namespace EliteDangerousCore
             return list.GroupBy(x => x.Name).Select(group => group.First());
         }
 
-        public HistoryEntry FindBeforeLastDockLoadGameShutdown( int depthback, params JournalTypeEnum[] e)
+        public static HistoryEntry FindBeforeLastDockLoadGameShutdown(List<HistoryEntry> historylist, int depthback, params JournalTypeEnum[] e)
         {
             for( int i = historylist.Count-1; i>=0 && depthback-->0; i--)
             {

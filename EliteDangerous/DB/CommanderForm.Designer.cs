@@ -46,7 +46,7 @@
             this.checkBoxCustomInara = new ExtendedControls.ExtCheckBox();
             this.textBoxBorderInaraName = new ExtendedControls.ExtTextBox();
             this.textBoxBorderInaraAPIKey = new ExtendedControls.ExtTextBox();
-            this.panel_defaultmapcolor = new ExtendedControls.ExtPanelNoChildThemed();
+            this.panel_defaultmapcolor = new ExtendedControls.ColorPanel();
             this.groupBoxCustomEDDN = new ExtendedControls.ExtGroupBox();
             this.groupBoxCustomEDSM = new ExtendedControls.ExtGroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -417,7 +417,6 @@
             // panel_defaultmapcolor
             // 
             this.panel_defaultmapcolor.AccessibleDescription = "";
-            this.panel_defaultmapcolor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel_defaultmapcolor.Location = new System.Drawing.Point(231, 23);
             this.panel_defaultmapcolor.Name = "panel_defaultmapcolor";
             this.panel_defaultmapcolor.Size = new System.Drawing.Size(51, 15);
@@ -941,7 +940,7 @@
         private ExtendedControls.ExtTextBoxAutoComplete extTextBoxAutoCompleteHomeSystem;
         private System.Windows.Forms.Label HomeSys;
         private System.Windows.Forms.Label labelMapCol;
-        private ExtendedControls.ExtPanelNoChildThemed panel_defaultmapcolor;
+        private ExtendedControls.ColorPanel panel_defaultmapcolor;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelCommanderInfo;
         private ExtendedControls.ExtCheckBox extCheckBoxConsoleCommander;
         private ExtendedControls.ExtPanelScroll extPanelScroll;

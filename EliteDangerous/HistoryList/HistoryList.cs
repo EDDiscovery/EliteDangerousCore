@@ -186,8 +186,10 @@ namespace EliteDangerousCore
                 }
 
                 // if we discard the entry, or we merge it into previous, don't add
-                if (JournalEventsManagement.DiscardHistoryReadJournalRecordsFromHistory(je) ||
-                    JournalEventsManagement.MergeJournalRecordsFromHistory(hist.hlastprocessed?.journalEntry, je))        // if we merge, don't store into HE
+
+                if (JournalEventsManagement.DiscardHistoryReadJournalRecordsFromHistory(je) ||          // discard due to its type
+                    JournalEventsManagement.DiscardJournalRecordDueToRepeat(je, hist.historylist) ||
+                    JournalEventsManagement.MergeJournalRecordsFromHistory(hist.hlastprocessed?.journalEntry, je) )
                 {
                     continue;
                 }
@@ -428,7 +430,7 @@ namespace EliteDangerousCore
                 // these we try and stop repeats by not allowing more than one after docking
                 else if (he.EntryType == JournalTypeEnum.Outfitting)
                 {
-                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000, he.EntryType);     // don't look back forever
+                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(historylist, 1000, he.EntryType);     // don't look back forever
 
                     if (lasthe != null && (lasthe.journalEntry as JournalOutfitting).YardInfo.Items?.Length > 0)
                     {
@@ -438,7 +440,7 @@ namespace EliteDangerousCore
                 }
                 else if (he.EntryType == JournalTypeEnum.Shipyard)
                 {
-                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000, he.EntryType);     // don't look back forever
+                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(historylist, 1000, he.EntryType);     // don't look back forever
 
                     if (lasthe != null && (lasthe.journalEntry as JournalShipyard).Yard.Ships?.Length > 0)
                     {
@@ -448,7 +450,7 @@ namespace EliteDangerousCore
                 }
                 else if( he.EntryType == JournalTypeEnum.StoredShips || he.EntryType == JournalTypeEnum.StoredModules)
                 {
-                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000, he.EntryType);     // don't look back forever
+                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(historylist, 1000, he.EntryType);     // don't look back forever
 
                     if (lasthe != null)
                     {
@@ -459,7 +461,7 @@ namespace EliteDangerousCore
                 // these we try and stop repeats by not allowing more than one after docking
                 else if (he.EntryType == JournalTypeEnum.EDDCommodityPrices || he.EntryType == JournalTypeEnum.Market)
                 {
-                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000, JournalTypeEnum.Market, JournalTypeEnum.EDDCommodityPrices);     // don't look back forever
+                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(historylist, 1000, JournalTypeEnum.Market, JournalTypeEnum.EDDCommodityPrices);     // don't look back forever
                     if (lasthe != null && (lasthe.journalEntry as JournalCommodityPricesBase).Commodities?.Count > 0)
                     {
                         //System.Diagnostics.Debug.WriteLine(he.EventTimeUTC.ToString() + " " + he.EntryType.ToString() + " Duplicate with " + lasthe.EntryType.ToString() + " " + lasthe.EventTimeUTC.ToString() + " remove");
@@ -468,7 +470,7 @@ namespace EliteDangerousCore
                 }
                 else if ( he.EntryType == JournalTypeEnum.NavRoute)
                 {
-                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(1000, he.EntryType);     // don't look back forever, back to last dock
+                    HistoryEntry lasthe = FindBeforeLastDockLoadGameShutdown(historylist, 1000, he.EntryType);     // don't look back forever, back to last dock
                     if ( lasthe != null )
                     {
                         JournalNavRoute cur= he.journalEntry as JournalNavRoute;
