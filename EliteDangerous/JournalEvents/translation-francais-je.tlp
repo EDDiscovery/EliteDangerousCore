@@ -265,9 +265,9 @@ SECTION JournalTypeEnum
 .NavRouteClear: "Nav Route Clear" => "Effacement d'itinéraire de navigation"
 .ShipRedeemed: "Ship Redeemed" => "Vaisseau racheté"
 .ShipyardRedeem: "Shipyard Redeem" => "Chantier Naval : Rachat"
-.PowerplayMerits: "Powerplay Merits" @
-.PowerplayRank: "Powerplay Rank" @
-.CarrierLocation: "Carrier location" @
+.PowerplayMerits: "Powerplay Merits" => "Points de distinction Powerplay"
+.PowerplayRank: "Powerplay Rank" => "Rang Powerplay"
+.CarrierLocation: "Carrier location" => "Position du porte-vaisseaux"
 
 
 SECTION JournalCargo
@@ -491,7 +491,7 @@ SECTION JournalScan
 .Detailedscanof: "Detailed scan of {0}" => "Scan détaillé de {0}"
 .Basicscanof: "Basic scan of {0}" => "Scan basique de {0}"
 .Navscanof: "Nav scan of {0}" => "Scan de navigation de {0}"
-.ScanAuto: "Scan Auto" @
+.ScanAuto: "Scan Auto" => "Scan auto"
 .ScanBasic: "Scan Basic" => "Scan basique"
 .ScanNav: "Scan Nav" => "Scan de navigation"
 .Scanof: "Scan of {0}" => "Scan de {0}"
@@ -1067,7 +1067,7 @@ SECTION JournalEntry
 .Wagesfor: "Wages for " => "Salaires pour "
 .itemsavailable: " items available" => " équipements disponibles"
 .NoPassengers: "No Passengers" => "Pas de passagers"
-.Merits: "Merits: " => "Mérites : "
+.Merits: "Merits: " => "Points de distinction : "
 .Votes: "Votes: " => "Votes : "
 .Pledged: "Pledged: " => "Engagé : "
 .FromPower: "From Power: " => "De la puissance : "
@@ -1277,7 +1277,7 @@ SECTION AtmosphereTypes
 
 .Ammonia_Thin_Rich: "Thin Ammonia Rich Atmosphere" => "Atmosphère fine riche en ammoniac"
 .Argon_Hot: "Hot Argon Atmosphere" => "Atmosphère chaude d'argon"
-.Argon_Hot_Rich: "Hot Argon Rich Atmosphere" @
+.Argon_Hot_Rich: "Hot Argon Rich Atmosphere" => "Atmosphère chaude riche en argon"
 .Metallic_Vapour_Hot: "Hot Metallic Vapour Atmosphere" => "Atmosphère chaude de vapeurs métalliques"
 .Metallic_Vapour_Hot_Thin: "Hot Thin Metallic Vapour Atmosphere" => "Atmosphère chaude et fine de vapeurs métalliques"
 
