@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright © 2025-2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -103,7 +103,7 @@ namespace EliteDangerousCore.JournalEvents
         }
         public long MarketID { get; set; }
 
-        public class ResourcesList
+        public class Contribution
         {
             [JsonCustomFormat]
             public string Name { get; set; }        // fdname
@@ -111,12 +111,12 @@ namespace EliteDangerousCore.JournalEvents
             public int Amount { get; set; }
         }
 
-        public ResourcesList[] Contributions { get; set; }
+        public Contribution[] Contributions { get; set; }
 
         public override string GetInfo()
         {
             StringBuilder sb = new StringBuilder(1000);
-            foreach (ResourcesList x in Contributions.EmptyIfNull())
+            foreach (Contribution x in Contributions.EmptyIfNull())
             {
                 sb.Append(MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(x.Name));
                 sb.Append(": ");
@@ -142,7 +142,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StarSystem { get; set; }
-        public long SystemAddreess { get; set; }
+        public long SystemAddress { get; set; }
 
         public override string GetInfo()
         {
@@ -158,11 +158,6 @@ namespace EliteDangerousCore.JournalEvents
         {
             // no data
         }
-
-        public override string GetInfo()
-        {
-            return "";
-        }
     }
 
     [JournalEntryType(JournalTypeEnum.ColonisationSystemClaimRelease)]
@@ -177,12 +172,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StarSystem { get; set; }
-        public long SystemAddreess { get; set; }
-
-        public override string GetInfo()
-        {
-            return "";
-        }
+        public long SystemAddress { get; set; }
     }
 
 

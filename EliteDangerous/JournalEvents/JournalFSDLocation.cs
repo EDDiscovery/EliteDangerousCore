@@ -28,15 +28,15 @@ namespace EliteDangerousCore.JournalEvents
         public SystemSource LocOrJumpSource { get; set; } = SystemSource.FromJournal;     // this is the default..
 
         public string Faction { get; set; }         // System Faction - keep name for backwards compat.
-        public FactionDefinitions.State FactionState { get; set; }       //may be null, FDName
-        public AllegianceDefinitions.Allegiance Allegiance { get; set; }      // System Faction - FDName
-        public EconomyDefinitions.Economy Economy { get; set; }
+        public FactionDefinitions.State FactionState { get; set; }              //System Faction FDName
+        public AllegianceDefinitions.Allegiance Allegiance { get; set; }        // System Allegiance FDName
+        public EconomyDefinitions.Economy Economy { get; set; }                 // System Economy FDName
         public string Economy_Localised { get; set; }
-        public EconomyDefinitions.Economy SecondEconomy { get; set; }
+        public EconomyDefinitions.Economy SecondEconomy { get; set; }           // System Economy FDName
         public string SecondEconomy_Localised { get; set; }
-        public GovernmentDefinitions.Government Government { get; set; }
+        public GovernmentDefinitions.Government Government { get; set; }        // System Government FDName
         public string Government_Localised { get; set; }
-        public SecurityDefinitions.Security Security { get; set; }
+        public SecurityDefinitions.Security Security { get; set; }              // System Security FDName
         public string Security_Localised { get; set; }
         public long? Population { get; set; }
         public PowerPlayDefinitions.State PowerplayState { get; set; }      // seen in CarrierJump, Location and FSDJump.  Not in docked
@@ -209,10 +209,34 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    // allows commonality of information between Location (when docked) and Docked events
+    public interface ILocDocked
+    {
+        bool Docked { get; }
+        string StarSystem { get; }
+        long? SystemAddress { get; }
+        string StationName { get;  }
+        string StationName_Localised { get; }
+        StationDefinitions.StarportTypes FDStationType { get;  }  // only on later events, else Unknown
+        string StationType { get; } // english, only on later events, else Unknown
+        long? MarketID { get;  }
+        string StationFaction { get;}
+        FactionDefinitions.State StationFactionState { get; }       //may be null, FDName
+        string StationFactionStateTranslated { get;  }
+        GovernmentDefinitions.Government StationGovernment { get;  }
+        string StationGovernment_Localised { get; }
+        AllegianceDefinitions.Allegiance StationAllegiance { get;  }   // fdname
+        StationDefinitions.StationServices[] StationServices { get; }   // may be null
+        EconomyDefinitions.Economies[] StationEconomyList { get;}        // may be null
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// Events
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //When written: at startup, or when being resurrected at a station
     [JournalEntryType(JournalTypeEnum.Location)]
-    public class JournalLocation : JournalLocOrJump, IBodyNameAndID, IStarScan, ICarrierStats
+    public class JournalLocation : JournalLocOrJump, IBodyNameAndID, IStarScan, ICarrierStats, ILocDocked
     {
         public JournalLocation(JObject evt) : base(evt, JournalTypeEnum.Location)      // all have evidence 16/3/2017
         {
@@ -222,6 +246,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Docked)
             {
                 StationName = evt["StationName"].Str();
+                StationName_Localised = JournalFieldNaming.CheckLocalisation(evt["StationName_Localised"].Str(), evt["StationName"].Str());
                 string st = evt["StationType"].StrNull();
                 if (st != null && st.Length == 0)        // seem empty ones
                     st = null;
@@ -276,6 +301,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool Docked { get; set; }
         public string StationName { get; set; } // will be null if not docked, 
+        public string StationName_Localised { get; set; } // will be null if not docked
         public string StationType { get; set; } // will be null if not docked, english name
         public StationDefinitions.StarportTypes FDStationType { get; set; } // will be Unknown if not docked
         public string Body { get; set; }
@@ -292,7 +318,7 @@ namespace EliteDangerousCore.JournalEvents
         // 3.3.2 will be empty/null for previous logs.
         public string StationFaction { get; set; }  
         public FactionDefinitions.State StationFactionState { get; set; } // fdname
-        public string StationFactionStateTranslated { get; set; }  
+        public string StationFactionStateTranslated { get; set; }
         public GovernmentDefinitions.Government StationGovernment { get; set; }
         public string StationGovernment_Localised { get; set; }
         public AllegianceDefinitions.Allegiance StationAllegiance { get; set; }   // fdname

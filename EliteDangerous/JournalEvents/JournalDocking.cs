@@ -18,7 +18,7 @@ using System;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Docked)]
-    public class JournalDocked : JournalEntry, IStatsJournalEntry
+    public class JournalDocked : JournalEntry, IStatsJournalEntry, ILocDocked
     {
         public JournalDocked(System.DateTime utc) : base(utc, JournalTypeEnum.Docked)
         {
@@ -48,6 +48,8 @@ namespace EliteDangerousCore.JournalEvents
                 Faction = evt.MultiStr(new string[] { "StationFaction", "Faction" });
                 FactionState = FactionDefinitions.FactionStateToEnum(evt["FactionState"].Str("Unknown")).Value;           // PRE 2.3 .. not present in newer files, fixed up in next bit of code (but see 3.3.2 as its been incorrectly reintroduced)
             }
+            
+            StationFactionStateTranslated = FactionDefinitions.ToLocalisedLanguage(FactionState); // null if not present
 
             Allegiance = AllegianceDefinitions.ToEnum( evt.MultiStr(new string[] { "StationAllegiance", "Allegiance" }, null) );    // may not be present, pass null to accept it
 
@@ -71,6 +73,7 @@ namespace EliteDangerousCore.JournalEvents
             LandingPads = evt["LandingPads"]?.ToObjectQ<LandingPadList>();      // only from odyssey release 5
         }
 
+        public bool Docked { get; set; } = true;        // always docked but used for commonality with Location
         public string StationName { get; set; }
         public string StationName_Localised { get; set; }
         public string StationType { get; set; } // english, only on later events, else Unknown
@@ -81,13 +84,20 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID { get; set; }
         public bool CockpitBreach { get; set; }
         public string Faction { get; set; }
-        public FactionDefinitions.State FactionState { get; set; }       //may be null, FDName
+        public string StationFaction { get => Faction; }            // alias
+        public FactionDefinitions.State FactionState { get; set; }       // FDName
+        public FactionDefinitions.State StationFactionState { get => FactionState; }    // alias for commonality with Location
+        public string StationFactionStateTranslated { get; set; }       // alias for commonality with Location
         public AllegianceDefinitions.Allegiance Allegiance { get; set; }          // FDName
+        public AllegianceDefinitions.Allegiance StationAllegiance { get => Allegiance; } // alias for commonality with Location
         public EconomyDefinitions.Economy Economy { get; set; }
         public string Economy_Localised { get; set; }
         public EconomyDefinitions.Economies[] EconomyList { get; set; }        // may be null
+        public EconomyDefinitions.Economies[] StationEconomyList { get => EconomyList; } // alias for commonality with Location
         public GovernmentDefinitions.Government Government { get; set; }
+        public GovernmentDefinitions.Government StationGovernment { get => Government; } // alias for commonality with Location
         public string Government_Localised { get; set; }
+        public string StationGovernment_Localised { get => Government_Localised; } // alias for commonality with Location
         public StationDefinitions.StationServices[] StationServices { get; set; }   // fdname
         public bool Wanted { get; set; }
         public bool? ActiveFine { get; set; }
