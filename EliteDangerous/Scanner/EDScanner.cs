@@ -15,9 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
-using BaseUtils;
 
 namespace EliteDangerousCore
 {
@@ -32,6 +30,8 @@ namespace EliteDangerousCore
         public Action<JournalEntry, StatusReader> OnNewJournalEntry;    // journal entries reported goind to the DB. Only a few events don't hit the DB now. There is no merge filtering etc
         public Action<UIEvent,StatusReader> OnNewUIEvent;               // ui events from status or journal entries converted into ui events
 
+        private const int ScanTick = 100;                               // tick time to check journals and status
+
         public EDJournalUIScanner(Action<Action> invokeAsyncOnUiThread)
         {
             InvokeAsyncOnUiThread = invokeAsyncOnUiThread;
@@ -39,11 +39,13 @@ namespace EliteDangerousCore
 
         #region Start stop and scan
 
+        // called to start monitoring all watchers.
+        // Optional to store to db (EDDLite uses this)
         public void StartMonitor(bool storetodb)
         {
             StopRequested = new ManualResetEvent(false);
 
-            foreach (JournalMonitorWatcher mw in watchers)
+            foreach (JournalMonitorWatcher mw in journalwatchers)
             {
                 mw.StartMonitor(storetodb);
             }
@@ -54,9 +56,10 @@ namespace EliteDangerousCore
             ScanThread.Start();
         }
 
+        // called to stop monitoring all watchers.  Can double stop
         public void StopMonitor()
         {
-            foreach (JournalMonitorWatcher mw in watchers)
+            foreach (JournalMonitorWatcher mw in journalwatchers)
             {
                 mw.StopMonitor();
             }
@@ -76,89 +79,12 @@ namespace EliteDangerousCore
             }
         }
 
-        // call to force reset of ui status
+        // call to force reset of ui status so it will emit the full set on restart
         public void ResetUIStatus()
         {
             foreach (var e in statuswatchers)
             {
                 e.Reset();
-            }
-        }
-
-        // Journal scanner main tick - every tick, do scan tick worker, pass anything found to foreground for dispatch
-
-        private void ScanThreadProc()
-        {
-            ManualResetEvent stopRequested = StopRequested;
-
-            while (!stopRequested.WaitOne(ScanTick))
-            {
-                var jlu = ScanTickWorker(() => stopRequested.WaitOne(0));
-
-                if (jlu != null && jlu.Count>0 && !stopRequested.WaitOne(0))
-                {
-                    InvokeAsyncOnUiThread(() => IssueEventsInUIThread(jlu));
-                }
-            }
-        }
-
-        private class Event
-        {
-            public JournalEntry je;        
-            public UIEvent ui;
-            public StatusReader sr;
-        }
-
-        private List<Event> ScanTickWorker(Func<bool> stopRequested)     // read the entries from all watchers..
-        {
-            var events = new List<Event>();
-
-            for (int i = 0; i < watchers.Count; i++)
-            {
-                var mw = watchers[i];                           // watchers/statuswatchers come in pairs
-                var sw = statuswatchers[i];
-
-                var evret = mw.ScanForNewEntries();             // return tuple of list of journal events
-
-                // split them into separate Event
-
-                foreach (var ev in evret.Item1)
-                {
-                    events.Add(new Event() { je = ev, sr = sw }); // feed an event in
-                }
-                foreach (var ev in evret.Item2)
-                {
-                    events.Add(new Event() { ui = ev, sr = sw });   // find in an ui event
-                }
-
-                var uiret = sw.Scan();      // return list of ui events
-                foreach (var ev in uiret)
-                {
-                    events.Add(new Event() { ui = ev, sr = sw });
-                }
-
-                if (stopRequested())
-                {
-                    return null;
-                }
-            }
-
-            return events;
-        }
-
-        // in UI thread.. fire the events off
-        private void IssueEventsInUIThread(List<Event> entries)       
-        {
-            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);
-
-            foreach (var e in entries)
-            {
-                if (e.je != null)
-                    OnNewJournalEntry?.Invoke(e.je, e.sr);
-                if (e.ui != null)
-                    OnNewUIEvent?.Invoke(e.ui, e.sr);
-                if (StopRequested.WaitOne(0))
-                    return;
             }
         }
 
@@ -216,34 +142,34 @@ namespace EliteDangerousCore
             //foreach (var x in folderlist)  System.Diagnostics.Debug.WriteLine($"Monitor Folder {x.Item1} incl {x.Item2}");
 
             List<int> del = new List<int>();
-            for (int i = 0; i < watchers.Count; i++)           // for all current watchers, are we still in use?
+            for (int i = 0; i < journalwatchers.Count; i++)           // for all current watchers, are we still in use?
             {
-                var exists = folderlist.Find(x => x.Item1.Equals(watchers[i].Folder, StringComparison.CurrentCultureIgnoreCase));
+                var exists = folderlist.Find(x => x.Item1.Equals(journalwatchers[i].Folder, StringComparison.CurrentCultureIgnoreCase));
 
-                if (exists == null || watchers[i].IncludeSubfolders != exists.Item2 )       // if not in list, or in list but sub folders are different..
+                if (exists == null || journalwatchers[i].IncludeSubfolders != exists.Item2 )       // if not in list, or in list but sub folders are different..
                     del.Add(i);    
             }
 
             for (int j = 0; j < del.Count; j++)     // remove any unused watchers
             {
                 int wi = del[j];
-                JournalMonitorWatcher mw = watchers[wi];
+                JournalMonitorWatcher mw = journalwatchers[wi];
                 //System.Diagnostics.Debug.WriteLine($"Monitor Remove {mw.WatcherFolder} incl {mw.IncludeSubfolders}");
                 mw.StopMonitor();          // just in case
-                watchers.Remove(mw);
+                journalwatchers.Remove(mw);
                 StatusReader sw = statuswatchers[wi];
                 statuswatchers.Remove(sw);
             }
 
             foreach (var tw in folderlist)      // make sure all folders are watched
             {
-                var exists = watchers.Find(x => x.Folder.Equals(tw.Item1, StringComparison.InvariantCultureIgnoreCase));
+                var exists = journalwatchers.Find(x => x.Folder.Equals(tw.Item1, StringComparison.InvariantCultureIgnoreCase));
                 if (exists == null)     // if not watching in list, add
                 {
                     try
                     {
                         JournalMonitorWatcher mw = new JournalMonitorWatcher(tw.Item1, journalmatchpattern, mindateutc, tw.Item2);
-                        watchers.Add(mw);
+                        journalwatchers.Add(mw);
 
                         StatusReader sw = new StatusReader(tw.Item1);
                         statuswatchers.Add(sw);
@@ -278,32 +204,114 @@ namespace EliteDangerousCore
 
             //System.Diagnostics.Debug.WriteLine($"Parse Start {BaseUtils.AppTicks.TickCountLap("LL",true)}");
 
-            for (int i = 0; i < watchers.Count; i++)             // parse files of all folders being watched
+            for (int i = 0; i < journalwatchers.Count; i++)             // parse files of all folders being watched
             {
                 // may create new commanders at the end, but won't need any new watchers, because they will obv be in the same folder
                 
                 //System.Diagnostics.Debug.WriteLine($"Parse scan {BaseUtils.AppTicks.TickCountLap("LL")} {watchers[i].Folder}");
-                var list = watchers[i].ScanJournalFiles(minjournaldateutc,reloadlastn);
+                var list = journalwatchers[i].ScanJournalFiles(minjournaldateutc,reloadlastn);
                 
                 //System.Diagnostics.Debug.WriteLine($"Parse process {BaseUtils.AppTicks.TickCountLap("LL")} {watchers[i].Folder}");
-                watchers[i].ProcessDetectedNewFiles(list, updateProgress, jeslist, closerequested);
+                journalwatchers[i].ProcessDetectedNewFiles(list, updateProgress, jeslist, closerequested);
                 //System.Diagnostics.Debug.WriteLine($"Parse Process Finished {BaseUtils.AppTicks.TickCountLap("LL")} {watchers[i].Folder}");
             }
         }
 
         #endregion
 
-        #region vars
+        #region Tick worker
+
+        // Journal and UI scanner dispatch thread.
+        // do scan tick worker at ScanTick rate, pass anything found to foreground for dispatch
+        private void ScanThreadProc()
+        {
+            ManualResetEvent stopRequested = StopRequested;
+
+            while (!stopRequested.WaitOne(ScanTick))        // WaitTick sets the pace of this thread firing
+            {
+                System.Diagnostics.Debug.WriteLine($"{Environment.TickCount} scan tick");
+                var eventlist = GatherEvents(() => stopRequested.WaitOne(0));
+
+                if (eventlist != null && eventlist.Count > 0 && !stopRequested.WaitOne(0))
+                {
+                    InvokeAsyncOnUiThread(() => IssueEventsInUIThread(eventlist));
+                }
+            }
+        }
+
+        private class Events
+        {
+            public JournalEntry je;
+            public UIEvent ui;
+            public StatusReader sr;
+        }
+
+        // read the entries from all watchers, journal and UI
+        private List<Events> GatherEvents(Func<bool> stopRequested)     
+        {
+            var events = new List<Events>();
+
+            for (int i = 0; i < journalwatchers.Count; i++)
+            {
+                var mw = journalwatchers[i];                    // watchers/statuswatchers come in pairs
+                var sw = statuswatchers[i];
+
+                var evret = mw.ScanForNewEntries();             // return tuple of list of journal events
+
+                // split them into separate Event
+
+                foreach (var ev in evret.Item1)
+                {
+                    events.Add(new Events() { je = ev, sr = sw }); // feed an event in
+                }
+                foreach (var ev in evret.Item2)
+                {
+                    events.Add(new Events() { ui = ev, sr = sw });   // find in an ui event
+                }
+
+                var uiret = sw.Scan();      // return list of ui events
+                foreach (var ev in uiret)
+                {
+                    events.Add(new Events() { ui = ev, sr = sw });
+                }
+
+                if (stopRequested())
+                {
+                    return null;
+                }
+            }
+
+            return events;
+        }
+
+        // in UI thread.. fire the events off
+        private void IssueEventsInUIThread(List<Events> entries)
+        {
+            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);
+
+            foreach (var e in entries)
+            {
+                if (e.je != null)
+                    OnNewJournalEntry?.Invoke(e.je, e.sr);
+                if (e.ui != null)
+                    OnNewUIEvent?.Invoke(e.ui, e.sr);
+                if (StopRequested.WaitOne(0))
+                    return;
+            }
+        }
+
+        #endregion
+
+        #region Vars
 
         private Thread ScanThread;
         private ManualResetEvent StopRequested;
         private Action<Action> InvokeAsyncOnUiThread;
-        private List<JournalMonitorWatcher> watchers = new List<JournalMonitorWatcher>();
+        private List<JournalMonitorWatcher> journalwatchers = new List<JournalMonitorWatcher>();
         private List<StatusReader> statuswatchers = new List<StatusReader>();
-
-        const int ScanTick = 100;       // tick time to check journals and status
 
 
         #endregion
     }
 }
+

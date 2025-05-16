@@ -15,20 +15,12 @@
 using EliteDangerousCore.DB;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace EliteDangerousCore
 {
     [System.Diagnostics.DebuggerDisplay("{ID}: {FullName} P:{Pos} CQC:{cqc} Training:{training}")]
     public class EDJournalReader : TravelLogUnitLogReader
     {
-        bool cqc = false;
-        bool training = false;
-
-        static JournalEvents.JournalContinued lastcontinued = null;
-
-        private Queue<JournalEntry> StartEntries = new Queue<JournalEntry>();
-
         public EDJournalReader(string filename) : base(filename)
         {
         }
@@ -37,12 +29,59 @@ namespace EliteDangerousCore
         {
         }
 
+        // read journal lines from file, return if its read anything.
+        // reporting if we have read anything is important.. it causes the TLU pos to be updated 
+        // add to the lists all unfiltered journal events, all events passed by the filter, and uievents generated from journal entries due to the filtering
+        // historyrefreshparsing = reading from DB, else reading dynamically during play
+        // last continued contains the memory if the process of reading has given us a previous continue
+        public bool ReadJournal(List<JournalEntry> jevents, List<UIEvent> uievents, bool historyrefreshparsing, ref JournalEvents.JournalContinued lastcontinued) 
+        {
+            bool readanything = false;
+
+            while (true)
+            {
+                string line = ReadLine();           // read line from TLU.
+
+                if (line == null)                   // null means finished, no more data
+                    return readanything;
+
+                //System.Diagnostics.Debug.WriteLine("Line read '" + line + "'");
+                readanything = true;
+
+                JournalEntry newentry = ProcessLine(line, historyrefreshparsing, ref lastcontinued);
+
+                if (newentry != null)                           // if we got a record back, we may not because it may not be valid or be rejected..
+                {
+                    // if we don't have a commander yet, we need to queue it until we have one, since every entry needs a commander
+
+                    if ((this.TravelLogUnit.CommanderId == null || this.TravelLogUnit.CommanderId < 0) && newentry.EventTypeID != JournalTypeEnum.LoadGame)
+                    {
+                        //System.Diagnostics.Debug.WriteLine("*** Delay " + newentry.JournalEntry.EventTypeStr);
+                        StartEntries.Enqueue(newentry);         // queue..
+                    }
+                    else
+                    {
+                        while (StartEntries.Count != 0)     // we have a commander, anything queued up, play that in first.
+                        {
+                            var dentry = StartEntries.Dequeue();
+                            dentry.SetCommander(TravelLogUnit.CommanderId.Value);
+                            //System.Diagnostics.Debug.WriteLine("*** UnDelay " + dentry.JournalEntry.EventTypeStr);
+                            JournalEventsManagement.FilterJournalEntriesToDBUI(dentry, jevents, uievents);
+                        }
+
+                        //System.Diagnostics.Debug.WriteLine("*** Send  " + newentry.JournalEntry.EventTypeStr);
+                        JournalEventsManagement.FilterJournalEntriesToDBUI(newentry, jevents, uievents); // add newentry to jevents and/or uievents
+                    }
+                }
+            }
+        }
+
         // inhistoryrefreshparse = means reading history in batch mode
         // returns null if journal line is bad or its a repeat.. It does not throw
-        private JournalEntry ProcessLine(string line, bool inhistoryrefreshparse)
+        private JournalEntry ProcessLine(string line, bool inhistoryrefreshparse, ref JournalEvents.JournalContinued lastcontinued)
         {
-         //   System.Diagnostics.Debug.WriteLine("Line in '" + line + "'");
-            int cmdrid = TravelLogUnit.CommanderId.HasValue  ? TravelLogUnit.CommanderId.Value  : -2; //-1 is hidden, -2 is never shown
+            //   System.Diagnostics.Debug.WriteLine("Line in '" + line + "'");
+            int cmdrid = TravelLogUnit.CommanderId.HasValue ? TravelLogUnit.CommanderId.Value : -2; //-1 is hidden, -2 is never shown
 
             if (line.Length == 0)
                 return null;
@@ -53,13 +92,13 @@ namespace EliteDangerousCore
             {           // use a try block in case anything in the creation goes tits up
                 je = JournalEntry.CreateJournalEntry(line, true, true);       // save JSON, save json, don't return if bad
             }
-            catch ( Exception ex)
+            catch (Exception ex)
             {
                 System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Exception Bad journal line: {line} {ex.Message} {ex.StackTrace}");
                 return null;
             }
 
-            if ( je == null )
+            if (je == null)
             {
                 System.Diagnostics.Trace.WriteLine($"{TravelLogUnit.FullName} Bad journal line: {line}");
                 return null;
@@ -93,11 +132,13 @@ namespace EliteDangerousCore
                         // Carry commander over from previous log if it ends with a Continued event.
                         if (contd != null && Math.Abs(header.EventTimeUTC.Subtract(contd.EventTimeUTC).TotalSeconds) < 5 && contd.CommanderId >= 0)
                         {
-                            cmdrid = lastcontinued.CommanderId;
+                            cmdrid = contd.CommanderId;
                             TravelLogUnit.CommanderId = contd.CommanderId;
                         }
                     }
                 }
+
+                lastcontinued = null; // used up, new file header, can't be continued now
             }
             else if (je.EventTypeID == JournalTypeEnum.Continued)
             {
@@ -110,7 +151,7 @@ namespace EliteDangerousCore
                 // for console logs, it will be [C] name
                 // for journal logs, it will be frontier name
 
-                string cmdrrootname = jlg.LoadGameCommander;            
+                string cmdrrootname = jlg.LoadGameCommander;
 
                 if (TravelLogUnit.IsBetaFlag)
                 {
@@ -137,7 +178,7 @@ namespace EliteDangerousCore
 
                 // for made up entries without a TLU (EDSM downloads, EDD created ones) assign the default flag
 
-                JournalEntry.DefaultHorizonsFlag = jlg.IsHorizons;              
+                JournalEntry.DefaultHorizonsFlag = jlg.IsHorizons;
                 JournalEntry.DefaultOdysseyFlag = jlg.IsOdyssey;
                 JournalEntry.DefaultBetaFlag = jlg.IsBeta;
 
@@ -150,7 +191,7 @@ namespace EliteDangerousCore
 
                 EDCommander commander = EDCommander.GetCommander(cmdrcreatedname);
 
-                if (commander == null )
+                if (commander == null)
                 {
                     // in the default condition, we have a hidden commander, and first Cmdr. Jameson.
                     // get list of all active or deleted commanders - deleted cause we don't want to create one if purposely deleted
@@ -170,19 +211,19 @@ namespace EliteDangerousCore
                         // make a new commander
                         // always add the path from now on
                         // note changing commander in EDCommander here does not work - it shows a mess of data - removed nov 22
-                        commander = EDCommander.Add(name: cmdrcreatedname, journalpath: TravelLogUnit.Path, toeddn: EliteConfigInstance.InstanceOptions.SetEDDNforNewCommanders);        
+                        commander = EDCommander.Add(name: cmdrcreatedname, journalpath: TravelLogUnit.Path, toeddn: EliteConfigInstance.InstanceOptions.SetEDDNforNewCommanders);
                     }
 
                     EDCommander.AddOrUpdateCount++;     // update the count, used to detect changes in commander by external systems
 
-                    if ( legacy )
+                    if (legacy)
                     {
                         commander.LegacyCommander = true;       // record legacy
                         System.Diagnostics.Trace.WriteLine($"Legacy commander {cmdrcreatedname} created");
 
                         var cmdr = EDCommander.GetCommander(cmdrrootname);     // if a live commander exist with this name
 
-                        if (cmdr!=null)
+                        if (cmdr != null)
                         {
                             commander.SetLinkedCommander(cmdr.Id, EliteReleaseDates.Odyssey14);       // record linked
                             System.Diagnostics.Trace.WriteLine($"Found existing commander {cmdrrootname}, linked");
@@ -206,7 +247,7 @@ namespace EliteDangerousCore
 
             // if in dynamic read during play, and its an additional file JE, and we are NOT a console commander, see if we can pick up extra info
 
-            if (!inhistoryrefreshparse && (je is IAdditionalFiles) && !(EDCommander.GetCommander(cmdrid)?.ConsoleCommander ?? false) )
+            if (!inhistoryrefreshparse && (je is IAdditionalFiles) && !(EDCommander.GetCommander(cmdrid)?.ConsoleCommander ?? false))
             {
                 (je as IAdditionalFiles).ReadAdditionalFiles(TravelLogUnit.Path);       // try and read file dynamically written.
             }
@@ -214,7 +255,7 @@ namespace EliteDangerousCore
             if (je.EventTypeID == JournalTypeEnum.FSDJump)
             {
                 training |= (je as JournalEvents.JournalFSDJump).StarSystem == "Training";       // seen in logs..  we keep current training, but turn it on if star system is training
-                                                                                        // we need to keep current training as we may be jumping where we can't detect another training incident
+                                                                                                 // we need to keep current training as we may be jumping where we can't detect another training incident
             }
             else if (je.EventTypeID == JournalTypeEnum.Location)        // "event":"Location", "Docked":false, "StarSystem":"Training"
             {
@@ -235,9 +276,9 @@ namespace EliteDangerousCore
                 training = false;                                                                   // always clear training flag, never appears during it
             }
             else if (je.EventTypeID == JournalTypeEnum.Music)                                       // music is an indicator of CQC
-            {   
+            {
                 var music = je as JournalEvents.JournalMusic;
-                
+
                 if (music?.MusicTrackID == JournalEvents.EDMusicTrackEnum.CQC || music?.MusicTrackID == JournalEvents.EDMusicTrackEnum.CQCMenu)
                 {
                     cqc = true;
@@ -246,62 +287,21 @@ namespace EliteDangerousCore
 
             if (cqc || training)  // Ignore events if in CQC or training
             {
-               // System.Diagnostics.Debug.WriteLine($"Rejected journal {je.EventTypeStr} as in {(training ? "Training" : "CQC")}");
+                // System.Diagnostics.Debug.WriteLine($"Rejected journal {je.EventTypeStr} as in {(training ? "Training" : "CQC")}");
                 return null;
             }
 
-           // System.Diagnostics.Debug.WriteLine($"Accepted journal {je.EventTypeStr}");
+            // System.Diagnostics.Debug.WriteLine($"Accepted journal {je.EventTypeStr}");
 
             je.SetTLUCommander(TravelLogUnit.ID, cmdrid);       // update the JE with info from where it came from and the commander
 
             return je;
         }
 
-        // read journal lines from file, return if its read anything.
-        // reporting if we have read anything is important.. it causes the TLU pos to be updated 
-        // add to the lists all unfiltered journal events, all events passed by the filter, and uievents generated from journal entries due to the filtering
-        // historyrefreshparsing = reading from DB, else reading dynamically during play
-        public bool ReadJournal(List<JournalEntry> jevents, List<UIEvent> uievents, bool historyrefreshparsing ) 
-        {
-            bool readanything = false;
 
-            while (true)
-            {
-                string line = ReadLine();           // read line from TLU.
-
-                if (line == null)                   // null means finished, no more data
-                    return readanything;
-
-                //System.Diagnostics.Debug.WriteLine("Line read '" + line + "'");
-                readanything = true;
-
-                JournalEntry newentry = ProcessLine(line, historyrefreshparsing);
-
-                if (newentry != null)                           // if we got a record back, we may not because it may not be valid or be rejected..
-                {
-                    // if we don't have a commander yet, we need to queue it until we have one, since every entry needs a commander
-
-                    if ((this.TravelLogUnit.CommanderId == null || this.TravelLogUnit.CommanderId < 0) && newentry.EventTypeID != JournalTypeEnum.LoadGame)
-                    {
-                        //System.Diagnostics.Debug.WriteLine("*** Delay " + newentry.JournalEntry.EventTypeStr);
-                        StartEntries.Enqueue(newentry);         // queue..
-                    }
-                    else
-                    {
-                        while (StartEntries.Count != 0)     // we have a commander, anything queued up, play that in first.
-                        {
-                            var dentry = StartEntries.Dequeue();
-                            dentry.SetCommander(TravelLogUnit.CommanderId.Value);
-                            //System.Diagnostics.Debug.WriteLine("*** UnDelay " + dentry.JournalEntry.EventTypeStr);
-                            JournalEventsManagement.FilterJournalEntriesToDBUI(dentry, jevents, uievents);
-                        }
-
-                        //System.Diagnostics.Debug.WriteLine("*** Send  " + newentry.JournalEntry.EventTypeStr);
-                        JournalEventsManagement.FilterJournalEntriesToDBUI(newentry, jevents, uievents); // add newentry to jevents and/or uievents
-                    }
-                }
-            }
-        }
+        private bool cqc = false;
+        private bool training = false;
+        private Queue<JournalEntry> StartEntries = new Queue<JournalEntry>();
 
     }
 }

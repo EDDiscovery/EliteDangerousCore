@@ -42,13 +42,13 @@ namespace EliteDangerousCore
 
         #region Scan start stop and monitor
 
+        // Called by EDScanner to Start the monitor on this folder.
         public void StartMonitor(bool storetodb)
         {
             if (m_Watcher == null)
             {
                 try
                 {
-
                     StoreToDBDuringUpdateRead = storetodb;
                     m_netLogFileQueue = new ConcurrentQueue<string>();
                     m_Watcher = new System.IO.FileSystemWatcher();
@@ -176,7 +176,7 @@ namespace EliteDangerousCore
             System.Diagnostics.Debug.Assert(lastnfi.ID != 0,"Last NFI is zero");       // must have committed it at this point, prev code checked for it but it must have been done
             System.Diagnostics.Debug.Assert(netlogreaders.ContainsKey(lastnfi.FullName),$"Can't find {lastnfi.FullName} in netlogreaders");       // must have added to netlogreaders.. double check
 
-            bool readanything = lastnfi.ReadJournal(jeentries, uientries, historyrefreshparsing: false);
+            bool readanything = lastnfi.ReadJournal(jeentries, uientries, historyrefreshparsing: false, ref lastcontinued);
 
             if (StoreToDBDuringUpdateRead)
             {
@@ -306,7 +306,7 @@ namespace EliteDangerousCore
                 List<JournalEntry> dbentries = new List<JournalEntry>();            // entries found for db
                 List<UIEvent> uieventswasted = new List<UIEvent>();                 // any UI events converted are wasted here
 
-                bool readanything = reader.ReadJournal(jeslist != null ? jeslist : dbentries, uieventswasted, historyrefreshparsing: true);      // this may create new commanders, and may write (but not commit) to the TLU
+                bool readanything = reader.ReadJournal(jeslist != null ? jeslist : dbentries, uieventswasted, historyrefreshparsing: true, ref lastcontinued);      // this may create new commanders, and may write (but not commit) to the TLU
                     
                 if ( jeslist != null )                  // if updating jes list
                 {
@@ -420,6 +420,7 @@ namespace EliteDangerousCore
         private bool StoreToDBDuringUpdateRead = false;
         private string journalfilematch;
         private DateTime mindateutc;
+        private JournalEvents.JournalContinued lastcontinued = null;
 
         #endregion
     }
