@@ -29,12 +29,11 @@ namespace EliteDangerousCore
         {
         }
 
-        // read journal lines from file, return if its read anything.
-        // reporting if we have read anything is important.. it causes the TLU pos to be updated 
-        // add to the lists all unfiltered journal events, all events passed by the filter, and uievents generated from journal entries due to the filtering
-        // historyrefreshparsing = reading from DB, else reading dynamically during play
+        // read journal lines from file, return if its read anything. Reporting if we have read anything is important.. it causes the TLU pos to be updated 
+        // add to list journal and ui events generated
+        // inhistoryrefreshparse = means reading history from the db in batch mode, do not try and read the .json extra files
         // last continued contains the memory if the process of reading has given us a previous continue
-        public bool ReadJournal(List<JournalEntry> jevents, List<UIEvent> uievents, bool historyrefreshparsing, ref JournalEvents.JournalContinued lastcontinued) 
+        public bool ReadJournal(List<JournalEntry> jevents, List<UIEvent> uievents, bool historyrefreshparsing, ref JournalEvents.JournalContinued lastcontinued)
         {
             bool readanything = false;
 
@@ -45,40 +44,47 @@ namespace EliteDangerousCore
                 if (line == null)                   // null means finished, no more data
                     return readanything;
 
-                //System.Diagnostics.Debug.WriteLine("Line read '" + line + "'");
                 readanything = true;
 
-                JournalEntry newentry = ProcessLine(line, historyrefreshparsing, ref lastcontinued);
+                ProcessLineIntoEvents(line, jevents, uievents, historyrefreshparsing, ref lastcontinued);
+            }
+        }
 
-                if (newentry != null)                           // if we got a record back, we may not because it may not be valid or be rejected..
+        // turn a line into a journal and UI events
+        // inhistoryrefreshparse = means reading history from the db in batch mode, do not try and read the .json extra files
+        public void ProcessLineIntoEvents(string line, List<JournalEntry> jevents, List<UIEvent> uievents, bool historyrefreshparsing, ref JournalEvents.JournalContinued lastcontinued)
+        {
+            JournalEntry newentry = ProcessLineIntoJournalEntry(line, historyrefreshparsing, ref lastcontinued);
+
+            if (newentry != null)                           // if we got a record back, we may not because it may not be valid or be rejected..
+            {
+                // if we don't have a commander yet, we need to queue it until we have one, since every entry needs a commander
+
+                if ((this.TravelLogUnit.CommanderId == null || this.TravelLogUnit.CommanderId < 0) && newentry.EventTypeID != JournalTypeEnum.LoadGame)
                 {
-                    // if we don't have a commander yet, we need to queue it until we have one, since every entry needs a commander
-
-                    if ((this.TravelLogUnit.CommanderId == null || this.TravelLogUnit.CommanderId < 0) && newentry.EventTypeID != JournalTypeEnum.LoadGame)
+                    //System.Diagnostics.Debug.WriteLine("*** Delay " + newentry.JournalEntry.EventTypeStr);
+                    StartEntries.Enqueue(newentry);         // queue..
+                }
+                else
+                {
+                    while (StartEntries.Count != 0)     // we have a commander, anything queued up, play that in first.
                     {
-                        //System.Diagnostics.Debug.WriteLine("*** Delay " + newentry.JournalEntry.EventTypeStr);
-                        StartEntries.Enqueue(newentry);         // queue..
+                        var dentry = StartEntries.Dequeue();
+                        dentry.SetCommander(TravelLogUnit.CommanderId.Value);
+                        //System.Diagnostics.Debug.WriteLine("*** UnDelay " + dentry.JournalEntry.EventTypeStr);
+                        JournalEventsManagement.FilterJournalEntriesToDBUI(dentry, jevents, uievents);
                     }
-                    else
-                    {
-                        while (StartEntries.Count != 0)     // we have a commander, anything queued up, play that in first.
-                        {
-                            var dentry = StartEntries.Dequeue();
-                            dentry.SetCommander(TravelLogUnit.CommanderId.Value);
-                            //System.Diagnostics.Debug.WriteLine("*** UnDelay " + dentry.JournalEntry.EventTypeStr);
-                            JournalEventsManagement.FilterJournalEntriesToDBUI(dentry, jevents, uievents);
-                        }
 
-                        //System.Diagnostics.Debug.WriteLine("*** Send  " + newentry.JournalEntry.EventTypeStr);
-                        JournalEventsManagement.FilterJournalEntriesToDBUI(newentry, jevents, uievents); // add newentry to jevents and/or uievents
-                    }
+                    //System.Diagnostics.Debug.WriteLine("*** Send  " + newentry.JournalEntry.EventTypeStr);
+                    JournalEventsManagement.FilterJournalEntriesToDBUI(newentry, jevents, uievents); // add newentry to jevents and/or uievents
                 }
             }
         }
 
-        // inhistoryrefreshparse = means reading history in batch mode
+        // taking a line, turn it into a JE 
+        // inhistoryrefreshparse = means reading history from the db in batch mode, do not try and read the .json extra files
         // returns null if journal line is bad or its a repeat.. It does not throw
-        private JournalEntry ProcessLine(string line, bool inhistoryrefreshparse, ref JournalEvents.JournalContinued lastcontinued)
+        private JournalEntry ProcessLineIntoJournalEntry(string line, bool inhistoryrefreshparse, ref JournalEvents.JournalContinued lastcontinued)
         {
             //   System.Diagnostics.Debug.WriteLine("Line in '" + line + "'");
             int cmdrid = TravelLogUnit.CommanderId.HasValue ? TravelLogUnit.CommanderId.Value : -2; //-1 is hidden, -2 is never shown

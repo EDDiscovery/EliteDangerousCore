@@ -12,10 +12,12 @@
  * governing permissions and limitations under the License.
  */
 
+using EliteDangerousCore.DB;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace EliteDangerousCore
 {
@@ -86,6 +88,77 @@ namespace EliteDangerousCore
             {
                 e.Reset();
             }
+        }
+
+        #endregion
+
+        #region Single Stepper
+
+        public class SingleStepper
+        {
+            public SingleStepper(JournalEntry startpos)
+            {
+                lastjid = startpos.Id;
+                cmdrid = startpos.CommanderId;
+            }
+
+            public TravelLogUnit tlu;
+            public long lastjid;
+            public int cmdrid;
+            public EDJournalReader journalreader;
+            public JournalEvents.JournalContinued lastcontinued;
+        }
+
+        // single stepping, the monitor is not running,
+        // given the last journal entry, find the next one after that and pass thru the same process as if it was read from a file
+        // true if stepped okay
+
+        public bool SingleStep(SingleStepper stepper)
+        {
+            JournalEntry next = JournalEntry.GetNext(stepper.lastjid, stepper.cmdrid);
+
+            if ( next != null )
+            {
+                if ( TravelLogUnit.TryGet(next.TLUId, out TravelLogUnit nexttlu) )
+                {
+                    stepper.lastjid = next.Id;
+                    if (stepper.tlu != nexttlu || stepper.journalreader == null)
+                    {
+                        stepper.journalreader = new EDJournalReader(nexttlu);
+                        stepper.tlu = nexttlu;
+                        System.Diagnostics.Debug.WriteLine($"Single step change to TLU {stepper.tlu.FileName}");
+                    }
+
+                    List<JournalEntry> jevents = new List<JournalEntry>();
+                    List<UIEvent> uievents = new List<UIEvent>();
+
+                    // turn the JSON into journal/ui events, in batch mode
+                    stepper.journalreader.ProcessLineIntoEvents(next.GetJson().ToString(), jevents, uievents, true, ref stepper.lastcontinued);
+
+                    var sw = statuswatchers[0];     // bodge for now
+
+                    var events = new List<Events>();
+                    foreach (var ev in jevents)
+                    {
+                        events.Add(new Events() { je = ev, sr = sw }); // feed an event in
+                        System.Diagnostics.Debug.WriteLine($"Single step issue {ev.EventTypeID}");
+                    }
+                    foreach (var ev in uievents)
+                    {
+                        events.Add(new Events() { ui = ev, sr = sw });   // find in an ui event
+                        System.Diagnostics.Debug.WriteLine($"Single step issue UI JE {ev.EventTypeID}");
+                    }
+
+                    if (events.Count > 0)
+                    {
+                        InvokeAsyncOnUiThread(() => IssueEventsInUIThread(events));
+                    }
+
+                    return true;
+                }
+            }
+            
+            return false;
         }
 
         #endregion
@@ -227,9 +300,8 @@ namespace EliteDangerousCore
         {
             ManualResetEvent stopRequested = StopRequested;
 
-            while (!stopRequested.WaitOne(ScanTick))        // WaitTick sets the pace of this thread firing
+            while (!stopRequested.WaitOne(ScanTick))        // ScanTick sets the pace of this thread firing
             {
-                System.Diagnostics.Debug.WriteLine($"{Environment.TickCount} scan tick");
                 var eventlist = GatherEvents(() => stopRequested.WaitOne(0));
 
                 if (eventlist != null && eventlist.Count > 0 && !stopRequested.WaitOne(0))
@@ -295,8 +367,6 @@ namespace EliteDangerousCore
                     OnNewJournalEntry?.Invoke(e.je, e.sr);
                 if (e.ui != null)
                     OnNewUIEvent?.Invoke(e.ui, e.sr);
-                if (StopRequested.WaitOne(0))
-                    return;
             }
         }
 

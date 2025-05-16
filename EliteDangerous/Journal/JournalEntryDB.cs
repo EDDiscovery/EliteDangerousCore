@@ -278,6 +278,30 @@ namespace EliteDangerousCore
 
             return null;
         }
+        static public JournalEntry GetNext(long journalid, int cmdrid)
+        {
+            return UserDatabase.Instance.DBRead<JournalEntry>(cn => { return GetNext(journalid, cmdrid, cn); });
+        }
+
+        static internal JournalEntry GetNext(long journalid, int cmdrid, SQLiteConnectionUser cn)
+        {
+            using (DbCommand cmd = cn.CreateCommand("select * from JournalEntries where ID>@journalid And CommanderId=@cmdrid ORDER BY ID ASC Limit 1"))
+            {
+                cmd.AddParameterWithValue("@journalid", journalid);
+                cmd.AddParameterWithValue("@cmdrid", cmdrid);
+
+                using (DbDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        return CreateJournalEntry(reader);
+                    }
+
+                }
+            }
+            return null;
+        }
+
 
         // Return data from table
         // ID, travellogid, commanderid, event json, sync flag
