@@ -1163,7 +1163,7 @@ SECTION GovernmentTypes
 .Theocracy: "Theocracy" => "Théocratie"
 .Engineer: "Engineer" => "Atelier"
 .Carrier: "Carrier" => "Propriétaire privé"
-.Undefined: "Undefined" @
+.Undefined: "Undefined" => "Non défini"
 
 SECTION EconomyTypes
 
@@ -1220,7 +1220,7 @@ SECTION StarportTypes
 .SurfaceStation: "Surface Station" => "Port planétaire"
 .CraterOutpost: "Crater Outpost" => "Avant-poste de cratère"
 .CraterPort: "Crater Port" => "Port planétaire de cratère"
-.SpaceConstructionDepot: "Space Construction Depot" => "Dépôt de construction spatiale"
+.SpaceConstructionDepot: "Space Construction Depot" => "Dépôt de construction spatial"
 .PlanetaryConstructionDepot: "Planetary Construction Depot" => "Dépôt de construction planétaire"
 .DockablePlanetStation: "Dockable Planet Station" => "Station planétaire amarrable"
 
@@ -1406,7 +1406,7 @@ SECTION ModulePartNames
 .Enhanced_Xeno_Scanner: "Enhanced Xeno Scanner" => "Détecteur de xénomorphes amélioré"
 .Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" => "Détecteur de xénomorphes à onde pulsée"
 .Concord_Cannon: "Concord Cannon" => "Canon Concorde"
-.Colonisation_Module: "Colonisation Module" => "Module de colonisation de système"
+.Colonisation_Module: "Colonisation Module" => "Instruments de colonisation de système"
 
 SECTION ShipSlots
 
