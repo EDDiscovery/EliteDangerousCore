@@ -25,6 +25,12 @@ SECTION JournalTypeEnum
 .CrewAssign: "Crew Assign" => "Affectation Équipage"
 .CrewFire: "Crew Fire" => "Licenciement Équipage"
 .CrewHire: "Crew Hire" => "Embauche Équipage"
+.ColonisationConstructionDepot: "Colonisation Construction Depot" => "Colonisation : Dépôt de contruction"
+.ColonisationContribution: "Colonisation Contribution" => "Colonisation : Contribution"
+.ColonisationSystemClaim: "Colonisation System Claim" => "Colonisation : Revendication de système"
+.ColonisationBeaconDeployed: "Colonisation Beacon Deployed" => "Colonisation : Balise déployée"
+.ColonisationSystemClaimRelease: "Colonisation System Claim Release" => "Colonisation : Annulation revendication de système"
+.Splitter Make Scan tag 1 dno 1051
 .ClearImpound: "Clear Impound" => "Règlement fourrière"
 .DatalinkScan: "Datalink Scan" => "Scan de liaison de données"
 .DeliverPowerMicroResources: "Deliver Power Micro Resources" => "Livraison de micro ressources Powerplay"
