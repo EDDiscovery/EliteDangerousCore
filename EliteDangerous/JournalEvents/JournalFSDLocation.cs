@@ -215,11 +215,12 @@ namespace EliteDangerousCore.JournalEvents
         bool Docked { get; }
         string StarSystem { get; }
         long? SystemAddress { get; }
-        string StationName { get;  }
-        string StationName_Localised { get; }
+        string StationName { get;  }      
+        string StationName_Localised { get; }          
         StationDefinitions.StarportTypes FDStationType { get;  }  // only on later events, else Unknown
         string StationType { get; } // english, only on later events, else Unknown
         long? MarketID { get;  }
+        StationDefinitions.Classification MarketClass();
         string StationFaction { get;}
         FactionDefinitions.State StationFactionState { get; }       //may be null, FDName
         string StationFactionStateTranslated { get;  }
@@ -245,8 +246,9 @@ namespace EliteDangerousCore.JournalEvents
             Docked = evt["Docked"].Bool();
             if (Docked)
             {
-                StationName = evt["StationName"].Str();
-                StationName_Localised = JournalFieldNaming.CheckLocalisation(evt["StationName_Localised"].Str(), evt["StationName"].Str());
+                var snl = JournalFieldNaming.GetStationNames(evt);
+                StationName = snl.Item1;
+                StationName_Localised = snl.Item2;
                 string st = evt["StationType"].StrNull();
                 if (st != null && st.Length == 0)        // seem empty ones
                     st = null;
@@ -314,6 +316,7 @@ namespace EliteDangerousCore.JournalEvents
         public double? Longitude { get; set; }
 
         public long? MarketID { get; set; }
+        public StationDefinitions.Classification MarketClass() { return MarketID != null ? StationDefinitions.Classify(MarketID.Value, FDStationType) : StationDefinitions.Classification.Unknown; }
 
         // 3.3.2 will be empty/null for previous logs.
         public string StationFaction { get; set; }  
@@ -334,7 +337,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string SummaryName(ISystem sys)     // Location
         {
             if (Docked)
-                return string.Format("At {0}".T(EDCTx.JournalLocation_AtStat), StationName);
+                return string.Format("At {0}".T(EDCTx.JournalLocation_AtStat), StationName_Localised);
             else
             {
                 string bodyname = Body.HasChars() ? Body.ReplaceIfStartsWith(StarSystem) : StarSystem;
@@ -406,95 +409,6 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
-    //When written: when jumping with a fleet carrier
-    [JournalEntryType(JournalTypeEnum.CarrierJump)]
-    public class JournalCarrierJump : JournalLocOrJump, IBodyNameAndID, IJournalJumpColor, IStarScan, ICarrierStats
-    {
-        public JournalCarrierJump(JObject evt) : base(evt, JournalTypeEnum.CarrierJump)
-        {
-            // base class does StarSystem/StarPos/Faction/Powerplay
-
-            Docked = evt["Docked"].Bool();
-            StationName = evt["StationName"].Str();
-
-            // keep type in case they introduce more than 1 carrier type
-            FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].Str());
-            StationType = StationDefinitions.ToEnglish(FDStationType);
-
-            MarketID = evt["MarketID"].LongNull();
-
-            // don't bother with StationGovernment, StationFaction, StationEconomy, StationEconomies
-
-            StationServices = StationDefinitions.ReadServicesFromJson(evt["StationServices"]);
-
-            Body = evt["Body"].Str();
-            BodyID = evt["BodyID"].IntNull();
-            BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
-            DistFromStarLS = evt["DistFromStarLS"].DoubleNull();
-
-            JToken jm = evt["EDDMapColor"];
-            MapColor = jm.Int(EDCommander.Current.MapColour);
-            if (jm.IsNull())
-                evt["EDDMapColor"] = EDCommander.Current.MapColour;      // new entries get this default map colour if its not already there
-        }
-
-        public bool Docked { get; set; }
-        public string StationName { get; set; }
-        public string StationType { get; set; } // friendly station type
-        public StationDefinitions.StarportTypes FDStationType { get; set; } // fdname
-        public string Body { get; set; }
-        public int? BodyID { get; set; }
-        public string BodyType { get; set; }
-        public string BodyDesignation { get; set; }
-        public double? DistFromStarLS { get; set; }
-
-        public long? MarketID { get; set; }
-        public int MapColor { get; set; }
-        public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
-
-        public StationDefinitions.StationServices[] StationServices { get; set; }
-        public EconomyDefinitions.Economies[] StationEconomyList { get; set; }        // may be null
-
-        public override string SummaryName(ISystem sys)
-        {
-            return string.Format("Jumped with carrier {0} to {1}".T(EDCTx.JournalCarrierJump_JumpedWith), StationName, Body);
-        }
-        public void AddStarScan(StarScan s, ISystem system)
-        {
-            s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
-        }
-
-        public override string GetInfo()        // carrier jump
-        {
-            return BaseUtils.FieldBuilder.Build("Type ".T(EDCTx.JournalLocOrJump_Type), StationDefinitions.ToLocalisedLanguage(FDStationType),
-                                                    "< in system ".T(EDCTx.JournalLocOrJump_insystem), StarSystem);
-        }
-
-        public override string GetDetailed()    // carrier jump
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Build("<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted);
-
-            if (HasPowerPlayInfo)
-            {
-                sb.AppendCR();
-                FillPowerInfo(sb);
-            }
-
-            if (HasFactionConflictThargoidInfo)
-            {
-                sb.AppendCR();
-                FillFactionConflictThargoidPowerPlayConflictInfo(sb);
-            }
-
-            return sb.ToString();
-        }
-
-        public void UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
-        {
-            s.Update(this);
-        }
-    }
 
     [JournalEntryType(JournalTypeEnum.FSDJump)]
     public class JournalFSDJump : JournalLocOrJump, IShipInformation, IJournalJumpColor, IStarScan

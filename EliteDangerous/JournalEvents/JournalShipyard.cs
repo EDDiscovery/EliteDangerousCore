@@ -27,20 +27,21 @@ namespace EliteDangerousCore.JournalEvents
             Rescan(evt);
         }
 
-        public JournalShipyard(DateTime utc, string sn, string sys, long mid, Tuple<long, string, long>[] list, int cmdrid, bool allowcobramkiv, bool horizons = true) :
+        public JournalShipyard(DateTime utc, string sn, string snloc, string sys, long mid, Tuple<long, string, long>[] list, int cmdrid, bool allowcobramkiv, bool horizons = true) :
               base(utc, JournalTypeEnum.Shipyard)
         {
             MarketID = mid;
             Horizons = horizons;
             AllowCobraMkIV = allowcobramkiv;
             var nlist = list.Select(x => new ShipYard.ShipyardItem { id = x.Item1, ShipType = x.Item2, ShipPrice = x.Item3 }).ToArray();
-            Yard = new ShipYard(sn, sys, utc, nlist);
+            Yard = new ShipYard(sn, snloc, sys, utc, nlist);
             SetCommander(cmdrid);
         }
 
         public void Rescan(JObject evt)
         {
-            Yard = new ShipYard(evt["StationName"].Str(), evt["StarSystem"].Str(), EventTimeUTC, evt["PriceList"]?.ToObjectQ<ShipYard.ShipyardItem[]>());
+            var snloc = JournalFieldNaming.GetStationNames(evt);
+            Yard = new ShipYard(snloc.Item1,snloc.Item2, evt["StarSystem"].Str(), EventTimeUTC, evt["PriceList"]?.ToObjectQ<ShipYard.ShipyardItem[]>());
             MarketID = evt["MarketID"].LongNull();
             Horizons = evt["Horizons"].BoolNull();
             AllowCobraMkIV = evt["AllowCobraMkIV"].BoolNull();

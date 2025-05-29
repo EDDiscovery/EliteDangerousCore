@@ -17,6 +17,7 @@ using QuickJSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -1030,6 +1031,102 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
     }
+
+    //When written: when jumping with a fleet carrier
+    [JournalEntryType(JournalTypeEnum.CarrierJump)]
+    public class JournalCarrierJump : JournalLocOrJump, IBodyNameAndID, IJournalJumpColor, IStarScan, ICarrierStats
+    {
+        public JournalCarrierJump(JObject evt) : base(evt, JournalTypeEnum.CarrierJump)
+        {
+            // base class does StarSystem/StarPos/Faction/Powerplay
+
+            Docked = evt["Docked"].Bool();
+            var snl = JournalFieldNaming.GetStationNames(evt);
+            StationName = snl.Item1;
+            StationName_Localised = snl.Item2;
+
+            // keep type in case they introduce more than 1 carrier type
+            FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].Str());
+            StationType = StationDefinitions.ToEnglish(FDStationType);
+
+            MarketID = evt["MarketID"].LongNull();
+
+            // don't bother with StationGovernment, StationFaction, StationEconomy, StationEconomies
+
+            StationServices = StationDefinitions.ReadServicesFromJson(evt["StationServices"]);
+
+            Body = evt["Body"].Str();
+            BodyID = evt["BodyID"].IntNull();
+            BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
+            DistFromStarLS = evt["DistFromStarLS"].DoubleNull();
+
+            JToken jm = evt["EDDMapColor"];
+            MapColor = jm.Int(EDCommander.Current.MapColour);
+            if (jm.IsNull())
+                evt["EDDMapColor"] = EDCommander.Current.MapColour;      // new entries get this default map colour if its not already there
+        }
+
+        public bool Docked { get; set; }
+        public string StationName { get; set; }         // from aprilish 2025, we get these even if we are not on it. Will be blank
+        public string StationName_Localised { get; set; }       
+        public string StationType { get; set; } // friendly station type
+        public StationDefinitions.StarportTypes FDStationType { get; set; } // fdname
+        public string Body { get; set; }
+        public int? BodyID { get; set; }
+        public string BodyType { get; set; }
+        public string BodyDesignation { get; set; }
+        public double? DistFromStarLS { get; set; }
+
+        public long? MarketID { get; set; }
+        public int MapColor { get; set; }
+        public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
+
+        public StationDefinitions.StationServices[] StationServices { get; set; }
+        public EconomyDefinitions.Economies[] StationEconomyList { get; set; }        // may be null
+
+        public override string SummaryName(ISystem sys)
+        {
+            if (Docked)
+                return string.Format("Jumped with carrier {0} to {1}".T(EDCTx.JournalCarrierJump_JumpedWith), StationName, Body);
+            else
+                return string.Format("Carrier jumped to {0}".T(EDCTx.JournalCarrierJump_JumpedItself), Body);
+        }
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
+        }
+
+        public override string GetInfo()        // carrier jump
+        {
+            return BaseUtils.FieldBuilder.Build("", Body ?? StarSystem);
+        }
+
+        public override string GetDetailed()    // carrier jump
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Build("<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted);
+
+            if (HasPowerPlayInfo)
+            {
+                sb.AppendCR();
+                FillPowerInfo(sb);
+            }
+
+            if (HasFactionConflictThargoidInfo)
+            {
+                sb.AppendCR();
+                FillFactionConflictThargoidPowerPlayConflictInfo(sb);
+            }
+
+            return sb.ToString();
+        }
+
+        public void UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
+        {
+            s.Update(this);
+        }
+    }
+
 
 }
 

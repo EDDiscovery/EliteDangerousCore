@@ -686,6 +686,7 @@ namespace EliteDangerousCore
         JournalLocation_AtStar, // At {0}
 
         JournalCarrierJump_JumpedWith, // Jumped with carrier {0} to {1}
+        JournalCarrierJump_JumpedItself, // Carrier Jumped to {0}
 
         JournalFSDJump_Jumpto, // Jump to {0}
         JournalFSDJump_Distance, // ; ly;N2

@@ -52,6 +52,7 @@ namespace EliteDangerousCore
         }
 
         public string StationName { get; private set; }
+        public string StationName_Localised { get; private set; }
         public string StarSystem { get; private set; }
         public DateTime DateTimeUTC { get; private set; }
         public ShipyardItem[] Ships { get; private set; }
@@ -60,9 +61,10 @@ namespace EliteDangerousCore
         {
         }
 
-        public ShipYard(string st, string sy, DateTime utc , ShipyardItem[] it  )
+        public ShipYard(string sn, string snloc, string sy, DateTime utc , ShipyardItem[] it  )
         {
-            StationName = st;
+            StationName = sn;
+            StationName_Localised = snloc;
             StarSystem = sy;
             DateTimeUTC = utc;
             Ships = it;
@@ -77,7 +79,7 @@ namespace EliteDangerousCore
                 CollectionStaticHelpers.Equals(Ships,other.Ships);
         }
 
-        public string Location { get { return StarSystem + ":" + StationName; } }
+        public string LocationKey { get { return StarSystem + ":" + StationName; } }
 
         public string Ident()
         {
@@ -124,10 +126,10 @@ namespace EliteDangerousCore
 
             foreach (var yard in shipyards.AsEnumerable().Reverse())        // give it to me in lastest one first..
             {
-                if (!nolocrepeats || yards.Find(x => x.Location.Equals(yard.Location)) == null) // allow yard repeats or not in list
+                if (!nolocrepeats || yards.Find(x => x.LocationKey.Equals(yard.LocationKey)) == null) // allow yard repeats or not in list
                 {
                     // if no last or different name or time is older..
-                    if (last == null || !yard.Location.Equals(last.Location) || (last.DateTimeUTC - yard.DateTimeUTC).TotalSeconds >= timeout)
+                    if (last == null || !yard.LocationKey.Equals(last.LocationKey) || (last.DateTimeUTC - yard.DateTimeUTC).TotalSeconds >= timeout)
                     {
                         yards.Add(yard);
                         last = yard;

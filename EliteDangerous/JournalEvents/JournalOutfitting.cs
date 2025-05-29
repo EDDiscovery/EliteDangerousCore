@@ -29,19 +29,20 @@ namespace EliteDangerousCore.JournalEvents
             Rescan(evt);
         }
 
-        public JournalOutfitting(DateTime utc, string sn, string sys, long mid, Tuple<long, string, long>[] list, int cmdrid, bool horizons = true) :
+        public JournalOutfitting(DateTime utc, string sn, string snloc, string sys, long mid, Tuple<long, string, long>[] list, int cmdrid, bool horizons = true) :
             base(utc, JournalTypeEnum.Outfitting)
         {
             MarketID = mid;
             Horizons = horizons;
             var nlist = list.Select(x => new Outfitting.OutfittingItem { id = x.Item1, Name = x.Item2, BuyPrice = x.Item3 }).ToArray();
-            YardInfo = new Outfitting(sn, sys, utc, nlist);
+            YardInfo = new Outfitting(sn, snloc, sys, utc, nlist);
             SetCommander(cmdrid);
         }
 
         public void Rescan(JObject evt)
         {
-            YardInfo = new Outfitting(evt["StationName"].Str(), evt["StarSystem"].Str(), EventTimeUTC, evt["Items"]?.ToObjectQ<Outfitting.OutfittingItem[]>());
+            var snloc = JournalFieldNaming.GetStationNames(evt);
+            YardInfo = new Outfitting(snloc.Item1, snloc.Item2, evt["StarSystem"].Str(), EventTimeUTC, evt["Items"]?.ToObjectQ<Outfitting.OutfittingItem[]>());
             MarketID = evt["MarketID"].LongNull();
             Horizons = evt["Horizons"].BoolNull();
         }

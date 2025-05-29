@@ -83,6 +83,7 @@ namespace EliteDangerousCore
         {
             public ISystem System { get; set; }
             public string WhereAmI { get; set; }
+            public string BodyName { get; set; }
             public string NextJumpSystemName { get; set; }
             public long? NextJumpSystemAddress { get; set; }
         };

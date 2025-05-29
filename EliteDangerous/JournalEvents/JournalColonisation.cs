@@ -65,9 +65,9 @@ namespace EliteDangerousCore.JournalEvents
                 other.ResourcesRequired.SequenceEqual(ResourcesRequired);
         }
 
-        public override string GetInfo()
+        public override string GetInfo(JournalEntry.FillInformationData fid)
         {
-            return BaseUtils.FieldBuilder.Build("Progress: ;%;N1".T(EDCTx.JournalEntry_Progress), ConstructionProgress * 100.0f,
+            return BaseUtils.FieldBuilder.Build("" , fid.BodyName, "Progress: ;%;N1".T(EDCTx.JournalEntry_Progress), ConstructionProgress * 100.0f,
                                                 ";Complete", ConstructionComplete,
                                                 ";Failed", ConstructionFailed);
         }

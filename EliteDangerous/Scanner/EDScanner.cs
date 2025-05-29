@@ -141,12 +141,12 @@ namespace EliteDangerousCore
                     foreach (var ev in jevents)
                     {
                         events.Add(new Events() { je = ev, sr = sw }); // feed an event in
-                        System.Diagnostics.Debug.WriteLine($"Single step issue {ev.EventTypeID}");
+                       // System.Diagnostics.Debug.WriteLine($"Single step issue {ev.EventTypeID}");
                     }
                     foreach (var ev in uievents)
                     {
                         events.Add(new Events() { ui = ev, sr = sw });   // find in an ui event
-                        System.Diagnostics.Debug.WriteLine($"Single step issue UI JE {ev.EventTypeID}");
+                      //  System.Diagnostics.Debug.WriteLine($"Single step issue UI JE {ev.EventTypeID}");
                     }
 
                     if (events.Count > 0)

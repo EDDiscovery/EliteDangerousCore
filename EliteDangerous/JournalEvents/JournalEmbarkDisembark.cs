@@ -14,6 +14,7 @@
 
 
 using QuickJSON;
+using static System.Collections.Specialized.BitVector32;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -32,7 +33,9 @@ namespace EliteDangerousCore.JournalEvents
             BodyID = evt["BodyID"].LongNull();
             OnPlanet = evt["OnPlanet"].BoolNull();
             OnStation = evt["OnStation"].BoolNull();
-            StationName = evt["StationName"].StrNull();
+            var snl = JournalFieldNaming.GetStationNames(evt);
+            StationName = snl.Item1;
+            StationName_Localised = snl.Item2;
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());        // may not be embarking from a station, accept 
             StationType = StationDefinitions.ToEnglish(FDStationType);
             MarketID = evt["MarketID"].LongNull();
@@ -52,6 +55,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? OnStation { get; set; }
         public bool? OnPlanet { get; set; }
         public string StationName { get; set; }
+        public string StationName_Localised { get; set; }
         public string StationType { get; set; } // friendly, may be null
         public StationDefinitions.StarportTypes FDStationType { get; set; }   // may be null
         public long? MarketID { get; set; }
@@ -72,7 +76,7 @@ namespace EliteDangerousCore.JournalEvents
 
             string body = Body == StationName ? null : Body.ReplaceIfStartsWith(StarSystem);
 
-            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", StationName, "", body, "", StarSystem), ". ");
+            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", StationName_Localised, "", body, "", StarSystem), ". ");
             if (FDStationType != StationDefinitions.StarportTypes.Unknown)
                 info += ", " + "Type: ".T(EDCTx.JournalEntry_Type) + StationDefinitions.ToLocalisedLanguage(FDStationType);
 
@@ -95,7 +99,9 @@ namespace EliteDangerousCore.JournalEvents
             BodyID = evt["BodyID"].LongNull();
             OnPlanet = evt["OnPlanet"].BoolNull();
             OnStation = evt["OnStation"].BoolNull();
-            StationName = evt["StationName"].StrNull();
+            var snl = JournalFieldNaming.GetStationNames(evt);
+            StationName = snl.Item1;
+            StationName_Localised = snl.Item2;
             HasStationTypeName = StationName.HasChars() && evt["StationType"] != null;
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());        // null means its not present, will be set to Unknown
             StationType = StationDefinitions.ToEnglish(FDStationType);
@@ -117,6 +123,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? OnPlanet { get; set; }
         public bool HasStationTypeName { get; set; }        // note bugs means that stationname/type does not seem to appear always even if you jump out to a station
         public string StationName { get; set; } // may be null, but that does not mean we may not be in a station
+        public string StationName_Localised { get; set; } 
         public string StationType { get; set; } // english friendly, may be Unknown if not there
         public StationDefinitions.StarportTypes FDStationType { get; set; }   // will be Unknown for no station given
         public long? MarketID { get; set; }
@@ -136,7 +143,7 @@ namespace EliteDangerousCore.JournalEvents
                 info = "Ship".T(EDCTx.JournalCargo_CargoShip);
 
             string body = Body == StationName ? null : Body.ReplaceIfStartsWith(StarSystem);
-            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", StationName, "", body, "", StarSystem), ". ");
+            info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", StationName_Localised, "", body, "", StarSystem), ". ");
             if (FDStationType != StationDefinitions.StarportTypes.Unknown)
                 info += ", " + "Type: ".T(EDCTx.JournalEntry_Type) + StationDefinitions.ToLocalisedLanguage(FDStationType);
             return info;

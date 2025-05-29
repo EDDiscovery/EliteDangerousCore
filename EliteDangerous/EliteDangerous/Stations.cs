@@ -276,6 +276,81 @@ namespace EliteDangerousCore
 
         #endregion
 
+        #region Market Classification
+
+// log analysis May 2025
+//128 = AsteroidBase,Coriolis,CraterOutpost,CraterPort,MegaShip,Ocellus,Orbis,Outpost,SurfaceStation
+//129 = Coriolis,MegaShip,Ocellus,SurfaceStation
+//3221-3231 = Coriolis,Ocellus,Orbis,Outpost
+//3240 = Orbis
+//3400 = MegaShip
+//3500-3546 = CraterOutpost,CraterPort,SurfaceStation
+//3600 = MegaShip
+//3700 = FleetCarrier,SurfaceStation
+//3701-3711 = FleetCarrier
+//3789 = CraterOutpost,CraterPort
+//3790 = CraterOutpost,CraterPort
+//3791 = CraterOutpost,CraterPort
+//3802-3928 = OnFootSettlement
+//3930 = SurfaceStation
+//3951 = SpaceConstructionDepot,SurfaceStation
+//3952 = SpaceConstructionDepot,SurfaceStation
+//3953 = SurfaceStation
+//3954 = SpaceConstructionDepot,SurfaceStation
+//3955 = SurfaceStation
+//3956 = SurfaceStation
+//3957 = SpaceConstructionDepot,SurfaceStation
+//3958 = SurfaceStation
+//3959 = SurfaceStation
+//3960 = SpaceConstructionDepot
+//3962 = SpaceConstructionDepot
+//4207 = SurfaceStation
+//4210 = Outpost,SurfaceStation
+//4211 = Coriolis,OnFootSettlement,Outpost,PlanetaryConstructionDepot,SurfaceStation
+//4212 = OnFootSettlement,Outpost
+//4214 = OnFootSettlement,Outpost,PlanetaryConstructionDepot
+//4215 = Outpost,PlanetaryConstructionDepot,SurfaceStation
+//4216 = Coriolis
+//4217 = CraterOutpost,Outpost,PlanetaryConstructionDepot
+//4221 = Orbis,SurfaceStation
+//4222 = SurfaceStation
+//4223 = PlanetaryConstructionDepot
+//4233 = Orbis
+//4238 = CraterOutpost,Ocellus,SurfaceStation
+//4239 = OnFootSettlement,PlanetaryConstructionDepot
+//4242 = PlanetaryConstructionDepot
+
+        public enum Classification { 
+            Unknown,
+            NormalPort,  
+            MegaShip,       
+            RescueShip,     
+            FleetCarrier,
+            TypesBelowColonisation,
+            SpaceConstructionDepot,
+            ColonisationShip,
+            ColonisationPort,
+        }
+
+        public static Classification Classify(long marketid, StarportTypes type)
+        {
+            long topcode = marketid / 1000000; // codes 128, 3220 etc.
+            if (topcode == 3400)
+                return Classification.RescueShip;
+            if (type == StarportTypes.Megaship || topcode == 3600)
+                return Classification.MegaShip;
+            if (type == StarportTypes.SpaceConstructionDepot)
+                return Classification.SpaceConstructionDepot;
+            if (topcode >= 3700 && topcode <= 3770)                 // these are all fleet carriers, some are called surface stations by error
+                return Classification.FleetCarrier;
+            if (topcode >= 3950 && topcode <= 3990)
+                return Classification.ColonisationShip;
+            if (topcode >= 4200 && topcode <= 4290)                  // only 4200-4230 seen, allow space
+                return Classification.ColonisationPort;
+            return Classification.NormalPort;
+        }
+
+        #endregion
 
         static Dictionary<string, StationServices> stationservicesparselist;
         static Dictionary<string, StarportTypes> starporttypesparselist;

@@ -62,13 +62,15 @@ namespace EliteDangerousCore
         }
 
         public string StationName { get; private set; }
+        public string StationName_Localised { get; private set; }
         public string StarSystem { get; private set; }
         public DateTime DateTimeUTC { get; private set; }
         public OutfittingItem[] Items { get; private set; }     // can be null if its retrospecively read
 
-        public Outfitting(string stationname, string starsystem, DateTime dt, OutfittingItem[] it = null)        // items can be null if no data captured at the point
+        public Outfitting(string stationname, string stationnameloc, string starsystem, DateTime dt, OutfittingItem[] it = null)        // items can be null if no data captured at the point
         {
             StationName = stationname;
+            StationName_Localised = stationnameloc;
             StarSystem = starsystem;
             DateTimeUTC = dt;
             Items = it;
@@ -85,7 +87,7 @@ namespace EliteDangerousCore
                 CollectionStaticHelpers.Equals(Items, other.Items);
         }
 
-        public string Location { get { return StarSystem + ":" + StationName; } }
+        public string LocationKey { get { return StarSystem + ":" + StationName; } }
 
         public string Ident()
         {
@@ -125,10 +127,10 @@ namespace EliteDangerousCore
 
             foreach (var yard in outfittingyards.AsEnumerable().Reverse())        // give it to me in lastest one first..
             {
-                if (!nolocrepeats || outfittings.Find(x => x.Location.Equals(yard.Location)) == null) // allow yard repeats or not in list
+                if (!nolocrepeats || outfittings.Find(x => x.LocationKey.Equals(yard.LocationKey)) == null) // allow yard repeats or not in list
                 {
                     // if no last or different name or time is older..
-                    if (last == null || !yard.Location.Equals(last.Location) || (last.DateTimeUTC - yard.DateTimeUTC).TotalSeconds >= timeout)
+                    if (last == null || !yard.LocationKey.Equals(last.LocationKey) || (last.DateTimeUTC - yard.DateTimeUTC).TotalSeconds >= timeout)
                     {
                         outfittings.Add(yard);
                         last = yard;

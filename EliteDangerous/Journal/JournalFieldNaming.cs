@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using QuickJSON;
 using System;
 using System.Collections.Generic;
 
@@ -217,6 +218,48 @@ namespace EliteDangerousCore
             return s;
         }
 
+        static public Tuple<string, string> GetStationNames(JObject evt, string root = "StationName")
+        {
+            var sn = evt[root].Str();
+            var snloc = evt[root+"_Localised"].StrNull();
+            if (snloc == null)
+            {
+                string cs = "$EXT_PANEL_ColonisationShip;";
+                if (sn.StartsWith(cs))
+                {
+                    snloc = sn.Substring(cs.Length).Trim();
+                    //System.Diagnostics.Debug.WriteLine($"Station Name `{sn}` loc `{snloc}`");
+                }
+                else
+                {
+                    snloc = sn;
+                    if (sn.Contains("$"))
+                        System.Diagnostics.Debug.WriteLine($"Localisation of Station Name `{sn}` Failed");
+                }
+            }
+            return new Tuple<string, string>(sn, snloc);
+        }
+        static public Tuple<string, string> GetStationNames(JObject evt)
+        {
+            var sn = evt["StationName"].Str();
+            var snloc = evt["StationName_Localised"].StrNull();
+            if (snloc == null)
+            {
+                string cs = "$EXT_PANEL_ColonisationShip;";
+                if (sn.StartsWith(cs))
+                {
+                    snloc = sn.Substring(cs.Length).Trim();
+                    //System.Diagnostics.Debug.WriteLine($"Station Name `{sn}` loc `{snloc}`");
+                }
+                else
+                {
+                    snloc = sn;
+                    if (sn.Contains("$"))
+                        System.Diagnostics.Debug.WriteLine($"Localisation of Station Name `{sn}` Failed");
+                }
+            }
+            return new Tuple<string, string>(sn, snloc);
+        }
 
         static public string CheckLocalisation(string loc, string alt)      
         {

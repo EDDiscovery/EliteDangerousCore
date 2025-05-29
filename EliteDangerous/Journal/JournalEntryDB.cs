@@ -24,6 +24,7 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 using BaseUtils;
+using SQLLiteExtensions;
 
 namespace EliteDangerousCore
 {
@@ -353,7 +354,7 @@ namespace EliteDangerousCore
                     condition = condition.AppendPrePad("TravelLogId = @tluid", " and ");
                     cmd.AddParameterWithValue("@tluid", tluid.Value);
                 }
-                if (onlyidstoreport != null)
+                if (onlyidstoreport?.Length > 0 )
                 {
                     int[] array = Array.ConvertAll(onlyidstoreport, x => (int)x);
                     if (allidsafterutc != null)
@@ -366,7 +367,13 @@ namespace EliteDangerousCore
                         condition = condition.AppendPrePad("EventTypeId in (" + string.Join(",", array) + ")", " and ");
                     }
                 }
-                if (idstoreject != null)
+                else if ( allidsafterutc != null )
+                {
+                    cmd.AddParameterWithValue("@idafter", allidsafterutc.Value);
+                    condition = condition.AppendPrePad("EventTime>=@idafter", " and ");
+                }
+
+                if (idstoreject?.Length > 0)
                 {
                     int[] array = Array.ConvertAll(idstoreject, x => (int)x);
                     condition = condition.AppendPrePad("EventTypeId not in (" + string.Join(",", array) + ")", " and ");
@@ -375,13 +382,16 @@ namespace EliteDangerousCore
                 if (condition.HasChars())
                     cmd.CommandText += " where " + condition;
 
-                cmd.CommandText += " Order By EventTime,Id ASC";
+                cmd.CommandText += " Order By EventTime ASC,Id ASC"; // i think we need eventtime due to edsm log imports, they may cause IDs to be out of order
+
+                //System.Diagnostics.Debug.WriteLine($"{AppTicks.TickCountLap("TD",true)}GetTableData query plan for:\r\n{cn.ExplainQueryPlanString(cmd)}");
 
                 List<TableData> jdata = new List<TableData>();
 
                 int eno = 0;
                 using (var reader = cmd.ExecuteReader())
                 {
+                    //System.Diagnostics.Debug.WriteLine($"{AppTicks.TickCountLap("TD")} Read");
                     while (reader.Read())
                     {
                         if (eno++ % 10000 == 0 && cancel.IsCancellationRequested)       // check every X entries
@@ -389,6 +399,7 @@ namespace EliteDangerousCore
 
                         jdata.Add(new TableData() { ID = (long)reader[0], TLUID = (long)reader[1], Cmdr = (int)(long)reader[2], Json = (string)reader[3], Syncflag = (int)(long)reader[4] });
                     }
+                    //System.Diagnostics.Debug.WriteLine($"{AppTicks.TickCountLap("TD")} Finish");
                 }
 
                 return jdata;

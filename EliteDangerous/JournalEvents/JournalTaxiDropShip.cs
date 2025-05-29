@@ -79,18 +79,21 @@ namespace EliteDangerousCore.JournalEvents
         public JournalBookTaxi(JObject evt) : base(evt, JournalTypeEnum.BookTaxi)
         {
             DestinationSystem = evt["DestinationSystem"].StrNull();
-            DestinationLocation = evt["DestinationLocation"].StrNull();
+            var snl = JournalFieldNaming.GetStationNames(evt, "DestinationLocation");
+            DestinationLocation = snl.Item1;
+            DestinationLocation_Localised = snl.Item2;
             Cost = evt["Cost"].Long();
         }
 
         public string DestinationSystem { get; set; }
         public string DestinationLocation { get; set; }
+        public string DestinationLocation_Localised { get; set; }       // no evidence
         public long Cost { get; set; }
 
         public override string GetInfo()
         {
             long? cost = Cost > 0 ? Cost : default(long?);
-            return BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), cost);
+            return BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation_Localised, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), cost);
         }
 
         public void Ledger(Ledger mcl)

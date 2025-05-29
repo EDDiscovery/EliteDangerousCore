@@ -121,7 +121,7 @@ namespace EliteDangerousCore.DLL
 
                 bodyname = he.Status.BodyName ?? "Unknown",
                 bodytype = he.Status.BodyType ?? "Unknown",
-                stationname = he.Status.StationName ?? "Unknown",
+                stationname = he.Status.StationName_Localised ?? "Unknown",
                 stationtype = he.Status.StationType ?? "Unknown",
                 stationfaction = he.Status.StationFaction ?? "Unknown",
                 shiptypefd = he.Status.ShipTypeFD ?? "Unknown",
