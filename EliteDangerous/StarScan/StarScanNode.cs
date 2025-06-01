@@ -140,7 +140,7 @@ namespace EliteDangerousCore
                     if (NodeType == ScanNodeType.star)
                         name = ScanData.StarTypeID.ToString();
                     else if (NodeType == ScanNodeType.body)
-                        name = ScanData.PlanetTypeID.ToString();
+                        name = ScanData.IsStar ? ScanData.StarTypeID.ToString() : ScanData.PlanetTypeID.ToString();
                 }
 
                 return filternames.Contains(name, StringComparer.InvariantCultureIgnoreCase);
