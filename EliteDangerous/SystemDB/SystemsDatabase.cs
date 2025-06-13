@@ -16,6 +16,7 @@ using SQLLiteExtensions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 
 namespace EliteDangerousCore.DB
 {
@@ -198,14 +199,31 @@ namespace EliteDangerousCore.DB
             }
         }
 
-        public void RemoveGridSystems(int[] gridids, Action<string> report = null)
+        // incrememental update from file
+        public long UpdateSystems(string downloadfile, bool[] grids, CancellationToken PendingClose, Action<string> ReportSyncProgress)
         {
+            System.Diagnostics.Debug.Assert(RebuildRunning == false);
             RebuildRunning = true;
-            SystemsDB.RemoveGridSystems(gridids, report);
+            SystemsDB.Loader3 loader3 = new SystemsDB.Loader3("", 50000, grids, true, false);
+            long count = loader3.ParseJSONFile(downloadfile, PendingClose, ReportSyncProgress);
+            loader3.Finish(PendingClose);
             RebuildRunning = false;
+            return count;
         }
 
-        public long StoreSystems(IEnumerable<ISystem> systems)            // dynamically update db
+
+        public void RemoveGridSystems(int[] gridids, Action<string> report = null)
+        {
+            if (!RebuildRunning)
+            {
+                RebuildRunning = true;
+                SystemsDB.RemoveGridSystems(gridids, report);
+                RebuildRunning = false;
+            }
+        }
+
+        // dynamically update db with found systems
+        public long StoreSystems(IEnumerable<ISystem> systems)            
         {
             long count = 0;
             if (!RebuildRunning)
@@ -215,6 +233,7 @@ namespace EliteDangerousCore.DB
 
             return count;
         }
+
         public void RebuildIndexes(Action<string> logger)
         {
             if (!RebuildRunning)
