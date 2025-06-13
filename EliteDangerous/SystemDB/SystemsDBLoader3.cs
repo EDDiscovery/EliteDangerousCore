@@ -33,7 +33,7 @@ namespace EliteDangerousCore.DB
 
         public class Loader3
         {
-            private static int LastSectorId;
+            private static int NextSectorId;
 
             public DateTime LastDate { get; set; }
 
@@ -52,13 +52,13 @@ namespace EliteDangerousCore.DB
                 overlapped = poverlapped;
                 dontoverwrite = pdontoverwrite;
 
-                var nextsectorid = SystemsDatabase.Instance.GetMaxSectorID() + 1;       // this is the next value to use
+                var lastsectorid = SystemsDatabase.Instance.GetMaxSectorID() + 1;       // this is the next value to use
                 LastDate = SystemsDatabase.Instance.GetLastRecordTimeUTC();
 
-                int lastsectorid;
+                int nextsectorid;
 
-                while (nextsectorid > (lastsectorid = LastSectorId))
-                    Interlocked.CompareExchange(ref LastSectorId, nextsectorid, lastsectorid);
+                while (lastsectorid > (nextsectorid = NextSectorId))
+                    Interlocked.CompareExchange(ref NextSectorId, lastsectorid, nextsectorid);
 
                 if (debugoutputfile != null)
                     debugfile = new StreamWriter(debugoutputfile);
@@ -321,7 +321,7 @@ namespace EliteDangerousCore.DB
                                         if (curwb.sectorinsertcmd.Length > 0)
                                             curwb.sectorinsertcmd.Append(',');
 
-                                        sectorid = Interlocked.Increment(ref LastSectorId);
+                                        sectorid = Interlocked.Increment(ref NextSectorId);
                                         curwb.sectorinsertcmd.Append('(');                            // add (id,gridid,name) to sector insert string
                                         curwb.sectorinsertcmd.Append(sectorid.ToStringInvariant());
                                         curwb.sectorinsertcmd.Append(',');
