@@ -34,6 +34,8 @@ namespace EliteDangerousCore.DB
         public class Loader3
         {
             private static int NextSectorId;
+            private static SemaphoreSlim WriteSemaphore = new SemaphoreSlim(1);
+            private static int WaitingThreads;
 
             public DateTime LastDate { get; set; }
 
@@ -149,6 +151,7 @@ namespace EliteDangerousCore.DB
                 char[] charbuf2 = new char[256];
 
                 bool stop = false;
+                bool gotsemaphore = false;
                 char nextchar = '!';    // any value
                 string maxdatetimestr = "2000-05-00 19:54:30+00";
                 uint namev = QuickJSON.Utils.Extensions.Checksum("name");
@@ -324,8 +327,30 @@ namespace EliteDangerousCore.DB
 
                                     var skey = new Tuple<long, string>(gridid, classifier.SectorName);
 
+                                    if (!gotsemaphore)
+                                    {
+                                        if (WriteSemaphore.CurrentCount == 0)
+                                        {
+                                            System.Diagnostics.Trace.WriteLine("Loader3: waiting for parallel load");
+                                        }
+
+                                        Interlocked.Increment(ref WaitingThreads);
+
+                                        if (!WriteSemaphore.Wait(5000))
+                                        {
+                                            System.Diagnostics.Trace.WriteLine("Loader3: waiting more than 5 seconds for parallel load");
+                                            WriteSemaphore.Wait();
+                                        }
+
+                                        gotsemaphore = true;
+                                        Interlocked.Decrement(ref WaitingThreads);
+                                    }
+
                                     if (lastsectorid != NextSectorId)
+                                    {
+                                        Trace.WriteLine($"Loader3: parallel sector insert detected: {lastsectorid} != {NextSectorId}");
                                         ReadSectors();
+                                    }
 
                                     if (!sectorcache.TryGetValue(skey, out long sectorid))     // if we dont have a sector with this grid id/name pair
                                     {
@@ -436,13 +461,15 @@ namespace EliteDangerousCore.DB
 
                             Write(curwb);       // creat a no wait db write - need to do this in a function because we are about to change curwb
 
-                            if (overlapped)
+                            if (overlapped && WaitingThreads == 0)
                             {
                                 prevwb = curwb;         // set previous and we will check next time to see if we need to pend
                             }
                             else
                             {
                                 SystemsDatabase.Instance.DBWait(curwb.sqlop, 5000);    // else not overlapped, finish it now
+                                WriteSemaphore.Release();
+                                gotsemaphore = false;
                             }
                         }
 
@@ -461,6 +488,8 @@ namespace EliteDangerousCore.DB
                     System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} last block {prevwb.wbno} complete");
                     prevwb.sqlop = null;
                     prevwb = null;
+                    WriteSemaphore.Release();
+                    gotsemaphore = false;
                 }
 
                 reportProgress?.Invoke($"Star database updated complete {updates:N0}");
