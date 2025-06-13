@@ -164,332 +164,342 @@ namespace EliteDangerousCore.DB
                 uint mainstarv = QuickJSON.Utils.Extensions.Checksum("mainStar");
                 uint needspermitv = QuickJSON.Utils.Extensions.Checksum("needsPermit");
 
-                while (!stop)     // while not cancel, and got another char..
+                try
                 {
-                    stop = cancelRequested.IsCancellationRequested || (nextchar = parser.GetChar()) == char.MinValue;
-
-                    if (!stop && nextchar == '{')       // if not stopping, and object (ignore anything between objects)
+                    while (!stop)     // while not cancel, and got another char..
                     {
-                        string starname = null;
-                        double? x = null, y = null, z = null;
-                        ulong? id = null, systemaddress = null;
-                        int? startype = null;
-                        bool spansh = false;
-                        bool permitsystem = false;
+                        stop = cancelRequested.IsCancellationRequested || (nextchar = parser.GetChar()) == char.MinValue;
 
-                        // skip to next non white, do not remove anything after, while not at EOL
-                        while ((nextchar = parser.GetNextNonSpaceChar(false)) != char.MinValue)
+                        if (!stop && nextchar == '{')       // if not stopping, and object (ignore anything between objects)
                         {
-                            if (nextchar == '"')            // property name
-                            {
-                                uint sc = parser.ChecksumCharBlock((xv) => xv != '"', skipafter: true);
-                                int textfieldlen;
+                            string starname = null;
+                            double? x = null, y = null, z = null;
+                            ulong? id = null, systemaddress = null;
+                            int? startype = null;
+                            bool spansh = false;
+                            bool permitsystem = false;
 
-                                // next char must be a colon, then skip further
-                                if (parser.IsCharMoveOn('"', true) && parser.IsCharMoveOn(':', true))
+                            // skip to next non white, do not remove anything after, while not at EOL
+                            while ((nextchar = parser.GetNextNonSpaceChar(false)) != char.MinValue)
+                            {
+                                if (nextchar == '"')            // property name
                                 {
-                                    if (sc == namev)
+                                    uint sc = parser.ChecksumCharBlock((xv) => xv != '"', skipafter: true);
+                                    int textfieldlen;
+
+                                    // next char must be a colon, then skip further
+                                    if (parser.IsCharMoveOn('"', true) && parser.IsCharMoveOn(':', true))
                                     {
-                                        starname = parser.JNextValue(charbuf, false).StrNull();
-                                    }
-                                    else if (sc == idv)     // edsm name
-                                    {
-                                        id = parser.JNextValue(charbuf, false).ULongNull();
-                                        spansh = false;
-                                    }
-                                    else if (sc == id64v)   // edsm and spansh name
-                                    {
-                                        systemaddress = parser.JNextValue(charbuf, false).ULongNull();
-                                    }
-                                    else if (sc == datev)   // edsm name
-                                    {
-                                        string dt = parser.JNextValue(charbuf, false).StrNull();
-                                        if (dt != null)
+                                        if (sc == namev)
                                         {
-                                            if (dt.CompareTo(maxdatetimestr) > 0)      // by doing a alpha compare, its quicker than a try parse
-                                                maxdatetimestr = dt;
+                                            starname = parser.JNextValue(charbuf, false).StrNull();
+                                        }
+                                        else if (sc == idv)     // edsm name
+                                        {
+                                            id = parser.JNextValue(charbuf, false).ULongNull();
                                             spansh = false;
                                         }
-                                    }
-                                    else if (sc == updatetimev) // spansh name
-                                    {
-                                        string dt = parser.JNextValue(charbuf, false).StrNull();
-                                        if (dt != null)
+                                        else if (sc == id64v)   // edsm and spansh name
                                         {
-                                            if (dt.CompareTo(maxdatetimestr) > 0)      // by doing a alpha compare, its quicker than a try parse
-                                                maxdatetimestr = dt;
-                                            spansh = true;
+                                            systemaddress = parser.JNextValue(charbuf, false).ULongNull();
                                         }
-                                    }
-                                    else if (sc == coordsv) // both
-                                    {
-                                        if (parser.IsCharMoveOn('{', true))       // must have {, and move on
+                                        else if (sc == datev)   // edsm name
                                         {
-                                            while (parser.IsCharMoveOn('"'))        // if quote, we are another property
+                                            string dt = parser.JNextValue(charbuf, false).StrNull();
+                                            if (dt != null)
                                             {
-                                                textfieldlen = parser.NextQuotedString('"', charbuf, replaceescape: true, skipafter: true);     // get prop name
-
-                                                if (textfieldlen == 1 && parser.IsCharMoveOn(':', true))       // 1 char, followed by a colon, move on
-                                                {
-                                                    var posv = parser.JNextValue(charbuf, false);
-                                                    if (charbuf[0] == 'x')
-                                                        x = posv.DoubleNull();
-                                                    else if (charbuf[0] == 'y')
-                                                        y = posv.DoubleNull();
-                                                    else
-                                                        z = posv.DoubleNull();
-
-                                                    parser.IsCharMoveOn(',', true);            // move past comma and space it
-                                                }
-                                                else
-                                                    break;      // error
+                                                if (dt.CompareTo(maxdatetimestr) > 0)      // by doing a alpha compare, its quicker than a try parse
+                                                    maxdatetimestr = dt;
+                                                spansh = false;
                                             }
-
-                                            if (!x.HasValue || !y.HasValue || !z.HasValue)
-                                                break;
-
-                                            if (!parser.IsCharMoveOn('}', true))          // if not on }, error
-                                                break;
                                         }
-                                        else
-                                            break;
-                                    }
-                                    else if (sc == mainstarv) // spansh
-                                    {
-                                        string sname = parser.JNextValue(charbuf, false).StrNull();
-                                        if (sname != null)
+                                        else if (sc == updatetimev) // spansh name
                                         {
-                                            var edstar = Spansh.SpanshClass.SpanshStarNameToEDStar(sname);
-                                            if (edstar != null)
+                                            string dt = parser.JNextValue(charbuf, false).StrNull();
+                                            if (dt != null)
                                             {
-                                                startype = (int)edstar;
+                                                if (dt.CompareTo(maxdatetimestr) > 0)      // by doing a alpha compare, its quicker than a try parse
+                                                    maxdatetimestr = dt;
                                                 spansh = true;
                                             }
-                                            else
-                                                System.Diagnostics.Debug.WriteLine($"DB read of spansh unknown star type {sname}");
                                         }
-                                    }
-                                    else if (sc == needspermitv) // spansh
-                                    {
-                                        permitsystem = parser.IsStringMoveOn("true") ? true : !parser.IsStringMoveOn("false");
-                                        permitsloaded++;
-                                    }
-                                    else if ( sc == coordsLockedv ) //EDSM
-                                    { 
-                                        var token = parser.JNextValue(charbuf, false);      // just remove true
+                                        else if (sc == coordsv) // both
+                                        {
+                                            if (parser.IsCharMoveOn('{', true))       // must have {, and move on
+                                            {
+                                                while (parser.IsCharMoveOn('"'))        // if quote, we are another property
+                                                {
+                                                    textfieldlen = parser.NextQuotedString('"', charbuf, replaceescape: true, skipafter: true);     // get prop name
+
+                                                    if (textfieldlen == 1 && parser.IsCharMoveOn(':', true))       // 1 char, followed by a colon, move on
+                                                    {
+                                                        var posv = parser.JNextValue(charbuf, false);
+                                                        if (charbuf[0] == 'x')
+                                                            x = posv.DoubleNull();
+                                                        else if (charbuf[0] == 'y')
+                                                            y = posv.DoubleNull();
+                                                        else
+                                                            z = posv.DoubleNull();
+
+                                                        parser.IsCharMoveOn(',', true);            // move past comma and space it
+                                                    }
+                                                    else
+                                                        break;      // error
+                                                }
+
+                                                if (!x.HasValue || !y.HasValue || !z.HasValue)
+                                                    break;
+
+                                                if (!parser.IsCharMoveOn('}', true))          // if not on }, error
+                                                    break;
+                                            }
+                                            else
+                                                break;
+                                        }
+                                        else if (sc == mainstarv) // spansh
+                                        {
+                                            string sname = parser.JNextValue(charbuf, false).StrNull();
+                                            if (sname != null)
+                                            {
+                                                var edstar = Spansh.SpanshClass.SpanshStarNameToEDStar(sname);
+                                                if (edstar != null)
+                                                {
+                                                    startype = (int)edstar;
+                                                    spansh = true;
+                                                }
+                                                else
+                                                    System.Diagnostics.Debug.WriteLine($"DB read of spansh unknown star type {sname}");
+                                            }
+                                        }
+                                        else if (sc == needspermitv) // spansh
+                                        {
+                                            permitsystem = parser.IsStringMoveOn("true") ? true : !parser.IsStringMoveOn("false");
+                                            permitsloaded++;
+                                        }
+                                        else if (sc == coordsLockedv) //EDSM
+                                        {
+                                            var token = parser.JNextValue(charbuf, false);      // just remove true
+                                        }
+                                        else
+                                        {
+                                            var token = parser.JNextValue(charbuf, false);      // don't know what it is, so use standard token reader
+                                            System.Diagnostics.Debug.WriteLine($"Read DB unknown field in json import value {token}");
+                                        }
+
+                                        parser.IsCharMoveOn(',', true);            // move past comma and space it
                                     }
                                     else
                                     {
-                                        var token = parser.JNextValue(charbuf, false);      // don't know what it is, so use standard token reader
-                                        System.Diagnostics.Debug.WriteLine($"Read DB unknown field in json import value {token}");
+                                        break;
                                     }
-
-                                    parser.IsCharMoveOn(',', true);            // move past comma and space it
+                                }
+                                else if (nextchar == '}')      // end of object
+                                {
+                                    break;
                                 }
                                 else
                                 {
                                     break;
                                 }
                             }
-                            else if (nextchar == '}')      // end of object
+
+                            if (spansh)                 // hold in id the record identifier
                             {
-                                break;
+                                if (startype == null)      // for spansh, we always set startype non null, so that we know the db.edsmid is really the system address
+                                    startype = (int)EDStar.Unknown;
+                                id = systemaddress;
                             }
-                            else
+
+                            // if a valid star is found - check the essential fields
+
+                            if (starname != null && x.HasValue && y.HasValue && z.HasValue && id.HasValue)
                             {
-                                break;
-                            }
-                        }
+                                //    System.Diagnostics.Debug.WriteLine($"Read {systemaddress} {id} {starname} {x} {y} {z}");
 
-                        if (spansh)                 // hold in id the record identifier
-                        {
-                            if (startype == null)      // for spansh, we always set startype non null, so that we know the db.edsmid is really the system address
-                                startype = (int)EDStar.Unknown;
-                            id = systemaddress;
-                        }
-
-                        // if a valid star is found - check the essential fields
-
-                        if (starname != null && x.HasValue && y.HasValue && z.HasValue && id.HasValue)
-                        {
-                            //    System.Diagnostics.Debug.WriteLine($"Read {systemaddress} {id} {starname} {x} {y} {z}");
-
-                            if ( SystemClass.Triage(starname,x.Value, y.Value,z.Value))      // triage because bad tools are leaking systems on 0/0/0 oct 23
-                            {
-                                int xi = (int)(x * SystemClass.XYZScalar);
-                                int yi = (int)(y * SystemClass.XYZScalar);
-                                int zi = (int)(z * SystemClass.XYZScalar);
-                                int gridid = GridId.Id128(xi, zi);
-
-                                if (grididallowed == null || (grididallowed.Length > gridid && grididallowed[gridid]))    // allows a null or small grid
+                                if (SystemClass.Triage(starname, x.Value, y.Value, z.Value))      // triage because bad tools are leaking systems on 0/0/0 oct 23
                                 {
-                                    var classifier = new EliteNameClassifier(starname);
+                                    int xi = (int)(x * SystemClass.XYZScalar);
+                                    int yi = (int)(y * SystemClass.XYZScalar);
+                                    int zi = (int)(z * SystemClass.XYZScalar);
+                                    int gridid = GridId.Id128(xi, zi);
 
-                                    var skey = new Tuple<long, string>(gridid, classifier.SectorName);
-
-                                    if (!gotsemaphore)
+                                    if (grididallowed == null || (grididallowed.Length > gridid && grididallowed[gridid]))    // allows a null or small grid
                                     {
-                                        if (WriteSemaphore.CurrentCount == 0)
+                                        var classifier = new EliteNameClassifier(starname);
+
+                                        var skey = new Tuple<long, string>(gridid, classifier.SectorName);
+
+                                        if (!gotsemaphore)
                                         {
-                                            System.Diagnostics.Trace.WriteLine("Loader3: waiting for parallel load");
+                                            if (WriteSemaphore.CurrentCount == 0)
+                                            {
+                                                System.Diagnostics.Trace.WriteLine("Loader3: waiting for parallel load");
+                                            }
+
+                                            Interlocked.Increment(ref WaitingThreads);
+
+                                            if (!WriteSemaphore.Wait(5000))
+                                            {
+                                                System.Diagnostics.Trace.WriteLine("Loader3: waiting more than 5 seconds for parallel load");
+                                                WriteSemaphore.Wait();
+                                            }
+
+                                            gotsemaphore = true;
+                                            Interlocked.Decrement(ref WaitingThreads);
                                         }
 
-                                        Interlocked.Increment(ref WaitingThreads);
-
-                                        if (!WriteSemaphore.Wait(5000))
+                                        if (lastsectorid != NextSectorId)
                                         {
-                                            System.Diagnostics.Trace.WriteLine("Loader3: waiting more than 5 seconds for parallel load");
-                                            WriteSemaphore.Wait();
+                                            Trace.WriteLine($"Loader3: parallel sector insert detected: {lastsectorid} != {NextSectorId}");
+                                            ReadSectors();
                                         }
 
-                                        gotsemaphore = true;
-                                        Interlocked.Decrement(ref WaitingThreads);
-                                    }
+                                        if (!sectorcache.TryGetValue(skey, out long sectorid))     // if we dont have a sector with this grid id/name pair
+                                        {
+                                            // System.Diagnostics.Debug.WriteLine($"In {wb.wbno} write sector {wb.sectorinsertcmd}");
+                                            if (curwb.sectorinsertcmd.Length > 0)
+                                                curwb.sectorinsertcmd.Append(',');
 
-                                    if (lastsectorid != NextSectorId)
-                                    {
-                                        Trace.WriteLine($"Loader3: parallel sector insert detected: {lastsectorid} != {NextSectorId}");
-                                        ReadSectors();
-                                    }
-
-                                    if (!sectorcache.TryGetValue(skey, out long sectorid))     // if we dont have a sector with this grid id/name pair
-                                    {
-                                        // System.Diagnostics.Debug.WriteLine($"In {wb.wbno} write sector {wb.sectorinsertcmd}");
-                                        if (curwb.sectorinsertcmd.Length > 0)
+                                            sectorid = lastsectorid = Interlocked.Increment(ref NextSectorId);
+                                            curwb.sectorinsertcmd.Append('(');                            // add (id,gridid,name) to sector insert string
+                                            curwb.sectorinsertcmd.Append(sectorid.ToStringInvariant());
                                             curwb.sectorinsertcmd.Append(',');
+                                            curwb.sectorinsertcmd.Append(gridid.ToStringInvariant());
+                                            curwb.sectorinsertcmd.Append(",'");
+                                            curwb.sectorinsertcmd.Append(classifier.SectorName.Replace("'", "''"));
+                                            curwb.sectorinsertcmd.Append("')");
 
-                                        sectorid = lastsectorid = Interlocked.Increment(ref NextSectorId);
-                                        curwb.sectorinsertcmd.Append('(');                            // add (id,gridid,name) to sector insert string
-                                        curwb.sectorinsertcmd.Append(sectorid.ToStringInvariant());
-                                        curwb.sectorinsertcmd.Append(',');
-                                        curwb.sectorinsertcmd.Append(gridid.ToStringInvariant());
-                                        curwb.sectorinsertcmd.Append(",'");
-                                        curwb.sectorinsertcmd.Append(classifier.SectorName.Replace("'", "''"));
-                                        curwb.sectorinsertcmd.Append("')");
+                                            sectorcache.Add(skey, sectorid);        // add to sector cache
+                                        }
 
-                                        sectorcache.Add(skey, sectorid);        // add to sector cache
-                                    }
+                                        if (classifier.IsNamed)
+                                        {
+                                            if (curwb.nameinsertcmd.Length > 0)
+                                                curwb.nameinsertcmd.Append(',');
 
-                                    if (classifier.IsNamed)
-                                    {
-                                        if (curwb.nameinsertcmd.Length > 0)
-                                            curwb.nameinsertcmd.Append(',');
+                                            curwb.nameinsertcmd.Append('(');                            // add (id,name) to names insert string
+                                            curwb.nameinsertcmd.Append(id.Value.ToStringInvariant());
+                                            curwb.nameinsertcmd.Append(",'");
+                                            curwb.nameinsertcmd.Append(classifier.StarName.Replace("'", "''"));
+                                            curwb.nameinsertcmd.Append("') ");
+                                            classifier.NameIdNumeric = id.Value;                      // the name becomes the id of the entry
+                                        }
 
-                                        curwb.nameinsertcmd.Append('(');                            // add (id,name) to names insert string
-                                        curwb.nameinsertcmd.Append(id.Value.ToStringInvariant());
-                                        curwb.nameinsertcmd.Append(",'");
-                                        curwb.nameinsertcmd.Append(classifier.StarName.Replace("'", "''"));
-                                        curwb.nameinsertcmd.Append("') ");
-                                        classifier.NameIdNumeric = id.Value;                      // the name becomes the id of the entry
-                                    }
+                                        if (permitsystem)
+                                        {
+                                            //System.Diagnostics.Debug.WriteLine($"Permit system {starname} {id}");
+                                            if (curwb.permitsystemsinsertcmd.Length > 0)
+                                                curwb.permitsystemsinsertcmd.Append(',');
 
-                                    if (permitsystem)
-                                    {
-                                        //System.Diagnostics.Debug.WriteLine($"Permit system {starname} {id}");
-                                        if (curwb.permitsystemsinsertcmd.Length > 0)
-                                            curwb.permitsystemsinsertcmd.Append(',');
+                                            curwb.permitsystemsinsertcmd.Append('(');                 // add (id) to permit system insert string
+                                            curwb.permitsystemsinsertcmd.Append(id.Value.ToStringInvariant());
+                                            curwb.permitsystemsinsertcmd.Append(")");
+                                        }
 
-                                        curwb.permitsystemsinsertcmd.Append('(');                 // add (id) to permit system insert string
-                                        curwb.permitsystemsinsertcmd.Append(id.Value.ToStringInvariant());
-                                        curwb.permitsystemsinsertcmd.Append(")");
-                                    }
+                                        if (curwb.systeminsertcmd.Length > 0)
+                                            curwb.systeminsertcmd.Append(",");
 
-                                    if (curwb.systeminsertcmd.Length > 0)
+                                        curwb.systeminsertcmd.Append('(');                            // add (id,sectorid,nameid,x,y,z,info) to systems insert string
+                                        curwb.systeminsertcmd.Append(id.Value.ToStringInvariant());                           // locale independent, because its just a decimal with no N formatting
+                                        curwb.systeminsertcmd.Append(',');
+                                        curwb.systeminsertcmd.Append(sectorid.ToStringInvariant());
+                                        curwb.systeminsertcmd.Append(',');
+                                        curwb.systeminsertcmd.Append(classifier.ID.ToStringInvariant());
+                                        curwb.systeminsertcmd.Append(',');
+                                        curwb.systeminsertcmd.Append(xi.ToStringInvariant());
+                                        curwb.systeminsertcmd.Append(',');
+                                        curwb.systeminsertcmd.Append(yi.ToStringInvariant());
+                                        curwb.systeminsertcmd.Append(',');
+                                        curwb.systeminsertcmd.Append(zi.ToStringInvariant());
                                         curwb.systeminsertcmd.Append(",");
+                                        if (startype.HasValue)
+                                            curwb.systeminsertcmd.Append(startype.Value.ToStringInvariant());
+                                        else
+                                            curwb.systeminsertcmd.Append("NULL");
 
-                                    curwb.systeminsertcmd.Append('(');                            // add (id,sectorid,nameid,x,y,z,info) to systems insert string
-                                    curwb.systeminsertcmd.Append(id.Value.ToStringInvariant());                           // locale independent, because its just a decimal with no N formatting
-                                    curwb.systeminsertcmd.Append(',');
-                                    curwb.systeminsertcmd.Append(sectorid.ToStringInvariant());
-                                    curwb.systeminsertcmd.Append(',');
-                                    curwb.systeminsertcmd.Append(classifier.ID.ToStringInvariant());
-                                    curwb.systeminsertcmd.Append(',');
-                                    curwb.systeminsertcmd.Append(xi.ToStringInvariant());
-                                    curwb.systeminsertcmd.Append(',');
-                                    curwb.systeminsertcmd.Append(yi.ToStringInvariant());
-                                    curwb.systeminsertcmd.Append(',');
-                                    curwb.systeminsertcmd.Append(zi.ToStringInvariant());
-                                    curwb.systeminsertcmd.Append(",");
-                                    if (startype.HasValue)
-                                        curwb.systeminsertcmd.Append(startype.Value.ToStringInvariant());
-                                    else
-                                        curwb.systeminsertcmd.Append("NULL");
+                                        curwb.systeminsertcmd.Append(")");
 
-                                    curwb.systeminsertcmd.Append(")");
+                                        if (debugfile != null)
+                                            debugfile.WriteLine($"{id} {starname} {x} {y} {z} SID:{sectorid} GID:{gridid}");
 
-                                    if (debugfile != null)
-                                        debugfile.WriteLine($"{id} {starname} {x} {y} {z} SID:{sectorid} GID:{gridid}");
-
-                                    recordstostore++;
+                                        recordstostore++;
+                                    }
+                                }
+                                else
+                                {
+                                    System.Diagnostics.Debug.WriteLine($"Rejected {starname} {x} {y} {z}");
                                 }
                             }
                             else
                             {
-                                System.Diagnostics.Debug.WriteLine($"Rejected {starname} {x} {y} {z}");
+                                System.Diagnostics.Debug.WriteLine("Loader Error failed to make a star");
                             }
                         }
-                        else
+
+                        // between objects, we see if we need to store, or we are stopping..
+
+                        if (recordstostore >= maxblocksize || stop)
                         {
-                            System.Diagnostics.Debug.WriteLine("Loader Error failed to make a star");
+                            if (prevwb != null)     // if we have a pending one, we wait for it to finish, as we don't overlap them 
+                            {
+                                System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} ready with next block");
+
+                                uint readyforblocktime = (uint)Environment.TickCount;
+
+                                var metric = SystemsDatabase.Instance.DBWait(prevwb.sqlop, 5000);        // wait for job, and get its metrics
+
+                                uint waitfortime = readyforblocktime - metric.Item2;                    // if job completed before read of json, it will be positive
+                                int dbfinishedbeforeread = (int)waitfortime;                            // experiments with changing block size, but it does not really work well.
+
+                                prevwb.sqlop = null;                                                    // we are abandoning this work block
+                                prevwb = null;
+
+                                System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} ready jobfinished {metric.Item2} delta {dbfinishedbeforeread}  ************ next BS {maxblocksize} Permits {permitsloaded}");
+                            }
+
+                            if (recordstostore > 0)
+                            {
+                                System.Diagnostics.Trace.WriteLine($"\r\n{BaseUtils.AppTicks.TickCountLap("SDBS")} Begin block size {recordstostore} {updates} block {curwb.wbno}");
+
+                                Write(curwb);       // creat a no wait db write - need to do this in a function because we are about to change curwb
+
+                                if (overlapped && WaitingThreads == 0)
+                                {
+                                    prevwb = curwb;         // set previous and we will check next time to see if we need to pend
+                                }
+                                else
+                                {
+                                    SystemsDatabase.Instance.DBWait(curwb.sqlop, 5000);    // else not overlapped, finish it now
+                                    WriteSemaphore.Release();
+                                    gotsemaphore = false;
+                                }
+                            }
+
+                            curwb = new WriteBlock(++wbno); // make a new one
+
+                            updates += recordstostore;
+                            reportProgress?.Invoke($"Star database updated {recordstostore:N0} total so far {updates:N0}");
+                            recordstostore = 0;
                         }
                     }
 
-                    // between objects, we see if we need to store, or we are stopping..
-
-                    if (recordstostore >= maxblocksize || stop)
+                    if (prevwb != null)     // if we have an outstanding one
                     {
-                        if (prevwb != null)     // if we have a pending one, we wait for it to finish, as we don't overlap them 
-                        {
-                            System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} ready with next block");
-
-                            uint readyforblocktime = (uint)Environment.TickCount;
-
-                            var metric = SystemsDatabase.Instance.DBWait(prevwb.sqlop, 5000);        // wait for job, and get its metrics
-
-                            uint waitfortime = readyforblocktime - metric.Item2;                    // if job completed before read of json, it will be positive
-                            int dbfinishedbeforeread = (int)waitfortime;                            // experiments with changing block size, but it does not really work well.
-
-                            prevwb.sqlop = null;                                                    // we are abandoning this work block
-                            prevwb = null;
-
-                            System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} ready jobfinished {metric.Item2} delta {dbfinishedbeforeread}  ************ next BS {maxblocksize} Permits {permitsloaded}");
-                        }
-
-                        if (recordstostore > 0)
-                        {
-                            System.Diagnostics.Trace.WriteLine($"\r\n{BaseUtils.AppTicks.TickCountLap("SDBS")} Begin block size {recordstostore} {updates} block {curwb.wbno}");
-
-                            Write(curwb);       // creat a no wait db write - need to do this in a function because we are about to change curwb
-
-                            if (overlapped && WaitingThreads == 0)
-                            {
-                                prevwb = curwb;         // set previous and we will check next time to see if we need to pend
-                            }
-                            else
-                            {
-                                SystemsDatabase.Instance.DBWait(curwb.sqlop, 5000);    // else not overlapped, finish it now
-                                WriteSemaphore.Release();
-                                gotsemaphore = false;
-                            }
-                        }
-
-                        curwb = new WriteBlock(++wbno); // make a new one
-
-                        updates += recordstostore;
-                        reportProgress?.Invoke($"Star database updated {recordstostore:N0} total so far {updates:N0}");
-                        recordstostore = 0;
+                        System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} Wait for last write {prevwb.wbno} to complete");
+                        SystemsDatabase.Instance.DBWait(prevwb.sqlop, 5000);
+                        System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} last block {prevwb.wbno} complete");
+                        prevwb.sqlop = null;
+                        prevwb = null;
+                        WriteSemaphore.Release();
+                        gotsemaphore = false;
                     }
                 }
-
-                if (prevwb != null)     // if we have an outstanding one
+                finally
                 {
-                    System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} Wait for last write {prevwb.wbno} to complete");
-                    SystemsDatabase.Instance.DBWait(prevwb.sqlop, 5000);
-                    System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCountLap("SDBS")} last block {prevwb.wbno} complete");
-                    prevwb.sqlop = null;
-                    prevwb = null;
-                    WriteSemaphore.Release();
-                    gotsemaphore = false;
+                    if (gotsemaphore)
+                    {
+                        WriteSemaphore.Release();
+                    }
                 }
 
                 reportProgress?.Invoke($"Star database updated complete {updates:N0}");
