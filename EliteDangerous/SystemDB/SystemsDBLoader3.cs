@@ -52,7 +52,7 @@ namespace EliteDangerousCore.DB
                 overlapped = poverlapped;
                 dontoverwrite = pdontoverwrite;
 
-                var lastsectorid = SystemsDatabase.Instance.GetMaxSectorID() + 1;       // this is the next value to use
+                lastsectorid = SystemsDatabase.Instance.GetMaxSectorID() + 1;       // this is the next value to use
                 LastDate = SystemsDatabase.Instance.GetLastRecordTimeUTC();
 
                 int nextsectorid;
@@ -60,10 +60,19 @@ namespace EliteDangerousCore.DB
                 while (lastsectorid > (nextsectorid = NextSectorId))
                     Interlocked.CompareExchange(ref NextSectorId, lastsectorid, nextsectorid);
 
+                lastsectorid = nextsectorid;
+
                 if (debugoutputfile != null)
                     debugfile = new StreamWriter(debugoutputfile);
 
                 sectorcache = new Dictionary<Tuple<long, string>, long>();
+
+                ReadSectors();
+            }
+
+            private void ReadSectors()
+            {
+                sectorcache.Clear();
 
                 SystemsDatabase.Instance.DBRead(db =>
                 {
@@ -315,13 +324,16 @@ namespace EliteDangerousCore.DB
 
                                     var skey = new Tuple<long, string>(gridid, classifier.SectorName);
 
+                                    if (lastsectorid != NextSectorId)
+                                        ReadSectors();
+
                                     if (!sectorcache.TryGetValue(skey, out long sectorid))     // if we dont have a sector with this grid id/name pair
                                     {
                                         // System.Diagnostics.Debug.WriteLine($"In {wb.wbno} write sector {wb.sectorinsertcmd}");
                                         if (curwb.sectorinsertcmd.Length > 0)
                                             curwb.sectorinsertcmd.Append(',');
 
-                                        sectorid = Interlocked.Increment(ref NextSectorId);
+                                        sectorid = lastsectorid = Interlocked.Increment(ref NextSectorId);
                                         curwb.sectorinsertcmd.Append('(');                            // add (id,gridid,name) to sector insert string
                                         curwb.sectorinsertcmd.Append(sectorid.ToStringInvariant());
                                         curwb.sectorinsertcmd.Append(',');
@@ -537,6 +549,7 @@ namespace EliteDangerousCore.DB
 
             private Dictionary<Tuple<long, string>, long> sectorcache;
             private string tablepostfix;
+            private int lastsectorid;
             private int maxblocksize;
             private bool overlapped;
             private bool dontoverwrite;
