@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using System.Threading;
 
 namespace EliteDangerousCore.DB
 {
@@ -32,6 +33,8 @@ namespace EliteDangerousCore.DB
 
         public class Loader3
         {
+            private static int LastSectorId;
+
             public DateTime LastDate { get; set; }
 
 
@@ -49,8 +52,13 @@ namespace EliteDangerousCore.DB
                 overlapped = poverlapped;
                 dontoverwrite = pdontoverwrite;
 
-                nextsectorid = SystemsDatabase.Instance.GetMaxSectorID() + 1;       // this is the next value to use
+                var nextsectorid = SystemsDatabase.Instance.GetMaxSectorID() + 1;       // this is the next value to use
                 LastDate = SystemsDatabase.Instance.GetLastRecordTimeUTC();
+
+                int lastsectorid;
+
+                while (nextsectorid > (lastsectorid = LastSectorId))
+                    Interlocked.CompareExchange(ref LastSectorId, nextsectorid, lastsectorid);
 
                 if (debugoutputfile != null)
                     debugfile = new StreamWriter(debugoutputfile);
@@ -313,7 +321,7 @@ namespace EliteDangerousCore.DB
                                         if (curwb.sectorinsertcmd.Length > 0)
                                             curwb.sectorinsertcmd.Append(',');
 
-                                        sectorid = nextsectorid++;
+                                        sectorid = Interlocked.Increment(ref LastSectorId);
                                         curwb.sectorinsertcmd.Append('(');                            // add (id,gridid,name) to sector insert string
                                         curwb.sectorinsertcmd.Append(sectorid.ToStringInvariant());
                                         curwb.sectorinsertcmd.Append(',');
@@ -529,7 +537,6 @@ namespace EliteDangerousCore.DB
 
             private Dictionary<Tuple<long, string>, long> sectorcache;
             private string tablepostfix;
-            private int nextsectorid;
             private int maxblocksize;
             private bool overlapped;
             private bool dontoverwrite;
