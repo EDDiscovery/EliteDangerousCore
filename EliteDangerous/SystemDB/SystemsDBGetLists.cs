@@ -22,7 +22,7 @@ namespace EliteDangerousCore.DB
     {
         public static long GetTotalSystems()            // this is SLOW try not to use
         {
-            if (SystemsDatabase.Instance.RebuildRunning)
+            if (SystemsDatabase.Instance.DBUpdating)
                 return 0;
 
             return SystemsDatabase.Instance.DBRead(db =>
@@ -42,7 +42,7 @@ namespace EliteDangerousCore.DB
         {
             List<ISystem> ret = new List<ISystem>();
 
-            if (SystemsDatabase.Instance.RebuildRunning)
+            if (SystemsDatabase.Instance.DBUpdating)
                 return ret;
 
             return SystemsDatabase.Instance.DBRead(db =>
@@ -77,7 +77,7 @@ namespace EliteDangerousCore.DB
         {
             List<V> ret = new List<V>();
 
-            if (SystemsDatabase.Instance.RebuildRunning)
+            if (SystemsDatabase.Instance.DBUpdating)
                 return ret;
 
             return SystemsDatabase.Instance.DBRead(db =>
@@ -115,7 +115,7 @@ namespace EliteDangerousCore.DB
             V[] vectsout = null;
             int fill = 0;
 
-            if (!SystemsDatabase.Instance.RebuildRunning) // use the cache is db is updating
+            if (!SystemsDatabase.Instance.DBUpdating) // use the cache is db is updating
             {
                 SystemsDatabase.Instance.DBRead(db =>
                 {

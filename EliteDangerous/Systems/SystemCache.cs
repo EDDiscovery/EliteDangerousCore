@@ -71,7 +71,7 @@ namespace EliteDangerousCore
         {
             ISystem found;
 
-            if (SystemsDatabase.Instance.RebuildRunning) // Find the system in the cache if a rebuild is running
+            if (SystemsDatabase.Instance.DBUpdating) // Find the system in the cache if a rebuild is running
             {
                 found = FindSystemInCacheDB(find, null);
             }
@@ -123,7 +123,7 @@ namespace EliteDangerousCore
             ISystem found = FindCachedSystem(find);
 
             // if we have a db and its okay, and either not found, or found but with no main star info and the db does have star type info, check the db
-            if (cn != null && !SystemsDatabase.Instance.RebuildRunning && (found == null || (found.MainStarType == EDStar.Unknown && SystemsDatabase.Instance.HasStarType) ))
+            if (cn != null && !SystemsDatabase.Instance.DBUpdating && (found == null || (found.MainStarType == EDStar.Unknown && SystemsDatabase.Instance.HasStarType) ))
             {
                 //System.Diagnostics.Debug.WriteLine("Look up from DB " + sys.name + " " + sys.id_edsm);
 
@@ -237,7 +237,7 @@ namespace EliteDangerousCore
                                     .ToList());
             }
 
-            if (!SystemsDatabase.Instance.RebuildRunning) // Return from cache if rebuild is running
+            if (!SystemsDatabase.Instance.DBUpdating) // Return from cache if rebuild is running
             {
                 SystemsDatabase.Instance.DBRead(cn =>
                 {
@@ -292,7 +292,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            if (!SystemsDatabase.Instance.RebuildRunning) // Return from cache if rebuild is running
+            if (!SystemsDatabase.Instance.DBUpdating) // Return from cache if rebuild is running
             {
                 SystemsDatabase.Instance.DBRead(cn =>
                 {
@@ -328,7 +328,7 @@ namespace EliteDangerousCore
                                     .FirstOrDefault(e => e.Distance(x, y, z) < maxdistance);        // find one in cache which matches, or null
             }
 
-            if (!SystemsDatabase.Instance.RebuildRunning)
+            if (!SystemsDatabase.Instance.DBUpdating)
             {
                 SystemsDatabase.Instance.DBRead(cn =>
                 {
@@ -413,7 +413,7 @@ namespace EliteDangerousCore
                                  .ToList();
             }
 
-            if (!SystemsDatabase.Instance.RebuildRunning)    // return from cache is rebuild is running
+            if (!SystemsDatabase.Instance.DBUpdating)    // return from cache is rebuild is running
             {
                 SystemsDatabase.Instance.DBRead(cn =>
                 {
@@ -542,7 +542,7 @@ namespace EliteDangerousCore
         {
             if (input.HasChars())
             {
-                if (!SystemsDatabase.Instance.RebuildRunning)           // DB okay, go and use it to find stars
+                if (!SystemsDatabase.Instance.DBUpdating)           // DB okay, go and use it to find stars
                 {
                     List<ISystem> systems = DB.SystemsDB.FindStarsWildcard(input, MaximumStars);
                     foreach (var i in systems)
