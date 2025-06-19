@@ -82,12 +82,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public class MissionItem
         {
-            public ulong MissionID;  
-            public string Name;
-            public bool PassengerMission;
-            public int Expires;
+            public ulong MissionID { get; set; }
+            public string Name { get; set; }                 // normalised name from $Mission_ .. _Name format
+            public string Name_Localised { get; set; }       // new '25
+            public bool PassengerMission { get; set; }
+            public int Expires { get; set; }
 
-            DateTime ExpiryTimeUTC;
+            DateTime ExpiryTimeUTC { get; set; }
 
             public void Normalise(DateTime utcnow)
             {
@@ -97,7 +98,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public string Format()
             {
-                return BaseUtils.FieldBuilder.Build("", Name, "<;(Passenger)".T(EDCTx.MissionItem_Passenger), PassengerMission, " " + "Expires: ".T(EDCTx.MissionItem_Expires), ExpiryTimeUTC.ToLocalTime());
+                return BaseUtils.FieldBuilder.Build("", Name_Localised ?? Name, "<;(Passenger)".T(EDCTx.MissionItem_Passenger), PassengerMission, " " + "Expires: ".T(EDCTx.MissionItem_Expires), ExpiryTimeUTC.ToLocalTime());
             }
         }
     }

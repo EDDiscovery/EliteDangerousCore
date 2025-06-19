@@ -229,7 +229,7 @@ namespace EliteDangerousCore.Spansh
             var data = response.Body;
             var spanshdump = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
 
-            BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshbodies.json", spanshdump?.ToString(true));
+            //BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshbodies.json", spanshdump?.ToString(true));
 
             return spanshdump;
         }

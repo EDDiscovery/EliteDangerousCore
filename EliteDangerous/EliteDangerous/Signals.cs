@@ -222,7 +222,7 @@ namespace EliteDangerousCore
                         "Power: ".T(EDCTx.JournalEntry_Power), SpawningPower,
                         "vs " + "Power: ".T(EDCTx.JournalEntry_Power), OpposingPower,
                         "State: ".T(EDCTx.FSSSignal_State), spstate,
-                        "Time: ".T(EDCTx.JournalEntry_Time), outoftime,
+                        "Expiry: ".T(EDCTx.JournalMissionAccepted_Expiry), outoftime,
                         "Last Seen: ".T(EDCTx.FSSSignal_LastSeen), seen
                         );
         }

@@ -56,7 +56,7 @@ namespace EliteDangerousCore.Spansh
             if (jsystem == null)
                 return null;
 
-            BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshstationdump.txt", json?.ToString(true));
+            //BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshstationdump.txt", json?.ToString(true));
 
             List<StationInfo> stationinfo = new List<StationInfo>();
 
@@ -567,7 +567,7 @@ namespace EliteDangerousCore.Spansh
             var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
 
           //  System.Diagnostics.Debug.WriteLine($"Spansh returns {json?.ToString(true)}");
-            BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshstationsearch.txt", json?.ToString(true));
+            //BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\spanshstationsearch.txt", json?.ToString(true));
 
             if (json != null && json["results"] != null)
             {

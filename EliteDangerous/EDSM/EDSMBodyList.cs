@@ -131,7 +131,7 @@ namespace EliteDangerousCore.EDSM
 
                         if (jobj != null && jobj.Contains("name"))       
                         {
-                            BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\edsmbodies.json", jobj?.ToString(true));
+                            //BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\edsmbodies.json", jobj?.ToString(true));
 
                             // make sure we have a sys from the results not the system we came in with as it may lack data
                             sys = new SystemClass(jobj["name"].Str(), jobj["id64"].Long(), SystemSource.FromEDSM);
