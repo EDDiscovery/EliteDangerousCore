@@ -693,7 +693,7 @@ namespace EliteDangerousCore
 
                                 if (wantsiblingcount)
                                 {
-                                    var starnodes = he.ScanNode.SystemNode.StarNodes.Where(x => x.Value.NodeType == StarScan.ScanNodeType.star).Count();
+                                    var starnodes = he.ScanNode.SystemNode.StarNodes.Where(x => x.Value.NodeType == StarScan.ScanNodeType.toplevelstar).Count();
                                     scandatavars["Sibling.Count"] = (starnodes - 1).ToStringInvariant();      // count of nodes under this
                                 }
 
@@ -930,7 +930,7 @@ namespace EliteDangerousCore
                     startofind = topnode.OwnName.Substring(0, 1);       // first char
                 }
 
-                var starnodes = node.SystemNode.StarNodes.Where(x => x.Value.NodeType == StarScan.ScanNodeType.star && x.Value.OwnName == startofind).ToList();       // star nodes from top level system structure
+                var starnodes = node.SystemNode.StarNodes.Where(x => x.Value.NodeType == StarScan.ScanNodeType.toplevelstar && x.Value.OwnName == startofind).ToList();       // star nodes from top level system structure
 
                 if (starnodes.Count >= 1 && starnodes[0].Value != node)      // find first star, and if not the same node, lets call it a Ealhstan special and its the primary star
                 {

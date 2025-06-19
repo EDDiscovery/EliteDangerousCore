@@ -143,7 +143,7 @@ namespace EliteDangerousCore
 
         private List<string> ExtractElementsBodyAndID(IBodyNameAndID sc, ISystem sys, out bool isbeltcluster, out ScanNodeType starscannodetype)
         {
-            starscannodetype = ScanNodeType.star;
+            starscannodetype = ScanNodeType.toplevelstar;
             isbeltcluster = false;
             List<string> elements;
 
@@ -205,7 +205,7 @@ namespace EliteDangerousCore
                     if (isbeltcluster)
                         sublvtype = lvl == 1 ? ScanNodeType.belt : ScanNodeType.beltcluster;
                     else
-                        sublvtype = ScanNodeType.body;
+                        sublvtype = ScanNodeType.planetmoonsubstar;
                 }
 
                 if (currentnodelist == null || !currentnodelist.TryGetValue(elements[lvl], out ScanNode subnode))

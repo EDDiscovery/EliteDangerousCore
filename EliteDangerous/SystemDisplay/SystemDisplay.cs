@@ -170,7 +170,7 @@ namespace EliteDangerousCore
 
                         // process body and stars only
 
-                        List<StarScan.ScanNode> planetsinorder = starnode.Children.Values.Where(s => s.NodeType == StarScan.ScanNodeType.body || s.NodeType == StarScan.ScanNodeType.star).ToList();
+                        List<StarScan.ScanNode> planetsinorder = starnode.Children.Values.Where(s => s.NodeType == StarScan.ScanNodeType.planetmoonsubstar).ToList();
                         var planetcentres = new Dictionary<StarScan.ScanNode, Point>();
 
                         for (int pn = 0; pn < planetsinorder.Count; pn++)

@@ -24,9 +24,9 @@ namespace EliteDangerousCore
     {
         public enum ScanNodeType 
         {  
-            star,            // used for top level stars - stars around stars are called a body.
-            barycentre,      // only used for top level barycentres (AB)
-            body,            // all levels >0 except for below are called a body
+            toplevelstar,       // used for top level stars - stars around stars are called a body.
+            barycentre,         // only used for top level barycentres (AB)
+            planetmoonsubstar,  // all levels >0 except for below are called a body
             belt,            // used on level 1 under the star : HIP 23759 A Belt Cluster 4 -> elements Main Star,A Belt,Cluster 4
             beltcluster,     // each cluster under it gets this name at level 2
             ring             // rings at the last level : Selkana 9 A Ring : MainStar,9,A Ring
@@ -137,9 +137,9 @@ namespace EliteDangerousCore
                 string name = NodeType.ToString();      // star etc..
                 if (ScanData != null)
                 {
-                    if (NodeType == ScanNodeType.star)
+                    if (NodeType == ScanNodeType.toplevelstar)
                         name = ScanData.StarTypeID.ToString();
-                    else if (NodeType == ScanNodeType.body)
+                    else if (NodeType == ScanNodeType.planetmoonsubstar)
                         name = ScanData.IsStar ? ScanData.StarTypeID.ToString() : ScanData.PlanetTypeID.ToString();
                 }
 

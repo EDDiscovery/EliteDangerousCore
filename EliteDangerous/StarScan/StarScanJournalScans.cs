@@ -138,7 +138,7 @@ namespace EliteDangerousCore
                         // Reprocess if we've encountered the primary (A) star and we already have a "Main Star", we reprocess to 
                         // allow any updates to PrimaryCache to make a difference
 
-                        if (reprocessPrimary && systemnode.StarNodes.Any(n => n.Key.Length > 1 && n.Value.NodeType == ScanNodeType.star))
+                        if (reprocessPrimary && systemnode.StarNodes.Any(n => n.Key.Length > 1 && n.Value.NodeType == ScanNodeType.toplevelstar))
                         {
                             // get bodies with scans
                             List<ScanNode> bodies = systemnode.Bodies().Where(b => b.ScanData != null).ToList();
@@ -170,7 +170,7 @@ namespace EliteDangerousCore
 
         private List<string> ExtractElementsJournalScan(JournalScan sc, ISystem sys, out ScanNodeType starscannodetype, out bool isbeltcluster, out bool isring)
         {
-            starscannodetype = ScanNodeType.star;
+            starscannodetype = ScanNodeType.toplevelstar;
             isbeltcluster = false;
             isring = false;
             List<string> elements;
@@ -285,7 +285,7 @@ namespace EliteDangerousCore
                         sublvtype = ScanNodeType.ring;
                     }
                     else
-                        sublvtype = ScanNodeType.body;                                      // default is body for levels 1 on
+                        sublvtype = ScanNodeType.planetmoonsubstar;                                      // default is body for levels 1 on
                 }
 
                 // if not got a node list (only happens when we have a scannode from another scannode), or we are not in the node list

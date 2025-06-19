@@ -82,7 +82,7 @@ namespace EliteDangerousCore
             // first is primary star. longform means full text, else abbreviation
             public string StarTypesFound(bool bracketit = true, bool longform = false)
             {
-                var sortedset = (from x in Bodies() where x.ScanData != null && x.NodeType == ScanNodeType.star orderby x.ScanData.DistanceFromArrivalLS select longform ? x.ScanData.StarTypeText : x.ScanData.StarClassificationAbv).ToList();
+                var sortedset = (from x in Bodies() where x.ScanData != null && x.NodeType == ScanNodeType.toplevelstar orderby x.ScanData.DistanceFromArrivalLS select longform ? x.ScanData.StarTypeText : x.ScanData.StarClassificationAbv).ToList();
                 string s = string.Join("; ", sortedset);
                 if (bracketit && s.HasChars())
                     s = "(" + s + ")";
@@ -91,15 +91,15 @@ namespace EliteDangerousCore
 
             public int StarPlanetsWithData()      // This corresponds to FSSDiscoveryScan
             {
-                return Bodies().Where(b => (b.NodeType == ScanNodeType.star || b.NodeType == ScanNodeType.body) && b.ScanData != null).Count();
+                return Bodies().Where(b => (b.NodeType == ScanNodeType.toplevelstar || b.NodeType == ScanNodeType.planetmoonsubstar) && b.ScanData != null).Count();
             }
             public int StarPlanetsWithData(bool includewebbodies)        // includewebbodies gives same total as above, false means only include ones which we have scanned
             {
-                return Bodies().Where(b => (b.NodeType == ScanNodeType.star || b.NodeType == ScanNodeType.body) && b.ScanData != null && (includewebbodies || !b.ScanData.IsWebSourced)).Count();
+                return Bodies().Where(b => (b.NodeType == ScanNodeType.toplevelstar || b.NodeType == ScanNodeType.planetmoonsubstar) && b.ScanData != null && (includewebbodies || !b.ScanData.IsWebSourced)).Count();
             }
             public int StarsScanned()      // only stars
             {
-                return Bodies().Where(b => b.NodeType == ScanNodeType.star && b.ScanData != null).Count();
+                return Bodies().Where(b => b.NodeType == ScanNodeType.toplevelstar && b.ScanData != null).Count();
             }
             public int BeltClusters() // number of belt clusters
             {

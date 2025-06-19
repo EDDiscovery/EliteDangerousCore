@@ -49,7 +49,7 @@ namespace EliteDangerousCore
                     }
                     else
                     {       // else create a new one. We set it to barycentre or body dependent on the parent node info
-                        rootnode = new ScanNode("Node" + topbp.BodyID.ToStringInvariant(), topbp.IsBarycentre ? ScanNodeType.barycentre : ScanNodeType.body, topbp.BodyID);
+                        rootnode = new ScanNode("Node" + topbp.BodyID.ToStringInvariant(), topbp.IsBarycentre ? ScanNodeType.barycentre : ScanNodeType.planetmoonsubstar, topbp.BodyID);
                     }
 
                     foreach (var kvp in StarNodes)  // go thru star list again
@@ -138,7 +138,7 @@ namespace EliteDangerousCore
                     }
 
                     string name = "Node" + cid.ToStringInvariant();     // no cid, make one
-                    ScanNode newnode = new ScanNode(name, pnode.IsBarycentre ? ScanNodeType.barycentre : ScanNodeType.body, cid);
+                    ScanNode newnode = new ScanNode(name, pnode.IsBarycentre ? ScanNodeType.barycentre : ScanNodeType.planetmoonsubstar, cid);
 
                     // if we have data on a barycentre, add a new JournalScan for it
                     if (Barycentres.ContainsKey(cid))
