@@ -1063,7 +1063,7 @@ namespace EliteDangerousCore
                             }
                         }
 
-                        if (count > 0) System.Diagnostics.Debug.WriteLine($"BodiesCount {SystemNode.System.Name} = {count}");
+                        //if (count > 0) System.Diagnostics.Debug.WriteLine($"BodiesCount {SystemNode.System.Name} = {count}");
 
                         return count;
                     }

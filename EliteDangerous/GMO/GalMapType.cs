@@ -44,8 +44,7 @@ namespace EliteDangerousCore.GMO
             OrganicPOI,
             EDSMUnknown,
             InhabitedSystem,
-
-            MarxNebula, // non EDSM
+            MarxNebula,
         }
         public enum GroupType
         {
@@ -121,6 +120,7 @@ namespace EliteDangerousCore.GMO
             galtypes.Add(new GalMapType("GECGLITCH", "Glitches", GroupType.Markers, VisibleObjectsType.minorPOI, index++));
             galtypes.Add(new GalMapType("GECSF", "System Features", GroupType.Markers, VisibleObjectsType.minorPOI, index++));     //?
             galtypes.Add(new GalMapType("GECIS", "Inhabited System", GroupType.Markers, VisibleObjectsType.InhabitedSystem, index++));     //?
+            galtypes.Add(new GalMapType("GECSET", "Settlement", GroupType.Markers, VisibleObjectsType.InhabitedSystem, index++));     //?
 
             // not EDSM/GEC
 

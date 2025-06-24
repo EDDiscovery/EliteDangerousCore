@@ -28,7 +28,6 @@ namespace EliteDangerousCore.DB
         private SystemsDatabase(bool walmode)
         {
             RWLocks = (walmode == false);       // if walmode is off, we need reader/writer locks
-            System.Diagnostics.Debug.WriteLine($"Make new system DB RWLocks = {RWLocks}");
         }
 
         public static bool WALMode { get; set; } = false;

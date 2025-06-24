@@ -766,7 +766,7 @@ namespace EliteDangerousCore
 
         static void CreateModules()
         {
-            System.Diagnostics.Debug.WriteLine("Creating mods");
+            //System.Diagnostics.Debug.WriteLine("Creating mods");
 
             shipmodules = new Dictionary<string, ShipModule>
             {

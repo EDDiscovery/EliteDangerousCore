@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2022 EDDiscovery development team
+ * Copyright 2016-2022 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -382,7 +382,7 @@ namespace EliteDangerousCore
                     int e = (i + 1) * tabledata.Count / threads;
                     Thread t1 = new Thread(new ParameterizedThreadStart(CreateJEinThread));
                     t1.Priority = ThreadPriority.Highest;
-                    t1.Name = $"GetAll {i}";
+                    t1.Name = $"JournalEntry GetAll {i}";
 
                     System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Journal Creation Spawn {s}..{e}");
 

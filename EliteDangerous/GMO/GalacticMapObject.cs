@@ -161,10 +161,10 @@ namespace EliteDangerousCore.GMO
 
         private GalMapType GetGalMapTypeFromTypeName(string typename)
         {
-            GalMapType ty = GalMapType.GalTypes.Find(x => x.TypeName.Equals(typename));
+            GalMapType ty = GalMapType.GalTypes.Find(x => x.TypeName.EqualsIIC(typename));
 
             if (ty == null)
-                ty = GalMapType.GalTypes.Find(x => x.Description.Contains(typename));
+                ty = GalMapType.GalTypes.Find(x => x.Description.ContainsIIC(typename));
 
             if (ty == null)
             {
