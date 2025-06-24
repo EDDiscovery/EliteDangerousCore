@@ -1185,7 +1185,7 @@ SECTION EconomyTypes
 .Repair: "Repair" => "Réparations"
 .Carrier: "Carrier" => "Entreprise privée"
 .Engineer: "Engineer" => "Ingénieur"
-.Undefined: "Undefined" => "Non défini"
+.Undefined: "Undefined" = GovernmentTypes.Undefined
 
 SECTION SecurityTypes
 
@@ -1547,11 +1547,11 @@ SECTION ShipSlots
 .TinyHardpoint8: "Utility Mount 8" => "Support utilitaire 8"
 .VesselVoice: "Vessel Voice" => "Voix du vaisseau"
 .WeaponColour: "Weapon Colour" => "Détails des armes"
-.Turret: "Turret" => "Tourelle"
+.Turret: "Turret" = ModulePartNames.Turret
 .Turret2: "Turret Type 2" => "Tourelle Type 2"
 .SineWaveScanner: "Sine Wave Scanner" => "Scanner à onde sinusoïdale"
 .BuggyCargoHatch: "Cargo Hatch" => "Ecoutille de soute"
-.ColonisationSuite: "Colonisation Suite" => "Instruments de colonisation de système"
+.ColonisationSuite: "Colonisation Suite" = ModulePartNames.Colonisation_Module
 
 SECTION StationServices
 
@@ -1589,7 +1589,7 @@ SECTION StationServices
 .Shipyard: "Shipyard" => "Chantier naval"
 .Shop: "Shop" => "Vendeur"
 .SocialSpace: "Social Space" => "Hall principal"
-.StationMenu: "Station Menu" => Services"
+.StationMenu: "Station Menu" => "Services\""
 .StationOperations: "Station Operations" => "Opérations de station"
 .TechnologyBroker: "Technology Broker" => "Courtier en technologie"
 .Tuning: "Tuning" => "Réglages"

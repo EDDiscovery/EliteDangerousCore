@@ -30,7 +30,6 @@ SECTION JournalTypeEnum
 .ColonisationSystemClaim: "Colonisation System Claim" => "Colonisation : Revendication de système"
 .ColonisationBeaconDeployed: "Colonisation Beacon Deployed" => "Colonisation : Balise déployée"
 .ColonisationSystemClaimRelease: "Colonisation System Claim Release" => "Colonisation : Annulation revendication de système"
-.Splitter Make Scan tag 1 dno 1051
 .ClearImpound: "Clear Impound" => "Règlement fourrière"
 .DatalinkScan: "Datalink Scan" => "Scan de liaison de données"
 .DeliverPowerMicroResources: "Deliver Power Micro Resources" => "Livraison de micro ressources Powerplay"
@@ -1108,6 +1107,7 @@ SECTION JournalEntry
 SECTION JournalCarrierJump
 
 .JumpedWith: "Jumped with carrier {0} to {1}" => "Saut avec porte-vaisseaux {0} vers {1}"
+.JumpedItself: "Carrier jumped to {0}" @
 
 SECTION JournalCarrier
 

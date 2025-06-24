@@ -1185,7 +1185,7 @@ SECTION EconomyTypes
 .Repair: "Repair" => "Reparaciones"
 .Carrier: "Carrier" = GovernmentTypes.Carrier
 .Engineer: "Engineer" = GovernmentTypes.Engineer
-.Undefined: "Undefined" => "Sin Definir"
+.Undefined: "Undefined" = GovernmentTypes.Undefined
 
 SECTION SecurityTypes
 

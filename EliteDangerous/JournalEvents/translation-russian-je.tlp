@@ -25,6 +25,11 @@ SECTION JournalTypeEnum
 .CrewAssign: "Crew Assign" => "Назначен член экипажа"
 .CrewFire: "Crew Fire" => "Уволен член экипажа"
 .CrewHire: "Crew Hire" => "Нанят член экипажа"
+.ColonisationConstructionDepot: "Colonisation Construction Depot" @
+.ColonisationContribution: "Colonisation Contribution" @
+.ColonisationSystemClaim: "Colonisation System Claim" @
+.ColonisationBeaconDeployed: "Colonisation Beacon Deployed" @
+.ColonisationSystemClaimRelease: "Colonisation System Claim Release" @
 .ClearImpound: "Clear Impound" @
 .DatalinkScan: "Datalink Scan" => "Сканирование канала данных"
 .DeliverPowerMicroResources: "Deliver Power Micro Resources" @
@@ -1102,6 +1107,7 @@ SECTION JournalEntry
 SECTION JournalCarrierJump
 
 .JumpedWith: "Jumped with carrier {0} to {1}" @
+.JumpedItself: "Carrier jumped to {0}" @
 
 SECTION JournalCarrier
 
