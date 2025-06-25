@@ -25,11 +25,11 @@ SECTION JournalTypeEnum
 .CrewAssign: "Crew Assign" => "Besatzung zugewiesen"
 .CrewFire: "Crew Fire" => "Besatzung entlassen"
 .CrewHire: "Crew Hire" => "Besatzung eingestellt"
-.ColonisationConstructionDepot: "Colonisation Construction Depot" @
-.ColonisationContribution: "Colonisation Contribution" @
-.ColonisationSystemClaim: "Colonisation System Claim" @
-.ColonisationBeaconDeployed: "Colonisation Beacon Deployed" @
-.ColonisationSystemClaimRelease: "Colonisation System Claim Release" @
+.ColonisationConstructionDepot: "Colonisation Construction Depot" => "Kolonisation Konstruktionsdepot"
+.ColonisationContribution: "Colonisation Contribution" => "Kolonisation Beitrag"
+.ColonisationSystemClaim: "Colonisation System Claim" => "Kolonisation Systembeanspruchung"
+.ColonisationBeaconDeployed: "Colonisation Beacon Deployed" => "Kolonisationsbake ausgebracht"
+.ColonisationSystemClaimRelease: "Colonisation System Claim Release" => "Kolonisation Systembeanspruchung freigeben"
 .ClearImpound: "Clear Impound" => "Begleiche Pfändung"
 .DatalinkScan: "Datalink Scan" => "Datenverbindungsscan"
 .DeliverPowerMicroResources: "Deliver Power Micro Resources" => "Liefere Macht-Mikroressourcen"
@@ -1107,7 +1107,7 @@ SECTION JournalEntry
 SECTION JournalCarrierJump
 
 .JumpedWith: "Jumped with carrier {0} to {1}" => "Mit Carrier {0} nach {1} gesprungen"
-.JumpedItself: "Carrier jumped to {0}" @
+.JumpedItself: "Carrier jumped to {0}" => "Carrier sprang nach {0}"
 
 SECTION JournalCarrier
 
