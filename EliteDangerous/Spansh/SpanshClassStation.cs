@@ -873,6 +873,9 @@ namespace EliteDangerousCore.Spansh
             [StarportTypes.SurfaceStation] = "Planetary Outpost",
             [StarportTypes.CraterPort] = "Planetary Port",
             [StarportTypes.OnFootSettlement] = "Settlement",
+            [StarportTypes.SpaceConstructionDepot] = "Space Construction Depot",
+            [StarportTypes.PlanetaryConstructionDepot] = "Planetary Construction Depot",
+            [StarportTypes.DockablePlanetStation] = "Dockable Planet Station",
         };
         
         public static StarportTypes StarportTypeNameToEnum(string englishname)
