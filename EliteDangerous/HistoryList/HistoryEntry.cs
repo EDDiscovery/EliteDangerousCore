@@ -12,7 +12,6 @@
  * governing permissions and limitations under the License.
  */
 
-using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;

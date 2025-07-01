@@ -185,11 +185,17 @@ namespace EliteDangerousCore
                 ["Viper_MkIV"] = "Faulcon DeLacy",
                 ["Vulture"] = "Core Dynamics",
                 ["Mandalay"] = "Zorgon Peterson",
+                ["Corsair"] = "Gutamaya",
             };
 
             foreach (var kvp in Manu)
             {
                 spaceships[kvp.Key.ToLowerInvariant()].Manufacturer = kvp.Value;
+            }
+            foreach (var kvp in spaceships)
+            {
+                if (kvp.Value.Manufacturer.Contains("<code>"))
+                    System.Diagnostics.Debug.WriteLine($"Item Data Missing manu for {kvp.Value.Name}");
             }
 
             // Add EDCD name overrides
