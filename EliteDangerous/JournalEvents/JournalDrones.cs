@@ -136,7 +136,7 @@ namespace EliteDangerousCore.JournalEvents
             FriendlyType = Type.ToString();
         }
 
-        public enum DroneType { Prospector, Collection, Hatchbreaker, FuelTransfer, Repair, Research, Decontamination }
+        public enum DroneType { Prospector, Collection, Hatchbreaker, FuelTransfer, Repair, Research, Decontamination , Recon }
 
         public DroneType Type { get; set; }
         public string FriendlyType { get; set; }
