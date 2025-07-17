@@ -180,6 +180,7 @@ namespace EliteDangerousCore
                 ["Krait_Light"] = "Faulcon DeLacy",
                 ["Mamba"] = "Zorgon Peterson",
                 ["Orca"] = "Saud Kruger",
+                ["Panthermkii"] = "Zorgon Peterson",
                 ["Python"] = "Faulcon DeLacy",
                 ["Python_NX"] = "Faulcon DeLacy",
                 ["SideWinder"] = "Faulcon DeLacy",
@@ -1295,6 +1296,31 @@ namespace EliteDangerousCore
             LatAcc = 0
         };
 
+        private static ShipProperties panthermkii = new ShipProperties()
+        {
+            FDID = "Panthermkii",           
+            HullMass = 1200F,   // game
+            Name = "Panther Clipper Mk II",
+            Speed = 182,    // game
+            Boost = 252,    // game
+            HullCost = 301348585,   // game
+            Class = 3,  
+            Shields = 245,  // game
+            Armour = 1116,      // game
+            MinThrust = 30.769, //rest not synced
+            BoostCost = 19,
+            FuelReserve = 0.77,
+            HeatCap = 289,
+            HeatDispMin = 3.1,
+            HeatDispMax = 48.35,
+            FuelCost = 50,
+            Hardness = 65,
+            Crew = 4,       // game
+            FwdAcc = 20.03,
+            RevAcc = 10.11,
+            LatAcc = 10.03
+        };
+
         // MUST be after ship definitions else they are not constructed
 
         private static Dictionary<string, ShipProperties> spaceships = new Dictionary<string, ShipProperties>
@@ -1331,6 +1357,7 @@ namespace EliteDangerousCore
             { "mamba",mamba},
             { "mandalay",mandalay},
             { "orca",orca},
+            { "panthermkii", panthermkii },
             { "python",python},
             { "python_nx",python_nx},
             { "sidewinder",sidewinder},

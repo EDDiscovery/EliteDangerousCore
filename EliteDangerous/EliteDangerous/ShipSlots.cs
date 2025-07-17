@@ -163,6 +163,8 @@ namespace EliteDangerousCore
             SineWaveScanner,
             BuggyCargoHatch,
             ColonisationSuite,  // trailblazers feb 25
+            Cargo01,        // Panther clipper, july 25
+            Cargo02,        // Panther clipper, july 25
         }
 
 
@@ -326,6 +328,8 @@ namespace EliteDangerousCore
             [Slot.SineWaveScanner] = "Sine Wave Scanner",
             [Slot.BuggyCargoHatch] = "Cargo Hatch",
             [Slot.ColonisationSuite] = "Colonisation Suite",
+            [Slot.Cargo01] = "Large Cargo Slot 1",
+            [Slot.Cargo02] = "Large Cargo Slot 2",
         };
 
         // maps the slot fdname to an enum
