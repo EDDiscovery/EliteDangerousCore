@@ -120,7 +120,7 @@ namespace EliteDangerousCore
                 sb.Append(ShipUserIdent);
             sb.AppendPrePad(ShipUserName);
             if (manu && GetShipProperties()?.Manufacturer != null)
-                sb.AppendPrePad(GetShipProperties().Manufacturer, ", ");
+                sb.AppendPrePad(GetShipProperties()?.Manufacturer??"Unknown ship", ", ");
             sb.AppendPrePad(ShipType);
             sb.AppendPrePad("(" + ID.ToString() + ")");
 

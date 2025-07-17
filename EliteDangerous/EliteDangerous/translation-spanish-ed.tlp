@@ -1407,6 +1407,7 @@ SECTION ModulePartNames
 .Pulse_Wave_Xeno_Scanner: "Pulse Wave Xeno Scanner" => "Xenoescáner de Onda de Pulsos"
 .Concord_Cannon: "Concord Cannon" => "Cañón de Concordia"
 .Colonisation_Module: "Colonisation Module" => "Módulo de Colonización"
+.Large_Cargo_Rack: "Large Cargo Rack" @
 
 SECTION ShipSlots
 
@@ -1552,6 +1553,8 @@ SECTION ShipSlots
 .SineWaveScanner: "Sine Wave Scanner" @
 .BuggyCargoHatch: "Cargo Hatch" => "Escotilla de carga"
 .ColonisationSuite: "Colonisation Suite" => "Equipo de Colonización"
+.Cargo01: "Large Cargo 1" @
+.Cargo02: "Large Cargo 2" @
 
 SECTION StationServices
 
