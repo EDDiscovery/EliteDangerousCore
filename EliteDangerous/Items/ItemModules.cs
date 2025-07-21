@@ -1033,19 +1033,17 @@ namespace EliteDangerousCore
                 { "cobramkv_armour_mirrored", new ShipModule(129031234,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Cobra Mk V Mirrored Surface Composite"){ Mass=27, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
                 { "cobramkv_armour_reactive", new ShipModule(129031235,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Cobra Mk V Reactive Surface Composite"){ Mass=27, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
 
+                { "corsair_armour_grade1", new ShipModule(129031322,ShipModule.ModuleTypes.LightweightAlloy,"Corsair Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
+                { "corsair_armour_grade2", new ShipModule(129031323,ShipModule.ModuleTypes.ReinforcedAlloy,"Corsair Reinforced Alloy"){ Mass=32, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
                 { "corsair_armour_grade3", new ShipModule(129031324,ShipModule.ModuleTypes.MilitaryGradeComposite,"Corsair Military Grade Composite"){ Mass=63, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
                 { "corsair_armour_mirrored", new ShipModule(129031325,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Corsair Mirrored Surface Composite"){ Mass=63, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
                 { "corsair_armour_reactive", new ShipModule(129031326,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Corsair Reactive Surface Composite"){ Mass=63, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
-                { "corsair_armour_grade2", new ShipModule(129031323,ShipModule.ModuleTypes.ReinforcedAlloy,"Corsair Reinforced Alloy"){ Mass=32, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
-                { "corsair_armour_grade1", new ShipModule(129031322,ShipModule.ModuleTypes.LightweightAlloy,"Corsair Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
 
-                { "panthermkii_armour_grade3", new ShipModule(-1,ShipModule.ModuleTypes.MilitaryGradeComposite,"Panther Clipper Mk II Military Grade Composite"){ Mass=63, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
-                { "panthermkii_armour_mirrored", new ShipModule(-1,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Panther Clipper Mk II Mirrored Surface Composite"){ Mass=63, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
-                { "panthermkii_armour_reactive", new ShipModule(-1,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Panther Clipper Mk II Reactive Surface Composite"){ Mass=63, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
-                { "panthermkii_armour_grade2", new ShipModule(-1,ShipModule.ModuleTypes.ReinforcedAlloy,"Panther Clipper Mk II Reinforced Alloy"){ Mass=32, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
-                { "panthermkii_armour_grade1", new ShipModule(-1,ShipModule.ModuleTypes.LightweightAlloy,"Panther Clipper Mk II Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
-
-                //end
+                { "panthermkii_armour_grade1", new ShipModule(129034271,ShipModule.ModuleTypes.LightweightAlloy,"Panther Clipper Mk II Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
+                { "panthermkii_armour_grade2", new ShipModule(129034272,ShipModule.ModuleTypes.ReinforcedAlloy,"Panther Clipper Mk II Reinforced Alloy"){ Mass=32, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
+                { "panthermkii_armour_grade3", new ShipModule(129034273,ShipModule.ModuleTypes.MilitaryGradeComposite,"Panther Clipper Mk II Military Grade Composite"){ Mass=63, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
+                { "panthermkii_armour_mirrored", new ShipModule(129034274,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Panther Clipper Mk II Mirrored Surface Composite"){ Mass=63, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
+                { "panthermkii_armour_reactive", new ShipModule(129034275,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Panther Clipper Mk II Reactive Surface Composite"){ Mass=63, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
                 // Auto field maint
 
@@ -1171,8 +1169,8 @@ namespace EliteDangerousCore
                 { "int_cargorack_size7_class1", new ShipModule(128064344,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 7 Rating E"){ Cost = 1178420, Class = 7, Rating = "E", Size = 128 } },
                 { "int_cargorack_size8_class1", new ShipModule(128064345,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 8 Rating E"){ Cost = 3829870, Class = 8, Rating = "E", Size = 256 } },
 
-                { "int_largecargorack_size8_class1", new ShipModule(-1,ShipModule.ModuleTypes.CargoRack,"Large Cargo Rack Class 8 Rating E"){ Cost = 3829870, Class = 8, Rating = "E", Size = 384 } },
-                { "int_largecargorack_size7_class1", new ShipModule(-1,ShipModule.ModuleTypes.CargoRack,"Large Cargo Rack Class 7 Rating E"){ Cost = 3829870, Class = 7, Rating = "E", Size = 192 } },
+                { "int_largecargorack_size8_class1", new ShipModule(129034964,ShipModule.ModuleTypes.CargoRack,"Large Cargo Rack Class 8 Rating E"){ Cost = 3829870, Class = 8, Rating = "E", Size = 384 } },
+                { "int_largecargorack_size7_class1", new ShipModule(129034963,ShipModule.ModuleTypes.CargoRack,"Large Cargo Rack Class 7 Rating E"){ Cost = 3829870, Class = 7, Rating = "E", Size = 192 } },
 
                 { "int_cargorack_size2_class1_free", new ShipModule(128666643, ShipModule.ModuleTypes.CargoRack, "Cargo Rack Class 2 Rating E") { Size = 4 } },
 
