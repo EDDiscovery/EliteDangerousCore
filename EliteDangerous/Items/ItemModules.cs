@@ -6967,6 +6967,7 @@ namespace EliteDangerousCore
                 {"paintjob_panthermkii_01_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Panthermkii 1 4") },
                 {"paintjob_panthermkii_01_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Panthermkii 1 5") },
                 {"paintjob_panthermkii_01_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Panthermkii 1 6") },
+                {"paintjob_panthermkii_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Panthermkii Black Friday 1") },
                 {"paintjob_python_autumn_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Autumn 1") },
                 {"paintjob_python_autumn_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Autumn 2") },
                 {"paintjob_python_autumn_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Autumn 3") },
