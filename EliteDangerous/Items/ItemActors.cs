@@ -152,6 +152,8 @@ namespace EliteDangerousCore
              { "thedweller", new Actor("The Dweller") },
 
              { "$name_ax_military", new Actor("AX Military Pilot") },       // seen in NPC texts
+
+             { "ms_dockablecoreb_twinhull", new Actor("Dockable Twinhull") },
         };
 
 
