@@ -806,7 +806,7 @@
             this.extScrollBar.SliderColor = System.Drawing.Color.DarkGray;
             this.extScrollBar.SmallChange = 1;
             this.extScrollBar.TabIndex = 0;
-            this.extScrollBar.Text = "extScrollBar1";
+            this.extScrollBar.Text = "";
             this.extScrollBar.ThumbBorderColor = System.Drawing.Color.Yellow;
             this.extScrollBar.ThumbButtonColor = System.Drawing.Color.DarkBlue;
             this.extScrollBar.ThumbDrawAngle = 0F;
