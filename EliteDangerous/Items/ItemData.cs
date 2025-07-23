@@ -42,7 +42,7 @@ namespace EliteDangerousCore
 
 #if VANITYADD
             string csfile = @"c:\code\eddiscovery\elitedangerouscore\elitedangerous\items\itemmodules.cs";
-            string infile = @"c:\code\newvanity.lst";
+            string infile = @"c:\code\newvanity.txt";
 
             if (System.IO.File.Exists(infile))
             {

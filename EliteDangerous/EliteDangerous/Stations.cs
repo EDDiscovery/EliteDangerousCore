@@ -186,6 +186,7 @@ namespace EliteDangerousCore
             SpaceConstructionDepot,
             PlanetaryConstructionDepot,
             DockablePlanetStation,
+            GameplayPOI,
         }
 
         // maps the StationType field to an enum.
@@ -212,6 +213,8 @@ namespace EliteDangerousCore
                 return "Orbital Construction Site";
             else if (starporttype == StarportTypes.PlanetaryConstructionDepot)
                 return "Planetary Construction Site";
+            else if (starporttype == StarportTypes.GameplayPOI)
+                return "Construction POI";
             else
                 return starporttype.ToString().SplitCapsWordFull();
         }

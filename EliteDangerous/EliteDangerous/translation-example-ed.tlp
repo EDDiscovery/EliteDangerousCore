@@ -1223,6 +1223,7 @@ SECTION StarportTypes
 .SpaceConstructionDepot: "Space Construction Depot" @
 .PlanetaryConstructionDepot: "Planetary Construction Depot" @
 .DockablePlanetStation: "Dockable Planet Station" @
+.GameplayPOI: "Construction POI" @
 
 SECTION PowerPlayStates
 
