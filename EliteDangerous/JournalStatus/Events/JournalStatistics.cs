@@ -16,6 +16,8 @@
 using QuickJSON;
 using System;
 using System.Linq;
+using System.Security.Cryptography;
+using static EliteDangerousCore.JournalEvents.JournalDied;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -81,30 +83,29 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Wealth: ; cr;N0".Tx(), BankAccount.CurrentWealth, "Notoriety Index: ;;N0".Tx(), Crime.Notoriety);
+            return BaseUtils.FieldBuilder.Build("Wealth: ; cr;N0".T(EDCTx.JournalEntry_Wealth), BankAccount.CurrentWealth, "Notoriety Index: ;;N0".T(EDCTx.JournalEntry_NotorietyIndex), Crime.Notoriety);
         }
 
 
         public override string GetDetailed()
         {
-            return "Bank Account".Tx() + Environment.NewLine + BankAccount?.Format() + Environment.NewLine +
-                        "Combat".Tx() + Environment.NewLine + Combat?.Format() + Environment.NewLine +
-                        "Crime".Tx() + Environment.NewLine + Crime?.Format() + Environment.NewLine +
-                        "Smuggling".Tx() + Environment.NewLine + Smuggling?.Format() + Environment.NewLine +
-                        "Trading".Tx() + Environment.NewLine + Trading?.Format() + Environment.NewLine +
-                        "Mining".Tx() + Environment.NewLine + Mining?.Format() + Environment.NewLine +
-                        "Exploration".Tx() + Environment.NewLine + Exploration?.Format() + Environment.NewLine +
-                        "Passengers".Tx() + Environment.NewLine + PassengerMissions?.Format() + Environment.NewLine +
-                        "Search and Rescue".Tx() + Environment.NewLine + SearchAndRescue?.Format() + Environment.NewLine +
-                        "Engineers".Tx() + Environment.NewLine + Crafting?.Format() + Environment.NewLine +
-                        "Crew".Tx() + Environment.NewLine + Crew?.Format() + Environment.NewLine +
-                        "Multicrew".Tx() + Environment.NewLine + Multicrew?.Format() + Environment.NewLine +
-                        "Materials and Commodity Trading".Tx() + Environment.NewLine + MaterialTraderStats?.Format() + Environment.NewLine +
-                        "CQC".Tx() + Environment.NewLine + CQC?.Format() + Environment.NewLine +
-                        "Fleetcarrier".Tx() + Environment.NewLine + FLEETCARRIER?.Format() + Environment.NewLine +
-                        "Exobiology".Tx() + Environment.NewLine + Exobiology.Format() + Environment.NewLine +
-                        "Thargoids".Tx() + Environment.NewLine + Thargoids.Format() + Environment.NewLine +
-                        "Squadron".Tx() + Environment.NewLine + Squadron.Format();
+            return "Bank Account".T(EDCTx.JournalStatistics_BankAccount) + Environment.NewLine + BankAccount?.Format() + Environment.NewLine +
+                        "Combat".T(EDCTx.JournalStatistics_Combat) + Environment.NewLine + Combat?.Format() + Environment.NewLine +
+                        "Crime".T(EDCTx.JournalStatistics_Crime) + Environment.NewLine + Crime?.Format() + Environment.NewLine +
+                        "Smuggling".T(EDCTx.JournalStatistics_Smuggling) + Environment.NewLine + Smuggling?.Format() + Environment.NewLine +
+                        "Trading".T(EDCTx.JournalStatistics_Trading) + Environment.NewLine + Trading?.Format() + Environment.NewLine +
+                        "Mining".T(EDCTx.JournalStatistics_Mining) + Environment.NewLine + Mining?.Format() + Environment.NewLine +
+                        "Exploration".T(EDCTx.JournalStatistics_Exploration) + Environment.NewLine + Exploration?.Format() + Environment.NewLine +
+                        "Passengers".T(EDCTx.JournalStatistics_Passengers) + Environment.NewLine + PassengerMissions?.Format() + Environment.NewLine +
+                        "Search and Rescue".T(EDCTx.JournalStatistics_SearchandRescue) + Environment.NewLine + SearchAndRescue?.Format() + Environment.NewLine +
+                        "Engineers".T(EDCTx.JournalStatistics_Engineers) + Environment.NewLine + Crafting?.Format() + Environment.NewLine +
+                        "Crew".T(EDCTx.JournalStatistics_Crew) + Environment.NewLine + Crew?.Format() + Environment.NewLine +
+                        "Multicrew".T(EDCTx.JournalStatistics_Multicrew) + Environment.NewLine + Multicrew?.Format() + Environment.NewLine +
+                        "Materials and Commodity Trading".T(EDCTx.JournalStatistics_MaterialsandCommodityTrading) + Environment.NewLine + MaterialTraderStats?.Format() + Environment.NewLine +
+                        "CQC".T(EDCTx.JournalStatistics_CQC) + Environment.NewLine + CQC?.Format() + Environment.NewLine +
+                        "Fleetcarrier".T(EDCTx.JournalStatistics_FLEETCARRIER) + Environment.NewLine + FLEETCARRIER?.Format() + Environment.NewLine +
+                        "Exobiology".T(EDCTx.JournalStatistics_Exobiology) + Environment.NewLine + Exobiology.Format() + Environment.NewLine +
+                        "Thargoids".T(EDCTx.JournalStatistics_Thargoids) + Environment.NewLine + Thargoids.Format();
         }
 
         public void Ledger(Ledger mcl)
@@ -134,22 +135,22 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Wealth: ; cr;N0".Tx(), CurrentWealth,
-                    "Spent on Ships: ; cr;N0".Tx(), SpentOnShips,
-                    "Spent on Outfitting: ; cr;N0".Tx(), SpentOnOutfitting,
-                    "Spent on Repairs: ; cr;N0".Tx(), SpentOnRepairs,
-                    "Spent on Fuel: ; cr;N0".Tx(), SpentOnFuel,
-                    "Spent on Ammo: ; cr;N0".Tx(), SpentOnAmmoConsumables,
-                    "Insurance Claims: ;;N0".Tx(), InsuranceClaims,
-                    "Spent on Insurance: ; cr;N0".Tx(), SpentOnInsurance,
-                    "Owned ships: ;;N0".Tx(), OwnedShipCount,
-                    "Spent on Suits: ; cr;N0".Tx(), SpentOnSuits,
-                    "Spent on Weapons: ; cr;N0".Tx(), SpentOnWeapons,
-                    "Spent on Suit Consumables: ; cr;N0".Tx(), SpentOnSuitConsumables,
-                    "Suits Owned: ;;N0".Tx(), SuitsOwned,
-                    "Weapons Owned: ;;N0".Tx(), WeaponsOwned,
-                    "Spent on Premium Stock: ; cr;N0".Tx(), SpentOnPremiumStock,
-                    "Premium Stock bought: ;;N0".Tx(), PremiumStockBought);
+                    "Wealth: ; cr;N0".T(EDCTx.BankAccountClass_Wealth), CurrentWealth,
+                    "Spent on Ships: ; cr;N0".T(EDCTx.BankAccountClass_SpentonShips), SpentOnShips,
+                    "Spent on Outfitting: ; cr;N0".T(EDCTx.BankAccountClass_SpentonOutfitting), SpentOnOutfitting,
+                    "Spent on Repairs: ; cr;N0".T(EDCTx.BankAccountClass_SpentonRepairs), SpentOnRepairs,
+                    "Spent on Fuel: ; cr;N0".T(EDCTx.BankAccountClass_SpentonFuel), SpentOnFuel,
+                    "Spent on Ammo: ; cr;N0".T(EDCTx.BankAccountClass_SpendonAmmo), SpentOnAmmoConsumables,
+                    "Insurance Claims: ;;N0".T(EDCTx.BankAccountClass_InsuranceClaims), InsuranceClaims,
+                    "Spent on Insurance: ; cr;N0".T(EDCTx.BankAccountClass_SpentonInsurance), SpentOnInsurance,
+                    "Owned ships: ;;N0".T(EDCTx.BankAccountClass_OwnedShipCount), OwnedShipCount,
+                    "Spent on Suits: ; cr;N0".T(EDCTx.BankAccountClass_SpentOnSuits), SpentOnSuits,
+                    "Spent on Weapons: ; cr;N0".T(EDCTx.BankAccountClass_SpentOnWeapons), SpentOnWeapons,
+                    "Spent on Suit Consumables: ; cr;N0".T(EDCTx.BankAccountClass_SpentOnSuitConsumables), SpentOnSuitConsumables,
+                    "Suits Owned: ;;N0".T(EDCTx.BankAccountClass_SuitsOwned), SuitsOwned,
+                    "Weapons Owned: ;;N0".T(EDCTx.BankAccountClass_WeaponsOwned), WeaponsOwned,
+                    "Spent on Premium Stock: ; cr;N0".T(EDCTx.BankAccountClass_SpentOnPremiumStock), SpentOnPremiumStock,
+                    "Premium Stock bought: ;;N0".T(EDCTx.BankAccountClass_PremiumStockBought), PremiumStockBought);
             }
         }
 
@@ -186,33 +187,33 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Bounties: ;;N0".Tx(), BountiesClaimed,
-                    "Bounty Profits: ; cr;N0".Tx(), BountyHuntingProfit,
-                    "Combat Bonds: ;;N0".Tx(), CombatBonds,
-                    "Combat Bond Profits: ; cr;N0".Tx(), CombatBondProfits,
-                    "Assassinations: ;;N0".Tx(), Assassinations,
-                    "Assassination Profits: ; cr;N0".Tx(), AssassinationProfits,
-                    "Highest Reward: ; cr;N0".Tx(), HighestSingleReward,
-                    "Skimmers Killed: ;;N0".Tx(), SkimmersKilled,
-                    "Surface Combat Bonds: ;;N0".Tx(), OnFootCombatBonds,
-                    "Surface Combat Bonds Profits: ; cr;N0".Tx(), OnFootCombatBondsProfits,
-                    "Vehicles Destroyed on Foot: ;;N0".Tx(), OnFootVehiclesDestroyed,
-                    "Ships Destroyed on Foot: ;;N0".Tx(), OnFootShipsDestroyed,
-                    "Dropships Taken: ;;N0".Tx(), DropshipsTaken,
-                    "Dropships Booked: ;;N0".Tx(), DropShipsBooked,
-                    "Dropships Cancelled: ;;N0".Tx(), DropshipsCancelled,
-                    "High Intensity Conflict Zones fought: ;;N0".Tx(), ConflictZoneHigh,
-                    "Medium Intensity Conflict Zones fought: ;;N0".Tx(), ConflictZoneMedium,
-                    "Low Intensity Conflict Zones fought: ;;N0".Tx(), ConflictZoneLow,
-                    "Total Conflict Zones fought: ;;N0".Tx(), ConflictZoneTotal,
-                    "High Intensity Conflict Zones won: ;;N0".Tx(), ConflictZoneHighWins,
-                    "Medium Intensity Conflict Zones won: ;;N0".Tx(), ConflictZoneMediumWins,
-                    "Low Intensity Conflict Zones won: ;;N0".Tx(), ConflictZoneLowWins,
-                    "Total Conflict Zones won: ;;N0".Tx(), ConflictZoneTotalWins,
-                    "Settlements Defended: ;;N0".Tx(), SettlementDefended,
-                    "Settlements Conquered: ;;N0".Tx(), SettlementConquered,
-                    "Skimmers Killed on Foot: ;;N0".Tx(), OnFootSkimmersKilled,
-                    "Scavengers Killed on Foot: ;;N0".Tx(), OnFootScavsKilled);
+                    "Bounties: ;;N0".T(EDCTx.CombatClass_Bounties), BountiesClaimed,
+                    "Bounty Profits: ; cr;N0".T(EDCTx.CombatClass_BountyProfits), BountyHuntingProfit,
+                    "Combat Bonds: ;;N0".T(EDCTx.CombatClass_CombatBonds), CombatBonds,
+                    "Combat Bond Profits: ; cr;N0".T(EDCTx.CombatClass_CombatBondProfits), CombatBondProfits,
+                    "Assassinations: ;;N0".T(EDCTx.CombatClass_Assassinations), Assassinations,
+                    "Assassination Profits: ; cr;N0".T(EDCTx.CombatClass_AssassinationProfits), AssassinationProfits,
+                    "Highest Reward: ; cr;N0".T(EDCTx.CombatClass_HighestReward), HighestSingleReward,
+                    "Skimmers Killed: ;;N0".T(EDCTx.CombatClass_SkimmersKilled), SkimmersKilled,
+                    "Surface Combat Bonds: ;;N0".T(EDCTx.CombatClass_OnFootCombatBonds), OnFootCombatBonds,
+                    "Surface Combat Bonds Profits: ; cr;N0".T(EDCTx.CombatClass_OnFootCombatBondsProfits), OnFootCombatBondsProfits,
+                    "Vehicles Destroyed on Foot: ;;N0".T(EDCTx.CombatClass_OnFootVehiclesDestroyed), OnFootVehiclesDestroyed,
+                    "Ships Destroyed on Foot: ;;N0".T(EDCTx.CombatClass_OnFootShipsDestroyed), OnFootShipsDestroyed,
+                    "Dropships Taken: ;;N0".T(EDCTx.CombatClass_DropshipsTaken), DropshipsTaken,
+                    "Dropships Booked: ;;N0".T(EDCTx.CombatClass_DropshipsBooked), DropShipsBooked,
+                    "Dropships Cancelled: ;;N0".T(EDCTx.CombatClass_DropshipsCancelled), DropshipsCancelled,
+                    "High Intensity Conflict Zones fought: ;;N0".T(EDCTx.CombatClass_ConflictZoneHigh), ConflictZoneHigh,
+                    "Medium Intensity Conflict Zones fought: ;;N0".T(EDCTx.CombatClass_ConflictZoneMedium), ConflictZoneMedium,
+                    "Low Intensity Conflict Zones fought: ;;N0".T(EDCTx.CombatClass_ConflictZoneLow), ConflictZoneLow,
+                    "Total Conflict Zones fought: ;;N0".T(EDCTx.CombatClass_ConflictZoneTotal), ConflictZoneTotal,
+                    "High Intensity Conflict Zones won: ;;N0".T(EDCTx.CombatClass_ConflictZoneHighWins), ConflictZoneHighWins,
+                    "Medium Intensity Conflict Zones won: ;;N0".T(EDCTx.CombatClass_ConflictZoneMediumWins), ConflictZoneMediumWins,
+                    "Low Intensity Conflict Zones won: ;;N0".T(EDCTx.CombatClass_ConflictZoneLowWins), ConflictZoneLowWins,
+                    "Total Conflict Zones won: ;;N0".T(EDCTx.CombatClass_ConflictZoneTotalWins), ConflictZoneTotalWins,
+                    "Settlements Defended: ;;N0".T(EDCTx.CombatClass_SettlementDefended), SettlementDefended,
+                    "Settlements Conquered: ;;N0".T(EDCTx.CombatClass_SettlementConquered), SettlementConquered,
+                    "Skimmers Killed on Foot: ;;N0".T(EDCTx.CombatClass_OnFootSkimmersKilled), OnFootSkimmersKilled,
+                    "Scavengers Killed on Foot: ;;N0".T(EDCTx.CombatClass_OnFootScavsKilled), OnFootScavsKilled);
             }
         }
 
@@ -245,28 +246,28 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Notoriety Index: ;;N0".Tx(), Notoriety,
-                    "Fines: ;;N0".Tx(), Fines,
-                    "Total Fines: ; cr;N0".Tx(), TotalFines,
-                    "Bounties: ;;N0".Tx(), BountiesReceived,
-                    "Total Bounties: ; cr;N0".Tx(), TotalBounties,
-                    "Highest Bounty: ; cr;N0".Tx(), HighestBounty,
-                    "Malware Uploaded: ;;N0".Tx(), MalwareUploaded,
-                    "Settlements shut down: ;;N0".Tx(), SettlementsStateShutdown,
-                    "Production Sabotaged: ;;N0".Tx(), ProductionSabotage,
-                    "Production Thefts: ;;N0".Tx(), ProductionTheft,
-                    "Total Murders: ;;N0".Tx(), TotalMurders,
-                    "Citizens Murdered: ;;N0".Tx(), CitizensMurdered,
-                    "Omnipol Murdered: ;;N0".Tx(), OmnipolMurdered,
-                    "Guards Murdered: ;;N0".Tx(), GuardsMurdered,
-                    "Data Stolen: ;;N0".Tx(), DataStolen,
-                    "Goods Stolen: ;;N0".Tx(), GoodsStolen,
-                    "Total Inventory Items Stolen: ;;N0".Tx(), TotalStolen,
-                    "Turrets Destroyed: ;;N0".Tx(), TurretsDestroyed,
-                    "Turrets Overloaded: ;;N0".Tx(), TurretsOverloaded,
-                    "Total Turrets shut down: ;;N0".Tx(), TurretsTotal,
-                    "Stolen Items Value: ; cr;N0".Tx(), ValueStolenStateChange,
-                    "Profiles Cloned: ;;N0".Tx(), ProfilesCloned);
+                    "Notoriety Index: ;;N0".T(EDCTx.CrimeClass_NotorietyIndex), Notoriety,
+                    "Fines: ;;N0".T(EDCTx.CrimeClass_Fines), Fines,
+                    "Total Fines: ; cr;N0".T(EDCTx.CrimeClass_TotalFines), TotalFines,
+                    "Bounties: ;;N0".T(EDCTx.CrimeClass_Bounties), BountiesReceived,
+                    "Total Bounties: ; cr;N0".T(EDCTx.CrimeClass_TotalBounties), TotalBounties,
+                    "Highest Bounty: ; cr;N0".T(EDCTx.CrimeClass_HighestBounty), HighestBounty,
+                    "Malware Uploaded: ;;N0".T(EDCTx.CrimeClass_MalwareUploaded), MalwareUploaded,
+                    "Settlements shut down: ;;N0".T(EDCTx.CrimeClass_SettlementsStateShutdown), SettlementsStateShutdown,
+                    "Production Sabotaged: ;;N0".T(EDCTx.CrimeClass_ProductionSabotage), ProductionSabotage,
+                    "Production Thefts: ;;N0".T(EDCTx.CrimeClass_ProductionTheft), ProductionTheft,
+                    "Total Murders: ;;N0".T(EDCTx.CrimeClass_TotalMurders), TotalMurders,
+                    "Citizens Murdered: ;;N0".T(EDCTx.CrimeClass_CitizensMurdered), CitizensMurdered,
+                    "Omnipol Murdered: ;;N0".T(EDCTx.CrimeClass_OmnipolMurdered), OmnipolMurdered,
+                    "Guards Murdered: ;;N0".T(EDCTx.CrimeClass_GuardsMurdered), GuardsMurdered,
+                    "Data Stolen: ;;N0".T(EDCTx.CrimeClass_DataStolen), DataStolen,
+                    "Goods Stolen: ;;N0".T(EDCTx.CrimeClass_GoodsStolen), GoodsStolen,
+                    "Total Inventory Items Stolen: ;;N0".T(EDCTx.CrimeClass_TotalStolen), TotalStolen,
+                    "Turrets Destroyed: ;;N0".T(EDCTx.CrimeClass_TurretsDestroyed), TurretsDestroyed,
+                    "Turrets Overloaded: ;;N0".T(EDCTx.CrimeClass_TurretsOverloaded), TurretsOverloaded,
+                    "Total Turrets shut down: ;;N0".T(EDCTx.CrimeClass_TurretsTotal), TurretsTotal,
+                    "Stolen Items Value: ; cr;N0".T(EDCTx.CrimeClass_ValueStolenStateChange), ValueStolenStateChange,
+                    "Profiles Cloned: ;;N0".T(EDCTx.CrimeClass_ProfilesCloned), ProfilesCloned);
             }
         }
 
@@ -281,11 +282,11 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Black Markets: ;;N0".Tx(), BlackMarketsTradedWith,
-                    "Black Market Profits: ; cr;N0".Tx(), BlackMarketsProfits,
-                    "Resources Smuggled: ;;N0".Tx(), ResourcesSmuggled,
-                    "Average Profit: ; cr;N0".Tx(), AverageProfit,
-                    "Highest Single Transaction: ; cr;N0".Tx(), HighestSingleTransaction);
+                    "Black Markets: ;;N0".T(EDCTx.SmugglingClass_BlackMarkets), BlackMarketsTradedWith,
+                    "Black Market Profits: ; cr;N0".T(EDCTx.SmugglingClass_BlackMarketProfits), BlackMarketsProfits,
+                    "Resources Smuggled: ;;N0".T(EDCTx.SmugglingClass_ResourcesSmuggled), ResourcesSmuggled,
+                    "Average Profit: ; cr;N0".T(EDCTx.SmugglingClass_AverageProfit), AverageProfit,
+                    "Highest Single Transaction: ; cr;N0".T(EDCTx.SmugglingClass_HighestSingleTransaction), HighestSingleTransaction);
             }
         }
 
@@ -303,14 +304,14 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                        "Markets Traded: ;;N0".Tx(), MarketsTradedWith,
-                        "Profits: ; cr;N0".Tx(), MarketProfits,
-                        "No. of Resources: ;;N0".Tx(), ResourcesTraded,
-                        "Average Profit: ; cr;N0".Tx(), AverageProfit,
-                        "Highest Single Transaction: ; cr;N0".Tx(), HighestSingleTransaction,
-                        "Data Sold: ;;N0".Tx(), DataSold,
-                        "Goods Sold: ;;N0".Tx(), GoodsSold,
-                        "Assets Sold: ;;N0".Tx(), AssetsSold);
+                        "Markets Traded: ;;N0".T(EDCTx.TradingClass_MarketsTraded), MarketsTradedWith,
+                        "Profits: ; cr;N0".T(EDCTx.TradingClass_Profits), MarketProfits,
+                        "No. of Resources: ;;N0".T(EDCTx.TradingClass_No), ResourcesTraded,
+                        "Average Profit: ; cr;N0".T(EDCTx.TradingClass_AverageProfit), AverageProfit,
+                        "Highest Single Transaction: ; cr;N0".T(EDCTx.TradingClass_HighestSingleTransaction), HighestSingleTransaction,
+                        "Data Sold: ;;N0".T(EDCTx.TradingClass_DataSold), DataSold,
+                        "Goods Sold: ;;N0".T(EDCTx.TradingClass_GoodsSold), GoodsSold,
+                        "Assets Sold: ;;N0".T(EDCTx.TradingClass_AssetsSold), AssetsSold);
             }
         }
 
@@ -322,9 +323,9 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                        "Profits: ; cr;N0".Tx(), MiningProfits,
-                        "Quantity: ;;N0".Tx(), QuantityMined,
-                        "Materials Collected: ;;N0".Tx(), MaterialsCollected);
+                        "Profits: ; cr;N0".T(EDCTx.MiningClass_Profits), MiningProfits,
+                        "Quantity: ;;N0".T(EDCTx.MiningClass_Quantity), QuantityMined,
+                        "Materials Collected: ;;N0".T(EDCTx.MiningClass_MaterialsTypesCollected), MaterialsCollected);
 
 
             }
@@ -355,23 +356,23 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                        "Systems Visited: ;;N0".Tx(), SystemsVisited,
-                        "Profits: ; cr;N0".Tx(), ExplorationProfits,
-                        "Level 2 Scans: ;;N0".Tx(), PlanetsScannedToLevel2,
-                        "Level 3 Scans: ;;N0".Tx(), PlanetsScannedToLevel3,
-                        "Efficient Scans: ;;N0".Tx(), EfficientScans,
-                        "Highest Payout: ; cr;N0".Tx(), HighestPayout,
-                        "Total Distance: ; ly;N0".Tx(), TotalHyperspaceDistance,
-                        "No of Jumps: ;;N0".Tx(), TotalHyperspaceJumps,
-                        "Greatest Distance: ; ly;N0".Tx(), GreatestDistanceFromStart,
-                        "Time Played".Tx() + ": ", TimePlayed.SecondsToDHMString(),
-                        "Distance Travelled on Foot: ; m;N0".Tx(), OnFootDistanceTravelled,
-                        "Shuttle Journeys: ;;N0".Tx(), ShuttleJourneys,
-                        "Shuttle Distance Travelled: ; ly;N0".Tx(), ShuttleDistanceTravelled,
-                        "Credits Spent on Shuttles: ; cr;N0".Tx(), SpentOnShuttles,
-                        "First Footfalls: ;;N0".Tx(), FirstFootfalls,
-                        "Planets walked on: ;;N0".Tx(), PlanetFootfalls,
-                        "Settlements docked at: ;;N0".Tx(), SettlementsVisited);
+                        "Systems Visited: ;;N0".T(EDCTx.ExplorationClass_SystemsVisited), SystemsVisited,
+                        "Profits: ; cr;N0".T(EDCTx.ExplorationClass_Profits), ExplorationProfits,
+                        "Level 2 Scans: ;;N0".T(EDCTx.ExplorationClass_Level2Scans), PlanetsScannedToLevel2,
+                        "Level 3 Scans: ;;N0".T(EDCTx.ExplorationClass_Level3Scans), PlanetsScannedToLevel3,
+                        "Efficient Scans: ;;N0".T(EDCTx.ExplorationClass_EfficientScans), EfficientScans,
+                        "Highest Payout: ; cr;N0".T(EDCTx.ExplorationClass_HighestPayout), HighestPayout,
+                        "Total Distance: ; ly;N0".T(EDCTx.ExplorationClass_TotalDistance), TotalHyperspaceDistance,
+                        "No of Jumps: ;;N0".T(EDCTx.ExplorationClass_NoofJumps), TotalHyperspaceJumps,
+                        "Greatest Distance: ; ly;N0".T(EDCTx.ExplorationClass_GreatestDistance), GreatestDistanceFromStart,
+                        "Time Played: ".T(EDCTx.ExplorationClass_TimePlayed), TimePlayed.SecondsToDHMString(),
+                        "Distance Travelled on Foot: ; m;N0".T(EDCTx.ExplorationClass_OnFootDistanceTravelled), OnFootDistanceTravelled,
+                        "Shuttle Journeys: ;;N0".T(EDCTx.ExplorationClass_ShuttleJourneys), ShuttleJourneys,
+                        "Shuttle Distance Travelled: ; ly;N0".T(EDCTx.ExplorationClass_ShuttleDistanceTravelled), ShuttleDistanceTravelled,
+                        "Credits Spent on Shuttles: ; cr;N0".T(EDCTx.ExplorationClass_SpentOnShuttles), SpentOnShuttles,
+                        "First Footfalls: ;;N0".T(EDCTx.ExplorationClass_FirstFootfalls), FirstFootfalls,
+                        "Planets walked on: ;;N0".T(EDCTx.ExplorationClass_PlanetFootfalls), PlanetFootfalls,
+                        "Settlements docked at: ;;N0".T(EDCTx.ExplorationClass_SettlementsVisited), SettlementsVisited);
             }
         }
 
@@ -388,12 +389,12 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Accepted Passenger Missions: ;;N0".Tx(), Accepted,
-                    "Passengers Disgruntled: ;;N0".Tx(), Disgruntled,
-                    "Total Bulk Passengers Delivered: ;;N0".Tx(), Bulk,
-                    "Total VIPs Delivered: ;;N0".Tx(), VIP,
-                    "Total Delivered: ;;N0".Tx(), Delivered,
-                    "Total Ejected: ;;N0".Tx(), Ejected);
+                    "Accepted Passenger Missions: ;;N0".T(EDCTx.PassengerMissionsClass_Accepted), Accepted,
+                    "Passengers Disgruntled: ;;N0".T(EDCTx.PassengerMissionsClass_PassengersDisgrunted), Disgruntled,
+                    "Total Bulk Passengers Delivered: ;;N0".T(EDCTx.PassengerMissionsClass_BulkMissionPassengers), Bulk,
+                    "Total VIPs Delivered: ;;N0".T(EDCTx.PassengerMissionsClass_VIPMissionPassengers), VIP,
+                    "Total Delivered: ;;N0".T(EDCTx.PassengerMissionsClass_PassengersDelivered), Delivered,
+                    "Total Ejected: ;;N0".T(EDCTx.PassengerMissionsClass_PassengersEjected), Ejected);
 
             }
         }
@@ -414,17 +415,17 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Total Items Rescued: ;;N0".Tx(), Traded,
-                    "Profit: ; cr;N0".Tx(), Profit,
-                    "Total Rescue Transactions: ;;N0".Tx(), Count,
-                    "Legal Salvage Value - Surface: ; cr;N0".Tx(), SalvageLegalPOI,
-                    "Legal Salvage Value - Settlements: ; cr;N0".Tx(), SalvageLegalSettlements,
-                    "Illegal Salvage Value - Surface: ; cr;N0".Tx(), SalvageIllegalPOI,
-                    "Illegal Salvage Value - Settlements: ; cr;N0".Tx(), SalvageIllegalSettlements,
-                    "Maglocks cut: ;;N0".Tx(), MaglocksOpened,
-                    "Panels cut: ;;N0".Tx(), PanelsOpened,
-                    "Settlement Fires extinguished: ;;N0".Tx(), SettlementsStateFireOut,
-                    "Settlements rebooted: ;;N0".Tx(), SettlementsStateReboot);
+                    "Total Items Rescued: ;;N0".T(EDCTx.SearchAndRescueClass_TotalItemsRescued), Traded,
+                    "Profit: ; cr;N0".T(EDCTx.SearchAndRescueClass_Profit), Profit,
+                    "Total Rescue Transactions: ;;N0".T(EDCTx.SearchAndRescueClass_TotalRescueTransactions), Count,
+                    "Legal Salvage Value - Surface: ; cr;N0".T(EDCTx.SearchAndRescueClass_SalvageLegalPOI), SalvageLegalPOI,
+                    "Legal Salvage Value - Settlements: ; cr;N0".T(EDCTx.SearchAndRescueClass_SalvageLegalSettlements), SalvageLegalSettlements,
+                    "Illegal Salvage Value - Surface: ; cr;N0".T(EDCTx.SearchAndRescueClass_SalvageIllegalPOI), SalvageIllegalPOI,
+                    "Illegal Salvage Value - Settlements: ; cr;N0".T(EDCTx.SearchAndRescueClass_SalvageIllegalSettlements), SalvageIllegalSettlements,
+                    "Maglocks cut: ;;N0".T(EDCTx.SearchAndRescueClass_MaglocksOpened), MaglocksOpened,
+                    "Panels cut: ;;N0".T(EDCTx.SearchAndRescueClass_PanelsOpened), PanelsOpened,
+                    "Settlement Fires extinguished: ;;N0".T(EDCTx.SearchAndRescueClass_SettlementsStateFireOut), SettlementsStateFireOut,
+                    "Settlements rebooted: ;;N0".T(EDCTx.SearchAndRescueClass_SettlementsStateReboot), SettlementsStateReboot);
             }
         }
 
@@ -448,21 +449,21 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Engineers Used: ;;N0".Tx(), CountOfUsedEngineers,
-                    "Blueprints: ;;N0".Tx(), RecipesGenerated,
-                    "At Level 1: ;;N0".Tx(), RecipesGeneratedRank1,
-                    "At Level 2: ;;N0".Tx(), RecipesGeneratedRank2,
-                    "At Level 3: ;;N0".Tx(), RecipesGeneratedRank3,
-                    "At Level 4: ;;N0".Tx(), RecipesGeneratedRank4,
-                    "At Level 5: ;;N0".Tx(), RecipesGeneratedRank5,
-                    "Suit Modifications Applied: ;;N0".Tx(), SuitModsApplied,
-                    "Weapon Modifications Applied: ;;N0".Tx(), WeaponModsApplied,
-                    "Suit Upgrades Applied: ;;N0".Tx(), SuitsUpgraded,
-                    "Weapon Upgrades Applied: ;;N0".Tx(), WeaponsUpgraded,
-                    "Suits fully Upgraded: ;;N0".Tx(), SuitsUpgradedFull,
-                    "Weapons fully Upgraded: ;;N0".Tx(), WeaponsUpgradedFull,
-                    "Suits fully Modified: ;;N0".Tx(), SuitModsAppliedFull,
-                    "Weapons fully Modified: ;;N0".Tx(), WeaponModsAppliedFull);
+                    "Engineers Used: ;;N0".T(EDCTx.CraftingClass_EngineersUsed), CountOfUsedEngineers,
+                    "Blueprints: ;;N0".T(EDCTx.CraftingClass_Blueprints), RecipesGenerated,
+                    "At Level 1: ;;N0".T(EDCTx.CraftingClass_AtLevel1), RecipesGeneratedRank1,
+                    "At Level 2: ;;N0".T(EDCTx.CraftingClass_AtLevel2), RecipesGeneratedRank2,
+                    "At Level 3: ;;N0".T(EDCTx.CraftingClass_AtLevel3), RecipesGeneratedRank3,
+                    "At Level 4: ;;N0".T(EDCTx.CraftingClass_AtLevel4), RecipesGeneratedRank4,
+                    "At Level 5: ;;N0".T(EDCTx.CraftingClass_AtLevel5), RecipesGeneratedRank5,
+                    "Suit Modifications Applied: ;;N0".T(EDCTx.CraftingClass_SuitModsApplied), SuitModsApplied,
+                    "Weapon Modifications Applied: ;;N0".T(EDCTx.CraftingClass_WeaponModsApplied), WeaponModsApplied,
+                    "Suit Upgrades Applied: ;;N0".T(EDCTx.CraftingClass_SuitsUpgraded), SuitsUpgraded,
+                    "Weapon Upgrades Applied: ;;N0".T(EDCTx.CraftingClass_WeaponsUpgraded), WeaponsUpgraded,
+                    "Suits fully Upgraded: ;;N0".T(EDCTx.CraftingClass_SuitsUpgradedFull), SuitsUpgradedFull,
+                    "Weapons fully Upgraded: ;;N0".T(EDCTx.CraftingClass_WeaponsUpgradedFull), WeaponsUpgradedFull,
+                    "Suits fully Modified: ;;N0".T(EDCTx.CraftingClass_SuitModsAppliedFull), SuitModsAppliedFull,
+                    "Weapons fully Modified: ;;N0".T(EDCTx.CraftingClass_WeaponModsAppliedFull), WeaponModsAppliedFull);
             }
         }
 
@@ -475,10 +476,10 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Total Wages: ; cr;N0".Tx(), TotalWages,
-                    "Hired: ;;N0".Tx(), Hired,
-                    "Fired: ;;N0".Tx(), Fired,
-                    "Killed in Action: ;;N0".Tx(), Died);
+                    "Total Wages: ; cr;N0".T(EDCTx.CrewClass_TotalWages), TotalWages,
+                    "Hired: ;;N0".T(EDCTx.CrewClass_Hired), Hired,
+                    "Fired: ;;N0".T(EDCTx.CrewClass_Fired), Fired,
+                    "Killed in Action: ;;N0".T(EDCTx.CrewClass_KilledinAction), Died);
             }
         }
 
@@ -493,11 +494,11 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Total Time".Tx() + ": ", TimeTotal.SecondsToDHMString(),
-                    "Gunner Time".Tx() + ": ", GunnerTimeTotal.SecondsToDHMString(),
-                    "Fighter Time".Tx() + ": ", FighterTimeTotal.SecondsToDHMString(),
-                    "Credits: ; cr;N0".Tx(), CreditsTotal,
-                    "Fines: ; cr;N0".Tx(), FinesTotal);
+                    "Total Time: ".T(EDCTx.MulticrewClass_TotalTime), TimeTotal.SecondsToDHMString(),
+                    "Gunner Time: ".T(EDCTx.MulticrewClass_GunnerTime), GunnerTimeTotal.SecondsToDHMString(),
+                    "Fighter Time: ".T(EDCTx.MulticrewClass_FighterTime), FighterTimeTotal.SecondsToDHMString(),
+                    "Credits: ; cr;N0".T(EDCTx.MulticrewClass_Credits), CreditsTotal,
+                    "Fines: ; cr;N0".T(EDCTx.MulticrewClass_Fines), FinesTotal);
             }
         }
 
@@ -517,17 +518,17 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Material Trades Completed: ;;N0".Tx(), TradesCompleted,
-                    "Material Traded: ;;N0".Tx(), MaterialsTraded,
-                    "Encoded Materials traded: ;;N0".Tx(), EncodedMaterialsTraded,
-                    "Raw Materials traded: ;;N0".Tx(), RawMaterialsTraded,
-                    "Grade 1 Materials Traded: ;;N0".Tx(), Grade1MaterialsTraded,
-                    "Grade 2 Materials Traded: ;;N0".Tx(), Grade2MaterialsTraded,
-                    "Grade 3 Materials Traded: ;;N0".Tx(), Grade3MaterialsTraded,
-                    "Grade 4 Materials Traded: ;;N0".Tx(), Grade4MaterialsTraded,
-                    "Grade 5 Materials Traded: ;;N0".Tx(), Grade5MaterialsTraded,
-                    "Assets Gained in Trade: ;;N0".Tx(), AssetsTradedIn,
-                    "Assets Spent in Trade: ;;N0".Tx(), AssetsTradedOut);
+                    "Material Trades Completed: ;;N0".T(EDCTx.MaterialTraderStatsClass_CommodityTrades), TradesCompleted,
+                    "Material Traded: ;;N0".T(EDCTx.MaterialTraderStatsClass_MaterialTraded), MaterialsTraded,
+                    "Encoded Materials traded: ;;N0".T(EDCTx.MaterialTraderStatsClass_EncodedMaterialsTraded), EncodedMaterialsTraded,
+                    "Raw Materials traded: ;;N0".T(EDCTx.MaterialTraderStatsClass_RawMaterialsTraded), RawMaterialsTraded,
+                    "Grade 1 Materials Traded: ;;N0".T(EDCTx.MaterialTraderStatsClass_G1MaterialsTraded), Grade1MaterialsTraded,
+                    "Grade 2 Materials Traded: ;;N0".T(EDCTx.MaterialTraderStatsClass_G2MaterialsTraded), Grade2MaterialsTraded,
+                    "Grade 3 Materials Traded: ;;N0".T(EDCTx.MaterialTraderStatsClass_G3MaterialsTraded), Grade3MaterialsTraded,
+                    "Grade 4 Materials Traded: ;;N0".T(EDCTx.MaterialTraderStatsClass_G4MaterialsTraded), Grade4MaterialsTraded,
+                    "Grade 5 Materials Traded: ;;N0".T(EDCTx.MaterialTraderStatsClass_G5MaterialsTraded), Grade5MaterialsTraded,
+                    "Assets Gained in Trade: ;;N0".T(EDCTx.MaterialTraderStatsClass_AssetsTradedIn), AssetsTradedIn,
+                    "Assets Spent in Trade: ;;N0".T(EDCTx.MaterialTraderStatsClass_AssetsTradedOut), AssetsTradedOut);
             }
         }
 
@@ -543,11 +544,11 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Profits from CQC: ; cr;N0".Tx(), CreditsEarned,
-                    "Time Played".Tx() + ": ", TimePlayed.SecondsToDHMString(),
-                    "K/D Ratio: ;;N2".Tx(), KD,
-                    "Kills: ;;N0".Tx(), Kills,
-                    "Win/Loss Ratio: ;;N2".Tx(), WL);
+                    "Profits from CQC: ; cr;N0".T(EDCTx.CQCClass_CreditsEarned), CreditsEarned,
+                    "Time Played: ".T(EDCTx.CQCClass_TimePlayed), TimePlayed.SecondsToDHMString(),
+                    "K/D Ratio: ;;N2".T(EDCTx.CQCClass_KDRatio), KD,
+                    "Kills: ;;N0".T(EDCTx.CQCClass_Kills), Kills,
+                    "Win/Loss Ratio: ;;N2".T(EDCTx.CQCClass_Win), WL);
             }
         }
 
@@ -577,24 +578,24 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Total Commodities Exported: ;;N0".Tx(), EXPORTTOTAL,
-                    "Total Commodities Imported: ;;N0".Tx(), IMPORTTOTAL,
-                    "Credits earned from Commodities: ; cr;N0".Tx(), TRADEPROFITTOTAL,
-                    "Credits spent on Commodities: ; cr;N0".Tx(), TRADESPENDTOTAL,
-                    "Credits earned from Stolen Goods: ; cr;N0".Tx(), STOLENPROFITTOTAL,
-                    "Credits spent on Stolen Goods: ; cr;N0".Tx(), STOLENSPENDTOTAL,
-                    "Total Travel Distance: ; ly;N0".Tx(), DISTANCETRAVELLED,
-                    "Number of Carrier Jumps: ;;N0".Tx(), TOTALJUMPS,
-                    "Total Ships Sold: ;;N0".Tx(), SHIPYARDSOLD,
-                    "Credits earned from Shipyard: ; cr;N0".Tx(), SHIPYARDPROFIT,
-                    "Total Modules Sold: ;;N0".Tx(), OUTFITTINGSOLD,
-                    "Credits earned from Outfitting: ; cr;N0".Tx(), OUTFITTINGPROFIT,
-                    "Total Ships Restocked: ;;N0".Tx(), REARMTOTAL,
-                    "Total Ships Refuelled: ;;N0".Tx(), REFUELTOTAL,
-                    "Credits earned from Refuelling: ; cr;N0".Tx(), REFUELPROFIT,
-                    "Total Ships Repaired: ;;N0".Tx(), REPAIRSTOTAL,
-                    "Redemption Office Exchanges: ;;N0".Tx(), VOUCHERSREDEEMED,
-                    "Redemption Office Payouts: ; cr;N0".Tx(), VOUCHERSPROFIT);
+                    "Total Commodities Exported: ;;N0".T(EDCTx.FLEETCARRIERClass_EXPORTTOTAL), EXPORTTOTAL,
+                    "Total Commodities Imported: ;;N0".T(EDCTx.FLEETCARRIERClass_IMPORTTOTAL), IMPORTTOTAL,
+                    "Credits earned from Commodities: ; cr;N0".T(EDCTx.FLEETCARRIERClass_TRADEPROFITTOTAL), TRADEPROFITTOTAL,
+                    "Credits spent on Commodities: ; cr;N0".T(EDCTx.FLEETCARRIERClass_TRADESPENDTOTAL), TRADESPENDTOTAL,
+                    "Credits earned from Stolen Goods: ; cr;N0".T(EDCTx.FLEETCARRIERClass_STOLENPROFITTOTAL), STOLENPROFITTOTAL,
+                    "Credits spent on Stolen Goods: ; cr;N0".T(EDCTx.FLEETCARRIERClass_STOLENSPENDTOTAL), STOLENSPENDTOTAL,
+                    "Total Travel Distance: ; ly;N0".T(EDCTx.FLEETCARRIERClass_DISTANCETRAVELLED), DISTANCETRAVELLED,
+                    "Number of Carrier Jumps: ;;N0".T(EDCTx.FLEETCARRIERClass_TOTALJUMPS), TOTALJUMPS,
+                    "Total Ships Sold: ;;N0".T(EDCTx.FLEETCARRIERClass_SHIPYARDSOLD), SHIPYARDSOLD,
+                    "Credits earned from Shipyard: ; cr;N0".T(EDCTx.FLEETCARRIERClass_SHIPYARDPROFIT), SHIPYARDPROFIT,
+                    "Total Modules Sold: ;;N0".T(EDCTx.FLEETCARRIERClass_OUTFITTINGSOLD), OUTFITTINGSOLD,
+                    "Credits earned from Outfitting: ; cr;N0".T(EDCTx.FLEETCARRIERClass_OUTFITTINGPROFIT), OUTFITTINGPROFIT,
+                    "Total Ships Restocked: ;;N0".T(EDCTx.FLEETCARRIERClass_REARMTOTAL), REARMTOTAL,
+                    "Total Ships Refuelled: ;;N0".T(EDCTx.FLEETCARRIERClass_REFUELTOTAL), REFUELTOTAL,
+                    "Credits earned from Refuelling: ; cr;N0".T(EDCTx.FLEETCARRIERClass_REFUELPROFIT), REFUELPROFIT,
+                    "Total Ships Repaired: ;;N0".T(EDCTx.FLEETCARRIERClass_REPAIRSTOTAL), REPAIRSTOTAL,
+                    "Redemption Office Exchanges: ;;N0".T(EDCTx.FLEETCARRIERClass_VOUCHERSREDEEMED), VOUCHERSREDEEMED,
+                    "Redemption Office Payouts: ; cr;N0".T(EDCTx.FLEETCARRIERClass_VOUCHERSPROFIT), VOUCHERSPROFIT);
             }
         }
 
@@ -615,17 +616,17 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Unique Genus Encountered: ;;N0".Tx(), OrganicGenusEncountered,
-                    "Unique Species Encountered: ;;N0".Tx(), OrganicSpeciesEncountered,
-                    "Unique Variants Encountered: ;;N0".Tx(), OrganicVariantEncountered,
-                    "Profit from Organic Data: ; cr;N0".Tx(), OrganicDataProfits,
-                    "Organic Data Registered: ;;N0".Tx(), OrganicData,
-                    "Profit from First Logged: ; cr;N0".Tx(), FirstLoggedProfits,
-                    "First Logged: ;;N0".Tx(), FirstLogged,
-                    "Systems with Organic Life: ;;N0".Tx(), OrganicSystems,
-                    "Planets with Organic Life: ;;N0".Tx(), OrganicPlanets,
-                    "Unique Genus Data Logged: ;;N0".Tx(), OrganicGenus,
-                    "Unique Species Data Logged: ;;N0".Tx(), OrganicSpecies);
+                    "Unique Genus Encountered: ;;N0".T(EDCTx.ExobiologyClass_OrganicGenusEncountered), OrganicGenusEncountered,
+                    "Unique Species Encountered: ;;N0".T(EDCTx.ExobiologyClass_OrganicSpeciesEncountered), OrganicSpeciesEncountered,
+                    "Unique Variants Encountered: ;;N0".T(EDCTx.ExobiologyClass_OrganicVariantEncountered), OrganicVariantEncountered,
+                    "Profit from Organic Data: ; cr;N0".T(EDCTx.ExobiologyClass_OrganicDataProfits), OrganicDataProfits,
+                    "Organic Data Registered: ;;N0".T(EDCTx.ExobiologyClass_OrganicData), OrganicData,
+                    "Profit from First Logged: ; cr;N0".T(EDCTx.ExobiologyClass_FirstLoggedProfits), FirstLoggedProfits,
+                    "First Logged: ;;N0".T(EDCTx.ExobiologyClass_FirstLogged), FirstLogged,
+                    "Systems with Organic Life: ;;N0".T(EDCTx.ExobiologyClass_OrganicSystems), OrganicSystems,
+                    "Planets with Organic Life: ;;N0".T(EDCTx.ExobiologyClass_OrganicPlanets), OrganicPlanets,
+                    "Unique Genus Data Logged: ;;N0".T(EDCTx.ExobiologyClass_OrganicGenus), OrganicGenus,
+                    "Unique Species Data Logged: ;;N0".T(EDCTx.ExobiologyClass_OrganicSpecies), OrganicSpecies);
             }
         }
 
@@ -643,13 +644,13 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ", bool showblanks = false)
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPadShowBlanks(Environment.NewLine + frontline, showblanks,
-                    "Thargoid wakes scanned: ;;N0".Tx(), WAKES,
-                    "Thargoids killed: ;;N0".Tx(), KILLED + TGSCOUTCOUNT,
-                    "Thargoid structures: ;;N0".Tx(), IMPRINT,
-                    "Total encounters: ;;N0".Tx(), TOTAL,
-                    "Last seen in".Tx() + ": ", TOTALLASTSYSTEM,
-                    "Last seen on".Tx() + ": ", TOTALLASTTIMESTAMP,
-                    "Last ship involved".Tx() + ": ", TOTALLASTSHIP);
+                    "Thargoid wakes scanned: ;;N0".T(EDCTx.ThargoidsClass_EncounterWakes), WAKES,
+                    "Thargoids killed: ;;N0".T(EDCTx.ThargoidsClass_EncounterKilled), KILLED + TGSCOUTCOUNT,
+                    "Thargoid structures: ;;N0".T(EDCTx.ThargoidsClass_EncounterImprint), IMPRINT,
+                    "Total encounters: ;;N0".T(EDCTx.ThargoidsClass_EncounterTotal), TOTAL,
+                    "Last seen in: ".T(EDCTx.ThargoidsClass_LastSystem), TOTALLASTSYSTEM,
+                    "Last seen on: ".T(EDCTx.ThargoidsClass_LastTime), TOTALLASTTIMESTAMP,
+                    "Last ship involved: ".T(EDCTx.ThargoidsClass_LastShip), TOTALLASTSHIP);
             }
         }
 
@@ -683,30 +684,30 @@ namespace EliteDangerousCore.JournalEvents
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Credits deposited in bank: ; cr;N0".Tx(), BankCreditsDeposited,
-                    "Credits withdrawn from bank: ; cr;N0".Tx(), BankCreditsWithdrawn,
-                    "Times commodities were deposited: ;;N0".Tx(), BankCommoditiesDepositedNum,
-                    "Value of deposited commodities: ; cr;N0".Tx(), BankCommoditiesDepositedValue,
-                    "Times commodities were withdrawn: ;;N0".Tx(), BankCommoditiesWithdrawnNum,
-                    "Value of withdrawn commodities: ; cr;N0".Tx(), BankCommoditiesWithdrawnValue,
-                    "Times personal assets were deposited: ;;N0".Tx(), BankPersonalAssetsDepositedNum,
-                    "Value of deposited personal assets: ; cr;N0".Tx(), BankPersonalAssetsDepositedValue,
-                    "Times personal assets were withdrawn: ;;N0".Tx(), BankPersonalAssetsWithdrawnNum,
-                    "Value of withdrawn personal assets: ; cr;N0".Tx(), BankPersonalAssetsWithdrawnValue,
-                    "Times ships were deposited: ;;N0".Tx(), BankShipsDepositedNum,
-                    "Value of deposited ships: ; cr;N0".Tx(), BankShipsDepositedValue,
-                    "Highest contribution for Aegis leaderboard: ;;N0".Tx(), Leaderboardaegishighestcontribution,
-                    "Highest contribution for BGS leaderboard: ;;N0".Tx(), Leaderboardbgshighestcontribution,
-                    "Highest contribution for Bounty leaderboard: ;;N0".Tx(), Leaderboardbountyhighestcontribution,
-                    "Highest contribution for Colonisation Contribution leaderboard: ;;N0".Tx(), Leaderboardcolonisationcontributionhighestcontribution,
-                    "Highest contribution for Combat leaderboard: ;;N0".Tx(), Leaderboardcombathighestcontribution,
-                    "Highest contribution for CQC leaderboard: ;;N0".Tx(), Leaderboardcqchighestcontribution,
-                    "Highest contribution for Exploration leaderboard: ;;N0".Tx(), Leaderboardexplorationhighestcontribution,
-                    "Highest contribution for Mining leaderboard: ;;N0".Tx(), Leaderboardmininghighestcontribution,
-                    "Highest contribution for Powerplay leaderboard: ;;N0".Tx(), Leaderboardpowerplayhighestcontribution,
-                    "Highest contribution for Trade leaderboard: ;;N0".Tx(), Leaderboardtradehighestcontribution,
-                    "Highest contribution for Illicit Trade leaderboard: ;;N0".Tx(), Leaderboardtradeillicithighestcontribution,
-                    "Times squadron got a podium place: ;;N0".Tx(), Leaderboardpodiums);
+                    "Credits deposited in bank: ; cr;N0", BankCreditsDeposited,
+                    "Credits withdrawn from bank: ; cr;N0", BankCreditsWithdrawn,
+                    "Times commodities were deposited: ;;N0", BankCommoditiesDepositedNum,
+                    "Value of deposited commodities: ; cr;N0", BankCommoditiesDepositedValue,
+                    "Times commodities were withdrawn: ;;N0", BankCommoditiesWithdrawnNum,
+                    "Value of withdrawn commodities: ; cr;N0", BankCommoditiesWithdrawnValue,
+                    "Times personal assets were deposited: ;;N0", BankPersonalAssetsDepositedNum,
+                    "Value of deposited personal assets: ; cr;N0", BankPersonalAssetsDepositedValue,
+                    "Times personal assets were withdrawn: ;;N0", BankPersonalAssetsWithdrawnNum,
+                    "Value of withdrawn personal assets: ; cr;N0", BankPersonalAssetsWithdrawnValue,
+                    "Times ships were deposited: ;;N0", BankShipsDepositedNum,
+                    "Value of deposited ships: ; cr;N0", BankShipsDepositedValue,
+                    "Highest contribution for Aegis leaderboard: ;;N0", Leaderboardaegishighestcontribution,
+                    "Highest contribution for BGS leaderboard: ;;N0", Leaderboardbgshighestcontribution,
+                    "Highest contribution for Bounty leaderboard: ;;N0", Leaderboardbountyhighestcontribution,
+                    "Highest contribution for Colonisation Contribution leaderboard: ;;N0", Leaderboardcolonisationcontributionhighestcontribution,
+                    "Highest contribution for Combat leaderboard: ;;N0", Leaderboardcombathighestcontribution,
+                    "Highest contribution for CQC leaderboard: ;;N0", Leaderboardcqchighestcontribution,
+                    "Highest contribution for Exploration leaderboard: ;;N0", Leaderboardexplorationhighestcontribution,
+                    "Highest contribution for Mining leaderboard: ;;N0", Leaderboardmininghighestcontribution,
+                    "Highest contribution for Powerplay leaderboard: ;;N0", Leaderboardpowerplayhighestcontribution,
+                    "Highest contribution for Trade leaderboard: ;;N0", Leaderboardtradehighestcontribution,
+                    "Highest contribution for Illicit Trade leaderboard: ;;N0", Leaderboardtradeillicithighestcontribution,
+                    "Times squadron got a podium place: ;;N0", Leaderboardpodiums);
             }
         }
     }
