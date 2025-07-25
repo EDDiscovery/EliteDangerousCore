@@ -13,7 +13,6 @@
  *
  */
 
-using EliteDangerousCore.DB;
 using System;
 using System.Collections.Generic;
 

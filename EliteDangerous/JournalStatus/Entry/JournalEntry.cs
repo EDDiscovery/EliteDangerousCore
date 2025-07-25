@@ -786,5 +786,20 @@ namespace EliteDangerousCore
 #endregion
 
     }
+
+    #region Attributes of a JournalEntry
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public class JournalEntryTypeAttribute : Attribute
+    {
+        public JournalTypeEnum EntryType { get; set; }
+
+        public JournalEntryTypeAttribute(JournalTypeEnum entrytype)
+        {
+            EntryType = entrytype;
+        }
+    }
+
+    #endregion
 }
 
