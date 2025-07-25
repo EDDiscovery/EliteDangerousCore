@@ -205,8 +205,14 @@ namespace EliteDangerousCore
             {
                 if (kvp.Value.Manufacturer == null)
                     System.Diagnostics.Debug.WriteLine($"Item Data Missing manu for {kvp.Value.Name}");
-                System.Diagnostics.Debug.Assert(BaseUtils.Icons.IconSet.Instance.Contains("Ships." + kvp.Key.ToLower()),$"Missing ship image {kvp.Key}");
             }
+
+            if (IconSet.Instance!=null)
+            {
+                foreach (var kvp in spaceships)     // check spaceships array for image and missing manu
+                    System.Diagnostics.Debug.Assert(BaseUtils.Icons.IconSet.Instance.Contains("Ships." + kvp.Key.ToLower()), $"Missing ship image {kvp.Key}");
+            }
+            
         }
 
 
