@@ -213,11 +213,12 @@ namespace EliteDangerousCore
             int cap = 0;
             foreach (ShipModule sm in Modules.Values)
             {
-                int classpos;
-                if (sm.Item.Contains("Cargo Rack") && (classpos = sm.Item.IndexOf("Class ")) != -1)
+                var me = sm.GetModuleEngineered(out string _);
+                //System.Diagnostics.Debug.WriteLine($"Module {me.ModType}");
+                if (me?.ModType == ItemData.ShipModule.ModuleTypes.CargoRack)       // paranoia check on engineering - new computation based on new pather clipper July 25
                 {
-                    char digit = sm.Item[classpos + 6];
-                    cap += (1 << (digit - '0'));        // 1<<1 = 2.. 1<<2 = 4, etc.
+                    //System.Diagnostics.Debug.WriteLine($"Cargo Module {me.Size}");
+                    cap += me.Size ?? 0;
                 }
             }
 

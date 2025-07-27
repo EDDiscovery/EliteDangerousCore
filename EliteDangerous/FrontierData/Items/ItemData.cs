@@ -41,7 +41,7 @@ namespace EliteDangerousCore
             //foreach ( StationDefinitions.StationServices x in Enum.GetValues(typeof(StationDefinitions.StationServices))) System.Diagnostics.Debug.WriteLine($".{x}: {StationDefinitions.ToEnglish(x).AlwaysQuoteString()} @");
 
 #if VANITYADD
-            string csfile = @"c:\code\eddiscovery\elitedangerouscore\elitedangerous\items\itemmodules.cs";
+            string csfile = @"c:\code\eddiscovery\elitedangerouscore\elitedangerous\FrontierData\items\itemmodules.cs";
             string infile = @"c:\code\newvanity.txt";
 
             if (System.IO.File.Exists(infile))
