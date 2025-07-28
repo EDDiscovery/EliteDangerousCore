@@ -260,7 +260,7 @@
             this.extComboBoxConvert2.SelectedValue = null;
             this.extComboBoxConvert2.Size = new System.Drawing.Size(198, 21);
             this.extComboBoxConvert2.TabIndex = 33;
-            this.extComboBoxConvert2.Text = "extComboBox1";
+            this.extComboBoxConvert2.Text = "";
             this.extComboBoxConvert2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.extComboBoxConvert2.ValueMember = "";
             // 
@@ -278,7 +278,7 @@
             this.extComboBoxConvert1.SelectedValue = null;
             this.extComboBoxConvert1.Size = new System.Drawing.Size(198, 21);
             this.extComboBoxConvert1.TabIndex = 33;
-            this.extComboBoxConvert1.Text = "extComboBox1";
+            this.extComboBoxConvert1.Text = "";
             this.extComboBoxConvert1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.extComboBoxConvert1.ValueMember = "";
             // 
