@@ -205,38 +205,33 @@ namespace EliteDangerousCore.JournalEvents
             return MissionDetailedInfo(true);
         }
 
-        private static string Cond(bool cond, string tx)
-        {
-            return cond ? tx.Tx() : tx;
-        }
-
         public string MissionBasicInfo(bool translate)          // MissionList::FullInfo uses this. Journal Entry info brief uses this
         {
             DateTime? exp = Expiry > DateTime.MinValue ? EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry) : default(DateTime?);
 
             return BaseUtils.FieldBuilder.Build("", LocalisedName,
-                                      Cond(translate, "< from "), Faction,
-                                      Cond(translate, "System: "), DestinationSystem,
-                                      Cond(translate, "Station: "), DestinationStation,
-                                      Cond(translate, "Settlement: "), DestinationSettlement,
-                                      Cond(translate, "Expiry: "), exp,
-                                      Cond(translate, "Influence: "), Influence,
-                                      Cond(translate, "Reputation: "), Reputation,
-                                      Cond(translate, "Reward: ; cr;N0"), Reward,
-                                      Cond(translate, "; (Wing)"), Wing);
+                                      "< from ".Tx(translate), Faction,
+                                      "System: ".Tx(translate), DestinationSystem,
+                                      "Station: ".Tx(translate), DestinationStation,
+                                      "Settlement: ".Tx(translate), DestinationSettlement,
+                                      "Expiry: ".Tx(translate), exp,
+                                      "Influence: ".Tx(translate), Influence,
+                                      "Reputation: ".Tx(translate), Reputation,
+                                      "Reward: ; cr;N0".Tx(translate), Reward,
+                                      "; (Wing)".Tx(translate), Wing);
         }
 
         public string MissionDetailedInfo(bool translate)          // MissionList::FullInfo (DLL uses this), Journal Entry detailed info
         {
             return BaseUtils.FieldBuilder.Build(
-                                           Cond(translate, "Deliver: "), CommodityLocalised,
-                                           Cond(translate, "Count: "), Count,
-                                           Cond(translate, "Target: "), TargetLocalised,
-                                           Cond(translate, "Type: "), TargetTypeFriendly,
-                                           Cond(translate, "Target Faction: "), TargetFaction,
-                                           Cond(translate, "Target Type: "), TargetTypeLocalised,
-                                           Cond(translate, "Kill Count: "), KillCount,
-                                           Cond(translate, "Passengers: " ), PassengerCount);
+                                           "Deliver: ".Tx(translate), CommodityLocalised,
+                                           "Count: ".Tx(translate), Count,
+                                           "Target: ".Tx(translate), TargetLocalised,
+                                           "Type: ".Tx(translate), TargetTypeFriendly,
+                                           "Target Faction: ".Tx(translate), TargetFaction,
+                                           "Target Type: ".Tx(translate), TargetTypeLocalised,
+                                           "Kill Count: ".Tx(translate), KillCount,
+                                           "Passengers: ".Tx(translate), PassengerCount);
         }
 
         public string MissionInfoColumn()          //  MissionList:info, used for MissionList:Info, used in mission panels.
@@ -472,18 +467,13 @@ namespace EliteDangerousCore.JournalEvents
             return PermitsList(translate, true) + CommoditiesList(translate, true) + MaterialList(translate, true) + FactionEffectsList(translate,true);
         }
 
-        private static string Cond(bool cond, string tx)
-        {
-            return cond ? tx.Tx() : tx;
-        }
-
         public string PermitsList(bool translate, bool pretty)
         {
             string detailed = "";
             if (PermitsAwarded != null && PermitsAwarded.Length > 0)
             {
                 if (pretty)
-                    detailed += Cond(translate,"Permits: ");
+                    detailed += "Permits: ".Tx(translate);
 
                 for (int i = 0; i < PermitsAwarded.Length; i++)
                     detailed += ((i > 0) ? "," : "") + PermitsAwarded[i];
@@ -500,7 +490,7 @@ namespace EliteDangerousCore.JournalEvents
             if (CommodityReward != null && CommodityReward.Length > 0)
             {
                 if (pretty)
-                    detailed += Cond(translate,"Rewards: ");
+                    detailed += "Rewards: ".Tx(translate);
 
                 for (int i = 0; i < CommodityReward.Length; i++)
                 {
@@ -520,7 +510,7 @@ namespace EliteDangerousCore.JournalEvents
             if (MaterialsReward != null && MaterialsReward.Length > 0)
             {
                 if (pretty)
-                    detailed += Cond(translate, "Rewards: ");
+                    detailed += "Rewards: ".Tx(translate);
 
                 for (int i = 0; i < MaterialsReward.Length; i++)
                 {
