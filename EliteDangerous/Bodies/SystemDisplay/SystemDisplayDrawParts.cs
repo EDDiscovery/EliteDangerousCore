@@ -179,14 +179,14 @@ namespace EliteDangerousCore
             var expired = FSSSignal.ExpiredSorted(signallist);
             if (expired.Count > 0)
             {
-                tip = tip.AppendPrePad("Expired:".T(EDCTx.UserControlScan_Expired), Environment.NewLine + Environment.NewLine);
+                tip = tip.AppendPrePad("Expired:".Tx(), Environment.NewLine + Environment.NewLine);
                 foreach (var sig in expired)
                     tip = tip.AppendPrePad(sig.ToString(true), Environment.NewLine);
             }
 
             if (codex.Count > 0)
             {
-                tip = tip.AppendPrePad("Codex".T(EDCTx.ScanDisplayUserControl_Codex) + ":", Environment.NewLine + Environment.NewLine);
+                tip = tip.AppendPrePad("Codex".Tx()+ ":", Environment.NewLine + Environment.NewLine);
                 foreach (var c in codex)
                 {
                     tip = tip.AppendPrePad(c.Info(), Environment.NewLine);

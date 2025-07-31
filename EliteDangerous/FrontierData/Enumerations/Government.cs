@@ -66,8 +66,7 @@ namespace EliteDangerousCore
 
         public static string ToLocalisedLanguage(Government gv)
         {
-            string id = "GovernmentTypes." + gv.ToString();
-            return BaseUtils.Translator.Instance.Translate(ToEnglish(gv), id);
+            return ToEnglish(gv).Tx();
         }
         
         static Dictionary<string, Government> parselist;

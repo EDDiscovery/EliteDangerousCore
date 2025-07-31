@@ -152,8 +152,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             string powerplaystr = PowerplayPowers != null ? string.Join(", ", PowerplayPowers) : null;
 
-            sb.Build("Power: ".T(EDCTx.JournalEntry_Power), ControllingPower,
-                    "Power play State: ".T(EDCTx.JournalEntry_Power), PowerplayState,
+            sb.Build("Power: ".Tx(), ControllingPower,
+                    "Power play State: ", PowerplayState,
                      "Power play Powers: " , powerplaystr,
                      "Power Control Progress: ", PowerplayStateControlProgress,
                      "Power Reinforcement: ", PowerplayStateReinforcement,
@@ -337,16 +337,16 @@ namespace EliteDangerousCore.JournalEvents
         public override string SummaryName(ISystem sys)     // Location
         {
             if (Docked)
-                return string.Format("At {0}".T(EDCTx.JournalLocation_AtStat), StationName_Localised);
+                return string.Format("At {0}".Tx(), StationName_Localised);
             else
             {
                 string bodyname = Body.HasChars() ? Body.ReplaceIfStartsWith(StarSystem) : StarSystem;
                 if ( OnFoot == true )
-                    return string.Format("On Foot at {0}".T(EDCTx.JournalEntry_OnFootAt), bodyname);
+                    return string.Format("On Foot at {0}".Tx(), bodyname);
                 else if (Latitude.HasValue && Longitude.HasValue)
-                    return string.Format("Landed on {0}".T(EDCTx.JournalLocation_LND), bodyname);
+                    return string.Format("Landed on {0}".Tx(), bodyname);
                 else
-                    return string.Format("At {0}".T(EDCTx.JournalLocation_AtStar), bodyname);
+                    return string.Format("At {0}".Tx(), bodyname);
             }
 
         }
@@ -355,16 +355,16 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Docked)
             {
-                return BaseUtils.FieldBuilder.Build("Type ".T(EDCTx.JournalLocOrJump_Type), StationDefinitions.ToLocalisedLanguage(FDStationType),
-                            "< in system ".T(EDCTx.JournalLocOrJump_insystem), StarSystem);
+                return BaseUtils.FieldBuilder.Build("Type ".Tx(), StationDefinitions.ToLocalisedLanguage(FDStationType),
+                            "< in system ".Tx(), StarSystem);
             }
             else if (Latitude.HasValue && Longitude.HasValue)
             {
-                return BaseUtils.FieldBuilder.Build("", Body, "< @ " + "Latitude: ;°;F4".T(EDCTx.JournalEntry_Latitude), Latitude, "Longitude: ;°;F4".T(EDCTx.JournalEntry_Longitude), Longitude);
+                return BaseUtils.FieldBuilder.Build("", Body, "< @ " + "Latitude: ;°;F4".Tx(), Latitude, "Longitude: ;°;F4".Tx(), Longitude);
             }
             else
             {
-                return "Near: ".T(EDCTx.JournalEntry_Near) + " " + BodyType + " " + Body;     // remove JournalLocOrJump_Inspacenear
+                return "Near: ".Tx()+ " " + BodyType + " " + Body;     // remove JournalLocOrJump_Inspacenear
             }
         }
 
@@ -374,13 +374,13 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Docked)
             {
-                sb.Build("<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted,
-                        "Faction: ".T(EDCTx.JournalLocOrJump_Faction), StationFaction,
-                        "State: ".T(EDCTx.JournalLocOrJump_State), StationFactionStateTranslated,
-                        "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance),
-                        "Economy: ".T(EDCTx.JournalLocOrJump_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),
-                        "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(Government),
-                        "Security: ".T(EDCTx.JournalLocOrJump_Security), SecurityDefinitions.ToLocalisedLanguage(Security));
+                sb.Build("<;(Wanted) ".Tx(), Wanted,
+                        "Faction: ".Tx(), StationFaction,
+                        "State: ".Tx(), StationFactionStateTranslated,
+                        "Allegiance: ".Tx(), AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance),
+                        "Economy: ".Tx(), EconomyDefinitions.ToLocalisedLanguage(Economy),
+                        "Government: ".Tx(), GovernmentDefinitions.ToLocalisedLanguage(Government),
+                        "Security: ".Tx(), SecurityDefinitions.ToLocalisedLanguage(Security));
             }
 
             if (HasPowerPlayInfo)
@@ -452,7 +452,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Taxi { get; set; }
         public bool? Multicrew { get; set; }
 
-        public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".T(EDCTx.JournalFSDJump_Jumpto), StarSystem); }
+        public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".Tx(), StarSystem); }
         public void AddStarScan(StarScan s, ISystem system)
         {
             s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
@@ -466,16 +466,16 @@ namespace EliteDangerousCore.JournalEvents
 
             var sb = new System.Text.StringBuilder(256);
 
-            sb.Build("; ly;N2".T(EDCTx.JournalFSDJump_Distance), tempdist, "Fuel used: ; t;N2".T(EDCTx.JournalFSDJump_FuelUsed), tempused, "Fuel left: ; t;N2".T(EDCTx.JournalFSDJump_FuelLeft), templevel);
+            sb.Build("; ly;N2".Tx(), tempdist, "Fuel used: ; t;N2".Tx(), tempused, "Fuel left: ; t;N2".Tx(), templevel);
 
             if (Faction.HasChars() || Allegiance != AllegianceDefinitions.Allegiance.Unknown || Economy != EconomyDefinitions.Economy.Unknown)
             {
                 sb.BuildCont(
-                    "Faction: ".T(EDCTx.JournalLocOrJump_Faction), Faction, "<;(Wanted) ".T(EDCTx.JournalLocOrJump_Wanted), Wanted,
-                    "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(FactionState),
-                    "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
-                    "Economy: ".T(EDCTx.JournalLocOrJump_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),
-                    "Population: ".T(EDCTx.JournalLocOrJump_Population), Population);
+                    "Faction: ".Tx(), Faction, "<;(Wanted) ".Tx(), Wanted,
+                    "State: ".Tx(), FactionDefinitions.ToLocalisedLanguage(FactionState),
+                    "Allegiance: ".Tx(), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
+                    "Economy: ".Tx(), EconomyDefinitions.ToLocalisedLanguage(Economy),
+                    "Population: ".Tx(), Population);
             }
             
             if (HasPowerPlayInfo)
@@ -550,7 +550,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", StarSystem,"",StarClass,"Remaining Jumps".T(EDCTx.JournalEntry_RemainingJumps), RemainingJumpsInRoute);
+            return BaseUtils.FieldBuilder.Build("", StarSystem,"",StarClass,"Remaining Jumps".Tx(), RemainingJumpsInRoute);
         }
     }
 
@@ -580,14 +580,14 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyStarClass { get; set; }
         public bool? InTaxi { get; set; }        // update 15+
 
-        public override string SummaryName(ISystem sys) { return "Charging FSD".T(EDCTx.JournalStartJump_ChargingFSD); }
+        public override string SummaryName(ISystem sys) { return "Charging FSD".Tx(); }
 
         public override string GetInfo()
         {
             if (IsHyperspace)
-                return "Hyperspace".T(EDCTx.JournalEntry_Hyperspace) + BaseUtils.FieldBuilder.Build("< to ".T(EDCTx.JournalEntry_to), StarSystem, "", FriendlyStarClass);
+                return "Hyperspace".Tx()+ BaseUtils.FieldBuilder.Build("< to ".Tx(), StarSystem, "", FriendlyStarClass);
             else
-                return "Supercruise".T(EDCTx.JournalEntry_Supercruise);
+                return "Supercruise".Tx();
         }
 
         public void AddStarScan(StarScan s, ISystem system)

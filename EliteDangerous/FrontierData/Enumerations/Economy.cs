@@ -84,8 +84,7 @@ namespace EliteDangerousCore
 
         public static string ToLocalisedLanguage(Economy ec)
         {
-            string id = "EconomyTypes." + ec.ToString();
-            return BaseUtils.Translator.Instance.Translate(ToEnglish(ec), id);
+            return ToEnglish(ec).Tx();
         }
 
         public static Economy[] ValidStates()
@@ -131,7 +130,7 @@ namespace EliteDangerousCore
         public static void Build(System.Text.StringBuilder sb, bool title, Economies[] list)
         {
             if (title)
-                sb.Append("Economies: ".T(EDCTx.JournalEntry_Economies));
+                sb.Append("Economies: ".Tx());
 
             for (int i = 0; i < list.Length; i++)
             {

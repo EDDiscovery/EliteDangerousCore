@@ -117,7 +117,6 @@
     <Compile Include="DB\User\EDCommander.cs" />
     <Compile Include="FrontierData\Enumerations\EstimatedValues.cs" />
     <Compile Include="FrontierData\Enumerations\FrontierFolder.cs" />
-    <Compile Include="Translations\Translations.cs" />
     <Compile Include="JournalStatus\Events\JournalColonisation.cs" />
     <Compile Include="JournalStatus\Entry\JournalTest.cs" />
     <Compile Include="Bodies\StarScan\StarScanFSSDiscoveryScan.cs" />

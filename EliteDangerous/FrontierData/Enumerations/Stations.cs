@@ -136,8 +136,7 @@ namespace EliteDangerousCore
 
         public static string ToLocalisedLanguage(StationServices sc)
         {
-            string id = "StationServices." + sc.ToString();
-            return BaseUtils.Translator.Instance.Translate(ToEnglish(sc), id);
+            return ToEnglish(sc).Tx();
         }
 
         public static StationServices[] ValidServices()
@@ -149,7 +148,7 @@ namespace EliteDangerousCore
         public static void Build(System.Text.StringBuilder sb, bool title, StationServices[] list)
         {
             if ( title )
-                sb.Append("Station services: ".T(EDCTx.JournalEntry_Stationservices));
+                sb.Append("Station services: ".Tx());
 
             for (int i = 0; i < list.Length; i++)
             {
@@ -222,7 +221,7 @@ namespace EliteDangerousCore
         public static string ToLocalisedLanguage(StarportTypes sc)
         {
             string id = "StarportTypes." + sc.ToString();
-            return BaseUtils.Translator.Instance.Translate(ToEnglish(sc), id);
+            return ToEnglish(sc).Tx();
         }
 
         public static StarportTypes[] ValidTypes(bool removeduplicates)
@@ -267,8 +266,7 @@ namespace EliteDangerousCore
 
         public static string ToLocalisedLanguage(StarportState sc)
         {
-            string id = "StarportStates." + sc.ToString();
-            return BaseUtils.Translator.Instance.Translate(ToEnglish(sc), id);
+            return ToEnglish(sc).Tx();
         }
 
         public static StarportState[] ValidStates()

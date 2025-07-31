@@ -97,7 +97,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     sb.Append(Yard.Ships.Length.ToString());
                     sb.AppendSPC();
-                    sb.Append("Ships".T(EDCTx.JournalEntry_Ships));
+                    sb.Append("Ships".Tx());
                 }
             }
 
@@ -194,15 +194,15 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Build("", ShipType, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), ShipPrice);
+            sb.Build("", ShipType, "Amount: ; cr;N0".Tx(), ShipPrice);
 
             if (StoreOldShip != null)
             {
-                sb.BuildCont("Stored: ".T(EDCTx.JournalEntry_Stored), StoreOldShip);
+                sb.BuildCont("Stored: ".Tx(), StoreOldShip);
             }
             if (SellOldShip != null)
             {
-                sb.BuildCont("Sold: ".T(EDCTx.JournalEntry_Sold), StoreOldShip, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), SellPrice);
+                sb.BuildCont("Sold: ".Tx(), StoreOldShip, "Amount: ; cr;N0".Tx(), SellPrice);
             }
             return sb.ToString();
         }
@@ -280,7 +280,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", ShipType, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), ShipPrice, "At: ".T(EDCTx.JournalShipyardSell_At), System);
+            return BaseUtils.FieldBuilder.Build("", ShipType, "Amount: ; cr;N0".Tx(), ShipPrice, "At: ".Tx(), System);
         }
 
         public JObject Json()            // create JSON of this record..
@@ -343,7 +343,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Swap ".T(EDCTx.JournalShipyardSwap_Swap), StoreOldShip, "< for a ".T(EDCTx.JournalShipyardSwap_fora), ShipType);
+            return BaseUtils.FieldBuilder.Build("Swap ".Tx(), StoreOldShip, "< for a ".Tx(), ShipType);
         }
     }
 
@@ -397,8 +397,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Of ".T(EDCTx.JournalShipyardTransfer_Of), ShipType, "< from ".T(EDCTx.JournalEntry_from), FromSystem, "Distance: ; ly;0.0".T(EDCTx.JournalEntry_Distance), 
-                            Distance, "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), TransferPrice, "Transfer Time: ".T(EDCTx.JournalEntry_TransferTime), FriendlyTransferTime);
+            return BaseUtils.FieldBuilder.Build("Of ".Tx(), ShipType, "< from ".Tx(), FromSystem, "Distance: ; ly;0.0".Tx(), 
+                            Distance, "Price: ; cr;N0".Tx(), TransferPrice, "Transfer Time: ".Tx(), FriendlyTransferTime);
         }
     }
 
@@ -437,7 +437,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("At starport: ".T(EDCTx.JournalStoredShips_Atstarport), ShipsHere?.Count(), "Other locations: ".T(EDCTx.JournalStoredShips_Otherlocations), ShipsRemote?.Count());
+            return BaseUtils.FieldBuilder.Build("At starport: ".Tx(), ShipsHere?.Count(), "Other locations: ".Tx(), ShipsRemote?.Count());
         }
 
         public override string GetDetailed()
@@ -447,20 +447,20 @@ namespace EliteDangerousCore.JournalEvents
             if (ShipsHere != null)
             {
                 foreach (StoredShip m in ShipsHere)
-                    sb.AppendPrePad(BaseUtils.FieldBuilder.Build("", m.ShipType, "; cr;N0".T(EDCTx.JournalStoredShips_SSP), m.Value, ";(Hot)".T(EDCTx.JournalEntry_Hot), m.Hot), System.Environment.NewLine);
+                    sb.AppendPrePad(BaseUtils.FieldBuilder.Build("", m.ShipType, "; cr;N0".Tx(), m.Value, ";(Hot)".Tx(), m.Hot), System.Environment.NewLine);
             }
 
             if (ShipsRemote != null)
             {
-                sb.AppendPrePad("Remote: ".T(EDCTx.JournalStoredShips_Remote), System.Environment.NewLine + System.Environment.NewLine);
+                sb.AppendPrePad("Remote: ".Tx(), System.Environment.NewLine + System.Environment.NewLine);
 
                 foreach (StoredShip m in ShipsRemote)
                 {
                     if (m.InTransit)
                     {
                         sb.AppendPrePad(BaseUtils.FieldBuilder.Build("; ", m.Name,
-                                    "<; in transit".T(EDCTx.JournalStoredShips_intransit), m.ShipType,
-                                    "Value: ; cr;N0".T(EDCTx.JournalEntry_Value), m.Value, ";(Hot)".T(EDCTx.JournalEntry_Hot), m.Hot), System.Environment.NewLine);
+                                    "<; in transit".Tx(), m.ShipType,
+                                    "Value: ; cr;N0".Tx(), m.Value, ";(Hot)".Tx(), m.Hot), System.Environment.NewLine);
 
                     }
                     else
@@ -468,9 +468,9 @@ namespace EliteDangerousCore.JournalEvents
                         sb.AppendPrePad(BaseUtils.FieldBuilder.Build(
                             "; ", m.Name,
                             "<", m.ShipType,
-                            "< at ".T(EDCTx.JournalStoredShips_at), m.StarSystem,
-                            "Transfer Cost: ; cr;N0".T(EDCTx.JournalEntry_TransferCost), m.TransferPrice, "Time: ".T(EDCTx.JournalEntry_Time), m.TransferTimeString,
-                            "Value: ; cr;N0".T(EDCTx.JournalEntry_Value), m.Value, ";(Hot)".T(EDCTx.JournalEntry_Hot), m.Hot), System.Environment.NewLine);
+                            "< at ".Tx(), m.StarSystem,
+                            "Transfer Cost: ; cr;N0".Tx(), m.TransferPrice, "Time: ".Tx(), m.TransferTimeString,
+                            "Value: ; cr;N0".Tx(), m.Value, ";(Hot)".Tx(), m.Hot), System.Environment.NewLine);
                     }
                 }
             }
@@ -531,7 +531,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Ship: ".T(EDCTx.JournalEntry_Ship), ShipType, "System: ".T(EDCTx.JournalEntry_System), System, "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), ShipPrice);
+            return BaseUtils.FieldBuilder.Build("Ship: ".Tx(), ShipType, "System: ".Tx(), System, "Price: ; cr;N0".Tx(), ShipPrice);
         }
     }
 
@@ -556,7 +556,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo(FillInformationData fid)
         {
-            return string.Format("Redeem ship {0} at {1}, available to deploy".T(EDCTx.JournalEntry_ShipyardRedeem), ShipType, fid.WhereAmI);
+            return string.Format("Redeem ship {0} at {1}, available to deploy".Tx(), ShipType, fid.WhereAmI);
         }
     }
 
@@ -578,7 +578,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo(FillInformationData fid)
         {
-            return string.Format("Redeemed and deployed ship {0} at {1} into shipyard".T(EDCTx.JournalEntry_ShipRedeem), ShipType, fid.WhereAmI);
+            return string.Format("Redeemed and deployed ship {0} at {1} into shipyard".Tx(), ShipType, fid.WhereAmI);
         }
     }
 }

@@ -106,9 +106,7 @@ namespace EliteDangerousCore.ScreenShots
 
             UpdateExample();
 
-            var enumlist = new Enum[] { EDCTx.ScreenShotConfigureForm, EDCTx.ScreenShotConfigureForm_labelQuality, EDCTx.ScreenShotConfigureForm_extCheckBoxEnabled, EDCTx.ScreenShotConfigureForm_extCheckBoxHiRes, EDCTx.ScreenShotConfigureForm_extCheckBoxKeepMasterConvertedImage, EDCTx.ScreenShotConfigureForm_extGroupBox1, EDCTx.ScreenShotConfigureForm_labelHeight2, EDCTx.ScreenShotConfigureForm_labelWidth2, EDCTx.ScreenShotConfigureForm_labelLeft2, EDCTx.ScreenShotConfigureForm_labelTop2, EDCTx.ScreenShotConfigureForm_groupBoxCropSettings, EDCTx.ScreenShotConfigureForm_labelHeight, EDCTx.ScreenShotConfigureForm_labelWidth, EDCTx.ScreenShotConfigureForm_labelLeft, EDCTx.ScreenShotConfigureForm_labelTop, EDCTx.ScreenShotConfigureForm_labelFolder, EDCTx.ScreenShotConfigureForm_buttonChangeScreenshotsFolder, EDCTx.ScreenShotConfigureForm_labelSubfolder, EDCTx.ScreenShotConfigureForm_labelImage2, EDCTx.ScreenShotConfigureForm_labelImage1, EDCTx.ScreenShotConfigureForm_labelCropResizeOptions, EDCTx.ScreenShotConfigureForm_labelFileNameFormat, EDCTx.ScreenShotConfigureForm_labelStoreFolder, EDCTx.ScreenShotConfigureForm_extButtonBrowseMoveOrg, EDCTx.ScreenShotConfigureForm_buttonEDChangeOutputFolder, EDCTx.ScreenShotConfigureForm_labelClipboard, EDCTx.ScreenShotConfigureForm_labelOriginal, EDCTx.ScreenShotConfigureForm_labelEnabled, EDCTx.ScreenShotConfigureForm_labelScanFor, EDCTx.ScreenShotConfigureForm_labelSaveAs };
-
-            BaseUtils.Translator.Instance.TranslateControls(this, enumlist);
+            BaseUtils.TranslatorMkII.Instance.TranslateControls(this);
 
             label_index.Text = this.Text;
         }
@@ -149,7 +147,7 @@ namespace EliteDangerousCore.ScreenShots
         {
             using (var dlg = new FolderBrowserDialog())
             {
-                dlg.Description = "Select screenshot folder".T(EDCTx.Screenshot_Folder);
+                dlg.Description = "Select screenshot folder".Tx();
                 dlg.SelectedPath = textBoxScreenshotsDir.Text;
 
                 if (dlg.ShowDialog(this) == DialogResult.OK)
@@ -163,7 +161,7 @@ namespace EliteDangerousCore.ScreenShots
         {
             FolderBrowserDialog dlg = new FolderBrowserDialog();
 
-            dlg.Description = "Select screenshot folder".T(EDCTx.Screenshot_Folder);
+            dlg.Description = "Select screenshot folder".Tx();
             dlg.SelectedPath = textBoxOutputDir.Text;
 
             if (dlg.ShowDialog(this) == DialogResult.OK)
@@ -176,7 +174,7 @@ namespace EliteDangerousCore.ScreenShots
         {
             if (!Directory.Exists(textBoxScreenshotsDir.Text))
             {
-                ExtendedControls.MessageBoxTheme.Show(this, "Folder specified does not exist".T(EDCTx.Screenshot_FolderNotExist));
+                ExtendedControls.MessageBoxTheme.Show(this, "Folder specified does not exist".Tx());
                 textBoxScreenshotsDir.Text = initialssfolder;
             }
             else
@@ -206,7 +204,7 @@ namespace EliteDangerousCore.ScreenShots
                         Close();
                     }
                     else
-                        ExtendedControls.MessageBoxTheme.Show(this, "Cannot set input and output to identical types and the same folder".T(EDCTx.Screenshot_Identical));
+                        ExtendedControls.MessageBoxTheme.Show(this, "Cannot set input and output to identical types and the same folder".Tx());
                 }
                 catch (Exception ex)
                 {
@@ -215,7 +213,7 @@ namespace EliteDangerousCore.ScreenShots
                 }
             }
             else
-                ExtendedControls.MessageBoxTheme.Show(this, "Folder specified does not exist".T(EDCTx.Screenshot_FolderNotExist));
+                ExtendedControls.MessageBoxTheme.Show(this, "Folder specified does not exist".Tx());
         }
 
         private void buttonExtCancel_Click(object sender, EventArgs e)
@@ -260,7 +258,7 @@ namespace EliteDangerousCore.ScreenShots
         {
             FolderBrowserDialog dlg = new FolderBrowserDialog();
 
-            dlg.Description = "Select screenshot folder".T(EDCTx.Screenshot_Folder);
+            dlg.Description = "Select screenshot folder".Tx();
             dlg.SelectedPath = OriginalImageDirectory;
 
             if (dlg.ShowDialog(this) == DialogResult.OK)

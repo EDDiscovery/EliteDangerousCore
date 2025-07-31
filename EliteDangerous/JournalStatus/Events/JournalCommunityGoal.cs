@@ -84,11 +84,11 @@ namespace EliteDangerousCore.JournalEvents
                 DateTime exp = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry);
 
                 return BaseUtils.FieldBuilder.Build(
-                     "Title: ".T(EDCTx.CommunityGoal_Title), Title, "System: ".T(EDCTx.CommunityGoal_System), SystemName,                  
-                     nl,"At: ".T(EDCTx.CommunityGoal_At), MarketName, "Expires: ".T(EDCTx.CommunityGoal_Expires), exp,
-                     nl,"Not Complete;Complete".T(EDCTx.CommunityGoal_NotComplete), IsComplete,  "Current Total: ".T(EDCTx.CommunityGoal_CurrentTotal), CurrentTotal, "Contribution: ".T(EDCTx.CommunityGoal_Contribution), PlayerContribution, "Num Contributors: ".T(EDCTx.CommunityGoal_NumContributors), NumContributors,
-                     nl,"Player % Band: ".T(EDCTx.CommunityGoal_Player), PlayerPercentileBand, "Top Rank: ".T(EDCTx.CommunityGoal_TopRank), TopRankSize, "Not In Top Rank;In Top Rank".T(EDCTx.CommunityGoal_NotInTopRank), PlayerInTopRank,
-                     nl,"Tier Reached: ".T(EDCTx.CommunityGoal_TierReached), TierReached,  "Bonus: ".T(EDCTx.CommunityGoal_Bonus), Bonus, "Top Tier Name".T(EDCTx.CommunityGoal_TopTierName), TopTierName , "TT. Bonus".T(EDCTx.CommunityGoal_TT), TopTierBonus
+                     "Title: ".Tx(), Title, "System: ".Tx(), SystemName,                  
+                     nl,"At: ".Tx(), MarketName, "Expires: ".Tx(), exp,
+                     nl,"Not Complete;Complete".Tx(), IsComplete,  "Current Total: ".Tx(), CurrentTotal, "Contribution: ".Tx(), PlayerContribution, "Num Contributors: ".Tx(), NumContributors,
+                     nl,"Player % Band: ".Tx(), PlayerPercentileBand, "Top Rank: ".Tx(), TopRankSize, "Not In Top Rank;In Top Rank".Tx(), PlayerInTopRank,
+                     nl,"Tier Reached: ".Tx(), TierReached,  "Bonus: ".Tx(), Bonus, "Top Tier Name".Tx(), TopTierName , "TT. Bonus".Tx(), TopTierBonus
                       );
             }
         }
@@ -155,7 +155,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".T(EDCTx.JournalEntry_CGS), System);
+            return BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".Tx(), System);
         }
     }
 
@@ -174,7 +174,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".T(EDCTx.JournalEntry_CGS), System);
+            return BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".Tx(), System);
         }
     }
 
@@ -200,7 +200,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".T(EDCTx.JournalEntry_CGS), System, "Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward);
+            return BaseUtils.FieldBuilder.Build("", Name, "< at ; Star System".Tx(), System, "Reward: ; cr;N0".Tx(), Reward);
         }
     }
 

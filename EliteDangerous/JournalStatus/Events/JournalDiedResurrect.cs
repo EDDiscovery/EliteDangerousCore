@@ -102,7 +102,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Killers != null)
             {
                 var sb = new System.Text.StringBuilder(256);
-                sb.Append("Killed by ".T(EDCTx.JournalEntry_Killedby));
+                sb.Append("Killed by ".Tx());
 
                 foreach (Killer k in Killers)
                 {
@@ -115,14 +115,14 @@ namespace EliteDangerousCore.JournalEvents
                     }
                     else if (ItemData.IsShip(k.Ship))
                     {
-                        kstr = string.Format("{0} in ship type {1} rank {2}".T(EDCTx.JournalEntry_Died), k.Name_Localised, k.FriendlyShip, k.Rank ?? "?");
+                        kstr = string.Format("{0} in ship type {1} rank {2}".Tx(), k.Name_Localised, k.FriendlyShip, k.Rank ?? "?");
                     }
                     else if (k.FriendlyShip.HasChars())
                     {
-                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", k.FriendlyShip, "Rank: ".T(EDCTx.JournalEntry_Rank), k.Rank);
+                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", k.FriendlyShip, "Rank: ".Tx(), k.Rank);
                     }
                     else
-                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "Rank: ".T(EDCTx.JournalEntry_Rank), k.Rank);
+                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "Rank: ".Tx(), k.Rank);
 
                     sb.AppendPrePad(kstr, ", ");
                 }
@@ -144,7 +144,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return "Boom!".T(EDCTx.JournalEntry_Boom);
+            return "Boom!".Tx();
         }
     }
 
@@ -179,7 +179,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Option: ".T(EDCTx.JournalEntry_Option), Option, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost, ";Bankrupt".T(EDCTx.JournalEntry_Bankrupt), Bankrupt);
+            return BaseUtils.FieldBuilder.Build("Option: ".Tx(), Option, "Cost: ; cr;N0".Tx(), Cost, ";Bankrupt".Tx(), Bankrupt);
         }
     }
 

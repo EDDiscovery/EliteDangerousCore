@@ -67,7 +67,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo(JournalEntry.FillInformationData fid)
         {
-            return BaseUtils.FieldBuilder.Build("" , fid.BodyName, "Progress: ;%;N1".T(EDCTx.JournalEntry_Progress), ConstructionProgress * 100.0f,
+            return BaseUtils.FieldBuilder.Build("" , fid.BodyName, "Progress: ;%;N1".Tx(), ConstructionProgress * 100.0f,
                                                 ";Complete", ConstructionComplete,
                                                 ";Failed", ConstructionFailed);
         }

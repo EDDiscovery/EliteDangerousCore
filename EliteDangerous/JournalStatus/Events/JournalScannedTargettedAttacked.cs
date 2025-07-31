@@ -106,7 +106,7 @@ namespace EliteDangerousCore.JournalEvents
                 return ToString();
             else
             {
-                return (MergedEntries.Count() + 1).ToString() + " Target Events".T(EDCTx.JournalShipTargeted_MC);
+                return (MergedEntries.Count() + 1).ToString() + " Target Events".Tx();
             }
         }
 
@@ -137,31 +137,31 @@ namespace EliteDangerousCore.JournalEvents
                 }
                 else if (ScanStage.Value == 1)
                 {
-                    return BaseUtils.FieldBuilder.Build("", PilotName_Localised, "Rank: ".T(EDCTx.JournalEntry_Rank), PilotRank, "< in ".T(EDCTx.JournalShipTargeted_in), Ship_Localised);
+                    return BaseUtils.FieldBuilder.Build("", PilotName_Localised, "Rank: ".Tx(), PilotRank, "< in ".Tx(), Ship_Localised);
                 }
                 else if (ScanStage.Value == 2)
                 {
                     return BaseUtils.FieldBuilder.Build(
-                        "", PilotName_Localised, "Rank: ".T(EDCTx.JournalEntry_Rank), PilotRank, "< in ".T(EDCTx.JournalShipTargeted_in), Ship_Localised,
-                        "Shield ;;N1".T(EDCTx.JournalEntry_Shield), ShieldHealth, "Hull ;;N1".T(EDCTx.JournalShipTargeted_Hull), HullHealth);
+                        "", PilotName_Localised, "Rank: ".Tx(), PilotRank, "< in ".Tx(), Ship_Localised,
+                        "Shield ;;N1".Tx(), ShieldHealth, "Hull ;;N1".Tx(), HullHealth);
 
 
                 }
                 else if (ScanStage.Value == 3)
                 {
                     return BaseUtils.FieldBuilder.Build(
-                                    "", PilotName_Localised, "< (;)", LegalStatus, "Rank: ".T(EDCTx.JournalEntry_Rank), PilotRank, "< in ".T(EDCTx.JournalShipTargeted_in), Ship_Localised,
-                                    "Shield ;;N1".T(EDCTx.JournalEntry_Shield), ShieldHealth, "Hull ;;N1".T(EDCTx.JournalShipTargeted_Hull), HullHealth,
-                                    "Bounty: ; cr;N0".T(EDCTx.JournalEntry_Bounty), Bounty,
-                                    "", SubSystem, "< at ;;N1".T(EDCTx.JournalShipTargeted_at), SubSystemHealth,
-                                    "Power: ".T(EDCTx.JournalEntry_Power), Power
+                                    "", PilotName_Localised, "< (;)", LegalStatus, "Rank: ".Tx(), PilotRank, "< in ".Tx(), Ship_Localised,
+                                    "Shield ;;N1".Tx(), ShieldHealth, "Hull ;;N1".Tx(), HullHealth,
+                                    "Bounty: ; cr;N0".Tx(), Bounty,
+                                    "", SubSystem, "< at ;;N1".Tx(), SubSystemHealth,
+                                    "Power: ".Tx(), Power
                                     );
                 }
                 else
                     info = "Unknown Scan Stage type - report to EDD team";
             }
             else
-                info = "Lost Target".T(EDCTx.JournalEntry_LostTarget);
+                info = "Lost Target".Tx();
 
             return info;
         }
@@ -184,7 +184,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             if (MergedEntries != null)
-                return (MergedEntries.Count + 1).ToString("N0") + " " + "times".T(EDCTx.JournalUnderAttack_ACOUNT);
+                return (MergedEntries.Count + 1).ToString("N0") + " " + "times".Tx();
             else
                 return BaseUtils.FieldBuilder.Build("", Target);
         }
@@ -227,7 +227,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("x ", Events,
-                                                "Shields Down;Shields Up".T(EDCTx.JournalEntry_ShieldsDown), ShieldsUp
+                                                "Shields Down;Shields Up".Tx(), ShieldsUp
                                                 );
         }
     }

@@ -144,11 +144,11 @@ namespace EliteDangerousCore
         public void Build(System.Text.StringBuilder sb)
         {
             sb.BuildSetPad(Environment.NewLine,
-                    "Engineer:".T(EDCTx.EngineeringData_Engineer) + " ", Engineer,
-                    "Blueprint:".T(EDCTx.EngineeringData_Blueprint) + " ", FriendlyBlueprintName,
-                    "Level:".T(EDCTx.EngineeringData_Level) + " ", Level,
-                    "Quality:".T(EDCTx.EngineeringData_Quality) + " ", Quality,
-                    "Experimental Effect:".T(EDCTx.EngineeringData_ExperimentalEffect) + " ", ExperimentalEffect_Localised);
+                    "Engineer:".Tx()+ " ", Engineer,
+                    "Blueprint:".Tx()+ " ", FriendlyBlueprintName,
+                    "Level:".Tx()+ " ", Level,
+                    "Quality:".Tx()+ " ", Quality,
+                    "Experimental Effect:".Tx()+ " ", ExperimentalEffect_Localised);
 
             if (ExperimentalEffect.HasChars())
             {
@@ -181,7 +181,7 @@ namespace EliteDangerousCore
                         {
                             bool better = m.LessIsGood ? (m.Value < m.OriginalValue) : (m.Value > m.OriginalValue);
                             double mul = m.Value / m.OriginalValue * 100 - 100;
-                            sb.Build("", m.FriendlyLabel, "<: ;;0.###", m.Value, "Original: ;;0.###".T(EDCTx.EngineeringData_Original), m.OriginalValue, "Mult: ;%;N1", mul, "< (Worse); (Better)".T(EDCTx.EngineeringData_Worse), better);
+                            sb.Build("", m.FriendlyLabel, "<: ;;0.###", m.Value, "Original: ;;0.###".Tx(), m.OriginalValue, "Mult: ;%;N1", mul, "< (Worse); (Better)".Tx(), better);
                         }
                         else
                         {

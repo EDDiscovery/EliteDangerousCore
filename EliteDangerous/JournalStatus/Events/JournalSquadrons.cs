@@ -104,8 +104,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Name, "Old: ".T(EDCTx.JournalEntry_Old), RankDefinitions.FriendlyName(OldRank), 
-                            "New: ".T(EDCTx.JournalEntry_New), RankDefinitions.FriendlyName(NewRank));
+            return BaseUtils.FieldBuilder.Build("", Name, "Old: ".Tx(), RankDefinitions.FriendlyName(OldRank), 
+                            "New: ".Tx(), RankDefinitions.FriendlyName(NewRank));
         }
 
         public RankDefinitions.SquadronRank OldRank { get; set; }
@@ -149,7 +149,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), RankDefinitions.FriendlyName(CurrentRank));
+            return BaseUtils.FieldBuilder.Build("", Name, "Rank: ".Tx(), RankDefinitions.FriendlyName(CurrentRank));
         }
     }
 

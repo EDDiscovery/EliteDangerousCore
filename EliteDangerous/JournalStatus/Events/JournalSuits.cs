@@ -48,7 +48,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             string smod = SuitMods != null ? string.Join(", ", SuitMods.Select(x=>Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
-            return BaseUtils.FieldBuilder.Build("", FriendlyName, "Mods: ".T(EDCTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Price);
+            return BaseUtils.FieldBuilder.Build("", FriendlyName, "Mods: ".Tx(), smod, "Cost: ; cr;N0".Tx(), Price);
             
         }
 
@@ -99,7 +99,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
+            return BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".Tx(), Price);
             
         }
 
@@ -342,7 +342,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             string wmod = WeaponMods != null ? string.Join(", ", WeaponMods) : null;
-            return BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID%10000, "", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< ++> ", ModuleNameFriendly, "Class: ".T(EDCTx.JournalEntry_Class), Class, "Mods: ".T(EDCTx.JournalEntry_Mods), wmod);
+            return BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID%10000, "", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< ++> ", ModuleNameFriendly, "Class: ".Tx(), Class, "Mods: ".Tx(), wmod);
             
         }
 
@@ -564,7 +564,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             long? p = Cost > 0 ? Cost : default(long?);
             string smod = SuitMods != null ? string.Join(", ", SuitMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
-            return BaseUtils.FieldBuilder.Build("", Name_Localised, "< => ", Class, "Mods: ".T(EDCTx.JournalEntry_Mods), smod, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), p);
+            return BaseUtils.FieldBuilder.Build("", Name_Localised, "< => ", Class, "Mods: ".Tx(), smod, "Cost: ; cr;N0".Tx(), p);
             
         }
 

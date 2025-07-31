@@ -55,28 +55,28 @@ namespace EliteDangerousCore.JournalEvents
             public void RingText(StringBuilder sb, string frontpad = "  ")
             {
                 sb.Append(frontpad);
-                sb.AppendFormat("{0} ({1})", Name.Alt("Unknown".T(EDCTx.Unknown)), TranslatedRingClass());
+                sb.AppendFormat("{0} ({1})", Name.Alt("Unknown".Tx()), TranslatedRingClass());
                 sb.AppendCR();
 
                 if (MassMT > (BodyPhysicalConstants.oneMoon_KG / 1e9 / 1000))
-                    sb.AppendFormat(frontpad + "Mass: {0:N4}{1}".T(EDCTx.StarPlanetRing_Mass), MassMT / (BodyPhysicalConstants.oneMoon_KG / 1E9), " Moons".T(EDCTx.JournalScan_Moons));
+                    sb.AppendFormat(frontpad + "Mass: {0:N4}{1}".Tx(), MassMT / (BodyPhysicalConstants.oneMoon_KG / 1E9), " Moons".Tx());
                 else
-                    sb.AppendFormat(frontpad + "Mass: {0:N4}{1}".T(EDCTx.StarPlanetRing_Mass), MassMT, " MT");
+                    sb.AppendFormat(frontpad + "Mass: {0:N4}{1}".Tx(), MassMT, " MT");
 
                 sb.AppendCR();
 
                 if (InnerRad > BodyPhysicalConstants.oneAU_m / 10)       // more than 0.1AU, its in ls
                 {
-                    sb.AppendFormat(frontpad + "Inner Radius: {0:0.00}ls".T(EDCTx.StarPlanetRing_InnerRadius), (InnerRad / BodyPhysicalConstants.oneLS_m));
+                    sb.AppendFormat(frontpad + "Inner Radius: {0:0.00}ls".Tx(), (InnerRad / BodyPhysicalConstants.oneLS_m));
                     sb.AppendCR();
-                    sb.AppendFormat(frontpad + "Outer Radius: {0:0.00}ls".T(EDCTx.StarPlanetRing_OuterRadius), (OuterRad / BodyPhysicalConstants.oneLS_m));
+                    sb.AppendFormat(frontpad + "Outer Radius: {0:0.00}ls".Tx(), (OuterRad / BodyPhysicalConstants.oneLS_m));
                     sb.AppendCR();
                 }
                 else
                 {
-                    sb.AppendFormat(frontpad + "Inner Radius: {0}km".T(EDCTx.StarPlanetRing_IK) , (InnerRad / 1000).ToString("N0"));
+                    sb.AppendFormat(frontpad + "Inner Radius: {0}km".Tx(), (InnerRad / 1000).ToString("N0"));
                     sb.AppendCR();
-                    sb.AppendFormat(frontpad + "Outer Radius: {0}km".T(EDCTx.StarPlanetRing_OK) + " \u0394 {1}" , (OuterRad / 1000).ToString("N0"), ((OuterRad - InnerRad) / 1000).ToString("N0"));
+                    sb.AppendFormat(frontpad + "Outer Radius: {0}km".Tx()+ " \u0394 {1}" , (OuterRad / 1000).ToString("N0"), ((OuterRad - InnerRad) / 1000).ToString("N0"));
                     sb.AppendCR();
                 }
             }
@@ -86,15 +86,15 @@ namespace EliteDangerousCore.JournalEvents
                 switch (RingClassID)
                 {
                     default:
-                        return "Unknown".T(EDCTx.Unknown);
+                        return "Unknown".Tx();
                     case RingClassEnum.Icy:
-                        return "Icy".T(EDCTx.StarPlanetRing_Icy);
+                        return "Icy".Tx();
                     case RingClassEnum.Rocky:
-                        return "Rocky".T(EDCTx.StarPlanetRing_Rocky);
+                        return "Rocky".Tx();
                     case RingClassEnum.MetalRich:
-                        return "Metal Rich".T(EDCTx.StarPlanetRing_MetalRich);
+                        return "Metal Rich".Tx();
                     case RingClassEnum.Metallic:
-                        return "Metallic".T(EDCTx.StarPlanetRing_Metallic);
+                        return "Metallic".Tx();
                 }
             }
         }
@@ -182,7 +182,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void HabZoneText_Hab(HabZones hz, StringBuilder sb)
         {
-            sb.AppendFormat(" - Habitable Zone, {0} ({1}-{2} AU),".T(EDCTx.JournalScan_HabitableZone),
+            sb.AppendFormat(" - Habitable Zone, {0} ({1}-{2} AU),".Tx(),
                  $"{hz.HabitableZoneInner:N0}-{hz.HabitableZoneOuter:N0}ls",
                  (hz.HabitableZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
                  (hz.HabitableZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
@@ -190,7 +190,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void HabZoneText_MRP(HabZones hz, StringBuilder sb)
         {
-            sb.AppendFormat(" - Metal Rich planets, {0} ({1}-{2} AU),".T(EDCTx.JournalScan_MetalRichplanets),
+            sb.AppendFormat(" - Metal Rich planets, {0} ({1}-{2} AU),".Tx(),
                              $"{hz.MetalRichZoneInner:N0}-{hz.MetalRichZoneOuter:N0}ls",
                              (hz.MetalRichZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
                              (hz.MetalRichZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
@@ -198,28 +198,28 @@ namespace EliteDangerousCore.JournalEvents
 
         public void HabZoneText_WW(HabZones hz, StringBuilder sb)
         {
-            sb.AppendFormat(" - Water Worlds, {0} ({1}-{2} AU),".T(EDCTx.JournalScan_WaterWorlds),
+            sb.AppendFormat(" - Water Worlds, {0} ({1}-{2} AU),".Tx(),
                              $"{hz.WaterWrldZoneInner:N0}-{hz.WaterWrldZoneOuter:N0}ls",
                              (hz.WaterWrldZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
                              (hz.WaterWrldZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
         }
         public void HabZoneText_EL(HabZones hz, StringBuilder sb)
         {
-            sb.AppendFormat(" - Earth Like Worlds, {0} ({1}-{2} AU),".T(EDCTx.JournalScan_EarthLikeWorlds),
+            sb.AppendFormat(" - Earth Like Worlds, {0} ({1}-{2} AU),".Tx(),
                              $"{hz.EarthLikeZoneInner:N0}-{hz.EarthLikeZoneOuter:N0}ls",
                              (hz.EarthLikeZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
                              (hz.EarthLikeZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
         }
         public void HabZoneText_AW(HabZones hz, StringBuilder sb)
         {
-            sb.AppendFormat(" - Ammonia Worlds, {0} ({1}-{2} AU),".T(EDCTx.JournalScan_AmmoniaWorlds),
+            sb.AppendFormat(" - Ammonia Worlds, {0} ({1}-{2} AU),".Tx(),
                              $"{hz.AmmonWrldZoneInner:N0}-{hz.AmmonWrldZoneOuter:N0}ls",
                              (hz.AmmonWrldZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
                              (hz.AmmonWrldZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
         }
         public void HabZoneText_ZIP(HabZones hz, StringBuilder sb)
         {
-            sb.AppendFormat(" - Icy Planets, {0} (from {1} AU)".T(EDCTx.JournalScan_IcyPlanets),
+            sb.AppendFormat(" - Icy Planets, {0} (from {1} AU)".Tx(),
                              $"{hz.IcyPlanetZoneInner:N0}ls to ~",
                              (hz.IcyPlanetZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
         }
@@ -232,7 +232,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (title)
                 {
-                    sb.AppendLine("Inferred Circumstellar zones:".T(EDCTx.JournalScan_InferredCircumstellarzones));
+                    sb.AppendLine("Inferred Circumstellar zones:".Tx());
                 }
 
                 HabZoneText_Hab(hz, sb);
@@ -252,7 +252,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     if (nSemiMajorAxis.HasValue && nSemiMajorAxis.Value > 0)
                     {
-                        sb.Append(" - Others stars not considered".T(EDCTx.JournalScan_Othersstarsnotconsidered));
+                        sb.Append(" - Others stars not considered".Tx());
                         sb.AppendCR();
                     }
                 }

@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("Music Track: ".T(EDCTx.JournalEntry_MusicTrack), MusicTrack);
+            return BaseUtils.FieldBuilder.Build("Music Track: ".Tx(), MusicTrack);
         }
 
         private EDMusicTrackEnum MusictoID(string str)

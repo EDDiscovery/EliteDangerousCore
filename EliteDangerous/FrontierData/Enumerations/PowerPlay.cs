@@ -57,8 +57,7 @@ namespace EliteDangerousCore
 
         public static string ToLocalisedLanguage(State sc)
         {
-            string id = "PowerPlayStates." + sc.ToString();
-            return BaseUtils.Translator.Instance.Translate(ToEnglish(sc), id);
+            return ToEnglish(sc).Tx();
         }
 
         public class PowerplayConflictProgress

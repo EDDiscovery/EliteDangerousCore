@@ -68,12 +68,12 @@ namespace EliteDangerousCore.ScreenShots
                 filesystemwatcher.Created += WatcherTripped;
                 filesystemwatcher.EnableRaisingEvents = true;
 
-                logit(string.Format("Scanning for {0} screenshots in {1}".T(EDCTx.ScreenshotDirectoryWatcher_Scan) ,ext, watchedfolder));
+                logit(string.Format("Scanning for {0} screenshots in {1}".Tx(),ext, watchedfolder));
                 return true;
             }
             else
             {
-                logit("Folder specified for image conversion does not exist, check screenshot settings in the Settings panel".T(EDCTx.ScreenshotDirectoryWatcher_NOF));
+                logit("Folder specified for image conversion does not exist, check screenshot settings in the Settings panel".Tx());
                 return false;
             }
         }
@@ -248,7 +248,7 @@ namespace EliteDangerousCore.ScreenShots
             {
                 System.Diagnostics.Trace.WriteLine("Screenshot Exception watcher: " + ex.Message);
                 System.Diagnostics.Trace.WriteLine("Trace: " + ex.StackTrace);
-                logit("Error in executing image conversion, try another screenshot, check output path settings. (Exception ".T(EDCTx.ScreenshotDirectoryWatcher_Excp) + ex.Message + ")");
+                logit("Error in executing image conversion, try another screenshot, check output path settings. (Exception ".Tx()+ ex.Message + ")");
             }
             return false;
         }

@@ -238,28 +238,18 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("EDD atmospheric property")]
         public EDAtmosphereProperty AtmosphereProperty { get; private set; }  // Atomsphere -> Property (None, Rich, Thick , Thin, Hot)
         [PropertyNameAttribute("Translated name of Atmosphere")]
-        public string AtmosphereTranslated { get
+        public string AtmosphereTranslated
+        {
+            get
             {
-                if (BaseUtils.Translator.Instance.Translating)
                 {
-                    string key = "AtmosphereTypes." + AtmosphereID.ToString() + ((AtmosphereProperty != EDAtmosphereProperty.None) ? "_" + AtmosphereProperty.ToString().Replace(", ", "_") : "");
-                    if (BaseUtils.Translator.Instance.IsDefined(key))       // if we defined it, all good, not an unknown combo
-                    {
-                        string res = BaseUtils.Translator.Instance.GetTranslation(key); // but it may be undefined (example.ex etc) so don't accept null
-                        if ( res != null )
-                            return res;
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine($"*** Missing translator ID for atmosphere {AtmosphereID} : {AtmosphereProperty} : `{Atmosphere}`");
-                    }
+                    string mainpart = AtmosphereID.ToString().Replace("_", " ") + ((AtmosphereProperty & EDAtmosphereProperty.Rich) != 0 ? " Rich" : "") + " Atmosphere";
+                    EDAtmosphereProperty apnorich = AtmosphereProperty & ~(EDAtmosphereProperty.Rich);
+                    string final = apnorich != EDAtmosphereProperty.None ? apnorich.ToString().Replace(",", "") + " " + mainpart : mainpart;
+                    return final.Tx();
                 }
-
-                string mainpart = AtmosphereID.ToString().Replace("_", " ") + ((AtmosphereProperty & EDAtmosphereProperty.Rich) != 0 ? " Rich" : "") + " Atmosphere";
-                EDAtmosphereProperty apnorich = AtmosphereProperty & ~(EDAtmosphereProperty.Rich);
-                string final = apnorich != EDAtmosphereProperty.None ? apnorich.ToString().Replace(",", "") + " " + mainpart : mainpart;
-                return final;
-            } }
+            }
+        }
 
         [PropertyNameAttribute("Dictionary of atmosphere composition, in %. Use an Iter variable to search it")]
         public Dictionary<string, double> AtmosphereComposition { get; private set; }       // from journal. value is in % (0-100)
@@ -285,24 +275,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             get
             {
-                if (BaseUtils.Translator.Instance.Translating)
-                {
-                    string key = "VolcanismTypes." + VolcanismID.ToString() + (VolcanismProperty != EDVolcanismProperty.None ? "_" + VolcanismProperty.ToString() : "");
-                    if (BaseUtils.Translator.Instance.IsDefined(key))       // if we defined it, all good, not an unknown combo
-                    {
-                        string res = BaseUtils.Translator.Instance.GetTranslation(key); // but it may be undefined (example.ex etc) so don't accept null
-                        if (res != null)
-                            return res;
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine($"*** Missing translator ID for volcanism {VolcanismID} : {VolcanismProperty} : `{Volcanism}`");
-                    }
-                }
-
                 string mainpart = VolcanismID.ToString().Replace("_", " ") + " Volcanism";
                 string final = VolcanismProperty != EDVolcanismProperty.None ? VolcanismProperty.ToString() + " " + mainpart : mainpart;
-                return final;
+                return final.Tx();
             }
         }
 
@@ -691,15 +666,15 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys)
         {
-            string text = "Scan of {0}".T(EDCTx.JournalScan_Scanof);
+            string text = "Scan of {0}".Tx();
             if (ScanType == "AutoScan")
-                text = "Autoscan of {0}".T(EDCTx.JournalScan_Autoscanof);
+                text = "Autoscan of {0}".Tx();
             else if (ScanType == "Detailed")
-                text = "Detailed scan of {0}".T(EDCTx.JournalScan_Detailedscanof);
+                text = "Detailed scan of {0}".Tx();
             else if (ScanType == "Basic")
-                text = "Basic scan of {0}".T(EDCTx.JournalScan_Basicscanof);
+                text = "Basic scan of {0}".Tx();
             else if (ScanType.Contains("Nav"))
-                text = "Nav scan of {0}".T(EDCTx.JournalScan_Navscanof);
+                text = "Nav scan of {0}".Tx();
 
             return string.Format(text, BodyName.ReplaceIfStartsWith(sys.Name));
         }
@@ -724,27 +699,27 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (IsStar)
             {
-                return BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass: ;SM;0.00".T(EDCTx.JournalScan_MSM), nStellarMass,
-                                                "Age: ;my;0.0".T(EDCTx.JournalScan_Age), nAge,
-                                                "Radius: ".T(EDCTx.JournalScan_RS), RadiusText,
-                                                "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
-                                                "Name: ".T(EDCTx.JournalScan_BNME), BodyName.ReplaceIfStartsWith(fid.System.Name));
+                return BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass: ;SM;0.00".Tx(), nStellarMass,
+                                                "Age: ;my;0.0".Tx(), nAge,
+                                                "Radius: ".Tx(), RadiusText,
+                                                "Dist: ;ls;0.0".Tx(), DistanceFromArrivalLS,
+                                                "Name: ".Tx(), BodyName.ReplaceIfStartsWith(fid.System.Name));
             }
             else if (IsPlanet)
             {
-                return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass: ".T(EDCTx.JournalScan_MASS), MassEMMM,
-                                                "<;, Landable".T(EDCTx.JournalScan_Landable), IsLandable,
-                                                "<;, Terraformable".T(EDCTx.JournalScan_Terraformable), TerraformState == "Terraformable", "", HasAtmosphere ? AtmosphereTranslated : null,
-                                                 "Gravity: ;G;0.00".T(EDCTx.JournalScan_Gravity), nSurfaceGravityG,
-                                                 "Radius: ".T(EDCTx.JournalScan_RS), RadiusText,
-                                                 "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
-                                                 "Name: ".T(EDCTx.JournalScan_SNME), BodyName.ReplaceIfStartsWith(fid.System.Name));
+                return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass: ".Tx(), MassEMMM,
+                                                "<;, Landable".Tx(), IsLandable,
+                                                "<;, Terraformable".Tx(), TerraformState == "Terraformable", "", HasAtmosphere ? AtmosphereTranslated : null,
+                                                 "Gravity: ;G;0.00".Tx(), nSurfaceGravityG,
+                                                 "Radius: ".Tx(), RadiusText,
+                                                 "Dist: ;ls;0.0".Tx(), DistanceFromArrivalLS,
+                                                 "Name: ".Tx(), BodyName.ReplaceIfStartsWith(fid.System.Name));
             }
             else 
             {
-                return BaseUtils.FieldBuilder.Build("Mass: ".T(EDCTx.JournalScan_MASS), MassEMMM,
-                                                 "Dist: ;ls;0.0".T(EDCTx.JournalScan_DISTA), DistanceFromArrivalLS,
-                                                 "Name: ".T(EDCTx.JournalScan_SNME), BodyName.ReplaceIfStartsWith(fid.System.Name));
+                return BaseUtils.FieldBuilder.Build("Mass: ".Tx(), MassEMMM,
+                                                 "Dist: ;ls;0.0".Tx(), DistanceFromArrivalLS,
+                                                 "Name: ".Tx(), BodyName.ReplaceIfStartsWith(fid.System.Name));
             }
         }
 
@@ -758,16 +733,16 @@ namespace EliteDangerousCore.JournalEvents
             if (IsStar)
             {
 
-                return BaseUtils.FieldBuilder.Build("Mass: ;SM;0.00".T(EDCTx.JournalScan_MSM), nStellarMass,
-                                                "Age: ;my;0.0".T(EDCTx.JournalScan_Age), nAge,
-                                                "Radius: ".T(EDCTx.JournalScan_RS), RadiusText,
-                                                "Dist: ".T(EDCTx.JournalScan_DIST), DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
+                return BaseUtils.FieldBuilder.Build("Mass: ;SM;0.00".Tx(), nStellarMass,
+                                                "Age: ;my;0.0".Tx(), nAge,
+                                                "Radius: ".Tx(), RadiusText,
+                                                "Dist: ".Tx(), DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
             }
             else
             {
-                return BaseUtils.FieldBuilder.Build("Mass: ".T(EDCTx.JournalScan_MASS), MassEMMM,
-                                                 "Radius: ".T(EDCTx.JournalScan_RS), RadiusText,
-                                                 "Dist: ".T(EDCTx.JournalScan_DIST), DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
+                return BaseUtils.FieldBuilder.Build("Mass: ".Tx(), MassEMMM,
+                                                 "Radius: ".Tx(), RadiusText,
+                                                 "Dist: ".Tx(), DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
             }
         }
 
@@ -776,9 +751,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             return new List<Tuple<string, string, Image>>()
             {
-                new Tuple<string, string,Image>( "Scan Auto", "Scan Auto".T(EDCTx.JournalScan_ScanAuto), JournalEntry.JournalTypeIcons[JournalTypeEnum.Scan] ),
-                new Tuple<string,string,Image>( "Scan Basic", "Scan Basic".T(EDCTx.JournalScan_ScanBasic), JournalEntry.JournalTypeIcons[JournalTypeEnum.Scan] ),
-                new Tuple<string,string,Image>( "Scan Nav", "Scan Nav".T(EDCTx.JournalScan_ScanNav), JournalEntry.JournalTypeIcons[JournalTypeEnum.Scan] ),
+                new Tuple<string, string,Image>( "Scan Auto", "Scan Auto".Tx(), JournalEntry.JournalTypeIcons[JournalTypeEnum.Scan] ),
+                new Tuple<string,string,Image>( "Scan Basic", "Scan Basic".Tx(), JournalEntry.JournalTypeIcons[JournalTypeEnum.Scan] ),
+                new Tuple<string,string,Image>( "Scan Nav", "Scan Nav".Tx(), JournalEntry.JournalTypeIcons[JournalTypeEnum.Scan] ),
             };
         }
 

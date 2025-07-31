@@ -672,9 +672,21 @@ namespace EliteDangerousCore
 
         private static Dictionary<JournalTypeEnum, string> GetJournalTranslatedNames()
         {
-            // only translate ones below Obsoleteoricons
             var v = Enum.GetValues(typeof(JournalTypeEnum)).OfType<JournalTypeEnum>();
-            var tx = v.ToDictionary(e => e, e => e < JournalTypeEnum.ObsoleteOrIcons ? e.ToString().SplitCapsWord().TxID(typeof(JournalTypeEnum), e.ToString()) : e.ToString().SplitCapsWord() );
+            var tx = v.ToDictionary(e => e, 
+                (ft)=> 
+                {
+                    // only translate ones below Obsoleteoricons
+                    if ( ft < JournalTypeEnum.ObsoleteOrIcons)
+                    {
+                        // we need to manually fix these because they don't relate to text at all
+                        string txstring = ft == JournalTypeEnum.CapShipBond ? "Capital Ship Bond" : ft == JournalTypeEnum.FCMaterials ? "Bartender Materials" : ft.ToString().SplitCapsWord();
+                        return txstring.Tx();
+                    }
+                    else
+                        return ft.ToString().SplitCapsWord(); 
+                } 
+                );
             return tx;
         }
 

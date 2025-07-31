@@ -30,7 +30,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("Boost: ;;0.0".T(EDCTx.JournalEntry_Boost), BoostValue);
+            return BaseUtils.FieldBuilder.Build("Boost: ;;0.0".Tx(), BoostValue);
         }
     }
 

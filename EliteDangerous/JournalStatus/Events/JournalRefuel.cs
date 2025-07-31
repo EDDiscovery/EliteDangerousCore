@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost, "Fuel: ; tons;0.0".T(EDCTx.JournalEntry_Fuel), Amount);
+            return BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".Tx(), Cost, "Fuel: ; tons;0.0".Tx(), Amount);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -65,7 +65,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost, "Fuel: ; tons;0.0".T(EDCTx.JournalEntry_Fuel), Amount);
+            return BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".Tx(), Cost, "Fuel: ; tons;0.0".Tx(), Amount);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -88,7 +88,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build(";t;0.0", Scooped, "Total: ;t;0.0".T(EDCTx.JournalFuelScoop_Total), Total);
+            return BaseUtils.FieldBuilder.Build(";t;0.0", Scooped, "Total: ;t;0.0".Tx(), Total);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -115,9 +115,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Main: ;t;0.0".T(EDCTx.JournalReservoirReplenished_Main), FuelMain,
+            return BaseUtils.FieldBuilder.Build("Main: ;t;0.0".Tx(), FuelMain,
                                                 "< <- ;t;0.0", FuelStart,
-                                                "Reservoir: ;t;0.0".T(EDCTx.JournalReservoirReplenished_Reservoir), FuelReservoir , 
+                                                "Reservoir: ;t;0.0".Tx(), FuelReservoir , 
                                                 "< (x;)", FuelEvents);
         }
 

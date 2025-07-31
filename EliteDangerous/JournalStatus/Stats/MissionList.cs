@@ -53,7 +53,7 @@ namespace EliteDangerousCore
 
             if (CargoDepot != null)
             {
-                info += Environment.NewLine + BaseUtils.FieldBuilder.Build("To Go:".T(EDCTx.MissionState_ToGo), CargoDepot.ItemsToGo, "Progress:;%;N1".T(EDCTx.MissionState_Progress), CargoDepot.ProgressPercent);
+                info += Environment.NewLine + BaseUtils.FieldBuilder.Build("To Go:".Tx(), CargoDepot.ItemsToGo, "Progress:;%;N1".Tx(), CargoDepot.ProgressPercent);
             }
             if (Completed != null)
             {

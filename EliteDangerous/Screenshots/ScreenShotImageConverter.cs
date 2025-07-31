@@ -253,7 +253,7 @@ namespace EliteDangerousCore.ScreenShots
                 }
             }
 
-            logit(string.Format("Converted {0} to {1}".T(EDCTx.ScreenShotImageConverter_CNV), inputfilename , outputfilepath));
+            logit(string.Format("Converted {0} to {1}".Tx(), inputfilename , outputfilepath));
 
             return new Tuple<string, string, Size>(inputfilepath, outputfilepath, finalsize);
         }

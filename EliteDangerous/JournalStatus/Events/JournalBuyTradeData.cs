@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()  
         {
-            return BaseUtils.FieldBuilder.Build("System: ".T(EDCTx.JournalEntry_System), System, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
+            return BaseUtils.FieldBuilder.Build("System: ".Tx(), System, "Cost: ; cr;N0".Tx(), Cost);
         }
     }
 }

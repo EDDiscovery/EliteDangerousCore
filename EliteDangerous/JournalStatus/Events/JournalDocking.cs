@@ -130,17 +130,17 @@ namespace EliteDangerousCore.JournalEvents
             public int Large;
         };
 
-        public override string SummaryName(ISystem sys) { return string.Format("At {0}".T(EDCTx.JournalDocked_At), StationName_Localised); }
+        public override string SummaryName(ISystem sys) { return string.Format("At {0}".Tx(), StationName_Localised); }
 
         public override string GetInfo()
         {
             var sb = new System.Text.StringBuilder(256);
-            sb.Build("", "Docked".T(EDCTx.JournalTypeEnum_Docked), "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType), "< in system ".T(EDCTx.JournalEntry_insystem), StarSystem,
-                "State: ".TxID(EDCTx.JournalLocOrJump_State), StationDefinitions.ToLocalisedLanguage(StationState),
-                ";(Wanted)".T(EDCTx.JournalEntry_Wanted), Wanted,
-                ";Active Fine".T(EDCTx.JournalEntry_ActiveFine), ActiveFine,
-                "Faction: ".T(EDCTx.JournalEntry_Faction), Faction,
-                "< in state ".T(EDCTx.JournalEntry_instate), FactionDefinitions.ToLocalisedLanguage(FactionState));
+            sb.Build("", "Docked".Tx(), "Type: ".Tx(), StationDefinitions.ToLocalisedLanguage(FDStationType), "< in system ".Tx(), StarSystem,
+                "State: ".Tx(), StationDefinitions.ToLocalisedLanguage(StationState),
+                ";(Wanted)".Tx(), Wanted,
+                ";Active Fine".Tx(), ActiveFine,
+                "Faction: ".Tx(), Faction,
+                "< in state ".Tx(), FactionDefinitions.ToLocalisedLanguage(FactionState));
 
             return sb.ToString();
         }
@@ -149,9 +149,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             var sb = new System.Text.StringBuilder(256);
 
-            sb.Build("Allegiance: ".T(EDCTx.JournalEntry_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance), 
-                    "Economy: ".T(EDCTx.JournalEntry_Economy), EconomyDefinitions.ToLocalisedLanguage(Economy),
-                    "Government: ".T(EDCTx.JournalEntry_Government),  GovernmentDefinitions.ToLocalisedLanguage(Government));
+            sb.Build("Allegiance: ".Tx(), AllegianceDefinitions.ToLocalisedLanguage(Allegiance), 
+                    "Economy: ".Tx(), EconomyDefinitions.ToLocalisedLanguage(Economy),
+                    "Government: ".Tx(),  GovernmentDefinitions.ToLocalisedLanguage(Government));
 
             if (StationServices != null)
             {
@@ -252,7 +252,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", StationName_Localised, "< on pad ".T(EDCTx.JournalEntry_onpad), LandingPad, "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType));
+            return BaseUtils.FieldBuilder.Build("", StationName_Localised, "< on pad ".Tx(), LandingPad, "Type: ".Tx(), StationDefinitions.ToLocalisedLanguage(FDStationType));
         }
     }
 
@@ -335,7 +335,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", StationName_Localised, "Type: ".T(EDCTx.JournalEntry_Type), StationDefinitions.ToLocalisedLanguage(FDStationType));
+            return BaseUtils.FieldBuilder.Build("", StationName_Localised, "Type: ".Tx(), StationDefinitions.ToLocalisedLanguage(FDStationType));
         }
     }
 

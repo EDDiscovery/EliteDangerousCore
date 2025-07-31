@@ -63,7 +63,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("Version: ".T(EDCTx.JournalEntry_Version), GameVersion , "Build: ".T(EDCTx.JournalEntry_Build), Build , "Part: ".T(EDCTx.JournalEntry_Part), Part);
+            return BaseUtils.FieldBuilder.Build("Version: ".Tx(), GameVersion , "Build: ".Tx(), Build , "Part: ".Tx(), Part);
         }
     }
 
@@ -167,11 +167,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship: ".T(EDCTx.JournalEntry_Ship), Ship, "Name: ".T(EDCTx.JournalEntry_Name), ShipName, "Ident: ".T(EDCTx.JournalEntry_Ident), ShipIdent, "Credits: ;;N0".T(EDCTx.JournalEntry_Credits), Credits);
+            return BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship: ".Tx(), Ship, "Name: ".Tx(), ShipName, "Ident: ".Tx(), ShipIdent, "Credits: ;;N0".Tx(), Credits);
         }
         public override string GetDetailed()
         {
-            return BaseUtils.FieldBuilder.Build("Mode: ".T(EDCTx.JournalEntry_Mode), GameMode, "Group: ".T(EDCTx.JournalEntry_Group), Group, "Not Landed;Landed".T(EDCTx.JournalEntry_NotLanded), StartLanded, "Fuel Level: ;;0.0".T(EDCTx.JournalEntry_FuelLevel), FuelLevel, "Capacity: ;;0.0".T(EDCTx.JournalEntry_Capacity), FuelCapacity);
+            return BaseUtils.FieldBuilder.Build("Mode: ".Tx(), GameMode, "Group: ".Tx(), Group, "Not Landed;Landed".Tx(), StartLanded, "Fuel Level: ;;0.0".Tx(), FuelLevel, "Capacity: ;;0.0".Tx(), FuelCapacity);
         }
 
         public void Ledger(Ledger mcl)
@@ -179,7 +179,7 @@ namespace EliteDangerousCore.JournalEvents
             mcl.Loan = Loan;
             if (mcl.CashTotal != Credits)
             {
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Cash total differs, adjustment".T(EDCTx.JournalEntry_Cashtotaldiffers), Credits - mcl.CashTotal);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Cash total differs, adjustment".Tx(), Credits - mcl.CashTotal);
             }
         }
 

@@ -40,7 +40,7 @@ namespace EliteDangerousCore.JournalEvents
         public void Ledger(Ledger mcl)
         {
             if ( Amount != 0 )
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Wages for ".T(EDCTx.JournalEntry_Wagesfor) + Name, -Amount);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Wages for ".Tx()+ Name, -Amount);
         }
     }
 
@@ -60,7 +60,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("<", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), RankDefinitions.FriendlyName(RankCombat));
+            return BaseUtils.FieldBuilder.Build("<", Name, "Rank: ".Tx(), RankDefinitions.FriendlyName(RankCombat));
         }
 
     }

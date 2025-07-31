@@ -211,19 +211,19 @@ namespace EliteDangerousCore
             string spstate = SpawningState_Localised != null ? SpawningState_Localised.Truncate(0, 32, "..") : null;
 
             return BaseUtils.FieldBuilder.Build(
-                        ";Station: ".T(EDCTx.FSSSignal_StationBool), ClassOfSignal == SignalDefinitions.Classification.Station,
-                        ";Carrier: ".T(EDCTx.FSSSignal_CarrierBool), ClassOfSignal == SignalDefinitions.Classification.Carrier,
-                        ";Megaship: ".T(EDCTx.FSSSignal_MegashipBool), ClassOfSignal == SignalDefinitions.Classification.Megaship,
-                        ";Installation: ".T(EDCTx.FSSSignal_InstallationBool), ClassOfSignal == SignalDefinitions.Classification.Installation,
+                        ";Station: ".Tx(), ClassOfSignal == SignalDefinitions.Classification.Station,
+                        ";Carrier: ".Tx(), ClassOfSignal == SignalDefinitions.Classification.Carrier,
+                        ";Megaship: ".Tx(), ClassOfSignal == SignalDefinitions.Classification.Megaship,
+                        ";Installation: ".Tx(), ClassOfSignal == SignalDefinitions.Classification.Installation,
                         "<", signname,
                         "", USSTypeLocalised,
-                        "Threat Level: ".T(EDCTx.FSSSignal_ThreatLevel), ThreatLevel,
-                        "Faction: ".T(EDCTx.FSSSignal_Faction), SpawningFaction_Localised,
-                        "Power: ".T(EDCTx.JournalEntry_Power), SpawningPower,
-                        "vs " + "Power: ".T(EDCTx.JournalEntry_Power), OpposingPower,
-                        "State: ".T(EDCTx.FSSSignal_State), spstate,
-                        "Expiry: ".T(EDCTx.JournalMissionAccepted_Expiry), outoftime,
-                        "Last Seen: ".T(EDCTx.FSSSignal_LastSeen), seen
+                        "Threat Level: ".Tx(), ThreatLevel,
+                        "Faction: ".Tx(), SpawningFaction_Localised,
+                        "Power: ".Tx(), SpawningPower,
+                        "vs " + "Power: ".Tx(), OpposingPower,
+                        "State: ".Tx(), spstate,
+                        "Expiry: ".Tx(), outoftime,
+                        "Last Seen: ".Tx(), seen
                         );
         }
 

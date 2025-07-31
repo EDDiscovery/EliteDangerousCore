@@ -97,7 +97,7 @@ namespace EliteDangerousCore
         {
             if (fdid.Length > 0 && ItemData.TryGetShipModule(fdid, out ItemData.ShipModule item, true))
             {
-                return item.TranslatedModTypeString;
+                return item.TranslatedModTypeString();
             }
             else
                 return "Unknown";
@@ -298,7 +298,7 @@ namespace EliteDangerousCore
         
         static public string CheckLocalisationTranslation(string loc, string alt)      
         {
-            if (BaseUtils.Translator.Instance.Translating)          // if we are translating, use the alt name as its the most valid..
+            if (BaseUtils.TranslatorMkII.Instance.Translating)          // if we are translating, use the alt name as its the most valid..
                 return alt;
             else
                 return CheckLocalisation(loc, alt);
@@ -319,7 +319,7 @@ namespace EliteDangerousCore
                     if (mcd != null)    // if we find it, translate it, else leave it alone
                         mintype = mcd.TranslatedName;
 
-                    res = "Ring Hot Spot of type ".TxID(EDCTx.Signals_RingHotSpot) + mintype;
+                    res = "Ring Hot Spot of type ".Tx()+ mintype;
                 }
             }
             return res;
@@ -338,7 +338,7 @@ namespace EliteDangerousCore
         public static string SecondsToDHMString(this int seconds)
         {
             TimeSpan time = TimeSpan.FromSeconds(seconds);
-            return string.Format("{0} days {1} hours {2} minutes".T(EDCTx.JournalEntry_TME), time.Days, time.Hours, time.Minutes);
+            return string.Format("{0} days {1} hours {2} minutes".Tx(), time.Days, time.Hours, time.Minutes);
         }
 
         public static string DockingDeniedReason(string fdname)

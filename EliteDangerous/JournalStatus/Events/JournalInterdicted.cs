@@ -29,7 +29,7 @@ namespace EliteDangerousCore.JournalEvents
 
             Interdictor = evt["Interdictor"].Str();
             if (IsThargoid == true && Interdictor.IsEmpty())
-                Interdictor = "Thargoids".TxID(EDCTx.JournalStatistics_Thargoids);
+                Interdictor = "Thargoids".Tx();
             Interdictor_Localised = JournalFieldNaming.CheckLocalisation(evt["Interdictor_Localised"].Str(),Interdictor);
             CombatRank = evt["CombatRank"].Enum<RankDefinitions.CombatRank>(RankDefinitions.CombatRank.Unknown);
             Faction = evt["Faction"].Str();
@@ -52,14 +52,14 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo() 
         {
             if ( Submitted )
-                return BaseUtils.FieldBuilder.Build(";Submitted".T(EDCTx.JournalEntry_Submitted), Submitted, "< to ".T(EDCTx.JournalEntry_to), Interdictor_Localised, 
-                    "< (NPC);(Player)".T(EDCTx.JournalEntry_NPC), IsPlayer, "Rank: ", RankDefinitions.FriendlyName(CombatRank), 
-                    "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, "Power: ".T(EDCTx.JournalEntry_Power), Power);
+                return BaseUtils.FieldBuilder.Build(";Submitted".Tx(), Submitted, "< to ".Tx(), Interdictor_Localised, 
+                    "< (NPC);(Player)".Tx(), IsPlayer, "Rank: ", RankDefinitions.FriendlyName(CombatRank), 
+                    "Faction: ".Tx(), Faction, "Power: ".Tx(), Power);
             else
-                return BaseUtils.FieldBuilder.Build("By: ".T(EDCTx.JournalEntry_By), Interdictor_Localised, 
-                    "< (NPC);(Player)".T(EDCTx.JournalEntry_NPC), IsPlayer, 
+                return BaseUtils.FieldBuilder.Build("By: ".Tx(), Interdictor_Localised, 
+                    "< (NPC);(Player)".Tx(), IsPlayer, 
                     "Rank: ", RankDefinitions.FriendlyName(CombatRank), 
-                    "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, "Power: ".T(EDCTx.JournalEntry_Power), Power);
+                    "Faction: ".Tx(), Faction, "Power: ".Tx(), Power);
         }
     }
 
@@ -92,10 +92,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Failed to interdict;Interdicted".T(EDCTx.JournalEntry_Failedtointerdict), Success, "< ", Interdicted_Localised, 
-                        "< (NPC);(Player)".T(EDCTx.JournalEntry_NPC), IsPlayer, 
+            return BaseUtils.FieldBuilder.Build("Failed to interdict;Interdicted".Tx(), Success, "< ", Interdicted_Localised, 
+                        "< (NPC);(Player)".Tx(), IsPlayer, 
                         "Rank: ", RankDefinitions.FriendlyName(CombatRank), 
-                        "Faction: ".T(EDCTx.JournalEntry_Faction), Faction, "Power: ".T(EDCTx.JournalEntry_Power), Power);
+                        "Faction: ".Tx(), Faction, "Power: ".Tx(), Power);
         }
     }
 
@@ -109,7 +109,7 @@ namespace EliteDangerousCore.JournalEvents
             IsThargoid = evt["IsThargoid"].BoolNull();
             Interdictor = evt["Interdictor"].Str();
             if (IsThargoid == true && Interdictor.IsEmpty())
-                Interdictor = "Thargoids".TxID(EDCTx.JournalStatistics_Thargoids);
+                Interdictor = "Thargoids".Tx();
             Interdictor_Localised = JournalFieldNaming.CheckLocalisation(evt["Interdictor_Localised"].Str(), Interdictor);
         }
 
@@ -119,7 +119,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? IsThargoid { get; set; }        // update 15+
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("By: ".T(EDCTx.JournalEntry_By), Interdictor_Localised, "< (NPC);(Player)".T(EDCTx.JournalEntry_NPC), IsPlayer);
+            return BaseUtils.FieldBuilder.Build("By: ".Tx(), Interdictor_Localised, "< (NPC);(Player)".Tx(), IsPlayer);
         }
     }
 

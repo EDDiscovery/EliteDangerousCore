@@ -43,7 +43,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             string info = StarSystem;
             if (Wanted == true)
-                info += ", You are wanted.".T(EDCTx.JournalSuperCruiseEntry_Wanted);
+                info += ", You are wanted.".Tx();
             return info;
         }
 
@@ -86,9 +86,9 @@ namespace EliteDangerousCore.JournalEvents
                 info += DestinationDrop.GetInfo() + ", ";
             }
             else
-                info = "At ".T(EDCTx.JournalSupercruiseExit_At);
+                info = "At ".Tx();
 
-            info += BaseUtils.FieldBuilder.Build("",Body, "< in ".T(EDCTx.JournalSupercruiseExit_in), StarSystem, "Type: ".T(EDCTx.JournalEntry_Type), BodyType);
+            info += BaseUtils.FieldBuilder.Build("",Body, "< in ".Tx(), StarSystem, "Type: ".Tx(), BodyType);
             return info;
         }
     }
@@ -111,7 +111,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("At ".T(EDCTx.JournalSupercruiseExit_At), Location_Localised.Alt(Location), "Threat Level: ".T(EDCTx.FSSSignal_ThreatLevel), Threat);
+            return BaseUtils.FieldBuilder.Build("At ".Tx(), Location_Localised.Alt(Location), "Threat Level: ".Tx(), Threat);
         }
     }
 

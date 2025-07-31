@@ -83,7 +83,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return YardInfo.Items != null ? (YardInfo.Items.Length.ToString() + " items available".T(EDCTx.JournalEntry_itemsavailable)) : "";
+            return YardInfo.Items != null ? (YardInfo.Items.Length.ToString() + " items available".Tx()) : "";
         }
 
         public override string GetDetailed()

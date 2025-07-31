@@ -53,8 +53,7 @@ namespace EliteDangerousCore
 
         public static string ToLocalisedLanguage(Security sc)
         {
-            string id = "SecurityTypes." + sc.ToString();
-            return BaseUtils.Translator.Instance.Translate(ToEnglish(sc), id);
+            return ToEnglish(sc).Tx();
         }
 
     }

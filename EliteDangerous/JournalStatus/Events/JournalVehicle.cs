@@ -43,7 +43,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("",Type , "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost , "Count: ".T(EDCTx.JournalEntry_Count), Count , "Loadout: ".T(EDCTx.JournalEntry_Loadout), Loadout);
+            return BaseUtils.FieldBuilder.Build("",Type , "Cost: ; cr;N0".Tx(), Cost , "Count: ".Tx(), Count , "Loadout: ".Tx(), Loadout);
         }
     }
 

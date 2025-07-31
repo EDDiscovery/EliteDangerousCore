@@ -47,18 +47,18 @@ namespace EliteDangerousCore
 
                 crs.chart1labels = new string[]
                 {
-                    "Bounties on Thargoids".T(EDCTx.UserControlStats_BountiesThargoid),
-                    "Bounties on On Foot NPC".T(EDCTx.UserControlStats_BountiesOnFootNPC),
-                    "Bounties on Skimmers".T(EDCTx.UserControlStats_BountiesSkimmers),
-                    "Ships Unknown Rank".T(EDCTx.UserControlStats_ShipsUnknown),
-                    "Ships Elite Rank".T(EDCTx.UserControlStats_ShipsElite),
-                    "Ships Deadly Rank".T(EDCTx.UserControlStats_ShipsDeadly),
-                    "Ships Dangerous Rank".T(EDCTx.UserControlStats_ShipsDangerous),
-                    "Ships Master Rank".T(EDCTx.UserControlStats_ShipsMaster),
-                    "Ships Expert Rank".T(EDCTx.UserControlStats_ShipsExpert),
-                    "Ships Competent Rank".T(EDCTx.UserControlStats_ShipsCompetent),
-                    "Ships Novice Rank".T(EDCTx.UserControlStats_ShipsNovice),
-                    "Ships Harmless Rank".T(EDCTx.UserControlStats_ShipsHarmless),
+                    "Bounties on Thargoids".Tx(),
+                    "Bounties on On Foot NPC".Tx(),
+                    "Bounties on Skimmers".Tx(),
+                    "Ships Unknown Rank".Tx(),
+                    "Ships Elite Rank".Tx(),
+                    "Ships Deadly Rank".Tx(),
+                    "Ships Dangerous Rank".Tx(),
+                    "Ships Master Rank".Tx(),
+                    "Ships Expert Rank".Tx(),
+                    "Ships Competent Rank".Tx(),
+                    "Ships Novice Rank".Tx(),
+                    "Ships Harmless Rank".Tx(),
                 };
 
                 crs.chart1data = new int[intervals][];        // outer [] is intervals      CHART 1 is PVP
@@ -67,14 +67,14 @@ namespace EliteDangerousCore
 
                 crs.chart2labels = new string[]
                 {
-                     "PVP Elite Rank".T(EDCTx.UserControlStats_PVPElite),
-                     "PVP Deadly Rank".T(EDCTx.UserControlStats_PVPDeadly),
-                     "PVP Dangerous Rank".T(EDCTx.UserControlStats_PVPDangerous),
-                     "PVP Master Rank".T(EDCTx.UserControlStats_PVPMaster),
-                     "PVP Expert Rank".T(EDCTx.UserControlStats_PVPExpert),
-                     "PVP Competent Rank".T(EDCTx.UserControlStats_PVPCompetent),
-                     "PVP Novice Rank".T(EDCTx.UserControlStats_PVPNovice),
-                     "PVP Harmless Rank".T(EDCTx.UserControlStats_PVPHarmless),
+                     "PVP Elite Rank".Tx(),
+                     "PVP Deadly Rank".Tx(),
+                     "PVP Dangerous Rank".Tx(),
+                     "PVP Master Rank".Tx(),
+                     "PVP Expert Rank".Tx(),
+                     "PVP Competent Rank".Tx(),
+                     "PVP Novice Rank".Tx(),
+                     "PVP Harmless Rank".Tx(),
                 };
 
                 crs.chart2data = new int[intervals][];        // outer [] is intervals
@@ -184,7 +184,7 @@ namespace EliteDangerousCore
                 {
                     int i = 0;
                     foreach (EDPlanet planettype in Enum.GetValues(typeof(EDPlanet)))
-                        crs.chart1labels[i++] = planettype == EDPlanet.Unknown_Body_Type ? "Belt Cluster".T(EDCTx.UserControlStats_Beltcluster) : Planets.PlanetNameTranslated(planettype);
+                        crs.chart1labels[i++] = planettype == EDPlanet.Unknown_Body_Type ? "Belt Cluster".Tx(): Planets.PlanetNameTranslated(planettype);
                 }
 
                 int intervals = tupletimes.Item1.Length;

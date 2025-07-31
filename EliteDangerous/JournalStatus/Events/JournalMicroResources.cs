@@ -69,7 +69,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             foreach (MicroResource m in mat.EmptyIfNull())
             {
-                sb.Append(BaseUtils.FieldBuilder.Build(prefix, m.GetFriendlyName(), "; items".T(EDCTx.JournalEntry_items), m.Count));
+                sb.Append(BaseUtils.FieldBuilder.Build(prefix, m.GetFriendlyName(), "; items".Tx(), m.Count));
                 sb.AppendCR();
             }
         }
@@ -168,25 +168,25 @@ namespace EliteDangerousCore.JournalEvents
             if (Items != null && Items.Length > 0)
             {
                 if (Items.Length > 10)
-                   info += BaseUtils.FieldBuilder.Build("Items".T(EDCTx.JournalMicroResources_Items) + ": ", Items.Length);
+                   info += BaseUtils.FieldBuilder.Build("Items".Tx()+ ": ", Items.Length);
             }
 
             if (Components != null && Components.Length > 0)
             {
-                info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Components".T(EDCTx.JournalMicroResources_Components) + ": ", Components.Length), "; ");
+                info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Components".Tx()+ ": ", Components.Length), "; ");
             }
 
             if (Consumables != null && Consumables.Length > 0)
             {
                 if (Items.Length > 10)
-                    info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Consumables".T(EDCTx.JournalMicroResources_Consumables) + ": ", Consumables.Length), "; ");
+                    info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Consumables".Tx()+ ": ", Consumables.Length), "; ");
                 else
                     info = info.AppendPrePad(string.Join(", ", Consumables.Select(x => x.GetFriendlyName()).ToArray()), "; ");
             }
 
             if (Data != null && Data.Length > 0)
             {
-                info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Data".T(EDCTx.JournalMicroResources_Data) + ": ", Data.Length), "; ");
+                info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("Data".Tx()+ ": ", Data.Length), "; ");
             }
 
             return info;
@@ -198,7 +198,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Items != null && Items.Length > 0)
             {
-                sb.Append("Items".T(EDCTx.JournalMicroResources_Items));
+                sb.Append("Items".Tx());
                 sb.Append(": ");
                 sb.AppendCR();
                 MicroResource.List(sb, Items);
@@ -206,14 +206,14 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Components != null && Components.Length > 0)
             {
-                sb.Append("Components".T(EDCTx.JournalMicroResources_Components));
+                sb.Append("Components".Tx());
                 sb.AppendCR();
                 MicroResource.List(sb, Components);
             }
 
             if (Consumables != null && Consumables.Length > 0)
             {
-                sb.Append("Consumables".T(EDCTx.JournalMicroResources_Consumables));
+                sb.Append("Consumables".Tx());
                 sb.Append(": ");
                 sb.AppendCR();
                 MicroResource.List(sb, Consumables);
@@ -221,7 +221,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Data != null && Data.Length > 0)
             {
-                sb.Append("Data".T(EDCTx.JournalMicroResources_Data));
+                sb.Append("Data".Tx());
                 sb.Append(": ");
                 sb.AppendCR();
                 MicroResource.List(sb, Data);
@@ -291,11 +291,11 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (Items.Length == 1)
                 {
-                    return BaseUtils.FieldBuilder.Build("", Items[0].GetFriendlyName(), "", Items[0].Count, "< buy price ; cr;N0".T(EDCTx.JournalEntry_buyprice), Price);
+                    return BaseUtils.FieldBuilder.Build("", Items[0].GetFriendlyName(), "", Items[0].Count, "< buy price ; cr;N0".Tx(), Price);
                 }
                 else
                 {
-                    return BaseUtils.FieldBuilder.Build("Items".T(EDCTx.JournalMicroResources_Items) + ":; ", TotalCount, "< buy price ; cr;N0".T(EDCTx.JournalEntry_buyprice), Price);
+                    return BaseUtils.FieldBuilder.Build("Items".Tx()+ ":; ", TotalCount, "< buy price ; cr;N0".Tx(), Price);
                 }
             }
             return "";
@@ -355,11 +355,11 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (Items.Length == 1)
                 {
-                    return BaseUtils.FieldBuilder.Build("", Items[0].GetFriendlyName(), "", Items[0].Count, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
+                    return BaseUtils.FieldBuilder.Build("", Items[0].GetFriendlyName(), "", Items[0].Count, "< sell price ; cr;N0".Tx(), Price);
                 }
                 else
                 {
-                    return BaseUtils.FieldBuilder.Build("Items".T(EDCTx.JournalMicroResources_Items) + ":; ", TotalCount, "< sell price ; cr;N0".T(EDCTx.JournalEntry_sellprice), Price);
+                    return BaseUtils.FieldBuilder.Build("Items".Tx()+ ":; ", TotalCount, "< sell price ; cr;N0".Tx(), Price);
                 }
             }
             return "";
@@ -422,7 +422,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             int? itemcount = Count > 1 ? Count : default(int?);
-            return BaseUtils.FieldBuilder.Build("", Received_FriendlyName, "; items".T(EDCTx.JournalEntry_items), itemcount);
+            return BaseUtils.FieldBuilder.Build("", Received_FriendlyName, "; items".Tx(), itemcount);
         }
 
         public override string GetDetailed()
@@ -596,7 +596,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);     // may be null
             int? itemcount = Resource.Count > 1 ? Resource.Count : default(int?);
-            return BaseUtils.FieldBuilder.Build("", Resource.GetFriendlyName(), "< (;)", mcd?.TranslatedCategory, "< ; items".T(EDCTx.JournalEntry_MatC), itemcount, ";Stolen".T(EDCTx.JournalEntry_Stolen), Stolen);
+            return BaseUtils.FieldBuilder.Build("", Resource.GetFriendlyName(), "< (;)", mcd?.TranslatedCategory, "< ; items".Tx(), itemcount, ";Stolen".Tx(), Stolen);
         }
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)    // no action, BPC does the work, but mark as MR
@@ -629,7 +629,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);     // may be null
             int? itemcount = Resource.Count > 1 ? Resource.Count : default(int?);
-            return BaseUtils.FieldBuilder.Build("", Resource.GetFriendlyName(), "< (;)", mcd?.TranslatedCategory, "< ; items".T(EDCTx.JournalEntry_MatC), itemcount);
+            return BaseUtils.FieldBuilder.Build("", Resource.GetFriendlyName(), "< (;)", mcd?.TranslatedCategory, "< ; items".Tx(), itemcount);
         }
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)    // no action, BPC does the work, but mark as MR
@@ -690,7 +690,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (MicroResources != null && MicroResources.Length > 0)
             {
-                sb.Append("Items".T(EDCTx.JournalMicroResources_Items));
+                sb.Append("Items".Tx());
                 sb.Append(": ");
                 MicroResource.List(sb, MicroResources,"");
             }
@@ -728,7 +728,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (MicroResources != null && MicroResources.Length > 0)
             {
-                sb.Append("Items".T(EDCTx.JournalMicroResources_Items));
+                sb.Append("Items".Tx());
                 sb.Append(": ");
                 MicroResource.List(sb, MicroResources,"");
             }

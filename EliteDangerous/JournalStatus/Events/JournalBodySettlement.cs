@@ -46,7 +46,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return "In ".T(EDCTx.JournalApproachBody_In) + StarSystem;
+            return "In ".Tx()+ StarSystem;
         }
     }
 
@@ -77,7 +77,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return "In ".T(EDCTx.JournalLeaveBody_In) + StarSystem;
+            return "In ".Tx()+ StarSystem;
         }
     }
 
@@ -145,7 +145,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Name_Localised, "< (;)", BodyName, "Latitude: ;°;F4".T(EDCTx.JournalEntry_Latitude), Latitude, "Longitude: ;°;F4".T(EDCTx.JournalEntry_Longitude), Longitude);
+            return BaseUtils.FieldBuilder.Build("", Name_Localised, "< (;)", BodyName, "Latitude: ;°;F4".Tx(), Latitude, "Longitude: ;°;F4".Tx(), Longitude);
         }
 
         public override string GetDetailed()
@@ -154,11 +154,11 @@ namespace EliteDangerousCore.JournalEvents
             {
                 System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
 
-                sb.Build("Economy: ".T(EDCTx.JournalEntry_Economy), EconomyDefinitions.ToLocalisedLanguage(StationEconomy),
-                    "Government: ".T(EDCTx.JournalEntry_Government), GovernmentDefinitions.ToLocalisedLanguage(StationGovernment),
-                    "Faction: ".T(EDCTx.JournalEntry_Faction), Faction,
-                    "< in state ".T(EDCTx.JournalEntry_instate), FactionDefinitions.ToLocalisedLanguage(FactionState),
-                    "Allegiance: ".T(EDCTx.JournalEntry_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance));
+                sb.Build("Economy: ".Tx(), EconomyDefinitions.ToLocalisedLanguage(StationEconomy),
+                    "Government: ".Tx(), GovernmentDefinitions.ToLocalisedLanguage(StationGovernment),
+                    "Faction: ".Tx(), Faction,
+                    "< in state ".Tx(), FactionDefinitions.ToLocalisedLanguage(FactionState),
+                    "Allegiance: ".Tx(), AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance));
 
                 if (StationServices != null)
                 {

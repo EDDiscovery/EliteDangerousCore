@@ -1,1317 +1,1212 @@
 ﻿
 SECTION JournalTypeEnum
 
-.Unknown: "Unknown" = Unknown
-.AfmuRepairs: "Afmu Repairs" => "Ремонт с помощью АПР"
-.ApproachBody: "Approach Body" => "Сближение с небесным телом"
-.ApproachSettlement: "Approach Settlement" => "Сближение с поселением"
-.Bounty: "Bounty" => "Награда"
-.BuyAmmo: "Buy Ammo" => "Покупка боеприпасов"
-.BuyDrones: "Buy Drones" => "Покупка дронов"
-.BuyExplorationData: "Buy Exploration Data" => "Покупка исследовательских данных"
-.BuyTradeData: "Buy Trade Data" => "Покупка данных о товарах"
-.Cargo: "Cargo" => "Груз"
-.CargoDepot: "Cargo Depot" => "Доставка груза"
-.ChangeCrewRole: "Change Crew Role" => "Смена роли в экипаже"
-.ClearSavedGame: "Clear Saved Game" => "Сброс сохранения"
-.CockpitBreached: "Cockpit Breached" => "Пробоина в фонаре кабины"
-.CollectCargo: "Collect Cargo" => "Груз собран"
-.Commander: "Commander" => "Командир"
-.CommitCrime: "Commit Crime" => "Совершено преступление"
-.CommunityGoal: "Community Goal" => "Цели сообщества"
-.CommunityGoalJoin: "Community Goal Join" => "Присоединение к цели сообщества"
-.CommunityGoalReward: "Community Goal Reward" => "Награда цели сообщества"
-.Continued: "Continued" => "Продолжение лога"
-.CrewAssign: "Crew Assign" => "Назначен член экипажа"
-.CrewFire: "Crew Fire" => "Уволен член экипажа"
-.CrewHire: "Crew Hire" => "Нанят член экипажа"
-.ColonisationConstructionDepot: "Colonisation Construction Depot" @
-.ColonisationContribution: "Colonisation Contribution" @
-.ColonisationSystemClaim: "Colonisation System Claim" @
-.ColonisationBeaconDeployed: "Colonisation Beacon Deployed" @
-.ColonisationSystemClaimRelease: "Colonisation System Claim Release" @
-.ClearImpound: "Clear Impound" @
-.DatalinkScan: "Datalink Scan" => "Сканирование канала данных"
-.DeliverPowerMicroResources: "Deliver Power Micro Resources" @
-.Died: "Died" => "Корабль уничтожен"
-.DiscoveryScan: "Discovery Scan" => "Сканирование системы"
-.Docked: "Docked" => "Стыковка"
-.DockFighter: "Dock Fighter" => "Истребитель погружен"
-.DockingCancelled: "Docking Cancelled" => "Стыковка отменена"
-.DockingDenied: "Docking Denied" => "В стыковке отказано"
-.DockingGranted: "Docking Granted" => "Стыковка разрешена"
-.DockingRequested: "Docking Requested" => "Запрос стыковки"
-.DockingTimeout: "Docking Timeout" => "Стыковка продлилась слишком долго"
-.DockSRV: "Dock SRV" => "ТРП погружен"
-.EjectCargo: "Eject Cargo" => "Сброс груза"
-.EndCrewSession: "End Crew Session" => "Экипаж распущен"
-.EngineerApply: "Engineer Apply" => "Изготовление модификации (до 3.0)"
-.EngineerContribution: "Engineer Contribution" => "Взнос для инженера"
-.EngineerCraft: "Engineer Craft" => "Изготовление модификации"
-.EngineerLegacyConvert: "Engineer Legacy Convert" => "Преобразование устаревшей модификации"
-.EngineerProgress: "Engineer Progress" => "Инженеры"
-.EscapeInterdiction: "Escape Interdiction" => "Уход от перехвата"
-.FCMaterials: "Bartender Materials" @
-.FSDJump: "FSD Jump" => "Прыжок"
-.FuelScoop: "Fuel Scoop" => "Сбор топлива"
-.Fileheader: "Fileheader" => "Заголовок файла"
-.FighterDestroyed: "Fighter Destroyed" => "Истребитель разрушен"
-.FighterRebuilt: "Fighter Rebuilt" => "Истребитель построен"
-.Friends: "Friends" => "Друзья"
-.HeatDamage: "Heat Damage" => "Повреждения от перегрева"
-.HeatWarning: "Heat Warning" => "Предупреждение о перегреве"
-.HullDamage: "Hull Damage" => "Повреждения корпуса"
-.HoloscreenHacked: "Holoscreen Hacked" @
-.Interdicted: "Interdicted" => "Ваш корабль перехвачен"
-.Interdiction: "Interdiction" => "Инициирован перехват"
-.JetConeBoost: "Jet Cone Boost" => "Перегрузка FSD (джет)"
-.JetConeDamage: "Jet Cone Damage" => "Урон от перегрузки (джет)"
-.JoinACrew: "Join A Crew" => "Присоединение к экипажу"
-.KickCrewMember: "Kick Crew Member" => "Член экипажа изгнан"
-.LaunchDrone: "Launch Drone" => "Дрон выпущен"
-.LaunchFighter: "Launch Fighter" => "Истребитель выпущен"
-.LaunchSRV: "Launch SRV" => "ТРП выпущен"
-.LeaveBody: "Leave Body" => "Отход от небесного тела"
-.Liftoff: "Liftoff" => "Взлет с поверхности"
-.LoadGame: "Load Game" => "Загрузка игры"
-.Loadout: "Loadout" => "Снаряжение"
-.Location: "Location" => "Местонахождение"
-.Market: "Market" => "Рынок"
-.MarketBuy: "Market Buy" => "Покупка на рынке"
-.MarketSell: "Market Sell" => "Продажа на рынке"
-.MaterialCollected: "Material Collected" => "Получен материал"
-.MaterialDiscarded: "Material Discarded" => "Выброшен материал"
-.MaterialDiscovered: "Material Discovered" => "Открыт материал"
-.MaterialTrade: "Material Trade" => "Обменян материал"
-.Materials: "Materials" => "Материалы"
-.MiningRefined: "Mining Refined" => "Переработка"
-.Missions: "Missions" => "Миссии"
-.MissionAbandoned: "Mission Abandoned" => "Миссия отменена"
-.MissionAccepted: "Mission Accepted" => "Миссия принята"
-.MissionCompleted: "Mission Completed" => "Миссия выполнена"
-.MissionFailed: "Mission Failed" => "Миссия провалена"
-.MissionRedirected: "Mission Redirected" => "Миссия обновлена"
-.ModuleInfo: "Module Info" => "Информация о модулях"
-.ModuleBuy: "Module Buy" => "Покупка модуля"
-.ModuleRetrieve: "Module Retrieve" => "Перемещение из хранилища"
-.ModuleSell: "Module Sell" => "Продажа модуля"
-.ModuleStore: "Module Store" => "Помещение в хранилище"
-.ModuleSwap: "Module Swap" => "Обмен модуля"
-.Music: "Music" => "Музыка"
-.NavBeaconScan: "Nav Beacon Scan" => "Данные нав. маяка"
-.NewCommander: "New Commander" => "Новый командир"
-.NpcCrewPaidWage: "Npc Crew Paid Wage" => "Выплата экипажу (npc)"
-.NpcCrewRank: "Npc Crew Rank" => "Повышение ранга члена экипажа (npc)"
-.Outfitting: "Outfitting" => "Оборудование"
-.Passengers: "Passengers" => "Пассажиры"
-.PayFines: "Pay Fines" => "Оплачен штраф"
-.PayBounties: "Pay Bounties" => "Оплачена награда за поимку"
-.PayLegacyFines: "Pay Legacy Fines" => "Оплачен просроченный штраф"
-.Powerplay: "Powerplay" => "Политика"
-.PowerplayCollect: "Powerplay Collect" => "Политические ресурсы получены"
-.PowerplayDefect: "Powerplay Defect" => "Переход к другой державе"
-.PowerplayDeliver: "Powerplay Deliver" => "Политические ресурсы доставлены"
-.PowerplayFastTrack: "Powerplay Fast Track" => "Ускорено получение квоты"
-.PowerplayJoin: "Powerplay Join" => "Присоединение к державе"
-.PowerplayLeave: "Powerplay Leave" => "Выход из державы"
-.PowerplaySalary: "Powerplay Salary" => "Недельный бонус державы"
-.PowerplayVote: "Powerplay Vote" => "Политический голос"
-.PowerplayVoucher: "Powerplay Voucher" => "Политический ваучер"
-.Progress: "Progress" => "Продвижение"
-.Promotion: "Promotion" => "Повышение"
-.PVPKill: "PVP Kill" => "Убийство игрока"
-.QuitACrew: "Quit A Crew" => "Выход из экипажа"
-.Rank: "Rank" => "Ранги"
-.RebootRepair: "Reboot Repair" => "Перезагрузка/починка"
-.ReceiveText: "Receive Text" => "Получено сообщение"
-.RedeemVoucher: "Redeem Voucher" => "Обналичен ваучер"
-.RefuelAll: "Refuel All" => "Корабль полностью заправлен"
-.RefuelPartial: "Refuel Partial" => "Корабль частично заправлен"
-.Repair: "Repair" => "Ремонт"
-.RepairAll: "Repair All" => "Корабль полностью отремонтирован"
-.RepairDrone: "Repair Drone" => "Корабль отремонтирован дроном"
-.Reputation: "Reputation" => "Репутация"
-.RequestPowerMicroResources: "Request Power Micro Resources" @
-.RestockVehicle: "Restock Vehicle" => "Покупка транспорта"
-.Resurrect: "Resurrect" => "Воскрешение"
-.SAASignalsFound: "SAA Signals Found" @
-.Scan: "Scan" => "Сканирование"
-.Scanned: "Scanned" => "Обнаружено сканирование корабля"
-.ScientificResearch: "Scientific Research" => "Научные исследования"
-.Screenshot: "Screenshot" => "Скриншот"
-.SearchAndRescue: "Search And Rescue" => "Спасательные операции"
-.SelfDestruct: "Self Destruct" => "Самоуничтожение"
-.SellDrones: "Sell Drones" => "Продажа дронов"
-.SellExplorationData: "Sell Exploration Data" => "Продажа исследовательских данных"
-.SellShipOnRebuy: "Sell Ship On Rebuy" => "Продажа корабля при выкупе нового"
-.SendText: "Send Text" => "Отправлено сообщение"
-.SetUserShipName: "Set User Ship Name" => "Изменение названия корабля"
-.ShieldState: "Shield State" => "Состояние щитов"
-.Shipyard: "Shipyard" => "Космоверфь"
-.ShipyardBuy: "Shipyard Buy" => "Покупка корабля"
-.ShipyardNew: "Shipyard New" => "Новый корабль"
-.ShipyardSell: "Shipyard Sell" => "Продажа корабля"
-.ShipyardSwap: "Shipyard Swap" => "Обмен корабля"
-.ShipyardTransfer: "Shipyard Transfer" => "Запрос на перемещение корабля"
-.ShipTargeted: "Ship Targeted" => "Выбор цели"
-.Shutdown: "Shutdown" => "Завершение игры"
-.SRVDestroyed: "SRV Destroyed" => "ТРП разрушен"
-.StartJump: "Start Jump" => "Готовится прыжок"
-.StoredModules: "Stored Modules" => "Модули в хранилище"
-.StoredShips: "Stored Ships" => "Хранимые корабли"
-.Statistics: "Statistics" => "Статистика"
-.SupercruiseEntry: "Supercruise Entry" => "Режим суперкруиза"
-.SupercruiseExit: "Supercruise Exit" => "Выход из суперкруиза"
-.SupercruiseDestinationDrop: "Supercruise Destination Drop" @
-.Synthesis: "Synthesis" => "Синтез"
-.SystemsShutdown: "Systems Shutdown" => "Отключение систем"
-.TechnologyBroker: "Technology Broker" => "Техноброкеры"
-.Touchdown: "Touchdown" => "Посадка"
-.UnderAttack: "Under Attack" => "Корабль атакован"
-.Undocked: "Undocked" => "Взлет с площадки"
-.USSDrop: "USS Drop" => "Выход к источнику сигнала"
-.VehicleSwitch: "Vehicle Switch" => "Переключение транспорта"
-.WingAdd: "Wing Add" => "Пилот присоединился к крылу"
-.WingInvite: "Wing Invite" => "Приглашение в крыло"
-.WingJoin: "Wing Join" => "Присоединение к крылу"
-.WingLeave: "Wing Leave" => "Выход из крыла"
-.ModuleSellRemote: "Module Sell Remote" => "Удаленная продажа"
-.FetchRemoteModule: "Fetch Remote Module" => "Запрос на перемещение модуля"
-.MassModuleStore: "Mass Module Store" => "Помещение в хранилище (несколько)"
-.DatalinkVoucher: "Datalink Voucher" => "Ваучер за пакет данных"
-.DataScanned: "Data Scanned" => "Сканирование данных"
-.CommunityGoalDiscard: "Community Goal Discard" => "Отказ от цели сообщества"
-.CrewLaunchFighter: "Crew Launch Fighter" => "Член экипажа запустил истребитель"
-.CrewMemberJoins: "Crew Member Joins" => "Пилот присоединился к экипажу"
-.CrewMemberQuits: "Crew Member Quits" => "Пилот покинул экипаж"
-.CrewMemberRoleChange: "Crew Member Role Change" => "Член экипажа сменил роль"
-.EDDItemSet: "EDD Item Set" => "Выбрать предмет (EDD)"
-.EDDCommodityPrices: "EDD Commodity Prices" => "Цены на товары (EDD)"
-.EngineerContribution_Unknown: "Engineer Contribution_Unknown" => "Взнос для инженера (неизвестн.)"
-.EngineerContribution_MatCommod: "Engineer Contribution_Mat Commod" => "Взнос для инженера (материалы/товары)"
-.AppliedToSquadron: "Applied To Squadron" @
-.AsteroidCracked: "Asteroid Cracked" => "Астероид взорван"
-.CodexEntry: "Codex Entry" => "Запись для кодекса"
-.DisbandedSquadron: "Disbanded Squadron" => "Эскадрилья расформирована"
-.FSDTarget: "FSD Target" => "Пункт назначения"
-.FSSAllBodiesFound: "FSS All Bodies Found" => "FSS-сканирование системы завершено"
-.FSSDiscoveryScan: "FSS Discovery Scan" => "FSS-сканирование системы"
-.FSSSignalDiscovered: "FSS Signal Discovered" => "Обнаружены сигналы"
-.InvitedToSquadron: "Invited To Squadron" => "Приглашение в эскадрилью"
-.JoinedSquadron: "Joined Squadron" => "Вступление в эскадрилью"
-.KickedFromSquadron: "Kicked From Squadron" => "Исключение из эскадрильи"
-.LeftSquadron: "Left Squadron" => "Выход из эскадрильи"
-.MultiSellExplorationData: "Multi Sell Exploration Data" => "Массовая продажа исследовательских данных"
-.SAAScanComplete: "SAA Scan Complete" => "Сканирование поверхности завершено"
-.SharedBookmarkToSquadron: "Shared Bookmark To Squadron" => "Поделился закладкой с эскадрильей"
-.SquadronCreated: "Squadron Created" => "Эскадрилья создана"
-.SquadronDemotion: "Squadron Demotion" => "Понижение ранга в эскадрилье"
-.SquadronPromotion: "Squadron Promotion" => "Повышение ранга в эскадрилье"
-.WonATrophyForSquadron: "Won A Trophy For Squadron" => "Добыт трофей для эскадрильи"
-.CrimeVictim: "Crime Victim" => "Сообщение о преступлении"
-.ProspectedAsteroid: "Prospected Asteroid" => "Астероид исследован"
-.ReservoirReplenished: "Reservoir Replenished" => "Пополнение резервуара"
-.SquadronStartup: "Squadron Startup" => "Эскадрилья"
-.CarrierBankTransfer: "Carrier Bank Transfer" @
-.CarrierBuy: "Carrier Buy" @
-.CarrierCancelDecommission: "Carrier Cancel Decommission" @
-.CarrierCrewServices: "Carrier Crew Services" @
-.CarrierDecommission: "Carrier Decommission" @
-.CarrierDepositFuel: "Carrier Deposit Fuel" @
-.CarrierDockingPermission: "Carrier Docking Permission" @
-.CarrierFinance: "Carrier Finance" @
-.CarrierJumpRequest: "Carrier Jump Request" @
-.CarrierJump: "Carrier Jump" @
-.CarrierModulePack: "Carrier Module Pack" @
-.CarrierShipPack: "Carrier Ship Pack" @
-.CarrierStats: "Carrier Stats" @
-.CarrierTradeOrder: "Carrier Trade Order" @
-.CarrierNameChange: "Carrier Name Change" @
-.CarrierJumpCancelled: "Carrier Jump Cancelled" @
-.CargoTransfer: "Cargo Transfer" @
-.NavRoute: "Nav Route" @
-.BookDropship: "Book Dropship" @
-.BookTaxi: "Book Taxi" @
-.BuyMicroResources: "Buy Micro Resources" @
-.BuySuit: "Buy Suit" @
-.BuyWeapon: "Buy Weapon" @
-.CancelDropship: "Cancel Dropship" @
-.CancelTaxi: "Cancel Taxi" @
-.CollectItems: "Collect Items" @
-.CreateSuitLoadout: "Create Suit Loadout" @
-.DeleteSuitLoadout: "Delete Suit Loadout" @
-.Disembark: "Disembark" @
-.DropItems: "Drop Items" @
-.Embark: "Embark" @
-.LoadoutEquipModule: "Loadout Equip Module" @
-.LoadoutRemoveModule: "Loadout Remove Module" @
-.RenameSuitLoadout: "Rename Suit Loadout" @
-.ScanOrganic: "Scan Organic" @
-.SellMicroResources: "Sell Micro Resources" @
-.SellOrganicData: "Sell Organic Data" @
-.SellSuit: "Sell Suit" @
-.SellWeapon: "Sell Weapon" @
-.SwitchSuitLoadout: "Switch Suit Loadout" @
-.TradeMicroResources: "Trade Micro Resources" @
-.UpgradeSuit: "Upgrade Suit" @
-.UpgradeWeapon: "Upgrade Weapon" @
-.UseConsumable: "Use Consumable" @
-.SuitLoadout: "Suit Loadout" @
-.DropshipDeploy: "Dropship Deploy" @
-.FactionKillBond: "Faction Kill Bond" => "Боевые облигации"
-.CapShipBond: "Capital Ship Bond" => "Боевые облигации (крейсер)"
-.BackpackChange: "Backpack Change" @
-.Backpack: "Backpack" @
-.Resupply: "Resupply" @
-.ShipLocker: "Ship Locker" @
-.FSSBodySignals: "FSS Body Signals" @
-.ModuleBuyAndStore: "Module Buy And Store" @
-.ScanBaryCentre: "Scan Bary Centre" @
-.NavRouteClear: "Nav Route Clear" @
-.ShipRedeemed: "Ship Redeemed" @
-.ShipyardRedeem: "Shipyard Redeem" @
-.PowerplayMerits: "Powerplay Merits" @
-.PowerplayRank: "Powerplay Rank" @
-.CarrierLocation: "Carrier location" @
+94A37CFA0C8992: "Afmu Repairs" => "Ремонт с помощью АПР"
+D2F34790ECB3BA: "Approach Body" => "Сближение с небесным телом"
+5FB514306EBAE2: "Approach Settlement" => "Сближение с поселением"
+4B7A83F3BE5558: "Bounty" => "Награда"
+9DD2CAFB447CCC: "Buy Ammo" => "Покупка боеприпасов"
+FEB62C499A2500: "Buy Drones" => "Покупка дронов"
+657F9AA0E064D8: "Buy Exploration Data" => "Покупка исследовательских данных"
+7CAFDD19556BE8: "Buy Trade Data" => "Покупка данных о товарах"
+4DB05D715294E0: "Cargo Depot" => "Доставка груза"
+0C9331C9670394: "Change Crew Role" => "Смена роли в экипаже"
+92297066F3CE05: "Clear Saved Game" => "Сброс сохранения"
+DECEEF4C721E9F: "Cockpit Breached" => "Пробоина в фонаре кабины"
+5C0DE795E1E9F4: "Collect Cargo" => "Груз собран"
+B268ED0B4B607A: "Commit Crime" => "Совершено преступление"
+8F950E8AA5B28D: "Community Goal" => "Цели сообщества"
+D901282523F7E6: "Community Goal Join" => "Присоединение к цели сообщества"
+157888363FB63B: "Community Goal Reward" => "Награда цели сообщества"
+0E4AA789DB9CE3: "Continued" => "Продолжение лога"
+D9DBF455284B6C: "Crew Assign" => "Назначен член экипажа"
+9FCD1C303A28D0: "Crew Fire" => "Уволен член экипажа"
+F461D7CE106E43: "Crew Hire" => "Нанят член экипажа"
+0DE99E6DD44B25: "Colonisation Construction Depot" => "Kolonisation Konstruktionsdepot"
+8B4C0F68F590D1: "Colonisation Contribution" => "Kolonisation Beitrag"
+CAD2667B19FFD9: "Colonisation System Claim" => "Kolonisation Systembeanspruchung"
+FDC7F8A4C985F5: "Colonisation Beacon Deployed" => "Kolonisationsbake ausgebracht"
+87AD5FCA61B672: "Colonisation System Claim Release" => "Kolonisation Systembeanspruchung freigeben"
+D03AD030E9F093: "Clear Impound" => "Begleiche Pfändung"
+C82B7C89CBD30E: "Datalink Scan" => "Сканирование канала данных"
+C681DDF728EF23: "Deliver Power Micro Resources" => "Liefere Macht-Mikroressourcen"
+7DA32347D585AC: "Discovery Scan" => "Сканирование системы"
+9D8193CC2A2C4A: "Docked" => "Стыковка"
+6D2D27037BA796: "Dock Fighter" => "Истребитель погружен"
+8314BEC36AF82B: "Docking Cancelled" => "Стыковка отменена"
+A45578BCD4D634: "Docking Denied" => "В стыковке отказано"
+26DC1C4B7F15D6: "Docking Granted" => "Стыковка разрешена"
+13F853321421F2: "Docking Requested" => "Запрос стыковки"
+3C77E9C9554E54: "Docking Timeout" => "Стыковка продлилась слишком долго"
+796895CEA9660E: "Dock SRV" => "ТРП погружен"
+E7E61DBEAF0D82: "Eject Cargo" => "Сброс груза"
+8BA3287C64D3F8: "End Crew Session" => "Экипаж распущен"
+C8A941A4EACDD9: "Engineer Apply" => "Изготовление модификации (до 3.0)"
+772CD2D2953DAF: "Engineer Contribution" => "Взнос для инженера"
+DCC8C35235D14B: "Engineer Craft" => "Изготовление модификации"
+2CD177C5449797: "Engineer Legacy Convert" => "Преобразование устаревшей модификации"
+D86077951EF998: "Engineer Progress" => "Инженеры"
+DA8DFCD3EB91C7: "Escape Interdiction" => "Уход от перехвата"
+5B25DA29144CE3: "Bartender Materials" => "Barkeepermaterialien"
+C8DFA75D28023B: "FSD Jump" => "Прыжок"
+E32CE0896F3456: "Fuel Scoop" => "Сбор топлива"
+25078CE898205E: "Fileheader" => "Заголовок файла"
+59343B3335F13B: "Fighter Destroyed" => "Истребитель разрушен"
+A55D954C33A2C6: "Fighter Rebuilt" => "Истребитель построен"
+C11D5E1D35FB7E: "Friends" => "Друзья"
+612F78C20036B3: "Heat Damage" => "Повреждения от перегрева"
+2404C350585EFF: "Heat Warning" => "Предупреждение о перегреве"
+8DCEF71583C289: "Hull Damage" => "Повреждения корпуса"
+AC6279DDA92ACD: "Holoscreen Hacked" => "Holoschirm gehackt"
+CFBCD7231691E7: "Jet Cone Damage" => "Урон от перегрузки (джет)"
+6B9B8F3795C3FE: "Join A Crew" => "Присоединение к экипажу"
+5E2C7463061466: "Kick Crew Member" => "Член экипажа изгнан"
+B4C51E14077D64: "Launch Drone" => "Дрон выпущен"
+3683810A2E0B5E: "Launch Fighter" => "Истребитель выпущен"
+98EE7DBAA15D4D: "Launch SRV" => "ТРП выпущен"
+4C1DEF3A63BE70: "Leave Body" => "Отход от небесного тела"
+4ED0770561AF5B: "Liftoff" => "Взлет с поверхности"
+802AA657657737: "Load Game" => "Загрузка игры"
+569BBD757E1BB8: "Market" => "Рынок"
+07B9763A41395A: "Market Buy" => "Покупка на рынке"
+A139B9152B48AE: "Market Sell" => "Продажа на рынке"
+04D7802CE9BF8C: "Material Collected" => "Получен материал"
+B325E88182396B: "Material Discarded" => "Выброшен материал"
+72314913DF1DFB: "Material Discovered" => "Открыт материал"
+4CABFFE40BF7F1: "Material Trade" => "Обменян материал"
+5F9C7AA91B0117: "Mining Refined" => "Переработка"
+97C9FE50FCAD64: "Mission Abandoned" => "Миссия отменена"
+E161E0A85A06A5: "Mission Accepted" => "Миссия принята"
+D99D5CBC0E9F5D: "Mission Completed" => "Миссия выполнена"
+63B5C824ABFAA2: "Mission Failed" => "Миссия провалена"
+BB88C34EE25C53: "Mission Redirected" => "Миссия обновлена"
+4348D55EBF3612: "Module Info" => "Информация о модулях"
+0F11042AFFE3BE: "Module Buy" => "Покупка модуля"
+9C6F653AC574EA: "Module Retrieve" => "Перемещение из хранилища"
+CD71CDF86BAD75: "Module Sell" => "Продажа модуля"
+12EB2E4F778BB0: "Module Store" => "Помещение в хранилище"
+F2B7A6EEFE871A: "Module Swap" => "Обмен модуля"
+131260CBFBB0C8: "Music" => "Музыка"
+378883DC424FF5: "Nav Beacon Scan" => "Данные нав. маяка"
+703619011B0E7C: "New Commander" => "Новый командир"
+A9F7B6DA4CD9A2: "Npc Crew Paid Wage" => "Выплата экипажу (npc)"
+BA39C1516AABF2: "Npc Crew Rank" => "Повышение ранга члена экипажа (npc)"
+76A8964DFF1EA9: "Pay Bounties" => "Оплачена награда за поимку"
+089888F828B2F4: "Pay Legacy Fines" => "Оплачен просроченный штраф"
+5000616468FC32: "Powerplay Collect" => "Политические ресурсы получены"
+10B7247C88B0C7: "Powerplay Defect" => "Переход к другой державе"
+4CA45BD051B2D7: "Powerplay Deliver" => "Политические ресурсы доставлены"
+3104A57A10DED4: "Powerplay Fast Track" => "Ускорено получение квоты"
+21D40F054F6CD6: "Powerplay Join" => "Присоединение к державе"
+6EB11A5AE6507E: "Powerplay Leave" => "Выход из державы"
+5CC808A9CDDAFF: "Powerplay Salary" => "Недельный бонус державы"
+40B15AA6265BDE: "Powerplay Vote" => "Политический голос"
+1F671B74035C76: "Powerplay Voucher" => "Политический ваучер"
+550AE25C2EEEB9: "Promotion" => "Повышение"
+249F234E0ECB7D: "PVP Kill" => "Убийство игрока"
+AEE2D9EEC50FC5: "Quit A Crew" => "Выход из экипажа"
+1216C18189303B: "Reboot Repair" => "Перезагрузка/починка"
+BDB49F46979640: "Receive Text" => "Получено сообщение"
+C362D4612F5C74: "Refuel All" => "Корабль полностью заправлен"
+631EE680DA6EC0: "Refuel Partial" => "Корабль частично заправлен"
+5F60B1C2E60520: "Repair" => "Ремонт"
+C3F2BE0BE60597: "Repair All" => "Корабль полностью отремонтирован"
+E8DB7AC16063A4: "Repair Drone" => "Корабль отремонтирован дроном"
+5F21606B3A35DE: "Reputation" => "Репутация"
+C2D9E7B331A6A3: "Request Power Micro Resources" => "Fordere Macht-Mikrosressourcen an"
+615977F038158E: "Restock Vehicle" => "Покупка транспорта"
+53515D02D18F1B: "Resurrect" => "Воскрешение"
+23B2A150243DBA: "SAA Signals Found" => "Oberflächensignale gefunden"
+78A22FBA11B38F: "Scanned" => "Обнаружено сканирование корабля"
+587EB8CC1361C3: "Scientific Research" => "Научные исследования"
+60C152D92DFFCE: "Screenshot" => "Скриншот"
+9DCFE3BBC19358: "Search And Rescue" => "Спасательные операции"
+F06DB83784986C: "Self Destruct" => "Самоуничтожение"
+EBDA61F721E706: "Sell Drones" => "Продажа дронов"
+756A5F9211337F: "Sell Exploration Data" => "Продажа исследовательских данных"
+8C28B150645580: "Sell Ship On Rebuy" => "Продажа корабля при выкупе нового"
+A4F67D90F861BB: "Send Text" => "Отправлено сообщение"
+ECE8DF43B4E578: "Set User Ship Name" => "Изменение названия корабля"
+0DA1A534B43399: "Shield State" => "Состояние щитов"
+3C297FAA7D6A91: "Shipyard" => "Космоверфь"
+757D7FCACF98BF: "Shipyard Buy" => "Покупка корабля"
+77AB9B969A910C: "Shipyard New" => "Новый корабль"
+4E29C0CE3E9D61: "Shipyard Sell" => "Продажа корабля"
+270AB9D553AFE5: "Shipyard Swap" => "Обмен корабля"
+7E6D4BF9F2AA3F: "Shipyard Transfer" => "Запрос на перемещение корабля"
+7908BD051ADB46: "Ship Targeted" => "Выбор цели"
+7FDDB7D8D1D60B: "Shutdown" => "Завершение игры"
+CAAACBDEADF1BF: "SRV Destroyed" => "ТРП разрушен"
+3B2C3C4691ED9D: "Start Jump" => "Готовится прыжок"
+F9BBEDF86004A2: "Stored Ships" => "Хранимые корабли"
+20F68A6A1AF1CE: "Supercruise Entry" => "Режим суперкруиза"
+D23F09253DF3FB: "Supercruise Exit" => "Выход из суперкруиза"
+060A4DB27456BF: "Supercruise Destination Drop" => "Supercruise Zielaustritt"
+572A527CEFEB60: "Systems Shutdown" => "Отключение систем"
+BC696A6FB39B1E: "Technology Broker" => "Техноброкеры"
+A2B5B115CC601A: "Touchdown" => "Посадка"
+89A69B807BD0C3: "Under Attack" => "Корабль атакован"
+43F61E0660CF21: "Undocked" => "Взлет с площадки"
+042FA91808F2A3: "USS Drop" => "Выход к источнику сигнала"
+90097AC4D99E06: "Vehicle Switch" => "Переключение транспорта"
+1F5209DDDFC851: "Wing Add" => "Пилот присоединился к крылу"
+CE86409EC0526C: "Wing Invite" => "Приглашение в крыло"
+037A5425B51D23: "Wing Join" => "Присоединение к крылу"
+7CE073E07B941F: "Wing Leave" => "Выход из крыла"
+3F13C520D21BF5: "Module Sell Remote" => "Удаленная продажа"
+324545E2943C03: "Fetch Remote Module" => "Запрос на перемещение модуля"
+E3EE9373B1B90F: "Mass Module Store" => "Помещение в хранилище (несколько)"
+52173A6697C471: "Datalink Voucher" => "Ваучер за пакет данных"
+5F400C4C44137D: "Data Scanned" => "Сканирование данных"
+1F52D64952C421: "Community Goal Discard" => "Отказ от цели сообщества"
+D7B33D045A2BCB: "Crew Launch Fighter" => "Член экипажа запустил истребитель"
+AD336CD7C73063: "Crew Member Joins" => "Пилот присоединился к экипажу"
+D50F857E661100: "Crew Member Quits" => "Пилот покинул экипаж"
+0BBA6B926C275D: "Crew Member Role Change" => "Член экипажа сменил роль"
+87840FD0486F82: "EDD Item Set" => "Выбрать предмет (EDD)"
+EF44C2AD2FEB81: "EDD Commodity Prices" => "Цены на товары (EDD)"
+54C7AEAC0DF2CA: "Engineer Contribution_Unknown" => "Взнос для инженера (неизвестн.)"
+7C4BA9326738CC: "Engineer Contribution_Mat Commod" => "Взнос для инженера (материалы/товары)"
+4F231038718008: "Applied To Squadron" => "Zgłoszenie do Eskadry"
+D9189899F7098F: "Asteroid Cracked" => "Астероид взорван"
+182D7F00B01931: "Codex Entry" => "Запись для кодекса"
+A4E2A8AD61007C: "Disbanded Squadron" => "Эскадрилья расформирована"
+D1BD90BB4FF563: "FSD Target" => "Пункт назначения"
+5AFA0561EA1EA2: "FSS All Bodies Found" => "FSS-сканирование системы завершено"
+75B4E8B7C347C8: "FSS Discovery Scan" => "FSS-сканирование системы"
+8E7C00F8CC93C7: "FSS Signal Discovered" => "Обнаружены сигналы"
+E8230B84718CEE: "Invited To Squadron" => "Приглашение в эскадрилью"
+A6C19FF94D7B3C: "Joined Squadron" => "Вступление в эскадрилью"
+DD1E18769DE9C5: "Kicked From Squadron" => "Исключение из эскадрильи"
+DBF7FC98D24808: "Left Squadron" => "Выход из эскадрильи"
+BB42F30FBF10D5: "Multi Sell Exploration Data" => "Массовая продажа исследовательских данных"
+9A0B26B14A7AD7: "SAA Scan Complete" => "Сканирование поверхности завершено"
+DED5555CBEC12B: "Shared Bookmark To Squadron" => "Поделился закладкой с эскадрильей"
+11E9777B7E1686: "Squadron Created" => "Эскадрилья создана"
+D337B3584D4A2C: "Squadron Demotion" => "Понижение ранга в эскадрилье"
+7E35276147EA5D: "Squadron Promotion" => "Повышение ранга в эскадрилье"
+2D4B697532658A: "Won A Trophy For Squadron" => "Добыт трофей для эскадрильи"
+1C2A2D69647B4E: "Crime Victim" => "Сообщение о преступлении"
+AF9B07B2FEE316: "Prospected Asteroid" => "Астероид исследован"
+3D182E824C16BF: "Reservoir Replenished" => "Пополнение резервуара"
+42F768126917CA: "Squadron Startup" => "Эскадрилья"
+21F7E2CAA96984: "Carrier Bank Transfer" => "Carrier Banktransfer"
+A94BBBE9C56BBE: "Carrier Buy" => "Carrier kaufen"
+A23ED09D92F353: "Carrier Cancel Decommission" => "Carrier Stillegung abbrechen"
+66499C0A001316: "Carrier Crew Services" => "Carrier Besatzungsservices"
+3BE0BA36AF68CA: "Carrier Decommission" => "Carrier Stilllegung"
+F7A0147A3FB973: "Carrier Deposit Fuel" => "Carrier Treibstoff lagern"
+4D7CC816A9CBDF: "Carrier Docking Permission" => "Carrier Anlegeerlaubnis"
+7DF333A8096FC5: "Carrier Finance" => "Carrierfinanz"
+03702A530DD63A: "Carrier Jump Request" => "Carrier Sprunganfrage"
+1A91119760CE17: "Carrier Jump" => "Carriersprung"
+CFA1B9339C0699: "Carrier Module Pack" => "Carrier Modulpaket"
+2A84B48D0FEC3D: "Carrier Ship Pack" => "Carrier Schiffspaket"
+037850588070C8: "Carrier Stats" => "Carrier Statistiken"
+811BF0A043B9DD: "Carrier Trade Order" => "Carrier Handelsbestellung"
+7722B972B8042E: "Carrier Name Change" => "Carrier Namensänderung"
+86A932837E6ED0: "Carrier Jump Cancelled" => "Carrier Sprung abgebrochen"
+18FC2307338F5B: "Cargo Transfer" => "Frachttransfer"
+A70E1E5D4FCF57: "Book Dropship" => "Abwurfschiff buchen"
+6F0043CCCF4ACB: "Book Taxi" => "Taxi buchen"
+EE2FD771832C88: "Buy Micro Resources" => "Mikroressourcen kaufen"
+AAABEAA3538323: "Buy Suit" => "Anzug kaufen"
+CE6C719AB9B430: "Buy Weapon" => "Waffe kaufen"
+1DBFBD01434228: "Cancel Dropship" => "Abwurfschiff abbrechen"
+A1393E5E4FBF69: "Cancel Taxi" => "Taxi abbrechen"
+31F8CBE66211D5: "Collect Items" => "Gegenstände einsammeln"
+32D1411A67758F: "Create Suit Loadout" => "Anzugkonfiguration erstellen"
+4409C46E15CC61: "Delete Suit Loadout" => "Anzugkonfiguration löschen"
+48846751537ACB: "Disembark" => "Ausschiffen"
+7AA2403F734BF0: "Drop Items" => "Gegenstände fallen lassen"
+60944C2DB33AC3: "Embark" => "Einschiffen"
+AD9D9A51B80C51: "Loadout Equip Module" => "Konfiguration Modul ausrüsten"
+A39C27356E914A: "Loadout Remove Module" => "Konfiguration Modul entfernen"
+FEACDC101F3C71: "Rename Suit Loadout" => "Anzugkonfiguration umbenennen"
+92CD330C7476AF: "Scan Organic" => "Scan organisch"
+E1364B2750FF51: "Sell Micro Resources" => "Mikroressourcen verkaufen"
+1F1D1B09C4D2D1: "Sell Organic Data" => "Organische Daten verkaufen"
+B69D39285E77BE: "Sell Suit" => "Anzug verkaufen"
+F2D461F2B14E6D: "Sell Weapon" => "Waffen verkaufen"
+89E3F435AC99AC: "Switch Suit Loadout" => "Anzugkonfiguration wechseln"
+D6CCA803E4CF15: "Trade Micro Resources" => "Mikroressourcen handeln"
+35B057D454E371: "Upgrade Suit" => "Anzug aufrüsten"
+CC32AF210BB9F0: "Upgrade Weapon" => "Waffe aufrüsten"
+2D95A18F6424D0: "Use Consumable" => "Verbrauchsmaterial benutzen"
+FAE5889CBC718C: "Suit Loadout" => "Anzugkonfiguration"
+AF4A72DDF4E93C: "Dropship Deploy" => "Abwurfschiff entsenden"
+D65B880844BDA5: "Faction Kill Bond" => "Боевые облигации"
+BEE86D7B577ADD: "Capital Ship Bond" => "Боевые облигации (крейсер)"
+C055CE660F5A68: "Backpack Change" => "Rucksack Änderung"
+A3C03E444B54D1: "Resupply" => "Aufstocken"
+274B5ED5219994: "FSS Body Signals" => "VSS Körpersignale"
+9EE301C4756544: "Module Buy And Store" => "Modul kaufen und lagern"
+1583DD9013D4EF: "Scan Bary Centre" => "Baryzentrumsscan"
+DDDE2AEC826902: "Nav Route Clear" => "Navroute leeren"
+762CAF00E77FCB: "Ship Redeemed" => "Schiff eingelöst"
+3D1641D631C5B9: "Shipyard Redeem" => "Werft Einlösung"
+02374D50F6A18D: "Powerplay Merits" => "Machtspielverdienst"
+8062068144644D: "Powerplay Rank" => "Machtspielrang"
+5668ADC227F38B: "Carrier Location" => "Carrierstandort"
 
 
 SECTION JournalCargo
 
-.CargoShip: "Ship" => "Груз на корабле: "
-.CargoSRV: "SRV" => "Груз в ТРП: "
+8A009AE46C6211: "SRV" => "Груз в ТРП: "
 
 SECTION JournalCodexEntry
 
-.At: "At " => "Система: "
-.in: "in " => "сектор: "
-.NewEntry: ";New Entry" => ";новая запись"
-.Traits: ";Traits" => "; сведения"
+21F7B3DA0DB370: "At " => "Система: "
+C36551215CB2D4: "in " => "сектор: "
+0E35DDA343D4D9: ";New Entry" => ";новая запись"
+BF03B90D446D74: ";Traits" => "; сведения"
 
 SECTION CommunityGoal
 
-.Title: "Title: " => "Название: "
-.System: "System: " => "система: "
-.At: "At: " => "Станция: "
-.Expires: "Expires: " => "срок: "
-.NotComplete: "Not Complete;Complete" => "Цель не достигнута;Цель достигнута"
-.CurrentTotal: "Current Total: " => "текущий прогресс: "
-.Contribution: "Contribution: " => "вклад: "
-.NumContributors: "Num Contributors: " => "внесли вклад: "
-.Player: "Player % Band: " => "Вы входите в топ %: "
-.TopRank: "Top Rank: " => "лучший ранг: "
-.NotInTopRank: "Not In Top Rank;In Top Rank" => "вы не входите в этот ранг;вы входите в этот ранг"
-.TierReached: "Tier Reached: " => "Достигнут уровень: "
-.Bonus: "Bonus: " => "награда: "
-.TopTierName: "Top Tier Name" => "максимальный уровень: "
-.TT: "TT. Bonus" => "Награда текущего уровня"
+EDD45BDC14E947: "Title: " => "Название: "
+9202F1C53A934E: "At: " => "Станция: "
+2DDBF726AF7076: "Expires: " => "срок: "
+636C2C3E755471: "Not Complete;Complete" => "Цель не достигнута;Цель достигнута"
+A4DB3D1E742FB7: "Current Total: " => "текущий прогресс: "
+E48FDD628C8DC7: "Contribution: " => "вклад: "
+388928396DE8DF: "Num Contributors: " => "внесли вклад: "
+9233AB21E2ADBB: "Player % Band: " => "Вы входите в топ %: "
+FBF1D2E25A4426: "Top Rank: " => "лучший ранг: "
+F944307E983058: "Not In Top Rank;In Top Rank" => "вы не входите в этот ранг;вы входите в этот ранг"
+4989EA19A762D3: "Tier Reached: " => "Достигнут уровень: "
+8FB2154EACE5DE: "Bonus: " => "награда: "
+7654BB6A1342A8: "Top Tier Name" => "максимальный уровень: "
+72819B6B953E71: "TT. Bonus" => "Награда текущего уровня"
 
 SECTION FSSSignal
 
-.State: "State: " => "Состояние: "
-.Faction: "Faction: " => "фракция: "
-.ThreatLevel: "Threat Level: " => " уровень угрозы: "
-.StationBool: ";Station: " => "; станция"
-.CarrierBool: ";Carrier: " @
-.MegashipBool: ";Megaship: " @
-.InstallationBool: ";Installation: " @
-.LastSeen: "Last Seen: " @
+7847429E435FC1: "State: " => "Состояние: "
+477D5FBB417454: "Faction: " => "фракция: "
+FBD2FFC832044A: "Threat Level: " => " уровень угрозы: "
+1064815C259027: ";Station: " => "; станция"
+2C1E7B1A811FA5: ";Carrier: " => ";Carrier: "
+4B7A9B7D38BE43: ";Megaship: " => ";Megaschiff: "
+F292A592250E0D: ";Installation: " => ";Installation: "
+4616E1CC672488: "Last Seen: " => "Zuletzt gesehen: "
 
 SECTION JournalFSSDiscoveryScan
 
-.Progress: "Progress: ;%;N1" => "Прогресс: ;%;N1"
-.Bodies: "Bodies: " @
-.Others: "Others: " => "другие: "
+90D81BB977D5B7: "Progress: ;%;N1" => "Прогресс: ;%;N1"
+9AA7993EF1EBB9: "Bodies: " => "Körper: "
+70D35041E4CA09: "Others: " => "другие: "
 
 SECTION JournalFSSSignalDiscovered
 
-.Detected: "Detected ; signals" => "Сигналов обнаружено: ;"
+A90AC299BB0207: "Detected ; signals" => "Сигналов обнаружено: ;"
 
 SECTION JournalDocked
 
-.At: "At {0}" => "Корабль пристыкован к {0}"
 
 SECTION JournalCommodityPricesBase
 
-.PON: "Prices on ; items" => "Цены на ; товары"
-.CPBat: "< at " => "< на "
-.CPBin: "< in " => "< в "
-.Itemstobuy: "Items to buy: " => "Товары, которые можно купить: "
-.CPBBuySell: "{0}: {1} sell {2} Diff {3} {4}%  " => "{0}: {1} продать {2} разница {3} {4}%  "
-.CPBBuy: "{0}: {1}  " @
-.SO: "Sell only Items: " => "Товары, которые можно продать: "
+BBB81F7CA96417: "Prices on ; items" => "Цены на ; товары"
+C45A6B5C9F13D9: "< at " => "< на "
+46FE700B99EAD5: "< in " => "< в "
+4FF47DDBF2C2E5: "Items to buy: " => "Товары, которые можно купить: "
+38892DF3CDB24B: "{0}: {1} sell {2} Diff {3} {4}%  " => "{0}: {1} продать {2} разница {3} {4}%  "
+0E5A14D01A6CE1: "{0}: {1}  " => "{0}: {1}"
+0B64BB452514D3: "Sell only Items: " => "Товары, которые можно продать: "
 
 SECTION JournalEngineerProgress
 
-.Progresson: "Progress on ; Engineers" => "Всего известно: ;"
-.Rank: "Rank: " => "Ранг: "
+1B81E4B95EF5F8: "Progress on ; Engineers" => "Всего известно: ;"
+4FABE731AE0FC3: "Rank: " => "Ранг: "
 
 SECTION JournalFSDJump
 
-.Jumpto: "Jump to {0}" => "Прыжок в {0}"
-.Distance: "; ly;N2" @
-.FuelUsed: "Fuel used: ; t;N2" @
-.FuelLeft: "Fuel left: ; t;N2" @
+04B4E8D64E0BC6: "Jump to {0}" => "Прыжок в {0}"
+E2A979859FDBBA: "; ly;N2" => "; ly;N2"
+0633457E6D4FA9: "Fuel used: ; t;N2" => "Zużyte paliwo: ; t;N2"
+79D0B9EAACAC09: "Fuel left: ; t;N2" => "Pozostało paliwo: ; t;N2"
 
 SECTION JournalLeaveBody
 
-.In: "In " = JournalCodexEntry.At
+0BB7C46C2736F9: "In " => "Система: "
 
 SECTION JournalLocOrJump
 
-.Faction: "Faction: " = FSSSignal.Faction
-.Wanted: "<;(Wanted) " => "<;(в розыске) "
-.State: "State: " => "состояние: "
-.Allegiance: "Allegiance: " => "принадлежность: "
-.Economy: "Economy: " => "экономика: "
-.Population: "Population: " => "Население: "
-.Government: "Government: " => "форма правления: "
-.Inf: "Inf: ;%" => "влияние: ;%"
-.PendingState: "Pending State: " => " ожидаемое состояние: "
-.RecoveringState: "Recovering State: " => " состояние восстановления: "
+A1F7BF2AD4BEB6: "<;(Wanted) " => "<;(в розыске) "
+DE700C1A223A4D: "Allegiance: " => "принадлежность: "
+44D26B8F2218CB: "Economy: " => "экономика: "
+3FCAA488BA65CB: "Population: " => "Население: "
+2E56F3E0457A1F: "Government: " => "форма правления: "
+6B3FB6468F5B3C: "Inf: ;%" => "влияние: ;%"
+8C72B30EA79D8C: "Pending State: " => " ожидаемое состояние: "
+9189629C966005: "Recovering State: " => " состояние восстановления: "
 
 SECTION JournalFuelScoop
 
-.Total: "Total: ;t;0.0" => "всего: ; т;0.0"
+087572061D1610: "Total: ;t;0.0" => "всего: ; т;0.0"
 
 SECTION JournalLoadout
 
-.Modules: "Modules: " => "модулей: "
+3AB9E085D3989C: "Modules: " => "модулей: "
 
 SECTION JournalLocation
 
-.AtStat: "At {0}" => "Местоположение: станция {0}"
-.LND: "Landed on {0}" => "Местоположение: планета {0}"
-.AtStar: "At {0}" => "Местоположение: система {0}"
+B208B70B652E87: "Landed on {0}" => "Местоположение: планета {0}"
 
 SECTION JournalLocOrJump
 
-.Type: "Type " => "Тип: "
-.insystem: "< in system " => "<, система: "
-.Security: "Security: " => "безопасность: "
-.Happiness: "Happiness: " => "удовлетворенность: "
-.Reputation: "Reputation: ;%;N1" => "репутация: ;%;N1"
-.SquadronSystem: ";Squadron System" => ";система эскадрильи"
-.HappiestSystem: ";Happiest System" => ";самая удовлетворенная система"
-.HomeSystem: ";Home System" => ";домашняя система"
-.ActiveState: "Active State: " => " текущие состояния: "
+E298B0EC36231C: "Type " => "Тип: "
+F6551977CCE103: "< in system " => "<, система: "
+C90AEA3F20DDBC: "Security: " => "безопасность: "
+D5DA2840F53DF6: "Happiness: " => "удовлетворенность: "
+9BF00A5AD1074F: "Reputation: ;%;N1" => "репутация: ;%;N1"
+B88C0272084C40: ";Squadron System" => ";система эскадрильи"
+CAB4C00BAF5433: ";Happiest System" => ";самая удовлетворенная система"
+077DC88F4AAFF0: ";Home System" => ";домашняя система"
+8D05C0D443ABEF: "Active State: " => " текущие состояния: "
 
 SECTION JournalMissionAccepted
 
-.from: "< from " => "< от фракции "
-.Expiry: "Expiry: " = CommunityGoal.Expires
-.Influence: "Influence: " => "влияние: "
-.Reputation: "Reputation: " => "репутация: "
-.Reward: "Reward: ; cr;N0" => "награда: ; кр.;N0"
-.Wing: "; (Wing)" => "; (для крыла)"
-.Deliver: "Deliver: " => "Товар: "
-.TargetType: "Target Type: " => "тип цели: "
-.KillCount: "Kill Count: " => "счетчик целей: "
-.Passengers: "Passengers: " => "число пассажиров: "
-.Count: "Count: " @
+3283C6A6480226: "< from " => "< от фракции "
+45648CB8A10AF0: "Expiry: " => "срок: "
+AB394764BE65E7: "Influence: " => "влияние: "
+523F57628709ED: "Reputation: " => "репутация: "
+3A4F33142BB77B: "Reward: ; cr;N0" => "награда: ; кр.;N0"
+4B0AAE097D7790: "; (Wing)" => "; (для крыла)"
+B4B4AABF6E92C4: "Deliver: " => "Товар: "
+BAB3C9BB7D042F: "Target Type: " => "тип цели: "
+234142964522F0: "Kill Count: " => "счетчик целей: "
+223780689F47A9: "Passengers: " => "число пассажиров: "
+C14D398EB6F6FD: "Count: " => "Ilość: "
 
 SECTION JournalMaterialDiscovered
 
-.DN: ", Discovery {0}" => ", открытие № {0}"
+8842645407ACA4: ", Discovery {0}" => ", открытие № {0}"
 
 SECTION JournalMaterials
 
-.Raw: "Raw: " => "Элементы: "
-.Manufactured: "Manufactured: " => "Промышленные: "
-.Encoded: "Encoded: " => "Зашифрованные данные: "
+02FA80C768E685: "Raw: " => "Элементы: "
+9AD41797D4856E: "Manufactured: " => "Промышленные: "
+27F86557785E47: "Encoded: " => "Зашифрованные данные: "
 
 SECTION JournalMissionRedirected
 
-.From: "From: " => "старый пункт назначения: "
-.To: "To: " => "новый пункт назначения: "
+B4F579B44C1BA2: "From: " => "старый пункт назначения: "
+52CEA31DEDF740: "To: " => "новый пункт назначения: "
 
 SECTION MissionItem
 
-.Passenger: "<;(Passenger)" => "<; (пассажир)"
-.Expires: "Expires: " = CommunityGoal.Expires
+81A4D1EEDF027B: "<;(Passenger)" => "<; (пассажир)"
 
 SECTION JournalModuleInfo
 
-.Modules: "Modules: " => "Всего модулей: "
 
 SECTION JournalMultiSellExplorationData
 
-.Total: "Total: ; cr;N0" => "всего: ; кр.;N0"
+A9017128736901: "Total: ; cr;N0" => "всего: ; кр.;N0"
 
 
 SECTION JournalProspectedAsteroid
 
-.Remaining: "Remaining: ;%;N1" => "осталось минералов: ;%;N1"
+165E27D469CF58: "Remaining: ;%;N1" => "осталось минералов: ;%;N1"
 
 SECTION JournalPromotion
 
-.Combat: "Combat" => "Боевой ранг: "
-.Trade: "Trade" => "Торговый ранг: "
-.Exploration: "Exploration" => "Исследовательский ранг: "
-.Empire: "Empire" => "Империя: "
-.Federation: "Federation" => "Федерация: "
-.CQC: "CQC" @
-.Soldier: "Soldier" @
-.ExoBiologist: "ExoBiologist" @
+B0811E470D6BF4: "Trade" => "Торговый ранг: "
+1F87C3714E9035: "Empire" => "Империя: "
+EC37C87C97E782: "Federation" => "Федерация: "
+E443046C7DE75A: "Soldier" => "Soldat"
+19B26057DCFA5F: "ExoBiologist" => "Exobiologe"
 
 SECTION JournalReceiveText
 
-.From: "From: " => "Имя: "
-.Text: " Texts" => " сообщен."
-.FC: "from " => "на канале "
-.on: "< on " => "<, канал: "
+BC18E959D7B347: " Texts" => " сообщен."
+585AF9B23226A0: "from " => "на канале "
+C0FFAB3C44DC69: "< on " => "<, канал: "
 
 SECTION JournalRepairDrone
 
-.Hull: "Hull: " => "Корпус: "
+3993AE78D352BB: "Hull: " => "Корпус: "
 
 SECTION JournalReputation
 
-.Federation: "Federation: ;;0.#" => "Федерация: ;;0.#"
-.Empire: "Empire: ;;0.#" => "Империя: ;;0.#"
-.Independent: "Independent: ;;0.#" => "Независимые: ;;0.#"
-.Alliance: "Alliance: ;;0.#" => "Альянс: ;;0.#"
+3A4763EEDBE2CE: "Federation: ;;0.#" => "Федерация: ;;0.#"
+8A097A63506C34: "Empire: ;;0.#" => "Империя: ;;0.#"
+B8DBEA784C01FE: "Independent: ;;0.#" => "Независимые: ;;0.#"
+6A16A6057FD3AF: "Alliance: ;;0.#" => "Альянс: ;;0.#"
 
 SECTION JournalReservoirReplenished
 
-.Main: "Main: ;t;0.0" => "Основной бак: ; т;0.0"
-.Reservoir: "Reservoir: ;t;0.0" => "рабочий резервуар: ; т;0.0"
+CE4729AC2B42E6: "Main: ;t;0.0" => "Основной бак: ; т;0.0"
+63A33B192E0CEC: "Reservoir: ;t;0.0" => "рабочий резервуар: ; т;0.0"
 
 SECTION StarPlanetRing
 
-.Mass: "Mass: {0:N4}{1}" => " Масса: {0:N4}{1}"
-.InnerRadius: "Inner Radius: {0:0.00}ls" => " Внутренний радиус: {0:0.00} св. с."
-.OuterRadius: "Outer Radius: {0:0.00}ls" => " Внешний радиус: {0:0.00} св. с."
-.IK: "Inner Radius: {0}km" => " Внутренний радиус: {0} км"
-.OK: "Outer Radius: {0}km" => " Внешний радиус: {0} км"
-.Icy: "Icy" => "лед."
-.Rocky: "Rocky" => "каменн."
-.MetalRich: "Metal Rich" => "насыщ. металлами"
-.Metallic: "Metallic" => "металлич."
+6BD20BEF04169E: "Mass: {0:N4}{1}" => " Масса: {0:N4}{1}"
+C2029264A2B419: "Inner Radius: {0:0.00}ls" => " Внутренний радиус: {0:0.00} св. с."
+9CAFCE749205D4: "Outer Radius: {0:0.00}ls" => " Внешний радиус: {0:0.00} св. с."
+C80236826F4F32: "Inner Radius: {0}km" => " Внутренний радиус: {0} км"
+D95BA68EDFC767: "Outer Radius: {0}km" => " Внешний радиус: {0} км"
+6B2FC602242208: "Icy" => "лед."
+A1CF264F7F1E4F: "Rocky" => "каменн."
+2FD9C95A438B18: "Metal Rich" => "насыщ. металлами"
+26D54591255652: "Metallic" => "металлич."
 
 SECTION JournalScan
 
-.CV: "Current value: {0:N0}" @
-.FDV: "First Discovered value: {0:N0}" @
-.Autoscanof: "Autoscan of {0}" => "Автосканирование {0}"
-.Detailedscanof: "Detailed scan of {0}" => "Подробное сканирование {0}"
-.Basicscanof: "Basic scan of {0}" => "Базовое сканирование {0}"
-.Navscanof: "Nav scan of {0}" => "Данные нав. маяка, {0}"
-.ScanAuto: "Scan Auto" => "Автосканирование"
-.ScanBasic: "Scan Basic" => "Базовое сканирование"
-.ScanNav: "Scan Nav" => "Сканирование нав. маяка"
-.Scanof: "Scan of {0}" => "Сканирование {0}"
-.MSM: "Mass: ;SM;0.00" => "солнечных масс: ; ;0.00"
-.Age: "Age: ;my;0.0" => "возраст: ; млн лет;0.0"
-.RS: "Radius: " => "Радиус: "
-.Landable: "<;, Landable" => "<;, пригодна для посадки"
-.Terraformable: "<;, Terraformable" => "<;, пригодна для терраформирования"
-.Gravity: "Gravity: ;G;0.00" => "гравитация: ; g;0.00"
-.NoAtmosphere: "No Atmosphere" => ", без атмосферы"
-.LandC: "Landable" => "пригодна для посадки"
-.AMY: "Age: {0} my" => "Возраст: {0} млн лет"
-.SolarMasses: "Solar Masses: {0:N2}" => "Солнечных масс: {0:N2}"
-.SurfaceTemp: "Surface Temp: {0}K" => "Температура поверхности: {0} K"
-.GV: "Gravity: {0:N2}g" => "Гравитация: {0:N2} g"
-.SPA: "Surface Pressure: {0} Atmospheres" => "Атмосферное давление: {0} ат"
-.SPP: "Surface Pressure: {0} Pa" => "Атмосферное давление: {0} Па"
-.Volcanism: "Volcanism: {0}" => "Вулканизм: {0}"
-.NoVolcanism: "No Volcanism" => "без вулканизма"
-.DistancefromArrivalPoint: "Distance from Arrival Point {0:N1}ls" => "Расстояние от точки прибытия {0:N1} св. с."
-.OrbitalPeriod: "Orbital Period: {0} days" => "Сидерический период обращения: {0} дн"
-.SMA: "Semi Major Axis: {0:0.00}AU" => "Большая полуось: {0:0.00} а. е."
-.SMK: "Semi Major Axis: {0}km" => "Большая полуось: {0} км"
-.OrbitalEccentricity: "Orbital Eccentricity: " => "Эксцентриситет орбиты: "
-.OrbitalInclination: "Orbital Inclination: {0:0.000}°" => "Наклонение орбиты: {0:0.000}°"
-.ArgOfPeriapsis: "Arg Of Periapsis: {0:0.000}°" => "Аргумент перицентра : {0:0.000}"
-.AbsoluteMagnitude: "Absolute Magnitude: {0:0.00}" => "Абсолютная звездная величина: {0:0.00}°"
-.Axialtilt: "Axial tilt: {0:0.00}°" => "Наклон оси вращения: {0:0.00}°"
-.RotationPeriod: "Rotation Period: {0} days" => "Период вращения: {0} дн"
-.Tidallylocked: "Tidally locked" => "Приливный захват"
-.Candidateforterraforming: "Candidate for terraforming" => "Кандидат на терраформирование"
-.Moons: " Moons" => " лунных масс"
-.Belt: "Belt" => "Пояс"
-.Belts: "Belts" => "Пояса"
-.Ring: "Ring" => "Кольцо"
-.Rings: "Rings" => "Кольца"
-.EV: "Base Estimated value: {0:N0}" => "Примерная стоимость данных сканирования: {0:N0} кр.,"
-.EVM: "Mapped value: {0:N0}/{1:N0}e" @
-.DB: "Discovered by {0} on {1}" => "Первооткрыватель: {0}, дата: {1}"
-.Othersstarsnotconsidered: " - Others stars not considered" => " (без учета других звезд)"
-.Materials: "Materials:" => "Материалы:"
-.AtmosphericComposition: "Atmospheric Composition:" => "Состав атмосферы:"
-.PlanetaryComposition: "Planetary Composition:" => "Состав планеты:"
-.HabitableZone: " - Habitable Zone, {0} ({1}-{2} AU)," => " - обитаемая зона, {0} ({1}-{2} а. е.),"
-.MetalRichplanets: " - Metal Rich planets, {0} ({1}-{2} AU)," => " - богатые металлами планеты, {0} ({1}-{2} а. е.),"
-.WaterWorlds: " - Water Worlds, {0} ({1}-{2} AU)," => " - водные планеты:, {0} ({1}-{2} а. е.),"
-.EarthLikeWorlds: " - Earth Like Worlds, {0} ({1}-{2} AU)," => " - землеподобные планеты, {0} ({1}-{2} а. е.),"
-.AmmoniaWorlds: " - Ammonia Worlds, {0} ({1}-{2} AU)," => " - аммиачные планеты, {0} ({1}-{2} а. е.),"
-.IcyPlanets: " - Icy Planets, {0} (from {1} AU)" => " - ледяные планеты, {0} (от {1} а. е.)"
-.DISTA: "Dist: ;ls;0.0" => "Расстояние от точки прибытия: ; св. с.;0.0"
-.DIST: "Dist: " @
-.BNME: "Name: " => "название звезды: "
-.SNME: "Name: " => "название тела: "
-.MPI: "Mapped" => "картографировано"
-.MPIE: "Efficiently" => "оптимально"
-.EVFD: "First Discovered+Mapped value: {0:N0}/{1:N0}e" => "Стоимость данных + бонус первооткрывателя: {0:N0}/{1:N0}e кр."
-.EVFM: "First Mapped value: {0:N0}/{1:N0}e" => "Стоимость данных + бонус первого картографировавшего: {0:N0}/{1:N0}e кр."
-.SCNT: "Scan Type: {0}" => "Тип сканирования: {0}"
-.EVAD: "Already Discovered" @
-.EVAM: "Already Mapped" @
-.InferredCircumstellarzones: "Inferred Circumstellar zones:" => "Предполагаемая околозвездная зона:"
-.MASS: "Mass: " => "Масса: "
-.AscendingNode: "Ascending Node: {0:0.000}°" @
-.MeanAnomaly: "Mean Anomaly: {0:0.000}°" @
+F14CA5F3DC73DE: "Current value: {0:N0}" => "Derzeitiger Wert: {0:N0}"
+FF2E1860C6D49F: "First Discovered value: {0:N0}" => "Wert Ersterkundung: {0:N0}"
+9BAE0E54DA6CE9: "Autoscan of {0}" => "Автосканирование {0}"
+70BDF82A819487: "Detailed scan of {0}" => "Подробное сканирование {0}"
+A00C566F3F90EF: "Basic scan of {0}" => "Базовое сканирование {0}"
+C99889E822FFD2: "Nav scan of {0}" => "Данные нав. маяка, {0}"
+D19051CBF6DE8E: "Scan Auto" => "Автосканирование"
+5DBE81790BF519: "Scan Basic" => "Базовое сканирование"
+D2F52355860145: "Scan Nav" => "Сканирование нав. маяка"
+D000D9F51096C0: "Scan of {0}" => "Сканирование {0}"
+5168D608A81C18: "Mass: ;SM;0.00" => "солнечных масс: ; ;0.00"
+BF8E38829287B3: "Age: ;my;0.0" => "возраст: ; млн лет;0.0"
+55C1D395FE5687: "Radius: " => "Радиус: "
+41997D5AA8F9A8: "<;, Landable" => "<;, пригодна для посадки"
+CABD9FE7A7C5A8: "<;, Terraformable" => "<;, пригодна для терраформирования"
+9C417B6452D141: "Gravity: ;G;0.00" => "гравитация: ; g;0.00"
+34E1E2662E5B20: "No Atmosphere" => ", без атмосферы"
+6E95AA58CB9A87: "Age: {0} my" => "Возраст: {0} млн лет"
+74526B12CD7DC5: "Solar Masses: {0:N2}" => "Солнечных масс: {0:N2}"
+B32AA433DE4238: "Surface Temp: {0}K" => "Температура поверхности: {0} K"
+DF8BA3A47550F7: "Gravity: {0:N2}g" => "Гравитация: {0:N2} g"
+9F2DAE94A92136: "Surface Pressure: {0} Atmospheres" => "Атмосферное давление: {0} ат"
+139A26036740E3: "Surface Pressure: {0} Pa" => "Атмосферное давление: {0} Па"
+E550B8BF252DA0: "Volcanism: {0}" => "Вулканизм: {0}"
+F2242B579D81E1: "No Volcanism" => "без вулканизма"
+056665C891A44A: "Distance from Arrival Point {0:N1}ls" => "Расстояние от точки прибытия {0:N1} св. с."
+E452781D716535: "Orbital Period: {0} days" => "Сидерический период обращения: {0} дн"
+9C92D7D1E0B506: "Semi Major Axis: {0:0.00}AU" => "Большая полуось: {0:0.00} а. е."
+1C861A7F7D3C80: "Semi Major Axis: {0}km" => "Большая полуось: {0} км"
+941C7E028C55A8: "Orbital Eccentricity: " => "Эксцентриситет орбиты: "
+24D86E4E8473EB: "Orbital Inclination: {0:0.000}°" => "Наклонение орбиты: {0:0.000}°"
+575CB9E18B9880: "Arg Of Periapsis: {0:0.000}°" => "Аргумент перицентра : {0:0.000}"
+04EFF963D056A3: "Absolute Magnitude: {0:0.00}" => "Абсолютная звездная величина: {0:0.00}°"
+452D821A83F1A5: "Axial tilt: {0:0.00}°" => "Наклон оси вращения: {0:0.00}°"
+456A3E168361D1: "Rotation Period: {0} days" => "Период вращения: {0} дн"
+B285F06D312CA2: "Tidally locked" => "Приливный захват"
+1E92B81458AA22: "Candidate for terraforming" => "Кандидат на терраформирование"
+7376D9B2BD1D99: " Moons" => " лунных масс"
+0CB33492C61519: "Belts" => "Пояса"
+96DDACCF581F48: "Ring" => "Кольцо"
+75B04B88D4665E: "Rings" => "Кольца"
+5987FFD982A381: "Base Estimated value: {0:N0}" => "Примерная стоимость данных сканирования: {0:N0} кр.,"
+6682A019C4883F: "Mapped value: {0:N0}/{1:N0}e" => "Kartographierter Wert: {0:N0}/{1:N0}e"
+C467DD57E52397: "Discovered by {0} on {1}" => "Первооткрыватель: {0}, дата: {1}"
+854F99DFC01A9F: " - Others stars not considered" => " (без учета других звезд)"
+279488A29AA084: "Materials:" => "Материалы:"
+1EABB5BB32923C: "Atmospheric Composition:" => "Состав атмосферы:"
+A5E37FD2756CAE: "Planetary Composition:" => "Состав планеты:"
+E9B087E594BA11: " - Habitable Zone, {0} ({1}-{2} AU)," => " - обитаемая зона, {0} ({1}-{2} а. е.),"
+CF39B2D7E183F0: " - Metal Rich planets, {0} ({1}-{2} AU)," => " - богатые металлами планеты, {0} ({1}-{2} а. е.),"
+0E2916E8281391: " - Water Worlds, {0} ({1}-{2} AU)," => " - водные планеты:, {0} ({1}-{2} а. е.),"
+4C363DDC65BBA2: " - Earth Like Worlds, {0} ({1}-{2} AU)," => " - землеподобные планеты, {0} ({1}-{2} а. е.),"
+5B1F0120B3CD0F: " - Ammonia Worlds, {0} ({1}-{2} AU)," => " - аммиачные планеты, {0} ({1}-{2} а. е.),"
+C379074215EC59: " - Icy Planets, {0} (from {1} AU)" => " - ледяные планеты, {0} (от {1} а. е.)"
+8669CDDA694B59: "Dist: ;ls;0.0" => "Расстояние от точки прибытия: ; св. с.;0.0"
+6E08B11C28445E: "Dist: " => "Entf: "
+94820B8DEE66A2: "Efficiently" => "оптимально"
+97E379A834EF5E: "First Discovered+Mapped value: {0:N0}/{1:N0}e" => "Стоимость данных + бонус первооткрывателя: {0:N0}/{1:N0}e кр."
+F42A5A3B540E51: "First Mapped value: {0:N0}/{1:N0}e" => "Стоимость данных + бонус первого картографировавшего: {0:N0}/{1:N0}e кр."
+AC983DAC73C35D: "Scan Type: {0}" => "Тип сканирования: {0}"
+381DCB85F1FBB2: "Inferred Circumstellar zones:" => "Предполагаемая околозвездная зона:"
+6D2CEAF8A4DE0D: "Mass: " => "Масса: "
+AEF0ABF930C73C: "Ascending Node: {0:0.000}°" => "Aufsteigender Knoten: {0:0.000}°"
+4853FB66BD4B2E: "Mean Anomaly: {0:0.000}°" => "Mittlere Anomalie: {0:0.000}°"
 
 SECTION JournalSAAScanComplete
 
-.Probes: "Probes: " => "использовано зондов: "
-.EfficiencyTarget: "Efficiency Target: " => "оптимальное число зондов: "
+549F7DE1A954E2: "Probes: " => "использовано зондов: "
+D338BDA2EF0EF8: "Efficiency Target: " => "оптимальное число зондов: "
 
 SECTION JournalScreenshot
 
-.At: "At " => "На "
-.in: "< in " => "<, в системе "
-.File: "File: " => "файл: "
-.Width: "Width: " => "ширина: "
-.Height: "Height: " => "высота: "
+3E80330244DEEA: "File: " => "файл: "
+51AD6E70C7C269: "Width: " => "ширина: "
+BE9DE399951621: "Height: " => "высота: "
 
 SECTION JournalSearchAndRescue
 
-.Reward: "Reward: " = CommunityGoal.Bonus
+B069920EC5D23A: "Reward: " => "награда: "
 
 SECTION JournalSellExplorationData
 
-.Total: "Total: ; cr;N0" = JournalMultiSellExplorationData.Total
 
 SECTION JournalSendText
 
-.To: "To: " => "Кому: "
-.Msg: "Msg: " => "текст: "
+7AF2ED79CA4B43: "Msg: " => "текст: "
 
 SECTION JournalSetUserShipName
 
-.On: "On: " => "корабль: "
+728F262DCA253E: "On: " => "корабль: "
 
 SECTION JournalShipTargeted
 
-.Hull: "Hull ;;N1" => "корпус: ;;N1"
-.at: "< at ;;N1" => "< в ;;N1"
-.MC: " Target Events" => " (количество целей)"
-.in: "< in " => "<, корабль: "
+D43B938327A28B: "Hull ;;N1" => "корпус: ;;N1"
+4D69DC1C675053: "< at ;;N1" => "< в ;;N1"
+0313D542901BDC: " Target Events" => " (количество целей)"
 
 SECTION JournalShipyardSell
 
-.At: "At: " => "На: "
 
 SECTION JournalShipyardSwap
 
-.Swap: "Swap " => "Замена "
-.fora: "< for a " = JournalCommodityPricesBase.CPBat
+1688D8D732BD46: "Swap " => "Замена "
+4A90C2022F4FC6: "< for a " => "< на "
 
 SECTION JournalShipyardTransfer
 
-.Of: "Of " => "Корабль: "
+2384D533C8AC08: "Of " => "Корабль: "
 
 SECTION JournalStartJump
 
-.ChargingFSD: "Charging FSD" => "Зарядка FSD"
+D3E1E961E72D83: "Charging FSD" => "Зарядка FSD"
 
 SECTION JournalStatistics
 
-.BankAccount: "Bank Account" => "Баланс"
-.Combat: "Combat" => "Бои"
-.Crime: "Crime" => "Преступления"
-.Smuggling: "Smuggling" => "Контрабанда"
-.Trading: "Trading" => "Торговля"
-.Mining: "Mining" => "Добыча ресурсов"
-.Exploration: "Exploration" => "Исследование"
-.Passengers: "Passengers" = JournalTypeEnum.Passengers
-.SearchandRescue: "Search and Rescue" = JournalTypeEnum.SearchAndRescue
-.Engineers: "Engineers" => "Изготовление"
-.Crew: "Crew" => "Экипаж"
-.Multicrew: "Multicrew" => "Multi-crew"
-.MaterialsandCommodityTrading: "Materials and Commodity Trading" => "Торговля материалами"
-.CQC: "CQC" @
-.FLEETCARRIER: "Fleetcarrier" @
-.Exobiology: "Exobiology" @
-.Thargoids: "Thargoids" @
+6916B9B5B958F3: "Multicrew" => "Multi-crew"
+97E9C7A4D75E7C: "Materials and Commodity Trading" => "Торговля материалами"
 
 SECTION BankAccountClass
 
-.Wealth: "Wealth: ; cr;N0" => "Текущие активы: ; кр.;N0"
-.SpentonShips: "Spent on Ships: ; cr;N0" => "Потрачено на корабли: ; кр.;N0"
-.SpentonOutfitting: "Spent on Outfitting: ; cr;N0" => "Потрачено на снаряжение: ; кр.;N0"
-.SpentonRepairs: "Spent on Repairs: ; cr;N0" => "Потрачено на ремонт: ; кр.;N0"
-.SpentonFuel: "Spent on Fuel: ; cr;N0" => "Потрачено на топливо: ; кр.;N0"
-.SpendonAmmo: "Spent on Ammo: ; cr;N0" => "Потрачено на боеприпасы: ; кр.;N0"
-.InsuranceClaims: "Insurance Claims: ;;N0" => "Страховых выплат: ;;N0"
-.SpentonInsurance: "Spent on Insurance: ; cr;N0" => "Потрачено на страховку: ; кр.;N0"
-.OwnedShipCount: "Owned ships: ;;N0" @
-.SpentOnSuits: "Spent on Suits: ; cr;N0" @
-.SpentOnWeapons: "Spent on Weapons: ; cr;N0" @
-.SpentOnSuitConsumables: "Spent on Suit Consumables: ; cr;N0" @
-.SuitsOwned: "Suits Owned: ;;N0" @
-.WeaponsOwned: "Weapons Owned: ;;N0" @
-.SpentOnPremiumStock: "Spent on Premium Stock: ; cr;N0" @
-.PremiumStockBought: "Premium Stock bought: ;;N0" @
+B4ACE12F412DDB: "Wealth: ; cr;N0" => "Текущие активы: ; кр.;N0"
+3888D1B39FDB3E: "Spent on Ships: ; cr;N0" => "Потрачено на корабли: ; кр.;N0"
+925B37A547FC62: "Spent on Outfitting: ; cr;N0" => "Потрачено на снаряжение: ; кр.;N0"
+CA5AE6964925EF: "Spent on Repairs: ; cr;N0" => "Потрачено на ремонт: ; кр.;N0"
+3B4309CF7D3EBA: "Spent on Fuel: ; cr;N0" => "Потрачено на топливо: ; кр.;N0"
+6F932A67AF5610: "Spent on Ammo: ; cr;N0" => "Потрачено на боеприпасы: ; кр.;N0"
+A8D8DE55E0CEFF: "Insurance Claims: ;;N0" => "Страховых выплат: ;;N0"
+EAC3D580980EB3: "Spent on Insurance: ; cr;N0" => "Потрачено на страховку: ; кр.;N0"
+C12549552820D1: "Owned ships: ;;N0" => "Schiffe in Besitz: ;;N0"
+19BBE8B062D51D: "Spent on Suits: ; cr;N0" => "In Anzüge investierte Credits: ; cr;N0"
+E8963EC51B4BDC: "Spent on Weapons: ; cr;N0" => "In persönliche Waffen investierte Credits: ; cr;N0"
+E8385CA7E6A83B: "Spent on Suit Consumables: ; cr;N0" => "In Verbrauchsgegenstände investierte Credits: ; cr;N0"
+54A05A0C723068: "Suits Owned: ;;N0" => "Anzahl der Anzüge in Besitz: ;;N0"
+A87E7D3B543DF1: "Weapons Owned: ;;N0" => "Anzahl persönlicher Waffen in Besitz: ;;N0"
+2D8EB9D873525C: "Spent on Premium Stock: ; cr;N0" => "In Premiumanzüge/Waffen investierte Credits: ; cr;N0"
+D06DBE4E150485: "Premium Stock bought: ;;N0" => "Anzahl gekaufter Premiumanzüge/Waffen: ;;N0"
 
 SECTION CombatClass
 
-.Bounties: "Bounties: ;;N0" => "Наград за поимку: ;;N0"
-.BountyProfits: "Bounty Profits: ; cr;N0" => "Прибыль от наград за поимку: ; кр.;N0"
-.CombatBonds: "Combat Bonds: ;;N0" => "Боевые облигации: ;;N0"
-.CombatBondProfits: "Combat Bond Profits: ; cr;N0" => "Прибыль от боевых облигаций: ; кр.;N0"
-.Assassinations: "Assassinations: ;;N0" => "Наемные убийства: ;;N0"
-.AssassinationProfits: "Assassination Profits: ; cr;N0" => "Прибыль от наемных убийств: ; кр.;N0"
-.HighestReward: "Highest Reward: ; cr;N0" => "Максимальный размер награды: ; кр.;N0"
-.SkimmersKilled: "Skimmers Killed: ;;N0" => "Сбито оборонных беспилотников: ;;N0"
-.OnFootCombatBonds: "Surface Combat Bonds: ;;N0" @
-.OnFootCombatBondsProfits: "Surface Combat Bonds Profits: ; cr;N0" @
-.OnFootVehiclesDestroyed: "Vehicles Destroyed on Foot: ;;N0" @
-.OnFootShipsDestroyed: "Ships Destroyed on Foot: ;;N0" @
-.DropshipsTaken: "Dropships Taken: ;;N0" @
-.DropshipsBooked: "Dropships Booked: ;;N0" @
-.DropshipsCancelled: "Dropships Cancelled: ;;N0" @
-.ConflictZoneHigh: "High Intensity Conflict Zones fought: ;;N0" @
-.ConflictZoneMedium: "Medium Intensity Conflict Zones fought: ;;N0" @
-.ConflictZoneLow: "Low Intensity Conflict Zones fought: ;;N0" @
-.ConflictZoneTotal: "Total Conflict Zones fought: ;;N0" @
-.ConflictZoneHighWins: "High Intensity Conflict Zones won: ;;N0" @
-.ConflictZoneMediumWins: "Medium Intensity Conflict Zones won: ;;N0" @
-.ConflictZoneLowWins: "Low Intensity Conflict Zones won: ;;N0" @
-.ConflictZoneTotalWins: "Total Conflict Zones won: ;;N0" @
-.SettlementDefended: "Settlements Defended: ;;N0" @
-.SettlementConquered: "Settlements Conquered: ;;N0" @
-.OnFootSkimmersKilled: "Skimmers Killed on Foot: ;;N0" @
-.OnFootScavsKilled: "Scavengers Killed on Foot: ;;N0" @
+D87058E44CF706: "Bounties: ;;N0" => "Наград за поимку: ;;N0"
+75FBC8535363DA: "Bounty Profits: ; cr;N0" => "Прибыль от наград за поимку: ; кр.;N0"
+297080499B404B: "Combat Bonds: ;;N0" => "Боевые облигации: ;;N0"
+C93F978697AB89: "Combat Bond Profits: ; cr;N0" => "Прибыль от боевых облигаций: ; кр.;N0"
+D3557FF491189F: "Assassinations: ;;N0" => "Наемные убийства: ;;N0"
+166E250877B392: "Assassination Profits: ; cr;N0" => "Прибыль от наемных убийств: ; кр.;N0"
+DCB6489A56E114: "Highest Reward: ; cr;N0" => "Максимальный размер награды: ; кр.;N0"
+EBA2ABF1C21F3B: "Skimmers Killed: ;;N0" => "Сбито оборонных беспилотников: ;;N0"
+C407F7BE10A0EA: "Surface Combat Bonds: ;;N0" => "OF-Kampfbelohnungen: ;;N0"
+B6CFA7A45807A4: "Surface Combat Bonds Profits: ; cr;N0" => "Einnahmen aus OF-Kampfbelohnungen: ; cr;N0"
+ACB06FD3BEC5CB: "Vehicles Destroyed on Foot: ;;N0" => "Fahrzeuge zerstört (zu Fuß): ;;N0"
+DA8FDAA8DDCA8A: "Ships Destroyed on Foot: ;;N0" => "Schiffe zerstört (zu Fuß): ;;N0"
+939976AD53D882: "Dropships Taken: ;;N0" => "Abwurfschiff-Reisen: ;;N0"
+18DFAE630A6BFB: "Dropships Booked: ;;N0" => "Gebuchte Abwurfschiffe: ;;N0"
+04CE11E4316C1F: "Dropships Cancelled: ;;N0" => "Stornierte Abwurfschiffe: ;;N0"
+B8D22F38632CF6: "High Intensity Conflict Zones fought: ;;N0" => "Konflikte (hohe Intensität) gekämpft: ;;N0"
+EA963F15E8EB0F: "Medium Intensity Conflict Zones fought: ;;N0" => "Konflikte (mittlere Intensität) gekämpft: ;;N0"
+B0C41E693F2B16: "Low Intensity Conflict Zones fought: ;;N0" => "Konflikte (niedrige Intensität) gekämpft: ;;N0"
+080A8FE8876778: "Total Conflict Zones fought: ;;N0" => "Konflikte (total) gekämpft: ;;N0"
+2FF418F245D56C: "High Intensity Conflict Zones won: ;;N0" => "Konflikte (hohe Intensität) gewonnen: ;;N0"
+B8B77AAC06992D: "Medium Intensity Conflict Zones won: ;;N0" => "Konflikte (mittlere Intensität) gewonnen: ;;N0"
+408F5291A5A252: "Low Intensity Conflict Zones won: ;;N0" => "Konflikte (niedrige Intensität) gewonnen: ;;N0"
+DAC56992EC2707: "Total Conflict Zones won: ;;N0" => "Konflikte (total) gewonnen: ;;N0"
+21ECC89812614B: "Settlements Defended: ;;N0" => "Verteidigte Siedlungen: ;;N0"
+8A1C0B3F35FBE1: "Settlements Conquered: ;;N0" => "Eingenommene Siedlungen: ;;N0"
+6B0157E966ED81: "Skimmers Killed on Foot: ;;N0" => "Zerstörte OF-Drohen (zu Fuß): ;;N0"
+9D2DBD0233311B: "Scavengers Killed on Foot: ;;N0" => "Getötet Plünderer (zu Fuß): ;;N0"
 
 SECTION CrimeClass
 
-.NotorietyIndex: "Notoriety Index: ;;N0" => "Плохая репутация: ;;N0"
-.Fines: "Fines: ;;N0" => "Получено штрафов: ;;N0"
-.TotalFines: "Total Fines: ; cr;N0" => "Общая сумма штрафов: ; кр.;N0"
-.Bounties: "Bounties: ;;N0" => "Наград получено/заработано: ;;N0"
-.TotalBounties: "Total Bounties: ; cr;N0" => "Общая сумма наград за поимку: ; кр.;N0"
-.HighestBounty: "Highest Bounty: ; cr;N0" => "Максимальная награда за поимку: ; кр.;N0"
-.MalwareUploaded: "Malware Uploaded: ;;N0" @
-.SettlementsStateShutdown: "Settlements shut down: ;;N0" @
-.ProductionSabotage: "Production Sabotaged: ;;N0" @
-.ProductionTheft: "Production Thefts: ;;N0" @
-.TotalMurders: "Total Murders: ;;N0" @
-.CitizensMurdered: "Citizens Murdered: ;;N0" @
-.OmnipolMurdered: "Omnipol Murdered: ;;N0" @
-.GuardsMurdered: "Guards Murdered: ;;N0" @
-.DataStolen: "Data Stolen: ;;N0" @
-.GoodsStolen: "Goods Stolen: ;;N0" @
-.TotalStolen: "Total Inventory Items Stolen: ;;N0" @
-.TurretsDestroyed: "Turrets Destroyed: ;;N0" @
-.TurretsOverloaded: "Turrets Overloaded: ;;N0" @
-.TurretsTotal: "Total Turrets shut down: ;;N0" @
-.ValueStolenStateChange: "Stolen Items Value: ; cr;N0" @
-.ProfilesCloned: "Profiles Cloned: ;;N0" @
+D85A90928DBF32: "Notoriety Index: ;;N0" => "Плохая репутация: ;;N0"
+FC58FE4F595799: "Fines: ;;N0" => "Получено штрафов: ;;N0"
+1CC4948A1473DA: "Total Fines: ; cr;N0" => "Общая сумма штрафов: ; кр.;N0"
+EF6F8A1629F935: "Total Bounties: ; cr;N0" => "Общая сумма наград за поимку: ; кр.;N0"
+7AB92D31A180E9: "Highest Bounty: ; cr;N0" => "Максимальная награда за поимку: ; кр.;N0"
+7268ADD5413CA8: "Malware Uploaded: ;;N0" => "Malware hochgeladen: ;;N0"
+F2ECFDC3D4EBE7: "Settlements shut down: ;;N0" => "Runtergefahrene Siedlungen: ;;N0"
+E0590A87E302E4: "Production Sabotaged: ;;N0" => "Sabotierte Produktion: ;;N0"
+516A8E6D9803E7: "Production Thefts: ;;N0" => "Produktionsdiebstähle: ;;N0"
+3C451953F75A26: "Total Murders: ;;N0" => "Morde (gesamt): ;;N0"
+B7131D7AA75C46: "Citizens Murdered: ;;N0" => "Ermordete Bürger: ;;N0"
+744000E028E9DA: "Omnipol Murdered: ;;N0" => "Ermordete Omnipol-Mitarbeiter: ;;N0"
+BF7C2D768E3B6F: "Guards Murdered: ;;N0" => "Ermordete Wachen: ;;N0"
+73C28FE515979A: "Data Stolen: ;;N0" => "Gestohlene Daten: ;;N0"
+C712999A7B19C8: "Goods Stolen: ;;N0" => "Gestohlene Waren: ;;N0"
+43FC8906639459: "Total Inventory Items Stolen: ;;N0" => "Gestohlenes im Inventar (gesamt): ;;N0"
+438F9F3B5F2CA1: "Turrets Destroyed: ;;N0" => "Zerstörte Geschütze: ;;N0"
+5E332B62707FE2: "Turrets Overloaded: ;;N0" => "Überladene Geschütze: ;;N0"
+3B00BFA3B8D7F2: "Total Turrets shut down: ;;N0" => "Ausgeschaltete Geschütze (gesamt): ;;N0"
+44124CD8A82E47: "Stolen Items Value: ; cr;N0" => "Wert gestohlener Gegenstände - aktiv: ; cr;N0"
+08FC105087B4DD: "Profiles Cloned: ;;N0" => "Geklonte Profile: ;;N0"
 
 SECTION SmugglingClass
 
-.BlackMarkets: "Black Markets: ;;N0" => "Сеть черного рынка: ;;N0"
-.BlackMarketProfits: "Black Market Profits: ; cr;N0" => "Прибыль от черного рынка: ; кр.;N0"
-.ResourcesSmuggled: "Resources Smuggled: ;;N0" => "Провезено контрабандой: ;;N0"
-.AverageProfit: "Average Profit: ; cr;N0" => "Средний размер прибыли: ; кр.;N0"
-.HighestSingleTransaction: "Highest Single Transaction: ; cr;N0" => "Максимальный размер транзакции: ; кр.;N0"
+B0F905CB4B5542: "Black Markets: ;;N0" => "Сеть черного рынка: ;;N0"
+72871CA443A5A8: "Black Market Profits: ; cr;N0" => "Прибыль от черного рынка: ; кр.;N0"
+2B5233DD646F8C: "Resources Smuggled: ;;N0" => "Провезено контрабандой: ;;N0"
+9A25DE94D5E63A: "Average Profit: ; cr;N0" => "Средний размер прибыли: ; кр.;N0"
+209D79F561CC37: "Highest Single Transaction: ; cr;N0" => "Максимальный размер транзакции: ; кр.;N0"
 
 SECTION TradingClass
 
-.MarketsTraded: "Markets Traded: ;;N0" => "Торговая сеть: ;;N0"
-.Profits: "Profits: ; cr;N0" => "Прибыль от торговли: ; кр.;N0"
-.No: "No. of Resources: ;;N0" => "Продано товаров: ;;N0"
-.AverageProfit: "Average Profit: ; cr;N0" = SmugglingClass.AverageProfit
-.HighestSingleTransaction: "Highest Single Transaction: ; cr;N0" = SmugglingClass.HighestSingleTransaction
-.DataSold: "Data Sold: ;;N0" @
-.GoodsSold: "Goods Sold: ;;N0" @
-.AssetsSold: "Assets Sold: ;;N0" @
+D1E02E23CB8EB9: "Markets Traded: ;;N0" => "Торговая сеть: ;;N0"
+9A081920BFF8EC: "Profits: ; cr;N0" => "Прибыль от торговли: ; кр.;N0"
+426DCC84DD33AA: "No. of Resources: ;;N0" => "Продано товаров: ;;N0"
+D74459B88E7874: "Data Sold: ;;N0" => "Verkaufte Daten: ;;N0"
+FD405DA3224FF6: "Goods Sold: ;;N0" => "Verkaufte Waren: ;;N0"
+B50C3C0ADF6AFC: "Assets Sold: ;;N0" => "Verkauftes Material: ;;N0"
 
 SECTION MiningClass
 
-.Profits: "Profits: ; cr;N0" => "Прибыль от добычи ресурсов: ; кр.;N0"
-.Quantity: "Quantity: ;;N0" => "Переработано материалов: ;;N0"
-.MaterialsTypesCollected: "Materials Collected: ;;N0" => "Собрано материалов: ;;N0"
+A37ECF8989B831: "Quantity: ;;N0" => "Переработано материалов: ;;N0"
+363CD8A2925D2F: "Materials Collected: ;;N0" => "Собрано материалов: ;;N0"
 
 SECTION ExplorationClass
 
-.SystemsVisited: "Systems Visited: ;;N0" => "Посещено систем: ;;N0"
-.Profits: "Profits: ; cr;N0" => "Прибыль от исследования: ; кр.;N0"
-.Level2Scans: "Level 2 Scans: ;;N0" => "Сканирования 2 уровня: ;;N0"
-.Level3Scans: "Level 3 Scans: ;;N0" => "Сканирования 3 уровня: ;;N0"
-.HighestPayout: "Highest Payout: ; cr;N0" => "Самая высокая выплата: ; кр.;N0"
-.TotalDistance: "Total Distance: ; ly;N0" => "Пройдено в гиперпространстве: ;;N0"
-.NoofJumps: "No of Jumps: ;;N0" => "Всего прыжков в гиперпространстве: ;;N0"
-.GreatestDistance: "Greatest Distance: ; ly;N0" => "Макс. расстояние с начала: ;ly;N0"
-.TimePlayed: "Time Played: " => "Время игры: "
-.OnFootDistanceTravelled: "Distance Travelled on Foot: ; m;N0" @
-.EfficientScans: "Efficient Scans: ;;N0" @
-.ShuttleJourneys: "Shuttle Journeys: ;;N0" @
-.ShuttleDistanceTravelled: "Shuttle Distance Travelled: ; ly;N0" @
-.SpentOnShuttles: "Credits Spent on Shuttles: ; cr;N0" @
-.FirstFootfalls: "First Footfalls: ;;N0" @
-.PlanetFootfalls: "Planets walked on: ;;N0" @
-.SettlementsVisited: "Settlements docked at: ;;N0" @
+BB1E37C81A2D3E: "Systems Visited: ;;N0" => "Посещено систем: ;;N0"
+03B1D041E5D830: "Level 2 Scans: ;;N0" => "Сканирования 2 уровня: ;;N0"
+6C7F381856597F: "Level 3 Scans: ;;N0" => "Сканирования 3 уровня: ;;N0"
+B483C046BC30D5: "Highest Payout: ; cr;N0" => "Самая высокая выплата: ; кр.;N0"
+E02E8A73E32E90: "Total Distance: ; ly;N0" => "Пройдено в гиперпространстве: ;;N0"
+BC86F52FD15F34: "No of Jumps: ;;N0" => "Всего прыжков в гиперпространстве: ;;N0"
+09F1BE8C639618: "Greatest Distance: ; ly;N0" => "Макс. расстояние с начала: ;ly;N0"
+CD878096F84091: "Time Played: " => "Время игры: "
+E2C5232144C21F: "Distance Travelled on Foot: ; m;N0" => "Gesamtentfernung (zu Fuß): ;m;N0"
+6D8865C83FB7A3: "Efficient Scans: ;;N0" => "Effiziente Scans: ;;N0"
+12B8B3C0A12010: "Shuttle Journeys: ;;N0" => "Shuttle-Reisen: ;;N0"
+FF7A46900A89C5: "Shuttle Distance Travelled: ; ly;N0" => "Per Shuttle zurückgelegte Distanz: ;Lj;N0"
+9F697FF592C9BF: "Credits Spent on Shuttles: ; cr;N0" => "In Shuttles investierte Credits: ; cr;N0"
+E33A0B125E4287: "First Footfalls: ;;N0" => "Erstbetretungen: ;;N0"
+7CF31B0C84182F: "Planets walked on: ;;N0" => "Zu Fuß betretene Planeten: ;;N0"
+6F1F1153230B46: "Settlements docked at: ;;N0" => "An Siedlungen angedockt: ;;N0"
 
 SECTION PassengerMissionsClass
 
-.Accepted: "Accepted Passenger Missions: ;;N0" @
-.PassengersDisgrunted: "Passengers Disgruntled: ;;N0" @
-.BulkMissionPassengers: "Total Bulk Passengers Delivered: ;;N0" => "Доставлено обычных пассажиров: ;;N0"
-.VIPMissionPassengers: "Total VIPs Delivered: ;;N0" => "Доставлено VIP-персон: ;;N0"
-.PassengersDelivered: "Total Delivered: ;;N0" => "Всего доставлено: ;;N0"
-.PassengersEjected: "Total Ejected: ;;N0" => "Всего потеряно: ;;N0"
+41175E6095AD03: "Accepted Passenger Missions: ;;N0" => "Angenommen: ;;N0"
+DF7229C84BAEB0: "Passengers Disgruntled: ;;N0" => "Passagiere verärgert: ;;N0"
+966D3F3ADDE63E: "Total Bulk Passengers Delivered: ;;N0" => "Доставлено обычных пассажиров: ;;N0"
+31F6CBFE3EC5A2: "Total VIPs Delivered: ;;N0" => "Доставлено VIP-персон: ;;N0"
+0D98D6A764BAA1: "Total Delivered: ;;N0" => "Всего доставлено: ;;N0"
+47ADAB6C47EBD9: "Total Ejected: ;;N0" => "Всего потеряно: ;;N0"
 
 SECTION SearchAndRescueClass
 
-.TotalItemsRescued: "Total Items Rescued: ;;N0" => "Всего спасено предметов: ;;N0"
-.Profit: "Profit: ; cr;N0" => "Общий доход: ; кр.;N0"
-.TotalRescueTransactions: "Total Rescue Transactions: ;;N0" => "Всего спасательных операций: ;;N0"
-.SalvageLegalPOI: "Legal Salvage Value - Surface: ; cr;N0" @
-.SalvageLegalSettlements: "Legal Salvage Value - Settlements: ; cr;N0" @
-.SalvageIllegalPOI: "Illegal Salvage Value - Surface: ; cr;N0" @
-.SalvageIllegalSettlements: "Illegal Salvage Value - Settlements: ; cr;N0" @
-.MaglocksOpened: "Maglocks cut: ;;N0" @
-.PanelsOpened: "Panels cut: ;;N0" @
-.SettlementsStateFireOut: "Settlement Fires extinguished: ;;N0" @
-.SettlementsStateReboot: "Settlements rebooted: ;;N0" @
+5926A1B4848462: "Total Items Rescued: ;;N0" => "Всего спасено предметов: ;;N0"
+647A63AFE926DC: "Profit: ; cr;N0" => "Общий доход: ; кр.;N0"
+F64FD229D3203E: "Total Rescue Transactions: ;;N0" => "Всего спасательных операций: ;;N0"
+71BA45909C35DF: "Legal Salvage Value - Surface: ; cr;N0" => "Wert legaler Bergungen (Oberfläche): ; cr;N0"
+C420B66B6443B9: "Legal Salvage Value - Settlements: ; cr;N0" => "Wert legaler Bergungen (Siedlung): ; cr;N0"
+F50E9A6BC44CD7: "Illegal Salvage Value - Surface: ; cr;N0" => "Wert illegaler Bergungen (Oberfläche): ; cr;N0"
+8CD6CE8BD959E2: "Illegal Salvage Value - Settlements: ; cr;N0" => "Wert illegaler Bergungen (Siedlung): ; cr;N0"
+E515E9787FC179: "Maglocks cut: ;;N0" => "Geöffnete Magnetverschlüsse: ;;N0"
+C0FEA21018F4A5: "Panels cut: ;;N0" => "Geöffnete Panels: ;;N0"
+46DA3C948BC8FD: "Settlement Fires extinguished: ;;N0" => "Gelöschte Feuer in Siedlungen: ;;N0"
+3920C6728322EC: "Settlements rebooted: ;;N0" => "Wiederhergestellte Siedlungen: ;;N0"
 
 SECTION CraftingClass
 
-.EngineersUsed: "Engineers Used: ;;N0" => "Использовано инженеров: ;;N0"
-.Blueprints: "Blueprints: ;;N0" => "Всего создано улучшений: ;;N0"
-.AtLevel1: "At Level 1: ;;N0" => "1-го уровня: ;;N0"
-.AtLevel2: "At Level 2: ;;N0" => "2-го уровня: ;;N0"
-.AtLevel3: "At Level 3: ;;N0" => "3-го уровня: ;;N0"
-.AtLevel4: "At Level 4: ;;N0" => "4-го уровня: ;;N0"
-.AtLevel5: "At Level 5: ;;N0" => "5-го уровня: ;;N0"
-.SuitModsApplied: "Suit Modifications Applied: ;;N0" @
-.WeaponModsApplied: "Weapon Modifications Applied: ;;N0" @
-.SuitsUpgraded: "Suit Upgrades Applied: ;;N0" @
-.WeaponsUpgraded: "Weapon Upgrades Applied: ;;N0" @
-.SuitsUpgradedFull: "Suits fully Upgraded: ;;N0" @
-.WeaponsUpgradedFull: "Weapons fully Upgraded: ;;N0" @
-.SuitModsAppliedFull: "Suits fully Modified: ;;N0" @
-.WeaponModsAppliedFull: "Weapons fully Modified: ;;N0" @
+5B57F75F7F38CD: "Engineers Used: ;;N0" => "Использовано инженеров: ;;N0"
+A1166F760A5D26: "Blueprints: ;;N0" => "Всего создано улучшений: ;;N0"
+490CCDD6CCBB53: "At Level 1: ;;N0" => "1-го уровня: ;;N0"
+0D2F4D0B12F52B: "At Level 2: ;;N0" => "2-го уровня: ;;N0"
+4A68330552049B: "At Level 3: ;;N0" => "3-го уровня: ;;N0"
+7B365660FAE0FE: "At Level 4: ;;N0" => "4-го уровня: ;;N0"
+4821A9B0E55679: "At Level 5: ;;N0" => "5-го уровня: ;;N0"
+1E6861119A8B28: "Suit Modifications Applied: ;;N0" => "Anzug-Modifikationen: ;;N0"
+4796B7B019C47C: "Weapon Modifications Applied: ;;N0" => "Waffen-Modifikationen: ;;N0"
+49AABB8F6AAA5C: "Suit Upgrades Applied: ;;N0" => "Anzug-Upgrades: ;;N0"
+DA0584A49C91A9: "Weapon Upgrades Applied: ;;N0" => "Waffen-Upgrades: ;;N0"
+ADDF7363C9A0F5: "Suits fully Upgraded: ;;N0" => "Anzüge komplett verbessert: ;;N0"
+33FCF79C1F760D: "Weapons fully Upgraded: ;;N0" => "Waffen komplett verbessert: ;;N0"
+1110D135B3AC55: "Suits fully Modified: ;;N0" => "Anzüg voll modifiziert: ;;N0"
+9CE0C127CEC0A7: "Weapons fully Modified: ;;N0" => "Waffen voll modifiziert: ;;N0"
 
 SECTION CrewClass
 
-.TotalWages: "Total Wages: ; cr;N0" => "Всего выплачено экипажу: ; кр.;N0"
-.Hired: "Hired: ;;N0" => "Нанято членов экипажа: ;;N0"
-.Fired: "Fired: ;;N0" => "Уволено членов экипажа: ;;N0"
-.KilledinAction: "Killed in Action: ;;N0" => "Погибло при исполнении служебных обязанностей: ;;N0"
+FDBB95B8322925: "Total Wages: ; cr;N0" => "Всего выплачено экипажу: ; кр.;N0"
+0471A08CE62C55: "Hired: ;;N0" => "Нанято членов экипажа: ;;N0"
+0A081626AEEB57: "Fired: ;;N0" => "Уволено членов экипажа: ;;N0"
+79EE42DCC7CC72: "Killed in Action: ;;N0" => "Погибло при исполнении служебных обязанностей: ;;N0"
 
 SECTION MulticrewClass
 
-.TotalTime: "Total Time: " => "Общее время: "
-.GunnerTime: "Gunner Time: " => "В роли наводчика: "
-.FighterTime: "Fighter Time: " => "В роли летчика-истребителя: "
-.Credits: "Credits: ; cr;N0" => "Кредитов заработано: ; кр.;N0"
-.Fines: "Fines: ; cr;N0" => "Штрафов получено: ; кр.;N0"
+EE9C4C95762B58: "Total Time: " => "Общее время: "
+BEA358C8EE3AA6: "Gunner Time: " => "В роли наводчика: "
+2A7EE15DF23E60: "Fighter Time: " => "В роли летчика-истребителя: "
+90AAB0386139D2: "Credits: ; cr;N0" => "Кредитов заработано: ; кр.;N0"
+DBAF8C40DD5627: "Fines: ; cr;N0" => "Штрафов получено: ; кр.;N0"
 
 SECTION MaterialTraderStatsClass
 
-.CommodityTrades: "Material Trades Completed: ;;N0" => "Сделок завершено: ;;N0"
-.MaterialTraded: "Material Traded: ;;N0" => "Обменяно материалов: ;;N0"
-.EncodedMaterialsTraded: "Encoded Materials traded: ;;N0" @
-.RawMaterialsTraded: "Raw Materials traded: ;;N0" @
-.G1MaterialsTraded: "Grade 1 Materials Traded: ;;N0" @
-.G2MaterialsTraded: "Grade 2 Materials Traded: ;;N0" @
-.G3MaterialsTraded: "Grade 3 Materials Traded: ;;N0" @
-.G4MaterialsTraded: "Grade 4 Materials Traded: ;;N0" @
-.G5MaterialsTraded: "Grade 5 Materials Traded: ;;N0" @
-.AssetsTradedIn: "Assets Gained in Trade: ;;N0" @
-.AssetsTradedOut: "Assets Spent in Trade: ;;N0" @
+64F2B5771A6C03: "Material Trades Completed: ;;N0" => "Сделок завершено: ;;N0"
+33860E4D2DF414: "Material Traded: ;;N0" => "Обменяно материалов: ;;N0"
+8A106DB6576E05: "Encoded Materials traded: ;;N0" => "Gehandelte verschlüsselte Materialien: ;;N0"
+C2F5A7A81A23DC: "Raw Materials traded: ;;N0" => "Gehandelte Rohmaterialien: ;;N0"
+5A690499160457: "Grade 1 Materials Traded: ;;N0" => "Gehandelte Grad-1-Materialien: ;;N0"
+0EB775F2663477: "Grade 2 Materials Traded: ;;N0" => "Gehandelte Grad-2-Materialien: ;;N0"
+BA66447D661963: "Grade 3 Materials Traded: ;;N0" => "Gehandelte Grad-3-Materialien: ;;N0"
+4187AA13C26C53: "Grade 4 Materials Traded: ;;N0" => "Gehandelte Grad-4-Materialien: ;;N0"
+7CCAD957FC69A7: "Grade 5 Materials Traded: ;;N0" => "Gehandelte Grad-5-Materialien: ;;N0"
+63B5FA19BDFF7B: "Assets Gained in Trade: ;;N0" => "Erhaltene Materialien (Handel): ;;N0"
+AE91D30D46C5B5: "Assets Spent in Trade: ;;N0" => "Ausgegebene Materialien (Handel): ;;N0"
 
 SECTION CQCClass
 
-.CreditsEarned: "Profits from CQC: ; cr;N0" @
-.TimePlayed: "Time Played: " = ExplorationClass.TimePlayed
-.KDRatio: "K/D Ratio: ;;N2" => "Соотношение убийств и смертей: ;;N2"
-.Kills: "Kills: ;;N0" => "Убийства: ;;N0"
-.Win: "Win/Loss Ratio: ;;N2" => "Соотношение побед и поражений: ;;N2"
+709AA3D79B426B: "Profits from CQC: ; cr;N0" => "Einnahmen aus CQC: ; cr;N0"
+00349FB8CBDB9C: "K/D Ratio: ;;N2" => "Соотношение убийств и смертей: ;;N2"
+E4491AAB65268C: "Kills: ;;N0" => "Убийства: ;;N0"
+8A742F1F88A782: "Win/Loss Ratio: ;;N2" => "Соотношение побед и поражений: ;;N2"
 
 SECTION FLEETCARRIERClass
 
-.EXPORTTOTAL: "Total Commodities Exported: ;;N0" @
-.IMPORTTOTAL: "Total Commodities Imported: ;;N0" @
-.TRADEPROFITTOTAL: "Credits earned from Commodities: ; cr;N0" @
-.TRADESPENDTOTAL: "Credits spent on Commodities: ; cr;N0" @
-.STOLENPROFITTOTAL: "Credits earned from Stolen Goods: ; cr;N0" @
-.STOLENSPENDTOTAL: "Credits spent on Stolen Goods: ; cr;N0" @
-.DISTANCETRAVELLED: "Total Travel Distance: ; ly;N0" @
-.TOTALJUMPS: "Number of Carrier Jumps: ;;N0" @
-.SHIPYARDSOLD: "Total Ships Sold: ;;N0" @
-.SHIPYARDPROFIT: "Credits earned from Shipyard: ; cr;N0" @
-.OUTFITTINGSOLD: "Total Modules Sold: ;;N0" @
-.OUTFITTINGPROFIT: "Credits earned from Outfitting: ; cr;N0" @
-.REARMTOTAL: "Total Ships Restocked: ;;N0" @
-.REFUELTOTAL: "Total Ships Refuelled: ;;N0" @
-.REFUELPROFIT: "Credits earned from Refuelling: ; cr;N0" @
-.REPAIRSTOTAL: "Total Ships Repaired: ;;N0" @
-.VOUCHERSREDEEMED: "Redemption Office Exchanges: ;;N0" @
-.VOUCHERSPROFIT: "Redemption Office Payouts: ; cr;N0" @
+DBB9533A55F0D6: "Total Commodities Exported: ;;N0" => "Insgesamt exportierte Waren: ;;N0"
+C1612A9998F6C7: "Total Commodities Imported: ;;N0" => "Insgesamt importierte Waren: ;;N0"
+168AE7F1055A42: "Credits earned from Commodities: ; cr;N0" => "Credits aus Warenverkauf: ; cr;N0"
+3160F8DD3FD184: "Credits spent on Commodities: ; cr;N0" => "In Waren investierte Credits: ; cr;N0"
+FF0B74FBC553FA: "Credits earned from Stolen Goods: ; cr;N0" => "Credits durch gestohlene Güter: ; cr;N0"
+6B43EA808A8EF1: "Credits spent on Stolen Goods: ; cr;N0" => "In gestohlene Güter investierte Credits: ; cr;N0"
+FF5D273DEEC12D: "Total Travel Distance: ; ly;N0" => "Insgesamt zurückgelegte Entfernung: ;Lj;N0"
+95FEB7797D71B1: "Number of Carrier Jumps: ;;N0" => "Anzahl Carrier-Sprünge: ;;N0"
+CC97805E2242A9: "Total Ships Sold: ;;N0" => "Insgesamt verkaufte Schiffe: ;;N0"
+6AD953FA65034F: "Credits earned from Shipyard: ; cr;N0" => "Credits aus Werft: ; cr;N0"
+859779ABE3648F: "Total Modules Sold: ;;N0" => "Insgesamt verkaufte Module: ;;N0"
+9ACE1EC044770B: "Credits earned from Outfitting: ; cr;N0" => "Credits aus Ausstattung: ; cr;N0"
+F85048E2B2D989: "Total Ships Restocked: ;;N0" => "Insgesamt aufgefüllte Schiffe: ;;N0"
+D3710C6839F9B6: "Total Ships Refuelled: ;;N0" => "Insgesamt aufgetankte Schiffe: ;;N0"
+15C65DFD86C4E4: "Credits earned from Refuelling: ; cr;N0" => "Credits aus Auftanken: ; cr;N0"
+37926927C297ED: "Total Ships Repaired: ;;N0" => "Insgesamt reparierte Schiffe: ;;N0"
+5976FDD386D8B3: "Redemption Office Exchanges: ;;N0" => "Einlöse-Büro-Austausch: ;;N0"
+9C8FDEA36579A3: "Redemption Office Payouts: ; cr;N0" => "Einlöse-Büro-Auszahlungen: ; cr;N0"
 
 SECTION ExobiologyClass
 
-.OrganicGenusEncountered: "Unique Genus Encountered: ;;N0" @
-.OrganicSpeciesEncountered: "Unique Species Encountered: ;;N0" @
-.OrganicVariantEncountered: "Unique Variants Encountered: ;;N0" @
-.OrganicDataProfits: "Profit from Organic Data: ; cr;N0" @
-.OrganicData: "Organic Data Registered: ;;N0" @
-.FirstLoggedProfits: "Profit from First Logged: ; cr;N0" @
-.FirstLogged: "First Logged: ;;N0" @
-.OrganicSystems: "Systems with Organic Life: ;;N0" @
-.OrganicPlanets: "Planets with Organic Life: ;;N0" @
-.OrganicGenus: "Unique Genus Data Logged: ;;N0" @
-.OrganicSpecies: "Unique Species Data Logged: ;;N0" @
+889C4F3E680F31: "Unique Genus Encountered: ;;N0" => "Gesehene Einzelarten: ;;N0"
+62AD18CDFF82CF: "Unique Species Encountered: ;;N0" => "Gesehene Einzelspezies: ;;N0"
+8FF7FDBB3F88D4: "Unique Variants Encountered: ;;N0" => "Gesehene Einzelvarianten: ;;N0"
+F5FB6D22DE8F7C: "Profit from Organic Data: ; cr;N0" => "Einnahmen aus organischen Daten: ; cr;N0"
+BB0AD0456BB312: "Organic Data Registered: ;;N0" => "Registrierte organische Daten: ;;N0"
+88FC3DE3AF29FC: "Profit from First Logged: ; cr;N0" => "Einnahmen aus Erstbeschreibungen: ; cr;N0"
+29AA43113CD409: "First Logged: ;;N0" => "Erstbeschreibungen: ;;N0"
+C9B976D6F69603: "Systems with Organic Life: ;;N0" => "Systeme mit organischem Leben: ;;N0"
+7E01A2D46F53D7: "Planets with Organic Life: ;;N0" => "Planeten mit organischem Leben: ;;N0"
+E2EF9DFEC41B63: "Unique Genus Data Logged: ;;N0" => "Erfasste Einzelarten: ;;N0"
+569A7852B97445: "Unique Species Data Logged: ;;N0" => "Erfasste Einzelspezies: ;;N0"
 
 SECTION ThargoidsClass
 
-.EncounterWakes: "Thargoid wakes scanned: ;;N0" @
-.EncounterKilled: "Thargoids killed: ;;N0" @
-.EncounterImprint: "Thargoid structures: ;;N0" @
-.EncounterTotal: "Total encounters: ;;N0" @
-.LastSystem: "Last seen in: " @
-.LastTime: "Last seen on: " @
-.LastShip: "Last ship involved: " @
+8CDAADFF8B5B17: "Thargoid wakes scanned: ;;N0" => "Thargoidsogwolken gescannt: ;;N0"
+66D1BD86691E46: "Thargoids killed: ;;N0" => "Thargoiden getötet: ;;N0"
+A244B487DEE654: "Thargoid structures: ;;N0" => "Thargoidenstrukturen: ;;N0"
+6B68D6D3D64B30: "Total encounters: ;;N0" => "Gesammte Begegnungen: ;;N0"
+76375FA7856815: "Last seen in: " => "Zuletzt gesehen in: "
+73A65CB42D7E71: "Last seen on: " => "Zuletzt gesehen am: "
+3EC67923F7122B: "Last ship involved: " => "Letztes involviertes Schiff: "
 
 SECTION JournalStoredModules
 
-.at: "< at " => "< в системе "
 
 SECTION JournalSupercruiseExit
 
-.in: "< in " = JournalStoredModules.at
-.At: "At " => "Выход у "
 
 SECTION JournalStoredShips
 
-.Atstarport: "At starport: " => "На текущей станции: "
-.Otherlocations: "Other locations: " => "на других: "
-.SSP: "; cr;N0" => "; кр.;N0"
-.Remote: "Remote: " => "Корабли на других станциях: "
-.intransit: "<; in transit" => "<; в пути"
-.at: "< at " = JournalStoredModules.at
+2DE9A85B47E0A5: "At starport: " => "На текущей станции: "
+3F834594889578: "Other locations: " => "на других: "
+6D3B4BD0DFDCB4: "; cr;N0" => "; кр.;N0"
+FD70B4E5980946: "Remote: " => "Корабли на других станциях: "
+3E3FE90EA447B7: "<; in transit" => "<; в пути"
 
 SECTION JournalSuperCruiseEntry
 
-.Wanted: ", You are wanted." @
+7B603813EB2C53: ", You are wanted." => ", du bist gesucht."
 
 SECTION JournalUnderAttack
 
-.ACOUNT: "times" => "раз(а)"
+7196B5875F713C: "times" => "раз(а)"
 
 SECTION JournalNavRoute
 
-.Jumps: "{0} jumps: " @
+248608AE1AD74C: "{0} jumps: " => "{0} Sprünge: "
 
 SECTION JournalApproachBody
 
-.In: "In " = JournalCodexEntry.At
 
 SECTION JournalEntry
 
-.BartenderMaterials: "Bartender Materials" @
-.TME: "{0} days {1} hours {2} minutes" => "{0} дн. {1} ч. {2} мин."
-.Hyperspace: "Hyperspace" @
-.Supercruise: "Supercruise" @
-.Target: "Target: " => "Цель: "
-.Victimfaction: "Victim faction: " => "фракция цели: "
-.Faction: "Faction: " = FSSSignal.Faction
-.from: "< from " => "< из "
-.dueto: "<, due to " => "<, из-за "
-.onfaction: "< on faction " => "<, фракция: "
-.Against: "Against " => "цель: "
-.Cost: "Cost: ; cr;N0" => "сумма: ; кр.;N0"
-.Bounty: "Bounty: ; cr;N0" => "награда за поимку: ; кр.;N0"
-.BountyOnly: "Bounty" => "награда за поимку"
-.Offender: "Offender " => "правонарушитель: "
-.Reward: "Reward: ; cr;N0" => "Награда: ; кр.;N0"
-.to: "< to " => "<: "
-.Brokertook: ", Broker took {0:N0}%" => ", комиссия брокера: {0:N0}%"
-.Type: "Type: " = JournalLocOrJump.Type
-.Amount: "Amount: ; cr;N0" = JournalEntry.Cost
-.System: "System: " = JournalCodexEntry.At
-.NoCargo: "No Cargo" => "Нет груза"
-.Cargo: "Cargo, {0} items" => "{0} шт."
-.items: "; items" => "; шт."
-.MissionCargo: "<; (Mission Cargo)" => "<; (для миссии)"
-.Count: "Count: " => "количество: "
-.Abandoned: ";Abandoned" => ";отменено"
-.PowerPlay: "PowerPlay: " => "Политика: "
-.Collected: "Collected: " => "Собрано: "
-.of: "< of " => "< шт. груза "
-.ofa: "of " @
-.Total: "Total: " => "Всего в хранилище: "
-.Progress: "Progress: ;%;N1" => "прогресс: ;%;N1"
-.Delivered: "Delivered: " => "Доставлено: "
-.Update: "Update, Collected: " => "Обновление. Собрано: "
-.ToGo: "To Go:" => "осталось: "
-.ProgressLeft: "Progress Left: ;%;N1" => "оставшийся прогресс: ;%;N1"
-.Stolen: ";Stolen" => ";украдено"
-.StartingPackage: "Starting Package: " => "стартовый пакет: "
-.CGS: "< at ; Star System" => "<, система: ;"
-.torole: "< to role ;" => "< на роль ;"
-.fired: "; fired" => "; уволен(а)"
-.Hired: "Hired: ;" => "Нанят(а): ;"
-.offaction: "< of faction " = JournalEntry.onfaction
-.Rank: "Rank: " => "ранг: "
-.Crew: "Crew: " => "Член экипажа: "
-.Telepresence: ";Telepresence" @
-.Role: "Role: " => "роль: "
-.CrewMember: "Crew Member: " = JournalEntry.Crew
-.DuetoCrime: ";Due to Crime" => "; из-за преступления"
-.Captain: "Captain: " => "Капитан: "
-.fromfaction: "< from faction " = JournalMissionAccepted.from
-.Died: "{0} in ship type {1} rank {2}" => "{0}, тип корабля: {1}, ранг: {2}"
-.Killedby: "Killed by " => "Корабль уничтожил(а): "
-.Boom: "Boom!" => "Бум!"
-.Option: "Option: " => "Опция: "
-.Bankrupt: ";Bankrupt" => ";Банкротство"
-.Dscan: "New bodies discovered: " => "Открыто новых тел: "
-.Bodies: "Bodies: " => "Небесные тела: "
-.insystem: "< in system " = JournalStoredModules.at
-.Wanted: ";(Wanted)" => ";(розыск)"
-.ActiveFine: ";Active Fine" => ";действующие штрафы"
-.instate: "< in state " => "< в состоянии "
-.Allegiance: "Allegiance: " => "Принадлежность: "
-.Economy: "Economy: " = JournalLocOrJump.Economy
-.Government: "Government: " = JournalLocOrJump.Government
-.Stationservices: "Station services: " => "Службы космопорта: "
-.Economies: "Economies: " => "Экономика: "
-.onpad: "< on pad " => "<, посадочная площадка "
-.Cockpit: "Cockpit: " => "Фонарь кабины: "
-.Corrosion: "Corrosion: " => "Коррозия: "
-.TotalCost: "Total Cost: ; cr;N0" => "общая сумма: ; кр;N0"
-.TotalSale: "Total Sale: ; cr;N0" @
-.each: "each: ; cr;N0" => "цена за шт.: ; кр.;N0"
-.Drones: "Drones" => "Дроны"
-.Price: "Price: ; cr;N0" => "цена: ; кр.;N0"
-.Name: "Name: " => "название: "
-.Blueprint: "Blueprint: " => "чертеж: "
-.Level: "Level: " => "Уровень: "
-.Override: "Override: " => "Заменяет: "
-.Commodity: "Commodity: " = JournalMissionAccepted.Deliver
-.Material: "Material: " => "материал: "
-.Quantity: "Quantity: " = JournalEntry.Count
-.TotalQuantity: "TotalQuantity: " => "общее количество: "
-.InSlot: "In Slot: " => "В слоте: "
-.By: "By: " => "Пытался перехватить пилот: "
-.Bonus: "Bonus: ; cr;N0" => "бонус: ; кр.;N0"
-.Scanned: "Scanned: " => "Системы: "
-.Discovered: "Discovered: " => "Обнаружено: "
-.Loadout: "Loadout: " => "Снаряжение: "
-.NPCControlled: "NPC Controlled;" => ", под управлением NPC;"
-.Version: "Version: " => "Версия: "
-.Build: "Build: " => "билд: "
-.Part: "Part: " => "часть: "
-.Ship: "Ship: " = JournalSetUserShipName.On
-.Ident: "Ident: " => "идентификатор: "
-.Credits: "Credits: ;;N0" => "баланс: ;;N0"
-.Mode: "Mode: " => "Режим: "
-.Group: "Group: " => "группа: "
-.NotLanded: "Not Landed;Landed" => ";на поверхности"
-.FuelLevel: "Fuel Level: ;;0.0" => "уровень топлива: ;;0.0"
-.Capacity: "Capacity: ;;0.0" => "грузовая вместимость: ;;0.0"
-.Cashtotaldiffers: "Cash total differs, adjustment" => "Количество денег отличается, корректировка"
-.NumberofStatuses: "Number of Statuses: " => "Количество статусов: "
-.Online: "Online: " => "В сети: "
-.Offline: "Offline: " => "не в сети: "
-.Unfriended: "Unfriended: " @
-.Declined: "Declined: " @
-.RequestedFriend: "Requested Friend: " @
-.AddedFriend: "Added Friend: " @
-.Submitted: ";Submitted" => "Перехвачен пилотом;Сдался пилоту"
-.NPC: "< (NPC);(Player)" => "< (NPC);(Игрок)"
-.Power: "Power: " => "держава: "
-.Failedtointerdict: "Failed to interdict;Interdicted" => "Ушел от перехвата: ;Успешно перехвачен: "
-.Boost: "Boost: ;;0.0" => "Ускорение: ;;0.0"
-.buyprice: "< buy price ; cr;N0" => "< цена покупки ; кр.;N0"
-.sellprice: "< sell price ; cr;N0" => "< цена продажи ; кр.;N0"
-.Profit: "Profit: ; cr;N0" => "Прибыль: ; кр.;N0"
-.Legal: "Legal;Illegal" => "законный;незаконный"
-.NotStolen: "Not Stolen;Stolen" = JournalEntry.Stolen
-.Market: "Market;BlackMarket" => "Рынок;Черный рынок"
-.MatC: "< ; items" => "<, ; шт."
-.Sold: "Sold: " => "Продано: "
-.Received: "Received: " => "получено: "
-.Active: "Active: " => "Активные: "
-.Failed: "Failed: " => "Проваленные: "
-.Completed: "Completed: " => "Завершенные: "
-.Station: "Station: " => "станция: "
-.Settlement: "Settlement: " @
-.TargetFaction: "Target Faction: " => "целевая фракция: "
-.Donation: "Donation: " => "пожертвование: "
-.Permits: "Permits: " => "разрешения: "
-.Rewards: "Rewards: " => "Выбранная награда: "
-.Fine: "Fine: " => "штраф: "
-.Missionname: "Mission name: " => "Название миссии: "
-.Hot: ";(Hot)" => ";(горячий)"
-.HullHealth: "Hull Health: ;%;N1" => "прочность щита: ;%;N1"
-.Hull: "Hull: ; cr;N0" => "стоимость корпуса: ; кр.;N0"
-.Modules: "Modules: ; cr;N0" => "стоимость модулей: ; кр.;N0"
-.Rebuy: "Rebuy: ; cr;N0" => "страховка: ; кр.;N0"
-.into: "< into " => "<, установка в слот: "
-.Stored: "Stored: " => "помещено в хранилище: "
-.Item: "Item: " => "модуль: "
-.on: " on " => " на "
-.Replacedby: "Replaced by: " => "заменен: "
-.Modifications: "Modifications: " => "Модификация: "
-.Slot: "Slot: " => "Слот: "
-.Swappedwith: ", Swapped with " => ", заменен на модуль: "
-.TransferCost: "Transfer Cost: ; cr;N0" => "цена перемещения: ; кр.;N0"
-.Time: "Time: " => "время: "
-.Value: "Value: ; cr;N0" => "стоимость: ; кр.;N0"
-.Totalmodules: "Total modules: " = JournalModuleInfo.Modules
-.Intoship: "Into ship: " => "для корабля: "
-.TransferTime: "Transfer Time: " => "время перемещения: "
-.MusicTrack: "Music Track: " => "Музыкальный трек: "
-.Wagesfor: "Wages for " => "Заработная плата за "
-.itemsavailable: " items available" => " модул. доступно"
-.NoPassengers: "No Passengers" => "Нет пассажиров"
-.Merits: "Merits: " => "поощрения: "
-.Votes: "Votes: " => "голоса: "
-.Pledged: "Pledged: " => "длительность поддержки: "
-.FromPower: "From Power: " => "От державы: "
-.ToPower: "To Power: " => "В державу: "
-.Systems: ", Systems: " => ", система: "
-.Shield: "Shield ;;N1" => "щит: ;;N1"
-.LostTarget: "Lost Target" => "Цель потеряна"
-.ShieldsDown: "Shields Down;Shields Up" => "Щиты отключены;Щиты включены"
-.Category: "Category: " => "Категория: "
-.Latitude: "Latitude: ;°;F4" => "широта: "
-.Longitude: "Longitude: ;°;F4" => "долгота: "
-.Num: "Num: " => "кол-во: "
-.Ships: "Ships" => "корабл."
-.Distance: "Distance: ; ly;0.0" => "расстояние: ; св. л.;0.0"
-.Threat: "Threat: " => "ур. опасности: "
-.RemainingJumps: "Remaining Jumps" @
-.Nearest: "Nearest: " @
-.Old: "Old: " @
-.New: "New: " @
-.Near: "Near: " @
-.OnFootAt: "On Foot at {0}" @
-.Wealth: "Wealth: ; cr;N0" = BankAccountClass.Wealth
-.NotorietyIndex: "Notoriety Index: ;;N0" => "плохая репутация: ;;N0"
-.Fuel: "Fuel: ; tons;0.0" => "получено ;0.0 т топлива"
-.Taxi: "Taxi" @
-.Mods: "Mods: " @
-.Class: "Class: " @
-.Pilot: "Pilot: " @
-.ShipRedeem: "Redeemed and deployed ship {0} at {1} into shipyard" @
-.ShipyardRedeem: "Redeem ship {0} at {1}, available to deploy" @
+3DEBAFED05C80C: "{0} days {1} hours {2} minutes" => "{0} дн. {1} ч. {2} мин."
+C427C71598A102: "Hyperspace" => "Hyperraum"
+AA10128899005B: "Supercruise" => "Supercruise"
+593EEC0E990749: "Target: " => "Цель: "
+07294E7BD39A4D: "Victim faction: " => "фракция цели: "
+67077E5976E34E: "<, due to " => "<, из-за "
+4BD46DBA6B624D: "< on faction " => "<, фракция: "
+8995BB11D7A6E8: "Against " => "цель: "
+786DD258AD80E6: "Bounty: ; cr;N0" => "награда за поимку: ; кр.;N0"
+BE6BC2677800F8: "Offender " => "правонарушитель: "
+878753E2A92917: "< to " => "<: "
+9AFDF43FB25981: ", Broker took {0:N0}%" => ", комиссия брокера: {0:N0}%"
+6D9764792C867E: "Type: " => "Тип: "
+A962DFA691CE85: "Amount: ; cr;N0" => "сумма: ; кр.;N0"
+9F9F5223C8298B: "No Cargo" => "Нет груза"
+3607B6B7691BA9: "Cargo, {0} items" => "{0} шт."
+5E022CEF16D434: "; items" => "; шт."
+9DF713AF0B27BF: "<; (Mission Cargo)" => "<; (для миссии)"
+26CD6A7BF77DBD: ";Abandoned" => ";отменено"
+2DF9D11ECB1CFD: "PowerPlay: " => "Политика: "
+583F28E4CF3D22: "Collected: " => "Собрано: "
+C0A9D54E4D7923: "< of " => "< шт. груза "
+2449D652417BC4: "of " => "von "
+AA8303DA72F581: "Total: " => "Всего в хранилище: "
+72FBF4548EC8B1: "Delivered: " => "Доставлено: "
+D431E00AC09D50: "Update, Collected: " => "Обновление. Собрано: "
+E7DE613857ED23: "To Go:" => "осталось: "
+50BDD4D6D6E2F6: "Progress Left: ;%;N1" => "оставшийся прогресс: ;%;N1"
+3C3CCCA0A46F8A: ";Stolen" => ";украдено"
+AED92E5EE5D181: "Starting Package: " => "стартовый пакет: "
+23D09CCE55532F: "< at ; Star System" => "<, система: ;"
+AEA15A59C8F40B: "< to role ;" => "< на роль ;"
+C54AD6BB838817: "; fired" => "; уволен(а)"
+20282D7E9CB678: "Hired: ;" => "Нанят(а): ;"
+14C60EE946D100: "< of faction " => "<, фракция: "
+A6310710F7E46B: "Crew: " => "Член экипажа: "
+AC931D89719A85: ";Telepresence" => ";Telepräsenz: "
+9D2D17B37709AD: "Role: " => "роль: "
+42E7F311E3AC6E: "Crew Member: " => "Член экипажа: "
+D8798F1C63F24D: ";Due to Crime" => "; из-за преступления"
+F91B1D5D18BD6A: "Captain: " => "Капитан: "
+387A7F12EE6A16: "< from faction " => "< от фракции "
+AA9FB409388CA4: "{0} in ship type {1} rank {2}" => "{0}, тип корабля: {1}, ранг: {2}"
+A63E6BD61A80ED: "Killed by " => "Корабль уничтожил(а): "
+96E930300EB555: "Boom!" => "Бум!"
+DE5647CBDB72F9: "Option: " => "Опция: "
+C8BA46A3C90F93: ";Bankrupt" => ";Банкротство"
+2BC5095AB460B0: "New bodies discovered: " => "Открыто новых тел: "
+ECCC4CD2A3B35D: ";(Wanted)" => ";(розыск)"
+EF6F6B19531B71: ";Active Fine" => ";действующие штрафы"
+79B918DF2A6E1E: "< in state " => "< в состоянии "
+C177C32751B215: "Station services: " => "Службы космопорта: "
+8F4A98919EB6AA: "Economies: " => "Экономика: "
+33C98BED0FDE5C: "< on pad " => "<, посадочная площадка "
+C3EA2738ADC8AE: "Cockpit: " => "Фонарь кабины: "
+FBE6518EB896C9: "Corrosion: " => "Коррозия: "
+3CDF4084F0BA2A: "Total Cost: ; cr;N0" => "общая сумма: ; кр;N0"
+6D23A438BB2054: "Total Sale: ; cr;N0" => "Gesamtumsatz: ; Cr;N0"
+7624811212F417: "each: ; cr;N0" => "цена за шт.: ; кр.;N0"
+B90EBC91B3A742: "Drones" => "Дроны"
+51195EF23F030B: "Price: ; cr;N0" => "цена: ; кр.;N0"
+7A5C86964FFABE: "Blueprint: " => "чертеж: "
+6B9ACFFF7C0394: "Level: " => "Уровень: "
+8428F911EBB896: "Override: " => "Заменяет: "
+81E50B4BFB2D8D: "Commodity: " => "Товар: "
+D81E3C520822A5: "Material: " => "материал: "
+F667661C1B58D0: "Quantity: " => "количество: "
+F1715241A78AEF: "TotalQuantity: " => "общее количество: "
+F8AB7114F1457F: "In Slot: " => "В слоте: "
+E6DC9E99FED8ED: "By: " => "Пытался перехватить пилот: "
+F3E92663BBE826: "Bonus: ; cr;N0" => "бонус: ; кр.;N0"
+365D3CC19B9937: "Scanned: " => "Системы: "
+ABF8C0970F5E94: "Discovered: " => "Обнаружено: "
+AD94D47D2D1080: "Loadout: " => "Снаряжение: "
+903937A1820E07: "NPC Controlled;" => ", под управлением NPC;"
+CECDC433805D47: "Version: " => "Версия: "
+42DEABE0CD3C60: "Build: " => "билд: "
+3EE9B5712EBC6D: "Part: " => "часть: "
+BD67ECE9BA21F5: "Ship: " => "корабль: "
+9ECD8A1D12A891: "Ident: " => "идентификатор: "
+4E54D83E64A56D: "Credits: ;;N0" => "баланс: ;;N0"
+FC04A4680235C9: "Mode: " => "Режим: "
+2DCC7725AB035F: "Group: " => "группа: "
+88027E516ABD34: "Not Landed;Landed" => ";на поверхности"
+DB39EF29AA8E17: "Fuel Level: ;;0.0" => "уровень топлива: ;;0.0"
+9875F4471A80C2: "Capacity: ;;0.0" => "грузовая вместимость: ;;0.0"
+7C7D492381C592: "Cash total differs, adjustment" => "Количество денег отличается, корректировка"
+8DE16B3469EA8A: "Number of Statuses: " => "Количество статусов: "
+9A1EBE660B1A36: "Online: " => "В сети: "
+4EDE204905BF1C: "Offline: " => "не в сети: "
+938BAC46A5C777: "Unfriended: " => "Entfreundet: "
+00AC9B7F75F585: "Declined: " => "Abgelehnt: "
+398817E043A41C: "Requested Friend: " => "Freundschaftsanfrage: "
+E1A7392D51744B: "Added Friend: " => "Freund hinzugefügt: "
+564B6CEAE398EC: ";Submitted" => "Перехвачен пилотом;Сдался пилоту"
+7394520AEF05D7: "< (NPC);(Player)" => "< (NPC);(Игрок)"
+121A00D89940A5: "Power: " => "держава: "
+EFBA445DCE4D4D: "Failed to interdict;Interdicted" => "Ушел от перехвата: ;Успешно перехвачен: "
+6D4C60FFF57E67: "Boost: ;;0.0" => "Ускорение: ;;0.0"
+95C16848518091: "< buy price ; cr;N0" => "< цена покупки ; кр.;N0"
+9BF139DE61306E: "< sell price ; cr;N0" => "< цена продажи ; кр.;N0"
+3576A295DC62CE: "Legal;Illegal" => "законный;незаконный"
+B965812110F44B: "Not Stolen;Stolen" => ";украдено"
+94CF760FC133A6: "Market;BlackMarket" => "Рынок;Черный рынок"
+6774408DE640A0: "< ; items" => "<, ; шт."
+0A0C60F2403EDB: "Sold: " => "Продано: "
+5EDBCC30153092: "Received: " => "получено: "
+B5D3541F876AD2: "Active: " => "Активные: "
+9500BEFFE7383E: "Failed: " => "Проваленные: "
+9EB7EBD9C53CE1: "Completed: " => "Завершенные: "
+113131F9A3FC18: "Station: " => "станция: "
+6B1A9C39AFA2D5: "Settlement: " => "Siedlung: "
+26553006CDD566: "Target Faction: " => "целевая фракция: "
+3DB7E4DB726EA9: "Donation: " => "пожертвование: "
+1333BD7570CDCF: "Permits: " => "разрешения: "
+CAE240B207B79E: "Rewards: " => "Выбранная награда: "
+84397827C2614B: "Fine: " => "штраф: "
+24FB9F3FC36951: "Mission name: " => "Название миссии: "
+52979E47A64B7F: ";(Hot)" => ";(горячий)"
+4C2D86B2C1FF6D: "Hull Health: ;%;N1" => "прочность щита: ;%;N1"
+5D2525AD1B6266: "Hull: ; cr;N0" => "стоимость корпуса: ; кр.;N0"
+19CD6C33DB63F3: "Modules: ; cr;N0" => "стоимость модулей: ; кр.;N0"
+F0DB993787E3F4: "Rebuy: ; cr;N0" => "страховка: ; кр.;N0"
+DBDAABE93AE174: "< into " => "<, установка в слот: "
+2428639C7D9665: "Stored: " => "помещено в хранилище: "
+D878F95AC9DBB7: "Item: " => "модуль: "
+BAC8E74F0524D9: " on " => " на "
+16E922D98E906D: "Replaced by: " => "заменен: "
+BB3507C0C55F7F: "Modifications: " => "Модификация: "
+5DE9871CB27FCC: "Slot: " => "Слот: "
+127EA66ADF07B7: ", Swapped with " => ", заменен на модуль: "
+B06383A94B7BE1: "Transfer Cost: ; cr;N0" => "цена перемещения: ; кр.;N0"
+7F64B1EEA0CCDA: "Time: " => "время: "
+400BDDE7F69B52: "Value: ; cr;N0" => "стоимость: ; кр.;N0"
+B7DEB813C5379F: "Total modules: " => "Всего модулей: "
+B01C88F6EFCAD3: "Into ship: " => "для корабля: "
+690D3948FCDD00: "Transfer Time: " => "время перемещения: "
+BE796AF8C98AB1: "Music Track: " => "Музыкальный трек: "
+194DFB1A2EC6C7: "Wages for " => "Заработная плата за "
+0FC9A117F3B233: " items available" => " модул. доступно"
+166D76AE76F567: "No Passengers" => "Нет пассажиров"
+51988BB94A07DD: "Merits: " => "поощрения: "
+674952D30A759E: "Votes: " => "голоса: "
+D78C2FD8959323: "Pledged: " => "длительность поддержки: "
+54019D8554E8DF: "From Power: " => "От державы: "
+677315622ABC16: "To Power: " => "В державу: "
+B5F18DD9DD424A: ", Systems: " => ", система: "
+FD31761D9B4004: "Shield ;;N1" => "щит: ;;N1"
+FBA2A215328E6A: "Lost Target" => "Цель потеряна"
+11530A93A09C51: "Shields Down;Shields Up" => "Щиты отключены;Щиты включены"
+568993E7B8F8AC: "Category: " => "Категория: "
+CEB1994BDE5913: "Latitude: ;°;F4" => "широта: "
+FDCDCA316D9694: "Longitude: ;°;F4" => "долгота: "
+FBAA8D51A30E1D: "Num: " => "кол-во: "
+B8A54799BE1F4D: "Ships" => "корабл."
+4CD90C4218A40C: "Distance: ; ly;0.0" => "расстояние: ; св. л.;0.0"
+4D71859891AF26: "Threat: " => "ур. опасности: "
+267537A7006640: "Remaining Jumps" => "Übrige Sprünge"
+C9B3661D181FE1: "Nearest: " => "Näheste: "
+BE03F01D0CDA71: "Old: " => "Alt: "
+8CA8638D7BC5B1: "New: " => "Neu: "
+D69C5F9BB5CEAB: "Near: " => "Bei: "
+183284B4FB3416: "On Foot at {0}" => "Zu Fuß bei {0}"
+F638A697CC8692: "Fuel: ; tons;0.0" => "получено ;0.0 т топлива"
+82E2B91027511A: "Taxi" => "Taxi"
+BC3584D572242C: "Mods: " => "Mods"
+85169AD2ED46DB: "Class: " => "Klasse"
+55C74A23327E26: "Pilot: " => "Pilot"
+C6BDFB2221032F: "Redeemed and deployed ship {0} at {1} into shipyard" => "Schiff {0} eingelöst und in Werft {1} ausgebracht."
+13E8B7503843F9: "Redeem ship {0} at {1}, available to deploy" => "Schiff {0} bei {1} einlösen, bereit zum ausbringen."
 
 SECTION JournalCarrierJump
 
-.JumpedWith: "Jumped with carrier {0} to {1}" @
-.JumpedItself: "Carrier jumped to {0}" @
+EF41C8690CDA9E: "Jumped with carrier {0} to {1}" => "Mit Carrier {0} nach {1} gesprungen"
+DE8CC5C4DD7104: "Carrier jumped to {0}" => "Carrier sprang nach {0}"
 
 SECTION JournalCarrier
 
-.At: "At " @
-.Callsign: "Call Sign: " @
-.Name: "Name: " @
-.JumpRange: "Jump Range: ; ly;0.0" @
-.Balance: "Carrier Balance: ; cr;N0" @
-.ReserveBalance: "Reserve Balance: ; cr;N0" @
-.AvailableBalance: "Available Balance: ; cr;N0" @
-.ReservePercent: "Reserve Percent: ;;N1" @
-.TaxRatePioneersupplies: "Tax Rate Pioneersupplies: ;;N1" @
-.TaxRateShipyard: "Tax Rate Shipyard: ;;N1" @
-.TaxRateRearm: "Tax Rate Rearm: ;;N1" @
-.TaxRateOutfitting: "Tax Rate Outfitting: ;;N1" @
-.TaxRateRefuel: "Tax Rate Refuel: ;;N1" @
-.TaxRateRepair: "Tax Rate Repair: ;;N1" @
-.TotalCapacity: "Total Capacity: " @
-.Crew: "Crew: " @
-.Cargo: "Cargo: " @
-.CargoReserved: "Cargo Space Reserved: " @
-.ShipPacks: "Ship Packs: " @
-.ModulePacks: "Module Packs: " @
-.FreeSpace: "Free Space: " @
-.ToSystem: "To " @
-.Body: "Body " @
-.Refund: "Refund: ; cr;N0" @
-.RefundTime: "at UTC " @
-.Deposit: "Deposit: ; cr;N0" @
-.Withdraw: "Withdraw: ; cr;N0" @
-.Operation: "Operation: " @
-.Tier: "Tier: " @
-.Purchase: "Purchase: " @
-.Sell: "Sell: " @
-.CancelSell: "Cancel Sell of: " @
-.Access: "Access: " @
-.AllowNotorious: ";Allow Notorious" @
-.Amount: "Amount: ;;N0" @
-.FuelLevel: "Fuel Level: ;;N0" @
+9EC1BEAA961EDB: "Call Sign: " => "Rufzeichen: "
+B15D8F8451444C: "Jump Range: ; ly;0.0" => "Sprungreichweite: ;Lj;0.0"
+4ABDD513D53A4E: "Carrier Balance: ; cr;N0" => "Carrier Kontostand: ; Cr;N0"
+F913B2BD65130A: "Reserve Balance: ; cr;N0" => "Reservekontostand: ; Cr;N0"
+4E79193AA6B741: "Available Balance: ; cr;N0" => "Verfügbarer Kontostand: ; Cr;N0"
+C42EAF2112EC06: "Reserve Percent: ;;N1" => "Reserve Prozent: ;;N1"
+49D5A743DB2870: "Tax Rate Pioneersupplies: ;;N1" => "Steuersatz Pioniervorräte: ;;N1"
+DCC8C4FA77E8E8: "Tax Rate Shipyard: ;;N1" => "Steuersatz Werft: ;;N1"
+A1D0A288C23201: "Tax Rate Rearm: ;;N1" => "Steuersatz Nachladen: ;;N1"
+FE3B97CFEA3000: "Tax Rate Outfitting: ;;N1" => "Steuersatz Ausrüstung: ;;N1"
+23275021E7D52C: "Tax Rate Refuel: ;;N1" => "Steuersatz Auftanken: ;;N1"
+10780F361BBC72: "Tax Rate Repair: ;;N1" => "Steuersatz Reparatur: ;;N1"
+5CB095843C654B: "Total Capacity: " => "Gesamtkapazität: "
+B71AFBB1DF2F4E: "Cargo: " => "Fracht: "
+470B55CDD0413C: "Cargo Space Reserved: " => "Reservierter Frachtraum: "
+13CDE1612690B5: "Ship Packs: " => "Schiffspakete: "
+959F26D6EACD7C: "Module Packs: " => "Modulpakete: "
+BE80BF931E7B6B: "Free Space: " => "Freier Raum: "
+19E9DAB67C02BA: "To " => "Nach "
+8E49CF8A52E094: "Body " => "Körper "
+E8C3CE0D2A99CF: "Refund: ; cr;N0" => "Rückerstattung: ; Cr;N0"
+B446E9EA0AD9CF: "at UTC " => "um UTC "
+1669AEFA581C8D: "Deposit: ; cr;N0" => "Einzahlung: ; Cr;N0"
+396161812AC722: "Withdraw: ; cr;N0" => "Abbuchung: ; Cr;N0"
+F7B6722B7ADFD9: "Operation: " => "Betrieb: "
+7758B9D2F1CB08: "Tier: " => "Ebene: "
+35037DB039AED0: "Purchase: " => "Kauf: "
+898EBD9EF35D82: "Sell: " => "Verkauf: "
+F8CB4571400A56: "Cancel Sell of: " => "Verkaufsabbruch von: "
+F75D4FA622FF8B: "Access: " => "Zugang: "
+DB5E11964705C3: ";Allow Notorious" => ";Erlaube berüchtigt"
+87D31ED8B95512: "Amount: ;;N0" => "Menge: ;;N0"
+543A5FFBD800E5: "Fuel Level: ;;N0" => "Treibstofffüllstand: ;;N0"
 
 SECTION JournalMicroResources
 
-.Items: "Items" @
-.Components: "Components" @
-.Consumables: "Consumables" @
-.Data: "Data" @
+44D25B5D1B6D98: "Items" => "Gegenstände"
+9289473EEEDAEE: "Components" => "Komponenten"
+4190D6D0F5DF6D: "Consumables" => "Verbrauchsgegenstände"
 
 SECTION JournalScanInfo
 
-.isa: " is a " @
-.Atmosphere: " Atmosphere: " @
-.SurfaceTemperature: " Surface temperature: {0} K." @
-.terraformable: "terraformable " @
-.LowRadius: " Is tiny " @
-.LargeRadius: " Is large." @
-.Signals: " Has mining signals." @
-.BioSignals: " Biological signals: {0}." @
-.GeoSignals: " Geological signals: {0}." @
-.ThargoidSignals: " Thargoid signals: {0}." @
-.GuardianSignals: " Guardian signals: {0}." @
-.HumanSignals: " Human signals: {0}." @
-.OtherSignals: " 'Other' signals: {0}." @
-.MandD: " (Mapped & Discovered)" @
-.MP: " (Mapped)" @
-.DIS: " (Discovered)" @
-.islandable: " Is landable." @
-.Hasring: " Is ringed." => ", есть кольцо"
-.Has: " Has " => ", "
-.eccentricity: " Has an high eccentricity of {0}." @
-.unknownAtmosphere: "unknown" @
-.BFSD: " Basic" => " базового"
-.SFSD: " Standard" => " стандартного"
-.PFSD: " Premium" => " премиум"
-.LE: "{0} has {1} level elements." => "На {0} есть элементы {1} уровня."
-.scanorganics: " Has been scanned for organics." @
+50C9F6207A37F8: " is a " => " ist ein(e) "
+7B4E443EE8814F: " Atmosphere: " => " Atmosphäre: "
+331B8B83C09885: " Surface temperature: {0} K." => "Oberflächentemperatur: {0} K."
+0606F2F9983136: "terraformable " => "terraformierbare/r "
+7C5BAE6C336788: " Is tiny " => " ist winzig"
+9DB73891779D78: " Is large." => " Ist groß."
+AC2B43A4D65B41: " Has mining signals." => " Hat Abbausignale."
+5234E64B6E1C03: " Biological signals: {0}." => " Biologische Signale: {0}."
+53140EBBBD2DC3: " Geological signals: {0}." => " Geologische Signale: {0}."
+F9C8D414B1F142: " Thargoid signals: {0}." => " Thargoid-Signale: {0}."
+62F9A8EAB9A1E8: " Guardian signals: {0}." => " Guardian-Signale: {0}."
+4CC1BD64C545E4: " Human signals: {0}." => " Menschliche Signale: {0}."
+EE5122344A579C: " 'Other' signals: {0}." => " 'Andere' Signale: {0}."
+204E719EB4129D: " (Mapped & Discovered)" => " (Kartographiert & erkundet)"
+D91D9838CE0944: " (Mapped)" => " (Kartographiert)"
+B2983B7DF494FA: " (Discovered)" => " (Erkundet)"
+D343B137399D3A: " Is landable." => " Ist landbar."
+817016EBBA625C: " Is ringed." => ", есть кольцо"
+69016A1EE7145D: " Has " => ", "
+AF3631062BAF32: " Has an high eccentricity of {0}." => " Hat eine hohe Exzentrizität von {0}."
+50D8B4A941C26B: "unknown" => "unbekannt"
+E4D013B562F9F8: " Basic" => " базового"
+DF4C2085E463AE: " Standard" => " стандартного"
+AFCB2A18DD3242: " Premium" => " премиум"
+82DA45C64A0D04: "{0} has {1} level elements." => "На {0} есть элементы {1} уровня."
+1147BFBDA286FC: " Has been scanned for organics." => " Wurde nach Organsimen gescannt."
 
 SECTION Services
 
-.BridgeCrew: "Bridge Crew" @
-.CommodityTrading: "Commodity Trading" @
-.TritiumDepot: "Tritium Depot" @
-.Refuel: "Refuel Station" @
-.Repair: "Repair Crews" @
-.Rearm: "Armoury" @
-.VoucherRedemption: "Redemption Office" @
-.Shipyard: "Shipyard" @
-.Outfitting: "Outfitting" @
-.BlackMarket: "Secure Warehouse" @
-.Exploration: "Universal Cartographics" @
-.Bartender: "Concourse Bar" @
-.VistaGenomics: "Vista Genomics" @
-.PioneerSupplies: "Pioneer Supplies" @
+F47FDB993838A7: "Bridge Crew" => "Brückencrew"
+1BABA82CF3020D: "Commodity Trading" => "Warenhandel"
+C6230E81C93721: "Tritium Depot" => "Tritiumdepot"
+AA61104F28684E: "Refuel Station" => "Auftankstation"
+CA4B1A71D2F677: "Repair Crews" => "Reparaturcrews"
+6A53D52EB6662E: "Armoury" => "Waffenkammer"
+7B2CA12E214447: "Redemption Office" => "Auszahlungsbüro"
+9BAD2DA74D2D7D: "Secure Warehouse" => "Sicheres Lager"
+419A2D5301C0DA: "Universal Cartographics" => "Universal Cartographics"
+CF7C02B2B0079B: "Concourse Bar" => "Hallenbar"
+F157DA72429B0A: "Vista Genomics" => "Vista Genomics"
+AA5680B5B5B241: "Pioneer Supplies" => "Pionierausrüstungen"
 
 SECTION JournalScanOrganics
 
-.Value: "Value: ; cr;N0" @
-.PotentialValue: "Potential Value: ; cr;N0" @
+4DAB054FDB754D: "Potential Value: ; cr;N0" => "Potentieller Wert: ; Cr;N0"
 
 SECTION AtmosphereTypes
 
-.Ammonia: "Ammonia Atmosphere" @
-.Ammonia_Hot_Thick: "Hot Thick Ammonia Atmosphere" @
-.Ammonia_Hot_Thick_Rich: "Hot Thick Ammonia Rich Atmosphere" @
-.Ammonia_Rich: "Ammonia Rich Atmosphere" @
-.Ammonia_Thick: "Thick Ammonia Atmosphere" @
-.Ammonia_Thick_Rich: "Thick Ammonia Rich Atmosphere" @
-.Ammonia_Thin: "Thin Ammonia Atmosphere" @
-.Argon: "Argon Atmosphere" @
-.Argon_Hot_Thick: "Hot Thick Argon Atmosphere" @
-.Argon_Hot_Thick_Rich: "Hot Thick Argon Rich Atmosphere" @
-.Argon_Rich: "Argon Rich Atmosphere" @
-.Argon_Thick: "Thick Argon Atmosphere" @
-.Argon_Thick_Rich: "Thick Argon Rich Atmosphere" @
-.Argon_Thin: "Thin Argon Atmosphere" @
-.Argon_Thin_Rich: "Thin Argon Rich Atmosphere" @
-.Carbon_Dioxide: "Carbon Dioxide Atmosphere" @
-.Carbon_Dioxide_Hot: "Hot Carbon Dioxide Atmosphere" @
-.Carbon_Dioxide_Hot_Rich: "Hot Carbon Dioxide Rich Atmosphere" @
-.Carbon_Dioxide_Hot_Thick: "Hot Thick Carbon Dioxide Atmosphere" @
-.Carbon_Dioxide_Hot_Thick_Rich: "Hot Thick Carbon Dioxide Rich Atmosphere" @
-.Carbon_Dioxide_Hot_Thin: "Hot Thin Carbon Dioxide Atmosphere" @
-.Carbon_Dioxide_Rich: "Carbon Dioxide Rich Atmosphere" @
-.Carbon_Dioxide_Thick: "Thick Carbon Dioxide Atmosphere" @
-.Carbon_Dioxide_Thick_Rich: "Thick Carbon Dioxide Rich Atmosphere" @
-.Carbon_Dioxide_Thin: "Thin Carbon Dioxide Atmosphere" @
-.Carbon_Dioxide_Thin_Rich: "Thin Carbon Dioxide Rich Atmosphere" @
-.Earth_Like: "Earth Like Atmosphere" @
-.Earth_Like_Thick: "Thick Earth Like Atmosphere" @
-.Helium: "Helium Atmosphere" @
-.Helium_Thick: "Thick Helium Atmosphere" @
-.Helium_Thin: "Thin Helium Atmosphere" @
-.Metallic_Vapour_Hot_Thick: "Hot Thick Metallic Vapour Atmosphere" @
-.Methane: "Methane Atmosphere" @
-.Methane_Hot_Thick: "Hot Thick Methane Atmosphere" @
-.Methane_Hot_Thick_Rich: "Hot Thick Methane Rich Atmosphere" @
-.Methane_Rich: "Methane Rich Atmosphere" @
-.Methane_Thick: "Thick Methane Atmosphere" @
-.Methane_Thick_Rich: "Thick Methane Rich Atmosphere" @
-.Methane_Thin: "Thin Methane Atmosphere" @
-.Methane_Thin_Rich: "Thin Methane Rich Atmosphere" @
-.Neon_Rich: "Neon Rich Atmosphere" @
-.Neon_Thin: "Thin Neon Atmosphere" @
-.Neon_Thin_Rich: "Thin Neon Rich Atmosphere" @
-.Nitrogen: "Nitrogen Atmosphere" @
-.Nitrogen_Hot_Thick: "Hot Thick Nitrogen Atmosphere" @
-.Nitrogen_Thick: "Thick Nitrogen Atmosphere" @
-.Nitrogen_Thin: "Thin Nitrogen Atmosphere" @
-.No: "No Atmosphere" @
-.Oxygen: "Oxygen Atmosphere" @
-.Oxygen_Thin: "Thin Oxygen Atmosphere" @
-.Silicate_Vapour_Hot: "Hot Silicate Vapour Atmosphere" @
-.Silicate_Vapour_Hot_Thick: "Hot Thick Silicate Vapour Atmosphere" @
-.Silicate_Vapour_Hot_Thin: "Hot Thin Silicate Vapour Atmosphere" @
-.Sulphur_Dioxide: "Sulphur Dioxide Atmosphere" @
-.Sulphur_Dioxide_Hot: "Hot Sulphur Dioxide Atmosphere" @
-.Sulphur_Dioxide_Hot_Thick: "Hot Thick Sulphur Dioxide Atmosphere" @
-.Sulphur_Dioxide_Hot_Thin: "Hot Thin Sulphur Dioxide Atmosphere" @
-.Sulphur_Dioxide_Thick: "Thick Sulphur Dioxide Atmosphere" @
-.Sulphur_Dioxide_Thin: "Thin Sulphur Dioxide Atmosphere" @
-.Unknown: "Unknown Atmosphere" @
-.Water: "Water Atmosphere" @
-.Water_Hot: "Hot Water Atmosphere" @
-.Water_Hot_Rich: "Hot Water Rich Atmosphere" @
-.Water_Hot_Thick: "Hot Thick Water Atmosphere" @
-.Water_Hot_Thick_Rich: "Hot Thick Water Rich Atmosphere" @
-.Water_Rich: "Water Rich Atmosphere" @
-.Water_Thick: "Thick Water Atmosphere" @
-.Water_Thick_Rich: "Thick Water Rich Atmosphere" @
-.Water_Thin: "Thin Water Atmosphere" @
-.Water_Thin_Rich: "Thin Water Rich Atmosphere" @
+0A1DC5CE861C38: "Ammonia Atmosphere" => "Ammoniakatmosphäre"
+E36E2226CA24CD: "Hot Thick Ammonia Atmosphere" => "Heiße dichte Ammoniakatmosphäre"
+F6022553670A62: "Hot Thick Ammonia Rich Atmosphere" => "Heiße dichte ammoniakreiche Atmosphäre"
+7559217BB156DC: "Ammonia Rich Atmosphere" => "Ammoniakreiche Atmosphäre"
+8D2251E1745895: "Thick Ammonia Atmosphere" => "Dichte Ammoniakatmosphäre"
+B1C527A623EB27: "Thick Ammonia Rich Atmosphere" => "Dichte ammoniakreiche Atmosphäre"
+0480FF061EFDD1: "Thin Ammonia Atmosphere" => "Dünne Ammoniakatmosphäre"
+92B4C387CDCDD5: "Argon Atmosphere" => "Argonatmosphäre"
+37D04A08DE9C71: "Hot Thick Argon Atmosphere" => "Heiße dichte Argonatmosphäre"
+1688398A1158C8: "Hot Thick Argon Rich Atmosphere" => "Heiße dichte argonreiche Atmosphäre"
+E5A0FE014C9378: "Argon Rich Atmosphere" => "Argonreiche Atmosphäre"
+015E4DDC3D94B3: "Thick Argon Atmosphere" => "Dichte Argonatmosphäre"
+5EBA8187E1012B: "Thick Argon Rich Atmosphere" => "Dichte argonreiche Atmosphäre"
+8459BAEB557A3F: "Thin Argon Atmosphere" => "Dünne Argonatmosphäre"
+E68F89BE004D27: "Thin Argon Rich Atmosphere" => "Dünne argonreiche Atmosphäre"
+3E00F7F985C690: "Carbon Dioxide Atmosphere" => "Kohlendioxidatmosphäre"
+70B1C829C32B0C: "Hot Carbon Dioxide Atmosphere" => "Heiße Kohlendioxidatmosphäre"
+205D687FE949F0: "Hot Carbon Dioxide Rich Atmosphere" => "Heiße kohlendioxidreiche Atmosphäre"
+D1EAE58822D16F: "Hot Thick Carbon Dioxide Atmosphere" => "Heiße dichte Kohlendioxidatmosphäre"
+36B2B7A1B6AC2A: "Hot Thick Carbon Dioxide Rich Atmosphere" => "Heiße dichte kohlendioxidreiche Atmosphäre"
+0A4F91AD30715C: "Hot Thin Carbon Dioxide Atmosphere" => "Heiße dünne Kohlendioxidatmosphäre"
+71717A1A2637E3: "Carbon Dioxide Rich Atmosphere" => "Kohlendioxidreiche Atmosphäre"
+62DEC62FA197F7: "Thick Carbon Dioxide Atmosphere" => "Dichte Kohlendioxidatmosphäre"
+16500A64C176A0: "Thick Carbon Dioxide Rich Atmosphere" => "Dichte kohlendioxidreiche Atmosphäre"
+6B0D3A69CA22BA: "Thin Carbon Dioxide Atmosphere" => "Dünne Kohlendioxidatmosphäre"
+113ED48B8FB781: "Thin Carbon Dioxide Rich Atmosphere" => "Dünne kohlendioxidreiche Atmosphäre"
+0E3AF834913154: "Earth Like Atmosphere" => "Erdähnliche Atmosphäre"
+A19D190F7F7EDB: "Thick Earth Like Atmosphere" => "Dichte erdähnliche Atmosphäre"
+683A2BE21F3496: "Helium Atmosphere" => "Heliumatmosphäre"
+66145BFE7F9599: "Thick Helium Atmosphere" => "Dichte Heliumatmosphäre"
+113FB552207696: "Thin Helium Atmosphere" => "Dünne Heliumatmosphäre"
+E6B08CF7C135CC: "Hot Thick Metallic Vapour Atmosphere" => "Heiße dichte Metalldampfatmosphäre"
+C282B84D7F3421: "Methane Atmosphere" => "Methanatmosphäre"
+5BA2B5C5725675: "Hot Thick Methane Atmosphere" => "Heiße dichte Methanatmosphäre"
+5CE5AAEEA3D075: "Hot Thick Methane Rich Atmosphere" => "Heiße dichte methanreiche Atmosphäre"
+EBE890E133629D: "Methane Rich Atmosphere" => "Methanreiche Atmosphäre"
+7FF344743E62BB: "Thick Methane Atmosphere" => "Dichte Methanatmosphäre"
+DA9BF706279D64: "Thick Methane Rich Atmosphere" => "Dichte methanreiche Atmosphäre"
+DFF9092A2B7842: "Thin Methane Atmosphere" => "Dünne Methanatmosphäre"
+2DBC0653044AB8: "Thin Methane Rich Atmosphere" => "Dünne methanreiche Atmosphäre"
+C8F858586EE5FE: "Neon Rich Atmosphere" => "Neonreiche Atmosphäre"
+5B33B63CB4CE31: "Thin Neon Atmosphere" => "Dünne Neonatmosphäre"
+73D224A0DE20B9: "Thin Neon Rich Atmosphere" => "Dünne neonreiche Atmosphäre"
+AE7CC4BBE7403A: "Nitrogen Atmosphere" => "Stickstoffatmosphäre"
+39998516995080: "Hot Thick Nitrogen Atmosphere" => "Heiße dichte Stickstoffatmosphäre"
+AB0E166ED5A0E3: "Thick Nitrogen Atmosphere" => "Dichte Stickstoffatmosphäre"
+3FE79B30BAF813: "Thin Nitrogen Atmosphere" => "Dünne Stickstoffatmosphäre"
+F33298A7DC6E19: "Oxygen Atmosphere" => "Sauerstoffatmosphäre"
+FAFA0A9F3AC3A9: "Thin Oxygen Atmosphere" => "Dünne Sauerstoffatmosphäre"
+D5C198FC5CFFA5: "Hot Silicate Vapour Atmosphere" => "Heiße Silikatdampfatmosphäre"
+A9A2C4F133C767: "Hot Thick Silicate Vapour Atmosphere" => "Heiße dichte Silikatdampfatmosphäre"
+017BFAA523D309: "Hot Thin Silicate Vapour Atmosphere" => "Heiße dünne Silikatdampfatmosphäre"
+5BEC71B86CD1D6: "Sulphur Dioxide Atmosphere" => "Schwefeldioxidatmosphäre"
+AB2424E38DB56E: "Hot Sulphur Dioxide Atmosphere" => "Heiße Schwefeldioxidatmosphäre"
+08CD6FFA7A88A4: "Hot Thick Sulphur Dioxide Atmosphere" => "Heiße dichte Schwefeldioxidatmosphäre"
+030D70E4A07CB2: "Hot Thin Sulphur Dioxide Atmosphere" => "Heiße dünne Schwefeldioxidatmosphäre"
+D292938F1D0303: "Thick Sulphur Dioxide Atmosphere" => "Dichte Schwefeldioxidatmosphäre"
+01D4ABC6251573: "Thin Sulphur Dioxide Atmosphere" => "Dünne Schwefeldioxidatmosphäre"
+8F08597CF3DE03: "Unknown Atmosphere" => "Unbekannte Atmosphäre"
+E436FB98308A84: "Water Atmosphere" => "Wasseratmosphäre"
+928784ECF69018: "Hot Water Atmosphere" => "Heiße Wasseratmosphäre"
+1D06B7FAD73C42: "Hot Water Rich Atmosphere" => "Heiße wasserreiche Atmosphäre"
+49B78D5AC54EE6: "Hot Thick Water Atmosphere" => "Heiße dichte Wasseratmosphäre"
+0F20899F0F07AF: "Hot Thick Water Rich Atmosphere" => "Heiße dichte wasserreiche Atmosphäre"
+2A9DA46CD56035: "Water Rich Atmosphere" => "Wasserreiche Atmosphäre"
+90F545822826C4: "Thick Water Atmosphere" => "Dichte Wasseratmosphäre"
+9E22EAF6BC437B: "Thick Water Rich Atmosphere" => "Dichte wasserreiche Atmosphäre"
+85E578C1152B35: "Thin Water Atmosphere" => "Dünne Wasseratmosphäre"
+4C623AF9C5D4BF: "Thin Water Rich Atmosphere" => "Dünne wasserreiche Atmosphäre"
 
 // added
 
-.Ammonia_Thin_Rich: "Thin Ammonia Rich Atmosphere" @
-.Argon_Hot: "Hot Argon Atmosphere" @
-.Argon_Hot_Rich: "Hot Argon Rich Atmosphere" @
-.Metallic_Vapour_Hot: "Hot Metallic Vapour Atmosphere" @
-.Metallic_Vapour_Hot_Thin: "Hot Thin Metallic Vapour Atmosphere" @
+F1D71513E026A6: "Thin Ammonia Rich Atmosphere" => "Dünne ammoniakreiche Atmosphäre"
+EC6DDB27FA16BC: "Hot Argon Atmosphere" => "Heiße Argonatmosphäre"
+5289C59164BE44: "Hot Argon Rich Atmosphere" => "Heiße argonreiche Atmosphäre"
+7909C52AAE1A7B: "Hot Metallic Vapour Atmosphere" => "Heiße Metalldampfatmosphäre"
+C1C9D393CAD88B: "Hot Thin Metallic Vapour Atmosphere" => "Heiße dünne Metalldampfatmosphäre"
 
 SECTION VolcanismTypes
 
-.Ammonia_Magma_Minor: "Minor Ammonia Magma Volcanism" @
-.Carbon_Dioxide_Geysers: "Carbon Dioxide Geysers Volcanism" @
-.Carbon_Dioxide_Geysers_Minor: "Minor Carbon Dioxide Geysers Volcanism" @
-.Metallic_Magma: "Metallic Magma Volcanism" @
-.Metallic_Magma_Major: "Major Metallic Magma Volcanism" @
-.Metallic_Magma_Minor: "Minor Metallic Magma Volcanism" @
-.Methane_Magma_Minor: "Minor Methane Magma Volcanism" @
-.Nitrogen_Magma_Minor: "Minor Nitrogen Magma Volcanism" @
-.No: "No Volcanism" @
-.Rocky_Magma: "Rocky Magma Volcanism" @
-.Rocky_Magma_Major: "Major Rocky Magma Volcanism" @
-.Rocky_Magma_Minor: "Minor Rocky Magma Volcanism" @
-.Silicate_Vapour_Geysers: "Silicate Vapour Geysers Volcanism" @
-.Silicate_Vapour_Geysers_Major: "Major Silicate Vapour Geysers Volcanism" @
-.Silicate_Vapour_Geysers_Minor: "Minor Silicate Vapour Geysers Volcanism" @
-.Water_Geysers: "Water Geysers Volcanism" @
-.Water_Geysers_Major: "Major Water Geysers Volcanism" @
-.Water_Geysers_Minor: "Minor Water Geysers Volcanism" @
-.Water_Magma: "Water Magma Volcanism" @
-.Water_Magma_Major: "Major Water Magma Volcanism" @
-.Water_Magma_Minor: "Minor Water Magma Volcanism" @
+C7C212A78D8056: "Minor Ammonia Magma Volcanism" => "Geringer Ammoniakmagma-Vulkanismus"
+64C83D51991EE6: "Carbon Dioxide Geysers Volcanism" => "Kohlendioxidgeysir-Vulkanismus"
+EC9BA750D20663: "Minor Carbon Dioxide Geysers Volcanism" => "Geringer Kohlendioxidgeysir-Vulkanismus"
+CE1372BD34FE4B: "Metallic Magma Volcanism" => "Metallischer Magma-Vulkanismus"
+A2D1C2CB863ADE: "Major Metallic Magma Volcanism" => "Bedeutender metallischer Magma-Vulkanismus"
+67770CE6C800D3: "Minor Metallic Magma Volcanism" => "Geringer metallischer Magma-Vulkanismus"
+EA076638B48974: "Minor Methane Magma Volcanism" => "Geringer Methanmagma-Vulkanismus"
+8F05ED17DCD392: "Minor Nitrogen Magma Volcanism" => "Geringer stickstoffmagma-Vulkanismus"
+B7CCDEFACC4D5B: "Rocky Magma Volcanism" => "Gesteinsmagma-Vulkanismus"
+017364055B4FB6: "Major Rocky Magma Volcanism" => "Bedeutender Gesteinsmagma-Vulkanismus"
+DDE943B43B148C: "Minor Rocky Magma Volcanism" => "Geringer Gesteinsmagma-Vulkanismus"
+4C3BBC3889C172: "Silicate Vapour Geysers Volcanism" => "Silikatdampfgeysir-Vulkanismus"
+A1F7196AC91711: "Major Silicate Vapour Geysers Volcanism" => "Bedeutender Silikatdampfgeysir-Vulkanismus"
+E12C5172C71943: "Minor Silicate Vapour Geysers Volcanism" => "Geringer Silikatdampfgeysir-Vulkanismus"
+E5523B05164496: "Water Geysers Volcanism" => "Wassergeysir-Vulkanismus"
+256B10A358431A: "Major Water Geysers Volcanism" => "Bedeutender Wassergeysir-Vulkanismus"
+3689BBDEB38CE4: "Minor Water Geysers Volcanism" => "Geringer Wassergeysir-Vulkanismus"
+061B430E3860A3: "Water Magma Volcanism" => "Wassermagma-Vulkanismus"
+DEA987C0845103: "Major Water Magma Volcanism" => "Bedeutender Wassermagma-Vulkanismus"
+B6AEF3724D1973: "Minor Water Magma Volcanism" => "Geringer Wassermagma-Vulkanismus"
 
 // added
 
-.Unknown: "Unknown Volcanism" @
+03966C34CFE140: "Unknown Volcanism" => "Unbekannter Vulkanismus"
 

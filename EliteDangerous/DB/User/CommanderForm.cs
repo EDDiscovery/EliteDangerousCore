@@ -31,14 +31,8 @@ namespace EliteDangerousCore.Forms
         {
             InitializeComponent();
 
-            var enumlist = new Enum[] { EDCTx.CommanderForm, EDCTx.CommanderForm_extGroupBoxCommanderInfo, EDCTx.CommanderForm_HomeSys, EDCTx.CommanderForm_labelMapCol, EDCTx.CommanderForm_extGroupBoxEDAstro, EDCTx.CommanderForm_extCheckBoxEDAstro, EDCTx.CommanderForm_groupBoxCustomInara, EDCTx.CommanderForm_labelINARAN, EDCTx.CommanderForm_labelInaraAPI, EDCTx.CommanderForm_checkBoxCustomInara, EDCTx.CommanderForm_groupBoxCustomEDSM, EDCTx.CommanderForm_checkBoxCustomEDSMFrom, EDCTx.CommanderForm_labelEDSMAPI, EDCTx.CommanderForm_labelEDSMN, EDCTx.CommanderForm_checkBoxCustomEDSMTo, 
-                                        EDCTx.CommanderForm_groupBoxCustomEDDN, EDCTx.CommanderForm_checkBoxCustomEDDNTo, EDCTx.CommanderForm_groupBoxCustomJournal, 
-                                        EDCTx.CommanderForm_labelCN, EDCTx.CommanderForm_labelJL, EDCTx.CommanderForm_buttonExtBrowse, EDCTx.CommanderForm_extCheckBoxConsoleCommander,
-                                        EDCTx.CommanderForm_extCheckBoxIncludeSubfolders};
-            var enumlisttt = new Enum[] { EDCTx.CommanderForm_panel_defaultmapcolor_ToolTip, EDCTx.CommanderForm_checkBoxCustomInara_ToolTip, EDCTx.CommanderForm_textBoxBorderInaraAPIKey_ToolTip, EDCTx.CommanderForm_textBoxBorderInaraName_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDSMFrom_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDSMTo_ToolTip, EDCTx.CommanderForm_textBoxBorderEDSMAPI_ToolTip, EDCTx.CommanderForm_textBoxBorderEDSMName_ToolTip, EDCTx.CommanderForm_checkBoxCustomEDDNTo_ToolTip, EDCTx.CommanderForm_textBoxBorderCmdr_ToolTip, EDCTx.CommanderForm_buttonExtBrowse_ToolTip, EDCTx.CommanderForm_textBoxBorderJournal_ToolTip };
-
-            BaseUtils.Translator.Instance.TranslateControls(this, enumlist);          // before additional controls
-            BaseUtils.Translator.Instance.TranslateTooltip(toolTip, enumlisttt, this);
+            BaseUtils.TranslatorMkII.Instance.TranslateControls(this);
+            BaseUtils.TranslatorMkII.Instance.TranslateTooltip(toolTip,this);
 
             if (additionalcontrols != null)
             {
@@ -176,7 +170,7 @@ namespace EliteDangerousCore.Forms
         private void buttonExtBrowse_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.Description = "Select folder where Journal*.log files are stored by Frontier in".T(EDCTx.CommanderForm_LF);
+            fbd.Description = "Select folder where Journal*.log files are stored by Frontier in".Tx();
 
             if (fbd.ShowDialog(this) == DialogResult.OK)
                 textBoxBorderJournal.Text = fbd.SelectedPath;
@@ -187,7 +181,7 @@ namespace EliteDangerousCore.Forms
         {
             if (textBoxBorderJournal.Text.HasChars() && !Directory.Exists(textBoxBorderJournal.Text))
             {
-                ExtendedControls.MessageBoxTheme.Show(this, "Folder does not exist".T(EDCTx.CommanderForm_ND), "Warning".TxID(EDCTx.Warning), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ExtendedControls.MessageBoxTheme.Show(this, "Folder does not exist".Tx(), "Warning".Tx(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {

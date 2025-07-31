@@ -91,11 +91,11 @@ namespace EliteDangerousCore.JournalEvents
                 var flist = FriendState();      // get consolidated list, ignoring repeat names
 
                // if ( flist.Count != OnlineCount + OfflineCount)
-               //     return BaseUtils.FieldBuilder.Build("Number of Statuses: ".T(EDCTx.JournalEntry_NumberofStatuses), flist.Count);
+               //     return BaseUtils.FieldBuilder.Build("Number of Statuses: ".Tx(), flist.Count);
 
                 if (OnlineCount > 0)
                 {
-                    sb.AppendPrePad("Online: ".T(EDCTx.JournalEntry_Online) + OnlineCount.ToString(), ", ");
+                    sb.AppendPrePad("Online: ".Tx()+ OnlineCount.ToString(), ", ");
 
                     foreach (var f in flist.Where(x => x.Value.Item1 > 0))
                         sb.AppendPrePad(f.Key, ", ");
@@ -103,7 +103,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (OfflineCount > 0)
                 {
-                    sb.AppendPrePad("Offline: ".T(EDCTx.JournalEntry_Offline) + OfflineCount.ToString(), ", ");
+                    sb.AppendPrePad("Offline: ".Tx()+ OfflineCount.ToString(), ", ");
 
                     foreach (var f in flist.Where(x => x.Value.Item1 < 0))
                         sb.AppendPrePad(f.Key, ", ");
@@ -163,17 +163,17 @@ namespace EliteDangerousCore.JournalEvents
         static private string Translate(string friendname, string status)
         {
             if (status.EqualsIIC("Online"))
-                return "Online: ".T(EDCTx.JournalEntry_Online) + friendname;
+                return "Online: ".Tx()+ friendname;
             else if (status.EqualsIIC("Offline"))
-                return "Offline: ".T(EDCTx.JournalEntry_Offline) + friendname;
+                return "Offline: ".Tx()+ friendname;
             else if (status.EqualsIIC("Lost"))
-                return "Unfriended: ".T(EDCTx.JournalEntry_Unfriended) + friendname;
+                return "Unfriended: ".Tx()+ friendname;
             else if (status.EqualsIIC("Declined"))
-                return "Declined: ".T(EDCTx.JournalEntry_Declined) + friendname;
+                return "Declined: ".Tx()+ friendname;
             else if (status.EqualsIIC("Requested"))
-                return "Requested Friend: ".T(EDCTx.JournalEntry_RequestedFriend) + friendname;
+                return "Requested Friend: ".Tx()+ friendname;
             else if (status.EqualsIIC("Added"))
-                return "Added Friend: ".T(EDCTx.JournalEntry_AddedFriend) + friendname;
+                return "Added Friend: ".Tx()+ friendname;
             else
                 return "??";
         }

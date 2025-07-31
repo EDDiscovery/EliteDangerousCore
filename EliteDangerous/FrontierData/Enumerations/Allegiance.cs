@@ -59,8 +59,7 @@ namespace EliteDangerousCore
 
         public static string ToLocalisedLanguage(Allegiance al)
         {
-            string id = "Allegiances." + al.ToString();
-            return BaseUtils.Translator.Instance.Translate(ToEnglish(al), id);
+            return ToEnglish(al).Tx();
         }
 
         static Dictionary<string, Allegiance> parselist;

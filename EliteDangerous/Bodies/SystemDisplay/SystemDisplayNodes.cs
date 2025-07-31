@@ -358,7 +358,7 @@ namespace EliteDangerousCore
                 if (sn.BeltData != null)
                     sn.BeltData.RingText(tooltip);
                 else
-                    tooltip.Append(sn.OwnName + Environment.NewLine + Environment.NewLine + "No scan data available".T(EDCTx.ScanDisplayUserControl_NSD));
+                    tooltip.Append(sn.OwnName + Environment.NewLine + Environment.NewLine + "No scan data available".Tx());
 
                 if (sn.Children != null && sn.Children.Count != 0)
                 {
@@ -392,40 +392,40 @@ namespace EliteDangerousCore
 
                 if (sn.NodeType == StarScan.ScanNodeType.barycentre)
                 {
-                    tooltip.AppendFormat("Barycentre of {0}".T(EDCTx.ScanDisplayUserControl_BC), sn.OwnName);
+                    tooltip.AppendFormat("Barycentre of {0}".Tx(), sn.OwnName);
                 }
                 else
                 {
                     tooltip.AppendLine(sn.BodyDesignator);
-                    tooltip.AppendLine("No scan data available".T(EDCTx.ScanDisplayUserControl_NSD));
+                    tooltip.AppendLine("No scan data available".Tx());
                     tooltip.AppendCR();
 
                     string addtext = "";
 
                     if (sn.SurfaceFeatures != null)
                     {
-                        tooltip.AppendFormat("Surface features".T(EDCTx.ScanDisplayUserControl_SurfaceFeatures));
+                        tooltip.AppendFormat("Surface features".Tx());
                         tooltip.Append(":");
                         StarScan.SurfaceFeatureList(tooltip, sn.SurfaceFeatures, 4, false, Environment.NewLine);
                         tooltip.AppendCR();
                     }
                     if (sn.Signals != null)
                     {
-                        tooltip.AppendFormat("Signals".T(EDCTx.ScanDisplayUserControl_Signals));
+                        tooltip.AppendFormat("Signals".Tx());
                         tooltip.Append(":");
                         JournalSAASignalsFound.SignalList(tooltip, sn.Signals, 4, false, false, Environment.NewLine);
                         tooltip.AppendCR();
                     }
                     if (sn.Genuses != null)
                     {
-                        tooltip.AppendFormat("Genuses".T(EDCTx.ScanDisplayUserControl_Genuses));
+                        tooltip.AppendFormat("Genuses".Tx());
                         tooltip.Append(":");
                         JournalSAASignalsFound.GenusList(tooltip, sn.Genuses, 4, false, false, Environment.NewLine);
                         tooltip.AppendCR();
                     }
                     if (sn.Organics != null)
                     {
-                        tooltip.AppendFormat("Organics".T(EDCTx.ScanDisplayUserControl_Organics));
+                        tooltip.AppendFormat("Organics".Tx());
                         tooltip.Append(":");
                         JournalScanOrganic.OrganicList(tooltip, sn.Organics, 4, false, Environment.NewLine);
                         tooltip.AppendCR();

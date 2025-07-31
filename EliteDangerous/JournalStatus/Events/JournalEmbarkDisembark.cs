@@ -66,19 +66,19 @@ namespace EliteDangerousCore.JournalEvents
         {
             string info = "";
             if (Taxi)
-                info = "Taxi".T(EDCTx.JournalEntry_Taxi);
+                info = "Taxi".Tx();
             else if (SRV)
-                info = "SRV".T(EDCTx.JournalCargo_CargoSRV);
+                info = "SRV".Tx();
             else if (Multicrew)
-                info = "Multicrew".T(EDCTx.JournalStatistics_Multicrew);
+                info = "Multicrew".Tx();
             else
-                info = "Ship".T(EDCTx.JournalCargo_CargoShip);
+                info = "Ship".Tx();
 
             string body = Body == StationName ? null : Body.ReplaceIfStartsWith(StarSystem);
 
             info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", StationName_Localised, "", body, "", StarSystem), ". ");
             if (FDStationType != StationDefinitions.StarportTypes.Unknown)
-                info += ", " + "Type: ".T(EDCTx.JournalEntry_Type) + StationDefinitions.ToLocalisedLanguage(FDStationType);
+                info += ", " + "Type: ".Tx()+ StationDefinitions.ToLocalisedLanguage(FDStationType);
 
             return info;
         }
@@ -134,18 +134,18 @@ namespace EliteDangerousCore.JournalEvents
         {
             string info = "";
             if (Taxi)
-                info = "Taxi".T(EDCTx.JournalEntry_Taxi);
+                info = "Taxi".Tx();
             else if (SRV)
-                info = "SRV".T(EDCTx.JournalCargo_CargoSRV);
+                info = "SRV".Tx();
             else if (Multicrew)
-                info = "Multicrew".T(EDCTx.JournalStatistics_Multicrew);
+                info = "Multicrew".Tx();
             else
-                info = "Ship".T(EDCTx.JournalCargo_CargoShip);
+                info = "Ship".Tx();
 
             string body = Body == StationName ? null : Body.ReplaceIfStartsWith(StarSystem);
             info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", StationName_Localised, "", body, "", StarSystem), ". ");
             if (FDStationType != StationDefinitions.StarportTypes.Unknown)
-                info += ", " + "Type: ".T(EDCTx.JournalEntry_Type) + StationDefinitions.ToLocalisedLanguage(FDStationType);
+                info += ", " + "Type: ".Tx()+ StationDefinitions.ToLocalisedLanguage(FDStationType);
             return info;
         }
     }

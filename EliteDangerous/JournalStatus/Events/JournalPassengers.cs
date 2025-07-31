@@ -60,13 +60,13 @@ namespace EliteDangerousCore.JournalEvents
                 StringBuilder sb = new System.Text.StringBuilder();
                 foreach (Passengers p in Manifest)
                 {
-                    sb.AppendSemiColonS().Build("", p.Type, "< ", p.Count, "; (VIP)", p.VIP, ";(Wanted)".T(EDCTx.JournalEntry_Wanted), p.Wanted);
+                    sb.AppendSemiColonS().Build("", p.Type, "< ", p.Count, "; (VIP)", p.VIP, ";(Wanted)".Tx(), p.Wanted);
                 }
 
                 return sb.ToString();
             }
             else
-                return "No Passengers".T(EDCTx.JournalEntry_NoPassengers);
+                return "No Passengers".Tx();
         }
     }
 }

@@ -32,7 +32,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()  
         {
-            return BaseUtils.FieldBuilder.Build("",Victim, "Rank: ".T(EDCTx.JournalEntry_Rank) , RankDefinitions.FriendlyName(CombatRank));
+            return BaseUtils.FieldBuilder.Build("",Victim, "Rank: ".Tx(), RankDefinitions.FriendlyName(CombatRank));
         }
     }
 }

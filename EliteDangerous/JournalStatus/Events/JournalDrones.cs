@@ -36,8 +36,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("Hull: ".T(EDCTx.JournalRepairDrone_Hull), HullRepaired.ToString("0.0"), "Cockpit: ".T(EDCTx.JournalEntry_Cockpit), CockpitRepaired.ToString("0.0"), 
-                                "Corrosion: ".T(EDCTx.JournalEntry_Corrosion), CorrosionRepaired.ToString("0.0"));
+            return BaseUtils.FieldBuilder.Build("Hull: ".Tx(), HullRepaired.ToString("0.0"), "Cockpit: ".Tx(), CockpitRepaired.ToString("0.0"), 
+                                "Corrosion: ".Tx(), CorrosionRepaired.ToString("0.0"));
         }
     }
 
@@ -82,7 +82,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), Type, "Count: ".T(EDCTx.JournalEntry_Count), Count, "Total Cost: ; cr;N0".T(EDCTx.JournalEntry_TotalCost), TotalCost, "each: ; cr;N0".T(EDCTx.JournalEntry_each), BuyPrice);
+            return BaseUtils.FieldBuilder.Build("Type: ".Tx(), Type, "Count: ".Tx(), Count, "Total Cost: ; cr;N0".Tx(), TotalCost, "each: ; cr;N0".Tx(), BuyPrice);
         }
     }
 
@@ -118,12 +118,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Count.ToString() + " " + "Drones".T(EDCTx.JournalEntry_Drones), TotalSale);
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Count.ToString() + " " + "Drones".Tx(), TotalSale);
         }
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Type, "Count: ".T(EDCTx.JournalEntry_Count), Count, "Price: ; cr;N0".T(EDCTx.JournalEntry_Price), SellPrice, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), TotalSale);
+            return BaseUtils.FieldBuilder.Build("", Type, "Count: ".Tx(), Count, "Price: ; cr;N0".Tx(), SellPrice, "Amount: ; cr;N0".Tx(), TotalSale);
         }
     }
 
@@ -148,7 +148,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Type: ".T(EDCTx.JournalEntry_Type), FriendlyType);
+            return BaseUtils.FieldBuilder.Build("Type: ".Tx(), FriendlyType);
         }
     }
 

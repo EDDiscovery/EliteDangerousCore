@@ -45,7 +45,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Type);
             if (mcd != null)
-                return BaseUtils.FieldBuilder.Build("", Type_Localised, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "Total: ".T(EDCTx.JournalEntry_Total), Total);
+                return BaseUtils.FieldBuilder.Build("", Type_Localised, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "Total: ".Tx(), Total);
             else
                 return Type_Localised;
         }
@@ -119,7 +119,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             var sb = new System.Text.StringBuilder(256);
 
-            sb.Build("", FriendlyMotherlodeMaterial, "", Content_Localised, "Remaining: ;%;N1".T(EDCTx.JournalProspectedAsteroid_Remaining), Remaining);
+            sb.Build("", FriendlyMotherlodeMaterial, "", Content_Localised, "Remaining: ;%;N1".Tx(), Remaining);
             
             if ( Materials != null )
             {

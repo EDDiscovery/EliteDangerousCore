@@ -59,32 +59,32 @@ namespace EliteDangerousCore.JournalEvents
                     if (IsLandable)
                     {
                         sb.AppendCS();
-                        sb.Append("Landable".T(EDCTx.JournalScan_LandC));
+                        sb.Append("Landable".Tx());
                     }
                     sb.AppendCR();
                 }
 
                 if (Terraformable)
                 {
-                    sb.Append("Candidate for terraforming".T(EDCTx.JournalScan_Candidateforterraforming));
+                    sb.Append("Candidate for terraforming".Tx());
                     sb.AppendCR();
                 }
 
                 if (nAge.HasValue)
                 {
-                    sb.AppendFormat("Age: {0} my".T(EDCTx.JournalScan_AMY), nAge.Value.ToString("N0"));
+                    sb.AppendFormat("Age: {0} my".Tx(), nAge.Value.ToString("N0"));
                     sb.AppendCR();
                 }
 
                 if (nStellarMass.HasValue)
                 {
-                    sb.AppendFormat("Solar Masses: {0:N2}".T(EDCTx.JournalScan_SolarMasses), nStellarMass.Value);
+                    sb.AppendFormat("Solar Masses: {0:N2}".Tx(), nStellarMass.Value);
                     sb.AppendCR();
                 }
 
                 if (nMassEM.HasValue)
                 {
-                    sb.Append("Mass: ".T(EDCTx.JournalScan_MASS));
+                    sb.Append("Mass: ".Tx());
                     sb.AppendSPC();
                     sb.Append(MassEMMM);
                     sb.AppendCR();
@@ -92,7 +92,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (nRadius.HasValue)
                 {
-                    sb.AppendFormat("Radius: ".T(EDCTx.JournalScan_RS));
+                    sb.AppendFormat("Radius: ".Tx());
                     sb.AppendSPC();
                     sb.Append(RadiusText);
                     sb.AppendCR();
@@ -100,7 +100,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (DistanceFromArrivalLS > 0)
                 {
-                    sb.AppendFormat("Distance from Arrival Point {0:N1}ls".T(EDCTx.JournalScan_DistancefromArrivalPoint), DistanceFromArrivalLS);
+                    sb.AppendFormat("Distance from Arrival Point {0:N1}ls".Tx(), DistanceFromArrivalLS);
                     sb.AppendCR();
                 }
 
@@ -117,13 +117,13 @@ namespace EliteDangerousCore.JournalEvents
 
             if (nSurfaceTemperature.HasValue)
             {
-                sb.AppendFormat("Surface Temp: {0}K".T(EDCTx.JournalScan_SurfaceTemp), nSurfaceTemperature.Value.ToString("N0"));
+                sb.AppendFormat("Surface Temp: {0}K".Tx(), nSurfaceTemperature.Value.ToString("N0"));
                 sb.AppendCR();
             }
 
             if (nSurfaceGravity.HasValue)
             {
-                sb.AppendFormat("Gravity: {0:N2}g".T(EDCTx.JournalScan_GV), nSurfaceGravityG.Value);
+                sb.AppendFormat("Gravity: {0:N2}g".Tx(), nSurfaceGravityG.Value);
                 sb.AppendCR();
             }
 
@@ -131,101 +131,101 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (nSurfacePressure.Value > 1000)
                 {
-                    sb.AppendFormat("Surface Pressure: {0} Atmospheres".T(EDCTx.JournalScan_SPA), nSurfacePressureEarth.Value.ToString("N2"));
+                    sb.AppendFormat("Surface Pressure: {0} Atmospheres".Tx(), nSurfacePressureEarth.Value.ToString("N2"));
                 }
                 else
                 {
-                    sb.AppendFormat("Surface Pressure: {0} Pa".T(EDCTx.JournalScan_SPP), (nSurfacePressure.Value).ToString("N2"));
+                    sb.AppendFormat("Surface Pressure: {0} Pa".Tx(), (nSurfacePressure.Value).ToString("N2"));
                 }
                 sb.AppendCR();
             }
 
             if (HasMeaningfulVolcanism)
             {
-                sb.AppendFormat("Volcanism: {0}".T(EDCTx.JournalScan_Volcanism), VolcanismTranslated);
+                sb.AppendFormat("Volcanism: {0}".Tx(), VolcanismTranslated);
                 sb.AppendCR();
             }
 
 
             if (nOrbitalPeriodDays.HasValue && nOrbitalPeriodDays > 0)
             {
-                sb.AppendFormat("Orbital Period: {0} days".T(EDCTx.JournalScan_OrbitalPeriod), nOrbitalPeriodDays.Value.ToString("0.0####"));
+                sb.AppendFormat("Orbital Period: {0} days".Tx(), nOrbitalPeriodDays.Value.ToString("0.0####"));
                 sb.AppendCR();
             }
 
             if (nSemiMajorAxis.HasValue)
             {
                 if (IsStar || nSemiMajorAxis.Value > BodyPhysicalConstants.oneAU_m / 10)
-                    sb.AppendFormat("Semi Major Axis: {0:0.00}AU".T(EDCTx.JournalScan_SMA), nSemiMajorAxisAU.Value);
+                    sb.AppendFormat("Semi Major Axis: {0:0.00}AU".Tx(), nSemiMajorAxisAU.Value);
                 else
-                    sb.AppendFormat("Semi Major Axis: {0}km".T(EDCTx.JournalScan_SMK), (nSemiMajorAxis.Value / 1000).ToString("N1"));
+                    sb.AppendFormat("Semi Major Axis: {0}km".Tx(), (nSemiMajorAxis.Value / 1000).ToString("N1"));
                 sb.AppendCR();
             }
 
             if (nEccentricity.HasValue)
             {
                 if (nEccentricity < 0.9)
-                    sb.AppendFormat("Orbital Eccentricity: ".T(EDCTx.JournalScan_OrbitalEccentricity) + "{0:0.000}", nEccentricity.Value);
+                    sb.AppendFormat("Orbital Eccentricity: ".Tx()+ "{0:0.000}", nEccentricity.Value);
                 else 
-                    sb.AppendFormat("Orbital Eccentricity: ".T(EDCTx.JournalScan_OrbitalEccentricity) + "{0:0.000000}", nEccentricity.Value);
+                    sb.AppendFormat("Orbital Eccentricity: ".Tx()+ "{0:0.000000}", nEccentricity.Value);
                 sb.AppendCR();
             }
 
             if (nOrbitalInclination.HasValue)
             {
-                sb.AppendFormat("Orbital Inclination: {0:0.000}°".T(EDCTx.JournalScan_OrbitalInclination), nOrbitalInclination.Value);
+                sb.AppendFormat("Orbital Inclination: {0:0.000}°".Tx(), nOrbitalInclination.Value);
                 sb.AppendCR();
             }
 
             if (nAscendingNode.HasValue)
             {
-                sb.AppendFormat("Ascending Node: {0:0.000}°".T(EDCTx.JournalScan_AscendingNode), nAscendingNode.Value);
+                sb.AppendFormat("Ascending Node: {0:0.000}°".Tx(), nAscendingNode.Value);
                 sb.AppendCR();
             }
 
             if (nPeriapsis.HasValue)
             {
-                sb.AppendFormat("Arg Of Periapsis: {0:0.000}°".T(EDCTx.JournalScan_ArgOfPeriapsis), nPeriapsis.Value);
+                sb.AppendFormat("Arg Of Periapsis: {0:0.000}°".Tx(), nPeriapsis.Value);
                 sb.AppendCR();
             }
 
             if (nMeanAnomaly.HasValue)
             {
-                sb.AppendFormat("Mean Anomaly: {0:0.000}°".T(EDCTx.JournalScan_MeanAnomaly), nMeanAnomaly.Value);
+                sb.AppendFormat("Mean Anomaly: {0:0.000}°".Tx(), nMeanAnomaly.Value);
                 sb.AppendCR();
             }
 
             if (nAxialTiltDeg.HasValue)
             {
-                sb.AppendFormat("Axial tilt: {0:0.00}°".T(EDCTx.JournalScan_Axialtilt), nAxialTiltDeg.Value);
+                sb.AppendFormat("Axial tilt: {0:0.00}°".Tx(), nAxialTiltDeg.Value);
                 sb.AppendCR();
             }
 
             if (nRotationPeriodDays.HasValue)
             {
-                sb.AppendFormat("Rotation Period: {0} days".T(EDCTx.JournalScan_RotationPeriod), nRotationPeriodDays.Value.ToString("0.0####"));
+                sb.AppendFormat("Rotation Period: {0} days".Tx(), nRotationPeriodDays.Value.ToString("0.0####"));
                 sb.AppendCR();
             }
 
 
             if (nAbsoluteMagnitude.HasValue)
             {
-                sb.AppendFormat("Absolute Magnitude: {0:0.00}".T(EDCTx.JournalScan_AbsoluteMagnitude), nAbsoluteMagnitude.Value);
+                sb.AppendFormat("Absolute Magnitude: {0:0.00}".Tx(), nAbsoluteMagnitude.Value);
                 sb.AppendCR();
             }
 
             if (nTidalLock.HasValue && nTidalLock.Value)
             {
-                sb.Append("Tidally locked".T(EDCTx.JournalScan_Tidallylocked));
+                sb.Append("Tidally locked".Tx());
                 sb.AppendCR();
             }
 
             if (HasRingsOrBelts)
             {
                 if (HasRings)
-                    sb.AppendFormat(Rings.Count() == 1 ? "Ring".T(EDCTx.JournalScan_Ring) : "Rings".T(EDCTx.JournalScan_Rings), ""); // OLD translator files had "Rings{0}" so supply an empty string just in case
+                    sb.AppendFormat(Rings.Count() == 1 ? "Ring".Tx(): "Rings".Tx(), ""); // OLD translator files had "Rings{0}" so supply an empty string just in case
                 else
-                    sb.AppendFormat(Rings.Count() == 1 ? "Belt".T(EDCTx.JournalScan_Belt) : "Belts".T(EDCTx.JournalScan_Belts), ""); // OLD translator files had "Belt{0}" so supply an empty string just in case
+                    sb.AppendFormat(Rings.Count() == 1 ? "Belt".Tx(): "Belts".Tx(), ""); // OLD translator files had "Belt{0}" so supply an empty string just in case
 
                 sb.Append(": ");
 
@@ -245,88 +245,88 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Mapped)
             {
-                sb.Append("Mapped".T(EDCTx.JournalScan_MPI));
+                sb.Append("Mapped".Tx());
                 if (EfficientMapped)
                 {
                     sb.AppendSPC();
-                    sb.Append("Efficiently".T(EDCTx.JournalScan_MPIE));
+                    sb.Append("Efficiently".Tx());
                 }
                 sb.AppendCR();
             }
 
             ScanEstimatedValues ev = GetEstimatedValues();
 
-            sb.AppendFormat("Current value: {0:N0}".T(EDCTx.JournalScan_CV) + "", ev.EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsWebSourced));
+            sb.AppendFormat("Current value: {0:N0}".Tx()+ "", ev.EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsWebSourced));
             sb.AppendCR();
 
             if (ev.EstimatedValueFirstDiscoveredFirstMapped > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
             {
-                string msg = "First Discovered+Mapped value: {0:N0}/{1:N0}e".T(EDCTx.JournalScan_EVFD) + "";
+                string msg = "First Discovered+Mapped value: {0:N0}/{1:N0}e".Tx()+ "";
                 sb.AppendFormat(msg, ev.EstimatedValueFirstDiscoveredFirstMapped, ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently);
                 sb.AppendCR();
             }
 
             if (ev.EstimatedValueFirstMapped > 0 && (!WasMapped.HasValue || !WasMapped.Value))    // if was not mapped
             {
-                sb.AppendFormat("First Mapped value: {0:N0}/{1:N0}e".T(EDCTx.JournalScan_EVFM) + "", ev.EstimatedValueFirstMapped, ev.EstimatedValueFirstMappedEfficiently);
+                sb.AppendFormat("First Mapped value: {0:N0}/{1:N0}e".Tx()+ "", ev.EstimatedValueFirstMapped, ev.EstimatedValueFirstMappedEfficiently);
                 sb.AppendCR();
             }
 
             if (ev.EstimatedValueFirstDiscovered > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
             {
-                sb.AppendFormat("First Discovered value: {0:N0}".T(EDCTx.JournalScan_FDV) + "", ev.EstimatedValueFirstDiscovered);
+                sb.AppendFormat("First Discovered value: {0:N0}".Tx()+ "", ev.EstimatedValueFirstDiscovered);
                 sb.AppendCR();
             }
 
             if (ev.EstimatedValueFirstDiscovered > 0) // if we have extra details, on planets, show the base value
             {
-                sb.AppendFormat("Mapped value: {0:N0}/{1:N0}e".T(EDCTx.JournalScan_EVM) + "", ev.EstimatedValueMapped, ev.EstimatedValueMappedEfficiently);
+                sb.AppendFormat("Mapped value: {0:N0}/{1:N0}e".Tx()+ "", ev.EstimatedValueMapped, ev.EstimatedValueMappedEfficiently);
                 sb.AppendCR();
-                sb.AppendFormat("Base Estimated value: {0:N0}".T(EDCTx.JournalScan_EV) + "", ev.EstimatedValueBase);
+                sb.AppendFormat("Base Estimated value: {0:N0}".Tx()+ "", ev.EstimatedValueBase);
                 sb.AppendCR();
             }
 
             if (WasDiscovered.HasValue && WasDiscovered.Value)
             {
-                sb.AppendFormat("Already Discovered".T(EDCTx.JournalScan_EVAD) + "");
+                sb.AppendFormat("Already Discovered".Tx()+ "");
                 sb.AppendCR();
             }
             if (WasMapped.HasValue && WasMapped.Value)
             {
-                sb.AppendFormat("Already Mapped".T(EDCTx.JournalScan_EVAM) + "");
+                sb.AppendFormat("Already Mapped".Tx()+ "");
                 sb.AppendCR();
             }
 
             if (EDSMDiscoveryCommander != null)
             {
-                sb.AppendFormat("Discovered by {0} on {1}".T(EDCTx.JournalScan_DB) + "", EDSMDiscoveryCommander, EDSMDiscoveryUTC.ToStringZulu());
+                sb.AppendFormat("Discovered by {0} on {1}".Tx()+ "", EDSMDiscoveryCommander, EDSMDiscoveryUTC.ToStringZulu());
                 sb.AppendCR();
             }
 
             if (SurfaceFeatures != null)
             {
-                sb.Append("Surface features".T(EDCTx.ScanDisplayUserControl_SurfaceFeatures));
+                sb.Append("Surface features".Tx());
                 sb.Append(": ");
                 StarScan.SurfaceFeatureList(sb, SurfaceFeatures, 4, false, Environment.NewLine);
                 sb.AppendCR();
             }
             if (Signals != null)
             {
-                sb.Append("Signals".T(EDCTx.ScanDisplayUserControl_Signals));
+                sb.Append("Signals".Tx());
                 sb.Append(": ");
                 JournalSAASignalsFound.SignalList(sb, Signals, 4, false, false, Environment.NewLine);
                 sb.AppendCR();
             }
             if (Genuses != null)
             {
-                sb.Append("Genuses".T(EDCTx.ScanDisplayUserControl_Genuses));
+                sb.Append("Genuses".Tx());
                 sb.Append(": ");
                 JournalSAASignalsFound.GenusList(sb, Genuses, 4, false, false, Environment.NewLine);
                 sb.AppendCR();
             }
             if (Organics != null)
             {
-                sb.Append("Organics".T(EDCTx.ScanDisplayUserControl_Organics));
+                sb.Append("Organics".Tx());
                 sb.Append(": ");
                 JournalScanOrganic.OrganicList(sb, Organics, 4, false, Environment.NewLine);
                 sb.AppendCR();
@@ -334,7 +334,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (ScanType.HasChars())        // early entries did not
             {
-                sb.AppendFormat("Scan Type: {0}".T(EDCTx.JournalScan_SCNT), ScanType);
+                sb.AppendFormat("Scan Type: {0}".Tx(), ScanType);
                 sb.AppendCR();
             }
 

@@ -46,7 +46,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("",Name_Localised , "Num: ".T(EDCTx.JournalEntry_Num), Count, "Reward: ".T(EDCTx.JournalSearchAndRescue_Reward), Reward);
+            return BaseUtils.FieldBuilder.Build("",Name_Localised , "Num: ".Tx(), Count, "Reward: ".Tx(), Reward);
         }
 
         public void Ledger(Ledger mcl)

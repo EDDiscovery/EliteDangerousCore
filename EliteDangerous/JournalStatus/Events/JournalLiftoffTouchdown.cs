@@ -52,9 +52,9 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo() 
         {
             return BaseUtils.FieldBuilder.Build("", Body, 
-                                          "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled,
-                                        "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised, 
-                                        "Latitude: ;°;F4".T(EDCTx.JournalEntry_Latitude), Latitude, "Longitude: ;°;F4".T(EDCTx.JournalEntry_Longitude), Longitude);
+                                          "NPC Controlled;".Tx(), PlayerControlled,
+                                        "Nearest: ".Tx(), NearestDestination_Localised, 
+                                        "Latitude: ;°;F4".Tx(), Latitude, "Longitude: ;°;F4".Tx(), Longitude);
         }
     }
 
@@ -92,16 +92,16 @@ namespace EliteDangerousCore.JournalEvents
 
         // IBodyFeature only
         public string BodyType { get { return "Planet"; } }
-        public string Name { get { return "Touchdown".TxID(EDCTx.JournalTypeEnum_Touchdown); } }
-        public string Name_Localised { get { return "Touchdown".TxID(EDCTx.JournalTypeEnum_Touchdown); } }
+        public string Name { get { return "Touchdown".Tx(); } }
+        public string Name_Localised { get { return "Touchdown".Tx(); } }
         public string BodyDesignation { get; set; }
 
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("", Body,
-                                            "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled,
-                                          "Nearest: ".T(EDCTx.JournalEntry_Nearest), NearestDestination_Localised,
-                                          "Latitude: ;°;F4".T(EDCTx.JournalEntry_Latitude), Latitude, "Longitude: ;°;F4".T(EDCTx.JournalEntry_Longitude), Longitude);
+                                            "NPC Controlled;".Tx(), PlayerControlled,
+                                          "Nearest: ".Tx(), NearestDestination_Localised,
+                                          "Latitude: ;°;F4".Tx(), Latitude, "Longitude: ;°;F4".Tx(), Longitude);
 
         }
 

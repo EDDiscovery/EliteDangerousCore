@@ -40,26 +40,26 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Active: ".T(EDCTx.JournalEntry_Active), ActiveMissions?.Length, "Failed: ".T(EDCTx.JournalEntry_Failed), FailedMissions?.Length, "Completed: ".T(EDCTx.JournalEntry_Completed), CompletedMissions?.Length);
+            return BaseUtils.FieldBuilder.Build("Active: ".Tx(), ActiveMissions?.Length, "Failed: ".Tx(), FailedMissions?.Length, "Completed: ".Tx(), CompletedMissions?.Length);
         }
         public override string GetDetailed()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             if (ActiveMissions != null && ActiveMissions.Length>0)
             {
-                sb.AppendPrePad("Active: ".T(EDCTx.JournalEntry_Active), Environment.NewLine);
+                sb.AppendPrePad("Active: ".Tx(), Environment.NewLine);
                 foreach (var x in ActiveMissions)
                     sb.AppendPrePad("    " + x.Format(), Environment.NewLine);
             }
             if (FailedMissions != null && FailedMissions.Length>0)
             {
-                sb.AppendPrePad("Failed: ".T(EDCTx.JournalEntry_Failed), Environment.NewLine);
+                sb.AppendPrePad("Failed: ".Tx(), Environment.NewLine);
                 foreach (var x in FailedMissions)
                     sb.AppendPrePad("    " + x.Format(), Environment.NewLine);
             }
             if (CompletedMissions != null && CompletedMissions.Length > 0)
             {
-                sb.AppendPrePad("Completed: ".T(EDCTx.JournalEntry_Completed), Environment.NewLine);
+                sb.AppendPrePad("Completed: ".Tx(), Environment.NewLine);
                 foreach (var x in CompletedMissions)
                     sb.AppendPrePad("    " + x.Format(), Environment.NewLine);
             }
@@ -98,7 +98,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public string Format()
             {
-                return BaseUtils.FieldBuilder.Build("", Name_Localised ?? Name, "<;(Passenger)".T(EDCTx.MissionItem_Passenger), PassengerMission, " " + "Expires: ".T(EDCTx.MissionItem_Expires), ExpiryTimeUTC.ToLocalTime());
+                return BaseUtils.FieldBuilder.Build("", Name_Localised ?? Name, "<;(Passenger)".Tx(), PassengerMission, " " + "Expires: ".Tx(), ExpiryTimeUTC.ToLocalTime());
             }
         }
     }
@@ -205,47 +205,52 @@ namespace EliteDangerousCore.JournalEvents
             return MissionDetailedInfo(true);
         }
 
+        private static string Cond(bool cond, string tx)
+        {
+            return cond ? tx.Tx() : tx;
+        }
+
         public string MissionBasicInfo(bool translate)          // MissionList::FullInfo uses this. Journal Entry info brief uses this
         {
             DateTime? exp = Expiry > DateTime.MinValue ? EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry) : default(DateTime?);
 
             return BaseUtils.FieldBuilder.Build("", LocalisedName,
-                                      EDTranslatorExtensions.TCond(translate, "< from ", EDCTx.JournalMissionAccepted_from), Faction,
-                                      EDTranslatorExtensions.TCond(translate, "System: ",EDCTx.JournalEntry_System ), DestinationSystem,
-                                      EDTranslatorExtensions.TCond(translate, "Station: ", EDCTx.JournalEntry_Station), DestinationStation,
-                                      EDTranslatorExtensions.TCond(translate, "Settlement: ", EDCTx.JournalEntry_Settlement), DestinationSettlement,
-                                      EDTranslatorExtensions.TCond(translate, "Expiry: ",EDCTx.JournalMissionAccepted_Expiry ), exp,
-                                      EDTranslatorExtensions.TCond(translate, "Influence: ",EDCTx.JournalMissionAccepted_Influence ), Influence,
-                                      EDTranslatorExtensions.TCond(translate, "Reputation: ",EDCTx.JournalMissionAccepted_Reputation ), Reputation,
-                                      EDTranslatorExtensions.TCond(translate, "Reward: ; cr;N0",EDCTx.JournalMissionAccepted_Reward ), Reward,
-                                      EDTranslatorExtensions.TCond(translate, "; (Wing)",EDCTx.JournalMissionAccepted_Wing ), Wing);
+                                      Cond(translate, "< from "), Faction,
+                                      Cond(translate, "System: "), DestinationSystem,
+                                      Cond(translate, "Station: "), DestinationStation,
+                                      Cond(translate, "Settlement: "), DestinationSettlement,
+                                      Cond(translate, "Expiry: "), exp,
+                                      Cond(translate, "Influence: "), Influence,
+                                      Cond(translate, "Reputation: "), Reputation,
+                                      Cond(translate, "Reward: ; cr;N0"), Reward,
+                                      Cond(translate, "; (Wing)"), Wing);
         }
 
         public string MissionDetailedInfo(bool translate)          // MissionList::FullInfo (DLL uses this), Journal Entry detailed info
         {
             return BaseUtils.FieldBuilder.Build(
-                                           EDTranslatorExtensions.TCond(translate, "Deliver: ", EDCTx.JournalMissionAccepted_Deliver ), CommodityLocalised,
-                                           EDTranslatorExtensions.TCond(translate, "Count: ", EDCTx.JournalMissionAccepted_Count ), Count,
-                                           EDTranslatorExtensions.TCond(translate, "Target: ", EDCTx.JournalEntry_Target ), TargetLocalised,
-                                           EDTranslatorExtensions.TCond(translate, "Type: ", EDCTx.JournalEntry_Type ), TargetTypeFriendly,
-                                           EDTranslatorExtensions.TCond(translate, "Target Faction: ", EDCTx.JournalEntry_TargetFaction ), TargetFaction,
-                                           EDTranslatorExtensions.TCond(translate, "Target Type: ", EDCTx.JournalMissionAccepted_TargetType ), TargetTypeLocalised,
-                                           EDTranslatorExtensions.TCond(translate, "Kill Count: ", EDCTx.JournalMissionAccepted_KillCount ), KillCount,
-                                           EDTranslatorExtensions.TCond(translate, "Passengers: ", EDCTx.JournalMissionAccepted_Passengers ), PassengerCount);
+                                           Cond(translate, "Deliver: "), CommodityLocalised,
+                                           Cond(translate, "Count: "), Count,
+                                           Cond(translate, "Target: "), TargetLocalised,
+                                           Cond(translate, "Type: "), TargetTypeFriendly,
+                                           Cond(translate, "Target Faction: "), TargetFaction,
+                                           Cond(translate, "Target Type: "), TargetTypeLocalised,
+                                           Cond(translate, "Kill Count: "), KillCount,
+                                           Cond(translate, "Passengers: " ), PassengerCount);
         }
 
         public string MissionInfoColumn()          //  MissionList:info, used for MissionList:Info, used in mission panels.
         {
             return BaseUtils.FieldBuilder.Build(
-                                        "Influence: ".T(EDCTx.JournalMissionAccepted_Influence), Influence,
-                                        "Reputation: ".T(EDCTx.JournalMissionAccepted_Reputation), Reputation,
-                                        "Deliver: ".T(EDCTx.JournalMissionAccepted_Deliver), FriendlyCommodity,
-                                        "Target: ".T(EDCTx.JournalEntry_Target), TargetLocalised,
-                                        "Type: ".T(EDCTx.JournalEntry_Type), TargetTypeFriendly,
-                                        "Target Faction: ".T(EDCTx.JournalEntry_TargetFaction), TargetFaction,
-                                        "Target Type: ".T(EDCTx.JournalMissionAccepted_TargetType), TargetTypeLocalised,
-                                        "Passengers: ".T(EDCTx.JournalMissionAccepted_Passengers), PassengerCount,
-                                        "Count: ".T(EDCTx.JournalMissionAccepted_Count), Count);
+                                        "Influence: ".Tx(), Influence,
+                                        "Reputation: ".Tx(), Reputation,
+                                        "Deliver: ".Tx(), FriendlyCommodity,
+                                        "Target: ".Tx(), TargetLocalised,
+                                        "Type: ".Tx(), TargetTypeFriendly,
+                                        "Target Faction: ".Tx(), TargetFaction,
+                                        "Target Type: ".Tx(), TargetTypeLocalised,
+                                        "Passengers: ".Tx(), PassengerCount,
+                                        "Count: ".Tx(), Count);
 
         }
 
@@ -438,12 +443,12 @@ namespace EliteDangerousCore.JournalEvents
         {
 
             return BaseUtils.FieldBuilder.Build("", LocalisedName,
-                                        "< from ".T(EDCTx.JournalEntry_from), Faction,
-                                        "Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward,
-                                        "Donation: ".T(EDCTx.JournalEntry_Donation), Donation,
-                                        "System: ".T(EDCTx.JournalEntry_System), DestinationSystem,
-                                        "Station: ".T(EDCTx.JournalEntry_Station), DestinationStation,
-                                        "Settlement: ".T(EDCTx.JournalEntry_Settlement), DestinationSettlement
+                                        "< from ".Tx(), Faction,
+                                        "Reward: ; cr;N0".Tx(), Reward,
+                                        "Donation: ".Tx(), Donation,
+                                        "System: ".Tx(), DestinationSystem,
+                                        "Station: ".Tx(), DestinationStation,
+                                        "Settlement: ".Tx(), DestinationSettlement
                                         );
         }
 
@@ -451,11 +456,11 @@ namespace EliteDangerousCore.JournalEvents
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
-            sb.Build( "Commodity: ".T(EDCTx.JournalEntry_Commodity), CommodityLocalised,
-                                            "Count: ".T(EDCTx.JournalMissionAccepted_Count), Count,
-                                            "Target: ".T(EDCTx.JournalEntry_Target), TargetLocalised,
-                                            "Type: ".T(EDCTx.JournalEntry_Type), TargetTypeLocalised,
-                                            "Target Faction: ".T(EDCTx.JournalEntry_TargetFaction), TargetFaction);
+            sb.Build( "Commodity: ".Tx(), CommodityLocalised,
+                                            "Count: ".Tx(), Count,
+                                            "Target: ".Tx(), TargetLocalised,
+                                            "Type: ".Tx(), TargetTypeLocalised,
+                                            "Target Faction: ".Tx(), TargetFaction);
 
             sb.AppendPrePad(RewardInformation(true),Environment.NewLine);
 
@@ -467,13 +472,18 @@ namespace EliteDangerousCore.JournalEvents
             return PermitsList(translate, true) + CommoditiesList(translate, true) + MaterialList(translate, true) + FactionEffectsList(translate,true);
         }
 
+        private static string Cond(bool cond, string tx)
+        {
+            return cond ? tx.Tx() : tx;
+        }
+
         public string PermitsList(bool translate, bool pretty)
         {
             string detailed = "";
             if (PermitsAwarded != null && PermitsAwarded.Length > 0)
             {
                 if (pretty)
-                    detailed += EDTranslatorExtensions.TCond(translate,"Permits: ",EDCTx.JournalEntry_Permits);
+                    detailed += Cond(translate,"Permits: ");
 
                 for (int i = 0; i < PermitsAwarded.Length; i++)
                     detailed += ((i > 0) ? "," : "") + PermitsAwarded[i];
@@ -490,7 +500,7 @@ namespace EliteDangerousCore.JournalEvents
             if (CommodityReward != null && CommodityReward.Length > 0)
             {
                 if (pretty)
-                    detailed += EDTranslatorExtensions.TCond(translate,"Rewards: ",EDCTx.JournalEntry_Rewards);
+                    detailed += Cond(translate,"Rewards: ");
 
                 for (int i = 0; i < CommodityReward.Length; i++)
                 {
@@ -510,7 +520,7 @@ namespace EliteDangerousCore.JournalEvents
             if (MaterialsReward != null && MaterialsReward.Length > 0)
             {
                 if (pretty)
-                    detailed += EDTranslatorExtensions.TCond(translate, "Rewards: ", EDCTx.JournalEntry_Rewards);
+                    detailed += Cond(translate, "Rewards: ");
 
                 for (int i = 0; i < MaterialsReward.Length; i++)
                 {
@@ -660,14 +670,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".T(EDCTx.JournalEntry_Fine), Fine);
+            return BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".Tx(), Fine);
         }
 
         public void Ledger(Ledger mcl)
         {
             if ( Fine.HasValue && Fine.Value != 0 )
             {
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Fine: ".T(EDCTx.JournalEntry_Fine) + LocalisedName, Fine.Value);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Fine: ".Tx()+ LocalisedName, Fine.Value);
             }
         }
 
@@ -705,10 +715,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Mission name: ".T(EDCTx.JournalEntry_Missionname), LocalisedName,
-                                      "From: ".T(EDCTx.JournalMissionRedirected_From), OldDestinationSystem,
+            return BaseUtils.FieldBuilder.Build("Mission name: ".Tx(), LocalisedName,
+                                      "From: ".Tx(), OldDestinationSystem,
                                       "", OldDestinationStation,
-                                      "To: ".T(EDCTx.JournalMissionRedirected_To), NewDestinationSystem,
+                                      "To: ".Tx(), NewDestinationSystem,
                                       "", NewDestinationStation);
         }
 
@@ -741,7 +751,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".T(EDCTx.JournalEntry_Fine), Fine);
+            return BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".Tx(), Fine);
         }
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)

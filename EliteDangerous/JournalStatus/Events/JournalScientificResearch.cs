@@ -38,7 +38,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("",Name_Localised, "Count: ".T(EDCTx.JournalEntry_Count),  Count , "Category: ".T(EDCTx.JournalEntry_Category), Category);
+            return BaseUtils.FieldBuilder.Build("",Name_Localised, "Count: ".Tx(),  Count , "Category: ".Tx(), Category);
         }
     }
 }

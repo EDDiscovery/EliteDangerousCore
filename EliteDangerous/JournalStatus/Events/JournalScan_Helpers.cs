@@ -28,7 +28,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 string indents = new string(' ', indent);
 
-                sb.Append("Materials:".T(EDCTx.JournalScan_Materials));
+                sb.Append("Materials:".Tx());
                 sb.AppendSPC();
 
                 int index = 0;
@@ -71,7 +71,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             string indents = new string(' ', indent);
 
-            sb.Append("Atmospheric Composition:".T(EDCTx.JournalScan_AtmosphericComposition));
+            sb.Append("Atmospheric Composition:".Tx());
             sb.AppendSPC();
             int index = 0;
             foreach (KeyValuePair<string, double> comp in AtmosphereComposition)
@@ -88,7 +88,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             string indents = new string(' ', indent);
 
-            sb.Append("Planetary Composition:".T(EDCTx.JournalScan_PlanetaryComposition));
+            sb.Append("Planetary Composition:".Tx());
             sb.AppendSPC();
             int index = 0;
             foreach (KeyValuePair<string, double> comp in PlanetComposition)
@@ -322,13 +322,13 @@ namespace EliteDangerousCore.JournalEvents
                     StringBuilder jumpLevel = new StringBuilder();
 
                     if (basic != 0)
-                        jumpLevel.AppendPrePad(basic + "/" + Recipes.FindSynthesis("FSD", "Basic").Count + " Basic".T(EDCTx.JournalScanInfo_BFSD), ", ");
+                        jumpLevel.AppendPrePad(basic + "/" + Recipes.FindSynthesis("FSD", "Basic").Count + " Basic".Tx(), ", ");
                     if (standard != 0)
-                        jumpLevel.AppendPrePad(standard + "/" + Recipes.FindSynthesis("FSD", "Standard").Count + " Standard".T(EDCTx.JournalScanInfo_SFSD), ", ");
+                        jumpLevel.AppendPrePad(standard + "/" + Recipes.FindSynthesis("FSD", "Standard").Count + " Standard".Tx(), ", ");
                     if (premium != 0)
-                        jumpLevel.AppendPrePad(premium + "/" + Recipes.FindSynthesis("FSD", "Premium").Count + " Premium".T(EDCTx.JournalScanInfo_PFSD), ", ");
+                        jumpLevel.AppendPrePad(premium + "/" + Recipes.FindSynthesis("FSD", "Premium").Count + " Premium".Tx(), ", ");
 
-                    jumponium = jumponium.AppendPrePad(string.Format("{0} has {1} level elements.".T(EDCTx.JournalScanInfo_LE), sysname, jumpLevel), Environment.NewLine);
+                    jumponium = jumponium.AppendPrePad(string.Format("{0} has {1} level elements.".Tx(), sysname, jumpLevel), Environment.NewLine);
                 }
             }
         }

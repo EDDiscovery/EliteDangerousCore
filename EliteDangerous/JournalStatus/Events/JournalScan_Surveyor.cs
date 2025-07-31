@@ -47,35 +47,35 @@ namespace EliteDangerousCore.JournalEvents
                     information.Append(" \u232C");  // partial
             }
 
-            information.Append(" is a ".T(EDCTx.JournalScanInfo_isa));
+            information.Append(" is a ".Tx());
 
             // Additional information
             information.Append((js.IsStar) ? Stars.StarName(js.StarTypeID) + "." : null);
-            information.Append((js.CanBeTerraformable) ? @"terraformable ".T(EDCTx.JournalScanInfo_terraformable) : null);
+            information.Append((js.CanBeTerraformable) ? @"terraformable ".Tx(): null);
             information.Append((js.IsPlanet) ? Planets.PlanetNameTranslated(js.PlanetTypeID) + "." : null);
-            information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? @" Is tiny ".T(EDCTx.JournalScanInfo_LowRadius) + "(" + RadiusText + ")." : null);
-            information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? @" Is large ".T(EDCTx.JournalScanInfo_LargeRadius) + "(" + RadiusText + ")." : null);
-            information.Append((js.IsLandable) ? @" Is landable.".T(EDCTx.JournalScanInfo_islandable) : null);
+            information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? @" Is tiny ".Tx()+ "(" + RadiusText + ")." : null);
+            information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? @" Is large ".Tx()+ "(" + RadiusText + ")." : null);
+            information.Append((js.IsLandable) ? @" Is landable.".Tx(): null);
             information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? @" (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)" : null);
-            information.Append((js.HasAtmosphere && showAtmos) ? @" Atmosphere: ".T(EDCTx.JournalScanInfo_Atmosphere) + js.AtmosphereTranslated : null);
-            information.Append((js.IsLandable && js.nSurfaceTemperature.HasValue && showTemp) ? (string.Format(" Surface temperature: {0} K.".T(EDCTx.JournalScanInfo_SurfaceTemperature), Math.Round(js.nSurfaceTemperature.Value, 1, MidpointRounding.AwayFromZero))) : null);
-            information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? @" Has ".T(EDCTx.JournalScanInfo_Has) + js.VolcanismTranslated + "." : null);
-            information.Append((hasminingsignals) ? " Has mining signals.".T(EDCTx.JournalScanInfo_Signals) : null);
-            information.Append((hasgeosignals) ? (string.Format(" Geological signals: {0}.".T(EDCTx.JournalScanInfo_GeoSignals), js.CountGeoSignals)) : null);
-            information.Append((hasbiosignals) ? (string.Format(" Biological signals: {0}.".T(EDCTx.JournalScanInfo_BioSignals), js.CountBioSignals)) : null);
-            information.Append((hasthargoidsignals) ? (string.Format(" Thargoid signals: {0}.".T(EDCTx.JournalScanInfo_ThargoidSignals), js.CountThargoidSignals)) : null);
-            information.Append((hasguardiansignals) ? (string.Format(" Guardian signals: {0}.".T(EDCTx.JournalScanInfo_GuardianSignals), js.CountGuardianSignals)) : null);
-            information.Append((hashumansignals) ? (string.Format(" Human signals: {0}.".T(EDCTx.JournalScanInfo_HumanSignals), js.CountHumanSignals)) : null);
-            information.Append((hasothersignals) ? (string.Format(" 'Other' signals: {0}.".T(EDCTx.JournalScanInfo_OtherSignals), js.CountOtherSignals)) : null);
-            information.Append((js.HasRingsOrBelts && showRings) ? @" Is ringed.".T(EDCTx.JournalScanInfo_Hasring) : null);
-            information.Append((js.nEccentricity >= eccentricityLimit) ? (string.Format(@" Has an high eccentricity of {0}.".T(EDCTx.JournalScanInfo_eccentricity), js.nEccentricity)) : null);
-            information.Append(hasscanorganics ? " Has been scanned for organics.".T(EDCTx.JournalScanInfo_scanorganics) : null);
+            information.Append((js.HasAtmosphere && showAtmos) ? @" Atmosphere: ".Tx()+ js.AtmosphereTranslated : null);
+            information.Append((js.IsLandable && js.nSurfaceTemperature.HasValue && showTemp) ? (string.Format(" Surface temperature: {0} K.".Tx(), Math.Round(js.nSurfaceTemperature.Value, 1, MidpointRounding.AwayFromZero))) : null);
+            information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? @" Has ".Tx()+ js.VolcanismTranslated + "." : null);
+            information.Append((hasminingsignals) ? " Has mining signals.".Tx(): null);
+            information.Append((hasgeosignals) ? (string.Format(" Geological signals: {0}.".Tx(), js.CountGeoSignals)) : null);
+            information.Append((hasbiosignals) ? (string.Format(" Biological signals: {0}.".Tx(), js.CountBioSignals)) : null);
+            information.Append((hasthargoidsignals) ? (string.Format(" Thargoid signals: {0}.".Tx(), js.CountThargoidSignals)) : null);
+            information.Append((hasguardiansignals) ? (string.Format(" Guardian signals: {0}.".Tx(), js.CountGuardianSignals)) : null);
+            information.Append((hashumansignals) ? (string.Format(" Human signals: {0}.".Tx(), js.CountHumanSignals)) : null);
+            information.Append((hasothersignals) ? (string.Format(" 'Other' signals: {0}.".Tx(), js.CountOtherSignals)) : null);
+            information.Append((js.HasRingsOrBelts && showRings) ? @" Is ringed.".Tx(): null);
+            information.Append((js.nEccentricity >= eccentricityLimit) ? (string.Format(@" Has an high eccentricity of {0}.".Tx(), js.nEccentricity)) : null);
+            information.Append(hasscanorganics ? " Has been scanned for organics.".Tx(): null);
 
             var ev = js.GetEstimatedValues();
 
             if (js.WasMapped == true && js.WasDiscovered == true)
             {
-                information.Append(" (Mapped & Discovered)".T(EDCTx.JournalScanInfo_MandD));
+                information.Append(" (Mapped & Discovered)".Tx());
                 if (showvalues)
                 {
                     information.Append(' ').Append(ev.EstimatedValueMappedEfficiently.ToString("N0")).Append(" cr");
@@ -83,7 +83,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else if (js.WasMapped == true && js.WasDiscovered == false)
             {
-                information.Append(" (Mapped)".T(EDCTx.JournalScanInfo_MP));
+                information.Append(" (Mapped)".Tx());
                 if (showvalues)
                 {
                     information.Append(' ').Append(ev.EstimatedValueFirstMappedEfficiently.ToString("N0")).Append(" cr");
@@ -91,7 +91,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else if (js.WasDiscovered == true && js.WasMapped == false)
             {
-                information.Append(" (Discovered)".T(EDCTx.JournalScanInfo_DIS));
+                information.Append(" (Discovered)".Tx());
                 if (showvalues)
                 {
                     information.Append(' ').Append((ev.EstimatedValueFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");

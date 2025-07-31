@@ -79,7 +79,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(ItemFD,ItemLocalised), "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost) , Cost );
+            return BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(ItemFD,ItemLocalised), "Cost: ; cr;N0".Tx(), Cost );
         }
     }
 
@@ -101,7 +101,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
+            return BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".Tx(), Cost);
         }
     }
 

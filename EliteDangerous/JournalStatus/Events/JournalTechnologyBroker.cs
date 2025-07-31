@@ -82,7 +82,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo() 
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Build("Type: ".T(EDCTx.JournalEntry_Type), BrokerType);
+            sb.Build("Type: ".Tx(), BrokerType);
 
             if (ItemsUnlocked != null)
             {

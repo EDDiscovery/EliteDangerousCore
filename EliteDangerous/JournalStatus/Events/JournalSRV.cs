@@ -68,8 +68,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", SRVType_Localised, "Loadout: ".T(EDCTx.JournalEntry_Loadout), Loadout) + 
-                        BaseUtils.FieldBuilder.Build(", " + "NPC Controlled;".T(EDCTx.JournalEntry_NPCControlled), PlayerControlled);
+            return BaseUtils.FieldBuilder.Build("", SRVType_Localised, "Loadout: ".Tx(), Loadout) + 
+                        BaseUtils.FieldBuilder.Build(", " + "NPC Controlled;".Tx(), PlayerControlled);
         }
     }
 

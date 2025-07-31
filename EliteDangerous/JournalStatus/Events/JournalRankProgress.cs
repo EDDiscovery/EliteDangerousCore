@@ -71,14 +71,14 @@ namespace EliteDangerousCore.JournalEvents
         {
             return new string[]
             {
-                "Combat".T(EDCTx.JournalPromotion_Combat),
-                "Trade".T(EDCTx.JournalPromotion_Trade),
-                "Exploration".T(EDCTx.JournalPromotion_Exploration),
-                "Soldier".T(EDCTx.JournalPromotion_Soldier),
-                "ExoBiologist".T(EDCTx.JournalPromotion_ExoBiologist),
-                "Empire".T(EDCTx.JournalPromotion_Empire),
-                "Federation".T(EDCTx.JournalPromotion_Federation),
-                "CQC".T(EDCTx.JournalPromotion_CQC),
+                "Combat".Tx(),
+                "Trade".Tx(),
+                "Exploration".Tx(),
+                "Soldier".Tx(),
+                "ExoBiologist".Tx(),
+                "Empire".Tx(),
+                "Federation".Tx(),
+                "CQC".Tx(),
             };
         }
     }

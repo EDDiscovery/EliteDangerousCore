@@ -33,10 +33,10 @@ namespace EliteDangerousCore
             [QuickJSON.JsonIgnore()]                // too big to output
             public ItemData.ShipModule ModuleInfo { get; set; }      // Module data from item data, may be null if module not found
 
-            public string EnglishModTypeString { get { return ModuleInfo?.EnglishModTypeString ?? "Unknown"; } }
+            public string EnglishModTypeString { get { return ModuleInfo?.EnglishModTypeString() ?? "Unknown"; } }
 
             [QuickJSON.JsonIgnore()]                // no output
-            public string TranslatedModTypeString { get { return ModuleInfo?.TranslatedModTypeString ?? "Unknown"; } }
+            public string TranslatedModTypeString { get { return ModuleInfo?.TranslatedModTypeString() ?? "Unknown"; } }
             [QuickJSON.JsonIgnore()]                // no output
             public string TranslatedModuleName { get { return ModuleInfo?.TranslatedModName ?? Name; } }
 
@@ -101,7 +101,7 @@ namespace EliteDangerousCore
 
         // all items with this translated module type name
         public List<OutfittingItem> FindByTranslatedModuleType(string translatedmoduletypename)
-        { return (from x in Items where x.ModuleInfo!=null && x.ModuleInfo.TranslatedModTypeString.Equals(translatedmoduletypename) select x).ToList(); }
+        { return (from x in Items where x.ModuleInfo!=null && x.ModuleInfo.TranslatedModTypeString().Equals(translatedmoduletypename) select x).ToList(); }
 
 
     }

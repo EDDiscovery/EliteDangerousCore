@@ -36,7 +36,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("System: ".T(EDCTx.JournalEntry_System), System, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost);
+            return BaseUtils.FieldBuilder.Build("System: ".Tx(), System, "Cost: ; cr;N0".Tx(), Cost);
         }
     }
 
@@ -77,8 +77,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), BaseValue, "Bonus: ; cr;N0".T(EDCTx.JournalEntry_Bonus), Bonus,
-                                "Total: ; cr;N0".T(EDCTx.JournalSellExplorationData_Total), TotalEarnings);
+            return BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".Tx(), BaseValue, "Bonus: ; cr;N0".Tx(), Bonus,
+                                "Total: ; cr;N0".Tx(), TotalEarnings);
         }
 
 
@@ -87,7 +87,7 @@ namespace EliteDangerousCore.JournalEvents
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             if (Systems != null && Systems.Length != 0)
             {
-                sb.Append( "Scanned: ".T(EDCTx.JournalEntry_Scanned));
+                sb.Append( "Scanned: ".Tx());
                 foreach (string s in Systems)
                 {
                     sb.Append(s);
@@ -97,7 +97,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Discovered != null && Discovered.Length != 0)
             {
                 sb.Append(System.Environment.NewLine);
-                sb.Append("Discovered: ".T(EDCTx.JournalEntry_Discovered));
+                sb.Append("Discovered: ".Tx());
                 foreach (string s in Discovered)
                 {
                     sb.Append(s);
@@ -156,8 +156,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), BaseValue, "Bonus: ; cr;N0".T(EDCTx.JournalEntry_Bonus), Bonus,
-                                "Total: ; cr;N0".T(EDCTx.JournalMultiSellExplorationData_Total), TotalEarnings);
+            return BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".Tx(), BaseValue, "Bonus: ; cr;N0".Tx(), Bonus,
+                                "Total: ; cr;N0".Tx(), TotalEarnings);
         }
 
         public override string GetDetailed()
@@ -214,7 +214,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Count: ".T(EDCTx.JournalEntry_Count), Bios?.Length ?? 0, "Amount: ; cr;N0".T(EDCTx.JournalEntry_Amount), TotalValue);
+            return BaseUtils.FieldBuilder.Build("Count: ".Tx(), Bios?.Length ?? 0, "Amount: ; cr;N0".Tx(), TotalValue);
         }
 
         public override string GetDetailed()

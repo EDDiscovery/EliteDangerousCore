@@ -535,9 +535,9 @@ namespace EliteDangerousCore
             Colour = cl;
             Rarity = rare;
 
-            TranslatedType = TranslatedType.TxID(typeof(MaterialCommodityMicroResourceType), Type.ToString());                // valid to pass this thru the Tx( system
-            TranslatedCategory = TranslatedCategory.TxID(typeof(MaterialCommodityMicroResourceType), TranslatedCategory);        // valid to pass this thru the Tx( system
-            TranslatedMaterialGroup = TranslatedMaterialGroup.TxID(typeof(MaterialCommodityMicroResourceType), MaterialGroup.ToString());                // valid to pass this thru the Tx( system
+            TranslatedType = TranslatedType.Tx();                // valid to pass this thru the Tx( system
+            TranslatedCategory = TranslatedCategory.Tx();        // valid to pass this thru the Tx( system
+            TranslatedMaterialGroup = TranslatedMaterialGroup.Tx();                // valid to pass this thru the Tx( system
 
             //System.Diagnostics.Debug.WriteLine($"Added {FDName} {Name} {Shortname}");
         }
@@ -1425,7 +1425,7 @@ namespace EliteDangerousCore
 
             foreach (var x in mcmrlist.Values)
             {
-                x.TranslatedName = x.TranslatedName.TxID(typeof(MaterialCommodityMicroResourceType), x.FDName);
+                x.TranslatedName = x.TranslatedName.Tx();
             }
 
             //foreach( var x in mcmrlist)

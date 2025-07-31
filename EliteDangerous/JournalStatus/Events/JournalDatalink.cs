@@ -52,7 +52,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Reward: ; cr;N0".T(EDCTx.JournalEntry_Reward), Reward, "< from faction ".T(EDCTx.JournalEntry_fromfaction), PayeeFaction, "Against ".T(EDCTx.JournalEntry_Against), VictimFaction);
+            return BaseUtils.FieldBuilder.Build("Reward: ; cr;N0".Tx(), Reward, "< from faction ".Tx(), PayeeFaction, "Against ".Tx(), VictimFaction);
         }
 
         public void UpdateStats(Stats stats, ISystem system, string stationfaction)

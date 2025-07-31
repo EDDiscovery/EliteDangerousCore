@@ -169,8 +169,8 @@ namespace EliteDangerousCore
             var ret = new Dictionary<string, string>();
             foreach (var x in modules)
             {
-                if (!ret.ContainsKey(x.Value.EnglishModTypeString))
-                    ret[x.Value.EnglishModTypeString] = x.Value.TranslatedModTypeString;
+                if (!ret.ContainsKey(x.Value.EnglishModTypeString()))
+                    ret[x.Value.EnglishModTypeString()] = x.Value.TranslatedModTypeString();
             }
             return ret;
         }
@@ -207,12 +207,6 @@ namespace EliteDangerousCore
                                     "shipkit", "weaponcustomisation", "voicepack" , "lights", "spoiler" , "wings", "bumper"};
             return Array.Find(vlist, x => ifd.Contains(x)) != null;
         }
-
-        private static string TXIT(string text)
-        {
-            return BaseUtils.Translator.Instance.Translate(text, "ModulePartNames." + text.Replace(" ", "_"));
-        }
-
         // called at start up to set up translation of module names
         static private void TranslateModules()
         {
@@ -226,7 +220,7 @@ namespace EliteDangerousCore
                 {
                     string[] armourdelim = new string[] { "Lightweight", "Reinforced", "Military", "Mirrored", "Reactive" };
                     int index = sm.EnglishModName.IndexOf(armourdelim, out int anum, StringComparison.InvariantCulture);
-                    string translated = TXIT(sm.EnglishModName.Substring(index));
+                    string translated = sm.EnglishModName.Substring(index).Tx();
                     sm.TranslatedModName = sm.EnglishModName.Substring(0, index) + translated;
                 }
                 else
@@ -236,21 +230,21 @@ namespace EliteDangerousCore
 
                     if (cindex != -1 && rindex != -1)
                     {
-                        string translated = TXIT(sm.EnglishModName.Substring(0, cindex));
-                        string cls = TXIT(sm.EnglishModName.Substring(cindex + 1, 5));
-                        string rat = TXIT(sm.EnglishModName.Substring(rindex + 1, 6));
+                        string translated = sm.EnglishModName.Substring(0, cindex).Tx();
+                        string cls = sm.EnglishModName.Substring(cindex + 1, 5).Tx();
+                        string rat = sm.EnglishModName.Substring(rindex + 1, 6).Tx();
                         sm.TranslatedModName = translated + " " + cls + " " + sm.EnglishModName.Substring(cindex + 7, 1) + " " + rat + " " + sm.EnglishModName.Substring(rindex + 8, 1);
                     }
                     else if (cindex != -1)
                     {
-                        string translated = TXIT(sm.EnglishModName.Substring(0, cindex));
-                        string cls = TXIT(sm.EnglishModName.Substring(cindex + 1, 5));
+                        string translated = sm.EnglishModName.Substring(0, cindex).Tx();
+                        string cls = sm.EnglishModName.Substring(cindex + 1, 5).Tx();
                         sm.TranslatedModName = translated + " " + cls + " " + sm.EnglishModName.Substring(cindex + 7, 1);
                     }
                     else if (rindex != -1)
                     {
-                        string translated = TXIT(sm.EnglishModName.Substring(0, rindex));
-                        string rat = TXIT(sm.EnglishModName.Substring(rindex + 1, 6));
+                        string translated = sm.EnglishModName.Substring(0, rindex).Tx();
+                        string rat = sm.EnglishModName.Substring(rindex + 1, 6).Tx();
                         sm.TranslatedModName = translated + " " + rat + " " + sm.EnglishModName.Substring(rindex + 8, 1);
                     }
                     else
@@ -265,21 +259,21 @@ namespace EliteDangerousCore
 
                             if (gindex >= 0)
                             {
-                                string translated = TXIT(sm.EnglishModName.Substring(0, gindex));
-                                string typen = TXIT(sm.EnglishModName.Substring(gindex + 1, types[gnum].Length - 2));
-                                string sizen = TXIT(sm.EnglishModName.Substring(sindex + 1, sizes[snum].Length - 1));
+                                string translated = sm.EnglishModName.Substring(0, gindex).Tx();
+                                string typen = sm.EnglishModName.Substring(gindex + 1, types[gnum].Length - 2).Tx();
+                                string sizen = sm.EnglishModName.Substring(sindex + 1, sizes[snum].Length - 1).Tx();
                                 sm.TranslatedModName = translated + " " + typen + " " + sizen;
                             }
                             else
                             {
-                                string translated = TXIT(sm.EnglishModName.Substring(0, sindex));
-                                string sizen = TXIT(sm.EnglishModName.Substring(sindex + 1, sizes[snum].Length - 1));
+                                string translated = sm.EnglishModName.Substring(0, sindex).Tx();
+                                string sizen = sm.EnglishModName.Substring(sindex + 1, sizes[snum].Length - 1).Tx();
                                 sm.TranslatedModName = translated + " " + sizen;
                             }
                         }
                         else
                         {
-                            sm.TranslatedModName = TXIT(sm.EnglishModName);
+                            sm.TranslatedModName = sm.EnglishModName.Tx();
                             //System.Diagnostics.Debug.WriteLine($"?? {kvp.Key} = {sm.ModName}");
                         }
                     }
@@ -432,16 +426,9 @@ namespace EliteDangerousCore
             public bool IsHardpoint { get { return Damage.HasValue && ModuleID != 128049522; } }        // Damage, but not point defense
 
             // string should be in spansh/EDCD csv compatible format, in english, as it it fed into Spansh
-            public string EnglishModTypeString { get { return ModType.ToString().Replace("AX", "AX ").Replace("_", "-").SplitCapsWordFull(); } }
+            public string EnglishModTypeString() { return ModType.ToString().Replace("AX", "AX ").Replace("_", "-").SplitCapsWordFull(); }
 
-            public string TranslatedModTypeString
-            {
-                get
-                {
-                    string kn = EnglishModTypeString.Replace(" ", "_");     // use ModulePartNames if its there, else use ModuleTypeNames
-                    return BaseUtils.Translator.Instance.Translate(EnglishModTypeString, BaseUtils.Translator.Instance.IsDefined("ModulePartNames." + kn) ? "ModulePartNames." + kn : "ModuleTypeNames." + kn);
-                }
-            }
+            public string TranslatedModTypeString() { return EnglishModTypeString().Tx(); }
 
             // printed in this order
 

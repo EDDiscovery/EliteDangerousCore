@@ -68,15 +68,15 @@ namespace EliteDangerousCore.JournalEvents
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             if (Raw != null && Raw.Length > 0)
             {
-                sb.Build("Raw: ".T(EDCTx.JournalMaterials_Raw) + "; ", Raw.Length);
+                sb.Build("Raw: ".Tx()+ "; ", Raw.Length);
             }
             if (Manufactured != null && Manufactured.Length > 0)
             {
-                sb.BuildCont("Manufactured: ".T(EDCTx.JournalMaterials_Manufactured) + "; ", Manufactured.Length);
+                sb.BuildCont("Manufactured: ".Tx()+ "; ", Manufactured.Length);
             }
             if (Encoded != null && Encoded.Length > 0)
             {
-                sb.BuildCont("Encoded: ".T(EDCTx.JournalMaterials_Encoded) + "; ", Encoded.Length);
+                sb.BuildCont("Encoded: ".Tx()+ "; ", Encoded.Length);
             }
             return sb.ToString();
         }
@@ -88,17 +88,17 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Raw != null && Raw.Length>0)
             {
-                sb.Append("Raw: ".T(EDCTx.JournalMaterials_Raw));
+                sb.Append("Raw: ".Tx());
                 List(sb,Raw);
             }
             if (Manufactured != null && Manufactured.Length > 0)
             {
-                sb.Append("Manufactured: ".T(EDCTx.JournalMaterials_Manufactured));
+                sb.Append("Manufactured: ".Tx());
                 List(sb, Manufactured);
             }
             if (Encoded != null && Encoded.Length > 0)
             {
-                sb.Append("Encoded: ".T(EDCTx.JournalMaterials_Encoded));
+                sb.Append("Encoded: ".Tx());
                 List(sb, Encoded);
             }
 
@@ -109,7 +109,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             foreach (Material m in mat)
             {
-                sb.Append(BaseUtils.FieldBuilder.Build(" ", m.FriendlyName, "; items".T(EDCTx.JournalEntry_items), m.Count));
+                sb.Append(BaseUtils.FieldBuilder.Build(" ", m.FriendlyName, "; items".Tx(), m.Count));
                 sb.AppendCR();
             }
         }
@@ -163,9 +163,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
-                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".T(EDCTx.JournalEntry_MatC), Count, "Total: ".T(EDCTx.JournalEntry_Total), Total);
+                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".Tx(), Count, "Total: ".Tx(), Total);
             else
-                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".T(EDCTx.JournalEntry_MatC), Count);
+                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".Tx(), Count);
         }
     }
 
@@ -197,9 +197,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
-                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".T(EDCTx.JournalEntry_MatC), Count, "Total: ".T(EDCTx.JournalEntry_Total), Total);
+                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".Tx(), Count, "Total: ".Tx(), Total);
             else
-                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".T(EDCTx.JournalEntry_MatC), Count);
+                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".Tx(), Count);
         }
     }
 
@@ -227,7 +227,7 @@ namespace EliteDangerousCore.JournalEvents
                 info += BaseUtils.FieldBuilder.Build(" (", mcd.TranslatedCategory, ";)", mcd.TranslatedType);
 
             if (DiscoveryNumber > 0)
-                info += string.Format(", Discovery {0}".T(EDCTx.JournalMaterialDiscovered_DN), DiscoveryNumber);
+                info += string.Format(", Discovery {0}".Tx(), DiscoveryNumber);
 
             return info;
         }
@@ -306,8 +306,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Paid != null && Received != null)
             {
-                return BaseUtils.FieldBuilder.Build("Sold: ".T(EDCTx.JournalEntry_Sold), Paid.Quantity, "< ", Paid.Material_Localised,
-                                                    "Received: ".T(EDCTx.JournalEntry_Received), Received.Quantity, "< ", Received.Material_Localised);
+                return BaseUtils.FieldBuilder.Build("Sold: ".Tx(), Paid.Quantity, "< ", Paid.Material_Localised,
+                                                    "Received: ".Tx(), Received.Quantity, "< ", Received.Material_Localised);
             }
             else
                 return "";

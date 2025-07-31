@@ -102,9 +102,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Prices on ; items".T(EDCTx.JournalCommodityPricesBase_PON), Commodities.Count,
-                                                "< at ".T(EDCTx.JournalCommodityPricesBase_CPBat), Station_Localised ?? Station,
-                                                "< in ".T(EDCTx.JournalCommodityPricesBase_CPBin), StarSystem);
+            return BaseUtils.FieldBuilder.Build("Prices on ; items".Tx(), Commodities.Count,
+                                                "< at ".Tx(), Station_Localised ?? Station,
+                                                "< in ".Tx(), StarSystem);
         }
 
         public override string GetDetailed()
@@ -117,7 +117,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (stocked.Count() > 0)
                 {
-                    sb.Append("Items to buy: ".T(EDCTx.JournalCommodityPricesBase_Itemstobuy));
+                    sb.Append("Items to buy: ".Tx());
                     sb.AppendCR();
 
                     foreach (CCommodities c in stocked)
@@ -127,12 +127,12 @@ namespace EliteDangerousCore.JournalEvents
                         if (c.HasDemandAndPrice)
                         {
                             sb.Append("  ");
-                            sb.Append(string.Format("{0}: {1} sell {2} Diff {3} {4}%  ".T(EDCTx.JournalCommodityPricesBase_CPBBuySell),
+                            sb.Append(string.Format("{0}: {1} sell {2} Diff {3} {4}%  ".Tx(),
                                 name, c.buyPrice, c.sellPrice, c.buyPrice - c.sellPrice,
                                 ((double)(c.buyPrice - c.sellPrice) / (double)c.sellPrice * 100.0).ToString("0.#")));
                         }
                         else
-                            sb.Append(string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.buyPrice));
+                            sb.Append(string.Format("{0}: {1}  ".Tx(), name, c.buyPrice));
 
                         sb.AppendCR();
                     }
@@ -142,14 +142,14 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (sellonly.Count() > 0)
                 {
-                    sb.Append("Sell only Items: ".T(EDCTx.JournalCommodityPricesBase_SO));
+                    sb.Append("Sell only Items: ".Tx());
                     sb.AppendCR();
 
                     foreach (CCommodities c in sellonly)
                     {
                         string name = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.fdname);
                         sb.Append("  ");
-                        sb.Append(string.Format("{0}: {1}  ".T(EDCTx.JournalCommodityPricesBase_CPBBuy), name, c.sellPrice));
+                        sb.Append(string.Format("{0}: {1}  ".Tx(), name, c.sellPrice));
                         sb.AppendCR();
                     }
                 }

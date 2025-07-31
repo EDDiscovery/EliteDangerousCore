@@ -124,22 +124,22 @@
   <data name="textBoxBorderEDSMName.EndButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAe
-        wQAAHsEBw2lUUwAAAAd0SU1FB+MDAggpB2WcKicAAAA3SURBVChTlYsBCgAgCMT2/09XmBdCWTkQVDZa
-        EQuAr3F3bnpms2RxizZZnKJUFjF6ysLMgZ8B6KDBfYNZaylsAAAAAElFTkSuQmCC
+        wAAAHsABES62twAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
+        AD5NGIphAJsmnIphAFkTQcUwAFaJQzEAoMF9g4mDa50AAAAASUVORK5CYII=
 </value>
   </data>
   <data name="textBoxBorderEDSMAPI.EndButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAe
-        wQAAHsEBw2lUUwAAAAd0SU1FB+MDAggpB2WcKicAAAA3SURBVChTlYsBCgAgCMT2/09XmBdCWTkQVDZa
-        EQuAr3F3bnpms2RxizZZnKJUFjF6ysLMgZ8B6KDBfYNZaylsAAAAAElFTkSuQmCC
+        wAAAHsABES62twAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
+        AD5NGIphAJsmnIphAFkTQcUwAFaJQzEAoMF9g4mDa50AAAAASUVORK5CYII=
 </value>
   </data>
   <data name="textBoxBorderJournal.EndButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAe
-        wQAAHsEBw2lUUwAAAAd0SU1FB+MDAggpB2WcKicAAAA3SURBVChTlYsBCgAgCMT2/09XmBdCWTkQVDZa
-        EQuAr3F3bnpms2RxizZZnKJUFjF6ysLMgZ8B6KDBfYNZaylsAAAAAElFTkSuQmCC
+        wAAAHsABES62twAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
+        AD5NGIphAJsmnIphAFkTQcUwAFaJQzEAoMF9g4mDa50AAAAASUVORK5CYII=
 </value>
   </data>
   <data name="textBoxBorderJournal.ToolTip" xml:space="preserve">
@@ -149,22 +149,22 @@ Leave override journal location blank to use the standard Frontier location for 
   <data name="textBoxBorderCmdr.EndButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAe
-        wQAAHsEBw2lUUwAAAAd0SU1FB+MDAggpB2WcKicAAAA3SURBVChTlYsBCgAgCMT2/09XmBdCWTkQVDZa
-        EQuAr3F3bnpms2RxizZZnKJUFjF6ysLMgZ8B6KDBfYNZaylsAAAAAElFTkSuQmCC
+        wAAAHsABES62twAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
+        AD5NGIphAJsmnIphAFkTQcUwAFaJQzEAoMF9g4mDa50AAAAASUVORK5CYII=
 </value>
   </data>
   <data name="textBoxBorderInaraName.EndButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAe
-        wQAAHsEBw2lUUwAAAAd0SU1FB+MDAggpB2WcKicAAAA3SURBVChTlYsBCgAgCMT2/09XmBdCWTkQVDZa
-        EQuAr3F3bnpms2RxizZZnKJUFjF6ysLMgZ8B6KDBfYNZaylsAAAAAElFTkSuQmCC
+        wAAAHsABES62twAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
+        AD5NGIphAJsmnIphAFkTQcUwAFaJQzEAoMF9g4mDa50AAAAASUVORK5CYII=
 </value>
   </data>
   <data name="textBoxBorderInaraAPIKey.EndButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAe
-        wQAAHsEBw2lUUwAAAAd0SU1FB+MDAggpB2WcKicAAAA3SURBVChTlYsBCgAgCMT2/09XmBdCWTkQVDZa
-        EQuAr3F3bnpms2RxizZZnKJUFjF6ysLMgZ8B6KDBfYNZaylsAAAAAElFTkSuQmCC
+        wAAAHsABES62twAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
+        AD5NGIphAJsmnIphAFkTQcUwAFaJQzEAoMF9g4mDa50AAAAASUVORK5CYII=
 </value>
   </data>
   <metadata name="statusStripCustom.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">

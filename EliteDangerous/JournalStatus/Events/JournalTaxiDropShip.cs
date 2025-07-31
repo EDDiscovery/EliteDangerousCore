@@ -93,7 +93,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             long? cost = Cost > 0 ? Cost : default(long?);
-            return BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation_Localised, "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), cost);
+            return BaseUtils.FieldBuilder.Build("", DestinationSystem, "<:", DestinationLocation_Localised, "Cost: ; cr;N0".Tx(), cost);
         }
 
         public void Ledger(Ledger mcl)

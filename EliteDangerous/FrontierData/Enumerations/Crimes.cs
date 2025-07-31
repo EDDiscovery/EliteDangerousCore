@@ -90,8 +90,7 @@ namespace EliteDangerousCore
         // localised language or english
         public static string ToLocalisedLanguage(string fdname )
         {
-            string id = "Crimes." + fdname.ToLowerInvariant();
-            return BaseUtils.Translator.Instance.Translate(ToEnglish(fdname),id);
+            return ToEnglish(fdname).Tx();
         }
 
         public static void IDSTx()

@@ -82,8 +82,7 @@ namespace EliteDangerousCore
         {
             if (stat == null)
                 return null;
-            string id = "FactionStates." + stat.ToString();
-            return BaseUtils.Translator.Instance.Translate(ToEnglish(stat), id);
+            return ToEnglish(stat).Tx();
         }
 
         public static void IDSTx()
@@ -125,19 +124,19 @@ namespace EliteDangerousCore
             public static string Reputation(double? value)
             {
                 if (value == null)
-                    return "Unknown".TxID(EDCTx.Unknown);
+                    return "Unknown".Tx();
                 else if (value < -90)
-                    return "Hostile".TxID(EDCTx.Hostile);
+                    return "Hostile".Tx();
                 else if (value <= -35)
-                    return "Unfriendly".TxID(EDCTx.Unfriendly);
+                    return "Unfriendly".Tx();
                 else if (value <= 4)
-                    return "Neutral".TxID(EDCTx.Neutral);
+                    return "Neutral".Tx();
                 else if (value <= 35)
-                    return "Cordial".TxID(EDCTx.Cordial);
+                    return "Cordial".Tx();
                 else if (value <= 90)
-                    return "Friendly".TxID(EDCTx.Friendly);
+                    return "Friendly".Tx();
                 else
-                    return "Allied".TxID(EDCTx.Allied);
+                    return "Allied".Tx();
             }
 
             public class PowerStatesInfo
@@ -193,27 +192,27 @@ namespace EliteDangerousCore
 
                 if (frontpart)
                 {
-                    sb.Build("", Name,  "State: ".T(EDCTx.JournalLocOrJump_State), FactionDefinitions.ToLocalisedLanguage(FactionState),
-                                        "Reputation: ;%;N1".T(EDCTx.JournalLocOrJump_Reputation), MyReputation,
-                                        "Government: ".T(EDCTx.JournalLocOrJump_Government), GovernmentDefinitions.ToLocalisedLanguage(Government),
-                                        "Allegiance: ".T(EDCTx.JournalLocOrJump_Allegiance), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
-                                        "Inf: ;%".T(EDCTx.JournalLocOrJump_Inf), (Influence * 100.0).ToString("0.0")
+                    sb.Build("", Name,  "State: ".Tx(), FactionDefinitions.ToLocalisedLanguage(FactionState),
+                                        "Reputation: ;%;N1".Tx(), MyReputation,
+                                        "Government: ".Tx(), GovernmentDefinitions.ToLocalisedLanguage(Government),
+                                        "Allegiance: ".Tx(), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
+                                        "Inf: ;%".Tx(), (Influence * 100.0).ToString("0.0")
                                                                    );
                 }
 
                 if (otherinfo)
                 {
-                    sb.BuildCont("Happiness: ".T(EDCTx.JournalLocOrJump_Happiness), Happiness_Localised,
-                                                                   ";Squadron System".T(EDCTx.JournalLocOrJump_SquadronSystem), SquadronFaction,
-                                                                   ";Happiest System".T(EDCTx.JournalLocOrJump_HappiestSystem), HappiestSystem,
-                                                                   ";Home System".T(EDCTx.JournalLocOrJump_HomeSystem), HomeSystem
+                    sb.BuildCont("Happiness: ".Tx(), Happiness_Localised,
+                                                                   ";Squadron System".Tx(), SquadronFaction,
+                                                                   ";Happiest System".Tx(), HappiestSystem,
+                                                                   ";Home System".Tx(), HomeSystem
                                                                    );
                 }
 
                 if (pendingstates && PendingStates != null)
                 {
                     sb.AppendCS();
-                    sb.Append("Pending State: ".T(EDCTx.JournalLocOrJump_PendingState));
+                    sb.Append("Pending State: ".Tx());
 
                     foreach (FactionDefinitions.FactionInformation.PowerStatesInfo state in PendingStates)
                         sb.Build(" ", state.State, "<(;)", state.Trend);
@@ -223,7 +222,7 @@ namespace EliteDangerousCore
                 if (recoveringstates && RecoveringStates != null)
                 {
                     sb.AppendCS();
-                    sb.Append("Recovering State: ".T(EDCTx.JournalLocOrJump_RecoveringState));
+                    sb.Append("Recovering State: ".Tx());
 
                     foreach (FactionDefinitions.FactionInformation.PowerStatesInfo state in RecoveringStates)
                         sb.Build(" ", state.State, "<(;)", state.Trend);
@@ -232,7 +231,7 @@ namespace EliteDangerousCore
                 if (activestates && ActiveStates != null)
                 {
                     sb.AppendCS();
-                    sb.Append("Active State: ".T(EDCTx.JournalLocOrJump_ActiveState));
+                    sb.Append("Active State: ".Tx());
 
                     foreach (FactionDefinitions.FactionInformation.ActiveStatesInfo state in ActiveStates)
                         sb.Build(" ", state.State);

@@ -328,8 +328,8 @@ namespace EliteDangerousCore
             [Slot.SineWaveScanner] = "Sine Wave Scanner",
             [Slot.BuggyCargoHatch] = "Cargo Hatch",
             [Slot.ColonisationSuite] = "Colonisation Suite",
-            [Slot.Cargo01] = "Large Cargo Slot 1",
-            [Slot.Cargo02] = "Large Cargo Slot 2",
+            [Slot.Cargo01] = "Large Cargo 1",
+            [Slot.Cargo02] = "Large Cargo 2",
         };
 
         // maps the slot fdname to an enum
@@ -356,8 +356,7 @@ namespace EliteDangerousCore
 
         public static string ToLocalisedLanguage(Slot al)
         {
-            string id = "ShipSlots." + al.ToString();
-            return BaseUtils.Translator.Instance.Translate(ToEnglish(al), id);
+            return ToEnglish(al).Tx();
         }
 
         static Dictionary<string, Slot> parselist;

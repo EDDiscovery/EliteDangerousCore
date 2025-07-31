@@ -35,7 +35,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo(FillInformationData fid)
         {
-            return BaseUtils.FieldBuilder.Build("New bodies discovered: ".T(EDCTx.JournalEntry_Dscan), Bodies,
+            return BaseUtils.FieldBuilder.Build("New bodies discovered: ".Tx(), Bodies,
                                                 "@ ", fid.System.Name);
         }
     }
@@ -65,9 +65,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo(FillInformationData fid)
         {
-            return BaseUtils.FieldBuilder.Build("Progress: ;%;N1".T(EDCTx.JournalFSSDiscoveryScan_Progress), Progress, 
-                "Bodies: ".T(EDCTx.JournalFSSDiscoveryScan_Bodies), BodyCount, 
-                "Others: ".T(EDCTx.JournalFSSDiscoveryScan_Others), NonBodyCount,
+            return BaseUtils.FieldBuilder.Build("Progress: ;%;N1".Tx(), Progress, 
+                "Bodies: ".Tx(), BodyCount, 
+                "Others: ".Tx(), NonBodyCount,
                 "@ ", fid.System.Name);
         }
     }
@@ -142,7 +142,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Signals.Count > 1)
             {
-                sb.Build("Detected ; signals".T(EDCTx.JournalFSSSignalDiscovered_Detected), Signals.Count);
+                sb.Build("Detected ; signals".Tx(), Signals.Count);
 
                 // resort the list, when first printed, it will reorder this, then it will be a low power operation
                 FSSSignal.Sort(Signals);
@@ -237,7 +237,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Bodies: ".T(EDCTx.JournalEntry_Bodies), NumBodies);
+            return BaseUtils.FieldBuilder.Build("Bodies: ".Tx(), NumBodies);
         }
     }
 
@@ -266,14 +266,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys)
         {
-            return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
+            return base.SummaryName(sys) + " " + "of ".Tx()+ BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
         public override string GetInfo(FillInformationData fid)
         {
             string name = BodyName.Contains(fid.System.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : fid.System.Name + ":" + BodyName;
-            return BaseUtils.FieldBuilder.Build("Probes: ".T(EDCTx.JournalSAAScanComplete_Probes), ProbesUsed,
-                                                "Efficiency Target: ".T(EDCTx.JournalSAAScanComplete_EfficiencyTarget), EfficiencyTarget,
+            return BaseUtils.FieldBuilder.Build("Probes: ".Tx(), ProbesUsed,
+                                                "Efficiency Target: ".Tx(), EfficiencyTarget,
                                                 "@ ", name);
         }
     }
@@ -391,7 +391,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys)
         {
-            return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
+            return base.SummaryName(sys) + " " + "of ".Tx()+ BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
 
@@ -607,7 +607,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys)
         {
-            return base.SummaryName(sys) + " " + "of ".T(EDCTx.JournalEntry_ofa) + BodyName.ReplaceIfStartsWith(sys.Name);
+            return base.SummaryName(sys) + " " + "of ".Tx()+ BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
         public override string GetInfo(FillInformationData fid)
@@ -754,8 +754,8 @@ namespace EliteDangerousCore.JournalEvents
                             "<: ", s.Genus_Localised, 
                             "", s.Species_Localised_Short, 
                             "", s.Variant_Localised_Short,
-                            "Value: ; cr;N0".T(EDCTx.JournalScanOrganics_Value), s.EstimatedValue, 
-                            "Potential Value: ; cr;N0".T(EDCTx.JournalScanOrganics_PotentialValue), s.PotentialEstimatedValue);
+                            "Value: ; cr;N0".Tx(), s.EstimatedValue, 
+                            "Potential Value: ; cr;N0".Tx(), s.PotentialEstimatedValue);
 
                 if (index++ < list.Count - 1)     // if another to go, separ
                     sb.Append(separ);
