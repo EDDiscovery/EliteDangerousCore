@@ -84,11 +84,11 @@ namespace EliteDangerousCore.JournalEvents
                 DateTime exp = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry);
 
                 return BaseUtils.FieldBuilder.Build(
-                     "Title: ".Tx(), Title, "System: ".Tx(), SystemName,                  
-                     nl,"At: ".Tx(), MarketName, "Expires: ".Tx(), exp,
-                     nl,"Not Complete;Complete".Tx(), IsComplete,  "Current Total: ".Tx(), CurrentTotal, "Contribution: ".Tx(), PlayerContribution, "Num Contributors: ".Tx(), NumContributors,
-                     nl,"Player % Band: ".Tx(), PlayerPercentileBand, "Top Rank: ".Tx(), TopRankSize, "Not In Top Rank;In Top Rank".Tx(), PlayerInTopRank,
-                     nl,"Tier Reached: ".Tx(), TierReached,  "Bonus: ".Tx(), Bonus, "Top Tier Name".Tx(), TopTierName , "TT. Bonus".Tx(), TopTierBonus
+                     "Title".Tx()+": ", Title, "System".Tx()+": ", SystemName,                  
+                     nl,"At".Tx()+": ", MarketName, "Expires".Tx()+": ", exp,
+                     nl,"Not Complete;Complete".Tx(), IsComplete,  "Current Total".Tx()+": ", CurrentTotal, "Contribution".Tx()+": ", PlayerContribution, "Num Contributors".Tx()+": ", NumContributors,
+                     nl,"Player % Band".Tx()+": ", PlayerPercentileBand, "Top Rank".Tx()+": ", TopRankSize, "Not In Top Rank;In Top Rank".Tx(), PlayerInTopRank,
+                     nl,"Tier Reached".Tx()+": ", TierReached,  "Bonus".Tx()+": ", Bonus, "Top Tier Name".Tx(), TopTierName , "TT. Bonus".Tx(), TopTierBonus
                       );
             }
         }

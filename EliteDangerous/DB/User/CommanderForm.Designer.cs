@@ -540,7 +540,7 @@
             this.labelEDSMAPI.Name = "labelEDSMAPI";
             this.labelEDSMAPI.Size = new System.Drawing.Size(82, 13);
             this.labelEDSMAPI.TabIndex = 2;
-            this.labelEDSMAPI.Text = "EDSM API Key:";
+            this.labelEDSMAPI.Text = "EDSM API Key";
             // 
             // labelEDSMN
             // 
@@ -550,7 +550,7 @@
             this.labelEDSMN.Name = "labelEDSMN";
             this.labelEDSMN.Size = new System.Drawing.Size(72, 13);
             this.labelEDSMN.TabIndex = 2;
-            this.labelEDSMN.Text = "EDSM Name:";
+            this.labelEDSMN.Text = "EDSM Name";
             // 
             // groupBoxCustomJournal
             // 
@@ -608,7 +608,7 @@
             this.labelCN.Name = "labelCN";
             this.labelCN.Size = new System.Drawing.Size(97, 13);
             this.labelCN.TabIndex = 2;
-            this.labelCN.Text = "Commander Name:";
+            this.labelCN.Text = "Commander Name";
             // 
             // labelJL
             // 
@@ -618,7 +618,7 @@
             this.labelJL.Name = "labelJL";
             this.labelJL.Size = new System.Drawing.Size(88, 13);
             this.labelJL.TabIndex = 2;
-            this.labelJL.Text = "Journal Location:";
+            this.labelJL.Text = "Journal Location";
             // 
             // extCheckBoxConsoleCommander
             // 
@@ -752,7 +752,7 @@
             this.labelINARAN.Name = "labelINARAN";
             this.labelINARAN.Size = new System.Drawing.Size(65, 13);
             this.labelINARAN.TabIndex = 2;
-            this.labelINARAN.Text = "Inara Name:";
+            this.labelINARAN.Text = "Inara Name";
             // 
             // labelInaraAPI
             // 
@@ -762,7 +762,7 @@
             this.labelInaraAPI.Name = "labelInaraAPI";
             this.labelInaraAPI.Size = new System.Drawing.Size(75, 13);
             this.labelInaraAPI.TabIndex = 2;
-            this.labelInaraAPI.Text = "Inara API Key:";
+            this.labelInaraAPI.Text = "Inara API Key";
             // 
             // panelOK
             // 
@@ -864,7 +864,7 @@
             this.HomeSys.Name = "HomeSys";
             this.HomeSys.Size = new System.Drawing.Size(75, 13);
             this.HomeSys.TabIndex = 2;
-            this.HomeSys.Text = "Home System:";
+            this.HomeSys.Text = "Home System";
             // 
             // labelMapCol
             // 

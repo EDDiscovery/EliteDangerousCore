@@ -35,7 +35,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo(FillInformationData fid)
         {
-            return BaseUtils.FieldBuilder.Build("New bodies discovered: ".Tx(), Bodies,
+            return BaseUtils.FieldBuilder.Build("New bodies discovered".Tx()+": ", Bodies,
                                                 "@ ", fid.System.Name);
         }
     }
@@ -66,8 +66,8 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo(FillInformationData fid)
         {
             return BaseUtils.FieldBuilder.Build("Progress: ;%;N1".Tx(), Progress, 
-                "Bodies: ".Tx(), BodyCount, 
-                "Others: ".Tx(), NonBodyCount,
+                "Bodies".Tx()+": ", BodyCount, 
+                "Others".Tx()+": ", NonBodyCount,
                 "@ ", fid.System.Name);
         }
     }
@@ -237,7 +237,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Bodies: ".Tx(), NumBodies);
+            return BaseUtils.FieldBuilder.Build("Bodies".Tx()+": ", NumBodies);
         }
     }
 
@@ -272,8 +272,8 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo(FillInformationData fid)
         {
             string name = BodyName.Contains(fid.System.Name, StringComparison.InvariantCultureIgnoreCase) ? BodyName : fid.System.Name + ":" + BodyName;
-            return BaseUtils.FieldBuilder.Build("Probes: ".Tx(), ProbesUsed,
-                                                "Efficiency Target: ".Tx(), EfficiencyTarget,
+            return BaseUtils.FieldBuilder.Build("Probes".Tx()+": ", ProbesUsed,
+                                                "Efficiency Target".Tx()+": ", EfficiencyTarget,
                                                 "@ ", name);
         }
     }

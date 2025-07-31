@@ -40,7 +40,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Engineer, "Blueprint: ".Tx(), Blueprint, "Level: ".Tx(), Level, "Override: ".Tx(), Override);
+            return BaseUtils.FieldBuilder.Build("", Engineer, "Blueprint".Tx()+": ", Blueprint, "Level".Tx()+": ", Level, "Override".Tx()+": ", Override);
         }
     }
 
@@ -113,8 +113,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Engineer, "Type: ".Tx(), Type, "Commodity: ".Tx(), Commodity_Localised,
-                    "Material: ".Tx(), Material_Localised, "Quantity: ".Tx(), Quantity, "TotalQuantity: ".Tx(), TotalQuantity);
+            return BaseUtils.FieldBuilder.Build("", Engineer, "Type".Tx()+": ", Type, "Commodity".Tx()+": ", Commodity_Localised,
+                    "Material".Tx()+": ", Material_Localised, "Quantity".Tx()+": ", Quantity, "TotalQuantity".Tx()+": ", TotalQuantity);
         }
     }
 
@@ -232,11 +232,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("In Slot: ".Tx(), ShipSlots.ToLocalisedLanguage(SlotFD),
+            return BaseUtils.FieldBuilder.Build("In Slot".Tx()+": ", ShipSlots.ToLocalisedLanguage(SlotFD),
                 "", JournalFieldNaming.GetForeignModuleName(ModuleFD, null),
-                "By: ".Tx(), Engineering?.Engineer,
-                "Blueprint: ".Tx(), Engineering?.FriendlyBlueprintName,
-                "Level: ".Tx(), Engineering?.Level);
+                "By".Tx()+": ", Engineering?.Engineer,
+                "Blueprint".Tx()+": ", Engineering?.FriendlyBlueprintName,
+                "Level".Tx()+": ", Engineering?.Level);
         }
 
         public override string GetDetailed()
@@ -313,7 +313,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             if (Engineers.Length == 1)
-                return BaseUtils.FieldBuilder.Build("", Engineers[0].Engineer, "", Engineers[0].Progress, "Rank: ".Tx(), Engineers[0].Rank, ";%", Engineers[0].RankProgress);
+                return BaseUtils.FieldBuilder.Build("", Engineers[0].Engineer, "", Engineers[0].Progress, "Rank".Tx()+": ", Engineers[0].Rank, ";%", Engineers[0].RankProgress);
             else
                 return BaseUtils.FieldBuilder.Build("Progress on ; Engineers".Tx(), Engineers.Length);
 
@@ -326,7 +326,7 @@ namespace EliteDangerousCore.JournalEvents
             foreach (var p in Engineers)
             {
                 sb.AppendCR();
-                sb.Build("", p.Engineer, "", p.Progress, "Rank: ".Tx(), p.Rank, ";%", p.RankProgress);
+                sb.Build("", p.Engineer, "", p.Progress, "Rank".Tx()+": ", p.Rank, ";%", p.RankProgress);
             }
 
             return sb.ToString();

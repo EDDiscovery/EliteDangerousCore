@@ -148,7 +148,7 @@ namespace EliteDangerousCore
         public static void Build(System.Text.StringBuilder sb, bool title, StationServices[] list)
         {
             if ( title )
-                sb.Append("Station services: ".Tx());
+                sb.Append("Station services".Tx()+": ");
 
             for (int i = 0; i < list.Length; i++)
             {

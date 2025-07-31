@@ -54,12 +54,12 @@ namespace EliteDangerousCore.JournalEvents
             if ( Submitted )
                 return BaseUtils.FieldBuilder.Build(";Submitted".Tx(), Submitted, "< to ".Tx(), Interdictor_Localised, 
                     "< (NPC);(Player)".Tx(), IsPlayer, "Rank: ", RankDefinitions.FriendlyName(CombatRank), 
-                    "Faction: ".Tx(), Faction, "Power: ".Tx(), Power);
+                    "Faction".Tx()+": ", Faction, "Power".Tx()+": ", Power);
             else
-                return BaseUtils.FieldBuilder.Build("By: ".Tx(), Interdictor_Localised, 
+                return BaseUtils.FieldBuilder.Build("By".Tx()+": ", Interdictor_Localised, 
                     "< (NPC);(Player)".Tx(), IsPlayer, 
                     "Rank: ", RankDefinitions.FriendlyName(CombatRank), 
-                    "Faction: ".Tx(), Faction, "Power: ".Tx(), Power);
+                    "Faction".Tx()+": ", Faction, "Power".Tx()+": ", Power);
         }
     }
 
@@ -95,7 +95,7 @@ namespace EliteDangerousCore.JournalEvents
             return BaseUtils.FieldBuilder.Build("Failed to interdict;Interdicted".Tx(), Success, "< ", Interdicted_Localised, 
                         "< (NPC);(Player)".Tx(), IsPlayer, 
                         "Rank: ", RankDefinitions.FriendlyName(CombatRank), 
-                        "Faction: ".Tx(), Faction, "Power: ".Tx(), Power);
+                        "Faction".Tx()+": ", Faction, "Power".Tx()+": ", Power);
         }
     }
 
@@ -119,7 +119,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? IsThargoid { get; set; }        // update 15+
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("By: ".Tx(), Interdictor_Localised, "< (NPC);(Player)".Tx(), IsPlayer);
+            return BaseUtils.FieldBuilder.Build("By".Tx()+": ", Interdictor_Localised, "< (NPC);(Player)".Tx(), IsPlayer);
         }
     }
 

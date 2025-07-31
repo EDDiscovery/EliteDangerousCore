@@ -39,7 +39,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("To: ".Tx(), To_Localised, "Msg: ".Tx(), Message);
+            return BaseUtils.FieldBuilder.Build("To".Tx()+": ", To_Localised, "Msg".Tx()+": ", Message);
         }
     }
 
@@ -116,14 +116,14 @@ namespace EliteDangerousCore.JournalEvents
         public override string ToString()
         {
             if ( FromLocalised.HasChars() )
-                return BaseUtils.FieldBuilder.Build("From: ".Tx(), FromLocalised, "< on ".Tx(), Channel, "<: ", MessageLocalised);
+                return BaseUtils.FieldBuilder.Build("From".Tx()+": ", FromLocalised, "< on ".Tx(), Channel, "<: ", MessageLocalised);
             else
                 return BaseUtils.FieldBuilder.Build("", Channel, "<: ", MessageLocalised);
         }
 
         public string ToStringNC()
         {
-            return BaseUtils.FieldBuilder.Build("From: ".Tx(), FromLocalised, "<: ", MessageLocalised);
+            return BaseUtils.FieldBuilder.Build("From".Tx()+": ", FromLocalised, "<: ", MessageLocalised);
         }
 
         public void Add(JournalReceiveText next)

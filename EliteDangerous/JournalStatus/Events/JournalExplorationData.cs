@@ -36,7 +36,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("System: ".Tx(), System, "Cost: ; cr;N0".Tx(), Cost);
+            return BaseUtils.FieldBuilder.Build("System".Tx()+": ", System, "Cost: ; cr;N0".Tx(), Cost);
         }
     }
 
@@ -87,7 +87,7 @@ namespace EliteDangerousCore.JournalEvents
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             if (Systems != null && Systems.Length != 0)
             {
-                sb.Append( "Scanned: ".Tx());
+                sb.Append( "Scanned".Tx()+": ");
                 foreach (string s in Systems)
                 {
                     sb.Append(s);
@@ -97,7 +97,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Discovered != null && Discovered.Length != 0)
             {
                 sb.Append(System.Environment.NewLine);
-                sb.Append("Discovered: ".Tx());
+                sb.Append("Discovered".Tx()+": ");
                 foreach (string s in Discovered)
                 {
                     sb.Append(s);
@@ -214,7 +214,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Count: ".Tx(), Bios?.Length ?? 0, "Amount: ; cr;N0".Tx(), TotalValue);
+            return BaseUtils.FieldBuilder.Build("Count".Tx()+": ", Bios?.Length ?? 0, "Amount: ; cr;N0".Tx(), TotalValue);
         }
 
         public override string GetDetailed()

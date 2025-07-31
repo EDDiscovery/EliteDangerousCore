@@ -119,10 +119,10 @@ namespace EliteDangerousCore.JournalEvents
                     }
                     else if (k.FriendlyShip.HasChars())
                     {
-                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", k.FriendlyShip, "Rank: ".Tx(), k.Rank);
+                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", k.FriendlyShip, "Rank".Tx()+": ", k.Rank);
                     }
                     else
-                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "Rank: ".Tx(), k.Rank);
+                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "Rank".Tx()+": ", k.Rank);
 
                     sb.AppendPrePad(kstr, ", ");
                 }
@@ -179,7 +179,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Option: ".Tx(), Option, "Cost: ; cr;N0".Tx(), Cost, ";Bankrupt".Tx(), Bankrupt);
+            return BaseUtils.FieldBuilder.Build("Option".Tx()+": ", Option, "Cost: ; cr;N0".Tx(), Cost, ";Bankrupt".Tx(), Bankrupt);
         }
     }
 

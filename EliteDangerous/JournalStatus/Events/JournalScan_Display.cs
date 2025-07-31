@@ -84,7 +84,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (nMassEM.HasValue)
                 {
-                    sb.Append("Mass: ".Tx());
+                    sb.Append("Mass".Tx()+": ");
                     sb.AppendSPC();
                     sb.Append(MassEMMM);
                     sb.AppendCR();
@@ -92,7 +92,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (nRadius.HasValue)
                 {
-                    sb.AppendFormat("Radius: ".Tx());
+                    sb.AppendFormat("Radius".Tx()+": ");
                     sb.AppendSPC();
                     sb.Append(RadiusText);
                     sb.AppendCR();
@@ -165,9 +165,9 @@ namespace EliteDangerousCore.JournalEvents
             if (nEccentricity.HasValue)
             {
                 if (nEccentricity < 0.9)
-                    sb.AppendFormat("Orbital Eccentricity: ".Tx()+ "{0:0.000}", nEccentricity.Value);
+                    sb.AppendFormat("Orbital Eccentricity".Tx()+": "+ "{0:0.000}", nEccentricity.Value);
                 else 
-                    sb.AppendFormat("Orbital Eccentricity: ".Tx()+ "{0:0.000000}", nEccentricity.Value);
+                    sb.AppendFormat("Orbital Eccentricity".Tx()+": "+ "{0:0.000000}", nEccentricity.Value);
                 sb.AppendCR();
             }
 

@@ -40,26 +40,26 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Active: ".Tx(), ActiveMissions?.Length, "Failed: ".Tx(), FailedMissions?.Length, "Completed: ".Tx(), CompletedMissions?.Length);
+            return BaseUtils.FieldBuilder.Build("Active".Tx()+": ", ActiveMissions?.Length, "Failed".Tx()+": ", FailedMissions?.Length, "Completed".Tx()+": ", CompletedMissions?.Length);
         }
         public override string GetDetailed()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             if (ActiveMissions != null && ActiveMissions.Length>0)
             {
-                sb.AppendPrePad("Active: ".Tx(), Environment.NewLine);
+                sb.AppendPrePad("Active".Tx()+": ", Environment.NewLine);
                 foreach (var x in ActiveMissions)
                     sb.AppendPrePad("    " + x.Format(), Environment.NewLine);
             }
             if (FailedMissions != null && FailedMissions.Length>0)
             {
-                sb.AppendPrePad("Failed: ".Tx(), Environment.NewLine);
+                sb.AppendPrePad("Failed".Tx()+": ", Environment.NewLine);
                 foreach (var x in FailedMissions)
                     sb.AppendPrePad("    " + x.Format(), Environment.NewLine);
             }
             if (CompletedMissions != null && CompletedMissions.Length > 0)
             {
-                sb.AppendPrePad("Completed: ".Tx(), Environment.NewLine);
+                sb.AppendPrePad("Completed".Tx()+": ", Environment.NewLine);
                 foreach (var x in CompletedMissions)
                     sb.AppendPrePad("    " + x.Format(), Environment.NewLine);
             }
@@ -98,7 +98,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public string Format()
             {
-                return BaseUtils.FieldBuilder.Build("", Name_Localised ?? Name, "<;(Passenger)".Tx(), PassengerMission, " " + "Expires: ".Tx(), ExpiryTimeUTC.ToLocalTime());
+                return BaseUtils.FieldBuilder.Build("", Name_Localised ?? Name, "<;(Passenger)".Tx(), PassengerMission, " " + "Expires".Tx()+": ", ExpiryTimeUTC.ToLocalTime());
             }
         }
     }
@@ -211,12 +211,12 @@ namespace EliteDangerousCore.JournalEvents
 
             return BaseUtils.FieldBuilder.Build("", LocalisedName,
                                       "< from ".Tx(translate), Faction,
-                                      "System: ".Tx(translate), DestinationSystem,
-                                      "Station: ".Tx(translate), DestinationStation,
-                                      "Settlement: ".Tx(translate), DestinationSettlement,
-                                      "Expiry: ".Tx(translate), exp,
-                                      "Influence: ".Tx(translate), Influence,
-                                      "Reputation: ".Tx(translate), Reputation,
+                                      "System".Tx(translate)+": ", DestinationSystem,
+                                      "Station".Tx(translate)+": ", DestinationStation,
+                                      "Settlement".Tx(translate)+": ", DestinationSettlement,
+                                      "Expiry".Tx(translate)+": ", exp,
+                                      "Influence".Tx(translate)+": ", Influence,
+                                      "Reputation".Tx(translate)+": ", Reputation,
                                       "Reward: ; cr;N0".Tx(translate), Reward,
                                       "; (Wing)".Tx(translate), Wing);
         }
@@ -224,28 +224,28 @@ namespace EliteDangerousCore.JournalEvents
         public string MissionDetailedInfo(bool translate)          // MissionList::FullInfo (DLL uses this), Journal Entry detailed info
         {
             return BaseUtils.FieldBuilder.Build(
-                                           "Deliver: ".Tx(translate), CommodityLocalised,
-                                           "Count: ".Tx(translate), Count,
-                                           "Target: ".Tx(translate), TargetLocalised,
-                                           "Type: ".Tx(translate), TargetTypeFriendly,
-                                           "Target Faction: ".Tx(translate), TargetFaction,
-                                           "Target Type: ".Tx(translate), TargetTypeLocalised,
-                                           "Kill Count: ".Tx(translate), KillCount,
-                                           "Passengers: ".Tx(translate), PassengerCount);
+                                           "Deliver".Tx(translate)+": ", CommodityLocalised,
+                                           "Count".Tx(translate)+": ", Count,
+                                           "Target".Tx(translate)+": ", TargetLocalised,
+                                           "Type".Tx(translate)+": ", TargetTypeFriendly,
+                                           "Target Faction".Tx(translate)+": ", TargetFaction,
+                                           "Target Type".Tx(translate)+": ", TargetTypeLocalised,
+                                           "Kill Count".Tx(translate)+": ", KillCount,
+                                           "Passengers".Tx(translate)+": ", PassengerCount);
         }
 
         public string MissionInfoColumn()          //  MissionList:info, used for MissionList:Info, used in mission panels.
         {
             return BaseUtils.FieldBuilder.Build(
-                                        "Influence: ".Tx(), Influence,
-                                        "Reputation: ".Tx(), Reputation,
-                                        "Deliver: ".Tx(), FriendlyCommodity,
-                                        "Target: ".Tx(), TargetLocalised,
-                                        "Type: ".Tx(), TargetTypeFriendly,
-                                        "Target Faction: ".Tx(), TargetFaction,
-                                        "Target Type: ".Tx(), TargetTypeLocalised,
-                                        "Passengers: ".Tx(), PassengerCount,
-                                        "Count: ".Tx(), Count);
+                                        "Influence".Tx()+": ", Influence,
+                                        "Reputation".Tx()+": ", Reputation,
+                                        "Deliver".Tx()+": ", FriendlyCommodity,
+                                        "Target".Tx()+": ", TargetLocalised,
+                                        "Type".Tx()+": ", TargetTypeFriendly,
+                                        "Target Faction".Tx()+": ", TargetFaction,
+                                        "Target Type".Tx()+": ", TargetTypeLocalised,
+                                        "Passengers".Tx()+": ", PassengerCount,
+                                        "Count".Tx()+": ", Count);
 
         }
 
@@ -440,10 +440,10 @@ namespace EliteDangerousCore.JournalEvents
             return BaseUtils.FieldBuilder.Build("", LocalisedName,
                                         "< from ".Tx(), Faction,
                                         "Reward: ; cr;N0".Tx(), Reward,
-                                        "Donation: ".Tx(), Donation,
-                                        "System: ".Tx(), DestinationSystem,
-                                        "Station: ".Tx(), DestinationStation,
-                                        "Settlement: ".Tx(), DestinationSettlement
+                                        "Donation".Tx()+": ", Donation,
+                                        "System".Tx()+": ", DestinationSystem,
+                                        "Station".Tx()+": ", DestinationStation,
+                                        "Settlement".Tx()+": ", DestinationSettlement
                                         );
         }
 
@@ -451,11 +451,11 @@ namespace EliteDangerousCore.JournalEvents
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
-            sb.Build( "Commodity: ".Tx(), CommodityLocalised,
-                                            "Count: ".Tx(), Count,
-                                            "Target: ".Tx(), TargetLocalised,
-                                            "Type: ".Tx(), TargetTypeLocalised,
-                                            "Target Faction: ".Tx(), TargetFaction);
+            sb.Build( "Commodity".Tx()+": ", CommodityLocalised,
+                                            "Count".Tx()+": ", Count,
+                                            "Target".Tx()+": ", TargetLocalised,
+                                            "Type".Tx()+": ", TargetTypeLocalised,
+                                            "Target Faction".Tx()+": ", TargetFaction);
 
             sb.AppendPrePad(RewardInformation(true),Environment.NewLine);
 
@@ -473,7 +473,7 @@ namespace EliteDangerousCore.JournalEvents
             if (PermitsAwarded != null && PermitsAwarded.Length > 0)
             {
                 if (pretty)
-                    detailed += "Permits: ".Tx(translate);
+                    detailed += "Permits".Tx(translate)+": ";
 
                 for (int i = 0; i < PermitsAwarded.Length; i++)
                     detailed += ((i > 0) ? "," : "") + PermitsAwarded[i];
@@ -490,7 +490,7 @@ namespace EliteDangerousCore.JournalEvents
             if (CommodityReward != null && CommodityReward.Length > 0)
             {
                 if (pretty)
-                    detailed += "Rewards: ".Tx(translate);
+                    detailed += "Rewards".Tx(translate)+": ";
 
                 for (int i = 0; i < CommodityReward.Length; i++)
                 {
@@ -510,7 +510,7 @@ namespace EliteDangerousCore.JournalEvents
             if (MaterialsReward != null && MaterialsReward.Length > 0)
             {
                 if (pretty)
-                    detailed += "Rewards: ".Tx(translate);
+                    detailed += "Rewards".Tx(translate)+": ";
 
                 for (int i = 0; i < MaterialsReward.Length; i++)
                 {
@@ -660,14 +660,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".Tx(), Fine);
+            return BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine".Tx()+": ", Fine);
         }
 
         public void Ledger(Ledger mcl)
         {
             if ( Fine.HasValue && Fine.Value != 0 )
             {
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Fine: ".Tx()+ LocalisedName, Fine.Value);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Fine".Tx()+": "+ LocalisedName, Fine.Value);
             }
         }
 
@@ -705,10 +705,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Mission name: ".Tx(), LocalisedName,
-                                      "From: ".Tx(), OldDestinationSystem,
+            return BaseUtils.FieldBuilder.Build("Mission name".Tx()+": ", LocalisedName,
+                                      "From".Tx()+": ", OldDestinationSystem,
                                       "", OldDestinationStation,
-                                      "To: ".Tx(), NewDestinationSystem,
+                                      "To".Tx()+": ", NewDestinationSystem,
                                       "", NewDestinationStation);
         }
 
@@ -741,7 +741,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine: ".Tx(), Fine);
+            return BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine".Tx()+": ", Fine);
         }
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)

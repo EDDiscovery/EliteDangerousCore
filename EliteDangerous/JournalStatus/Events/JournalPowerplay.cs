@@ -43,7 +43,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("", Power, "Rank: ".Tx(), Rank, "Merits: ".Tx(), Merits, "Votes: ".Tx(), Votes, "Pledged: ".Tx(), TimePledgedString);
+            return BaseUtils.FieldBuilder.Build("", Power, "Rank".Tx()+": ", Rank, "Merits".Tx()+": ", Merits, "Votes".Tx()+": ", Votes, "Pledged".Tx()+": ", TimePledgedString);
         }
     }
 
@@ -65,7 +65,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Power, "Type: ".Tx(), Type_Localised, "Count: ".Tx(), Count);
+            return BaseUtils.FieldBuilder.Build("", Power, "Type".Tx()+": ", Type_Localised, "Count".Tx()+": ", Count);
         }
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
@@ -88,7 +88,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("From Power: ".Tx(), FromPower, "To Power: ".Tx(), ToPower);
+            return BaseUtils.FieldBuilder.Build("From Power".Tx()+": ", FromPower, "To Power".Tx()+": ", ToPower);
         }
     }
 
@@ -110,7 +110,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Power, "Type: ".Tx(), Type_Localised, "Count: ".Tx(), Count);
+            return BaseUtils.FieldBuilder.Build("", Power, "Type".Tx()+": ", Type_Localised, "Count".Tx()+": ", Count);
         }
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
@@ -213,7 +213,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Power, "System: ".Tx(), System, "Votes: ".Tx(), Votes);
+            return BaseUtils.FieldBuilder.Build("", Power, "System".Tx()+": ", System, "Votes".Tx()+": ", Votes);
         }
     }
 
@@ -236,7 +236,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Systems != null)
             {
-                sb.Append(", Systems: ".Tx());
+                sb.Append(", Systems".Tx()+": ");
 
                 bool comma = false;
                 foreach (string s in Systems)

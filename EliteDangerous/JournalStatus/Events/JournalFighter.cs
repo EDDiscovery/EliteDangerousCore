@@ -91,7 +91,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Loadout: ".Tx(), Loadout, "NPC Controlled;".Tx(), PlayerControlled);
+            return BaseUtils.FieldBuilder.Build("Loadout".Tx()+": ", Loadout, "NPC Controlled;".Tx(), PlayerControlled);
         }
     }
 

@@ -81,7 +81,6 @@ D27BB169DB8306: "Slaves" => "Esclavage"
 D018B082E8A372: "Technology" => "Technologie"
 41129461CC1C57: "Textiles" @
 42316A12B62CC1: "Waste" => "Déchets"
-F32D0645A8333F: "Weapons" => "Armes"
 E59834BC3D5687: "Power Play" @
 5F957C031DD5AB: "Encoded Guardian" => "Encodé Guardian"
 D7F2D358727387: "Encoded Guardian Obelisk" => "Encodé obélisque Guardian"
@@ -922,11 +921,9 @@ F958260588E1AF: "Steel" => "Acier"
 
 SECTION EngineeringData
 
-4E6D343228BED7: "Engineer:" => "Ingénieur : "
-49BBF32AC7C1A6: "Blueprint:" => "Plan : "
-FF303351D14868: "Level:" => "Niveau : "
-455348D1C29EA3: "Quality:" => "Qualité : "
-EF5D9F79BEAF2B: "Experimental Effect:" => "Effet expérimental : "
+05FC94B0147F09: "Engineer" => "Ingénieur "
+A60F2C73604F62: "Quality" => "Qualité "
+A5BADB0C4C0940: "Experimental Effect" => "Effet expérimental "
 C312376DA63393: "Original: ;;0.###" @
 75A08C2632AF12: "< (Worse); (Better)" => "< (Pire); (Meilleur)"
 
@@ -939,21 +936,20 @@ SECTION CommanderForm
 7420CC18DF9C4B: "CommanderForm" @
 6E6A6F2086BB5F: "Other" => "Autre"
 B26565C54E6DA2: "Default Map Color" => "Couleur par défaut de la carte"
-DEE4E356C26D02: "Home System:" => "Système de base"
+F3646F7AE1228F: "Home System" => "Système de base"
 2737A55B1A4751: "Inara Information (optional)" => "Information Inara (Optionnel)"
-5DD121F921D7EF: "Inara Name:" => "Nom sur Inara : "
-8E613ABCFB844C: "Inara API Key:" => "Clé API Inara"
+BC5F6A124741B3: "Inara Name" => "Nom sur Inara "
+8A77089A093CC5: "Inara API Key" => "Clé API Inara"
 137D072F2C9C3C: "Sync to Inara" => "Synchroniser avec Inara"
 C43E80AA3B8661: "EDDN" @
 9DA63A795A3C3E: "Send Event Information to EDDN" => "Envoyer les événements à EDDN"
 AC4970F6799584: "EDSM Information (optional)" => "Information EDSM (optionnel)"
 C99C6E4AE25A6A: "Sync From EDSM" => "Synchroniser avec EDSM"
-B7D7C7A89C58A4: "EDSM API Key:" => "Clé API EDSM"
-207BE724CD92FC: "EDSM Name:" => "Nom sur EDSM"
+F5E545BFC9C3EA: "EDSM API Key" => "Clé API EDSM"
 285B6B2BAD13A6: "Sync to EDSM" => "Synchroniser avec EDSM"
 DA99D6AA2339EB: "Journal Related Information" => "Information du journal"
-F4BADF41104DD9: "Commander Name:" => "Nom du commandant"
-30FEC77A60FAAB: "Journal Location:" => "Emplacement du journal"
+118C7887B7CC7E: "Commander Name" => "Nom du commandant"
+5FB324A0C0B9BF: "Journal Location" => "Emplacement du journal"
 519D5F0E4852BC: "New travel entries get this colour on the map" => "Les nouvelles entrées ont cette couleur sur la carte"
 D24093C6144C3D: "Give the user name for this commander on Inara" => "Entrer le nom d'utilisateur Inara pour ce commandant"
 869ACEC134C95E: "Sync with Inara" => "Synchroniser avec Inara"
@@ -987,8 +983,6 @@ SECTION ScreenShotConfigureForm
 
 835B2880FDF517: "Screen Shot Configure" => "Configuration des captures d'écran"
 0B9344A6FEDB18: "Crop/Resize Settings" => "Paramètres de rognage"
-3F608B4935EAD6: "Height" => "Hauteur"
-A58DDF50C5EA5C: "Width" => "Largeur"
 CAE0435C41E816: "Top" => "Haut"
 78140597ADB96D: "ED/Steam Screenshot folder" => "Dossier des captures d'écran ED/Steam"
 F5CC0954288A69: "In Sub folder" => "Dans le sous dossier"
@@ -1123,7 +1117,6 @@ A83522C3E1F334: "Democracy" => "Démocratie"
 D8D4559A372171: "Prison" => "Centre de détention"
 9DB9478502242D: "Prison Colony" => "Colonie pénitentiaire"
 AB1A1F939BDE0E: "Theocracy" => "Théocratie"
-05FC94B0147F09: "Engineer" => "Atelier"
 0646F4AFD90C8F: "Undefined" => "Non défini"
 
 SECTION EconomyTypes
@@ -1349,7 +1342,6 @@ FFE926B9A1E06C: "Concord Cannon" => "Canon Concorde"
 
 SECTION ShipSlots
 
-FAB9348C4FD97F: "Armour" => "Blindage"
 F5B0EF731C022D: "Bobble Position 1" => "Tableau de bord 1"
 7E3AF4B6256EFA: "Bobble Position 2" => "Tableau de bord 2"
 F213415E8C5019: "Bobble Position 3" => "Tableau de bord 3"

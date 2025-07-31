@@ -361,7 +361,7 @@ public string Format(string frontline = "    ")
                         "Total Distance: ; ly;N0".Tx(), TotalHyperspaceDistance,
                         "No of Jumps: ;;N0".Tx(), TotalHyperspaceJumps,
                         "Greatest Distance: ; ly;N0".Tx(), GreatestDistanceFromStart,
-                        "Time Played: ".Tx(), TimePlayed.SecondsToDHMString(),
+                        "Time Played".Tx()+": ", TimePlayed.SecondsToDHMString(),
                         "Distance Travelled on Foot: ; m;N0".Tx(), OnFootDistanceTravelled,
                         "Shuttle Journeys: ;;N0".Tx(), ShuttleJourneys,
                         "Shuttle Distance Travelled: ; ly;N0".Tx(), ShuttleDistanceTravelled,
@@ -490,9 +490,9 @@ public string Format(string frontline = "    ")
             public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
-                    "Total Time: ".Tx(), TimeTotal.SecondsToDHMString(),
-                    "Gunner Time: ".Tx(), GunnerTimeTotal.SecondsToDHMString(),
-                    "Fighter Time: ".Tx(), FighterTimeTotal.SecondsToDHMString(),
+                    "Total Time".Tx()+": ", TimeTotal.SecondsToDHMString(),
+                    "Gunner Time".Tx()+": ", GunnerTimeTotal.SecondsToDHMString(),
+                    "Fighter Time".Tx()+": ", FighterTimeTotal.SecondsToDHMString(),
                     "Credits: ; cr;N0".Tx(), CreditsTotal,
                     "Fines: ; cr;N0".Tx(), FinesTotal);
             }
@@ -541,7 +541,7 @@ public string Format(string frontline = "    ")
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
                     "Profits from CQC: ; cr;N0".Tx(), CreditsEarned,
-                    "Time Played: ".Tx(), TimePlayed.SecondsToDHMString(),
+                    "Time Played".Tx()+": ", TimePlayed.SecondsToDHMString(),
                     "K/D Ratio: ;;N2".Tx(), KD,
                     "Kills: ;;N0".Tx(), Kills,
                     "Win/Loss Ratio: ;;N2".Tx(), WL);
@@ -644,9 +644,9 @@ public string Format(string frontline = "    ")
                     "Thargoids killed: ;;N0".Tx(), KILLED + TGSCOUTCOUNT,
                     "Thargoid structures: ;;N0".Tx(), IMPRINT,
                     "Total encounters: ;;N0".Tx(), TOTAL,
-                    "Last seen in: ".Tx(), TOTALLASTSYSTEM,
-                    "Last seen on: ".Tx(), TOTALLASTTIMESTAMP,
-                    "Last ship involved: ".Tx(), TOTALLASTSHIP);
+                    "Last seen in".Tx()+": ", TOTALLASTSYSTEM,
+                    "Last seen on".Tx()+": ", TOTALLASTTIMESTAMP,
+                    "Last ship involved".Tx()+": ", TOTALLASTSHIP);
             }
         }
     }

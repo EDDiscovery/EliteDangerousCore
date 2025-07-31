@@ -36,8 +36,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("Hull: ".Tx(), HullRepaired.ToString("0.0"), "Cockpit: ".Tx(), CockpitRepaired.ToString("0.0"), 
-                                "Corrosion: ".Tx(), CorrosionRepaired.ToString("0.0"));
+            return BaseUtils.FieldBuilder.Build("Hull".Tx()+": ", HullRepaired.ToString("0.0"), "Cockpit".Tx()+": ", CockpitRepaired.ToString("0.0"), 
+                                "Corrosion".Tx()+": ", CorrosionRepaired.ToString("0.0"));
         }
     }
 
@@ -82,7 +82,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Type: ".Tx(), Type, "Count: ".Tx(), Count, "Total Cost: ; cr;N0".Tx(), TotalCost, "each: ; cr;N0".Tx(), BuyPrice);
+            return BaseUtils.FieldBuilder.Build("Type".Tx()+": ", Type, "Count".Tx()+": ", Count, "Total Cost: ; cr;N0".Tx(), TotalCost, "each: ; cr;N0".Tx(), BuyPrice);
         }
     }
 
@@ -123,7 +123,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Type, "Count: ".Tx(), Count, "Price: ; cr;N0".Tx(), SellPrice, "Amount: ; cr;N0".Tx(), TotalSale);
+            return BaseUtils.FieldBuilder.Build("", Type, "Count".Tx()+": ", Count, "Price: ; cr;N0".Tx(), SellPrice, "Amount: ; cr;N0".Tx(), TotalSale);
         }
     }
 
@@ -148,7 +148,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Type: ".Tx(), FriendlyType);
+            return BaseUtils.FieldBuilder.Build("Type".Tx()+": ", FriendlyType);
         }
     }
 

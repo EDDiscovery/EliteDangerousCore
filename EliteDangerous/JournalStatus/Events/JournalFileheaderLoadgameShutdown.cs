@@ -63,7 +63,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("Version: ".Tx(), GameVersion , "Build: ".Tx(), Build , "Part: ".Tx(), Part);
+            return BaseUtils.FieldBuilder.Build("Version".Tx()+": ", GameVersion , "Build".Tx()+": ", Build , "Part".Tx()+": ", Part);
         }
     }
 
@@ -167,11 +167,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship: ".Tx(), Ship, "Name: ".Tx(), ShipName, "Ident: ".Tx(), ShipIdent, "Credits: ;;N0".Tx(), Credits);
+            return BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship".Tx()+": ", Ship, "Name".Tx()+": ", ShipName, "Ident".Tx()+": ", ShipIdent, "Credits: ;;N0".Tx(), Credits);
         }
         public override string GetDetailed()
         {
-            return BaseUtils.FieldBuilder.Build("Mode: ".Tx(), GameMode, "Group: ".Tx(), Group, "Not Landed;Landed".Tx(), StartLanded, "Fuel Level: ;;0.0".Tx(), FuelLevel, "Capacity: ;;0.0".Tx(), FuelCapacity);
+            return BaseUtils.FieldBuilder.Build("Mode".Tx()+": ", GameMode, "Group".Tx()+": ", Group, "Not Landed;Landed".Tx(), StartLanded, "Fuel Level: ;;0.0".Tx(), FuelLevel, "Capacity: ;;0.0".Tx(), FuelCapacity);
         }
 
         public void Ledger(Ledger mcl)

@@ -152,7 +152,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             string powerplaystr = PowerplayPowers != null ? string.Join(", ", PowerplayPowers) : null;
 
-            sb.Build("Power: ".Tx(), ControllingPower,
+            sb.Build("Power".Tx()+": ", ControllingPower,
                     "Power play State: ", PowerplayState,
                      "Power play Powers: " , powerplaystr,
                      "Power Control Progress: ", PowerplayStateControlProgress,
@@ -364,7 +364,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else
             {
-                return "Near: ".Tx()+ " " + BodyType + " " + Body;     // remove JournalLocOrJump_Inspacenear
+                return "Near".Tx()+": "+ " " + BodyType + " " + Body;     // remove JournalLocOrJump_Inspacenear
             }
         }
 
@@ -375,12 +375,12 @@ namespace EliteDangerousCore.JournalEvents
             if (Docked)
             {
                 sb.Build("<;(Wanted) ".Tx(), Wanted,
-                        "Faction: ".Tx(), StationFaction,
-                        "State: ".Tx(), StationFactionStateTranslated,
-                        "Allegiance: ".Tx(), AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance),
-                        "Economy: ".Tx(), EconomyDefinitions.ToLocalisedLanguage(Economy),
-                        "Government: ".Tx(), GovernmentDefinitions.ToLocalisedLanguage(Government),
-                        "Security: ".Tx(), SecurityDefinitions.ToLocalisedLanguage(Security));
+                        "Faction".Tx()+": ", StationFaction,
+                        "State".Tx()+": ", StationFactionStateTranslated,
+                        "Allegiance".Tx()+": ", AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance),
+                        "Economy".Tx()+": ", EconomyDefinitions.ToLocalisedLanguage(Economy),
+                        "Government".Tx()+": ", GovernmentDefinitions.ToLocalisedLanguage(Government),
+                        "Security".Tx()+": ", SecurityDefinitions.ToLocalisedLanguage(Security));
             }
 
             if (HasPowerPlayInfo)
@@ -471,11 +471,11 @@ namespace EliteDangerousCore.JournalEvents
             if (Faction.HasChars() || Allegiance != AllegianceDefinitions.Allegiance.Unknown || Economy != EconomyDefinitions.Economy.Unknown)
             {
                 sb.BuildCont(
-                    "Faction: ".Tx(), Faction, "<;(Wanted) ".Tx(), Wanted,
-                    "State: ".Tx(), FactionDefinitions.ToLocalisedLanguage(FactionState),
-                    "Allegiance: ".Tx(), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
-                    "Economy: ".Tx(), EconomyDefinitions.ToLocalisedLanguage(Economy),
-                    "Population: ".Tx(), Population);
+                    "Faction".Tx()+": ", Faction, "<;(Wanted) ".Tx(), Wanted,
+                    "State".Tx()+": ", FactionDefinitions.ToLocalisedLanguage(FactionState),
+                    "Allegiance".Tx()+": ", AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
+                    "Economy".Tx()+": ", EconomyDefinitions.ToLocalisedLanguage(Economy),
+                    "Population".Tx()+": ", Population);
             }
             
             if (HasPowerPlayInfo)

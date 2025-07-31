@@ -130,7 +130,7 @@ namespace EliteDangerousCore
         public static void Build(System.Text.StringBuilder sb, bool title, Economies[] list)
         {
             if (title)
-                sb.Append("Economies: ".Tx());
+                sb.Append("Economies".Tx()+": ");
 
             for (int i = 0; i < list.Length; i++)
             {

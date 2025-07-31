@@ -211,19 +211,19 @@ namespace EliteDangerousCore
             string spstate = SpawningState_Localised != null ? SpawningState_Localised.Truncate(0, 32, "..") : null;
 
             return BaseUtils.FieldBuilder.Build(
-                        ";Station: ".Tx(), ClassOfSignal == SignalDefinitions.Classification.Station,
-                        ";Carrier: ".Tx(), ClassOfSignal == SignalDefinitions.Classification.Carrier,
-                        ";Megaship: ".Tx(), ClassOfSignal == SignalDefinitions.Classification.Megaship,
-                        ";Installation: ".Tx(), ClassOfSignal == SignalDefinitions.Classification.Installation,
+                        ";Station".Tx()+": ", ClassOfSignal == SignalDefinitions.Classification.Station,
+                        ";Carrier".Tx()+": ", ClassOfSignal == SignalDefinitions.Classification.Carrier,
+                        ";Megaship".Tx()+": ", ClassOfSignal == SignalDefinitions.Classification.Megaship,
+                        ";Installation".Tx()+": ", ClassOfSignal == SignalDefinitions.Classification.Installation,
                         "<", signname,
                         "", USSTypeLocalised,
-                        "Threat Level: ".Tx(), ThreatLevel,
-                        "Faction: ".Tx(), SpawningFaction_Localised,
-                        "Power: ".Tx(), SpawningPower,
-                        "vs " + "Power: ".Tx(), OpposingPower,
-                        "State: ".Tx(), spstate,
-                        "Expiry: ".Tx(), outoftime,
-                        "Last Seen: ".Tx(), seen
+                        "Threat Level".Tx()+": ", ThreatLevel,
+                        "Faction".Tx()+": ", SpawningFaction_Localised,
+                        "Power".Tx()+": ", SpawningPower,
+                        "vs " + "Power".Tx()+": ", OpposingPower,
+                        "State".Tx()+": ", spstate,
+                        "Expiry".Tx()+": ", outoftime,
+                        "Last Seen".Tx()+": ", seen
                         );
         }
 

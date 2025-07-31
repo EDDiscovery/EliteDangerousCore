@@ -198,11 +198,11 @@ namespace EliteDangerousCore.JournalEvents
 
             if (StoreOldShip != null)
             {
-                sb.BuildCont("Stored: ".Tx(), StoreOldShip);
+                sb.BuildCont("Stored".Tx()+": ", StoreOldShip);
             }
             if (SellOldShip != null)
             {
-                sb.BuildCont("Sold: ".Tx(), StoreOldShip, "Amount: ; cr;N0".Tx(), SellPrice);
+                sb.BuildCont("Sold".Tx()+": ", StoreOldShip, "Amount: ; cr;N0".Tx(), SellPrice);
             }
             return sb.ToString();
         }
@@ -280,7 +280,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", ShipType, "Amount: ; cr;N0".Tx(), ShipPrice, "At: ".Tx(), System);
+            return BaseUtils.FieldBuilder.Build("", ShipType, "Amount: ; cr;N0".Tx(), ShipPrice, "At".Tx()+": ", System);
         }
 
         public JObject Json()            // create JSON of this record..
@@ -398,7 +398,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("Of ".Tx(), ShipType, "< from ".Tx(), FromSystem, "Distance: ; ly;0.0".Tx(), 
-                            Distance, "Price: ; cr;N0".Tx(), TransferPrice, "Transfer Time: ".Tx(), FriendlyTransferTime);
+                            Distance, "Price: ; cr;N0".Tx(), TransferPrice, "Transfer Time".Tx()+": ", FriendlyTransferTime);
         }
     }
 
@@ -437,7 +437,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("At starport: ".Tx(), ShipsHere?.Count(), "Other locations: ".Tx(), ShipsRemote?.Count());
+            return BaseUtils.FieldBuilder.Build("At starport".Tx()+": ", ShipsHere?.Count(), "Other locations".Tx()+": ", ShipsRemote?.Count());
         }
 
         public override string GetDetailed()
@@ -452,7 +452,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (ShipsRemote != null)
             {
-                sb.AppendPrePad("Remote: ".Tx(), System.Environment.NewLine + System.Environment.NewLine);
+                sb.AppendPrePad("Remote".Tx()+": ", System.Environment.NewLine + System.Environment.NewLine);
 
                 foreach (StoredShip m in ShipsRemote)
                 {
@@ -469,7 +469,7 @@ namespace EliteDangerousCore.JournalEvents
                             "; ", m.Name,
                             "<", m.ShipType,
                             "< at ".Tx(), m.StarSystem,
-                            "Transfer Cost: ; cr;N0".Tx(), m.TransferPrice, "Time: ".Tx(), m.TransferTimeString,
+                            "Transfer Cost: ; cr;N0".Tx(), m.TransferPrice, "Time".Tx()+": ", m.TransferTimeString,
                             "Value: ; cr;N0".Tx(), m.Value, ";(Hot)".Tx(), m.Hot), System.Environment.NewLine);
                     }
                 }
@@ -531,7 +531,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Ship: ".Tx(), ShipType, "System: ".Tx(), System, "Price: ; cr;N0".Tx(), ShipPrice);
+            return BaseUtils.FieldBuilder.Build("Ship".Tx()+": ", ShipType, "System".Tx()+": ", System, "Price: ; cr;N0".Tx(), ShipPrice);
         }
     }
 

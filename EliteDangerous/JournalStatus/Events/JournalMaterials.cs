@@ -68,15 +68,15 @@ namespace EliteDangerousCore.JournalEvents
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             if (Raw != null && Raw.Length > 0)
             {
-                sb.Build("Raw: ".Tx()+ "; ", Raw.Length);
+                sb.Build("Raw".Tx()+": "+ "; ", Raw.Length);
             }
             if (Manufactured != null && Manufactured.Length > 0)
             {
-                sb.BuildCont("Manufactured: ".Tx()+ "; ", Manufactured.Length);
+                sb.BuildCont("Manufactured".Tx()+": "+ "; ", Manufactured.Length);
             }
             if (Encoded != null && Encoded.Length > 0)
             {
-                sb.BuildCont("Encoded: ".Tx()+ "; ", Encoded.Length);
+                sb.BuildCont("Encoded".Tx()+": "+ "; ", Encoded.Length);
             }
             return sb.ToString();
         }
@@ -88,17 +88,17 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Raw != null && Raw.Length>0)
             {
-                sb.Append("Raw: ".Tx());
+                sb.Append("Raw".Tx()+": ");
                 List(sb,Raw);
             }
             if (Manufactured != null && Manufactured.Length > 0)
             {
-                sb.Append("Manufactured: ".Tx());
+                sb.Append("Manufactured".Tx()+": ");
                 List(sb, Manufactured);
             }
             if (Encoded != null && Encoded.Length > 0)
             {
-                sb.Append("Encoded: ".Tx());
+                sb.Append("Encoded".Tx()+": ");
                 List(sb, Encoded);
             }
 
@@ -163,7 +163,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
-                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".Tx(), Count, "Total: ".Tx(), Total);
+                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".Tx(), Count, "Total".Tx()+": ", Total);
             else
                 return BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".Tx(), Count);
         }
@@ -197,7 +197,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
-                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".Tx(), Count, "Total: ".Tx(), Total);
+                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".Tx(), Count, "Total".Tx()+": ", Total);
             else
                 return BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".Tx(), Count);
         }
@@ -306,8 +306,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Paid != null && Received != null)
             {
-                return BaseUtils.FieldBuilder.Build("Sold: ".Tx(), Paid.Quantity, "< ", Paid.Material_Localised,
-                                                    "Received: ".Tx(), Received.Quantity, "< ", Received.Material_Localised);
+                return BaseUtils.FieldBuilder.Build("Sold".Tx()+": ", Paid.Quantity, "< ", Paid.Material_Localised,
+                                                    "Received".Tx()+": ", Received.Quantity, "< ", Received.Material_Localised);
             }
             else
                 return "";

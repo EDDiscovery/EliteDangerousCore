@@ -57,7 +57,7 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? @" Is large ".Tx()+ "(" + RadiusText + ")." : null);
             information.Append((js.IsLandable) ? @" Is landable.".Tx(): null);
             information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? @" (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)" : null);
-            information.Append((js.HasAtmosphere && showAtmos) ? @" Atmosphere: ".Tx()+ js.AtmosphereTranslated : null);
+            information.Append((js.HasAtmosphere && showAtmos) ? @" Atmosphere".Tx()+": "+ js.AtmosphereTranslated : null);
             information.Append((js.IsLandable && js.nSurfaceTemperature.HasValue && showTemp) ? (string.Format(" Surface temperature: {0} K.".Tx(), Math.Round(js.nSurfaceTemperature.Value, 1, MidpointRounding.AwayFromZero))) : null);
             information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? @" Has ".Tx()+ js.VolcanismTranslated + "." : null);
             information.Append((hasminingsignals) ? " Has mining signals.".Tx(): null);

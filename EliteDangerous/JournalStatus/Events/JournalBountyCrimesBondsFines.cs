@@ -131,7 +131,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("; cr;N0", TotalReward, "Target: ".Tx(), TargetLocalised, "Pilot: ".Tx(), PilotName_Localised, "Victim faction: ".Tx(), VictimFactionLocalised);
+            return BaseUtils.FieldBuilder.Build("; cr;N0", TotalReward, "Target".Tx()+": ", TargetLocalised, "Pilot".Tx()+": ", PilotName_Localised, "Victim faction".Tx()+": ", VictimFactionLocalised);
         }
 
         public override string GetDetailed()
@@ -141,7 +141,7 @@ namespace EliteDangerousCore.JournalEvents
                 var sb = new System.Text.StringBuilder(256);
                 foreach (BountyReward r in Rewards)
                 {
-                    sb.BuildCont("Faction: ".Tx(), r.Faction, "; cr;N0", r.Reward);
+                    sb.BuildCont("Faction".Tx()+": ", r.Faction, "; cr;N0", r.Reward);
                 }
                 return sb.ToString();
             }
@@ -497,7 +497,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            string info = BaseUtils.FieldBuilder.Build("Type: ".Tx(), Type, "Amount: ; cr;N0".Tx(), Amount, "Faction: ".Tx(), Faction);
+            string info = BaseUtils.FieldBuilder.Build("Type".Tx()+": ", Type, "Amount: ; cr;N0".Tx(), Amount, "Faction".Tx()+": ", Faction);
             if (BrokerPercentage > 0)
                 info += string.Format(", Broker took {0:N0}%".Tx(), BrokerPercentage);
             return info;
@@ -555,7 +555,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Ship: ".Tx(), ShipType_Localised, "< in system ".Tx(), System);
+            return BaseUtils.FieldBuilder.Build("Ship".Tx()+": ", ShipType_Localised, "< in system ".Tx(), System);
         }
     }
 
@@ -573,7 +573,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Power: ".Tx(), PowerBefore, "< -> ", PowerAfter);
+            return BaseUtils.FieldBuilder.Build("Power".Tx()+": ", PowerBefore, "< -> ", PowerAfter);
         }
     }
 

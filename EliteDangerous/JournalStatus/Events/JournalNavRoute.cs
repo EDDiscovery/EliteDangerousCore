@@ -96,7 +96,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Route != null)
             {
-                sb.AppendFormat("{0} jumps: ".Tx(), Route.Length - 1);
+                sb.AppendFormat("{0} jumps".Tx()+": ", Route.Length - 1);
 
                 for (int i = 1; i < Route.Length; i++)
                 {

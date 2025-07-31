@@ -135,11 +135,11 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             var sb = new System.Text.StringBuilder(256);
-            sb.Build("", "Docked".Tx(), "Type: ".Tx(), StationDefinitions.ToLocalisedLanguage(FDStationType), "< in system ".Tx(), StarSystem,
-                "State: ".Tx(), StationDefinitions.ToLocalisedLanguage(StationState),
+            sb.Build("", "Docked".Tx(), "Type".Tx()+": ", StationDefinitions.ToLocalisedLanguage(FDStationType), "< in system ".Tx(), StarSystem,
+                "State".Tx()+": ", StationDefinitions.ToLocalisedLanguage(StationState),
                 ";(Wanted)".Tx(), Wanted,
                 ";Active Fine".Tx(), ActiveFine,
-                "Faction: ".Tx(), Faction,
+                "Faction".Tx()+": ", Faction,
                 "< in state ".Tx(), FactionDefinitions.ToLocalisedLanguage(FactionState));
 
             return sb.ToString();
@@ -149,9 +149,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             var sb = new System.Text.StringBuilder(256);
 
-            sb.Build("Allegiance: ".Tx(), AllegianceDefinitions.ToLocalisedLanguage(Allegiance), 
-                    "Economy: ".Tx(), EconomyDefinitions.ToLocalisedLanguage(Economy),
-                    "Government: ".Tx(),  GovernmentDefinitions.ToLocalisedLanguage(Government));
+            sb.Build("Allegiance".Tx()+": ", AllegianceDefinitions.ToLocalisedLanguage(Allegiance), 
+                    "Economy".Tx()+": ", EconomyDefinitions.ToLocalisedLanguage(Economy),
+                    "Government".Tx()+": ",  GovernmentDefinitions.ToLocalisedLanguage(Government));
 
             if (StationServices != null)
             {
@@ -252,7 +252,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", StationName_Localised, "< on pad ".Tx(), LandingPad, "Type: ".Tx(), StationDefinitions.ToLocalisedLanguage(FDStationType));
+            return BaseUtils.FieldBuilder.Build("", StationName_Localised, "< on pad ".Tx(), LandingPad, "Type".Tx()+": ", StationDefinitions.ToLocalisedLanguage(FDStationType));
         }
     }
 
@@ -335,7 +335,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", StationName_Localised, "Type: ".Tx(), StationDefinitions.ToLocalisedLanguage(FDStationType));
+            return BaseUtils.FieldBuilder.Build("", StationName_Localised, "Type".Tx()+": ", StationDefinitions.ToLocalisedLanguage(FDStationType));
         }
     }
 

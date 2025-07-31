@@ -81,7 +81,6 @@ D27BB169DB8306: "Slaves" @
 D018B082E8A372: "Technology" @
 41129461CC1C57: "Textiles" @
 42316A12B62CC1: "Waste" @
-F32D0645A8333F: "Weapons" @
 E59834BC3D5687: "Power Play" @
 5F957C031DD5AB: "Encoded Guardian" @
 D7F2D358727387: "Encoded Guardian Obelisk" @
@@ -922,11 +921,9 @@ F958260588E1AF: "Steel" @
 
 SECTION EngineeringData
 
-4E6D343228BED7: "Engineer:" @
-49BBF32AC7C1A6: "Blueprint:" @
-FF303351D14868: "Level:" @
-455348D1C29EA3: "Quality:" @
-EF5D9F79BEAF2B: "Experimental Effect:" @
+05FC94B0147F09: "Engineer" @
+A60F2C73604F62: "Quality" @
+A5BADB0C4C0940: "Experimental Effect" @
 C312376DA63393: "Original: ;;0.###" @
 75A08C2632AF12: "< (Worse); (Better)" @
 
@@ -939,21 +936,20 @@ SECTION CommanderForm
 7420CC18DF9C4B: "CommanderForm" @
 6E6A6F2086BB5F: "Other" @
 B26565C54E6DA2: "Default Map Color" @
-DEE4E356C26D02: "Home System:" @
+F3646F7AE1228F: "Home System" @
 2737A55B1A4751: "Inara Information (optional)" @
-5DD121F921D7EF: "Inara Name:" @
-8E613ABCFB844C: "Inara API Key:" @
+BC5F6A124741B3: "Inara Name" @
+8A77089A093CC5: "Inara API Key" @
 137D072F2C9C3C: "Sync to Inara" @
 C43E80AA3B8661: "EDDN" @
 9DA63A795A3C3E: "Send Event Information to EDDN" @
 AC4970F6799584: "EDSM Information (optional)" @
 C99C6E4AE25A6A: "Sync From EDSM" @
-B7D7C7A89C58A4: "EDSM API Key:" @
-207BE724CD92FC: "EDSM Name:" @
+F5E545BFC9C3EA: "EDSM API Key" @
 285B6B2BAD13A6: "Sync to EDSM" @
 DA99D6AA2339EB: "Journal Related Information" @
-F4BADF41104DD9: "Commander Name:" @
-30FEC77A60FAAB: "Journal Location:" @
+118C7887B7CC7E: "Commander Name" @
+5FB324A0C0B9BF: "Journal Location" @
 519D5F0E4852BC: "New travel entries get this colour on the map" @
 D24093C6144C3D: "Give the user name for this commander on Inara" @
 869ACEC134C95E: "Sync with Inara" @
@@ -987,8 +983,6 @@ SECTION ScreenShotConfigureForm
 
 835B2880FDF517: "Screen Shot Configure" @
 0B9344A6FEDB18: "Crop/Resize Settings" @
-3F608B4935EAD6: "Height" @
-A58DDF50C5EA5C: "Width" @
 CAE0435C41E816: "Top" @
 78140597ADB96D: "ED/Steam Screenshot folder" @
 F5CC0954288A69: "In Sub folder" @
@@ -1123,7 +1117,6 @@ A83522C3E1F334: "Democracy" @
 D8D4559A372171: "Prison" @
 9DB9478502242D: "Prison Colony" @
 AB1A1F939BDE0E: "Theocracy" @
-05FC94B0147F09: "Engineer" @
 0646F4AFD90C8F: "Undefined" @
 
 SECTION EconomyTypes
@@ -1349,7 +1342,6 @@ FFE926B9A1E06C: "Concord Cannon" @
 
 SECTION ShipSlots
 
-FAB9348C4FD97F: "Armour" @
 F5B0EF731C022D: "Bobble Position 1" @
 7E3AF4B6256EFA: "Bobble Position 2" @
 F213415E8C5019: "Bobble Position 3" @

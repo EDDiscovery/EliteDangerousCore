@@ -45,7 +45,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Type);
             if (mcd != null)
-                return BaseUtils.FieldBuilder.Build("", Type_Localised, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "Total: ".Tx(), Total);
+                return BaseUtils.FieldBuilder.Build("", Type_Localised, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "Total".Tx()+": ", Total);
             else
                 return Type_Localised;
         }

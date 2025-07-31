@@ -144,11 +144,11 @@ namespace EliteDangerousCore
         public void Build(System.Text.StringBuilder sb)
         {
             sb.BuildSetPad(Environment.NewLine,
-                    "Engineer:".Tx()+ " ", Engineer,
-                    "Blueprint:".Tx()+ " ", FriendlyBlueprintName,
-                    "Level:".Tx()+ " ", Level,
-                    "Quality:".Tx()+ " ", Quality,
-                    "Experimental Effect:".Tx()+ " ", ExperimentalEffect_Localised);
+                    "Engineer".Tx()+": "+ " ", Engineer,
+                    "Blueprint".Tx()+": "+ " ", FriendlyBlueprintName,
+                    "Level".Tx()+": "+ " ", Level,
+                    "Quality".Tx()+": "+ " ", Quality,
+                    "Experimental Effect".Tx()+": "+ " ", ExperimentalEffect_Localised);
 
             if (ExperimentalEffect.HasChars())
             {

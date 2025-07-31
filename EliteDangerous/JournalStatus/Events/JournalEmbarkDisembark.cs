@@ -78,7 +78,7 @@ namespace EliteDangerousCore.JournalEvents
 
             info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", StationName_Localised, "", body, "", StarSystem), ". ");
             if (FDStationType != StationDefinitions.StarportTypes.Unknown)
-                info += ", " + "Type: ".Tx()+ StationDefinitions.ToLocalisedLanguage(FDStationType);
+                info += ", " + "Type".Tx()+": "+ StationDefinitions.ToLocalisedLanguage(FDStationType);
 
             return info;
         }
@@ -145,7 +145,7 @@ namespace EliteDangerousCore.JournalEvents
             string body = Body == StationName ? null : Body.ReplaceIfStartsWith(StarSystem);
             info = info.AppendPrePad(BaseUtils.FieldBuilder.Build("", StationName_Localised, "", body, "", StarSystem), ". ");
             if (FDStationType != StationDefinitions.StarportTypes.Unknown)
-                info += ", " + "Type: ".Tx()+ StationDefinitions.ToLocalisedLanguage(FDStationType);
+                info += ", " + "Type".Tx()+": "+ StationDefinitions.ToLocalisedLanguage(FDStationType);
             return info;
         }
     }

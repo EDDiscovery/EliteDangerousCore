@@ -52,7 +52,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Cmdr ", Name, "Starting Package: ".Tx(), Package);
+            return BaseUtils.FieldBuilder.Build("Cmdr ", Name, "Starting Package".Tx()+": ", Package);
         }
     }
 

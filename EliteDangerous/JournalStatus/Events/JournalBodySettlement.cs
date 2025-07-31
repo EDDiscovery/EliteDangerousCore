@@ -154,11 +154,11 @@ namespace EliteDangerousCore.JournalEvents
             {
                 System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
 
-                sb.Build("Economy: ".Tx(), EconomyDefinitions.ToLocalisedLanguage(StationEconomy),
-                    "Government: ".Tx(), GovernmentDefinitions.ToLocalisedLanguage(StationGovernment),
-                    "Faction: ".Tx(), Faction,
+                sb.Build("Economy".Tx()+": ", EconomyDefinitions.ToLocalisedLanguage(StationEconomy),
+                    "Government".Tx()+": ", GovernmentDefinitions.ToLocalisedLanguage(StationGovernment),
+                    "Faction".Tx()+": ", Faction,
                     "< in state ".Tx(), FactionDefinitions.ToLocalisedLanguage(FactionState),
-                    "Allegiance: ".Tx(), AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance));
+                    "Allegiance".Tx()+": ", AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance));
 
                 if (StationServices != null)
                 {

@@ -60,7 +60,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("<", Name, "Rank: ".Tx(), RankDefinitions.FriendlyName(RankCombat));
+            return BaseUtils.FieldBuilder.Build("<", Name, "Rank".Tx()+": ", RankDefinitions.FriendlyName(RankCombat));
         }
 
     }

@@ -117,7 +117,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (stocked.Count() > 0)
                 {
-                    sb.Append("Items to buy: ".Tx());
+                    sb.Append("Items to buy".Tx()+": ");
                     sb.AppendCR();
 
                     foreach (CCommodities c in stocked)
@@ -142,7 +142,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (sellonly.Count() > 0)
                 {
-                    sb.Append("Sell only Items: ".Tx());
+                    sb.Append("Sell only Items".Tx()+": ");
                     sb.AppendCR();
 
                     foreach (CCommodities c in sellonly)

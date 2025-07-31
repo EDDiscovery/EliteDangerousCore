@@ -34,7 +34,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("Type: ".Tx(), USSTypeLocalised, "Threat: ".Tx(), USSThreat);
+            return BaseUtils.FieldBuilder.Build("Type".Tx()+": ", USSTypeLocalised, "Threat".Tx()+": ", USSThreat);
         }
     }
 }

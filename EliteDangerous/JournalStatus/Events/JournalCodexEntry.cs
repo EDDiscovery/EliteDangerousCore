@@ -125,7 +125,7 @@ namespace EliteDangerousCore.JournalEvents
                                                 "", SubCategory_Localised,
                                                 ";New Entry".Tx(), IsNewEntry,
                                                 ";Traits".Tx(), NewTraitsDiscovered,
-                                                "Nearest: ".Tx(), NearestDestination_Localised,
+                                                "Nearest".Tx()+": ", NearestDestination_Localised,
                                                 "Latitude: ;°;F4".Tx(), Latitude, "Longitude: ;°;F4".Tx(), Longitude
                                                 );
         }
@@ -143,7 +143,7 @@ namespace EliteDangerousCore.JournalEvents
                                                 "", SubCategory_Localised,
                                                 ";New Entry".Tx(), IsNewEntry,
                                                 ";Traits".Tx(), NewTraitsDiscovered,
-                                                "Nearest: ".Tx(), NearestDestination_Localised
+                                                "Nearest".Tx()+": ", NearestDestination_Localised
                                                 );
         }
 

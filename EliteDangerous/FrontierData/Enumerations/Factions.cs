@@ -192,17 +192,17 @@ namespace EliteDangerousCore
 
                 if (frontpart)
                 {
-                    sb.Build("", Name,  "State: ".Tx(), FactionDefinitions.ToLocalisedLanguage(FactionState),
+                    sb.Build("", Name,  "State".Tx()+": ", FactionDefinitions.ToLocalisedLanguage(FactionState),
                                         "Reputation: ;%;N1".Tx(), MyReputation,
-                                        "Government: ".Tx(), GovernmentDefinitions.ToLocalisedLanguage(Government),
-                                        "Allegiance: ".Tx(), AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
+                                        "Government".Tx()+": ", GovernmentDefinitions.ToLocalisedLanguage(Government),
+                                        "Allegiance".Tx()+": ", AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
                                         "Inf: ;%".Tx(), (Influence * 100.0).ToString("0.0")
                                                                    );
                 }
 
                 if (otherinfo)
                 {
-                    sb.BuildCont("Happiness: ".Tx(), Happiness_Localised,
+                    sb.BuildCont("Happiness".Tx()+": ", Happiness_Localised,
                                                                    ";Squadron System".Tx(), SquadronFaction,
                                                                    ";Happiest System".Tx(), HappiestSystem,
                                                                    ";Home System".Tx(), HomeSystem
@@ -212,7 +212,7 @@ namespace EliteDangerousCore
                 if (pendingstates && PendingStates != null)
                 {
                     sb.AppendCS();
-                    sb.Append("Pending State: ".Tx());
+                    sb.Append("Pending State".Tx()+": ");
 
                     foreach (FactionDefinitions.FactionInformation.PowerStatesInfo state in PendingStates)
                         sb.Build(" ", state.State, "<(;)", state.Trend);
@@ -222,7 +222,7 @@ namespace EliteDangerousCore
                 if (recoveringstates && RecoveringStates != null)
                 {
                     sb.AppendCS();
-                    sb.Append("Recovering State: ".Tx());
+                    sb.Append("Recovering State".Tx()+": ");
 
                     foreach (FactionDefinitions.FactionInformation.PowerStatesInfo state in RecoveringStates)
                         sb.Build(" ", state.State, "<(;)", state.Trend);
@@ -231,7 +231,7 @@ namespace EliteDangerousCore
                 if (activestates && ActiveStates != null)
                 {
                     sb.AppendCS();
-                    sb.Append("Active State: ".Tx());
+                    sb.Append("Active State".Tx()+": ");
 
                     foreach (FactionDefinitions.FactionInformation.ActiveStatesInfo state in ActiveStates)
                         sb.Build(" ", state.State);

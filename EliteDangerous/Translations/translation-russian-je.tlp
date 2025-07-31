@@ -252,48 +252,46 @@ DDDE2AEC826902: "Nav Route Clear" => "Navroute leeren"
 
 SECTION JournalCargo
 
-8A009AE46C6211: "SRV" => "Груз в ТРП: "
+8A009AE46C6211: "SRV" => "Груз в ТРП"
 
 SECTION JournalCodexEntry
 
-21F7B3DA0DB370: "At " => "Система: "
-C36551215CB2D4: "in " => "сектор: "
+21F7B3DA0DB370: "At " => "Система"
+C36551215CB2D4: "in " => "сектор"
 0E35DDA343D4D9: ";New Entry" => ";новая запись"
 BF03B90D446D74: ";Traits" => "; сведения"
 
 SECTION CommunityGoal
 
-EDD45BDC14E947: "Title: " => "Название: "
-9202F1C53A934E: "At: " => "Станция: "
-2DDBF726AF7076: "Expires: " => "срок: "
+768E0C1C69573F: "Title" => "Название"
+0855009C46728A: "At" => "Станция"
+A99BE3DA0C9DA2: "Expires" => "срок"
 636C2C3E755471: "Not Complete;Complete" => "Цель не достигнута;Цель достигнута"
-A4DB3D1E742FB7: "Current Total: " => "текущий прогресс: "
-E48FDD628C8DC7: "Contribution: " => "вклад: "
-388928396DE8DF: "Num Contributors: " => "внесли вклад: "
-9233AB21E2ADBB: "Player % Band: " => "Вы входите в топ %: "
-FBF1D2E25A4426: "Top Rank: " => "лучший ранг: "
+0DB16A8C94160B: "Current Total" => "текущий прогресс"
+982D5A73469ACE: "Contribution" => "вклад"
+D431FC74CD845B: "Num Contributors" => "внесли вклад"
+E9BB68A65645DF: "Player % Band" => "Вы входите в топ %"
+7BBFBA05C8A45A: "Top Rank" => "лучший ранг"
 F944307E983058: "Not In Top Rank;In Top Rank" => "вы не входите в этот ранг;вы входите в этот ранг"
-4989EA19A762D3: "Tier Reached: " => "Достигнут уровень: "
-8FB2154EACE5DE: "Bonus: " => "награда: "
-7654BB6A1342A8: "Top Tier Name" => "максимальный уровень: "
+B065C5EEE9CF43: "Tier Reached" => "Достигнут уровень"
+4D963CFAB70D8C: "Bonus" => "награда"
+7654BB6A1342A8: "Top Tier Name" => "максимальный уровень"
 72819B6B953E71: "TT. Bonus" => "Награда текущего уровня"
 
 SECTION FSSSignal
 
-7847429E435FC1: "State: " => "Состояние: "
-477D5FBB417454: "Faction: " => "фракция: "
-FBD2FFC832044A: "Threat Level: " => " уровень угрозы: "
-1064815C259027: ";Station: " => "; станция"
-2C1E7B1A811FA5: ";Carrier: " => ";Carrier: "
-4B7A9B7D38BE43: ";Megaship: " => ";Megaschiff: "
-F292A592250E0D: ";Installation: " => ";Installation: "
-4616E1CC672488: "Last Seen: " => "Zuletzt gesehen: "
+16D19F8245DA02: "Threat Level" => " уровень угрозы"
+A6E0A89081909E: ";Station" => "; станция"
+F8AF3031BB50C4: ";Carrier" => ";Carrier"
+7E861CF6FC0928: ";Megaship" => ";Megaschiff"
+F810904826BC3A: ";Installation" => ";Installation"
+20C226FB3237BB: "Last Seen" => "Zuletzt gesehen"
 
 SECTION JournalFSSDiscoveryScan
 
 90D81BB977D5B7: "Progress: ;%;N1" => "Прогресс: ;%;N1"
-9AA7993EF1EBB9: "Bodies: " => "Körper: "
-70D35041E4CA09: "Others: " => "другие: "
+B091D64170AFAF: "Bodies" => "Körper"
+8D7BF5BF136E81: "Others" => "другие"
 
 SECTION JournalFSSSignalDiscovered
 
@@ -307,15 +305,14 @@ SECTION JournalCommodityPricesBase
 BBB81F7CA96417: "Prices on ; items" => "Цены на ; товары"
 C45A6B5C9F13D9: "< at " => "< на "
 46FE700B99EAD5: "< in " => "< в "
-4FF47DDBF2C2E5: "Items to buy: " => "Товары, которые можно купить: "
+D446B632E23844: "Items to buy" => "Товары, которые можно купить"
 38892DF3CDB24B: "{0}: {1} sell {2} Diff {3} {4}%  " => "{0}: {1} продать {2} разница {3} {4}%  "
 0E5A14D01A6CE1: "{0}: {1}  " => "{0}: {1}"
-0B64BB452514D3: "Sell only Items: " => "Товары, которые можно продать: "
+9E0595F4B34B89: "Sell only Items" => "Товары, которые можно продать"
 
 SECTION JournalEngineerProgress
 
 1B81E4B95EF5F8: "Progress on ; Engineers" => "Всего известно: ;"
-4FABE731AE0FC3: "Rank: " => "Ранг: "
 
 SECTION JournalFSDJump
 
@@ -326,18 +323,15 @@ E2A979859FDBBA: "; ly;N2" => "; ly;N2"
 
 SECTION JournalLeaveBody
 
-0BB7C46C2736F9: "In " => "Система: "
+0BB7C46C2736F9: "In " => "Система"
 
 SECTION JournalLocOrJump
 
 A1F7BF2AD4BEB6: "<;(Wanted) " => "<;(в розыске) "
-DE700C1A223A4D: "Allegiance: " => "принадлежность: "
-44D26B8F2218CB: "Economy: " => "экономика: "
-3FCAA488BA65CB: "Population: " => "Население: "
-2E56F3E0457A1F: "Government: " => "форма правления: "
+182D37EC74BF3C: "Population" => "Население"
 6B3FB6468F5B3C: "Inf: ;%" => "влияние: ;%"
-8C72B30EA79D8C: "Pending State: " => " ожидаемое состояние: "
-9189629C966005: "Recovering State: " => " состояние восстановления: "
+20682CE886E023: "Pending State" => " ожидаемое состояние"
+A65110A78F3D51: "Recovering State" => " состояние восстановления"
 
 SECTION JournalFuelScoop
 
@@ -345,7 +339,7 @@ SECTION JournalFuelScoop
 
 SECTION JournalLoadout
 
-3AB9E085D3989C: "Modules: " => "модулей: "
+04E9462C0FF02B: "Modules" => "модулей"
 
 SECTION JournalLocation
 
@@ -353,29 +347,26 @@ B208B70B652E87: "Landed on {0}" => "Местоположение: планета
 
 SECTION JournalLocOrJump
 
-E298B0EC36231C: "Type " => "Тип: "
-F6551977CCE103: "< in system " => "<, система: "
-C90AEA3F20DDBC: "Security: " => "безопасность: "
-D5DA2840F53DF6: "Happiness: " => "удовлетворенность: "
+E298B0EC36231C: "Type " => "Тип"
+F6551977CCE103: "< in system " => "<, система"
+115686EAF61F61: "Happiness" => "удовлетворенность"
 9BF00A5AD1074F: "Reputation: ;%;N1" => "репутация: ;%;N1"
 B88C0272084C40: ";Squadron System" => ";система эскадрильи"
 CAB4C00BAF5433: ";Happiest System" => ";самая удовлетворенная система"
 077DC88F4AAFF0: ";Home System" => ";домашняя система"
-8D05C0D443ABEF: "Active State: " => " текущие состояния: "
+6BE989FCF3D7AF: "Active State" => " текущие состояния"
 
 SECTION JournalMissionAccepted
 
 3283C6A6480226: "< from " => "< от фракции "
-45648CB8A10AF0: "Expiry: " => "срок: "
-AB394764BE65E7: "Influence: " => "влияние: "
-523F57628709ED: "Reputation: " => "репутация: "
+BA8F571E0F93E1: "Expiry" => "срок"
+03ECFA6479FA3A: "Influence" => "влияние"
 3A4F33142BB77B: "Reward: ; cr;N0" => "награда: ; кр.;N0"
 4B0AAE097D7790: "; (Wing)" => "; (для крыла)"
-B4B4AABF6E92C4: "Deliver: " => "Товар: "
-BAB3C9BB7D042F: "Target Type: " => "тип цели: "
-234142964522F0: "Kill Count: " => "счетчик целей: "
-223780689F47A9: "Passengers: " => "число пассажиров: "
-C14D398EB6F6FD: "Count: " => "Ilość: "
+DCAC5D49C54C3C: "Deliver" => "Товар"
+4266916B95C358: "Target Type" => "тип цели"
+594D59A3A18111: "Kill Count" => "счетчик целей"
+66E12969C225CC: "Count" => "Ilość"
 
 SECTION JournalMaterialDiscovered
 
@@ -383,14 +374,9 @@ SECTION JournalMaterialDiscovered
 
 SECTION JournalMaterials
 
-02FA80C768E685: "Raw: " => "Элементы: "
-9AD41797D4856E: "Manufactured: " => "Промышленные: "
-27F86557785E47: "Encoded: " => "Зашифрованные данные: "
 
 SECTION JournalMissionRedirected
 
-B4F579B44C1BA2: "From: " => "старый пункт назначения: "
-52CEA31DEDF740: "To: " => "новый пункт назначения: "
 
 SECTION MissionItem
 
@@ -410,9 +396,9 @@ SECTION JournalProspectedAsteroid
 
 SECTION JournalPromotion
 
-B0811E470D6BF4: "Trade" => "Торговый ранг: "
-1F87C3714E9035: "Empire" => "Империя: "
-EC37C87C97E782: "Federation" => "Федерация: "
+B0811E470D6BF4: "Trade" => "Торговый ранг"
+1F87C3714E9035: "Empire" => "Империя"
+EC37C87C97E782: "Federation" => "Федерация"
 E443046C7DE75A: "Soldier" => "Soldat"
 19B26057DCFA5F: "ExoBiologist" => "Exobiologe"
 
@@ -420,11 +406,11 @@ SECTION JournalReceiveText
 
 BC18E959D7B347: " Texts" => " сообщен."
 585AF9B23226A0: "from " => "на канале "
-C0FFAB3C44DC69: "< on " => "<, канал: "
+C0FFAB3C44DC69: "< on " => "<, канал"
 
 SECTION JournalRepairDrone
 
-3993AE78D352BB: "Hull: " => "Корпус: "
+DC04075740AF45: "Hull" => "Корпус"
 
 SECTION JournalReputation
 
@@ -464,7 +450,6 @@ D2F52355860145: "Scan Nav" => "Сканирование нав. маяка"
 D000D9F51096C0: "Scan of {0}" => "Сканирование {0}"
 5168D608A81C18: "Mass: ;SM;0.00" => "солнечных масс: ; ;0.00"
 BF8E38829287B3: "Age: ;my;0.0" => "возраст: ; млн лет;0.0"
-55C1D395FE5687: "Radius: " => "Радиус: "
 41997D5AA8F9A8: "<;, Landable" => "<;, пригодна для посадки"
 CABD9FE7A7C5A8: "<;, Terraformable" => "<;, пригодна для терраформирования"
 9C417B6452D141: "Gravity: ;G;0.00" => "гравитация: ; g;0.00"
@@ -481,7 +466,7 @@ F2242B579D81E1: "No Volcanism" => "без вулканизма"
 E452781D716535: "Orbital Period: {0} days" => "Сидерический период обращения: {0} дн"
 9C92D7D1E0B506: "Semi Major Axis: {0:0.00}AU" => "Большая полуось: {0:0.00} а. е."
 1C861A7F7D3C80: "Semi Major Axis: {0}km" => "Большая полуось: {0} км"
-941C7E028C55A8: "Orbital Eccentricity: " => "Эксцентриситет орбиты: "
+FD157443DE4822: "Orbital Eccentricity" => "Эксцентриситет орбиты"
 24D86E4E8473EB: "Orbital Inclination: {0:0.000}°" => "Наклонение орбиты: {0:0.000}°"
 575CB9E18B9880: "Arg Of Periapsis: {0:0.000}°" => "Аргумент перицентра : {0:0.000}"
 04EFF963D056A3: "Absolute Magnitude: {0:0.00}" => "Абсолютная звездная величина: {0:0.00}°"
@@ -491,15 +476,13 @@ B285F06D312CA2: "Tidally locked" => "Приливный захват"
 1E92B81458AA22: "Candidate for terraforming" => "Кандидат на терраформирование"
 7376D9B2BD1D99: " Moons" => " лунных масс"
 0CB33492C61519: "Belts" => "Пояса"
-96DDACCF581F48: "Ring" => "Кольцо"
 75B04B88D4665E: "Rings" => "Кольца"
 5987FFD982A381: "Base Estimated value: {0:N0}" => "Примерная стоимость данных сканирования: {0:N0} кр.,"
 6682A019C4883F: "Mapped value: {0:N0}/{1:N0}e" => "Kartographierter Wert: {0:N0}/{1:N0}e"
 C467DD57E52397: "Discovered by {0} on {1}" => "Первооткрыватель: {0}, дата: {1}"
 854F99DFC01A9F: " - Others stars not considered" => " (без учета других звезд)"
-279488A29AA084: "Materials:" => "Материалы:"
-1EABB5BB32923C: "Atmospheric Composition:" => "Состав атмосферы:"
-A5E37FD2756CAE: "Planetary Composition:" => "Состав планеты:"
+5046A1063B521B: "Atmospheric Composition" => "Состав атмосферы"
+D8F3372588C7F1: "Planetary Composition" => "Состав планеты"
 E9B087E594BA11: " - Habitable Zone, {0} ({1}-{2} AU)," => " - обитаемая зона, {0} ({1}-{2} а. е.),"
 CF39B2D7E183F0: " - Metal Rich planets, {0} ({1}-{2} AU)," => " - богатые металлами планеты, {0} ({1}-{2} а. е.),"
 0E2916E8281391: " - Water Worlds, {0} ({1}-{2} AU)," => " - водные планеты:, {0} ({1}-{2} а. е.),"
@@ -507,41 +490,39 @@ CF39B2D7E183F0: " - Metal Rich planets, {0} ({1}-{2} AU)," => " - богатые
 5B1F0120B3CD0F: " - Ammonia Worlds, {0} ({1}-{2} AU)," => " - аммиачные планеты, {0} ({1}-{2} а. е.),"
 C379074215EC59: " - Icy Planets, {0} (from {1} AU)" => " - ледяные планеты, {0} (от {1} а. е.)"
 8669CDDA694B59: "Dist: ;ls;0.0" => "Расстояние от точки прибытия: ; св. с.;0.0"
-6E08B11C28445E: "Dist: " => "Entf: "
+56A9DD3BD69226: "Dist" => "Entf"
 94820B8DEE66A2: "Efficiently" => "оптимально"
 97E379A834EF5E: "First Discovered+Mapped value: {0:N0}/{1:N0}e" => "Стоимость данных + бонус первооткрывателя: {0:N0}/{1:N0}e кр."
 F42A5A3B540E51: "First Mapped value: {0:N0}/{1:N0}e" => "Стоимость данных + бонус первого картографировавшего: {0:N0}/{1:N0}e кр."
 AC983DAC73C35D: "Scan Type: {0}" => "Тип сканирования: {0}"
-381DCB85F1FBB2: "Inferred Circumstellar zones:" => "Предполагаемая околозвездная зона:"
-6D2CEAF8A4DE0D: "Mass: " => "Масса: "
+187199564DF54F: "Inferred Circumstellar zones" => "Предполагаемая околозвездная зона"
 AEF0ABF930C73C: "Ascending Node: {0:0.000}°" => "Aufsteigender Knoten: {0:0.000}°"
 4853FB66BD4B2E: "Mean Anomaly: {0:0.000}°" => "Mittlere Anomalie: {0:0.000}°"
 
 SECTION JournalSAAScanComplete
 
-549F7DE1A954E2: "Probes: " => "использовано зондов: "
-D338BDA2EF0EF8: "Efficiency Target: " => "оптимальное число зондов: "
+6934B3123D3109: "Probes" => "использовано зондов"
+030E6445D2280E: "Efficiency Target" => "оптимальное число зондов"
 
 SECTION JournalScreenshot
 
-3E80330244DEEA: "File: " => "файл: "
-51AD6E70C7C269: "Width: " => "ширина: "
-BE9DE399951621: "Height: " => "высота: "
+2C3CAFA4DB3F3E: "File" => "файл"
+A58DDF50C5EA5C: "Width" => "ширина"
+3F608B4935EAD6: "Height" => "высота"
 
 SECTION JournalSearchAndRescue
 
-B069920EC5D23A: "Reward: " => "награда: "
 
 SECTION JournalSellExplorationData
 
 
 SECTION JournalSendText
 
-7AF2ED79CA4B43: "Msg: " => "текст: "
+14766B11B99F48: "Msg" => "текст"
 
 SECTION JournalSetUserShipName
 
-728F262DCA253E: "On: " => "корабль: "
+E0049A66519CAE: "On" => "корабль"
 
 SECTION JournalShipTargeted
 
@@ -559,7 +540,7 @@ SECTION JournalShipyardSwap
 
 SECTION JournalShipyardTransfer
 
-2384D533C8AC08: "Of " => "Корабль: "
+2384D533C8AC08: "Of " => "Корабль"
 
 SECTION JournalStartJump
 
@@ -674,7 +655,7 @@ B483C046BC30D5: "Highest Payout: ; cr;N0" => "Самая высокая выпл
 E02E8A73E32E90: "Total Distance: ; ly;N0" => "Пройдено в гиперпространстве: ;;N0"
 BC86F52FD15F34: "No of Jumps: ;;N0" => "Всего прыжков в гиперпространстве: ;;N0"
 09F1BE8C639618: "Greatest Distance: ; ly;N0" => "Макс. расстояние с начала: ;ly;N0"
-CD878096F84091: "Time Played: " => "Время игры: "
+25FA47C8047A82: "Time Played" => "Время игры"
 E2C5232144C21F: "Distance Travelled on Foot: ; m;N0" => "Gesamtentfernung (zu Fuß): ;m;N0"
 6D8865C83FB7A3: "Efficient Scans: ;;N0" => "Effiziente Scans: ;;N0"
 12B8B3C0A12010: "Shuttle Journeys: ;;N0" => "Shuttle-Reisen: ;;N0"
@@ -734,9 +715,9 @@ FDBB95B8322925: "Total Wages: ; cr;N0" => "Всего выплачено эки�
 
 SECTION MulticrewClass
 
-EE9C4C95762B58: "Total Time: " => "Общее время: "
-BEA358C8EE3AA6: "Gunner Time: " => "В роли наводчика: "
-2A7EE15DF23E60: "Fighter Time: " => "В роли летчика-истребителя: "
+8CE2E6C39769DC: "Total Time" => "Общее время"
+B8759E7DAEEB15: "Gunner Time" => "В роли наводчика"
+A2D11970FCAA8C: "Fighter Time" => "В роли летчика-истребителя"
 90AAB0386139D2: "Credits: ; cr;N0" => "Кредитов заработано: ; кр.;N0"
 DBAF8C40DD5627: "Fines: ; cr;N0" => "Штрафов получено: ; кр.;N0"
 
@@ -802,9 +783,9 @@ SECTION ThargoidsClass
 66D1BD86691E46: "Thargoids killed: ;;N0" => "Thargoiden getötet: ;;N0"
 A244B487DEE654: "Thargoid structures: ;;N0" => "Thargoidenstrukturen: ;;N0"
 6B68D6D3D64B30: "Total encounters: ;;N0" => "Gesammte Begegnungen: ;;N0"
-76375FA7856815: "Last seen in: " => "Zuletzt gesehen in: "
-73A65CB42D7E71: "Last seen on: " => "Zuletzt gesehen am: "
-3EC67923F7122B: "Last ship involved: " => "Letztes involviertes Schiff: "
+6BE262170622C0: "Last seen in" => "Zuletzt gesehen in"
+7E967FB5DA23E0: "Last seen on" => "Zuletzt gesehen am"
+24CD0F239B6A95: "Last ship involved" => "Letztes involviertes Schiff"
 
 SECTION JournalStoredModules
 
@@ -814,10 +795,10 @@ SECTION JournalSupercruiseExit
 
 SECTION JournalStoredShips
 
-2DE9A85B47E0A5: "At starport: " => "На текущей станции: "
-3F834594889578: "Other locations: " => "на других: "
+EC5905CB483B0B: "At starport" => "На текущей станции"
+A9DB6CA00CA90B: "Other locations" => "на других"
 6D3B4BD0DFDCB4: "; cr;N0" => "; кр.;N0"
-FD70B4E5980946: "Remote: " => "Корабли на других станциях: "
+C93F6536DCFBEE: "Remote" => "Корабли на других станциях"
 3E3FE90EA447B7: "<; in transit" => "<; в пути"
 
 SECTION JournalSuperCruiseEntry
@@ -830,7 +811,7 @@ SECTION JournalUnderAttack
 
 SECTION JournalNavRoute
 
-248608AE1AD74C: "{0} jumps: " => "{0} Sprünge: "
+502FB9BD86B143: "{0} jumps" => "{0} Sprünge"
 
 SECTION JournalApproachBody
 
@@ -840,101 +821,85 @@ SECTION JournalEntry
 3DEBAFED05C80C: "{0} days {1} hours {2} minutes" => "{0} дн. {1} ч. {2} мин."
 C427C71598A102: "Hyperspace" => "Hyperraum"
 AA10128899005B: "Supercruise" => "Supercruise"
-593EEC0E990749: "Target: " => "Цель: "
-07294E7BD39A4D: "Victim faction: " => "фракция цели: "
+ABC4DE9A615B76: "Victim faction" => "фракция цели"
 67077E5976E34E: "<, due to " => "<, из-за "
-4BD46DBA6B624D: "< on faction " => "<, фракция: "
-8995BB11D7A6E8: "Against " => "цель: "
+4BD46DBA6B624D: "< on faction " => "<, фракция"
+8995BB11D7A6E8: "Against " => "цель"
 786DD258AD80E6: "Bounty: ; cr;N0" => "награда за поимку: ; кр.;N0"
-BE6BC2677800F8: "Offender " => "правонарушитель: "
-878753E2A92917: "< to " => "<: "
+BE6BC2677800F8: "Offender " => "правонарушитель"
+878753E2A92917: "< to " => "<"
 9AFDF43FB25981: ", Broker took {0:N0}%" => ", комиссия брокера: {0:N0}%"
-6D9764792C867E: "Type: " => "Тип: "
 A962DFA691CE85: "Amount: ; cr;N0" => "сумма: ; кр.;N0"
 9F9F5223C8298B: "No Cargo" => "Нет груза"
 3607B6B7691BA9: "Cargo, {0} items" => "{0} шт."
 5E022CEF16D434: "; items" => "; шт."
 9DF713AF0B27BF: "<; (Mission Cargo)" => "<; (для миссии)"
 26CD6A7BF77DBD: ";Abandoned" => ";отменено"
-2DF9D11ECB1CFD: "PowerPlay: " => "Политика: "
-583F28E4CF3D22: "Collected: " => "Собрано: "
+770B6A2A562593: "PowerPlay" => "Политика"
+5B0F7590D06F96: "Collected" => "Собрано"
 C0A9D54E4D7923: "< of " => "< шт. груза "
 2449D652417BC4: "of " => "von "
-AA8303DA72F581: "Total: " => "Всего в хранилище: "
-72FBF4548EC8B1: "Delivered: " => "Доставлено: "
-D431E00AC09D50: "Update, Collected: " => "Обновление. Собрано: "
-E7DE613857ED23: "To Go:" => "осталось: "
+EEA956CDE875F0: "Delivered" => "Доставлено"
+EFAF83C9C08BA6: "Update, Collected" => "Обновление. Собрано"
+0995BCD9E22E34: "To Go" => "осталось"
 50BDD4D6D6E2F6: "Progress Left: ;%;N1" => "оставшийся прогресс: ;%;N1"
 3C3CCCA0A46F8A: ";Stolen" => ";украдено"
-AED92E5EE5D181: "Starting Package: " => "стартовый пакет: "
+7BE44386C602D7: "Starting Package" => "стартовый пакет"
 23D09CCE55532F: "< at ; Star System" => "<, система: ;"
 AEA15A59C8F40B: "< to role ;" => "< на роль ;"
 C54AD6BB838817: "; fired" => "; уволен(а)"
 20282D7E9CB678: "Hired: ;" => "Нанят(а): ;"
-14C60EE946D100: "< of faction " => "<, фракция: "
-A6310710F7E46B: "Crew: " => "Член экипажа: "
-AC931D89719A85: ";Telepresence" => ";Telepräsenz: "
-9D2D17B37709AD: "Role: " => "роль: "
-42E7F311E3AC6E: "Crew Member: " => "Член экипажа: "
+14C60EE946D100: "< of faction " => "<, фракция"
+AC931D89719A85: ";Telepresence" => ";Telepräsenz"
+C3F104D1365744: "Role" => "роль"
+FA4417824B6B53: "Crew Member" => "Член экипажа"
 D8798F1C63F24D: ";Due to Crime" => "; из-за преступления"
-F91B1D5D18BD6A: "Captain: " => "Капитан: "
+0A98B391C30338: "Captain" => "Капитан"
 387A7F12EE6A16: "< from faction " => "< от фракции "
 AA9FB409388CA4: "{0} in ship type {1} rank {2}" => "{0}, тип корабля: {1}, ранг: {2}"
-A63E6BD61A80ED: "Killed by " => "Корабль уничтожил(а): "
+A63E6BD61A80ED: "Killed by " => "Корабль уничтожил(а)"
 96E930300EB555: "Boom!" => "Бум!"
-DE5647CBDB72F9: "Option: " => "Опция: "
+E31D972229DE38: "Option" => "Опция"
 C8BA46A3C90F93: ";Bankrupt" => ";Банкротство"
-2BC5095AB460B0: "New bodies discovered: " => "Открыто новых тел: "
+B0D1107B426FB8: "New bodies discovered" => "Открыто новых тел"
 ECCC4CD2A3B35D: ";(Wanted)" => ";(розыск)"
 EF6F6B19531B71: ";Active Fine" => ";действующие штрафы"
 79B918DF2A6E1E: "< in state " => "< в состоянии "
-C177C32751B215: "Station services: " => "Службы космопорта: "
-8F4A98919EB6AA: "Economies: " => "Экономика: "
+2179F6518767A0: "Station services" => "Службы космопорта"
+7AB35C38FC4EB9: "Economies" => "Экономика"
 33C98BED0FDE5C: "< on pad " => "<, посадочная площадка "
-C3EA2738ADC8AE: "Cockpit: " => "Фонарь кабины: "
-FBE6518EB896C9: "Corrosion: " => "Коррозия: "
+B56631BC889045: "Cockpit" => "Фонарь кабины"
+408DF9CD449307: "Corrosion" => "Коррозия"
 3CDF4084F0BA2A: "Total Cost: ; cr;N0" => "общая сумма: ; кр;N0"
 6D23A438BB2054: "Total Sale: ; cr;N0" => "Gesamtumsatz: ; Cr;N0"
 7624811212F417: "each: ; cr;N0" => "цена за шт.: ; кр.;N0"
 B90EBC91B3A742: "Drones" => "Дроны"
 51195EF23F030B: "Price: ; cr;N0" => "цена: ; кр.;N0"
-7A5C86964FFABE: "Blueprint: " => "чертеж: "
-6B9ACFFF7C0394: "Level: " => "Уровень: "
-8428F911EBB896: "Override: " => "Заменяет: "
-81E50B4BFB2D8D: "Commodity: " => "Товар: "
-D81E3C520822A5: "Material: " => "материал: "
-F667661C1B58D0: "Quantity: " => "количество: "
-F1715241A78AEF: "TotalQuantity: " => "общее количество: "
-F8AB7114F1457F: "In Slot: " => "В слоте: "
-E6DC9E99FED8ED: "By: " => "Пытался перехватить пилот: "
+06992D2C6A4FD0: "Blueprint" => "чертеж"
+D8169782B57C7A: "Material" => "материал"
+42A0FD97255454: "TotalQuantity" => "общее количество"
+9085D8627BED7E: "In Slot" => "В слоте"
+CFADBD7A577133: "By" => "Пытался перехватить пилот"
 F3E92663BBE826: "Bonus: ; cr;N0" => "бонус: ; кр.;N0"
-365D3CC19B9937: "Scanned: " => "Системы: "
-ABF8C0970F5E94: "Discovered: " => "Обнаружено: "
-AD94D47D2D1080: "Loadout: " => "Снаряжение: "
+ACBB9E004BB3EA: "Discovered" => "Обнаружено"
 903937A1820E07: "NPC Controlled;" => ", под управлением NPC;"
-CECDC433805D47: "Version: " => "Версия: "
-42DEABE0CD3C60: "Build: " => "билд: "
-3EE9B5712EBC6D: "Part: " => "часть: "
-BD67ECE9BA21F5: "Ship: " => "корабль: "
-9ECD8A1D12A891: "Ident: " => "идентификатор: "
+BBD80CF7E2DED5: "Build" => "билд"
+88BE9D62D71BAB: "Part" => "часть"
 4E54D83E64A56D: "Credits: ;;N0" => "баланс: ;;N0"
-FC04A4680235C9: "Mode: " => "Режим: "
-2DCC7725AB035F: "Group: " => "группа: "
 88027E516ABD34: "Not Landed;Landed" => ";на поверхности"
 DB39EF29AA8E17: "Fuel Level: ;;0.0" => "уровень топлива: ;;0.0"
 9875F4471A80C2: "Capacity: ;;0.0" => "грузовая вместимость: ;;0.0"
 7C7D492381C592: "Cash total differs, adjustment" => "Количество денег отличается, корректировка"
-8DE16B3469EA8A: "Number of Statuses: " => "Количество статусов: "
-9A1EBE660B1A36: "Online: " => "В сети: "
-4EDE204905BF1C: "Offline: " => "не в сети: "
-938BAC46A5C777: "Unfriended: " => "Entfreundet: "
-00AC9B7F75F585: "Declined: " => "Abgelehnt: "
-398817E043A41C: "Requested Friend: " => "Freundschaftsanfrage: "
-E1A7392D51744B: "Added Friend: " => "Freund hinzugefügt: "
+50905F52C647BD: "Number of Statuses" => "Количество статусов"
+C3E839DF608469: "Online" => "В сети"
+E01FA717BACCF9: "Offline" => "не в сети"
+2AA1CF3369C989: "Unfriended" => "Entfreundet"
+FF59B80FE424C3: "Declined" => "Abgelehnt"
+7032F347790214: "Requested Friend" => "Freundschaftsanfrage"
+D3FC1E3648741C: "Added Friend" => "Freund hinzugefügt"
 564B6CEAE398EC: ";Submitted" => "Перехвачен пилотом;Сдался пилоту"
 7394520AEF05D7: "< (NPC);(Player)" => "< (NPC);(Игрок)"
-121A00D89940A5: "Power: " => "держава: "
-EFBA445DCE4D4D: "Failed to interdict;Interdicted" => "Ушел от перехвата: ;Успешно перехвачен: "
+EFBA445DCE4D4D: "Failed to interdict;Interdicted" => "Ушел от перехвата: ;Успешно перехвачен"
 6D4C60FFF57E67: "Boost: ;;0.0" => "Ускорение: ;;0.0"
 95C16848518091: "< buy price ; cr;N0" => "< цена покупки ; кр.;N0"
 9BF139DE61306E: "< sell price ; cr;N0" => "< цена продажи ; кр.;N0"
@@ -942,69 +907,60 @@ EFBA445DCE4D4D: "Failed to interdict;Interdicted" => "Ушел от перехв
 B965812110F44B: "Not Stolen;Stolen" => ";украдено"
 94CF760FC133A6: "Market;BlackMarket" => "Рынок;Черный рынок"
 6774408DE640A0: "< ; items" => "<, ; шт."
-0A0C60F2403EDB: "Sold: " => "Продано: "
-5EDBCC30153092: "Received: " => "получено: "
-B5D3541F876AD2: "Active: " => "Активные: "
-9500BEFFE7383E: "Failed: " => "Проваленные: "
-9EB7EBD9C53CE1: "Completed: " => "Завершенные: "
-113131F9A3FC18: "Station: " => "станция: "
-6B1A9C39AFA2D5: "Settlement: " => "Siedlung: "
-26553006CDD566: "Target Faction: " => "целевая фракция: "
-3DB7E4DB726EA9: "Donation: " => "пожертвование: "
-1333BD7570CDCF: "Permits: " => "разрешения: "
-CAE240B207B79E: "Rewards: " => "Выбранная награда: "
-84397827C2614B: "Fine: " => "штраф: "
-24FB9F3FC36951: "Mission name: " => "Название миссии: "
+E6560D9C298E72: "Sold" => "Продано"
+27548C4FC95D7C: "Received" => "получено"
+A733B809D2F123: "Active" => "Активные"
+09FEF5D8D9A3C8: "Failed" => "Проваленные"
+1798B3BA42EE08: "Completed" => "Завершенные"
+45EAAD8B8CE857: "Settlement" => "Siedlung"
+2C09302558D86A: "Donation" => "пожертвование"
+3AF114B6246603: "Permits" => "разрешения"
+2F4F4B7FBC81BC: "Rewards" => "Выбранная награда"
+226D7EC9AFB279: "Fine" => "штраф"
+A9E6320C912D31: "Mission name" => "Название миссии"
 52979E47A64B7F: ";(Hot)" => ";(горячий)"
 4C2D86B2C1FF6D: "Hull Health: ;%;N1" => "прочность щита: ;%;N1"
 5D2525AD1B6266: "Hull: ; cr;N0" => "стоимость корпуса: ; кр.;N0"
 19CD6C33DB63F3: "Modules: ; cr;N0" => "стоимость модулей: ; кр.;N0"
 F0DB993787E3F4: "Rebuy: ; cr;N0" => "страховка: ; кр.;N0"
-DBDAABE93AE174: "< into " => "<, установка в слот: "
-2428639C7D9665: "Stored: " => "помещено в хранилище: "
-D878F95AC9DBB7: "Item: " => "модуль: "
+DBDAABE93AE174: "< into " => "<, установка в слот"
 BAC8E74F0524D9: " on " => " на "
-16E922D98E906D: "Replaced by: " => "заменен: "
-BB3507C0C55F7F: "Modifications: " => "Модификация: "
-5DE9871CB27FCC: "Slot: " => "Слот: "
-127EA66ADF07B7: ", Swapped with " => ", заменен на модуль: "
+4DB98AF9E39320: "Replaced by" => "заменен"
+405F45092D843A: "Modifications" => "Модификация"
+127EA66ADF07B7: ", Swapped with " => ", заменен на модуль"
 B06383A94B7BE1: "Transfer Cost: ; cr;N0" => "цена перемещения: ; кр.;N0"
-7F64B1EEA0CCDA: "Time: " => "время: "
 400BDDE7F69B52: "Value: ; cr;N0" => "стоимость: ; кр.;N0"
-B7DEB813C5379F: "Total modules: " => "Всего модулей: "
-B01C88F6EFCAD3: "Into ship: " => "для корабля: "
-690D3948FCDD00: "Transfer Time: " => "время перемещения: "
-BE796AF8C98AB1: "Music Track: " => "Музыкальный трек: "
+F398AE993C17B4: "Total modules" => "Всего модулей"
+F10983CD704614: "Into ship" => "для корабля"
+AD277E4A02CD50: "Transfer Time" => "время перемещения"
+4B8A3E370AEDAF: "Music Track" => "Музыкальный трек"
 194DFB1A2EC6C7: "Wages for " => "Заработная плата за "
 0FC9A117F3B233: " items available" => " модул. доступно"
 166D76AE76F567: "No Passengers" => "Нет пассажиров"
-51988BB94A07DD: "Merits: " => "поощрения: "
-674952D30A759E: "Votes: " => "голоса: "
-D78C2FD8959323: "Pledged: " => "длительность поддержки: "
-54019D8554E8DF: "From Power: " => "От державы: "
-677315622ABC16: "To Power: " => "В державу: "
-B5F18DD9DD424A: ", Systems: " => ", система: "
+12473AE7FBD7A8: "Merits" => "поощрения"
+B66C4B2775554E: "Votes" => "голоса"
+8B6EFFD47EFDEC: "Pledged" => "длительность поддержки"
+C65D5243E9C5E6: "From Power" => "От державы"
+BF2C7EF9644B5F: "To Power" => "В державу"
+DFAE9A3323B18F: ", Systems" => ", система"
 FD31761D9B4004: "Shield ;;N1" => "щит: ;;N1"
 FBA2A215328E6A: "Lost Target" => "Цель потеряна"
 11530A93A09C51: "Shields Down;Shields Up" => "Щиты отключены;Щиты включены"
-568993E7B8F8AC: "Category: " => "Категория: "
-CEB1994BDE5913: "Latitude: ;°;F4" => "широта: "
-FDCDCA316D9694: "Longitude: ;°;F4" => "долгота: "
-FBAA8D51A30E1D: "Num: " => "кол-во: "
+CEB1994BDE5913: "Latitude: ;°;F4" => "широта"
+FDCDCA316D9694: "Longitude: ;°;F4" => "долгота"
+8A24E40402207B: "Num" => "кол-во"
 B8A54799BE1F4D: "Ships" => "корабл."
 4CD90C4218A40C: "Distance: ; ly;0.0" => "расстояние: ; св. л.;0.0"
-4D71859891AF26: "Threat: " => "ур. опасности: "
+8AA2DD0F5E9E76: "Threat" => "ур. опасности"
 267537A7006640: "Remaining Jumps" => "Übrige Sprünge"
-C9B3661D181FE1: "Nearest: " => "Näheste: "
-BE03F01D0CDA71: "Old: " => "Alt: "
-8CA8638D7BC5B1: "New: " => "Neu: "
-D69C5F9BB5CEAB: "Near: " => "Bei: "
+76B1EBC80AA9A9: "Nearest" => "Näheste"
+FBB3C38F715793: "Old" => "Alt"
+6403F2B7EB2AAA: "New" => "Neu"
+FCC451567343E0: "Near" => "Bei"
 183284B4FB3416: "On Foot at {0}" => "Zu Fuß bei {0}"
 F638A697CC8692: "Fuel: ; tons;0.0" => "получено ;0.0 т топлива"
 82E2B91027511A: "Taxi" => "Taxi"
-BC3584D572242C: "Mods: " => "Mods"
-85169AD2ED46DB: "Class: " => "Klasse"
-55C74A23327E26: "Pilot: " => "Pilot"
+3C769675CD0F12: "Pilot" => "Pilot"
 C6BDFB2221032F: "Redeemed and deployed ship {0} at {1} into shipyard" => "Schiff {0} eingelöst und in Werft {1} ausgebracht."
 13E8B7503843F9: "Redeem ship {0} at {1}, available to deploy" => "Schiff {0} bei {1} einlösen, bereit zum ausbringen."
 
@@ -1015,7 +971,7 @@ DE8CC5C4DD7104: "Carrier jumped to {0}" => "Carrier sprang nach {0}"
 
 SECTION JournalCarrier
 
-9EC1BEAA961EDB: "Call Sign: " => "Rufzeichen: "
+808572574FD987: "Call Sign" => "Rufzeichen"
 B15D8F8451444C: "Jump Range: ; ly;0.0" => "Sprungreichweite: ;Lj;0.0"
 4ABDD513D53A4E: "Carrier Balance: ; cr;N0" => "Carrier Kontostand: ; Cr;N0"
 F913B2BD65130A: "Reserve Balance: ; cr;N0" => "Reservekontostand: ; Cr;N0"
@@ -1027,24 +983,21 @@ A1D0A288C23201: "Tax Rate Rearm: ;;N1" => "Steuersatz Nachladen: ;;N1"
 FE3B97CFEA3000: "Tax Rate Outfitting: ;;N1" => "Steuersatz Ausrüstung: ;;N1"
 23275021E7D52C: "Tax Rate Refuel: ;;N1" => "Steuersatz Auftanken: ;;N1"
 10780F361BBC72: "Tax Rate Repair: ;;N1" => "Steuersatz Reparatur: ;;N1"
-5CB095843C654B: "Total Capacity: " => "Gesamtkapazität: "
-B71AFBB1DF2F4E: "Cargo: " => "Fracht: "
-470B55CDD0413C: "Cargo Space Reserved: " => "Reservierter Frachtraum: "
-13CDE1612690B5: "Ship Packs: " => "Schiffspakete: "
-959F26D6EACD7C: "Module Packs: " => "Modulpakete: "
-BE80BF931E7B6B: "Free Space: " => "Freier Raum: "
+7246FA5C1BB112: "Total Capacity" => "Gesamtkapazität"
+2E330C845EDFD7: "Cargo Space Reserved" => "Reservierter Frachtraum"
+8D639F579B9C33: "Ship Packs" => "Schiffspakete"
+502849675D7247: "Module Packs" => "Modulpakete"
+C8E72CE20762EF: "Free Space" => "Freier Raum"
 19E9DAB67C02BA: "To " => "Nach "
 8E49CF8A52E094: "Body " => "Körper "
 E8C3CE0D2A99CF: "Refund: ; cr;N0" => "Rückerstattung: ; Cr;N0"
 B446E9EA0AD9CF: "at UTC " => "um UTC "
 1669AEFA581C8D: "Deposit: ; cr;N0" => "Einzahlung: ; Cr;N0"
 396161812AC722: "Withdraw: ; cr;N0" => "Abbuchung: ; Cr;N0"
-F7B6722B7ADFD9: "Operation: " => "Betrieb: "
-7758B9D2F1CB08: "Tier: " => "Ebene: "
-35037DB039AED0: "Purchase: " => "Kauf: "
-898EBD9EF35D82: "Sell: " => "Verkauf: "
-F8CB4571400A56: "Cancel Sell of: " => "Verkaufsabbruch von: "
-F75D4FA622FF8B: "Access: " => "Zugang: "
+430D32076EB256: "Operation" => "Betrieb"
+5BD44EBE63CD3B: "Tier" => "Ebene"
+BFF04E12429E0D: "Cancel Sell of" => "Verkaufsabbruch von"
+2F81A22DE0AF5E: "Access" => "Zugang"
 DB5E11964705C3: ";Allow Notorious" => ";Erlaube berüchtigt"
 87D31ED8B95512: "Amount: ;;N0" => "Menge: ;;N0"
 543A5FFBD800E5: "Fuel Level: ;;N0" => "Treibstofffüllstand: ;;N0"
@@ -1058,7 +1011,7 @@ SECTION JournalMicroResources
 SECTION JournalScanInfo
 
 50C9F6207A37F8: " is a " => " ist ein(e) "
-7B4E443EE8814F: " Atmosphere: " => " Atmosphäre: "
+0574C953EE5588: " Atmosphere" => " Atmosphäre"
 331B8B83C09885: " Surface temperature: {0} K." => "Oberflächentemperatur: {0} K."
 0606F2F9983136: "terraformable " => "terraformierbare/r "
 7C5BAE6C336788: " Is tiny " => " ist winzig"

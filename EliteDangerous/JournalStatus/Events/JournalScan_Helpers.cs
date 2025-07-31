@@ -28,7 +28,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 string indents = new string(' ', indent);
 
-                sb.Append("Materials:".Tx());
+                sb.Append("Materials".Tx()+": ");
                 sb.AppendSPC();
 
                 int index = 0;
@@ -71,7 +71,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             string indents = new string(' ', indent);
 
-            sb.Append("Atmospheric Composition:".Tx());
+            sb.Append("Atmospheric Composition".Tx()+": ");
             sb.AppendSPC();
             int index = 0;
             foreach (KeyValuePair<string, double> comp in AtmosphereComposition)
@@ -88,7 +88,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             string indents = new string(' ', indent);
 
-            sb.Append("Planetary Composition:".Tx());
+            sb.Append("Planetary Composition".Tx()+": ");
             sb.AppendSPC();
             int index = 0;
             foreach (KeyValuePair<string, double> comp in PlanetComposition)

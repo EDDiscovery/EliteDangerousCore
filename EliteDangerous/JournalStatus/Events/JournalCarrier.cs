@@ -201,12 +201,12 @@ namespace EliteDangerousCore.JournalEvents
         {
             return BaseUtils.FieldBuilder.Build("At ".Tx(), Location,
                                               "Cost: ; cr;N0".Tx(), Price,
-                                              "Call Sign: ".Tx(), Callsign);
+                                              "Call Sign".Tx()+": ", Callsign);
         }
 
         public void Ledger(Ledger mcl)
         {
-            string x = "Call Sign: ".Tx()+ Callsign;
+            string x = "Call Sign".Tx()+": "+ Callsign;
             mcl.AddEvent(Id, EventTimeUTC, JournalTypeEnum.CarrierBuy, x, -Price);
         }
 
@@ -278,8 +278,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Name: ".Tx(), State.Name,
-                                                "Call Sign: ".Tx(), State.Callsign,
+            return BaseUtils.FieldBuilder.Build("Name".Tx()+": ", State.Name,
+                                                "Call Sign".Tx()+": ", State.Callsign,
                                                 "Fuel Level: ;;N0".Tx(), State.FuelLevel,
                                                 "Jump Range: ; ly;0.0".Tx(), State.JumpRangeCurr,
                                                 "Carrier Balance: ; cr;N0".Tx(), State.Finance.CarrierBalance,
@@ -300,13 +300,13 @@ namespace EliteDangerousCore.JournalEvents
         {
             var sb = new System.Text.StringBuilder(256);
 
-            sb.Build("Total Capacity: ".Tx(), State.SpaceUsage.TotalCapacity,
-                                                    "Crew: ".Tx(), State.SpaceUsage.Crew,
-                                                    "Cargo: ".Tx(), State.SpaceUsage.Cargo,
-                                                    "Cargo Space Reserved: ".Tx(), State.SpaceUsage.CargoSpaceReserved,
-                                                    "Ship Packs: ".Tx(), State.SpaceUsage.ShipPacks,
-                                                    "Module Packs: ".Tx(), State.SpaceUsage.ModulePacks,
-                                                    "Free Space: ".Tx(), State.SpaceUsage.FreeSpace);
+            sb.Build("Total Capacity".Tx()+": ", State.SpaceUsage.TotalCapacity,
+                                                    "Crew".Tx()+": ", State.SpaceUsage.Crew,
+                                                    "Cargo".Tx()+": ", State.SpaceUsage.Cargo,
+                                                    "Cargo Space Reserved".Tx()+": ", State.SpaceUsage.CargoSpaceReserved,
+                                                    "Ship Packs".Tx()+": ", State.SpaceUsage.ShipPacks,
+                                                    "Module Packs".Tx()+": ", State.SpaceUsage.ModulePacks,
+                                                    "Free Space".Tx()+": ", State.SpaceUsage.FreeSpace);
 
             if (State.Services != null && State.Services.Count>0)
             {
@@ -580,9 +580,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Role: ".Tx(), FriendlyCrewRole,
-                                                "Operation: ".Tx(), Operation,
-                                                "Crew Member: ".Tx(), CrewName
+            return BaseUtils.FieldBuilder.Build("Role".Tx()+": ", FriendlyCrewRole,
+                                                "Operation".Tx()+": ", Operation,
+                                                "Crew Member".Tx()+": ", CrewName
                                                 );
         }
 
@@ -698,7 +698,7 @@ namespace EliteDangerousCore.JournalEvents
             return BaseUtils.FieldBuilder.Build(
                                                 "", FriendlyOperation,
                                                 "", PackTheme,
-                                                "Tier: ".Tx(), PackTier,
+                                                "Tier".Tx()+": ", PackTier,
                                                 "Cost: ; cr;N0".Tx(), Cost,
                                                 "Refund: ; cr;N0".Tx(), Refund
                                                 );
@@ -737,7 +737,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             return BaseUtils.FieldBuilder.Build("", FriendlyOperation,
                                                 "", PackTheme,
-                                                "Tier: ".Tx(), PackTier,
+                                                "Tier".Tx()+": ", PackTier,
                                                 "Cost: ; cr;N0".Tx(), Cost,
                                                 "Refund: ; cr;N0".Tx(), Refund
                                                 );
@@ -804,21 +804,21 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Order.PurchaseOrder != null)
             {
-                return BaseUtils.FieldBuilder.Build("Purchase: ".Tx(), Order.Commodity_Localised,
+                return BaseUtils.FieldBuilder.Build("Purchase".Tx()+": ", Order.Commodity_Localised,
                                                     "", Order.PurchaseOrder,
                                                     "Cost: ; cr;N0".Tx(), Order.Price,
                                                     "<; (Blackmarket)", Order.BlackMarket);
             }
             else if (Order.SaleOrder != null)
             {
-                return BaseUtils.FieldBuilder.Build("Sell: ".Tx(), Order.Commodity_Localised,
+                return BaseUtils.FieldBuilder.Build("Sell".Tx()+": ", Order.Commodity_Localised,
                                                     "", Order.SaleOrder,
                                                     "Cost: ; cr;N0".Tx(), Order.Price,
                                                     "<; (Blackmarket)", Order.BlackMarket); 
             }
             else if ( CancelTrade != null && CancelTrade.Value == true )
             {
-                return BaseUtils.FieldBuilder.Build("Cancel Sell of: ".Tx(), Order.Commodity_Localised, "<; (Blackmarket)", Order.BlackMarket);
+                return BaseUtils.FieldBuilder.Build("Cancel Sell of".Tx()+": ", Order.Commodity_Localised, "<; (Blackmarket)", Order.BlackMarket);
             }
             else
             {
@@ -848,7 +848,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Access: ".Tx(), DockingAccess,
+            return BaseUtils.FieldBuilder.Build("Access".Tx()+": ", DockingAccess,
                                                 ";Allow Notorious".Tx(), AllowNotorious);
         }
 
@@ -874,7 +874,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Name: ".Tx(), Name, "Call Sign: ".Tx(), Callsign);
+            return BaseUtils.FieldBuilder.Build("Name".Tx()+": ", Name, "Call Sign".Tx()+": ", Callsign);
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -967,7 +967,7 @@ namespace EliteDangerousCore.JournalEvents
                 var stocked = Items.Where(x => x.HasStock);
                 if (stocked.Count() > 0)
                 {
-                    sb.Append("Items to buy: ".Tx());
+                    sb.Append("Items to buy".Tx()+": ");
                     sb.AppendCR();
                     foreach (CCommodities c in stocked)
                     {
@@ -982,7 +982,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (sellonly.Count() > 0)
                 {
-                    sb.Append("Sell only Items: ".Tx());
+                    sb.Append("Sell only Items".Tx()+": ");
                     sb.AppendCR();
 
                     foreach (CCommodities c in sellonly)

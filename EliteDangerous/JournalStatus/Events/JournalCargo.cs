@@ -185,9 +185,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Type_Localised, "Count: ".Tx(), Count,
+            return BaseUtils.FieldBuilder.Build("", Type_Localised, "Count".Tx()+": ", Count,
                             "<; (Mission Cargo)".Tx(), MissionID != null,
-                            ";Abandoned".Tx(), Abandoned, "PowerPlay: ".Tx(), PowerplayOrigin);
+                            ";Abandoned".Tx(), Abandoned, "PowerPlay".Tx()+": ", PowerplayOrigin);
         }
     }
 
@@ -249,15 +249,15 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (UpdateEnum == UpdateTypeEnum.Collect)
             {
-                return BaseUtils.FieldBuilder.Build("Collected: ".Tx(), Count, "< of ".Tx(), FriendlyCargoType, "Total: ".Tx(), ItemsDelivered, "To Go:".Tx(), ItemsToGo, "Progress: ;%;N1".Tx(), ProgressPercent);
+                return BaseUtils.FieldBuilder.Build("Collected".Tx()+": ", Count, "< of ".Tx(), FriendlyCargoType, "Total".Tx()+": ", ItemsDelivered, "To Go".Tx()+": ", ItemsToGo, "Progress: ;%;N1".Tx(), ProgressPercent);
             }
             else if (UpdateEnum == UpdateTypeEnum.Deliver)
             {
-                return BaseUtils.FieldBuilder.Build("Delivered: ".Tx(), Count, "< of ".Tx(), FriendlyCargoType, "Total: ".Tx(), ItemsDelivered, "To Go:".Tx(), ItemsToGo, "Progress: ;%;N1".Tx(), ProgressPercent);
+                return BaseUtils.FieldBuilder.Build("Delivered".Tx()+": ", Count, "< of ".Tx(), FriendlyCargoType, "Total".Tx()+": ", ItemsDelivered, "To Go".Tx()+": ", ItemsToGo, "Progress: ;%;N1".Tx(), ProgressPercent);
             }
             else if (UpdateEnum == UpdateTypeEnum.WingUpdate)
             {
-                return BaseUtils.FieldBuilder.Build("Update, Collected: ".Tx(), ItemsCollected, "Delivered: ".Tx(), ItemsDelivered, "To Go:".Tx(), ItemsToGo, "Progress Left: ;%;N1".Tx(), ProgressPercent);
+                return BaseUtils.FieldBuilder.Build("Update, Collected".Tx()+": ", ItemsCollected, "Delivered".Tx()+": ", ItemsDelivered, "To Go".Tx()+": ", ItemsToGo, "Progress Left: ;%;N1".Tx(), ProgressPercent);
             }
             else
             {

@@ -232,7 +232,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (title)
                 {
-                    sb.AppendLine("Inferred Circumstellar zones:".Tx());
+                    sb.AppendLine("Inferred Circumstellar zones".Tx()+": ");
                 }
 
                 HabZoneText_Hab(hz, sb);
