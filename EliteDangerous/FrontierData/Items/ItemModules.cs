@@ -54,7 +54,7 @@ namespace EliteDangerousCore
                     string candidatename = GenerateCandidateModuleName(fdid);
 
                     var newmodule = new ShipModule(-1, IsVanity(lowername) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType, candidatename);
-                    string futilemessage = " - this is item unknown to EDD, but IT WILL not affect operation of the program. It would be nice to report it to us so we can add it to known module lists";
+                    string futilemessage = " - THIS IS NOT AN ERROR. This is item unknown to EDD and will be added automatically added to your EDD module list. Please though report it to us so we can add it to known module lists";
                     System.Diagnostics.Trace.WriteLine($"*** Unknown Module {{ \"{lowername}\", new ShipModule(-1,{(IsVanity(lowername) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename}\") }}," + futilemessage);
 
                     synthesisedmodules[lowername] = m = newmodule;                   // lets cache them for completeness..
