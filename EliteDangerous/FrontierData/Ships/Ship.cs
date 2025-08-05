@@ -215,7 +215,9 @@ namespace EliteDangerousCore
             {
                 var me = sm.GetModuleEngineered(out string _);
                 //System.Diagnostics.Debug.WriteLine($"Module {me.ModType}");
-                if (me?.ModType == ItemData.ShipModule.ModuleTypes.CargoRack)       // paranoia check on engineering - new computation based on new pather clipper July 25
+                // paranoia check on engineering - new computation based on new pather clipper July 25, added corrosion proof cargo racks
+                if (me?.ModType == ItemData.ShipModule.ModuleTypes.CargoRack ||
+                    me?.ModType == ItemData.ShipModule.ModuleTypes.CorrosionResistantCargoRack)      
                 {
                     //System.Diagnostics.Debug.WriteLine($"Cargo Module {me.Size}");
                     cap += me.Size ?? 0;
