@@ -41,6 +41,10 @@ namespace EliteDangerousCore
             // name of the body in the system (2 A)
             public string SystemBodyName { get { return BodyDesignator.Length > SystemNode.System.Name.Length + 1 ? BodyDesignator.Substring(SystemNode.System.Name.Length + 1) : BodyDesignator; } }
             public string BodyName { get; internal set; }               // if we can extract from the journals a custom name of it, this holds it. Mostly null. Named bodies use this (earth)
+
+            public string BodyNameOrOwnName { get { return BodyName ?? OwnName; } }         // will return 'Mercury' or '1'
+            public string BodyNameOrBodyDesignator { get { return BodyName ?? BodyDesignator; } }   // with return for stars the star name from bodydesignator, or for other the bodyname or bodydesignator
+
             public SortedList<string, ScanNode> Children{ get; private set; }   // kids, may ne null, indexed by OwnName
             public ScanNode Parent{ get; private set; }                 // Parent of this node 
             public SystemNode SystemNode{ get; private set; }           // the system node the entry is associated with
@@ -54,7 +58,6 @@ namespace EliteDangerousCore
             // did Web create the node? JournalScan sets it to ScanData.WebsourcedBody.
             public bool WebCreatedNode { get { return DataSource == SystemSource.FromEDSM || DataSource == SystemSource.FromSpansh; } }       
 
-            public string BodyNameOrOwnName { get { return BodyName ?? OwnName; } }
 
             public JournalScan.StarPlanetRing BeltData { get; internal set; }    // can be null if not belt. if its a type==belt, it is populated with belt data
             public List<JournalSAASignalsFound.SAASignal> Signals { get; internal set; } // can be null if no signals for this node, else its a list of signals.
@@ -64,8 +67,9 @@ namespace EliteDangerousCore
 
             public ScanNode() { }
             public ScanNode(string name, ScanNodeType node, int? bodyid) 
-            { 
-                BodyDesignator = OwnName = name; NodeType = node; BodyID = bodyid;  Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>()); 
+            {
+                BodyDesignator = OwnName = name; NodeType = node; BodyID = bodyid;  Children = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());
+               // System.Diagnostics.Debug.WriteLine($"Made node on=`{OwnName}` bd=`{BodyDesignator}` {NodeType} {bodyid}");
             }
             public ScanNode(ScanNode other) // copy constructor, but not children
             {
@@ -77,6 +81,7 @@ namespace EliteDangerousCore
             public ScanNode(string ownname, string bodydesignator, ScanNodeType nodetype, int level, ScanNode parent, SystemNode sysn, SystemSource datasource)
             {
                 OwnName = ownname; BodyDesignator = bodydesignator; NodeType = nodetype; Level = level; Parent = parent; SystemNode = sysn; DataSource = datasource;
+             //   System.Diagnostics.Debug.WriteLine($"Made node on=`{OwnName}` bd=`{BodyDesignator}` {NodeType} {Level}");
             }
 
 

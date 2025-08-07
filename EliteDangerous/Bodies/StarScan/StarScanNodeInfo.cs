@@ -51,9 +51,10 @@ namespace EliteDangerousCore
             public static JObject DumpOrbitElements(ScanNode top)
             {
                 JObject obj = new JObject();
-                obj["Name"] = top.OwnName;
-                obj["FullName"] = top.BodyDesignator;
                 obj["NodeType"] = top.NodeType.ToString();
+                obj["OwnName"] = top.OwnName;
+                obj["BodyName"] = top.BodyNameOrBodyDesignator;
+                obj["BodyDesignator"] = top.BodyDesignator;
                 if (top.BodyID.HasValue)
                 {
                     obj["ID"] = top.BodyID.Value;
