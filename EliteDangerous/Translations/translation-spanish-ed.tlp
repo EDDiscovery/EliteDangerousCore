@@ -663,13 +663,13 @@ BAB1B86AF01C8C: "Shield Disruptor" => "Disruptor de Escudos"
 A6C08FB5C6231E: "Shield Projector" => "Projector de Escudos"
 46B906744496C8: "Power Regulator" => "Regulador de Potencia"
 13ED863C691D05: "Compact Library" => "Biblioteca Compacta"
-0219FD54BD5841: "Infinity" => "Unendlichkeit"
+0219FD54BD5841: "Infinity" @
 3EA7F625D591ED: "Insight Entertainment Suite" => "Paquete de Entretenimiento de Insight"
-5E9F20FDCF5876: "Lazarus" => "Lazarus"
+5E9F20FDCF5876: "Lazarus" @
 908B1A10947DE6: "Universal Translator" => "Traductor Universal"
 54DE3481EEABAF: "Biochemical Agent" => "Agente Bioquímico"
 FF63D344B7D43F: "Degraded Power Regulator" => "Regulador de Potencia Degradado"
-91069D2DC1BAD4: "Hush" => "Schnurr"
+91069D2DC1BAD4: "Hush" @
 8F7F57B519FC9B: "Push" => "Schub"
 310CDDCEC7D396: "Synthetic Pathogen" => "Patógeno Sintético"
 8B9064183EF53B: "Building Schematic" => "Esquema de Edifico"
@@ -693,7 +693,7 @@ B6395000A9A879: "Micro Hydraulics" => "Microhidráulica"
 DBD437248E19BF: "Micro Thrusters" => "Microimpulsores"
 4BD4D4C4B385E4: "Optical Fibre" => "Fibra Óptica"
 2AC2F245FD5F54: "Optical Lens" => "Lente Óptica"
-4E87F05FFB19BB: "RDX" => "Hexogen"
+4E87F05FFB19BB: "RDX" @
 FA4EE329A92C83: "Titanium Plating" => "Placa de Titanio"
 0BFE29130D90BE: "Tungsten Carbide" => "Carburo de Tungsteno"
 C0A121BF3E92D9: "Weapon Component" => "Componente de Arma"
@@ -757,7 +757,7 @@ E3B3CE376E22EF: "Vaccine Research" => "Investigación sobre Vacunas"
 0FC55F7DCDE252: "Virology Data" => "Datos Virológicos"
 0FB118E78CED35: "Vaccination Records" => "Registros de Vacunación"
 48046081F787CE: "Census Data" => "Datos Censales"
-E9450A24ED3254: "Geographical Data" => "Geographische Daten"
+E9450A24ED3254: "Geographical Data" @
 F2EE7B48467478: "Mineral Survey" => "Estudio Mineral"
 28290FC8B7A48D: "Chemical Formulae" => "Formulas Químicas"
 0FB6054F199E83: "Chemical Experiment Data" => "Datos de Experimentos Químicos"
@@ -853,7 +853,7 @@ EDBF0F6E7911FC: "Settlement Assault Plans" => "Planes de Ataque del Asentamiento
 282CC56D8E2F05: "Stellar Activity Logs" => "Registros de Actividad Estelar"
 898D49A9DC8514: "Tactical Plans" => "Planes Tácticos"
 B78F1464BB330D: "VIP Security Detail" => "Información de Seguridad VIP"
-10E7006889348F: "Virus" => "Virus"
+10E7006889348F: "Virus" @
 19395A79FA0544: "Xeno-Defence Protocols" => "Protocolos de Xenodefensa"
 6DE31E0682AA2C: "Hardened Surface Fragments" => "Fragmentos de Superficie Endurecida"
 F3F91AD10AECC1: "Phasing Membrane Residue" => "Residuo de membrana fásica"
@@ -878,9 +878,9 @@ FD65C748C50196: "Titan Maw Deep Tissue Sample" => "Muestra de tejido profundo de
 B653BD96C99482: "Thargoid Scythe Tissue Sample" => "Muestra de tejido Scythe Thargoide"
 C24BFA8921E5FA: "Protective Membrane Scrap" => "Fragmento de Membrana Protectora"
 A84C9CD31417F7: "Xenobiological Prison Pod" => "Cápsula de Bioconservación Thargoide"
-5DF67B04657E35: "Coral Sap" => "Korallensaft"
+5DF67B04657E35: "Coral Sap" @
 166785E49A9A74: "Onionhead Gamma Strain" => "Cepa Gamma de Cebollazo"
-671C1633687558: "Classified Experimental Equipment" => "Geheime Experimentalausrüstung"
+671C1633687558: "Classified Experimental Equipment" @
 BE14C595DD96B0: "Impure Spire Mineral" => "Mineral de agujas impuro"
 79D81CAD13966C: "Semi-Refined Spire Mineral" => "Mineral de agujas semi-refinado"
 14785DB1611534: "Titan Drive Component" => "Componente de Motor de Titan"
@@ -1089,8 +1089,8 @@ F25FB448CEA0EA: "Terrorism" => "Ataque Terrorista"
 65A64D0FA63FE9: "Cold War" => "Guerra Fría"
 34FDB0A2BFD8F0: "Historic Event" => "Evento Histórico"
 726830EC042D32: "Revolution" => "Revolución"
-6443C50BCCD300: "Technological Leap" => "Technologischer Sprung"
-ECD42F44D582A9: "Trade War" => "Handelskrieg"
+6443C50BCCD300: "Technological Leap" @
+ECD42F44D582A9: "Trade War" @
 6E292633B0D81A: "Exploited" => "Explotado"
 
 SECTION Allegiances
@@ -1152,9 +1152,9 @@ SECTION StarportTypes
 6E4C6A39225E73: "Asteroid Base" => "Base de Asteroide"
 570C8ADC370DE1: "Coriolis" => "Coriolis"
 1815546AA3D985: "Megaship" => "Meganave"
-FB3178D94F9E42: "Ocellus" => "Ocellus"
-3EF72E85AA2D48: "Bernal" => "Bernal"
-00493BC6639D4E: "Orbis" => "Orbis"
+FB3178D94F9E42: "Ocellus" @
+3EF72E85AA2D48: "Bernal" @
+00493BC6639D4E: "Orbis" @
 85B353889DE58E: "Outpost" => "Base Espacial"
 932FCD8429DDCB: "On Foot Settlement" => "Asentamiento a Pie"
 2C9F6741A4616A: "Surface Station" => "Estación de Superficie"
@@ -1182,7 +1182,7 @@ F6D3C9C3B20E15: "Stronghold" => "Bastión"
 SECTION ModuleTypeNames
 
 74C8CD195A9A7B: "Pacifier Frag Cannon" => "Cañón de Fragmentación Pacificador"
-84B8326146D262: "Cargo Scanner" => "Verzeichnisscanner"
+84B8326146D262: "Cargo Scanner" @
 FF989D476F1F12: "Guardian Module Reinforcement" => "Refuerzo de Módulo Guardián"
 A78907591643F9: "Guardian Shield Reinforcement" => "Refuerzo de Escudo Guardián"
 757166A532FC06: "Guardian FSD Booster" => "Potenciador de Motor de Distorsión Guardián"
@@ -1203,16 +1203,16 @@ D34DD311322502: "Planetary Approach Suite" => "Equipo de Aproximación Planetari
 AD2618B16E649A: "Discovery Scanner" => "Escáner de Exploración"
 A20FD9AA9142BF: "Cockpit Type" => "Tipo de Cabina"
 E56766478D5E9E: "Data Link Scanner" => "Escáner de Enlace de Datos"
-A6C269B1A02EF9: "Prison Cells" => "Gefängniszelle"
+A6C269B1A02EF9: "Prison Cells" @
 4075F1A901AC84: "Cargo Bay Door Type" => "Tipo de Bodega de Carga"
 EB702E354D4040: "Fighter Weapon" => "Armamento del Caza"
 1CC4848D27B6F3: "Wear And Tear Type" => "Tipo de Desgaste"
-86B9B261DED066: "Vanity Type" => "Kosmetik-Typ"
+86B9B261DED066: "Vanity Type" @
 352374D32CCD3B: "Unknown Type" => "Tipo Desconocido"
 
 SECTION ModulePartNames
 
-6437B7BF655854: "Rating" => "Güte"
+6437B7BF655854: "Rating" @
 18CA7013AA73C5: "Gimbal" => "Asistido"
 AB98F5B85764B8: "Fixed" => "Fijo"
 281D014FC5B622: "Turret" => "Torreta"
@@ -1329,7 +1329,7 @@ D40A95D31F4184: "Bi Weave Shield Generator" => "Generador de Escudos Entrelazado
 497BFCDF3C5164: "Thargoid Pulse Neutraliser" => "Neutralizador de Pulsos Thargoide"
 D342181A121125: "Experimental Weapon Stabiliser" => "Estabilizador de Armas Experimentales"
 E6B48D253A5BD7: "Supercruise Assist" => "Asistencia de Supercrucero"
-6A4768B56F68C3: "Stellar Body Discovery Scanner" => "Erkundungsscanner"
+6A4768B56F68C3: "Stellar Body Discovery Scanner" @
 B1CFE72FD27178: "Intermediate" => "Intermedio"
 A8DC0C1CE3892F: "Thrusters" => "Impulsores"
 E8B772D1BC2A20: "Enhanced Performance Thrusters" => "Propulsores de Rendimiento Mejorado"
@@ -1338,7 +1338,7 @@ E8B772D1BC2A20: "Enhanced Performance Thrusters" => "Propulsores de Rendimiento 
 6F55767D3D0B28: "Pulse Wave Xeno Scanner" => "Xenoescáner de Onda de Pulsos"
 FFE926B9A1E06C: "Concord Cannon" => "Cañón de Concordia"
 492166ECE113AD: "Colonisation Module" => "Módulo de Colonización"
-0DB27EBBF41345: "Large Cargo Rack" => "Großes Frachtgestell"
+0DB27EBBF41345: "Large Cargo Rack" @
 
 SECTION ShipSlots
 
@@ -1353,12 +1353,12 @@ EF443E79E76E9C: "Bobble Position 8" => "Salpicadero 8"
 E223117F612687: "Bobble Position 9" => "Salpicadero 9"
 94324B04A9490F: "Bobble Position 10" => "Salpicadero 10"
 909864C061970A: "Cargo Hatch" => "Escotilla de Carga"
-99409BD53C5299: "Codex Scanner" => "Codex-Scanner"
+99409BD53C5299: "Codex Scanner" @
 160F9FFC7620A0: "Decal Front" => "Emblema Delantero"
 DB796083868753: "Decal Right" => "Emblema Derecho"
 79549C332B0274: "Decal Left" => "Emblema Izquierdo"
 988E508955A414: "Engine Colour" => "Color de Motores"
-F83D1753113967: "Federation Fighter Shield" => "Föderations-Fighter-Schild"
+F83D1753113967: "Federation Fighter Shield" @
 C826742CF71A04: "GDN Hybrid Fighter V 1 Shield" => "Escudo caza híbrido GDN V 1"
 02D7E123A7CF23: "GDN Hybrid Fighter V 2 Shield" => "Escudo caza híbrido GDN V 2"
 5BC09860CFA756: "GDN Hybrid Fighter V 3 Shield" => "Escudo caza híbrido GDN V 3"
@@ -1467,14 +1467,14 @@ D45B70672A3B36: "Utility Mount 8" => "Anclaje de Apoyo 8"
 E4DD5EE5641BD6: "Vessel Voice" => "Voz de la Nave"
 3CE46E3FB1D343: "Weapon Colour" => "Color del Arma"
 D96AA577649F7B: "Turret Type 2" => "Torreta tipo 2"
-3AE8579069394D: "Sine Wave Scanner" => "Sinuswellen-Scanner"
+3AE8579069394D: "Sine Wave Scanner" @
 BCC6D8B8761B2B: "Colonisation Suite" => "Equipo de Colonización"
-1D10985EBE451F: "Large Cargo 1" => "Große Fracht 1"
-FA9AB13CECC85C: "Large Cargo 2" => "Große Fracht 2"
+1D10985EBE451F: "Large Cargo 1" @
+FA9AB13CECC85C: "Large Cargo 2" @
 
 SECTION StationServices
 
-4D720898E61E8B: "Apex Interstellar" => "Apex Interstellar"
+4D720898E61E8B: "Apex Interstellar" @
 A8CF8DE554773A: "Autodock" => "Aterrizaje Automático"
 882219054258CA: "Bartender" => "Camarero"
 E994445B523BBA: "Black Market" => "Mercado Negro"
@@ -1487,19 +1487,19 @@ D7B33C2AD2D256: "Fleet Carrier Fuel" => "Combustible del Portanaves"
 5DFCF847B92DE4: "Fleet Carrier Management" => "Gestión del Portanaves"
 61538661D8E094: "Fleet Carrier Vendor" => "Vendedor del Portanaves"
 BCF0B075B87A0B: "Flight Controller" => "Controlador de Vuelo"
-4E110FCC0D930E: "Frontline Solutions" => "Frontline Solutions"
+4E110FCC0D930E: "Frontline Solutions" @
 CE58D89A4E21CC: "Interstellar Factors Contact" => "Contacto de Interstellar Factors"
-E2CCAE04963449: "Initiatives" => "Initiativen"
+E2CCAE04963449: "Initiatives" @
 DF9FFF10547920: "Livery" => "Diseño"
-87E1A3CD31659F: "Missions Generated" => "Missionen Generiert"
-4C43E25D84B7F8: "On Dock Mission" => "Missionen angedockt"
+87E1A3CD31659F: "Missions Generated" @
+4C43E25D84B7F8: "On Dock Mission" @
 47B3D6DC1170FA: "Refuel" => "Repostar"
 3CCF7127AB2FFF: "Restock" => "Reaprovisionar"
 55DE88709232EC: "Shop" => "Tienda"
 AD038C447F5DE3: "Social Space" => "Espacio Social"
 D286137F857962: "Station Menu" => "Menú de la Estación"
 BB15267B3070D3: "Station Operations" => "Operaciones de la Estación"
-221B7518505747: "Tuning" => "Tuning"
-60200FB3E2E83B: "Construction Services" => "Konstruktionsdienste"
+221B7518505747: "Tuning" @
+60200FB3E2E83B: "Construction Services" @
 AA300EF7059881: "Refinery Contact" => "Contacto de Refinería"
 2E40E3A594EE09: "System Colonisation" => "Colonización del Sistema"

@@ -27,7 +27,7 @@ F461D7CE106E43: "Crew Hire" => "Contratar Tripulación"
 CAD2667B19FFD9: "Colonisation System Claim" => "Reclamación de sistema de colonización"
 FDC7F8A4C985F5: "Colonisation Beacon Deployed" => "Baliza de colonización desplegada"
 87AD5FCA61B672: "Colonisation System Claim Release" => "Liberación de reclamación de sistema de colonización"
-D03AD030E9F093: "Clear Impound" => "Begleiche Pfändung"
+D03AD030E9F093: "Clear Impound" @
 C82B7C89CBD30E: "Datalink Scan" => "Escaneo de enlace de datos"
 C681DDF728EF23: "Deliver Power Micro Resources" => "Entregar micro recursos de potencia"
 7DA32347D585AC: "Discovery Scan" => "Exploración de descubrimiento"
@@ -1047,10 +1047,10 @@ CA4B1A71D2F677: "Repair Crews" => "Equipo de Reparación"
 6A53D52EB6662E: "Armoury" => "Armería"
 7B2CA12E214447: "Redemption Office" => "Oficina de Canje"
 9BAD2DA74D2D7D: "Secure Warehouse" => "Almacén de Contrabando"
-419A2D5301C0DA: "Universal Cartographics" => "Universal Cartographics"
+419A2D5301C0DA: "Universal Cartographics" @
 CF7C02B2B0079B: "Concourse Bar" => "Bar del Vestíbulo"
-F157DA72429B0A: "Vista Genomics" => "Vista Genomics"
-AA5680B5B5B241: "Pioneer Supplies" => "Pionierausrüstungen"
+F157DA72429B0A: "Vista Genomics" @
+AA5680B5B5B241: "Pioneer Supplies" @
 
 SECTION JournalScanOrganics
 
