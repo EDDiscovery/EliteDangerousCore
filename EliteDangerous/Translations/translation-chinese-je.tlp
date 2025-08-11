@@ -48,7 +48,7 @@ DCC8C35235D14B: "Engineer Craft" => "生成改装"
 D86077951EF998: "Engineer Progress" => "工程师进展"
 DA8DFCD3EB91C7: "Escape Interdiction" => "逃脱FSD拦截"
 5B25DA29144CE3: "Bartender Materials" @
-C8DFA75D28023B: "FSD Jump" => "FSD跳跃"
+C8DFA75D28023B: "FSD Jump" => "删除重复的FSD跳跃记录"
 E32CE0896F3456: "Fuel Scoop" => "燃料收集"
 25078CE898205E: "Fileheader" => "游戏日志文件头"
 59343B3335F13B: "Fighter Destroyed" => "舰载机被摧毁"
@@ -252,23 +252,23 @@ DDDE2AEC826902: "Nav Route Clear" @
 
 SECTION JournalCargo
 
-8A009AE46C6211: "SRV" => "SRV车"
+8A009AE46C6211: "SRV" => "停靠SRV车"
 
 SECTION JournalCodexEntry
 
-21F7B3DA0DB370: "At " => "à "
-C36551215CB2D4: "in " => "dans "
+21F7B3DA0DB370: "At " => "显示战斗数据"
+C36551215CB2D4: "in " => "查看装备信息，基于空间站访问记录的数据"
 0E35DDA343D4D9: ";New Entry" @
 BF03B90D446D74: ";Traits" @
 
 SECTION CommunityGoal
 
-768E0C1C69573F: "Title" => "Titre "
-0855009C46728A: "At" => "À "
+768E0C1C69573F: "Title" => "切换当此窗口透明时是否显示标题"
+0855009C46728A: "At" => "无数据"
 A99BE3DA0C9DA2: "Expires" @
 636C2C3E755471: "Not Complete;Complete" @
 0DB16A8C94160B: "Current Total" @
-982D5A73469ACE: "Contribution" => "Contribution "
+982D5A73469ACE: "Contribution" => "捐赠工程师"
 D431FC74CD845B: "Num Contributors" @
 E9BB68A65645DF: "Player % Band" @
 7BBFBA05C8A45A: "Top Rank" @
@@ -290,8 +290,8 @@ F810904826BC3A: ";Installation" @
 SECTION JournalFSSDiscoveryScan
 
 90D81BB977D5B7: "Progress: ;%;N1" => "扫描进度：;%;N1"
-B091D64170AFAF: "Bodies" => "Corps "
-8D7BF5BF136E81: "Others" => "Autres "
+B091D64170AFAF: "Bodies" => "预计的星系扫描价值"
+8D7BF5BF136E81: "Others" => "切换窗口置顶"
 
 SECTION JournalFSSSignalDiscovered
 
@@ -304,7 +304,7 @@ SECTION JournalCommodityPricesBase
 
 BBB81F7CA96417: "Prices on ; items" @
 C45A6B5C9F13D9: "< at " @
-46FE700B99EAD5: "< in " => "< dans "
+46FE700B99EAD5: "< in " => "位于 "
 D446B632E23844: "Items to buy" @
 38892DF3CDB24B: "{0}: {1} sell {2} Diff {3} {4}%  " @
 0E5A14D01A6CE1: "{0}: {1}  " @
@@ -323,7 +323,7 @@ E2A979859FDBBA: "; ly;N2" @
 
 SECTION JournalLeaveBody
 
-0BB7C46C2736F9: "In " => "Dans "
+0BB7C46C2736F9: "In " => "查看装备信息，基于空间站访问记录的数据"
 
 SECTION JournalLocOrJump
 
@@ -348,7 +348,7 @@ B208B70B652E87: "Landed on {0}" => "登陆于 {0}"
 SECTION JournalLocOrJump
 
 E298B0EC36231C: "Type " @
-F6551977CCE103: "< in system " => "< dans le système "
+F6551977CCE103: "< in system " => "< 星系："
 115686EAF61F61: "Happiness" @
 9BF00A5AD1074F: "Reputation: ;%;N1" @
 B88C0272084C40: ";Squadron System" @
@@ -358,15 +358,15 @@ CAB4C00BAF5433: ";Happiest System" @
 
 SECTION JournalMissionAccepted
 
-3283C6A6480226: "< from " => "< de "
+3283C6A6480226: "< from " => "< 任务发配人："
 BA8F571E0F93E1: "Expiry" @
 03ECFA6479FA3A: "Influence" @
-3A4F33142BB77B: "Reward: ; cr;N0" => "Récompense : ; cr;N0"
+3A4F33142BB77B: "Reward: ; cr;N0" => "最高赏金：; cr;N0"
 4B0AAE097D7790: "; (Wing)" @
-DCAC5D49C54C3C: "Deliver" => "Livraison "
+DCAC5D49C54C3C: "Deliver" => "势力物资送达"
 4266916B95C358: "Target Type" @
 594D59A3A18111: "Kill Count" @
-66E12969C225CC: "Count" => "Nb "
+66E12969C225CC: "Count" => "所持材料列表"
 
 SECTION JournalMaterialDiscovered
 
@@ -405,8 +405,8 @@ E443046C7DE75A: "Soldier" @
 SECTION JournalReceiveText
 
 BC18E959D7B347: " Texts" @
-585AF9B23226A0: "from " => "de "
-C0FFAB3C44DC69: "< on " => "< à "
+585AF9B23226A0: "from " => "查看船坞信息，基于空间站访问记录的数据"
+C0FFAB3C44DC69: "< on " => "< 派系："
 
 SECTION JournalRepairDrone
 
@@ -431,9 +431,9 @@ C2029264A2B419: "Inner Radius: {0:0.00}ls" @
 9CAFCE749205D4: "Outer Radius: {0:0.00}ls" @
 C80236826F4F32: "Inner Radius: {0}km" @
 D95BA68EDFC767: "Outer Radius: {0}km" @
-6B2FC602242208: "Icy" => "Glacé"
+6B2FC602242208: "Icy" => "冰质行星 (Icy Bodies)"
 A1CF264F7F1E4F: "Rocky" @
-2FD9C95A438B18: "Metal Rich" => "Riche en métaux"
+2FD9C95A438B18: "Metal Rich" => "富金属行星 (Metal Rich Bodies)"
 26D54591255652: "Metallic" @
 
 SECTION JournalScan
@@ -474,9 +474,9 @@ FD157443DE4822: "Orbital Eccentricity" @
 456A3E168361D1: "Rotation Period: {0} days" @
 B285F06D312CA2: "Tidally locked" @
 1E92B81458AA22: "Candidate for terraforming" @
-7376D9B2BD1D99: " Moons" => " Lunes"
-0CB33492C61519: "Belts" => "Ceintures"
-75B04B88D4665E: "Rings" => "Anneaux"
+7376D9B2BD1D99: " Moons" => "星系{0}的扫描概要：{1}个恒星; {2}个行星（{3}个类地行星，{4}个气态巨行星），{5}个卫星"
+0CB33492C61519: "Belts" => "小行星带(Belts)"
+75B04B88D4665E: "Rings" => "环(Rings)"
 5987FFD982A381: "Base Estimated value: {0:N0}" @
 6682A019C4883F: "Mapped value: {0:N0}/{1:N0}e" @
 C467DD57E52397: "Discovered by {0} on {1}" @
@@ -490,7 +490,7 @@ CF39B2D7E183F0: " - Metal Rich planets, {0} ({1}-{2} AU)," @
 5B1F0120B3CD0F: " - Ammonia Worlds, {0} ({1}-{2} AU)," @
 C379074215EC59: " - Icy Planets, {0} (from {1} AU)" @
 8669CDDA694B59: "Dist: ;ls;0.0" @
-56A9DD3BD69226: "Dist" => "Dist "
+56A9DD3BD69226: "Dist" => "距离(ly)"
 94820B8DEE66A2: "Efficiently" @
 97E379A834EF5E: "First Discovered+Mapped value: {0:N0}/{1:N0}e" @
 F42A5A3B540E51: "First Mapped value: {0:N0}/{1:N0}e" @
@@ -506,9 +506,9 @@ SECTION JournalSAAScanComplete
 
 SECTION JournalScreenshot
 
-2C3CAFA4DB3F3E: "File" => "Fichier "
-A58DDF50C5EA5C: "Width" => "Largeur "
-3F608B4935EAD6: "Height" => "Hauteur "
+2C3CAFA4DB3F3E: "File" => "显示当前指挥官的游戏日志文件路径"
+A58DDF50C5EA5C: "Width" => "这个操作将花费很长时间并会占用很多宽带\r\n你确定要继续？"
+3F608B4935EAD6: "Height" => "高度"
 
 SECTION JournalSearchAndRescue
 
@@ -522,7 +522,7 @@ SECTION JournalSendText
 
 SECTION JournalSetUserShipName
 
-E0049A66519CAE: "On" => "Pour "
+E0049A66519CAE: "On" => "无"
 
 SECTION JournalShipTargeted
 
@@ -540,7 +540,7 @@ SECTION JournalShipyardSwap
 
 SECTION JournalShipyardTransfer
 
-2384D533C8AC08: "Of " => "De "
+2384D533C8AC08: "Of " => "EDDiscovery的程序日志"
 
 SECTION JournalStartJump
 
@@ -719,7 +719,7 @@ SECTION MulticrewClass
 B8759E7DAEEB15: "Gunner Time" @
 A2D11970FCAA8C: "Fighter Time" @
 90AAB0386139D2: "Credits: ; cr;N0" @
-DBAF8C40DD5627: "Fines: ; cr;N0" => "Amendes : ; cr;N0"
+DBAF8C40DD5627: "Fines: ; cr;N0" => "罚款总额：; cr;N0"
 
 SECTION MaterialTraderStatsClass
 
@@ -798,7 +798,7 @@ SECTION JournalStoredShips
 EC5905CB483B0B: "At starport" @
 A9DB6CA00CA90B: "Other locations" @
 6D3B4BD0DFDCB4: "; cr;N0" @
-C93F6536DCFBEE: "Remote" => "Distant "
+C93F6536DCFBEE: "Remote" => "远程出售模组"
 3E3FE90EA447B7: "<; in transit" @
 
 SECTION JournalSuperCruiseEntry
@@ -807,7 +807,7 @@ SECTION JournalSuperCruiseEntry
 
 SECTION JournalUnderAttack
 
-7196B5875F713C: "times" => "fois"
+7196B5875F713C: "times" => "时间："
 
 SECTION JournalNavRoute
 
@@ -820,7 +820,7 @@ SECTION JournalEntry
 
 3DEBAFED05C80C: "{0} days {1} hours {2} minutes" => "{0}天{1}小时{2}分"
 C427C71598A102: "Hyperspace" @
-AA10128899005B: "Supercruise" => "Super-navigation"
+AA10128899005B: "Supercruise" => "进入巡航"
 ABC4DE9A615B76: "Victim faction" => "受害者派系："
 67077E5976E34E: "<, due to " => "<，由于"
 4BD46DBA6B624D: "< on faction " => "< 派系："
@@ -835,13 +835,13 @@ A962DFA691CE85: "Amount: ; cr;N0" @
 5E022CEF16D434: "; items" => "; 物品"
 9DF713AF0B27BF: "<; (Mission Cargo)" => "<; (任务货物)"
 26CD6A7BF77DBD: ";Abandoned" @
-770B6A2A562593: "PowerPlay" => "PowerPlay "
+770B6A2A562593: "PowerPlay" => "势力斗争"
 5B0F7590D06F96: "Collected" => "收集的："
 C0A9D54E4D7923: "< of " => "< 的"
-2449D652417BC4: "of " => "de "
-EEA956CDE875F0: "Delivered" => "Livré "
+2449D652417BC4: "of " => "EDDiscovery的程序日志"
+EEA956CDE875F0: "Delivered" => "载送的普通乘客总数：;;N0"
 EFAF83C9C08BA6: "Update, Collected" @
-0995BCD9E22E34: "To Go" => "Reste "
+0995BCD9E22E34: "To Go" => "显示所需的FSD跳跃次数"
 50BDD4D6D6E2F6: "Progress Left: ;%;N1" @
 3C3CCCA0A46F8A: ";Stolen" => ";赃物"
 7BE44386C602D7: "Starting Package" @
@@ -851,18 +851,18 @@ C54AD6BB838817: "; fired" @
 20282D7E9CB678: "Hired: ;" @
 14C60EE946D100: "< of faction " @
 AC931D89719A85: ";Telepresence" @
-C3F104D1365744: "Role" => "Rôle "
-FA4417824B6B53: "Crew Member" => "Membre d'équipage "
+C3F104D1365744: "Role" => "更改船员职责"
+FA4417824B6B53: "Crew Member" => "踢出船员"
 D8798F1C63F24D: ";Due to Crime" @
 0A98B391C30338: "Captain" @
 387A7F12EE6A16: "< from faction " @
 AA9FB409388CA4: "{0} in ship type {1} rank {2}" @
 A63E6BD61A80ED: "Killed by " @
 96E930300EB555: "Boom!" @
-E31D972229DE38: "Option" => "Option "
+E31D972229DE38: "Option" => "目标派系（可选）"
 C8BA46A3C90F93: ";Bankrupt" @
 B0D1107B426FB8: "New bodies discovered" @
-ECCC4CD2A3B35D: ";(Wanted)" => ";(被通缉)"
+ECCC4CD2A3B35D: ";(Wanted)" => "<;(被通缉)"
 EF6F6B19531B71: ";Active Fine" => ";有罚款"
 79B918DF2A6E1E: "< in state " => "< 状态："
 2179F6518767A0: "Station services" => "可用服务："
@@ -876,15 +876,15 @@ B56631BC889045: "Cockpit" => "驾驶舱修复量："
 B90EBC91B3A742: "Drones" @
 51195EF23F030B: "Price: ; cr;N0" @
 06992D2C6A4FD0: "Blueprint" @
-D8169782B57C7A: "Material" => "Matériau "
+D8169782B57C7A: "Material" => "所持材料列表"
 42A0FD97255454: "TotalQuantity" @
 9085D8627BED7E: "In Slot" @
 CFADBD7A577133: "By" => "被："
 F3E92663BBE826: "Bonus: ; cr;N0" @
-ACBB9E004BB3EA: "Discovered" => "Découvert "
+ACBB9E004BB3EA: "Discovered" => "发现材料"
 903937A1820E07: "NPC Controlled;" @
 BBD80CF7E2DED5: "Build" @
-88BE9D62D71BAB: "Part" => "Partie "
+88BE9D62D71BAB: "Part" => "搜索特定的条目"
 4E54D83E64A56D: "Credits: ;;N0" => "账户余额：;;N0"
 88027E516ABD34: "Not Landed;Landed" => "不在星球上;在星球上"
 DB39EF29AA8E17: "Fuel Level: ;;0.0" => "燃料量：;;0.0"
@@ -907,16 +907,16 @@ EFBA445DCE4D4D: "Failed to interdict;Interdicted" @
 B965812110F44B: "Not Stolen;Stolen" => "非赃物;赃物"
 94CF760FC133A6: "Market;BlackMarket" => "贸易市场;黑市"
 6774408DE640A0: "< ; items" @
-E6560D9C298E72: "Sold" => "Vendu "
+E6560D9C298E72: "Sold" => "出售的商品"
 27548C4FC95D7C: "Received" @
 A733B809D2F123: "Active" => "正在进行的任务数："
 09FEF5D8D9A3C8: "Failed" => "失败的任务数："
 1798B3BA42EE08: "Completed" => "完成的任务数："
-45EAAD8B8CE857: "Settlement" => "Installation "
+45EAAD8B8CE857: "Settlement" => "接近地表移民地"
 2C09302558D86A: "Donation" @
 3AF114B6246603: "Permits" @
 2F4F4B7FBC81BC: "Rewards" => "任务奖励："
-226D7EC9AFB279: "Fine" => "Amende "
+226D7EC9AFB279: "Fine" => "定义按键"
 A9E6320C912D31: "Mission name" => "任务名称："
 52979E47A64B7F: ";(Hot)" @
 4C2D86B2C1FF6D: "Hull Health: ;%;N1" => "船体HP;%;N1"
@@ -924,7 +924,7 @@ A9E6320C912D31: "Mission name" => "任务名称："
 19CD6C33DB63F3: "Modules: ; cr;N0" => "模组价值：; cr;N0"
 F0DB993787E3F4: "Rebuy: ; cr;N0" => "保险费用：; Cr;N0"
 DBDAABE93AE174: "< into " @
-BAC8E74F0524D9: " on " => " sur "
+BAC8E74F0524D9: " on " => "星系扫描数据"
 4DB98AF9E39320: "Replaced by" @
 405F45092D843A: "Modifications" @
 127EA66ADF07B7: ", Swapped with " @
@@ -948,15 +948,15 @@ FBA2A215328E6A: "Lost Target" @
 11530A93A09C51: "Shields Down;Shields Up" @
 CEB1994BDE5913: "Latitude: ;°;F4" @
 FDCDCA316D9694: "Longitude: ;°;F4" @
-8A24E40402207B: "Num" => "Num "
-B8A54799BE1F4D: "Ships" => "Vaisseaux"
+8A24E40402207B: "Num" => "输入想要跳至的行"
+B8A54799BE1F4D: "Ships" => "飞船及其装备的模组"
 4CD90C4218A40C: "Distance: ; ly;0.0" @
 8AA2DD0F5E9E76: "Threat" => "危险等级："
 267537A7006640: "Remaining Jumps" @
-76B1EBC80AA9A9: "Nearest" => "Plus proche "
-FBB3C38F715793: "Old" => "Vieux "
-6403F2B7EB2AAA: "New" => "Nouveau "
-FCC451567343E0: "Near" => "Proche "
+76B1EBC80AA9A9: "Nearest" => "距离当前位置最近的星系列表"
+FBB3C38F715793: "Old" => "标签页启动失败。\r\n这是异常状况，请通过Discord或者Github告知开发团队。\r\n你可以尝试按住Shift键的同时双击EDDiscovery的图标进入安全模式。\r\n选择重置标签页后，点击运行程序。这样也许会解决问题。"
+6403F2B7EB2AAA: "New" => "选择新的配置文件或更改配置文件设置"
+FCC451567343E0: "Near" => "距离当前位置最近的星系列表"
 183284B4FB3416: "On Foot at {0}" @
 F638A697CC8692: "Fuel: ; tons;0.0" => "添加的燃料量：; t;0.0"
 82E2B91027511A: "Taxi" @
@@ -988,14 +988,14 @@ FE3B97CFEA3000: "Tax Rate Outfitting: ;;N1" @
 8D639F579B9C33: "Ship Packs" @
 502849675D7247: "Module Packs" @
 C8E72CE20762EF: "Free Space" @
-19E9DAB67C02BA: "To " => "Vers "
-8E49CF8A52E094: "Body " => "Corps "
+19E9DAB67C02BA: "To " => "指南针 (遮罩), 用来显示地表坐标的方向"
+8E49CF8A52E094: "Body " => "星体名称"
 E8C3CE0D2A99CF: "Refund: ; cr;N0" @
 B446E9EA0AD9CF: "at UTC " @
 1669AEFA581C8D: "Deposit: ; cr;N0" @
 396161812AC722: "Withdraw: ; cr;N0" @
-430D32076EB256: "Operation" => "Opération "
-5BD44EBE63CD3B: "Tier" => "Tier "
+430D32076EB256: "Operation" => "同步数据至数据库正在进行中或者即将开始，请稍等"
+5BD44EBE63CD3B: "Tier" => "&Frontier论坛"
 BFF04E12429E0D: "Cancel Sell of" @
 2F81A22DE0AF5E: "Access" @
 DB5E11964705C3: ";Allow Notorious" @
@@ -1004,13 +1004,13 @@ DB5E11964705C3: ";Allow Notorious" @
 
 SECTION JournalMicroResources
 
-44D25B5D1B6D98: "Items" => "Marchandises"
+44D25B5D1B6D98: "Items" => "查看装备信息，基于空间站访问记录的数据"
 9289473EEEDAEE: "Components" @
 4190D6D0F5DF6D: "Consumables" @
 
 SECTION JournalScanInfo
 
-50C9F6207A37F8: " is a " => " est un(e) "
+50C9F6207A37F8: " is a " => "标签页启动失败。\r\n这是异常状况，请通过Discord或者Github告知开发团队。\r\n你可以尝试按住Shift键的同时双击EDDiscovery的图标进入安全模式。\r\n选择重置标签页后，点击运行程序。这样也许会解决问题。"
 0574C953EE5588: " Atmosphere" @
 331B8B83C09885: " Surface temperature: {0} K." @
 0606F2F9983136: "terraformable " @
@@ -1028,19 +1028,19 @@ D91D9838CE0944: " (Mapped)" @
 B2983B7DF494FA: " (Discovered)" @
 D343B137399D3A: " Is landable." @
 817016EBBA625C: " Is ringed." @
-69016A1EE7145D: " Has " => " A "
+69016A1EE7145D: " Has " => "为防止服务器泛洪，Inara历史数据上传已被禁用直到与上次上传相间1个小时为止"
 AF3631062BAF32: " Has an high eccentricity of {0}." @
-50D8B4A941C26B: "unknown" => "Inconnue"
-E4D013B562F9F8: " Basic" => " 种基础"
-DF4C2085E463AE: " Standard" => " 种标准"
-AFCB2A18DD3242: " Premium" => " 种高级"
+50D8B4A941C26B: "unknown" => "未知"
+E4D013B562F9F8: " Basic" => "可合成FSD推进剂的最大次数：\r\n  {0} 次基础\r\n  {1} 次标准\r\n  {2} 次高级"
+DF4C2085E463AE: " Standard" => "可合成FSD推进剂的最大次数：\r\n  {0} 次基础\r\n  {1} 次标准\r\n  {2} 次高级"
+AFCB2A18DD3242: " Premium" => "可合成FSD推进剂的最大次数：\r\n  {0} 次基础\r\n  {1} 次标准\r\n  {2} 次高级"
 82DA45C64A0D04: "{0} has {1} level elements." => "{0} 上有 {1}的元素。"
 1147BFBDA286FC: " Has been scanned for organics." @
 
 SECTION Services
 
 F47FDB993838A7: "Bridge Crew" @
-1BABA82CF3020D: "Commodity Trading" => "Commerce de marchandises"
+1BABA82CF3020D: "Commodity Trading" => "\r★ 商品和材料交易"
 C6230E81C93721: "Tritium Depot" @
 AA61104F28684E: "Refuel Station" @
 CA4B1A71D2F677: "Repair Crews" @

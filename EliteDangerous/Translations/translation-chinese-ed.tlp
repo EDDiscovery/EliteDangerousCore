@@ -4,7 +4,7 @@ SECTION Bodies
 C5C83D37FC24C9: "Luminous Hot {0} class star" => "{0}型红色明亮主序星"
 A6575650F6A219: "Luminous Blue {0} class star" => "{0}型蓝色明亮主序星"
 89F39A30E7DE6F: "Bluish-White {0} class star" => "{0}型淡蓝色主序星"
-060F7B31C5F584: "White {0} class star" => "{0}型白色主序星"
+060F7B31C5F584: "White {0} class star" => "{0}型淡蓝色主序星"
 3FB2857EDF5091: "Yellow {0} class star" => "{0}型黄色主序星"
 99E105D59BB657: "Orange {0} class star" => "{0}型橙色主序星"
 008BE0893471FC: "Red {0} class star" => "{0}型红色主序星"
@@ -42,8 +42,8 @@ CAE8513F05FCFA: "Rocky body" @
 ADC592859327D2: "Icy body" @
 9EEC22A08CA741: "Rocky ice world" @
 8D5CDA53992AAF: "Earth-like world" @
-299654D0B7EE38: "Water world" => "Monde aquatique"
-D18619BF6E92A2: "Ammonia world" => "Monde ammoniac"
+299654D0B7EE38: "Water world" => "水质行星 (Water Worlds)"
+D18619BF6E92A2: "Ammonia world" => "氨质行星 (Ammonia Worlds)"
 2726CE623674C0: "Water giant" @
 170121C537E10B: "Water giant with life" @
 193ED308212A2C: "Gas giant with water-based life" @
@@ -60,7 +60,7 @@ F73669E0485E17: "Helium gas giant" @
 SECTION MaterialCommodityMicroResourceType
 
 8DEC7F27C9D37E: "Consumable" @
-297D709EBEB7F1: "Goods" => "Marchandises"
+297D709EBEB7F1: "Goods" => "收购的商品"
 20E338624CEE29: "Assets" @
 A6D9973DE820A4: "Very Common" => "非常普遍 (Very Common)"
 7DE90A65241A6C: "Common" => "普遍 (Common)"
@@ -116,7 +116,7 @@ B68E9F3FF3BAE2: "Manufactured Shielding" @
 C149E954057508: "Manufactured Alloys" @
 3FEDA0153EEE13: "NA" @
 
-6097563751A0DD: "Carbon" => "Carbone"
+6097563751A0DD: "Carbon" => "{0}型碳星"
 8564FE3B4B674B: "Iron" @
 D8DAAFDCF1EBBB: "Nickel" @
 D78770B2D0DA77: "Phosphorus" @
@@ -136,7 +136,7 @@ A7E0DDE67D845A: "Molybdenum" @
 606CB109E24D78: "Mercury" @
 BD833D839EF85A: "Boron" @
 5115CD70FBFF44: "Cadmium" @
-3F6D6A8699144A: "Tin" => "Étain"
+3F6D6A8699144A: "Tin" => "查看装备信息，基于空间站访问记录的数据"
 D9FEEABBE75010: "Selenium" @
 C3250BCC20769B: "Yttrium" @
 284B4228F9F74E: "Technetium" @
@@ -267,7 +267,7 @@ B59D92EA592420: "Mineral Oil" @
 0B2301806255D0: "Pesticides" @
 B8932F08E18A7B: "Surface Stabilisers" @
 16702D35FF9AFB: "Synthetic Reagents" @
-DE9B1BE49DAE27: "Water" => "Eau"
+DE9B1BE49DAE27: "Water" => "水质行星 (Water Worlds)"
 D31D367BC5C7FD: "Clothing" @
 C1EB0B6281EFCB: "Consumer Technology" @
 6CA5920827E1B5: "Domestic Appliances" @
@@ -281,7 +281,7 @@ BB4DD43B4E074E: "Coffee" @
 3BC7F21AA97E04: "Fruit and Vegetables" @
 16D82F9F85D57C: "Grain" @
 115E5617FC75F4: "Synthetic Meat" @
-C675BC77DB00A2: "Tea" => "Thé(s)"
+C675BC77DB00A2: "Tea" => "标签页启动失败。\r\n这是异常状况，请通过Discord或者Github告知开发团队。\r\n你可以尝试按住Shift键的同时双击EDDiscovery的图标进入安全模式。\r\n选择重置标签页后，点击运行程序。这样也许会解决问题。"
 6EE6CD353562D6: "Ceramic Composites" @
 B0DE6F45FEBABA: "Insulating Membrane" @
 FE1992FE4BD87A: "Polymers" @
@@ -404,7 +404,7 @@ DF017780546F43: "Scientific Samples" @
 E19C2225A55788: "Large Survey Data Cache" @
 51FD999F7723C3: "Small Survey Data Cache" @
 523E6E7CF22A0B: "Ancient Artefact" @
-45240EBE2706A4: "Black Box" => "Boîte noire"
+45240EBE2706A4: "Black Box" => "透明模式下显示黑色文本背景"
 538F22EECD9EC0: "Commercial Samples" @
 A48C28ACD6A5EF: "Encrypted Data Storage" @
 96FCF7717B582E: "Experimental Chemicals" @
@@ -413,7 +413,7 @@ C14E8F83D47FAB: "Prototype Tech" @
 D7A7445908B467: "Rare Artwork" @
 74910D01B49690: "Rebel Transmissions" @
 0DF7D1EE30A9E0: "Technical Blueprints" @
-B3BB5D5823ED15: "Trade Data" => "Données commerciales"
+B3BB5D5823ED15: "Trade Data" => "购买贸易数据"
 E8FB972E185CC0: "Guardian Relic" @
 364F055F92F98E: "Guardian Orb" @
 4CF24398EB3508: "Guardian Casket" @
@@ -670,7 +670,7 @@ A6C08FB5C6231E: "Shield Projector" @
 54DE3481EEABAF: "Biochemical Agent" @
 FF63D344B7D43F: "Degraded Power Regulator" @
 91069D2DC1BAD4: "Hush" @
-8F7F57B519FC9B: "Push" => "Boost"
+8F7F57B519FC9B: "Push" => "星系{0}是从EDSM那里推送过来的，不能移除"
 310CDDCEC7D396: "Synthetic Pathogen" @
 8B9064183EF53B: "Building Schematic" @
 1ED1264F96B2BA: "Insight" @
@@ -921,7 +921,7 @@ F958260588E1AF: "Steel" @
 
 SECTION EngineeringData
 
-05FC94B0147F09: "Engineer" => "Ingénieur "
+05FC94B0147F09: "Engineer" => "工程师改装规划助手"
 A60F2C73604F62: "Quality" @
 A5BADB0C4C0940: "Experimental Effect" @
 C312376DA63393: "Original: ;;0.###" @
@@ -934,7 +934,7 @@ SECTION MissionState
 SECTION CommanderForm
 
 7420CC18DF9C4B: "CommanderForm" => "指挥官配置"
-6E6A6F2086BB5F: "Other" => "Autre"
+6E6A6F2086BB5F: "Other" => "自定义布局 (可自定义显示的面板和位置)"
 B26565C54E6DA2: "Default Map Color" @
 F3646F7AE1228F: "Home System" @
 2737A55B1A4751: "Inara Information (optional)" => "Inara 设置（可选）"
@@ -945,7 +945,7 @@ C43E80AA3B8661: "EDDN" => "EDDN 设置"
 9DA63A795A3C3E: "Send Event Information to EDDN" => "向 EDDN 发送事件数据"
 AC4970F6799584: "EDSM Information (optional)" => "EDSM 设置(可选)"
 C99C6E4AE25A6A: "Sync From EDSM" => "从 EDSM 同步"
-F5E545BFC9C3EA: "EDSM API Key" => "EDSM API Key："
+F5E545BFC9C3EA: "EDSM API Key" => "请确保你已选中一个指挥官并且设置了EDSM的API Key！"
 285B6B2BAD13A6: "Sync to EDSM" => "同步至 EDSM"
 DA99D6AA2339EB: "Journal Related Information" => "游戏日志文件相关设置"
 118C7887B7CC7E: "Commander Name" => "指挥官名称："
@@ -996,7 +996,7 @@ F313A0B1810B43: "Save as" => "转换为"
 028F003916130A: "Crop/Resize Options" @
 28B7E35F9B39EB: "Conversion Enabled" @
 A94BDE0A67C8B5: "Mark HiRes Files" @
-5EFE0C9323A499: "Clipboard" => "Presse-papier"
+5EFE0C9323A499: "Clipboard" => "复制航行日志条目到剪切板"
 5B5F0166120216: "Original Image" @
 0022FD2EB8F912: "JPEG Quality" @
 
@@ -1011,7 +1011,7 @@ SECTION ScanDisplayUserControl
 AD7F166EE19EC4: "No scan data available" @
 BC71898C9ADABE: "Barycentre of {0}" @
 F50801EB15AB8D: "Surface features" @
-2346A18EA3002F: "Signals" => "Signaux"
+2346A18EA3002F: "Signals" => "探测到;个信号"
 2C5D5B88672D11: "Codex" @
 85373BC01466D9: "Organics" @
 B3C13D36C779CE: "Genuses" @
@@ -1070,14 +1070,14 @@ SECTION FactionStates
 E49F1B828CEC9B: "Bust" @
 A94C88D10627AF: "Civil Unrest" @
 AB94603F9DBF62: "Civil War" @
-217DA2DCEFEEBA: "Election" => "Élections"
+217DA2DCEFEEBA: "Election" => "筛选匹配域选项的条目"
 5210FC6FC23F69: "Expansion" @
 36B875EDCEEDDF: "Famine" @
 0401729C31EA52: "Investment" @
 8BA04349B45EB2: "Lockdown" @
 C3DC83475D5860: "Outbreak" @
 81D8D99EA2C4FA: "Retreat" @
-F3C59920B10916: "War" => "Guerre"
+F3C59920B10916: "War" => "警告"
 4846DFEAC68196: "Civil Liberty" @
 1D84F47CBBA154: "Pirate Attack" @
 6C7FE02750CB89: "Blight" @
@@ -1095,7 +1095,7 @@ ECD42F44D582A9: "Trade War" @
 
 SECTION Allegiances
 
-228505F85662D9: "Independent" => "Indépendants"
+228505F85662D9: "Independent" => "独立：;;0.#"
 A21193C4A51E0D: "Alliance" @
 6809E8745EABCE: "Guardian" @
 824377DA32D5A8: "Thargoid" @
@@ -1125,32 +1125,32 @@ F5A68A44533A39: "Agri" @
 1758C0C9560790: "Colony" @
 2552A425FB8790: "Extraction" @
 DB17FE39BE1106: "High Tech" @
-7DB3CF51525D67: "Industrial" => "Industrie"
+7DB3CF51525D67: "Industrial" => "工业原料 (Industrial Materials)"
 430853FBD980AA: "Military" @
 1AD1F0C5C04761: "Refinery" @
-329CB8B6BA8C42: "Service" => "Services"
+329CB8B6BA8C42: "Service" => "可用服务："
 A018B12A2AD28C: "Terraforming" @
 7D62DD12AFFDD8: "Tourism" @
 052FC79809942F: "Damaged" @
-6A5DA7147407CC: "Rescue" => "Sauvetage"
+6A5DA7147407CC: "Rescue" => "搜寻与救援"
 
 SECTION SecurityTypes
 
-A124947CBD2D1D: "Low" => "Faible"
+A124947CBD2D1D: "Low" => "自定义布局 (可自定义显示的面板和位置)"
 D404968EA90B07: "Medium" @
-B1A5954A483F8F: "High" => "Élevée"
+B1A5954A483F8F: "High" => "设定高价值星体的最低标准"
 765F9880243902: "Lawless" @
 
 SECTION StarportStates
 
 643321EE0FC5B8: "Under Repairs" @
-F34FB6E3669DFD: "Abandoned" => "Abandonné"
+F34FB6E3669DFD: "Abandoned" => "放弃任务"
 DA33E1B7E0C4EA: "Construction" @
 
 SECTION StarportTypes
 
 6E4C6A39225E73: "Asteroid Base" @
-570C8ADC370DE1: "Coriolis" => "Spatioport Coriolis"
+570C8ADC370DE1: "Coriolis" => "在Corolis网站上打开"
 1815546AA3D985: "Megaship" @
 FB3178D94F9E42: "Ocellus" @
 3EF72E85AA2D48: "Bernal" @
@@ -1304,7 +1304,7 @@ E3DFD04A073CB1: "Multi Cannon" @
 602DBF4D79F6A1: "Enforcer Cannon" @
 8B96379F08809F: "Advanced Multi Cannon" @
 D6663DDA5FE9B2: "Business" @
-916A78D701DED3: "First" => "1re"
+916A78D701DED3: "First" => "至下一个航点："
 2F2F07428B7DFC: "Luxury" @
 CA39470A7A6DED: "Advanced Planet Approach Suite" @
 376992DE1C37B6: "Planet Approach Suite" @
@@ -1477,10 +1477,10 @@ SECTION StationServices
 4D720898E61E8B: "Apex Interstellar" @
 A8CF8DE554773A: "Autodock" @
 882219054258CA: "Bartender" @
-E994445B523BBA: "Black Market" => "Marché noir"
+E994445B523BBA: "Black Market" => "访问黑市数：;;N0"
 B0DD615CBBDCBF: "Contacts" @
 9C67E23C401E4C: "Crew Lounge" @
-E8B5CBF904F402: "Dock" => "Appontage"
+E8B5CBF904F402: "Dock" => "自最近降落后"
 13B8FE38A93B1E: "Workshop" @
 40EEE9BBA83352: "Fleet Carrier Administration" @
 D7B33C2AD2D256: "Fleet Carrier Fuel" @
@@ -1493,9 +1493,9 @@ E2CCAE04963449: "Initiatives" @
 DF9FFF10547920: "Livery" @
 87E1A3CD31659F: "Missions Generated" @
 4C43E25D84B7F8: "On Dock Mission" @
-47B3D6DC1170FA: "Refuel" => "Carburant"
-3CCF7127AB2FFF: "Restock" => "Ravitaillement"
-55DE88709232EC: "Shop" => "Vendeur"
+47B3D6DC1170FA: "Refuel" => "加满燃料"
+3CCF7127AB2FFF: "Restock" => "补充库存载具"
+55DE88709232EC: "Shop" => "改装所需材料的清单"
 AD038C447F5DE3: "Social Space" @
 D286137F857962: "Station Menu" @
 BB15267B3070D3: "Station Operations" @
