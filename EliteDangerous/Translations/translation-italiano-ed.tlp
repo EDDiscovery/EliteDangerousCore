@@ -30,9 +30,9 @@ AEB820E13BA851: "M Red Super Giant" => "Supergigante rossa M"
 67E35BE54A2E33: "M Red Giant" => "Gigante rossa M"
 843E61D2A13E15: "K Orange Giant" => "Gigante arancione K"
 F966E50854E3BE: "Rogue Planet" => "Pianeta interstellare"
-A796E9CB0C487E: "Nebula" => "Nebel"
-6291A56BDE2FBC: "Stellar Remnant Nebula" => "Stellarer Überrestnebel"
-457A6D2361E0B4: "Unknown star class" => "Unbekannte Sternenklasse"
+A796E9CB0C487E: "Nebula" @
+6291A56BDE2FBC: "Stellar Remnant Nebula" @
+457A6D2361E0B4: "Unknown star class" @
 DA951D81DC5835: "Class {0} star" => "Stella di classe {0}"
 
 SECTION EDPlanet
@@ -59,9 +59,9 @@ F73669E0485E17: "Helium gas giant" => "Gigante gassoso di elio"
 
 SECTION MaterialCommodityMicroResourceType
 
-8DEC7F27C9D37E: "Consumable" => "Verbrauchsgegenstände"
+8DEC7F27C9D37E: "Consumable" @
 297D709EBEB7F1: "Goods" => "Waren"
-20E338624CEE29: "Assets" => "Material"
+20E338624CEE29: "Assets" @
 A6D9973DE820A4: "Very Common" => "Molto Comune"
 7DE90A65241A6C: "Common" => "Comune"
 2DFA66079D9B72: "Standard" => "Normale"
@@ -81,16 +81,16 @@ D27BB169DB8306: "Slaves" => "Schiavi"
 D018B082E8A372: "Technology" => "Tecnologia"
 41129461CC1C57: "Textiles" => "Tessuti"
 42316A12B62CC1: "Waste" => "Rifiuti"
-E59834BC3D5687: "Power Play" => "Machtspiele"
-5F957C031DD5AB: "Encoded Guardian" => "Kodiert Guardian"
-D7F2D358727387: "Encoded Guardian Obelisk" => "Kodiert Guardian Obelisk"
-C9D1430D58DB76: "Encoded Thargoid 1" => "Kodiert Thargoid 1"
-9549AC63C7D34E: "Encoded Thargoid 2" => "Kodiert Thargoid 2"
-5F29B110C48E8A: "Manufactured Guardian" => "Gefertigt Guardian"
-7D5EB9573ECC33: "Manufactured Thargoid 1" => "Gefertigt Thargoid 1"
-B7875D448ED47A: "Manufactured Thargoid 2" => "Gefertigt Thargoid 2"
-D96DF76AA29F8C: "Manufactured Thargoid 3" => "Gefertigt Thargoid 3"
-47B291C855F125: "Manufactured Thargoid 4" => "Gefertigt Thargoid 4"
+E59834BC3D5687: "Power Play" @
+5F957C031DD5AB: "Encoded Guardian" @
+D7F2D358727387: "Encoded Guardian Obelisk" @
+C9D1430D58DB76: "Encoded Thargoid 1" @
+9549AC63C7D34E: "Encoded Thargoid 2" @
+5F29B110C48E8A: "Manufactured Guardian" @
+7D5EB9573ECC33: "Manufactured Thargoid 1" @
+B7875D448ED47A: "Manufactured Thargoid 2" @
+D96DF76AA29F8C: "Manufactured Thargoid 3" @
+47B291C855F125: "Manufactured Thargoid 4" @
 2307D1C25A5EB6: "Raw Category 1" => "Categoria grezza 1"
 752D2DA4015B13: "Raw Category 2" => "Categoria grezza 2"
 4D319D82C555FD: "Raw Category 3" => "Categoria grezza 3"
@@ -125,7 +125,7 @@ C6F71D85AEAA3B: "Lead" => "Piombo"
 694C89929DF0C3: "Rhenium" => "Renio"
 32166E83EED381: "Chromium" => "Cromo"
 7FD1880116B24F: "Germanium" => "Germanio"
-F53B3D840BA643: "Manganese" => "Mangan"
+F53B3D840BA643: "Manganese" @
 2EF29114B97E27: "Vanadium" => "Vanadio"
 1A8DA3E397E6FC: "Zinc" => "Zinco"
 38AD3D9D1B0D4E: "Zirconium" => "Zirconio"
@@ -349,24 +349,24 @@ B8027C819BA246: "Samarium" => "Samario"
 6D1DEF3D08576E: "Titanium" => "Titanio"
 BABFA2DBB1285A: "Uranium" => "Uranio"
 6018DE21870658: "Platinum Alloy" => "Lega di platino"
-58643D6DB6BA32: "Bauxite" => "Bauxit"
-70E6F26939C0AB: "Bertrandite" => "Bertrandit"
-F8574840E0F0B1: "Bromellite" => "Bromellit"
-6F8EB57E03AB19: "Coltan" => "Coltan"
+58643D6DB6BA32: "Bauxite" @
+70E6F26939C0AB: "Bertrandite" @
+F8574840E0F0B1: "Bromellite" @
+6F8EB57E03AB19: "Coltan" @
 F38618732BB19E: "Cryolite" => "Criolite"
-BD10491DA22C95: "Gallite" => "Gallit"
-DB7F9D2253BC1C: "Goslarite" => "Goslarit"
+BD10491DA22C95: "Gallite" @
+DB7F9D2253BC1C: "Goslarite" @
 48C47FA4EAA971: "Methane Clathrate" => "Clatrato di metano"
-7B58B2343B546A: "Indite" => "Indit"
+7B58B2343B546A: "Indite" @
 2A2539749F04F3: "Jadeite" => "Giadeite"
-A45D48DC9040A6: "Lepidolite" => "Lepidolith"
+A45D48DC9040A6: "Lepidolite" @
 A53F81FC22C1C6: "Lithium Hydroxide" => "Idrossido di Litio"
-9E4EF32FC557C8: "Moissanite" => "Moissanit"
-102E6D71C2648C: "Painite" => "Painit"
+9E4EF32FC557C8: "Moissanite" @
+102E6D71C2648C: "Painite" @
 226ABC3C40DEE3: "Pyrophyllite" => "Pirofilite"
 06BCDD5ED5E2EC: "Rutile" => "Rutilo"
-D24E5FC12F25EB: "Taaffeite" => "Taaffeit"
-BEC98421B9A1DB: "Uraninite" => "Uraninit"
+D24E5FC12F25EB: "Taaffeite" @
+BEC98421B9A1DB: "Uraninite" @
 A6F13CFA5881BB: "Methanol Monohydrate Crystals" => "Cristalli di metanolo monoidratato"
 E2B61CFCF527A9: "Low Temperature Diamonds" => "Diamanti da basse temperature"
 C1B3314B6DE301: "Trinkets of Hidden Fortune" => "Ciondoli della fortuna nascosta"
@@ -629,15 +629,15 @@ C1546E24270533: "Yuri Grom's Military Supplies" => "Forniture Militari di Yuri G
 80B28BF8F02044: "Marked Slaves" => "Schiavi marchiati"
 B96D6E675B6864: "Torval Deeds" => "Titoli della Torval"
 0CEB45762CE0EB: "Guardian Vessel Blueprint Fragment" => "Segmento di progetto della nave dei Guardiani"
-E674FE017C376B: "Duradrives" => "Duradrives"
+E674FE017C376B: "Duradrives" @
 73CFFD701C1599: "Nanomedicines" => "Nanomedicine"
-DEFA6650D427BF: "Rhodplumsite" => "Rhodplumsit"
-C7CF2220899676: "Serendibite" => "Serendibit"
-63166AC40FA5EC: "Monazite" => "Monazit"
-14255CC509B949: "Musgravite" => "Musgravit"
-7AD7C53BBADDEA: "Benitoite" => "Benitoit"
-F7DA48383A4F83: "Grandidierite" => "Grandidierit"
-50E46BD62843A5: "Alexandrite" => "Alexandrit"
+DEFA6650D427BF: "Rhodplumsite" @
+C7CF2220899676: "Serendibite" @
+63166AC40FA5EC: "Monazite" @
+14255CC509B949: "Musgravite" @
+7AD7C53BBADDEA: "Benitoite" @
+F7DA48383A4F83: "Grandidierite" @
+50E46BD62843A5: "Alexandrite" @
 72C32A85578D1C: "Void Opal" => "Opale"
 E51C748BE670B7: "Thargoid Hydra Tissue Sample" => "Campione di tessuto di idra thargoide"
 EA97D7BCF3DAF7: "Ancient Key" => "Chiave antica"
@@ -651,273 +651,273 @@ B9935BB7C4E9FE: "Mollusc Membrane" => "Membrana di mollusco"
 E95A101CE286DE: "Mollusc Mycelium" => "Micelio di mollusco"
 705649BA9EF685: "Mollusc Spores" => "Spore di mollusco"
 742B93B416B081: "Pod Shell Tissue" => "Tessuto del guscio del baccello"
-5A8DF16D603202: "Apa Vietii" => "Apa Vietii"
+5A8DF16D603202: "Apa Vietii" @
 E4A15F99FF35EE: "Tritium" => "Trizio"
 FD342C31D0669F: "Pod Mesoglea" => "Mesoglea del baccello"
 84CB6D6038D0AF: "Pod Outer Tissue" => "Tessuto esterno del baccello"
-B686372820D16D: "E-Breach" => "E-Breach"
+B686372820D16D: "E-Breach" @
 56B6C5999CA2F1: "Energy Cell" => "Energiezelle"
-2C538F773C6E35: "Medkit" => "Medikit"
-05FDA03C4327EF: "Frag Grenade" => "Splittergranate"
-BAB1B86AF01C8C: "Shield Disruptor" => "Schildunterbrecher"
-A6C08FB5C6231E: "Shield Projector" => "Schildgenerator"
-46B906744496C8: "Power Regulator" => "Energieregulator"
-13ED863C691D05: "Compact Library" => "Kompakt-Bibliothek"
-0219FD54BD5841: "Infinity" => "Unendlichkeit"
-3EA7F625D591ED: "Insight Entertainment Suite" => "Insight-Entertainment-Bibliothek"
-5E9F20FDCF5876: "Lazarus" => "Lazarus"
-908B1A10947DE6: "Universal Translator" => "Universal-Übersetzer"
-54DE3481EEABAF: "Biochemical Agent" => "Biochemischer Wirkstoff"
-FF63D344B7D43F: "Degraded Power Regulator" => "Ausrangierter Energieregulator"
-91069D2DC1BAD4: "Hush" => "Schnurr"
-8F7F57B519FC9B: "Push" => "Schub"
-310CDDCEC7D396: "Synthetic Pathogen" => "Synthetischer Erreger"
-8B9064183EF53B: "Building Schematic" => "Gebäudeplan"
-1ED1264F96B2BA: "Insight" => "Insight"
-814A8773345E0D: "Compression-Liquefied Gas" => "Komprimiertes Flüssiggas"
-C4ABC3FC85B8E9: "Health Monitor" => "Gesundheitsmonitor"
-E320E61B0E04A9: "Inertia Canister" => "Tragheits-Container"
-74909A803C14FE: "Ionised Gas" => "Ionisiertes Gas"
-A253AD904DB98A: "Ship Schematic" => "Schiffsplan"
-BAB6D6A9208C8E: "Suit Schematic" => "Anzugplan"
-D5206878E214AA: "Vehicle Schematic" => "Fahrzeugplan"
-7B745AA1B0AAB3: "Weapon Schematic" => "Waffenplan"
-FD3172119E0422: "True Form Fossil" => "Makelloses Fossil"
-B11D67CC236F68: "Carbon Fibre Plating" => "Carbonfaserplatten"
-07A4F1D7AA1CB8: "Encrypted Memory Chip" => "Verschlüsselter Speicherchip"
-7EA816472F3D24: "Epoxy Adhesive" => "Epoxy-Klebstoff"
-8507B79695D14C: "Graphene" => "Graphen"
-14EA4FAB8E9E29: "Memory Chip" => "Speicherchip"
-AD77AE42B37584: "Microelectrode" => "Mikroelektrode"
-B6395000A9A879: "Micro Hydraulics" => "Mikrohydraulikgeräte"
-DBD437248E19BF: "Micro Thrusters" => "Mikro-Schubdüsen"
-4BD4D4C4B385E4: "Optical Fibre" => "Glasfaser"
-2AC2F245FD5F54: "Optical Lens" => "Optische Linse"
-4E87F05FFB19BB: "RDX" => "Hexogen"
-FA4EE329A92C83: "Titanium Plating" => "Titanplatten"
-0BFE29130D90BE: "Tungsten Carbide" => "Wolframcarbid"
-C0A121BF3E92D9: "Weapon Component" => "Waffenkomponente"
-92668DB83A0206: "Aerogel" => "Aerogel"
-1B4A10ECED0CF9: "Chemical Superbase" => "Chemische Superbase"
-9ADE2BC23EB172: "Circuit Board" => "Schaltplatte"
-FE974CC177F2AA: "Circuit Switch" => "Elektroschalter"
-CC7D1A8BC54DC9: "Electrical Wiring" => "Elektroverkabelung"
-EF5BD47F89CDA2: "Electromagnet" => "Elektromagnet"
-BE92ABBC8DBE75: "Metal Coil" => "Metallspule"
+2C538F773C6E35: "Medkit" @
+05FDA03C4327EF: "Frag Grenade" @
+BAB1B86AF01C8C: "Shield Disruptor" @
+A6C08FB5C6231E: "Shield Projector" @
+46B906744496C8: "Power Regulator" @
+13ED863C691D05: "Compact Library" @
+0219FD54BD5841: "Infinity" @
+3EA7F625D591ED: "Insight Entertainment Suite" @
+5E9F20FDCF5876: "Lazarus" @
+908B1A10947DE6: "Universal Translator" @
+54DE3481EEABAF: "Biochemical Agent" @
+FF63D344B7D43F: "Degraded Power Regulator" @
+91069D2DC1BAD4: "Hush" @
+8F7F57B519FC9B: "Push" @
+310CDDCEC7D396: "Synthetic Pathogen" @
+8B9064183EF53B: "Building Schematic" @
+1ED1264F96B2BA: "Insight" @
+814A8773345E0D: "Compression-Liquefied Gas" @
+C4ABC3FC85B8E9: "Health Monitor" @
+E320E61B0E04A9: "Inertia Canister" @
+74909A803C14FE: "Ionised Gas" @
+A253AD904DB98A: "Ship Schematic" @
+BAB6D6A9208C8E: "Suit Schematic" @
+D5206878E214AA: "Vehicle Schematic" @
+7B745AA1B0AAB3: "Weapon Schematic" @
+FD3172119E0422: "True Form Fossil" @
+B11D67CC236F68: "Carbon Fibre Plating" @
+07A4F1D7AA1CB8: "Encrypted Memory Chip" @
+7EA816472F3D24: "Epoxy Adhesive" @
+8507B79695D14C: "Graphene" @
+14EA4FAB8E9E29: "Memory Chip" @
+AD77AE42B37584: "Microelectrode" @
+B6395000A9A879: "Micro Hydraulics" @
+DBD437248E19BF: "Micro Thrusters" @
+4BD4D4C4B385E4: "Optical Fibre" @
+2AC2F245FD5F54: "Optical Lens" @
+4E87F05FFB19BB: "RDX" @
+FA4EE329A92C83: "Titanium Plating" @
+0BFE29130D90BE: "Tungsten Carbide" @
+C0A121BF3E92D9: "Weapon Component" @
+92668DB83A0206: "Aerogel" @
+1B4A10ECED0CF9: "Chemical Superbase" @
+9ADE2BC23EB172: "Circuit Board" @
+FE974CC177F2AA: "Circuit Switch" @
+CC7D1A8BC54DC9: "Electrical Wiring" @
+EF5BD47F89CDA2: "Electromagnet" @
+BE92ABBC8DBE75: "Metal Coil" @
 CEAED7978D18F1: "Motor" => "Motor"
-9DB081C011CCC6: "Chemical Catalyst" => "Chemischer Katalysator"
-963B3020895B30: "Micro Transformer" => "Mikro-Transformator"
-6CB7653E3039C7: "Electrical Fuse" => "Elektrosicherung"
-153F57302798E3: "Micro Supercapacitor" => "Mikro-Superkondensatoren"
-70925D9DB32620: "Viscoelastic Polymer" => "Viskoelastisches Polymer"
-D8FD448329A2B2: "Ion Battery" => "Ionen-Batterie"
-9FEB0F479D126D: "Scrambler" => "Störsender"
-8E347D35BEA679: "Chemical Inventory" => "Chemische Bestandsliste"
-CCEB5C0E47193A: "Duty Rota" => "Dienstpläne"
-9BA967998E1E49: "Evacuation Protocols" => "Evakuierungsprotokolle"
-078701699B4FA6: "Exploration Journals" => "Erkundungstagebücher"
-4804DF31CB6C23: "Faction News" => "Fraktionsnachrichten"
-A8802CDECD7A78: "Financial Projections" => "Finanzprognosen"
-DB51C3A2F52F9E: "Sales Records" => "Verkaufszahlen"
-7663B808BB5161: "Union Membership" => "Gewerkschaftsmitgliedschaft"
-910AC2445574B7: "Maintenance Logs" => "Wartungs-Logs"
-7C717E23251FE6: "Patrol Routes" => "Patrouillenrouten"
-8A12E1D0DBD433: "Settlement Defence Plans" => "Siedlungsverteidigungspläne"
-20490487E3DA20: "Surveillance Logs" => "Überwachungs-Logs"
-7059BEC1AF94B2: "Operational Manual" => "Bedienungsanleitung"
-A525114747E19B: "Blacklist Data" => "Daten der schwarzen Liste"
-CC20A1D255BF58: "Air Quality Reports" => "Berichte zur Luftqualität"
-041E25C13E6B14: "Employee Directory" => "Mitarbeiterverzeichnis"
-361D90389EC664: "Faction Associates" => "Fraktionspartner"
-2D4702638BC349: "Meeting Minutes" => "Besprechungsprotokolle"
-F76635BBDA0D97: "Multimedia Entertainment" => "Multimedia-Unterhaltung"
-D52CE16BFFA7F5: "Network Access History" => "Netzwerkzugriffshistorie"
-732D3D10FD6074: "Purchase Records" => "Kaufaufzeichnungen"
-80B56B7D2D09EF: "Radioactivity Data" => "Daten zur Radioaktivität"
-FAC2A65BDC50F0: "Residential Directory" => "Einwohnerverzeichnis"
-61D24738442AAA: "Shareholder Information" => "Aktionärsinformationen"
-0C988F7CBE6B01: "Travel Permits" => "Reiseerlaubnisse"
-FA52BA81A3E1C8: "Accident Logs" => "Unfall-Logs"
-C013528544EA14: "Campaign Plans" => "Kampagnenpläne"
-10B5CE65C0E5A8: "Combat Training Material" => "Kampftraining-Materialien"
-CE585B47A11492: "Internal Correspondence" => "Interne Korrespondenz"
-BD46FA16350982: "Payroll Information" => "Gehaltsinformationen"
-FBEB4C81BEDE75: "Personal Logs" => "Persönliche Logs"
-8C7E48ECD7F176: "Weapon Inventory" => "Waffeninventarliste"
-253CF89E78DB01: "Atmospheric Data" => "Atmosphärische Daten"
-2C14D5B03B70FA: "Topographical Surveys" => "Topographische Erhebung"
-FA4B52A49DEC89: "Literary Fiction" => "Belletristik"
-EABC6312A02720: "Reactor Output Review" => "Evaluierung der Reaktorleistung"
-704611E81694AE: "Next of Kin Records" => "Angehörigen-Aufzeichnungen"
-6FCEBA68EAC856: "Purchase Requests" => "Kaufanfragen"
-DDB919EF7E34C5: "Tax Records" => "Steuerunterlagen"
-FA674E36F1032A: "Visitor Register" => "Besucherliste"
-99E2F755DF0828: "Pharmaceutical Patents" => "Pharmazeutische Patente"
-E3B3CE376E22EF: "Vaccine Research" => "Impfstoffforschung"
-0FC55F7DCDE252: "Virology Data" => "Virologische Daten"
-0FB118E78CED35: "Vaccination Records" => "Aufzeichnungen zu Impfungen"
-48046081F787CE: "Census Data" => "Zensusdaten"
-E9450A24ED3254: "Geographical Data" => "Geographische Daten"
-F2EE7B48467478: "Mineral Survey" => "Mineralienübersicht"
-28290FC8B7A48D: "Chemical Formulae" => "Chemische Formeln"
-0FB6054F199E83: "Chemical Experiment Data" => "Chemieexperiment-Daten"
-E354940BA4D71D: "Chemical Patents" => "Chemische Patente"
-8889D604EBB2DE: "Production Reports" => "Produktionsberichte"
-DD5ACDC094127C: "Production Schedule" => "Produktionszeitplan"
-BE70200358219C: "Blood Test Results" => "Bluttest-Ergebnisse"
-33B92E67B71697: "Combatant Performance" => "Kampfleistung"
-50F9E580F090BF: "Troop Deployment Records" => "Truppeneinsatzprotokolle"
-F5CA1EF151E530: "Cat Media" => "Katzen-Medien"
-E9B0FB3365842A: "Employee Genetic Data" => "Gen-Daten von Mitarbeitern"
-5DF5DBC4F23D09: "Faction Donator List" => "Spenderliste einer Fraktion"
-DF53CCC148DD31: "NOC Data" => "Geheimoperation-Daten"
-29C68F745A875A: "Manufacturing Instructions" => "Herstellungsanweisungen"
-3F5C7408E911D3: "Mollusc Fluid" => "Molluskenflüssigkeit"
-AB97C4E635EF02: "Mollusc Brain Tissue" => "Mollusken-Hirnmasse"
-C90C75AC3132B2: "Pod Tissue" => "Hülsengewebe"
-5F4285C433B765: "Agricultural Process Sample" => "Agrikulturverfahren-Probe"
-1374A6FC13DD9E: "Biological Sample" => "Biologische Probe"
-46F9B870105613: "Californium" => "Californium"
-B427EBBAC47730: "Cast Fossil" => "Fossilfund"
-1D2F8552BFA5A2: "Chemical Process Sample" => "Chemieverfahren-Probe"
-1F0E38B7798EEE: "Chemical Sample" => "Chemieprobe"
-9210CB780867BA: "Deep Mantle Sample" => "Innerer-Mantel-Probe"
-9D4FEF132B7C20: "Genetic Repair Meds" => "Gen-Reparatursets"
-2559D014F7472A: "G-Meds" => "G-Medizin"
-6595FA5ED08279: "Inorganic Contaminant" => "Anorganischer Schadstoff"
-28D4BC969512A0: "Insight Data Bank" => "Insight-Datenbank"
-4739103A94D195: "Microbial Inhibitor" => "Mikrobieller Hemmstoff"
-7B4E07A4BE12DC: "Mutagenic Catalyst" => "Mutagen-Katalysator"
-B324038726E947: "Nutritional Concentrate" => "Nahrungskonzentrat"
-B36EFDFAD52188: "Personal Computer" => "Personal Computer"
-D34DF235EE1247: "Personal Documents" => "Persönliche Dokumente"
-5376E35D4CD995: "Petrified Fossil" => "Versteinertes Fossil"
-31B79A0086E7AC: "Pyrolytic Catalyst" => "Pyrolytischer Katalysator"
-B09A8727F143DD: "Refinement Process Sample" => "Raffinerieverfahren-Probe"
-82B6B5FE1D9C6B: "Surveillance Equipment" => "Überwachungsausrüstung"
-55FBFD80010F20: "Synthetic Genome" => "Synthetisches Genom"
-EB770C5D9887E6: "Oxygenic Bacteria" => "Sauerstoffbakterien"
-092383AAEABDB1: "Epinephrine" => "Epinephrin"
-2E49C5FB2803C1: "pH Neutraliser" => "pH-Neutralisator"
-DA34BA9DE444C9: "Transmitter" => "Sender"
+9DB081C011CCC6: "Chemical Catalyst" @
+963B3020895B30: "Micro Transformer" @
+6CB7653E3039C7: "Electrical Fuse" @
+153F57302798E3: "Micro Supercapacitor" @
+70925D9DB32620: "Viscoelastic Polymer" @
+D8FD448329A2B2: "Ion Battery" @
+9FEB0F479D126D: "Scrambler" @
+8E347D35BEA679: "Chemical Inventory" @
+CCEB5C0E47193A: "Duty Rota" @
+9BA967998E1E49: "Evacuation Protocols" @
+078701699B4FA6: "Exploration Journals" @
+4804DF31CB6C23: "Faction News" @
+A8802CDECD7A78: "Financial Projections" @
+DB51C3A2F52F9E: "Sales Records" @
+7663B808BB5161: "Union Membership" @
+910AC2445574B7: "Maintenance Logs" @
+7C717E23251FE6: "Patrol Routes" @
+8A12E1D0DBD433: "Settlement Defence Plans" @
+20490487E3DA20: "Surveillance Logs" @
+7059BEC1AF94B2: "Operational Manual" @
+A525114747E19B: "Blacklist Data" @
+CC20A1D255BF58: "Air Quality Reports" @
+041E25C13E6B14: "Employee Directory" @
+361D90389EC664: "Faction Associates" @
+2D4702638BC349: "Meeting Minutes" @
+F76635BBDA0D97: "Multimedia Entertainment" @
+D52CE16BFFA7F5: "Network Access History" @
+732D3D10FD6074: "Purchase Records" @
+80B56B7D2D09EF: "Radioactivity Data" @
+FAC2A65BDC50F0: "Residential Directory" @
+61D24738442AAA: "Shareholder Information" @
+0C988F7CBE6B01: "Travel Permits" @
+FA52BA81A3E1C8: "Accident Logs" @
+C013528544EA14: "Campaign Plans" @
+10B5CE65C0E5A8: "Combat Training Material" @
+CE585B47A11492: "Internal Correspondence" @
+BD46FA16350982: "Payroll Information" @
+FBEB4C81BEDE75: "Personal Logs" @
+8C7E48ECD7F176: "Weapon Inventory" @
+253CF89E78DB01: "Atmospheric Data" @
+2C14D5B03B70FA: "Topographical Surveys" @
+FA4B52A49DEC89: "Literary Fiction" @
+EABC6312A02720: "Reactor Output Review" @
+704611E81694AE: "Next of Kin Records" @
+6FCEBA68EAC856: "Purchase Requests" @
+DDB919EF7E34C5: "Tax Records" @
+FA674E36F1032A: "Visitor Register" @
+99E2F755DF0828: "Pharmaceutical Patents" @
+E3B3CE376E22EF: "Vaccine Research" @
+0FC55F7DCDE252: "Virology Data" @
+0FB118E78CED35: "Vaccination Records" @
+48046081F787CE: "Census Data" @
+E9450A24ED3254: "Geographical Data" @
+F2EE7B48467478: "Mineral Survey" @
+28290FC8B7A48D: "Chemical Formulae" @
+0FB6054F199E83: "Chemical Experiment Data" @
+E354940BA4D71D: "Chemical Patents" @
+8889D604EBB2DE: "Production Reports" @
+DD5ACDC094127C: "Production Schedule" @
+BE70200358219C: "Blood Test Results" @
+33B92E67B71697: "Combatant Performance" @
+50F9E580F090BF: "Troop Deployment Records" @
+F5CA1EF151E530: "Cat Media" @
+E9B0FB3365842A: "Employee Genetic Data" @
+5DF5DBC4F23D09: "Faction Donator List" @
+DF53CCC148DD31: "NOC Data" @
+29C68F745A875A: "Manufacturing Instructions" @
+3F5C7408E911D3: "Mollusc Fluid" @
+AB97C4E635EF02: "Mollusc Brain Tissue" @
+C90C75AC3132B2: "Pod Tissue" @
+5F4285C433B765: "Agricultural Process Sample" @
+1374A6FC13DD9E: "Biological Sample" @
+46F9B870105613: "Californium" @
+B427EBBAC47730: "Cast Fossil" @
+1D2F8552BFA5A2: "Chemical Process Sample" @
+1F0E38B7798EEE: "Chemical Sample" @
+9210CB780867BA: "Deep Mantle Sample" @
+9D4FEF132B7C20: "Genetic Repair Meds" @
+2559D014F7472A: "G-Meds" @
+6595FA5ED08279: "Inorganic Contaminant" @
+28D4BC969512A0: "Insight Data Bank" @
+4739103A94D195: "Microbial Inhibitor" @
+7B4E07A4BE12DC: "Mutagenic Catalyst" @
+B324038726E947: "Nutritional Concentrate" @
+B36EFDFAD52188: "Personal Computer" @
+D34DF235EE1247: "Personal Documents" @
+5376E35D4CD995: "Petrified Fossil" @
+31B79A0086E7AC: "Pyrolytic Catalyst" @
+B09A8727F143DD: "Refinement Process Sample" @
+82B6B5FE1D9C6B: "Surveillance Equipment" @
+55FBFD80010F20: "Synthetic Genome" @
+EB770C5D9887E6: "Oxygenic Bacteria" @
+092383AAEABDB1: "Epinephrine" @
+2E49C5FB2803C1: "pH Neutraliser" @
+DA34BA9DE444C9: "Transmitter" @
 5929D88EBD3AE3: "Propaganda" => "Propaganda"
-AE693D4F69920E: "Security Expenses" => "Aufwendungen für Sicherheit"
-F6AD6484AD4231: "Weapon Test Data" => "Waffentestdaten"
-BBEEA64594B99F: "Audio Logs" => "Audio-Logs"
-55AAB72FA928FC: "AX Combat Logs" => "AX-Kampf-Logs"
-B479B12F39AD7B: "Ballistics Data" => "Ballistische Daten"
-0136BE1E498226: "Biological Weapon Data" => "Biowaffen-Daten"
-C2D379DDB5B201: "Biometric Data" => "Biometrische Daten"
-4AA0E46CA46245: "Chemical Weapon Data" => "Chemiewaffen-Daten"
-84795C1388B982: "Classic Entertainment" => "Klassische Unterhaltung"
-AC47880D04A6FE: "Cocktail Recipes" => "Cocktail-Rezepte"
-AD8F9E6F2E3E33: "Conflict History" => "Konflikthistorie"
-2A1DAB94C14D71: "Criminal Records" => "Strafakten"
-62B54B1230FADE: "Crop Yield Analysis" => "Ernteertrag-Analyse"
-D180322118809C: "Culinary Recipes" => "Kulinarische Rezepte"
-844D883FC6D5F5: "Digital Designs" => "Digitale Konzepte"
-06638F4EAD54C7: "Employee Expenses" => "Aufwendungen für Mitarbeiter"
-324597A3E90156: "Employment History" => "Beschäftigungshistorie"
-2751A5E372FAE1: "Enhanced Interrogation Recordings" => "Optimierte Vernehmungsaufzeichnungen"
-ABBCE35258F9D8: "Espionage Material" => "Spionagematerial"
-782A0CB7CCF562: "Extraction Yield Data" => "Daten für Förderungsausbeute"
-22DE57EA5F1225: "Fleet Registry" => "Flottenliste"
-BB313830994F38: "Gene Sequencing Data" => "Gen-Sequenzierungsdaten"
-F888C312B297D9: "Genetic Research" => "Genforschung"
-4EF55097B729A1: "Geological Data" => "Geologische Daten"
-AEF5CECD0B4C13: "Hydroponic Data" => "Hydrokultur-Daten"
-3DA00DEDBE61BE: "Incident Logs" => "Zwischenfall-Logs"
-2F8909295FAAEF: "Influence Projections" => "Einfluss-Projektionen"
-94101FE8842BDA: "Interrogation Recordings" => "Vernehmungsaufzeichnungen"
-E8A35A474E4010: "Interview Recordings" => "Aufzeichnungen von Vorstellungsgesprächen"
-5C64DD9CC5BF87: "Job Applications" => "Bewerbungen"
-628C76BCF3245D: "Kompromat" => "Kompromittierendes Material"
-61B24E80B963A3: "Medical Records" => "Medizinische Daten"
-EBE202F81E4FFD: "Clinical Trial Records" => "Klinische Prüfberichte"
-EAA3CB406D5E79: "Mining Analytics" => "Abbau-Analytik"
-6B77D84694D38C: "Network Security Protocols" => "Netzwerksicherheitsprotokolle"
-B02F8018BAB111: "Opinion Polls" => "Umfrageergebnisse"
-C0AF61E3027728: "Patient History" => "Patientenhistorie"
-B4B5DDCFD876DE: "Photo Albums" => "Fotoalben"
-BD94B46475B620: "Plant Growth Charts" => "Diagramme zum Pflanzenwachstum"
-62044C60C090D4: "Political Affiliations" => "Politische Beziehungen"
-951BF6B687BBC8: "Prisoner Logs" => "Gefangenen-Logs"
-C0D0026AEF8F26: "Recycling Logs" => "Recycling-Logs"
-9F1FD6B3A47DFE: "Risk Assessments" => "Gefährdungsbeurteilungen"
-0C20F6688E1983: "Seed Geneaology" => "Saatgut-Geneaologie"
-EDBF0F6E7911FC: "Settlement Assault Plans" => "Siedlungsangriffspläne"
-3E0F08F9989D88: "Slush Fund Logs" => "Schmiergeld-Logs"
-17C89AC4828B9D: "Smear Campaign Plans" => "Pläne für Verleumdungskampagne"
-96F663B681175C: "Spectral Analysis Data" => "Spektralanalyse-Daten"
-34CAD5ABAA7C3C: "Spyware" => "Spyware"
-282CC56D8E2F05: "Stellar Activity Logs" => "Sternenaktivitäts-Logs"
-898D49A9DC8514: "Tactical Plans" => "Taktikpläne"
-B78F1464BB330D: "VIP Security Detail" => "VIP-Sicherheitsdienst"
-10E7006889348F: "Virus" => "Virus"
-19395A79FA0544: "Xeno-Defence Protocols" => "Xeno-Abwehr-Protokolle"
-6DE31E0682AA2C: "Hardened Surface Fragments" => "Gehärtete Oberflächenfragmente"
-F3F91AD10AECC1: "Phasing Membrane Residue" => "Synchronisierungsmembranüberrest"
-840E7BE22DA788: "Heat Exposure Specimen" => "Hitzebehandeltes Exemplar"
-61BF0EFE31ED72: "Caustic Crystal" => "Ätzender Kristall"
-8B37585700D7C4: "Caustic Shard" => "Ätzendes Fragment"
-00722BFBA39027: "Corrosive Mechanisms" => "Korrosiver Mechanismus"
-1F3E280B1BBF84: "Massive Energy Surge Analytics" => "Analyse einer massiven Energiewelle"
-2FE6E3C09CE4B4: "Thargoid Interdiction Telemetry" => "Thargoid Unterbrechungstelemetrie"
-CAEB1D03B1C5B1: "Unclassified Relic" => "Unklassifiziertes Relikt"
-0D36F71A7F0448: "Anomaly Particles" => "Anomaliepartikel"
-8A33A1935C0ED8: "Titan Maw Partial Tissue Sample" => "Titanenschlund-Gewebeprobe"
-CE592430FEB2B9: "Thargoid Orthrus Tissue Sample" => "Thargoid-Orthrus Gewebeprobe"
-CC783A11934379: "Caustic Tissue Sample" => "Ätzende Gewebeprobe"
-10EA87C677F7E4: "Unoccupied Escape Pod" => "Leere Fluchtkapsel"
-EE620BCF314DE0: "Thargoid Glaive Tissue Sample" => "Thardoiden-Glaive Gewebeprobe"
-8F0343D40DFD37: "Titan Deep Tissue Sample" => "Titan tiefe Gewebeprobe"
-986D41183BE4C4: "Titan Tissue Sample" => "Titan Gewebeprobe"
-2D8E663BFACB48: "Titan Partial Tissue Sample" => "Titan teilweise Gewebeprobe"
-FD65C748C50196: "Titan Maw Deep Tissue Sample" => "Titanenschlund tiefe Gewebeprobe"
-7E64AF58213DBC: "Titan Maw Tissue Sample" => "Titanenschlund Gewebeprobe"
-B653BD96C99482: "Thargoid Scythe Tissue Sample" => "Thargoid-Scythe Gewebeprobe"
-C24BFA8921E5FA: "Protective Membrane Scrap" => "Schutzmembranenrest"
-A84C9CD31417F7: "Xenobiological Prison Pod" => "Xenobiologische Gefängniskapsel"
-5DF67B04657E35: "Coral Sap" => "Korallensaft"
-166785E49A9A74: "Onionhead Gamma Strain" => "Onionhead (Gamma)"
-671C1633687558: "Classified Experimental Equipment" => "Geheime Experimentalausrüstung"
-BE14C595DD96B0: "Impure Spire Mineral" => "Unreines Turmmineral"
-79D81CAD13966C: "Semi-Refined Spire Mineral" => "Halbraffiniertes Turmmineral"
-14785DB1611534: "Titan Drive Component" => "Titan-Antriebskomponente"
-D3B678A4A81E5C: "Cyst Specimen" => "Zystenprobe"
-FC48D911046A60: "Bone Fragments" => "Knochenfragmente"
-3A28DC61040550: "Organ Sample" => "Organprobe"
-6B164FC0B3CA5A: "Tactical Core Chip" => "Taktischer Kernchip"
+AE693D4F69920E: "Security Expenses" @
+F6AD6484AD4231: "Weapon Test Data" @
+BBEEA64594B99F: "Audio Logs" @
+55AAB72FA928FC: "AX Combat Logs" @
+B479B12F39AD7B: "Ballistics Data" @
+0136BE1E498226: "Biological Weapon Data" @
+C2D379DDB5B201: "Biometric Data" @
+4AA0E46CA46245: "Chemical Weapon Data" @
+84795C1388B982: "Classic Entertainment" @
+AC47880D04A6FE: "Cocktail Recipes" @
+AD8F9E6F2E3E33: "Conflict History" @
+2A1DAB94C14D71: "Criminal Records" @
+62B54B1230FADE: "Crop Yield Analysis" @
+D180322118809C: "Culinary Recipes" @
+844D883FC6D5F5: "Digital Designs" @
+06638F4EAD54C7: "Employee Expenses" @
+324597A3E90156: "Employment History" @
+2751A5E372FAE1: "Enhanced Interrogation Recordings" @
+ABBCE35258F9D8: "Espionage Material" @
+782A0CB7CCF562: "Extraction Yield Data" @
+22DE57EA5F1225: "Fleet Registry" @
+BB313830994F38: "Gene Sequencing Data" @
+F888C312B297D9: "Genetic Research" @
+4EF55097B729A1: "Geological Data" @
+AEF5CECD0B4C13: "Hydroponic Data" @
+3DA00DEDBE61BE: "Incident Logs" @
+2F8909295FAAEF: "Influence Projections" @
+94101FE8842BDA: "Interrogation Recordings" @
+E8A35A474E4010: "Interview Recordings" @
+5C64DD9CC5BF87: "Job Applications" @
+628C76BCF3245D: "Kompromat" @
+61B24E80B963A3: "Medical Records" @
+EBE202F81E4FFD: "Clinical Trial Records" @
+EAA3CB406D5E79: "Mining Analytics" @
+6B77D84694D38C: "Network Security Protocols" @
+B02F8018BAB111: "Opinion Polls" @
+C0AF61E3027728: "Patient History" @
+B4B5DDCFD876DE: "Photo Albums" @
+BD94B46475B620: "Plant Growth Charts" @
+62044C60C090D4: "Political Affiliations" @
+951BF6B687BBC8: "Prisoner Logs" @
+C0D0026AEF8F26: "Recycling Logs" @
+9F1FD6B3A47DFE: "Risk Assessments" @
+0C20F6688E1983: "Seed Geneaology" @
+EDBF0F6E7911FC: "Settlement Assault Plans" @
+3E0F08F9989D88: "Slush Fund Logs" @
+17C89AC4828B9D: "Smear Campaign Plans" @
+96F663B681175C: "Spectral Analysis Data" @
+34CAD5ABAA7C3C: "Spyware" @
+282CC56D8E2F05: "Stellar Activity Logs" @
+898D49A9DC8514: "Tactical Plans" @
+B78F1464BB330D: "VIP Security Detail" @
+10E7006889348F: "Virus" @
+19395A79FA0544: "Xeno-Defence Protocols" @
+6DE31E0682AA2C: "Hardened Surface Fragments" @
+F3F91AD10AECC1: "Phasing Membrane Residue" @
+840E7BE22DA788: "Heat Exposure Specimen" @
+61BF0EFE31ED72: "Caustic Crystal" @
+8B37585700D7C4: "Caustic Shard" @
+00722BFBA39027: "Corrosive Mechanisms" @
+1F3E280B1BBF84: "Massive Energy Surge Analytics" @
+2FE6E3C09CE4B4: "Thargoid Interdiction Telemetry" @
+CAEB1D03B1C5B1: "Unclassified Relic" @
+0D36F71A7F0448: "Anomaly Particles" @
+8A33A1935C0ED8: "Titan Maw Partial Tissue Sample" @
+CE592430FEB2B9: "Thargoid Orthrus Tissue Sample" @
+CC783A11934379: "Caustic Tissue Sample" @
+10EA87C677F7E4: "Unoccupied Escape Pod" @
+EE620BCF314DE0: "Thargoid Glaive Tissue Sample" @
+8F0343D40DFD37: "Titan Deep Tissue Sample" @
+986D41183BE4C4: "Titan Tissue Sample" @
+2D8E663BFACB48: "Titan Partial Tissue Sample" @
+FD65C748C50196: "Titan Maw Deep Tissue Sample" @
+7E64AF58213DBC: "Titan Maw Tissue Sample" @
+B653BD96C99482: "Thargoid Scythe Tissue Sample" @
+C24BFA8921E5FA: "Protective Membrane Scrap" @
+A84C9CD31417F7: "Xenobiological Prison Pod" @
+5DF67B04657E35: "Coral Sap" @
+166785E49A9A74: "Onionhead Gamma Strain" @
+671C1633687558: "Classified Experimental Equipment" @
+BE14C595DD96B0: "Impure Spire Mineral" @
+79D81CAD13966C: "Semi-Refined Spire Mineral" @
+14785DB1611534: "Titan Drive Component" @
+D3B678A4A81E5C: "Cyst Specimen" @
+FC48D911046A60: "Bone Fragments" @
+3A28DC61040550: "Organ Sample" @
+6B164FC0B3CA5A: "Tactical Core Chip" @
 
-D2B435BD2F3E46: "Industrial Component" => "Industrielle Komponente"
-C1CE31586A391E: "Industrial Machinery" => "Industrielle Ausrüstung"
-2DCB764B313D21: "Inventory Record" => "Inventaraufzeichnung"
-EA1CDBB770CC86: "Military Schematic" => "Militärisches Schaltbild"
-1792DD8962F49D: "Electronics Package" => "Elektronikpaket"
-CACAE8D037A65E: "Computer Parts" => "Computerteile"
-D951A767ACC061: "Experimental Prototype" => "Experimenteller Prototyp"
-25946A7A1E6FF5: "Agricultural Sample" => "Agrikulturelle Probe"
-330C82CE91032A: "Extraction Sample" => "Extraktionsprobe"
-F8CEFA975F677C: "Personal Protective Equipment" => "Persönliche Schutzausrüstung"
-11BAFA088A95B6: "Medical sample" => "Medizinische Probe"
-83D10B63DD86F5: "Data Storage Device" => "Datenspeichergerät"
-ED2D074319EE5D: "Security Logs" => "Sicherheitsaufzeichnung"
-E2EB8DA18DEDC2: "Energy Regulator" => "Energieregler"
-F14F348E8705FC: "Research Notes" => "Forschungsnotizen"
-B78364EC31B550: "Power Injection Malware" => "Macht-Injektionsschadsoftware"
-FF45E2F509D37D: "Power Tracker Malware" => "Macht-Verfolgungsschadsoftware"
-4A3FD7417F083B: "Power Research Data" => "Macht-Forschungsdaten"
-A70BEDE79B1B91: "Power Association Data" => "Macht-Verbandsdaten"
-3E41776DD38D94: "Power Industrial Data" => "Macht-Industriedaten"
-610F70C31BFBFE: "Power Political Data" => "Macht-Politikdaten"
-45F97EC4AE8647: "Power Classified Data" => "Macht-Geheimdaten"
-C0406718170188: "Power Megaship Data" => "Macht-Megaschiffdaten"
-09174EAAB9A86E: "Spire Refinery Compound" => "Spitzen-Raffinerie-Verbindung"
-C9E4E38F3EFB08: "Contaminated Spire Compound" => "Kontaminierte Spitzen-Verbindung"
-FDCDA739585356: "Thargoid Capital Ship Data" => "Thargoiden-Großkampfschiff-Daten"
-9F0A7BE43C6581: "Search and Rescue Voucher" => "Suchen und Retten Beleg"
-F958260588E1AF: "Steel" => "Stahl"
-4A1B391ED87F19: "Haematite" => "Hämatit"
+D2B435BD2F3E46: "Industrial Component" @
+C1CE31586A391E: "Industrial Machinery" @
+2DCB764B313D21: "Inventory Record" @
+EA1CDBB770CC86: "Military Schematic" @
+1792DD8962F49D: "Electronics Package" @
+CACAE8D037A65E: "Computer Parts" @
+D951A767ACC061: "Experimental Prototype" @
+25946A7A1E6FF5: "Agricultural Sample" @
+330C82CE91032A: "Extraction Sample" @
+F8CEFA975F677C: "Personal Protective Equipment" @
+11BAFA088A95B6: "Medical sample" @
+83D10B63DD86F5: "Data Storage Device" @
+ED2D074319EE5D: "Security Logs" @
+E2EB8DA18DEDC2: "Energy Regulator" @
+F14F348E8705FC: "Research Notes" @
+B78364EC31B550: "Power Injection Malware" @
+FF45E2F509D37D: "Power Tracker Malware" @
+4A3FD7417F083B: "Power Research Data" @
+A70BEDE79B1B91: "Power Association Data" @
+3E41776DD38D94: "Power Industrial Data" @
+610F70C31BFBFE: "Power Political Data" @
+45F97EC4AE8647: "Power Classified Data" @
+C0406718170188: "Power Megaship Data" @
+09174EAAB9A86E: "Spire Refinery Compound" @
+C9E4E38F3EFB08: "Contaminated Spire Compound" @
+FDCDA739585356: "Thargoid Capital Ship Data" @
+9F0A7BE43C6581: "Search and Rescue Voucher" @
+F958260588E1AF: "Steel" @
+4A1B391ED87F19: "Haematite" @
 
 SECTION EngineeringData
 
@@ -957,17 +957,17 @@ C747D3A6040F7B: "Enter the API key from the Inara Website\r\nGet an Inara API ke
 6B75A3DB046011: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Invia"
 52503993582E1E: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Ricevi tutti i dati su salti FSD da EDSM che sono sul lora banco dati ma non in EDDiscovery"
 669BEBF7483A79: "Send your travel and ship data to EDSM" => "Invia il tuo storico di viaggio e di navi a EDSM"
-034723940C1DC8: "Enter the API key from the EDSM Website\r\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" => "Gib deinen EDSM-API-Schlüssel ein.\nDu kannst deinen Schlüssel auf https://www.edsm.net/de/settings/api finden."
+034723940C1DC8: "Enter the API key from the EDSM Website\r\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" @
 8D74BA59E06617: "Give the name this commander is known as in EDSM" => "Inserisci il nome come questo comandante è conosciuto su EDSM"
 BB1D039B4A17EB: "Browse to the the journal folder" => "Sfoglia la localizzazione del giornale"
 D589A4444C45C3: "Enter commander name as used in Elite Dangerous" => "Inserire il nome del comandante come è su Elite Dangerous"
 336EE34F690338: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\r\nLeave override journal location blank to use the standard Frontier location for journals" => "Inserisci la localizzazione del giornale. In genere, è sufficiente lasciare questo campo in bianco per usare la localizzazione normale usata da Frontier"
 6841D35D0AFBD2: "Select folder where Journal*.log files are stored by Frontier in" => "Seleziona dove sono gli archivi di Journal*.log creati da Frontier"
 C8F2449029DBE8: "Folder does not exist" => "La cartella non esiste"
-017A61D0567AB2: "Console Commander" => "Konsolenkommandant"
+017A61D0567AB2: "Console Commander" @
 6D5EE3C260CB5A: "EDAstro" => "EDAstro"
 90731B79C24461: "Send Events to EDAstro" => "Invia eventi a EDAstro"
-A0801CDD86D5EA: "Include Subfolders" => "Unterordner einschließen"
+A0801CDD86D5EA: "Include Subfolders" @
 
 SECTION ScreenshotDirectoryWatcher
 
@@ -998,508 +998,508 @@ F313A0B1810B43: "Save as" => "Salva come"
 A94BDE0A67C8B5: "Mark HiRes Files" => "Segna i file HiRes"
 5EFE0C9323A499: "Clipboard" => "Appunti"
 5B5F0166120216: "Original Image" => "Immagine originale"
-0022FD2EB8F912: "JPEG Quality" => "JPEG Qualität"
+0022FD2EB8F912: "JPEG Quality" @
 
 SECTION Screenshot
 
-8AE834B8E13929: "Folder specified does not exist" => "Spezifizierter Ordner existiert nicht"
-C180FD4808AE6C: "Select screenshot folder" => "Wähle Screenshotordner"
-64A4C2645669E9: "Cannot set input and output to identical types and the same folder" => "Eingag und Ausgang können nicht der identische Dateityp oder Ordner sein."
+8AE834B8E13929: "Folder specified does not exist" @
+C180FD4808AE6C: "Select screenshot folder" @
+64A4C2645669E9: "Cannot set input and output to identical types and the same folder" @
 
 SECTION ScanDisplayUserControl
 
-AD7F166EE19EC4: "No scan data available" => "Keine Scandaten verfügbar"
-BC71898C9ADABE: "Barycentre of {0}" => "Baryzentrum von {0}"
-F50801EB15AB8D: "Surface features" => "Oberflächenmerkmal"
-2346A18EA3002F: "Signals" => "Signale"
-2C5D5B88672D11: "Codex" => "Kodex"
-85373BC01466D9: "Organics" => "Organsimen"
-B3C13D36C779CE: "Genuses" => "Gattungen"
+AD7F166EE19EC4: "No scan data available" @
+BC71898C9ADABE: "Barycentre of {0}" @
+F50801EB15AB8D: "Surface features" @
+2346A18EA3002F: "Signals" @
+2C5D5B88672D11: "Codex" @
+85373BC01466D9: "Organics" @
+B3C13D36C779CE: "Genuses" @
 
 SECTION Signals
 
-EC12FE95DAE4B4: "Ring Hot Spot of type " => "Ringhotspot des Typs "
+EC12FE95DAE4B4: "Ring Hot Spot of type " @
 
 SECTION Crimes
 
 D8875269EA787E: "Assault" => "Angriff"
-7E69F306524234: "Collided at speed in a no fire zone" => "Mit Tempo in Waffenruhezone kollidiert"
-286C8E9A967A57: "Collided at speed in a no fire zone resulting in hull damage" => "Mit Tempo in Waffenruhezone kollidiert und damit Hüllenschaden verursacht"
-B0065185CC111E: "Disobeyed a order from the police" => "Polizeianweisung missachtet"
-2A21FFF431E992: "Blocking an airlock" => "Luftschleuse blockiert"
-8BE64DD5E3BFAF: "Blocking a landing pad" => "Landeplattform blockiert"
-F2D66626EB276D: "Tresspass" => "Unbefugtes Betreten"
-CEAFDD2E153F96: "Minor blocking of an airlock" => "Geringe Blockade einer Luftschleuse"
-4464B7564F5819: "Minor blocking of a landing pad" => "Geringe Blockade einer Landeplattform"
-D4213851A769A7: "Minor tresspass" => "Geringes unbefugtes Betreten"
-DB9820D786ACFA: "Ejecting goods in a dangerous place" => "Waren an einem gefährlichen Ort ausgeworfen"
-7A1C563C95160F: "Ejecting goods near station" => "Waren nahe einer Station ausgeworfen"
-0A9F23A149C620: "Firing weapons in a no fire zone" => "Waffen in einer Waffenruhezone abgefeuert"
-80BEEDE43DD099: "Firing inside station" => "Waffen in einer Station abgefeuert"
-4E4C900819AB85: "Carrying illegal cargo" => "Illegale Fracht geladen"
-79AD7CECB12BA3: "Murder of pilot on ship" => "Mord des Schiffspiloten"
-200674A3D4E0BA: "Using an arc cutter" => "Brennschneider benutzt"
-EFED1634A0BC04: "Illegal Entry" => "Illegaler Zutritt"
-2E105C09DA965B: "Carrying illegal data" => "Illegale Daten geladen"
-0CB2C0C0837406: "Carrying illegal goods" => "Illegale Waren geladen"
-633475D77702C0: "Carrying stolen goods" => "Gestohlene Waren geladen"
-D73556D282092D: "Damaging station defenses" => "Stationsverteidigung beschädigt"
-84B728DB76DC5C: "Illegal transfer of data" => "Illegaler Datentransfer"
-626B045FD2490F: "Carrying a weapon in violation of rules" => "Regelwidriges Waffentragen"
-F34179E351C85D: "Using an E Breach" => "E-Breach benutzt"
-BC70569D4EAB01: "Failure to submit to scan" => "Versagt sich einem Scan unterziehen zu lassen"
-C5D3316FF12496: "Identity theft" => "Identitätsdiebstahl"
-A6E8313B589277: "Murder of a person" => "Mord"
-12E9AABE42C954: "Intending to overcharge an access port" => "Absicht eine Zugriffsschnittstelle zu überladen"
-683852E640C112: "Illegal Overcharging an access port" => "Illegales Überladen einer Zugriffsschnittstelle"
-92B4CBAB5D18FD: "Cloning a persons security profile" => "Klonen eines persönlichen Sicherheitsprofils"
-B56237DBC25E7E: "Theft of station property" => "Diebstahl von stationseigentum"
-000328EC01CEF4: "Reckless Endangerment" => "Rücksichtslose Gefährdung"
-34259DC09760BC: "Theft of items" => "Diebstahl von Gegenständen"
-4A0C279BB3A0CB: "Tresspass on station" => "Unbefugtes Betreten einer Station"
-E3A998C0E178AC: "Wanted passenger" => "Gesuchter Passagier"
-30EA427C049756: "Piracy" => "Piraterie"
-771CD10722A7D2: "Discharging a weapon" => "Abfeuern einer Waffe"
-0F204F94B09CCD: "Destroying an APEX Shuttle" => "Zerstörung eines APEX-Shuttles"
-04E4EDA53C745B: "Tampering with a station" => "Sabotage einer Station"
+7E69F306524234: "Collided at speed in a no fire zone" @
+286C8E9A967A57: "Collided at speed in a no fire zone resulting in hull damage" @
+B0065185CC111E: "Disobeyed a order from the police" @
+2A21FFF431E992: "Blocking an airlock" @
+8BE64DD5E3BFAF: "Blocking a landing pad" @
+F2D66626EB276D: "Tresspass" @
+CEAFDD2E153F96: "Minor blocking of an airlock" @
+4464B7564F5819: "Minor blocking of a landing pad" @
+D4213851A769A7: "Minor tresspass" @
+DB9820D786ACFA: "Ejecting goods in a dangerous place" @
+7A1C563C95160F: "Ejecting goods near station" @
+0A9F23A149C620: "Firing weapons in a no fire zone" @
+80BEEDE43DD099: "Firing inside station" @
+4E4C900819AB85: "Carrying illegal cargo" @
+79AD7CECB12BA3: "Murder of pilot on ship" @
+200674A3D4E0BA: "Using an arc cutter" @
+EFED1634A0BC04: "Illegal Entry" @
+2E105C09DA965B: "Carrying illegal data" @
+0CB2C0C0837406: "Carrying illegal goods" @
+633475D77702C0: "Carrying stolen goods" @
+D73556D282092D: "Damaging station defenses" @
+84B728DB76DC5C: "Illegal transfer of data" @
+626B045FD2490F: "Carrying a weapon in violation of rules" @
+F34179E351C85D: "Using an E Breach" @
+BC70569D4EAB01: "Failure to submit to scan" @
+C5D3316FF12496: "Identity theft" @
+A6E8313B589277: "Murder of a person" @
+12E9AABE42C954: "Intending to overcharge an access port" @
+683852E640C112: "Illegal Overcharging an access port" @
+92B4CBAB5D18FD: "Cloning a persons security profile" @
+B56237DBC25E7E: "Theft of station property" @
+000328EC01CEF4: "Reckless Endangerment" @
+34259DC09760BC: "Theft of items" @
+4A0C279BB3A0CB: "Tresspass on station" @
+E3A998C0E178AC: "Wanted passenger" @
+30EA427C049756: "Piracy" @
+771CD10722A7D2: "Discharging a weapon" @
+0F204F94B09CCD: "Destroying an APEX Shuttle" @
+04E4EDA53C745B: "Tampering with a station" @
 
 SECTION FactionStates
 
-2B430A92D31252: "Unknown Spansh" => "Unbekannt Spansh"
-4EE5308E2E70F4: "Boom" => "Boom"
-E49F1B828CEC9B: "Bust" => "Wirtschaftskrise"
-A94C88D10627AF: "Civil Unrest" => "Zivile Unruhen"
-AB94603F9DBF62: "Civil War" => "Bürgerkrieg"
+2B430A92D31252: "Unknown Spansh" @
+4EE5308E2E70F4: "Boom" @
+E49F1B828CEC9B: "Bust" @
+A94C88D10627AF: "Civil Unrest" @
+AB94603F9DBF62: "Civil War" @
 217DA2DCEFEEBA: "Election" => "Wahl"
-5210FC6FC23F69: "Expansion" => "Expansion"
-36B875EDCEEDDF: "Famine" => "Hungersnot"
-0401729C31EA52: "Investment" => "Investition"
-8BA04349B45EB2: "Lockdown" => "Lockdown"
-C3DC83475D5860: "Outbreak" => "Krankheitsausbruch"
-81D8D99EA2C4FA: "Retreat" => "Rückzug"
+5210FC6FC23F69: "Expansion" @
+36B875EDCEEDDF: "Famine" @
+0401729C31EA52: "Investment" @
+8BA04349B45EB2: "Lockdown" @
+C3DC83475D5860: "Outbreak" @
+81D8D99EA2C4FA: "Retreat" @
 F3C59920B10916: "War" => "Krieg"
-4846DFEAC68196: "Civil Liberty" => "Zivile Freiheit"
-1D84F47CBBA154: "Pirate Attack" => "Piratenangriff"
-6C7FE02750CB89: "Blight" => "Pflanzenfäule"
-225C88A863D0BD: "Drought" => "Dürre"
-BDC127528AB0C6: "Infrastructure Failure" => "Infrastrukturversagen"
-4D784C67BA4E12: "Natural Disaster" => "Naturkatastrophe"
-D9A673D9DBA870: "Public Holiday" => "Öffentliche Feiertage"
-F25FB448CEA0EA: "Terrorism" => "Terrorismus"
-65A64D0FA63FE9: "Cold War" => "Kalter Krieg"
-34FDB0A2BFD8F0: "Historic Event" => "Historisches Ereignis"
+4846DFEAC68196: "Civil Liberty" @
+1D84F47CBBA154: "Pirate Attack" @
+6C7FE02750CB89: "Blight" @
+225C88A863D0BD: "Drought" @
+BDC127528AB0C6: "Infrastructure Failure" @
+4D784C67BA4E12: "Natural Disaster" @
+D9A673D9DBA870: "Public Holiday" @
+F25FB448CEA0EA: "Terrorism" @
+65A64D0FA63FE9: "Cold War" @
+34FDB0A2BFD8F0: "Historic Event" @
 726830EC042D32: "Revolution" => "Revolution"
-6443C50BCCD300: "Technological Leap" => "Technologischer Sprung"
-ECD42F44D582A9: "Trade War" => "Handelskrieg"
-6E292633B0D81A: "Exploited" => "Ausgebeutet"
+6443C50BCCD300: "Technological Leap" @
+ECD42F44D582A9: "Trade War" @
+6E292633B0D81A: "Exploited" @
 
 SECTION Allegiances
 
-228505F85662D9: "Independent" => "Unabhängig"
+228505F85662D9: "Independent" @
 A21193C4A51E0D: "Alliance" => "Allianz"
 6809E8745EABCE: "Guardian" => "Guardian"
 824377DA32D5A8: "Thargoid" => "Thargoid"
-7EE28AFA2ED21A: "Pilots Federation" => "Pilotenföderation"
-61539847DBF080: "Player Pilots Federation" => "Spieler-Pilotenföderation"
+7EE28AFA2ED21A: "Pilots Federation" @
+61539847DBF080: "Player Pilots Federation" @
 
 SECTION GovernmentTypes
 
-C65B57585778D6: "Anarchy" => "Anarchie"
-3EAB10EF58C8F1: "Communism" => "Kommunismus"
-9001B3A1D67EDB: "Confederacy" => "Konföderation"
-11C0E9B8B4B018: "Cooperative" => "Kooperative"
+C65B57585778D6: "Anarchy" @
+3EAB10EF58C8F1: "Communism" @
+9001B3A1D67EDB: "Confederacy" @
+11C0E9B8B4B018: "Cooperative" @
 A83ED75221E875: "Corporate" => "Konzern"
-A83522C3E1F334: "Democracy" => "Demokratie"
-899F1271330C93: "Dictatorship" => "Diktatur"
-4995BBA6CF0B9D: "Feudal" => "Feudalismus"
+A83522C3E1F334: "Democracy" @
+899F1271330C93: "Dictatorship" @
+4995BBA6CF0B9D: "Feudal" @
 5D3908AC11C06A: "Imperial" => "Imperialismus"
-3CA0A4D60502DA: "Patronage" => "Patronat"
+3CA0A4D60502DA: "Patronage" @
 D8D4559A372171: "Prison" => "Gefängnis"
-9DB9478502242D: "Prison Colony" => "Gefängniskolonie"
-AB1A1F939BDE0E: "Theocracy" => "Theokratie"
-0646F4AFD90C8F: "Undefined" => "Undefiniert"
+9DB9478502242D: "Prison Colony" @
+AB1A1F939BDE0E: "Theocracy" @
+0646F4AFD90C8F: "Undefined" @
 
 SECTION EconomyTypes
 
 F5A68A44533A39: "Agri" => "Landwirtschaft"
-1758C0C9560790: "Colony" => "Kolonie"
-2552A425FB8790: "Extraction" => "Extraktion"
-DB17FE39BE1106: "High Tech" => "Hochtechnologie"
+1758C0C9560790: "Colony" @
+2552A425FB8790: "Extraction" @
+DB17FE39BE1106: "High Tech" @
 7DB3CF51525D67: "Industrial" => "Industriell"
 430853FBD980AA: "Military" => "Militärisch"
-1AD1F0C5C04761: "Refinery" => "Raffinerie"
-329CB8B6BA8C42: "Service" => "Dienstleistung"
-A018B12A2AD28C: "Terraforming" => "Terraformierung"
-7D62DD12AFFDD8: "Tourism" => "Tourismus"
+1AD1F0C5C04761: "Refinery" @
+329CB8B6BA8C42: "Service" @
+A018B12A2AD28C: "Terraforming" @
+7D62DD12AFFDD8: "Tourism" @
 052FC79809942F: "Damaged" => "Beschädigt"
-6A5DA7147407CC: "Rescue" => "Rettung"
+6A5DA7147407CC: "Rescue" @
 
 SECTION SecurityTypes
 
 A124947CBD2D1D: "Low" => "Niedrig"
-D404968EA90B07: "Medium" => "Mittel"
+D404968EA90B07: "Medium" @
 B1A5954A483F8F: "High" => "Hoch"
-765F9880243902: "Lawless" => "Gesetzlos"
+765F9880243902: "Lawless" @
 
 SECTION StarportStates
 
-643321EE0FC5B8: "Under Repairs" => "In Reparatur"
-F34FB6E3669DFD: "Abandoned" => "Verlassen"
-DA33E1B7E0C4EA: "Construction" => "Konstruktion"
+643321EE0FC5B8: "Under Repairs" @
+F34FB6E3669DFD: "Abandoned" @
+DA33E1B7E0C4EA: "Construction" @
 
 SECTION StarportTypes
 
-6E4C6A39225E73: "Asteroid Base" => "Asteroidenbasis"
-570C8ADC370DE1: "Coriolis" => "Coriolis"
-1815546AA3D985: "Megaship" => "Megaschiff"
-FB3178D94F9E42: "Ocellus" => "Ocellus"
-3EF72E85AA2D48: "Bernal" => "Bernal"
-00493BC6639D4E: "Orbis" => "Orbis"
-85B353889DE58E: "Outpost" => "Außenposten"
-932FCD8429DDCB: "On Foot Settlement" => "Fußläufige Siedlung"
-2C9F6741A4616A: "Surface Station" => "Oberflächenstation"
-F70A2D8CB9AC62: "Crater Outpost" => "Krateraußenposten"
-CD515256E31FA0: "Crater Port" => "Kraterhafen"
-E2407F2BA86D9F: "Space Construction Depot" => "Weltraumkonstruktionsdepot"
-72D0849A72AB18: "Planetary Construction Depot" => "Planetares Konstruktionsdepot"
-2D68CF109D6809: "Dockable Planet Station" => "Dockbare planetare Station"
+6E4C6A39225E73: "Asteroid Base" @
+570C8ADC370DE1: "Coriolis" @
+1815546AA3D985: "Megaship" @
+FB3178D94F9E42: "Ocellus" @
+3EF72E85AA2D48: "Bernal" @
+00493BC6639D4E: "Orbis" @
+85B353889DE58E: "Outpost" @
+932FCD8429DDCB: "On Foot Settlement" @
+2C9F6741A4616A: "Surface Station" @
+F70A2D8CB9AC62: "Crater Outpost" @
+CD515256E31FA0: "Crater Port" @
+E2407F2BA86D9F: "Space Construction Depot" @
+72D0849A72AB18: "Planetary Construction Depot" @
+2D68CF109D6809: "Dockable Planet Station" @
 D089EF39D4EA65: "Construction POI" @
 
 SECTION PowerPlayStates
 
-1C3BEAD9C3B9C0: "In prepare radius" => "Im Vorbereitungsradius"
-D8B21A674C893B: "Prepared" => "Vorbereitet"
-FD83DA39F2DA91: "Contested" => "Umstritten"
-30401222095701: "Controlled" => "Kontrolliert"
-F15914E9852279: "In turmoil" => "In Aufruhr"
+1C3BEAD9C3B9C0: "In prepare radius" @
+D8B21A674C893B: "Prepared" @
+FD83DA39F2DA91: "Contested" @
+30401222095701: "Controlled" @
+F15914E9852279: "In turmoil" @
 64701663DF9A69: "Home system" => "Heimatsystem"
-A306BDBFED7B4A: "Fortified" => "Befestigt"
-F6D3C9C3B20E15: "Stronghold" => "Festung"
+A306BDBFED7B4A: "Fortified" @
+F6D3C9C3B20E15: "Stronghold" @
 
 
 // these are the ones which can't be satisfied from ModulePartNames
 
 SECTION ModuleTypeNames
 
-74C8CD195A9A7B: "Pacifier Frag Cannon" => "Friedensstifter-Splitterkanone"
-84B8326146D262: "Cargo Scanner" => "Verzeichnisscanner"
-FF989D476F1F12: "Guardian Module Reinforcement" => "Guardian-Modulverstärkung"
-A78907591643F9: "Guardian Shield Reinforcement" => "Guardian-Schildverstärkung"
-757166A532FC06: "Guardian FSD Booster" => "Guardian-Frameshiftantrieb-Booster"
-D0BA3A15789844: "Guardian Hull Reinforcement" => "Guardian-Rumpfhüllenverstärkung"
-FC959E391D33D3: "Meta Alloy Hull Reinforcement" => "Metalegierung-Rumpfhüllenverstärkung"
-836C41406E876F: "Operations Multi Limpet Controller" => "Operationen-Drohnensteuerung"
-7995EF635236F0: "Rescue Multi Limpet Controller" => "Rettungs-Drohnensteuerung"
-15DA658272ACD6: "Xeno Multi Limpet Controller" => "Xeno-Drohnensteuerung"
-FAEDBE6F1A4F34: "Mining Lance" => "Lanzenabbaulaser"
-653BBF7510FED7: "Torpedo Pylon" => "Torpedopylon"
-41A949FCC7A77A: "Rocket Propelled FSD Disruptor" => "Containment-Rakete"
-9E736BAECDD6ED: "Economy Class Passenger Cabin" => "Economy-Klasse-Passagierkabine"
-FA1A81896E2C73: "Business Class Passenger Cabin" => "Business-Klasse-Passagierkabine"
-B73C7C091DEDB1: "First Class Passenger Cabin" => "Erste-Klasse-Passagierkabine"
-1FDF40C0302B8A: "Luxury Class Passenger Cabin" => "Luxus-Klasse-Passagierkabine"
-D99A8D85FA5C90: "Advanced Planetary Approach Suite" => "Fortgeschrittene Planetenanflug-Suite"
-D34DD311322502: "Planetary Approach Suite" => "Planetenanflug-Suite"
-AD2618B16E649A: "Discovery Scanner" => "Erkundungsscanner"
-A20FD9AA9142BF: "Cockpit Type" => "Cockpit-Typ"
-E56766478D5E9E: "Data Link Scanner" => "Datanlink-Scanner"
-A6C269B1A02EF9: "Prison Cells" => "Gefängniszelle"
-4075F1A901AC84: "Cargo Bay Door Type" => "Frachtluken-Typ"
-EB702E354D4040: "Fighter Weapon" => "Fighter-Waffe"
-1CC4848D27B6F3: "Wear And Tear Type" => "Verschleißteil"
-86B9B261DED066: "Vanity Type" => "Kosmetik-Typ"
-352374D32CCD3B: "Unknown Type" => "Unbekannter Typ"
+74C8CD195A9A7B: "Pacifier Frag Cannon" @
+84B8326146D262: "Cargo Scanner" @
+FF989D476F1F12: "Guardian Module Reinforcement" @
+A78907591643F9: "Guardian Shield Reinforcement" @
+757166A532FC06: "Guardian FSD Booster" @
+D0BA3A15789844: "Guardian Hull Reinforcement" @
+FC959E391D33D3: "Meta Alloy Hull Reinforcement" @
+836C41406E876F: "Operations Multi Limpet Controller" @
+7995EF635236F0: "Rescue Multi Limpet Controller" @
+15DA658272ACD6: "Xeno Multi Limpet Controller" @
+FAEDBE6F1A4F34: "Mining Lance" @
+653BBF7510FED7: "Torpedo Pylon" @
+41A949FCC7A77A: "Rocket Propelled FSD Disruptor" @
+9E736BAECDD6ED: "Economy Class Passenger Cabin" @
+FA1A81896E2C73: "Business Class Passenger Cabin" @
+B73C7C091DEDB1: "First Class Passenger Cabin" @
+1FDF40C0302B8A: "Luxury Class Passenger Cabin" @
+D99A8D85FA5C90: "Advanced Planetary Approach Suite" @
+D34DD311322502: "Planetary Approach Suite" @
+AD2618B16E649A: "Discovery Scanner" @
+A20FD9AA9142BF: "Cockpit Type" @
+E56766478D5E9E: "Data Link Scanner" @
+A6C269B1A02EF9: "Prison Cells" @
+4075F1A901AC84: "Cargo Bay Door Type" @
+EB702E354D4040: "Fighter Weapon" @
+1CC4848D27B6F3: "Wear And Tear Type" @
+86B9B261DED066: "Vanity Type" @
+352374D32CCD3B: "Unknown Type" @
 
 SECTION ModulePartNames
 
-6437B7BF655854: "Rating" => "Güte"
-18CA7013AA73C5: "Gimbal" => "Kardanisch"
-AB98F5B85764B8: "Fixed" => "Fest"
-281D014FC5B622: "Turret" => "Turm"
+6437B7BF655854: "Rating" @
+18CA7013AA73C5: "Gimbal" @
+AB98F5B85764B8: "Fixed" @
+281D014FC5B622: "Turret" @
 C74FD9714E38B2: "Small" => "Klein"
 738FD1D2452FC3: "Large" => "Groß"
-32978FBE93D3BE: "Huge" => "Riesig"
-DEB4A070484561: "Tiny" => "Winzig"
+32978FBE93D3BE: "Huge" @
+DEB4A070484561: "Tiny" @
 
-1F4A6D7872C157: "Lightweight Alloy" => "Leichte Legierung"
-2FFB3A2CBCF67A: "Reinforced Alloy" => "Verstärkte Legierungen"
-57ECD1BCDAF154: "Military Grade Composite" => "Militärkomposit"
-1CAC669157D892: "Mirrored Surface Composite" => "Gespiegelte-Oberfläche-Komposit"
-C8590A891E828F: "Reactive Surface Composite" => "Reaktive-Oberfläche-Komposit"
-BAD1C5B09CF01E: "Auto Field Maintenance Unit" => "Automatische Feldwartungseinheit"
-64CC6706B99A5A: "Beam Laser" => "Strahlenlaser"
-963B8DFDDD6029: "Retributor Beam Laser" => "Retributor-Strahlenlaser"
-9BB0161952B8A2: "Burst Laser" => "Salvenlaser"
-E4B1AB2D0505E8: "Cytoscrambler Burst Laser" => "Zytostreuer-Salvenlaser"
-8A417F5C472FE6: "Cannon" => "Kanone"
-306BFD525FA9C5: "Fragment Cannon" => "Splitterkanone"
-8DFC90E4A072C6: "Pacifier Fragment Cannon" => "Friedensstifter-Splitterkanone"
-93C5390A421D81: "Cargo Rack" => "Frachtgestell"
-D3BBF2FAE69CDA: "Corrosion Resistant Cargo Rack" => "Korrosionsbeständiges Frachtgestell"
-9917741FA0BE27: "Manifest Scanner" => "Verzeichnisscanner"
-09CE66844887F5: "Chaff Launcher" => "Düpelwerfer"
-C72CB5EAFA5795: "Electronic Countermeasure" => "Elektronische Gegenmaßnmahmen"
-0704707CF48360: "Heat Sink Launcher" => "Kühlkörperwerfer"
-9327CC68A44A77: "Caustic Sink Launcher" => "Ätzbehälterwerfer"
-46169139E4459B: "Point Defence" => "Punktverteidigungsgeschütz"
-9C8CE66481B70F: "Kill Warrant Scanner" => "Tötungsbefehlscanner"
-6D14E5FC0B7237: "Detailed Surface Scanner" => "Detail-Oberflächenscanner"
-1E150F53516D41: "Standard Docking Computer" => "Standard-Landecomputer"
-300DCF505B20B3: "Advanced Docking Computer" => "Erweiterter Landecomputer"
-70523AB707ECE7: "Fighter Hangar" => "Fighter-Bucht"
-F29E64CC9E04F3: "Remote Release Flak Launcher" => "Flakwerfer mit Fernzündung"
-1080CBE65D9A1D: "Remote Release Flechette Launcher" => "Pfeilwerfer mit Fernzündung"
-96D6DE2D0ECA17: "Frame Shift Drive Interdictor" => "FSA-Unterbrecher"
-2CB280A97E5A91: "Fuel Tank" => "Treibstofftank"
-690694EF82363C: "Guardian Plasma Charger" => "Guardian-Plasmawerfer"
-65206BEEF3B609: "Guardian Shard Cannon" => "Guardian-Fragmentkanone"
-9A31FB88856271: "Guardian Gauss Cannon" => "Guardian-Gausskanone"
-5016AC5C7A98F1: "Guardian Module Reinforcement Package" => "Guardian-Modulverstärkung"
-E2DA89A1E83995: "Guardian Shield Reinforcement Package" => "Guardian-Schildverstärkung"
-D85841371D587A: "Guardian Frame Shift Drive Booster" => "Guardian-Frameshiftantrieb-Booster"
-6074FA1EC8BC09: "Guardian Hybrid Power Distributor" => "Guardian-Energieverteiler"
-C63B1C1BCFD89F: "Guardian Hybrid Power Plant" => "Guardian-Kraftwerk"
-2E490043296324: "Hull Reinforcement Package" => "Rumpfhüllenverstärkung"
-3F3ECEFA577C63: "Guardian Hull Reinforcement Package" => "Guardian-Rumpfhüllenverstärkung"
-53C8470A362144: "Meta Alloy Hull Reinforcement Package" => "Metalegierung-Rumpfhüllenverstärkung"
-286E5F17D2DFFE: "Frame Shift Drive" => "Frameshift-Antrieb"
-BC7C4D39E10588: "Frame Shift Drive (SCO)" => "Frameshift-Antrieb (SCO)"
-7E102B2176905C: "Frame Shift Wake Scanner" => "FS-Sogwolkenscanner"
-9275CA7358B155: "Life Support" => "Lebenserhaltung"
-A65DF936BCD66F: "Collector Limpet Controller" => "Steuerung Sammeldrohne"
-010A01796C54DA: "Fuel Transfer Limpet Controller" => "Treibstofftransfer-Drohnenstrg."
-D800B8604577F9: "Hatch Breaker Limpet Controller" => "Steuerung Ladelukenöffner-Drohne"
-46895A7E784BB1: "Prospector Limpet Controller" => "Steuerung Erzsuche-Drohne"
-83DA3EEF1CA30A: "Repair Limpet Controller" => "Steuerung Reparaturdrohne"
-61FE350795984C: "Research Limpet Controller" => "Steuerung Forschungsdrohne"
-33DC9A3F619FE3: "Decontamination Limpet Controller" => "Steuerung Dekontaminationsdrohnen"
-45E3A623B94955: "Recon Limpet Controller" => "Steuerung Aufklärungsdrohne"
-07A96DB8AB36EE: "Mining Multi Limpet Controller" => "Abbau-Multidrohnensteuerung"
-5A296E04CA7CEC: "Operations Limpet Controller" => "Operationen-Drohnensteuerung"
-9F686F82A534E7: "Rescue Limpet Controller" => "Rettungs-Drohnensteuerung"
-05E2BAA5813FF1: "Xeno Limpet Controller" => "Xeno-Drohnensteuerung"
-8ADBF0F4706D99: "Universal Multi Limpet Controller" => "Universelle Multi-Drohnensteuerung"
-7053E88EB58EE7: "Mine Launcher" => "Minenwerfer"
-80DAB55450B89D: "Shock Mine Launcher" => "Schock-Minenwerfer"
-2D355576AB8BE1: "Abrasion Blaster" => "AX-Abrasionsblaster"
-7458B9B45AF75C: "Seismic Charge Launcher" => "Seismischer-Ladungswerfer"
-7501F5C476A95E: "Sub Surface Displacement Missile" => "Untergrund-Verdrängungsrakete"
-0B330E37DFDB6F: "Mining Laser" => "Abbaulaser"
-BE6622D947D845: "Mining Lance Beam Laser" => "Lanzenabbaulaser"
-01F6E4BB0ABAB1: "AX Missile Rack" => "AX-Raketenrampe"
-0B7F815A04EA1F: "Enhanced AX Missile Rack" => "Verbesserte AX-Raketenrampe"
-2EEEDBE87FDC88: "Guardian Nanite Torpedo Pylon" => "Guardian-Nanobot-Torpedopylon"
-5FC2FBF0CEF16E: "Seeker Missile Rack" => "Suchraketenrampe"
-8B2C23821BE9A0: "Missile Rack" => "Raketenrampe"
-C008DCFA55478D: "Rocket Propelled FSD Disrupter" => "Containment-Rakete"
-8E84C39592581B: "Pack Hound Missile Rack" => "Schwarmwerfer-Raketenrampe"
-CD7FA37A5942F0: "Advanced Torp Pylon" => "Optimierter Torpedopylon"
-D47989B5AEA7E2: "Advanced Missile Rack" => "Optimierte Raketenrampe"
-4079B7B39F7668: "Human Extraction Missile" => "Menschenextraktionsrakete"
-B3A021E4800549: "Enzyme Missile Rack" => "Enzymraketenrampe"
-94E9918390EAA7: "Module Reinforcement Package" => "Modulverstärkung"
-8454F69AA40E0B: "AX Multi Cannon" => "AX-Mehrfachgeschütz"
-7613DA5FCB46C3: "Enhanced AX Multi Cannon" => "Verbessertes AX-Mehrfachgeschütz"
-E3DFD04A073CB1: "Multi Cannon" => "Mehrfachgeschütz"
-602DBF4D79F6A1: "Enforcer Cannon" => "Vollstreckerkanone"
-8B96379F08809F: "Advanced Multi Cannon" => "Optimiertes Mehrfachgeschütz"
-D6663DDA5FE9B2: "Business" => "Business"
-916A78D701DED3: "First" => "Erste"
-2F2F07428B7DFC: "Luxury" => "Luxus"
-CA39470A7A6DED: "Advanced Planet Approach Suite" => "Fortgeschrittene Planetenanflug-Suite"
-376992DE1C37B6: "Planet Approach Suite" => "Planetenanflug-Suite"
-5F7CF7A85C6B10: "Planetary Vehicle Hangar" => "Planetenfahrzeug-Hangar"
-36AA174EFAA515: "Plasma Accelerator" => "Plasmabeschleuniger"
-F79B4B8AD884B9: "Advanced Plasma Accelerator" => "Optimierter Plasmabeschleuniger"
-1D202C4D8DA513: "Shock Cannon" => "Schockkanone"
-7A5078EF876AD6: "Power Distributor" => "Energieverteiler"
-717B5FB556BE67: "Power Plant" => "Kraftwerk"
-B274BC2A7429E0: "Pulse Laser" => "Impulslaser"
-1B945A1283E87F: "Pulse Disruptor Laser" => "Impulsunterbrecher-Laser"
-7809B2B30F59B4: "Pulse Wave Analyser" => "Impulswellen-Analysator"
-5BB7DBB8683EC3: "Rail Gun" => "Schienenkanone"
-EAC52E34209313: "Imperial Hammer Rail Gun" => "Imperiale Hammer-Schienenkanone"
+1F4A6D7872C157: "Lightweight Alloy" @
+2FFB3A2CBCF67A: "Reinforced Alloy" @
+57ECD1BCDAF154: "Military Grade Composite" @
+1CAC669157D892: "Mirrored Surface Composite" @
+C8590A891E828F: "Reactive Surface Composite" @
+BAD1C5B09CF01E: "Auto Field Maintenance Unit" @
+64CC6706B99A5A: "Beam Laser" @
+963B8DFDDD6029: "Retributor Beam Laser" @
+9BB0161952B8A2: "Burst Laser" @
+E4B1AB2D0505E8: "Cytoscrambler Burst Laser" @
+8A417F5C472FE6: "Cannon" @
+306BFD525FA9C5: "Fragment Cannon" @
+8DFC90E4A072C6: "Pacifier Fragment Cannon" @
+93C5390A421D81: "Cargo Rack" @
+D3BBF2FAE69CDA: "Corrosion Resistant Cargo Rack" @
+9917741FA0BE27: "Manifest Scanner" @
+09CE66844887F5: "Chaff Launcher" @
+C72CB5EAFA5795: "Electronic Countermeasure" @
+0704707CF48360: "Heat Sink Launcher" @
+9327CC68A44A77: "Caustic Sink Launcher" @
+46169139E4459B: "Point Defence" @
+9C8CE66481B70F: "Kill Warrant Scanner" @
+6D14E5FC0B7237: "Detailed Surface Scanner" @
+1E150F53516D41: "Standard Docking Computer" @
+300DCF505B20B3: "Advanced Docking Computer" @
+70523AB707ECE7: "Fighter Hangar" @
+F29E64CC9E04F3: "Remote Release Flak Launcher" @
+1080CBE65D9A1D: "Remote Release Flechette Launcher" @
+96D6DE2D0ECA17: "Frame Shift Drive Interdictor" @
+2CB280A97E5A91: "Fuel Tank" @
+690694EF82363C: "Guardian Plasma Charger" @
+65206BEEF3B609: "Guardian Shard Cannon" @
+9A31FB88856271: "Guardian Gauss Cannon" @
+5016AC5C7A98F1: "Guardian Module Reinforcement Package" @
+E2DA89A1E83995: "Guardian Shield Reinforcement Package" @
+D85841371D587A: "Guardian Frame Shift Drive Booster" @
+6074FA1EC8BC09: "Guardian Hybrid Power Distributor" @
+C63B1C1BCFD89F: "Guardian Hybrid Power Plant" @
+2E490043296324: "Hull Reinforcement Package" @
+3F3ECEFA577C63: "Guardian Hull Reinforcement Package" @
+53C8470A362144: "Meta Alloy Hull Reinforcement Package" @
+286E5F17D2DFFE: "Frame Shift Drive" @
+BC7C4D39E10588: "Frame Shift Drive (SCO)" @
+7E102B2176905C: "Frame Shift Wake Scanner" @
+9275CA7358B155: "Life Support" @
+A65DF936BCD66F: "Collector Limpet Controller" @
+010A01796C54DA: "Fuel Transfer Limpet Controller" @
+D800B8604577F9: "Hatch Breaker Limpet Controller" @
+46895A7E784BB1: "Prospector Limpet Controller" @
+83DA3EEF1CA30A: "Repair Limpet Controller" @
+61FE350795984C: "Research Limpet Controller" @
+33DC9A3F619FE3: "Decontamination Limpet Controller" @
+45E3A623B94955: "Recon Limpet Controller" @
+07A96DB8AB36EE: "Mining Multi Limpet Controller" @
+5A296E04CA7CEC: "Operations Limpet Controller" @
+9F686F82A534E7: "Rescue Limpet Controller" @
+05E2BAA5813FF1: "Xeno Limpet Controller" @
+8ADBF0F4706D99: "Universal Multi Limpet Controller" @
+7053E88EB58EE7: "Mine Launcher" @
+80DAB55450B89D: "Shock Mine Launcher" @
+2D355576AB8BE1: "Abrasion Blaster" @
+7458B9B45AF75C: "Seismic Charge Launcher" @
+7501F5C476A95E: "Sub Surface Displacement Missile" @
+0B330E37DFDB6F: "Mining Laser" @
+BE6622D947D845: "Mining Lance Beam Laser" @
+01F6E4BB0ABAB1: "AX Missile Rack" @
+0B7F815A04EA1F: "Enhanced AX Missile Rack" @
+2EEEDBE87FDC88: "Guardian Nanite Torpedo Pylon" @
+5FC2FBF0CEF16E: "Seeker Missile Rack" @
+8B2C23821BE9A0: "Missile Rack" @
+C008DCFA55478D: "Rocket Propelled FSD Disrupter" @
+8E84C39592581B: "Pack Hound Missile Rack" @
+CD7FA37A5942F0: "Advanced Torp Pylon" @
+D47989B5AEA7E2: "Advanced Missile Rack" @
+4079B7B39F7668: "Human Extraction Missile" @
+B3A021E4800549: "Enzyme Missile Rack" @
+94E9918390EAA7: "Module Reinforcement Package" @
+8454F69AA40E0B: "AX Multi Cannon" @
+7613DA5FCB46C3: "Enhanced AX Multi Cannon" @
+E3DFD04A073CB1: "Multi Cannon" @
+602DBF4D79F6A1: "Enforcer Cannon" @
+8B96379F08809F: "Advanced Multi Cannon" @
+D6663DDA5FE9B2: "Business" @
+916A78D701DED3: "First" @
+2F2F07428B7DFC: "Luxury" @
+CA39470A7A6DED: "Advanced Planet Approach Suite" @
+376992DE1C37B6: "Planet Approach Suite" @
+5F7CF7A85C6B10: "Planetary Vehicle Hangar" @
+36AA174EFAA515: "Plasma Accelerator" @
+F79B4B8AD884B9: "Advanced Plasma Accelerator" @
+1D202C4D8DA513: "Shock Cannon" @
+7A5078EF876AD6: "Power Distributor" @
+717B5FB556BE67: "Power Plant" @
+B274BC2A7429E0: "Pulse Laser" @
+1B945A1283E87F: "Pulse Disruptor Laser" @
+7809B2B30F59B4: "Pulse Wave Analyser" @
+5BB7DBB8683EC3: "Rail Gun" @
+EAC52E34209313: "Imperial Hammer Rail Gun" @
 711BF3598846F8: "Sensors" => "Sensoren"
-0F094935AF23BE: "Shield Booster" => "Schild-Booster"
-13AFA94574C563: "Shield Cell Bank" => "Schildzellenbank"
-7278A03C01494A: "Shield Generator" => "Schildgenerator"
-E4A485CF62B0F6: "Prismatic Shield Generator" => "Prismaschildgenerator"
-D40A95D31F4184: "Bi Weave Shield Generator" => "Zwei-Schicht-Schildgenerator"
-18FB5A3D52BB2B: "Shutdown Field Neutraliser" => "Abschalt-Feldneutralisator"
-497BFCDF3C5164: "Thargoid Pulse Neutraliser" => "Thargoid-Puls-Neutralisator"
-D342181A121125: "Experimental Weapon Stabiliser" => "Experimenteller Waffenstabilisator"
-E6B48D253A5BD7: "Supercruise Assist" => "Supercruise-Assistent"
-6A4768B56F68C3: "Stellar Body Discovery Scanner" => "Erkundungsscanner"
+0F094935AF23BE: "Shield Booster" @
+13AFA94574C563: "Shield Cell Bank" @
+7278A03C01494A: "Shield Generator" @
+E4A485CF62B0F6: "Prismatic Shield Generator" @
+D40A95D31F4184: "Bi Weave Shield Generator" @
+18FB5A3D52BB2B: "Shutdown Field Neutraliser" @
+497BFCDF3C5164: "Thargoid Pulse Neutraliser" @
+D342181A121125: "Experimental Weapon Stabiliser" @
+E6B48D253A5BD7: "Supercruise Assist" @
+6A4768B56F68C3: "Stellar Body Discovery Scanner" @
 B1CFE72FD27178: "Intermediate" => "Mittelmaß"
-A8DC0C1CE3892F: "Thrusters" => "Schubdüsen"
-E8B772D1BC2A20: "Enhanced Performance Thrusters" => "Verbesserte Performance-Schubdüsen"
-0DF5187CDB1495: "Xeno Scanner" => "Xeno-Scanner"
-70EA63BC991A90: "Enhanced Xeno Scanner" => "Verbesserter Xenoscanner"
-6F55767D3D0B28: "Pulse Wave Xeno Scanner" => "Impulswellen-Xeno-Scanner"
-FFE926B9A1E06C: "Concord Cannon" => "Concord-Kanone"
-492166ECE113AD: "Colonisation Module" => "Kolonisierungsmodul"
-0DB27EBBF41345: "Large Cargo Rack" => "Großes Frachtgestell"
+A8DC0C1CE3892F: "Thrusters" @
+E8B772D1BC2A20: "Enhanced Performance Thrusters" @
+0DF5187CDB1495: "Xeno Scanner" @
+70EA63BC991A90: "Enhanced Xeno Scanner" @
+6F55767D3D0B28: "Pulse Wave Xeno Scanner" @
+FFE926B9A1E06C: "Concord Cannon" @
+492166ECE113AD: "Colonisation Module" @
+0DB27EBBF41345: "Large Cargo Rack" @
 
 SECTION ShipSlots
 
-F5B0EF731C022D: "Bobble Position 1" => "Armaturenbrett 1"
-7E3AF4B6256EFA: "Bobble Position 2" => "Armaturenbrett 2"
-F213415E8C5019: "Bobble Position 3" => "Armaturenbrett 3"
-C0925E65AD676A: "Bobble Position 4" => "Armaturenbrett 4"
-0E4B4C02034696: "Bobble Position 5" => "Armaturenbrett 5"
-7C6D79B3D0C991: "Bobble Position 6" => "Armaturenbrett 6"
-FFE627AA2211D4: "Bobble Position 7" => "Armaturenbrett 7"
-EF443E79E76E9C: "Bobble Position 8" => "Armaturenbrett 8"
-E223117F612687: "Bobble Position 9" => "Armaturenbrett 9"
-94324B04A9490F: "Bobble Position 10" => "Armaturenbrett 10"
-909864C061970A: "Cargo Hatch" => "Ladeluke"
-99409BD53C5299: "Codex Scanner" => "Codex-Scanner"
-160F9FFC7620A0: "Decal Front" => "Folie Vorne"
-DB796083868753: "Decal Right" => "Folie Rechts"
-79549C332B0274: "Decal Left" => "Folie Links"
-988E508955A414: "Engine Colour" => "Antriebsverzierung"
-F83D1753113967: "Federation Fighter Shield" => "Föderations-Fighter-Schild"
-C826742CF71A04: "GDN Hybrid Fighter V 1 Shield" => "Guardian-Fighter v1 Schild"
-02D7E123A7CF23: "GDN Hybrid Fighter V 2 Shield" => "Guardian-Fighter v2 Schild"
-5BC09860CFA756: "GDN Hybrid Fighter V 3 Shield" => "Guardian-Fighter v3 Schild"
-4FA6E3C0BD17A5: "Huge Hardpoint 1" => "Riesige Aufhängung 1"
-AE382721B3A4E7: "Huge Hardpoint 2" => "Riesige Aufhängung 2"
-DC135E620E72E8: "Independent Fighter Shield" => "Unabhängiger-Fighter-Schild"
-B03ABC8A35C117: "Large Hardpoint 1" => "Große Aufhängung 1"
-1C180CE9EE73C5: "Large Hardpoint 2" => "Große Aufhängung 2"
-659C0C876C2160: "Large Hardpoint 3" => "Große Aufhängung 3"
-F43AA964229084: "Large Hardpoint 4" => "Große Aufhängung 4"
-A170BDDB57407E: "Medium Hardpoint 1" => "Mittlere Aufhängung 1"
-BE7DD45637B559: "Medium Hardpoint 2" => "Mittlere Aufhängung 2"
-4BBD04305C4BF0: "Medium Hardpoint 3" => "Mittlere Aufhängung 3"
-485F68ABD0CDE8: "Medium Hardpoint 4" => "Mittlere Aufhängung 4"
-A7AB21F5CF19AE: "Medium Hardpoint 5" => "Mittlere Aufhängung 5"
-77E9039F43F6E2: "Military Slot 1" => "Militärschacht 1"
-A22CCB7E4839AD: "Military Slot 2" => "Militärschacht 2"
-62898937228B9D: "Military Slot 3" => "Militärschacht 3"
-659756B43DB6FA: "Paint Job" => "Lackierung"
-1247331999BD41: "Ship Cockpit" => "Schiffscockpit"
-B94A658100919D: "Ship ID Right" => "Schiff-ID Rechts"
-1E5D7A96ED6F01: "Ship ID Left" => "Schiff-ID Links"
-986D947429065E: "Ship Kit Bumper" => "Schiffsbausatz Bumper"
-91DC0A268418F5: "Ship Kit Spoiler" => "Schiffsbausatz Spoiler"
-993E2B74B2EA99: "Ship Kit Tail" => "Schiffsbausatz Heck"
-9E0027E395B765: "Ship Kit Wings" => "Schiffsbausatz Flügel"
-BC9DE092B7E58D: "Nameplate Right" => "Namensschild Rechts"
-DC73070F29FAA0: "Nameplate Left" => "Namensschild Links"
-E7D24C92C73F25: "Optional Slot 0 Class 8" => "Optionaler Schacht 0 Klasse 8"
-885F2C9C4B7E8B: "Optional Slot 1 Class 2" => "Optionaler Schacht 1 Klasse 2"
-0B0A56C382EEA6: "Optional Slot 1 Class 3" => "Optionaler Schacht 1 Klasse 3"
-C9A17528CC37B0: "Optional Slot 1 Class 4" => "Optionaler Schacht 1 Klasse 4"
-2C7FD86E379618: "Optional Slot 1 Class 5" => "Optionaler Schacht 1 Klasse 5"
-F8FB55BDF37E40: "Optional Slot 1 Class 6" => "Optionaler Schacht 1 Klasse 6"
-687ABCAC283ADB: "Optional Slot 1 Class 7" => "Optionaler Schacht 1 Klasse 7"
-1E0D086F2FB4E6: "Optional Slot 1 Class 8" => "Optionaler Schacht 1 Klasse 8"
-8B0615BD3806C3: "Optional Slot 2 Class 2" => "Optionaler Schacht 2 Klasse 2"
-5CDA34D1E25E96: "Optional Slot 2 Class 3" => "Optionaler Schacht 2 Klasse 3"
-678BA252A5F335: "Optional Slot 2 Class 4" => "Optionaler Schacht 2 Klasse 4"
-FC2B8F1471FE83: "Optional Slot 2 Class 5" => "Optionaler Schacht 2 Klasse 5"
-A99AECBA034113: "Optional Slot 2 Class 6" => "Optionaler Schacht 2 Klasse 6"
-5E6EDF8048AA39: "Optional Slot 2 Class 7" => "Optionaler Schacht 2 Klasse 7"
-BCB6A6E2F45E60: "Optional Slot 2 Class 8" => "Optionaler Schacht 2 Klasse 8"
-F635FCE4025991: "Optional Slot 3 Class 1" => "Optionaler Schacht 3 Klasse 1"
-A21693950B15EE: "Optional Slot 3 Class 2" => "Optionaler Schacht 3 Klasse 2"
-22FA6ADED763B6: "Optional Slot 3 Class 3" => "Optionaler Schacht 3 Klasse 3"
-D55FCBE2A09B17: "Optional Slot 3 Class 4" => "Optionaler Schacht 3 Klasse 4"
-76607186CC3761: "Optional Slot 3 Class 5" => "Optionaler Schacht 3 Klasse 5"
-5FB6E8BAC9DC88: "Optional Slot 3 Class 6" => "Optionaler Schacht 3 Klasse 6"
-E61A1E9AE1B27B: "Optional Slot 3 Class 7" => "Optionaler Schacht 3 Klasse 7"
-32B21D22839308: "Optional Slot 4 Class 1" => "Optionaler Schacht 4 Klasse 1"
-AAE41EE98815F8: "Optional Slot 4 Class 2" => "Optionaler Schacht 4 Klasse 2"
-05696B07DD1B20: "Optional Slot 4 Class 3" => "Optionaler Schacht 4 Klasse 3"
-E968C6B6BA8D27: "Optional Slot 4 Class 4" => "Optionaler Schacht 4 Klasse 4"
-AE98D3B8BC52AE: "Optional Slot 4 Class 5" => "Optionaler Schacht 4 Klasse 5"
-A2428300BAE68E: "Optional Slot 4 Class 6" => "Optionaler Schacht 4 Klasse 6"
-C801DC9A469868: "Optional Slot 5 Class 1" => "Optionaler Schacht 5 Klasse 1"
-B34229AFC4A922: "Optional Slot 5 Class 2" => "Optionaler Schacht 5 Klasse 2"
-A85924BEFF814E: "Optional Slot 5 Class 3" => "Optionaler Schacht 5 Klasse 3"
-2AEBCE58D0354E: "Optional Slot 5 Class 4" => "Optionaler Schacht 5 Klasse 4"
-56241B4E1A9F20: "Optional Slot 5 Class 5" => "Optionaler Schacht 5 Klasse 5"
-9C40E1F910147A: "Optional Slot 5 Class 6" => "Optionaler Schacht 5 Klasse 6"
-CA09113685A4B9: "Optional Slot 6 Class 1" => "Optionaler Schacht 6 Klasse 1"
-08A40BEAE2D9AC: "Optional Slot 6 Class 2" => "Optionaler Schacht 6 Klasse 2"
-713A085D7A6B60: "Optional Slot 6 Class 3" => "Optionaler Schacht 6 Klasse 3"
-D86F58EA5DD1CD: "Optional Slot 6 Class 4" => "Optionaler Schacht 6 Klasse 4"
-4E1D21ED0771CD: "Optional Slot 6 Class 5" => "Optionaler Schacht 6 Klasse 5"
-F8ADF37E07F6EC: "Optional Slot 7 Class 1" => "Optionaler Schacht 7 Klasse 1"
-910C1FAC529F9A: "Optional Slot 7 Class 2" => "Optionaler Schacht 7 Klasse 2"
-AFB271774C7ECF: "Optional Slot 7 Class 3" => "Optionaler Schacht 7 Klasse 3"
-CE3ADBA96B0C99: "Optional Slot 7 Class 4" => "Optionaler Schacht 7 Klasse 4"
-2A3CB0FE6A9540: "Optional Slot 7 Class 5" => "Optionaler Schacht 7 Klasse 5"
-25092FCB6372A8: "Optional Slot 8 Class 1" => "Optionaler Schacht 8 Klasse 1"
-9BB4C22DF1C07F: "Optional Slot 8 Class 2" => "Optionaler Schacht 8 Klasse 2"
-C4525B53F318D1: "Optional Slot 8 Class 3" => "Optionaler Schacht 8 Klasse 3"
-F0B18965D06832: "Optional Slot 8 Class 4" => "Optionaler Schacht 8 Klasse 4"
-0B34FF14CF4D01: "Optional Slot 9 Class 1" => "Optionaler Schacht 9 Klasse 1"
-FE6A27546E56FC: "Optional Slot 9 Class 2" => "Optionaler Schacht 9 Klasse 2"
-37EBB40B5D1CC8: "Optional Slot 9 Class 3" => "Optionaler Schacht 9 Klasse 3"
-9D66A1EEBAC0DD: "Optional Slot 9 Class 4" => "Optionaler Schacht 9 Klasse 4"
-1D789803629DBF: "Optional Slot 10 Class 1" => "Optionaler Schacht 10 Klasse 1"
-9E1FDD91F3034C: "Optional Slot 10 Class 2" => "Optionaler Schacht 10 Klasse 2"
-FE77DED06FC359: "Optional Slot 10 Class 3" => "Optionaler Schacht 10 Klasse 3"
-B9F7EC2C516319: "Optional Slot 10 Class 4" => "Optionaler Schacht 10 Klasse 4"
-9E334982917548: "Optional Slot 11 Class 1" => "Optionaler Schacht 11 Klasse 1"
-2E43536EE0228A: "Optional Slot 11 Class 2" => "Optionaler Schacht 11 Klasse 2"
-396FF2847C8FAD: "Optional Slot 11 Class 3" => "Optionaler Schacht 11 Klasse 3"
-7B3D33D0B5E58B: "Optional Slot 12 Class 1" => "Optionaler Schacht 12 Klasse 1"
-EB2C412690A12A: "Optional Slot 13 Class 2" => "Optionaler Schacht 13 Klasse 1"
-F448DCEB3AF33F: "Optional Slot 14 Class 1" => "Optionaler Schacht 14 Klasse 1"
-EB2E26440F6DEA: "Small Hardpoint 1" => "Kleine Aufhängung 1"
-D55A80FE439B81: "Small Hardpoint 2" => "Kleine Aufhängung 2"
-F947800CCCE7FF: "Small Hardpoint 3" => "Kleine Aufhängung 3"
-3F6DB68E74DE60: "Small Hardpoint 4" => "Kleine Aufhängung 4"
-0CEC961D38E574: "Small Hardpoint 5" => "Kleine Aufhängung 5"
-16D34D20B21E87: "Small Hardpoint 6" => "Kleine Aufhängung 6"
-A0B05903143371: "String Lights" => "Lichterkette"
-4F751D52E89B5F: "Utility Mount 1" => "Werkzeugsteckplatz 1"
-6BA0C5CC04F00A: "Utility Mount 2" => "Werkzeugsteckplatz 2"
-DCD4E538925A66: "Utility Mount 3" => "Werkzeugsteckplatz 3"
-AD2158F5BFF769: "Utility Mount 4" => "Werkzeugsteckplatz 4"
-8C99DEB528D776: "Utility Mount 5" => "Werkzeugsteckplatz 5"
-359062D37B0D91: "Utility Mount 6" => "Werkzeugsteckplatz 6"
-52175069090626: "Utility Mount 7" => "Werkzeugsteckplatz 7"
-D45B70672A3B36: "Utility Mount 8" => "Werkzeugsteckplatz 8"
-E4DD5EE5641BD6: "Vessel Voice" => "Schiffstimme"
-3CE46E3FB1D343: "Weapon Colour" => "Waffenverzierung"
-D96AA577649F7B: "Turret Type 2" => "Geschützturm 2"
-3AE8579069394D: "Sine Wave Scanner" => "Sinuswellen-Scanner"
-BCC6D8B8761B2B: "Colonisation Suite" => "Kolonisierungssuite"
-1D10985EBE451F: "Large Cargo 1" => "Große Fracht 1"
-FA9AB13CECC85C: "Large Cargo 2" => "Große Fracht 2"
+F5B0EF731C022D: "Bobble Position 1" @
+7E3AF4B6256EFA: "Bobble Position 2" @
+F213415E8C5019: "Bobble Position 3" @
+C0925E65AD676A: "Bobble Position 4" @
+0E4B4C02034696: "Bobble Position 5" @
+7C6D79B3D0C991: "Bobble Position 6" @
+FFE627AA2211D4: "Bobble Position 7" @
+EF443E79E76E9C: "Bobble Position 8" @
+E223117F612687: "Bobble Position 9" @
+94324B04A9490F: "Bobble Position 10" @
+909864C061970A: "Cargo Hatch" @
+99409BD53C5299: "Codex Scanner" @
+160F9FFC7620A0: "Decal Front" @
+DB796083868753: "Decal Right" @
+79549C332B0274: "Decal Left" @
+988E508955A414: "Engine Colour" @
+F83D1753113967: "Federation Fighter Shield" @
+C826742CF71A04: "GDN Hybrid Fighter V 1 Shield" @
+02D7E123A7CF23: "GDN Hybrid Fighter V 2 Shield" @
+5BC09860CFA756: "GDN Hybrid Fighter V 3 Shield" @
+4FA6E3C0BD17A5: "Huge Hardpoint 1" @
+AE382721B3A4E7: "Huge Hardpoint 2" @
+DC135E620E72E8: "Independent Fighter Shield" @
+B03ABC8A35C117: "Large Hardpoint 1" @
+1C180CE9EE73C5: "Large Hardpoint 2" @
+659C0C876C2160: "Large Hardpoint 3" @
+F43AA964229084: "Large Hardpoint 4" @
+A170BDDB57407E: "Medium Hardpoint 1" @
+BE7DD45637B559: "Medium Hardpoint 2" @
+4BBD04305C4BF0: "Medium Hardpoint 3" @
+485F68ABD0CDE8: "Medium Hardpoint 4" @
+A7AB21F5CF19AE: "Medium Hardpoint 5" @
+77E9039F43F6E2: "Military Slot 1" @
+A22CCB7E4839AD: "Military Slot 2" @
+62898937228B9D: "Military Slot 3" @
+659756B43DB6FA: "Paint Job" @
+1247331999BD41: "Ship Cockpit" @
+B94A658100919D: "Ship ID Right" @
+1E5D7A96ED6F01: "Ship ID Left" @
+986D947429065E: "Ship Kit Bumper" @
+91DC0A268418F5: "Ship Kit Spoiler" @
+993E2B74B2EA99: "Ship Kit Tail" @
+9E0027E395B765: "Ship Kit Wings" @
+BC9DE092B7E58D: "Nameplate Right" @
+DC73070F29FAA0: "Nameplate Left" @
+E7D24C92C73F25: "Optional Slot 0 Class 8" @
+885F2C9C4B7E8B: "Optional Slot 1 Class 2" @
+0B0A56C382EEA6: "Optional Slot 1 Class 3" @
+C9A17528CC37B0: "Optional Slot 1 Class 4" @
+2C7FD86E379618: "Optional Slot 1 Class 5" @
+F8FB55BDF37E40: "Optional Slot 1 Class 6" @
+687ABCAC283ADB: "Optional Slot 1 Class 7" @
+1E0D086F2FB4E6: "Optional Slot 1 Class 8" @
+8B0615BD3806C3: "Optional Slot 2 Class 2" @
+5CDA34D1E25E96: "Optional Slot 2 Class 3" @
+678BA252A5F335: "Optional Slot 2 Class 4" @
+FC2B8F1471FE83: "Optional Slot 2 Class 5" @
+A99AECBA034113: "Optional Slot 2 Class 6" @
+5E6EDF8048AA39: "Optional Slot 2 Class 7" @
+BCB6A6E2F45E60: "Optional Slot 2 Class 8" @
+F635FCE4025991: "Optional Slot 3 Class 1" @
+A21693950B15EE: "Optional Slot 3 Class 2" @
+22FA6ADED763B6: "Optional Slot 3 Class 3" @
+D55FCBE2A09B17: "Optional Slot 3 Class 4" @
+76607186CC3761: "Optional Slot 3 Class 5" @
+5FB6E8BAC9DC88: "Optional Slot 3 Class 6" @
+E61A1E9AE1B27B: "Optional Slot 3 Class 7" @
+32B21D22839308: "Optional Slot 4 Class 1" @
+AAE41EE98815F8: "Optional Slot 4 Class 2" @
+05696B07DD1B20: "Optional Slot 4 Class 3" @
+E968C6B6BA8D27: "Optional Slot 4 Class 4" @
+AE98D3B8BC52AE: "Optional Slot 4 Class 5" @
+A2428300BAE68E: "Optional Slot 4 Class 6" @
+C801DC9A469868: "Optional Slot 5 Class 1" @
+B34229AFC4A922: "Optional Slot 5 Class 2" @
+A85924BEFF814E: "Optional Slot 5 Class 3" @
+2AEBCE58D0354E: "Optional Slot 5 Class 4" @
+56241B4E1A9F20: "Optional Slot 5 Class 5" @
+9C40E1F910147A: "Optional Slot 5 Class 6" @
+CA09113685A4B9: "Optional Slot 6 Class 1" @
+08A40BEAE2D9AC: "Optional Slot 6 Class 2" @
+713A085D7A6B60: "Optional Slot 6 Class 3" @
+D86F58EA5DD1CD: "Optional Slot 6 Class 4" @
+4E1D21ED0771CD: "Optional Slot 6 Class 5" @
+F8ADF37E07F6EC: "Optional Slot 7 Class 1" @
+910C1FAC529F9A: "Optional Slot 7 Class 2" @
+AFB271774C7ECF: "Optional Slot 7 Class 3" @
+CE3ADBA96B0C99: "Optional Slot 7 Class 4" @
+2A3CB0FE6A9540: "Optional Slot 7 Class 5" @
+25092FCB6372A8: "Optional Slot 8 Class 1" @
+9BB4C22DF1C07F: "Optional Slot 8 Class 2" @
+C4525B53F318D1: "Optional Slot 8 Class 3" @
+F0B18965D06832: "Optional Slot 8 Class 4" @
+0B34FF14CF4D01: "Optional Slot 9 Class 1" @
+FE6A27546E56FC: "Optional Slot 9 Class 2" @
+37EBB40B5D1CC8: "Optional Slot 9 Class 3" @
+9D66A1EEBAC0DD: "Optional Slot 9 Class 4" @
+1D789803629DBF: "Optional Slot 10 Class 1" @
+9E1FDD91F3034C: "Optional Slot 10 Class 2" @
+FE77DED06FC359: "Optional Slot 10 Class 3" @
+B9F7EC2C516319: "Optional Slot 10 Class 4" @
+9E334982917548: "Optional Slot 11 Class 1" @
+2E43536EE0228A: "Optional Slot 11 Class 2" @
+396FF2847C8FAD: "Optional Slot 11 Class 3" @
+7B3D33D0B5E58B: "Optional Slot 12 Class 1" @
+EB2C412690A12A: "Optional Slot 13 Class 2" @
+F448DCEB3AF33F: "Optional Slot 14 Class 1" @
+EB2E26440F6DEA: "Small Hardpoint 1" @
+D55A80FE439B81: "Small Hardpoint 2" @
+F947800CCCE7FF: "Small Hardpoint 3" @
+3F6DB68E74DE60: "Small Hardpoint 4" @
+0CEC961D38E574: "Small Hardpoint 5" @
+16D34D20B21E87: "Small Hardpoint 6" @
+A0B05903143371: "String Lights" @
+4F751D52E89B5F: "Utility Mount 1" @
+6BA0C5CC04F00A: "Utility Mount 2" @
+DCD4E538925A66: "Utility Mount 3" @
+AD2158F5BFF769: "Utility Mount 4" @
+8C99DEB528D776: "Utility Mount 5" @
+359062D37B0D91: "Utility Mount 6" @
+52175069090626: "Utility Mount 7" @
+D45B70672A3B36: "Utility Mount 8" @
+E4DD5EE5641BD6: "Vessel Voice" @
+3CE46E3FB1D343: "Weapon Colour" @
+D96AA577649F7B: "Turret Type 2" @
+3AE8579069394D: "Sine Wave Scanner" @
+BCC6D8B8761B2B: "Colonisation Suite" @
+1D10985EBE451F: "Large Cargo 1" @
+FA9AB13CECC85C: "Large Cargo 2" @
 
 SECTION StationServices
 
-4D720898E61E8B: "Apex Interstellar" => "Apex Interstellar"
-A8CF8DE554773A: "Autodock" => "Autodock"
-882219054258CA: "Bartender" => "Barkeeper"
-E994445B523BBA: "Black Market" => "Schwarzmarkt"
-B0DD615CBBDCBF: "Contacts" => "Kontakte"
-9C67E23C401E4C: "Crew Lounge" => "Crewlounge"
+4D720898E61E8B: "Apex Interstellar" @
+A8CF8DE554773A: "Autodock" @
+882219054258CA: "Bartender" @
+E994445B523BBA: "Black Market" @
+B0DD615CBBDCBF: "Contacts" @
+9C67E23C401E4C: "Crew Lounge" @
 E8B5CBF904F402: "Dock" => "Dock"
-13B8FE38A93B1E: "Workshop" => "Werkstatt"
-40EEE9BBA83352: "Fleet Carrier Administration" => "Carrier-Administration"
-D7B33C2AD2D256: "Fleet Carrier Fuel" => "Carrier-Treibstoff"
-5DFCF847B92DE4: "Fleet Carrier Management" => "Carrier-Managment"
-61538661D8E094: "Fleet Carrier Vendor" => "Carrier-Händler"
-BCF0B075B87A0B: "Flight Controller" => "Flugkontrolle"
-4E110FCC0D930E: "Frontline Solutions" => "Frontline Solutions"
-CE58D89A4E21CC: "Interstellar Factors Contact" => "Interstellare-Faktoren-Kontakt"
-E2CCAE04963449: "Initiatives" => "Initiativen"
-DF9FFF10547920: "Livery" => "Lackiererei"
-87E1A3CD31659F: "Missions Generated" => "Missionen Generiert"
-4C43E25D84B7F8: "On Dock Mission" => "Missionen angedockt"
-47B3D6DC1170FA: "Refuel" => "Auftanken"
-3CCF7127AB2FFF: "Restock" => "Nachladen"
+13B8FE38A93B1E: "Workshop" @
+40EEE9BBA83352: "Fleet Carrier Administration" @
+D7B33C2AD2D256: "Fleet Carrier Fuel" @
+5DFCF847B92DE4: "Fleet Carrier Management" @
+61538661D8E094: "Fleet Carrier Vendor" @
+BCF0B075B87A0B: "Flight Controller" @
+4E110FCC0D930E: "Frontline Solutions" @
+CE58D89A4E21CC: "Interstellar Factors Contact" @
+E2CCAE04963449: "Initiatives" @
+DF9FFF10547920: "Livery" @
+87E1A3CD31659F: "Missions Generated" @
+4C43E25D84B7F8: "On Dock Mission" @
+47B3D6DC1170FA: "Refuel" @
+3CCF7127AB2FFF: "Restock" @
 55DE88709232EC: "Shop" => "Laden"
-AD038C447F5DE3: "Social Space" => "Abflughalle"
-D286137F857962: "Station Menu" => "Stationsmenü"
-BB15267B3070D3: "Station Operations" => "Stationsoperationen"
-221B7518505747: "Tuning" => "Tuning"
-60200FB3E2E83B: "Construction Services" => "Konstruktionsdienste"
-AA300EF7059881: "Refinery Contact" => "Raffineriekontakt"
-2E40E3A594EE09: "System Colonisation" => "Systemkolonisation"
+AD038C447F5DE3: "Social Space" @
+D286137F857962: "Station Menu" @
+BB15267B3070D3: "Station Operations" @
+221B7518505747: "Tuning" @
+60200FB3E2E83B: "Construction Services" @
+AA300EF7059881: "Refinery Contact" @
+2E40E3A594EE09: "System Colonisation" @
