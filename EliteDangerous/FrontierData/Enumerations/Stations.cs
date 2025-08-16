@@ -208,11 +208,7 @@ namespace EliteDangerousCore
 
         public static string ToEnglish(StarportTypes starporttype)
         {
-            if (starporttype == StarportTypes.SpaceConstructionDepot)
-                return "Orbital Construction Site";
-            else if (starporttype == StarportTypes.PlanetaryConstructionDepot)
-                return "Planetary Construction Site";
-            else if (starporttype == StarportTypes.GameplayPOI)
+            if (starporttype == StarportTypes.GameplayPOI)
                 return "Construction POI";
             else
                 return starporttype.ToString().SplitCapsWordFull();
@@ -220,7 +216,6 @@ namespace EliteDangerousCore
 
         public static string ToLocalisedLanguage(StarportTypes sc)
         {
-            string id = "StarportTypes." + sc.ToString();
             return ToEnglish(sc).Tx();
         }
 

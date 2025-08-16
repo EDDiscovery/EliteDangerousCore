@@ -29,7 +29,7 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(this.GetType(), true,
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: this,
-                customformat: (ty, ob) => { return JournalFieldNaming.FixCommodityName((string)ob); }
+                customconverter: (ty, ob) => { return JournalFieldNaming.FixCommodityName((string)ob); }
                 );        // read fields named in this structure matching JSON names
         }
         public long MarketID { get; set; }
@@ -98,7 +98,7 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(this.GetType(), true,
                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                initialobject: this,
-                customformat: (ty, ob) => { return JournalFieldNaming.FixCommodityName((string)ob); }
+                customconverter: (ty, ob) => { return JournalFieldNaming.FixCommodityName((string)ob); }
                );        // read fields named in this structure matching JSON names
         }
         public long MarketID { get; set; }

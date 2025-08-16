@@ -910,7 +910,6 @@
             this.extScrollBar.MousePressedButtonColor2 = System.Drawing.Color.Red;
             this.extScrollBar.Name = "extScrollBar";
             this.extScrollBar.Size = new System.Drawing.Size(48, 538);
-            this.extScrollBar.SkinnyStyle = false;
             this.extScrollBar.SliderColor = System.Drawing.Color.DarkGray;
             this.extScrollBar.SliderColor2 = System.Drawing.Color.DarkGray;
             this.extScrollBar.SliderDrawAngle = 90F;
