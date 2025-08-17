@@ -69,7 +69,7 @@ namespace EliteDangerousCore.Inara
 
         public void LaunchBrowserForStation(string system, string station)
         {
-            string url = ServerAddress + "elite/station/?search=" + System.Web.HttpUtility.UrlEncode(system) + "[" + System.Web.HttpUtility.UrlEncode(station) + "]";
+            string url = ServerAddress + "elite/station/?search=" + System.Web.HttpUtility.UrlEncode(station) + " [" + System.Web.HttpUtility.UrlEncode(system) + "]";
             BaseUtils.BrowserInfo.LaunchBrowser(url);
         }
 
