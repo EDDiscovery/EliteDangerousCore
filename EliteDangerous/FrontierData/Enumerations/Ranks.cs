@@ -207,6 +207,23 @@ namespace EliteDangerousCore
             Officer = 2,
             Agent = 3,
             Rookie = 4,
+
+            Rank0 = 10,                     // New vanguard ranks
+            Rank1 = 11,
+            Rank2 = 12,
+            Rank3 = 13,
+            Rank4 = 14,
+            Rank5 = 15,
+            Rank6 = 16,
+            Rank7 = 17,
+            Rank8 = 18,
+            Rank9 = 10,
+            Rank10 = 20,
+            Rank11 = 21,
+            Rank12 = 22,
+            Rank13 = 23,
+            Rank14 = 24,
+
         }
         public static string FriendlyName(SquadronRank cr)
         {
