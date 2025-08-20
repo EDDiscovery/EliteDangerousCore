@@ -1061,7 +1061,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return "@ " + StarSystem + (CarrierType.HasChars() ? ", Carrier Type: " + CarrierType.SplitCapsWord() : "");
+            return "@ " + StarSystem + (CarrierType.HasChars() ? ", " + "Carrier Type".Tx() + ": " + CarrierType.SplitCapsWord() : "");
         }
 
         public void UpdateCarrierStats(CarrierStats s, bool _)
