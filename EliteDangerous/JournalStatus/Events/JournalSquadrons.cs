@@ -100,14 +100,22 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSquadronRankBase(JObject evt, JournalTypeEnum e) : base(evt, e)
         {
-            OldRank = (RankDefinitions.SquadronRank)evt["OldRank"].Int();
-            NewRank = (RankDefinitions.SquadronRank)evt["NewRank"].Int();
+            if (EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards)
+            {
+                OldRank = (RankDefinitions.SquadronRank)evt["OldRank"].Int();
+                NewRank = (RankDefinitions.SquadronRank)evt["NewRank"].Int();
+            }
+            else
+            {
+                OldRank42 = evt["OldRank"].Int();
+                NewRank42 = evt["NewRank"].Int();
+            }
             OldRankName = evt["OldRankName"].Str();
             NewRankName = evt["NewRankName"].Str();
             OldRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["OldRank_Localised"].Str(), OldRankName);
             NewRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["NewRank_Localised"].Str(), NewRankName);
         }
-
+        
         public override string GetInfo()
         {
             if (EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards)
@@ -122,9 +130,11 @@ namespace EliteDangerousCore.JournalEvents
             }
 
         }
-
+        
         public RankDefinitions.SquadronRank OldRank { get; set; }
         public RankDefinitions.SquadronRank NewRank { get; set; }
+        public int OldRank42 { get; set; }
+        public int NewRank42 { get; set; }
         public string OldRankName { get; set; }
         public string NewRankName { get; set; }
         public string OldRankName_Localised { get; set; }
@@ -161,11 +171,19 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSquadronStartup(JObject evt) : base(evt, JournalTypeEnum.SquadronStartup)
         {
-            CurrentRank = (RankDefinitions.SquadronRank)evt["CurrentRank"].Int();
+            if (EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards)
+            {
+                CurrentRank = (RankDefinitions.SquadronRank)evt["CurrentRank"].Int();
+            }
+            else
+            {
+                CurrentRank42 = evt["CurrentRank"].Int();
+            }
             CurrentRankName = evt["CurrentRankName"].Str();
         }
 
         public RankDefinitions.SquadronRank CurrentRank { get; set; }
+        public int CurrentRank42 { get; set; }
         public string CurrentRankName { get; set; }
 
         public override string GetInfo()
