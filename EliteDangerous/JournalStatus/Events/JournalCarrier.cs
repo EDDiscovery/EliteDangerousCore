@@ -285,7 +285,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             return BaseUtils.FieldBuilder.Build("Name".Tx()+": ", State.Name,
                                                 "Call Sign".Tx()+": ", State.Callsign,
-                                                "CarrierType".Tx()+": ", State.CarrierType,
+                                                "Carrier Type".Tx()+": ", State.CarrierType.SplitCapsWord(),
                                                 "Fuel Level: ;;N0".Tx(), State.FuelLevel,
                                                 "Jump Range: ; ly;0.0".Tx(), State.JumpRangeCurr,
                                                 "Carrier Balance: ; cr;N0".Tx(), State.Finance.CarrierBalance,
@@ -1061,7 +1061,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return "@ " + StarSystem;
+            return "@ " + StarSystem + (CarrierType.HasChars() ? ", Carrier Type: " + CarrierType.SplitCapsWord() : "");
         }
 
         public void UpdateCarrierStats(CarrierStats s, bool _)

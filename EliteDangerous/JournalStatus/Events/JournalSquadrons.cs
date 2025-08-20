@@ -110,7 +110,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            if (OldRankName == "" && NewRankName == "")
+            if (EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards)
             {
                 return BaseUtils.FieldBuilder.Build("", Name, "Old".Tx() + ": ", RankDefinitions.FriendlyName(OldRank),
                             "New".Tx() + ": ", RankDefinitions.FriendlyName(NewRank));
@@ -170,7 +170,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            if (CurrentRankName == "")
+            if (EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards)
             {
                 return BaseUtils.FieldBuilder.Build("", Name, "Rank".Tx() + ": ", RankDefinitions.FriendlyName(CurrentRank));
             }

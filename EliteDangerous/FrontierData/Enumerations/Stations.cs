@@ -70,6 +70,8 @@ namespace EliteDangerousCore
             ConstructionServices,   // trailblazers feb 25 in game names, see mapping below to fdnames
             RefineryContact,
             SystemColonisation,
+
+            SquadronBank, // vanguards august 25
         }
 
         public static StationServices StationServicesToEnum(string fdname)

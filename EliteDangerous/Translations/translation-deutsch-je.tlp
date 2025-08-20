@@ -999,7 +999,7 @@ DE8CC5C4DD7104: "Carrier jumped to {0}" => "Carrier sprang nach {0}"
 SECTION JournalCarrier
 
 808572574FD987: "Call Sign" => "Rufzeichen"
-EA77433C4CD79B: "CarrierType" => "Carrierart"
+8359F3D1A48C34: "Carrier Type" => "Carrierart"
 B15D8F8451444C: "Jump Range: ; ly;0.0" => "Sprungreichweite: ;Lj;0.0"
 4ABDD513D53A4E: "Carrier Balance: ; cr;N0" => "Carrier Kontostand: ; Cr;N0"
 F913B2BD65130A: "Reserve Balance: ; cr;N0" => "Reservekontostand: ; Cr;N0"
