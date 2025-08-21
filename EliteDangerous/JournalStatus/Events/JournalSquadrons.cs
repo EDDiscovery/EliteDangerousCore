@@ -25,9 +25,11 @@ namespace EliteDangerousCore.JournalEvents
         public JournalSquadronBase(JObject evt, JournalTypeEnum e) : base(evt, e)
         {
             Name = evt["SquadronName"].Str();
+            SquadronID = evt["SquadronID"].Int();
         }
 
         public string Name { get; set; }
+        public int SquadronID { get; set; }
     }
 
     [JournalEntryType(JournalTypeEnum.AppliedToSquadron)]
@@ -98,18 +100,45 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSquadronRankBase(JObject evt, JournalTypeEnum e) : base(evt, e)
         {
-            OldRank = (RankDefinitions.SquadronRank)evt["OldRank"].Int();
-            NewRank = (RankDefinitions.SquadronRank)evt["NewRank"].Int();
+            if (EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards)
+            {
+                OldRank = (RankDefinitions.SquadronRank)evt["OldRank"].Int();
+                NewRank = (RankDefinitions.SquadronRank)evt["NewRank"].Int();
+            }
+            else
+            {
+                OldRank42 = evt["OldRank"].Int();
+                NewRank42 = evt["NewRank"].Int();
+            }
+            OldRankName = evt["OldRankName"].Str();
+            NewRankName = evt["NewRankName"].Str();
+            OldRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["OldRank_Localised"].Str(), OldRankName);
+            NewRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["NewRank_Localised"].Str(), NewRankName);
         }
-
+        
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Name, "Old".Tx()+": ", RankDefinitions.FriendlyName(OldRank), 
-                            "New".Tx()+": ", RankDefinitions.FriendlyName(NewRank));
-        }
+            if (EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards)
+            {
+                return BaseUtils.FieldBuilder.Build("", Name, "Old".Tx() + ": ", RankDefinitions.FriendlyName(OldRank),
+                            "New".Tx() + ": ", RankDefinitions.FriendlyName(NewRank));
+            }
+            else
+            {
+                return BaseUtils.FieldBuilder.Build("", Name, "Old".Tx() + ": ", OldRankName_Localised,
+                            "New".Tx() + ": ", NewRankName_Localised);
+            }
 
+        }
+        
         public RankDefinitions.SquadronRank OldRank { get; set; }
         public RankDefinitions.SquadronRank NewRank { get; set; }
+        public int OldRank42 { get; set; }
+        public int NewRank42 { get; set; }
+        public string OldRankName { get; set; }
+        public string NewRankName { get; set; }
+        public string OldRankName_Localised { get; set; }
+        public string NewRankName_Localised { get; set; }
     }
 
 
@@ -142,14 +171,32 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSquadronStartup(JObject evt) : base(evt, JournalTypeEnum.SquadronStartup)
         {
-            CurrentRank = (RankDefinitions.SquadronRank)evt["CurrentRank"].Int();
+            if (EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards)
+            {
+                CurrentRank = (RankDefinitions.SquadronRank)evt["CurrentRank"].Int();
+            }
+            else
+            {
+                CurrentRank42 = evt["CurrentRank"].Int();
+            }
+            CurrentRankName = evt["CurrentRankName"].Str();
         }
 
         public RankDefinitions.SquadronRank CurrentRank { get; set; }
+        public int CurrentRank42 { get; set; }
+        public string CurrentRankName { get; set; }
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Name, "Rank".Tx()+": ", RankDefinitions.FriendlyName(CurrentRank));
+            if (EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards)
+            {
+                return BaseUtils.FieldBuilder.Build("", Name, "Rank".Tx() + ": ", RankDefinitions.FriendlyName(CurrentRank));
+            }
+            else
+            {
+                return BaseUtils.FieldBuilder.Build("", Name, "Rank".Tx() + ": ", CurrentRankName);
+            }
+
         }
     }
 

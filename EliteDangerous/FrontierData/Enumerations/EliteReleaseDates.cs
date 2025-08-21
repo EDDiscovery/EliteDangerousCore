@@ -25,10 +25,11 @@ namespace EliteDangerousCore
         public static DateTime Release_3_2 = new DateTime(2018, 8, 28, 10, 0, 0, DateTimeKind.Utc);
         public static DateTime Release_3_3 = new DateTime(2018, 12, 11, 9, 0, 0, DateTimeKind.Utc);
         public static DateTime Odyssey5 = new DateTime(2021, 7, 1,12,0,0, DateTimeKind.Utc);
-        public static DateTime Odyssey14 = new DateTime(2022, 11, 29, 12, 0, 0, DateTimeKind.Utc);
+        public static DateTime Odyssey14 = new DateTime(2022, 11, 29, 12, 0, 0, DateTimeKind.Utc);          //Galaxy split Live/Legacy
         public static DateTime OdysseyType8 = new DateTime(2024, 8, 7, 12, 0, 0, DateTimeKind.Utc);
         public static DateTime Ascendency = new DateTime(2024, 10, 22, 12, 0, 0, DateTimeKind.Utc);         // power play 2.0
         public static DateTime Trailblazers = new DateTime(2025, 2, 26, 12, 0, 0, DateTimeKind.Utc);        // colonisation
+        public static DateTime Vanguards = new DateTime(2025, 8, 19, 12, 0, 0,DateTimeKind.Utc);            //squadron overhaul
         public static DateTime GameEndTime = new DateTime(2999, 12, 14, 23, 59, 59, DateTimeKind.Utc);      // not according to the forums, its already dead!
     }
     public static class EliteFixesDates
