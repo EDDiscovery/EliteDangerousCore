@@ -117,8 +117,8 @@ namespace EliteDangerousCore.JournalEvents
             OldRankName = evt["OldRankName"].Str(RankDefinitions.FriendlyName(OldRank));
             NewRankName = evt["NewRankName"].Str(RankDefinitions.FriendlyName(NewRank));
 
-            OldRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["OldRank_Localised"].Str(), OldRankName);
-            NewRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["NewRank_Localised"].Str(), NewRankName);
+            OldRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["OldRankName_Localised"].Str(), OldRankName);
+            NewRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["NewRankName_Localised"].Str(), NewRankName);
         }
         
         public override string GetInfo()
@@ -167,7 +167,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             CurrentRank = GetRank(evt, evt.Contains("CurrentRankName"), "CurrentRank");
             CurrentRankName = evt["CurrentRankName"].Str(RankDefinitions.FriendlyName(CurrentRank));
-            CurrentRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["CurrentRank_Localised"].Str(), CurrentRankName);
+            CurrentRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["CurrentRankName_Localised"].Str(), CurrentRankName);
         }
 
         public RankDefinitions.SquadronRank CurrentRank { get; set; }
