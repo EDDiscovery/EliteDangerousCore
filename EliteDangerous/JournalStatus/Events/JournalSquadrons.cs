@@ -17,6 +17,7 @@ using QuickJSON;
 using System;
 using System.Linq;
 using System.Text;
+using static BaseUtils.IntRangeList;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -30,6 +31,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Name { get; set; }
         public int SquadronID { get; set; }
+
+        protected RankDefinitions.SquadronRank GetRank(JToken evt, bool newrank, string idfield)
+        {
+            //bool oldrank = EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards;
+            int value = evt[idfield].Int() + (newrank ? (int)RankDefinitions.SquadronRank.Rank0 : 0);
+            return (RankDefinitions.SquadronRank)value;
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.AppliedToSquadron)]
@@ -100,42 +108,28 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSquadronRankBase(JObject evt, JournalTypeEnum e) : base(evt, e)
         {
-            if (EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards)
-            {
-                OldRank = (RankDefinitions.SquadronRank)evt["OldRank"].Int();
-                NewRank = (RankDefinitions.SquadronRank)evt["NewRank"].Int();
-            }
-            else
-            {
-                OldRank42 = evt["OldRank"].Int();
-                NewRank42 = evt["NewRank"].Int();
-            }
-            OldRankName = evt["OldRankName"].Str();
-            NewRankName = evt["NewRankName"].Str();
+            bool newformat = evt.Contains("OldRankName") || evt.Contains("NewRankName");
+
+            OldRank = GetRank(evt, newformat, "OldRank");
+            NewRank = GetRank(evt, newformat, "NewRank");
+
+            // Vanguards + have these fields, older ones don't, but fill in
+            OldRankName = evt["OldRankName"].Str(RankDefinitions.FriendlyName(OldRank));
+            NewRankName = evt["NewRankName"].Str(RankDefinitions.FriendlyName(NewRank));
+
             OldRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["OldRank_Localised"].Str(), OldRankName);
             NewRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["NewRank_Localised"].Str(), NewRankName);
         }
         
         public override string GetInfo()
         {
-            if (EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards)
-            {
-                return BaseUtils.FieldBuilder.Build("", Name, "Old".Tx() + ": ", RankDefinitions.FriendlyName(OldRank),
-                            "New".Tx() + ": ", RankDefinitions.FriendlyName(NewRank));
-            }
-            else
-            {
-                return BaseUtils.FieldBuilder.Build("", Name, "Old".Tx() + ": ", OldRankName_Localised,
-                            "New".Tx() + ": ", NewRankName_Localised);
-            }
-
+            return BaseUtils.FieldBuilder.Build("", Name, "Old".Tx() + ": ", OldRankName_Localised,
+                        "New".Tx() + ": ", NewRankName_Localised);
         }
         
         public RankDefinitions.SquadronRank OldRank { get; set; }
         public RankDefinitions.SquadronRank NewRank { get; set; }
-        public int OldRank42 { get; set; }
-        public int NewRank42 { get; set; }
-        public string OldRankName { get; set; }
+        public string OldRankName { get; set; }                 // always filled,even for older squadrons
         public string NewRankName { get; set; }
         public string OldRankName_Localised { get; set; }
         public string NewRankName_Localised { get; set; }
@@ -171,32 +165,18 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSquadronStartup(JObject evt) : base(evt, JournalTypeEnum.SquadronStartup)
         {
-            if (EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards)
-            {
-                CurrentRank = (RankDefinitions.SquadronRank)evt["CurrentRank"].Int();
-            }
-            else
-            {
-                CurrentRank42 = evt["CurrentRank"].Int();
-            }
-            CurrentRankName = evt["CurrentRankName"].Str();
+            CurrentRank = GetRank(evt, evt.Contains("CurrentRankName"), "CurrentRank");
+            CurrentRankName = evt["CurrentRankName"].Str(RankDefinitions.FriendlyName(CurrentRank));
+            CurrentRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["CurrentRank_Localised"].Str(), CurrentRankName);
         }
 
         public RankDefinitions.SquadronRank CurrentRank { get; set; }
-        public int CurrentRank42 { get; set; }
-        public string CurrentRankName { get; set; }
+        public string CurrentRankName { get; set; }     // always filled in
+        public string CurrentRankName_Localised { get; set; }     // always filled in
 
         public override string GetInfo()
         {
-            if (EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards)
-            {
-                return BaseUtils.FieldBuilder.Build("", Name, "Rank".Tx() + ": ", RankDefinitions.FriendlyName(CurrentRank));
-            }
-            else
-            {
-                return BaseUtils.FieldBuilder.Build("", Name, "Rank".Tx() + ": ", CurrentRankName);
-            }
-
+            return BaseUtils.FieldBuilder.Build("", Name, "Rank".Tx() + ": ", CurrentRankName_Localised);
         }
     }
 
