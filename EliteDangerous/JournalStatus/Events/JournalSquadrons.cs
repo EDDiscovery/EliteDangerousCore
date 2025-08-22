@@ -46,6 +46,10 @@ namespace EliteDangerousCore.JournalEvents
         public JournalAppliedToSquadron(JObject evt) : base(evt, JournalTypeEnum.AppliedToSquadron)
         {
         }
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("", Name);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.DisbandedSquadron)]
@@ -62,6 +66,10 @@ namespace EliteDangerousCore.JournalEvents
         public JournalInvitedToSquadron(JObject evt) : base(evt, JournalTypeEnum.InvitedToSquadron)
         {
         }
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("", Name);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.JoinedSquadron)]
@@ -69,6 +77,10 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalJoinedSquadron(JObject evt) : base(evt, JournalTypeEnum.JoinedSquadron)
         {
+        }
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("", Name);
         }
     }
 
@@ -78,6 +90,10 @@ namespace EliteDangerousCore.JournalEvents
         public JournalKickedFromSquadron(JObject evt) : base(evt, JournalTypeEnum.KickedFromSquadron)
         {
         }
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("", Name);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.LeftSquadron)]
@@ -85,6 +101,10 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalLeftSquadron(JObject evt) : base(evt, JournalTypeEnum.LeftSquadron)
         {
+        }
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("", Name);
         }
     }
 
