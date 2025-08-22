@@ -372,14 +372,14 @@ namespace EliteDangerousCore.Inara
                         foreach( var y in x.Engineering.Modifiers )
                         {
                             JObject mod = new JObject();
-                            eng["name"] = y.Label;
+                            mod["name"] = y.Label;
                             if (y.ValueStr.HasChars())
-                                eng["value"] = y.ValueStr;
+                                mod["value"] = y.ValueStr;
                             else
                             {
-                                eng["value"] = y.Value;
-                                eng["originalValue"] = y.OriginalValue;
-                                eng["lessIsGood"] = y.LessIsGood;
+                                mod["value"] = y.Value;
+                                mod["originalValue"] = y.OriginalValue;
+                                mod["lessIsGood"] = y.LessIsGood;
                             }
 
                             mods.Add(mod);
