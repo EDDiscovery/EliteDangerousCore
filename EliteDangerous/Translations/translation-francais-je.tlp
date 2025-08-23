@@ -787,6 +787,33 @@ A244B487DEE654: "Thargoid structures: ;;N0" => "Structures Thargoids : ;;N0"
 7E967FB5DA23E0: "Last seen on" => "Date "
 24CD0F239B6A95: "Last ship involved" => "Dernier vaisseau "
 
+SECTION SquadronClass
+
+728152AC715A16: "Credits deposited in bank: ; cr;N0" @
+EB57915CBECF14: "Credits withdrawn from bank: ; cr;N0" @
+E70876095D9995: "Times commodities were deposited: ;;N0" @
+979B4B21F1883F: "Value of deposited commodities: ; cr;N0" @
+B24A06E2BEC8D8: "Times commodities were withdrawn: ;;N0" @
+40841B34E7F547: "Value of withdrawn commodities: ; cr;N0" @
+532366FEE4659B: "Times personal assets were deposited: ;;N0" @
+258C2CFBA5DF38: "Value of deposited personal assets: ; cr;N0" @
+A0D1DF478B9E21: "Times personal assets were withdrawn: ;;N0" @
+0FE848AD4253FE: "Value of withdrawn personal assets: ; cr;N0" @
+F73282F8B718CE: "Times ships were deposited: ;;N0" @
+88249FB2AC381A: "Value of deposited ships: ; cr;N0" @
+AE039D8838F8C7: "Highest contribution for Aegis leaderboard: ;;N0" @
+5F4D0AC904A2BC: "Highest contribution for BGS leaderboard: ;;N0" @
+6CACA73BD9B708: "Highest contribution for Bounty leaderboard: ;;N0" @
+F79C7D4454593E: "Highest contribution for Colonisation Contribution leaderboard: ;;N0" @
+CBBFDE8AB0958F: "Highest contribution for Combat leaderboard: ;;N0" @
+CC3330138638FF: "Highest contribution for CQC leaderboard: ;;N0" @
+BDC6D8E52A2CA6: "Highest contribution for Exploration leaderboard: ;;N0" @
+54C7DFF1A1B6F4: "Highest contribution for Mining leaderboard: ;;N0" @
+4C83A8A9F5B221: "Highest contribution for Powerplay leaderboard: ;;N0" @
+E5F44644D71624: "Highest contribution for Trade leaderboard: ;;N0" @
+4DC4A4CFA653D6: "Highest contribution for Illicit Trade leaderboard: ;;N0" @
+DD290F0A316A20: "Times squadron got a podium place: ;;N0" @
+
 SECTION JournalStoredModules
 
 
@@ -972,6 +999,7 @@ DE8CC5C4DD7104: "Carrier jumped to {0}" @
 SECTION JournalCarrier
 
 808572574FD987: "Call Sign" => "Ident "
+8359F3D1A48C34: "Carrier Type" @
 B15D8F8451444C: "Jump Range: ; ly;0.0" => "Portée de saut : ; al;0.0"
 4ABDD513D53A4E: "Carrier Balance: ; cr;N0" => "Solde du porte-vaisseaux : ; cr;N0"
 F913B2BD65130A: "Reserve Balance: ; cr;N0" => "Allocation hebdomadaire : ; cr;N0"
