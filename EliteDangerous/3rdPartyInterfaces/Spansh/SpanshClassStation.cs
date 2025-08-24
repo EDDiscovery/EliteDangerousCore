@@ -773,6 +773,7 @@ namespace EliteDangerousCore.Spansh
             [StationServices.ConstructionServices] = "Construction Services",
             [StationServices.SystemColonisation] = "System Colonisation",
             [StationServices.RefineryContact] = "Refinery Contact",
+            [StationServices.SquadronBank] = "Squadron Bank",
         };
 
         private static StationServices StationServiceNameToEnum(string fdname)

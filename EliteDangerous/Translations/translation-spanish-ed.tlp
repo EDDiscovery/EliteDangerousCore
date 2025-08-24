@@ -1223,6 +1223,7 @@ SECTION StarportTypes
 .SpaceConstructionDepot: "Space Construction Depot" => "Depósito de Construcción Espacial"
 .PlanetaryConstructionDepot: "Planetary Construction Depot" => "Depósito de Construcción Planetaria"
 .DockablePlanetStation: "Dockable Planet Station" => "Estación Planetaria Atracable"
+.GameplayPOI: "Construction POI" @
 
 SECTION PowerPlayStates
 
@@ -1601,3 +1602,5 @@ SECTION StationServices
 .ConstructionServices: "Construction Services" @
 .RefineryContact: "Refinery Contact" => "Contacto de Refinería"
 .SystemColonisation: "System Colonisation" => "Colonización del Sistema"
+.SquadronBank: "! Squadron Bank !" @
+
