@@ -1068,6 +1068,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCarrierStats(CarrierStats s, bool _)
         {
+            s.Update(this);
         }
     }
 

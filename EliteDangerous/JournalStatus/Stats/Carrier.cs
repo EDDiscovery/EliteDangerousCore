@@ -275,6 +275,31 @@ namespace EliteDangerousCore
             }
         }
 
+        // we have a carrier location
+        public void Update(JournalCarrierLocation j)
+        {
+            var jh = JumpHistory.LastOrDefault();
+
+            // if no last jump, or different system on top of stack
+            if (jh == null || jh.StarSystem.Name != j.StarSystem || jh.BodyID != j.BodyID)
+            {
+                StarSystem = new SystemClass(j.StarSystem);                  // set new location without position
+                SystemAddress = j.SystemAddress;
+                Body = j.StarSystem + (j.BodyID != 0 ? $" ({j.BodyID})" : "");                                         // not given
+                BodyID = j.BodyID;
+
+                //System.Diagnostics.Debug.WriteLine($"Carrier {j.EventTimeUTC} jump - changed at to `{StarSystem}` `{Body}`");
+
+                JumpHistory.Add(new Jumps(StarSystem, Body, BodyID, j.EventTimeUTC));
+            }
+            else
+            {
+                //System.Diagnostics.Debug.WriteLine($"Carrier {j.EventTimeUTC} location - already autojumped to {j.StarSystem} {j.Body}");
+            }
+
+            CancelJumpTimer();      // cancel auto jump
+        }
+
 
         public void Update(JournalCarrierDecommission j)
         {
