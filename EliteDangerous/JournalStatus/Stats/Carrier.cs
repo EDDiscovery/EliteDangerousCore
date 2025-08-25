@@ -21,10 +21,17 @@ namespace EliteDangerousCore
 {
     public class CarrierStats
     {
+        public CarrierStats(CarrierDefinitions.CarrierType carrierType)
+        {
+            this.CarrierType = carrierType;
+        }
+
         // from journalcarrier, a copy of the carrier stats journal record. 
         // use State.HaveCarrier to determine carrier state
 
         #region Vars
+        CarrierDefinitions.CarrierType CarrierType { get; set; }
+
         public CarrierState State { get; private set; } = new CarrierState();
 
         // from CarrierBuy, CarrierJump
@@ -128,9 +135,12 @@ namespace EliteDangerousCore
 
         public void Process(JournalEntry je, bool onfootfleetcarrier)
         {
-            if (je is ICarrierStats)
+            if (je is ICarrierStats cs)
             {
-                ((ICarrierStats)je).UpdateCarrierStats(this,onfootfleetcarrier);
+                if (cs.CarrierType == CarrierDefinitions.CarrierType.UnknownType || cs.CarrierType == CarrierType)
+                {
+                    cs.UpdateCarrierStats(this, onfootfleetcarrier);
+                }
             }
 
             CheckCarrierJump(je.EventTimeUTC);
@@ -240,36 +250,7 @@ namespace EliteDangerousCore
         // we have a carrier jump
         public void Update(JournalCarrierJump j)
         {
-            var jh = JumpHistory.LastOrDefault();
-
-            // if no last jump, or different system on top of stack
-            if (jh == null || jh.StarSystem.Name != j.StarSystem || jh.Body != j.Body || jh.BodyID != j.BodyID)
-            {
-                StarSystem = new SystemClass(j.StarSystem, null, j.StarPos.X, j.StarPos.Y, j.StarPos.Z);                  // set new location with position
-                SystemAddress = j.SystemAddress ?? 0;
-                Body = NextBody ?? j.Body ?? j.StarSystem;        // you should always have a nextbody, but if debugging.. 
-                BodyID = NextBodyID;
-
-                //System.Diagnostics.Debug.WriteLine($"Carrier {j.EventTimeUTC} jump - changed at to `{StarSystem}` `{Body}`");
-
-                JumpHistory.Add(new Jumps(StarSystem, Body, BodyID, j.EventTimeUTC));
-            }
-            else
-            {
-                //System.Diagnostics.Debug.WriteLine($"Carrier {j.EventTimeUTC} jump - already autojumped to {j.StarSystem} {j.Body}");
-            }
-
-            CancelJumpTimer();      // cancel auto jump
-        }
-
-        public void Update(JournalLocation j, bool onfootfleetcarrier)            
-        {
-            // odyssey up to patch 13 is writing Location on jump if in ship or on foot
-            // if we have a location, and station type is fleet carrier, it jumped
-
-            // only if location is on a carrier
-
-            if ((onfootfleetcarrier || j.FDStationType == StationDefinitions.StarportTypes.FleetCarrier))       
+            if (j.StationName == State.Name)
             {
                 var jh = JumpHistory.LastOrDefault();
 
@@ -277,22 +258,23 @@ namespace EliteDangerousCore
                 if (jh == null || jh.StarSystem.Name != j.StarSystem || jh.Body != j.Body || jh.BodyID != j.BodyID)
                 {
                     StarSystem = new SystemClass(j.StarSystem, null, j.StarPos.X, j.StarPos.Y, j.StarPos.Z);                  // set new location with position
-                    SystemAddress = j.SystemAddress.Value;
-                    Body = j.Body;
-                    BodyID = j.BodyID ?? 0;
+                    SystemAddress = j.SystemAddress ?? 0;
+                    Body = NextBody ?? j.Body ?? j.StarSystem;        // you should always have a nextbody, but if debugging.. 
+                    BodyID = NextBodyID;
 
-                    //System.Diagnostics.Debug.WriteLine($"Carrier {j.EventTimeUTC} Location - location changed to `{StarSystem}` `{Body}`");
+                    //System.Diagnostics.Debug.WriteLine($"Carrier {j.EventTimeUTC} jump - changed at to `{StarSystem}` `{Body}`");
 
                     JumpHistory.Add(new Jumps(StarSystem, Body, BodyID, j.EventTimeUTC));
-                    CancelJumpTimer();
                 }
                 else
                 {
-                    //System.Diagnostics.Debug.WriteLine($"Carrier {j.EventTimeUTC} Location - already autojumped to `{j.Body}`");
+                    //System.Diagnostics.Debug.WriteLine($"Carrier {j.EventTimeUTC} jump - already autojumped to {j.StarSystem} {j.Body}");
                 }
 
+                CancelJumpTimer();      // cancel auto jump
             }
         }
+
 
         public void Update(JournalCarrierDecommission j)
         {

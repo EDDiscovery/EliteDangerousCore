@@ -31,7 +31,7 @@ namespace EliteDangerousCore
         public SuitList SuitList { get; private set; } = new SuitList();
         public SuitLoadoutList SuitLoadoutList { get; private set; } = new SuitLoadoutList();
         public EngineerCrafting Engineering { get; private set; } = new EngineerCrafting();
-        public CarrierStats Carrier { get; private set; } = new CarrierStats();
+        public CarrierStats Carrier { get; private set; } = new CarrierStats(CarrierDefinitions.CarrierType.FleetCarrier);
         public Ledger CashLedger { get; private set; } = new Ledger();       // and the ledger..
         public ShipList ShipInformationList { get; private set; } = new ShipList();     // ship info
         public ShipYardList Shipyards { get; private set; } = new ShipYardList(); // yards in space (not meters)

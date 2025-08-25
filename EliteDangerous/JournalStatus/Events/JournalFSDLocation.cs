@@ -237,7 +237,7 @@ namespace EliteDangerousCore.JournalEvents
 
     //When written: at startup, or when being resurrected at a station
     [JournalEntryType(JournalTypeEnum.Location)]
-    public class JournalLocation : JournalLocOrJump, IBodyNameAndID, IStarScan, ICarrierStats, ILocDocked
+    public class JournalLocation : JournalLocOrJump, IBodyNameAndID, IStarScan, ILocDocked
     {
         public JournalLocation(JObject evt) : base(evt, JournalTypeEnum.Location)      // all have evidence 16/3/2017
         {
@@ -403,10 +403,6 @@ namespace EliteDangerousCore.JournalEvents
             s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
-        public void UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrier)
-        {
-            s.Update(this,onfootfleetcarrier);
-        }
     }
 
 
