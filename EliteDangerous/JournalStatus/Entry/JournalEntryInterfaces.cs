@@ -136,6 +136,7 @@ namespace EliteDangerousCore
 
     public interface ICarrierStats
     {
+        CarrierDefinitions.CarrierType CarrierType { get; }
         void UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrier);
     }
 }
