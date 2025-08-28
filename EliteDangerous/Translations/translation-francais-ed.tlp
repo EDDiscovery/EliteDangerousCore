@@ -1338,7 +1338,7 @@ E8B772D1BC2A20: "Enhanced Performance Thrusters" => "Propulseurs à performances
 6F55767D3D0B28: "Pulse Wave Xeno Scanner" => "Détecteur de xénomorphes à onde pulsée"
 FFE926B9A1E06C: "Concord Cannon" => "Canon Concorde"
 492166ECE113AD: "Colonisation Module" => "Instruments de colonisation de système"
-0DB27EBBF41345: "Large Cargo Rack" @
+0DB27EBBF41345: "Large Cargo Rack" => "Compartiment soute large"
 
 SECTION ShipSlots
 
@@ -1469,8 +1469,8 @@ E4DD5EE5641BD6: "Vessel Voice" => "Voix du vaisseau"
 D96AA577649F7B: "Turret Type 2" => "Tourelle Type 2"
 3AE8579069394D: "Sine Wave Scanner" => "Scanner à onde sinusoïdale"
 BCC6D8B8761B2B: "Colonisation Suite" => "Instruments de colonisation de système"
-1D10985EBE451F: "Large Cargo 1" @
-FA9AB13CECC85C: "Large Cargo 2" @
+1D10985EBE451F: "Large Cargo 1" => "Cargo large 1"
+FA9AB13CECC85C: "Large Cargo 2" => "Cargo large 2"
 
 SECTION StationServices
 

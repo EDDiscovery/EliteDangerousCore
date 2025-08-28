@@ -994,7 +994,7 @@ C6BDFB2221032F: "Redeemed and deployed ship {0} at {1} into shipyard" => "Vaisse
 SECTION JournalCarrierJump
 
 EF41C8690CDA9E: "Jumped with carrier {0} to {1}" => "Saut avec porte-vaisseaux {0} vers {1}"
-DE8CC5C4DD7104: "Carrier jumped to {0}" @
+DE8CC5C4DD7104: "Carrier jumped to {0}" => "Saut du porte-vaisseaux vers {0}"
 
 SECTION JournalCarrier
 
