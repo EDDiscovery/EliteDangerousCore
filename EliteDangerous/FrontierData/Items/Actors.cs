@@ -148,6 +148,7 @@ namespace EliteDangerousCore
              { "lizryder", new Actor("Engineer Liz Ryder") },
              { "heratani", new Actor("Engineer Hera Tani") },
              { "felicityfarseer", new Actor("Engineer Felicity Farseer") },
+             { "thesarge", new Actor("Engineer The Sarge") },
 
              { "thedweller", new Actor("The Dweller") },
 
