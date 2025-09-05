@@ -75,6 +75,8 @@ namespace EliteDangerousCore
 
             public double JumpRange(int currentCargo, double unladenMassHullModules, double fuel, double boost)
             {
+                if (fuel == 0)
+                    return 0;
                 double mass = currentCargo + unladenMassHullModules + fuel;
                 double massf = OptimalMass / mass;
                 double fuelmultiplier = (LinearConstant * 0.001);

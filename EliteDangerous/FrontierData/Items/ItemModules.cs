@@ -54,7 +54,7 @@ namespace EliteDangerousCore
                     string candidatename = GenerateCandidateModuleName(fdid);
 
                     var newmodule = new ShipModule(-1, IsVanity(lowername) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType, candidatename);
-                    string futilemessage = " - THIS IS NOT AN ERROR. This is item unknown to EDD and will be added automatically added to your EDD module list. Please though report it to us so we can add it to known module lists";
+                    string futilemessage = " - THIS IS NOT AN ERROR. This is item unknown to EDD and will be added automatically to your EDD module list. Please though report it to us so we can add it to known module lists";
                     System.Diagnostics.Trace.WriteLine($"*** Unknown Module {{ \"{lowername}\", new ShipModule(-1,{(IsVanity(lowername) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename}\") }}," + futilemessage);
 
                     synthesisedmodules[lowername] = m = newmodule;                   // lets cache them for completeness..
@@ -2723,6 +2723,7 @@ namespace EliteDangerousCore
                 {"bobble_ship_gdn_fighter_v3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ship Gdn Fighter V 3") },
                 {"bobble_ship_pythonmkii", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ship Pythonmkii") },
                 {"bobble_ship_thargoid", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ship Thargoid") },
+                {"bobble_ship_type8", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ship Type 8") },
                 {"bobble_ship_viper", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Ship Viper") },
                 {"bobble_skull", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Skull") },
                 {"bobble_snowflake", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Snowflake") },
@@ -2932,6 +2933,10 @@ namespace EliteDangerousCore
                 {"cobramkv_shipkitb_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cobramkv Ship Kit B Wings 2") },
                 {"cobramkv_shipkitb_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cobramkv Ship Kit B Wings 3") },
                 {"cobramkv_shipkitb_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Cobramkv Ship Kit B Wings 4") },
+                {"corsair_ppaisling_tail1", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Corsair PP Aisling Tail 1") },
+                {"corsair_ppaisling_tail2", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Corsair PP Aisling Tail 2") },
+                {"corsair_ppaisling_tail3", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Corsair PP Aisling Tail 3") },
+                {"corsair_ppaisling_tail4", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Corsair PP Aisling Tail 4") },
                 {"corsair_pparissa_tail1", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Corsair PP Arissa Tail 1") },
                 {"corsair_pparissa_tail2", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Corsair PP Arissa Tail 2") },
                 {"corsair_pparissa_tail3", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Corsair PP Arissa Tail 3") },
@@ -3137,6 +3142,7 @@ namespace EliteDangerousCore
                 {"decal_lavecon", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Lave Con") },
                 {"decal_met_billionaires_treasure_hunts_bronze", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Met Billionaires Treasure Hunts Bronze") },
                 {"decal_met_billionaires_treasure_hunts_gold", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Met Billionaires Treasure Hunts Gold") },
+                {"decal_met_billionaires_treasure_hunts_silver", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Met Billionaires Treasure Hunts Silver") },
                 {"decal_met_bountyhunter_gold", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Met Bountyhunter Gold") },
                 {"decal_met_bountyhunter_silver", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Met Bountyhunter Silver") },
                 {"decal_met_brewercorporation_bronze", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Met Brewercorporation Bronze") },
@@ -4498,6 +4504,7 @@ namespace EliteDangerousCore
                 {"paintjob_asp_scout_tactical_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Scout Tactical White") },
                 {"paintjob_asp_scout_vibrant_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Scout Vibrant Blue") },
                 {"paintjob_asp_scout_vibrant_orange", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Scout Vibrant Orange") },
+                {"paintjob_asp_scout_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Scout Vibrant Purple") },
                 {"paintjob_asp_scout_vibrant_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Scout Vibrant Red") },
                 {"paintjob_asp_scout_vibrant_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Scout Vibrant Yellow") },
                 {"paintjob_asp_shatter_01_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Shatter 1 1") },
@@ -4646,6 +4653,7 @@ namespace EliteDangerousCore
                 {"paintjob_belugaliner_tactical_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Beluga Liner Tactical White") },
                 {"paintjob_belugaliner_vibrant_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Beluga Liner Vibrant Blue") },
                 {"paintjob_belugaliner_vibrant_orange", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Beluga Liner Vibrant Orange") },
+                {"paintjob_belugaliner_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Beluga Liner Vibrant Purple") },
                 {"paintjob_belugaliner_vibrant_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Beluga Liner Vibrant Red") },
                 {"paintjob_belugaliner_vibrant_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Beluga Liner Vibrant Yellow") },
                 {"paintjob_cobramkiii_25thanniversary_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobra Mk III 25 Thanniversary 1") },
@@ -5071,6 +5079,12 @@ namespace EliteDangerousCore
                 {"paintjob_cobramkv_01_07", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobramkv 1 7") },
                 {"paintjob_cobramkv_01_08", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobramkv 1 8") },
                 {"paintjob_cobramkv_01_09", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobramkv 1 9") },
+                {"paintjob_cobramkv_01_11", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobramkv 1 11") },
+                {"paintjob_cobramkv_01_12", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobramkv 1 12") },
+                {"paintjob_cobramkv_01_13", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobramkv 1 13") },
+                {"paintjob_cobramkv_01_14", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobramkv 1 14") },
+                {"paintjob_cobramkv_01_15", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobramkv 1 15") },
+                {"paintjob_cobramkv_01_16", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobramkv 1 16") },
                 {"paintjob_cobramkv_02_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobramkv 2 1") },
                 {"paintjob_cobramkv_02_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobramkv 2 2") },
                 {"paintjob_cobramkv_02_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Cobramkv 2 3") },
@@ -5104,6 +5118,12 @@ namespace EliteDangerousCore
                 {"paintjob_corsair_01_16", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Corsair 1 16") },
                 {"paintjob_corsair_01_17", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Corsair 1 17") },
                 {"paintjob_corsair_01_18", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Corsair 1 18") },
+                {"paintjob_corsair_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Corsair Black Friday 1") },
+                {"paintjob_corsair_blackfriday_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Corsair Black Friday 2") },
+                {"paintjob_corsair_blackfriday_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Corsair Black Friday 3") },
+                {"paintjob_corsair_blackfriday_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Corsair Black Friday 4") },
+                {"paintjob_corsair_blackfriday_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Corsair Black Friday 5") },
+                {"paintjob_corsair_blackfriday_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Corsair Black Friday 6") },
                 {"paintjob_corsair_metallic_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Corsair Metallic Chrome") },
                 {"paintjob_corsair_metallic_gold", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Corsair Metallic Gold") },
                 {"paintjob_corsair_white_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Corsair White 1") },
@@ -6943,6 +6963,7 @@ namespace EliteDangerousCore
                 {"paintjob_mandalay_01_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay 1 4") },
                 {"paintjob_mandalay_01_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay 1 5") },
                 {"paintjob_mandalay_01_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay 1 6") },
+                {"paintjob_mandalay_01_08", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay 1 8") },
                 {"paintjob_mandalay_01_10", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay 1 10") },
                 {"paintjob_mandalay_01_11", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay 1 11") },
                 {"paintjob_mandalay_01_12", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay 1 12") },
