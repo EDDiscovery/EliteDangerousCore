@@ -64,6 +64,10 @@ namespace EliteDangerousCore.UIEvents
             public double Engines { get; set; }
             public double Weapons { get; set; }
 
+            public override string ToString()
+            {
+                return $"Sys:{Systems} Eng:{Engines} Wep:{Weapons}";
+            }
         }
     }
 }

@@ -114,8 +114,8 @@ namespace EliteDangerousCore.DLL
                 wanted = he.Status.Wanted,
                 bodyapproached = he.Status.BodyApproached,
                 bookeddropship = he.Status.BookedDropship,
-                issrv = he.Status.IsSRV,
-                isfighter = he.Status.IsFighter,
+                issrv = he.Status.IsShipSRV,
+                isfighter = he.Status.IsShipFighter,
                 onfoot = he.Status.OnFoot,
                 bookedtaxi = he.Status.BookedTaxi,
 

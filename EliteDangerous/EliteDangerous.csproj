@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FrontierData\Enumerations\Carrier.cs" />
+    <Compile Include="FrontierData\Items\ModuleList.cs" />
     <Compile Include="JournalStatus\Computers\FactionsStatsComputer.cs" />
     <Compile Include="JournalStatus\Computers\JournalStatsInfo.cs" />
     <Compile Include="Config\EliteConfigInstance.cs" />
@@ -132,11 +133,11 @@
     <Compile Include="History\List\HistoryListFill.cs" />
     <Compile Include="History\Queries\Queries.cs" />
     <Compile Include="FrontierData\Items\ItemData.cs" />
-    <Compile Include="FrontierData\Items\ItemEngineers.cs" />
-    <Compile Include="FrontierData\Items\ItemShips.cs" />
-    <Compile Include="FrontierData\Items\ItemActors.cs" />
-    <Compile Include="FrontierData\Items\ItemSuits.cs" />
-    <Compile Include="FrontierData\Items\ItemWeapons.cs" />
+    <Compile Include="FrontierData\Items\Engineers.cs" />
+    <Compile Include="FrontierData\Items\Ships.cs" />
+    <Compile Include="FrontierData\Items\Actors.cs" />
+    <Compile Include="FrontierData\Items\Suits.cs" />
+    <Compile Include="FrontierData\Items\HandItems.cs" />
     <Compile Include="JournalStatus\Events\JournalEmbarkDisembark.cs" />
     <Compile Include="JournalStatus\Events\JournalCarrier.cs" />
     <Compile Include="JournalStatus\Events\JournalScan_Helpers.cs" />
@@ -189,7 +190,7 @@
     <Compile Include="Bodies\StarScan\StarScanFSSSignalsDiscovered.cs" />
     <Compile Include="Bodies\StarScan\StarScanSAASignalsFound.cs" />
     <Compile Include="Bodies\StarScan\StarScanSAAScan.cs" />
-    <Compile Include="FrontierData\Items\Identifiers.cs" />
+    <Compile Include="FrontierData\Enumerations\Identifiers.cs" />
     <Compile Include="JournalStatus\Stats\Carrier.cs" />
     <Compile Include="JournalStatus\Stats\Stats.cs" />
     <Compile Include="JournalStatus\UIScan\StatusReader.cs" />
@@ -210,7 +211,7 @@
     <Compile Include="FrontierData\Ships\ShipModulesInStore.cs" />
     <Compile Include="FrontierData\Ships\ShipList.cs" />
     <Compile Include="FrontierData\Ships\ShipModule.cs" />
-    <Compile Include="FrontierData\Items\ItemModules.cs" />
+    <Compile Include="FrontierData\Items\Modules.cs" />
     <Compile Include="JournalStatus\xNetLogs\NetLogClass.cs" />
     <Compile Include="JournalStatus\xNetLogs\NetLogReader.cs" />
     <Compile Include="FrontierData\Enumerations\Ranks.cs" />

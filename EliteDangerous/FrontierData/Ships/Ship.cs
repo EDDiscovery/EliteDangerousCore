@@ -292,6 +292,17 @@ namespace EliteDangerousCore
                 fuelwarningpercent = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ShipInformation:" + ShipFD + ID.ToStringInvariant() + "Warninglevel", 0);
         }
 
+        public bool HasWeapons()
+        {
+            var wmodules = FindShipModules(x => x.GetModuleUnengineered()?.IsHardpoint == true);
+            return wmodules.Length > 0;
+        }
+        public bool HasMiningEquipment()
+        {
+            var wmodules = FindShipModules(x => x.GetModuleUnengineered()?.IsMiningEquipment == true);
+            return wmodules.Length > 0;
+        }
+
         private double fuelwarningpercent = -999;
 
         public override string ToString()

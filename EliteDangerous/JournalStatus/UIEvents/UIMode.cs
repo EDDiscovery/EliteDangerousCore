@@ -18,22 +18,26 @@ using System;
 namespace EliteDangerousCore.UIEvents
 {
     [System.Diagnostics.DebuggerDisplay("Mode {Mode} {MajorMode}")]
-    public class UIMode : UIEvent
+    public class UIMode : UIEvent, IEquatable<UIMode>
     {
         public UIMode(DateTime time, bool refresh) : base(UITypeEnum.Mode, time, refresh)
         {
         }
 
-        public UIMode(ModeType type, MajorModeType mode) : base(UITypeEnum.Mode, DateTime.MinValue,false)
+        public UIMode(ModeType type, MajorModeType mode, bool multicrew, bool taxi) : this(DateTime.MinValue,false)
         {
             Mode = type;
             MajorMode = mode;
+            Multicrew = multicrew;
+            Taxi = taxi;
         }
 
-        public UIMode(ModeType type, MajorModeType mode, DateTime time, bool refresh) : this(time, refresh)
+        public UIMode(ModeType type, MajorModeType mode, bool multicrew, bool taxi, DateTime time, bool refresh) : this(time, refresh)
         {
             Mode = type;
             MajorMode = mode;
+            Multicrew = multicrew;
+            Taxi = taxi;
         }
 
         // NOTE webserver reported this in 'Mode' JSON record, and the website checks the names. Be careful changing
@@ -42,21 +46,12 @@ namespace EliteDangerousCore.UIEvents
         public enum ModeType        
         {      
             None,
-            MainShipNormalSpace,
+
+            MainShipNormalSpace,            
             MainShipDockedStarPort,
             MainShipDockedPlanet,
             MainShipSupercruise,
             MainShipLanded,
-            TaxiDocked,
-            TaxiNormalSpace,
-            TaxiSupercruise,
-            TaxiDockedPlanet,
-            MulticrewDockedStarPort,
-            MulticrewDockedPlanet,
-            MulticrewNormalSpace,
-            MulticrewSupercruise,
-            MulticrewLanded,
-            MulticrewSRV,
             SRV,
             Fighter,
             OnFootStarPortHangar,
@@ -67,32 +62,45 @@ namespace EliteDangerousCore.UIEvents
             OnFootPlanet
         };
 
-        public enum MajorModeType       // NOTE webserver reported this in 'ShipType' JSON record, and the website checks the names. Be careful changing
+        // NOTE webserver reported this in 'ShipType' JSON record, and the website checks the names. Be careful changing
+        public enum MajorModeType       
         {
             None,
             MainShip,
-            Taxi,
-            Multicrew,
             SRV,
             Fighter,
             OnFoot, 
         }
 
-        
-        public ModeType Mode { get; private set; }
-        public MajorModeType MajorMode { get; private set; }
+        public ModeType Mode { get; private set; }              // detailed mode
+        public MajorModeType MajorMode { get; private set; }    // major operating mode
 
-        public bool InFlight { get { return Mode == ModeType.MainShipNormalSpace ||
-                                            Mode == ModeType.MainShipSupercruise ||
-                                            Mode == ModeType.MulticrewNormalSpace ||
-                                            Mode == ModeType.MulticrewSupercruise;
-                                }}
+        public bool Taxi { get; private set; }                  // if in taxi, will have MainShip* modes
+        public bool Multicrew { get; private set; }             // if playing in multicrew
 
+        public bool InFlight
+        {
+            get
+            {
+                return Mode == ModeType.MainShipNormalSpace || Mode == ModeType.MainShipSupercruise;
+            }
+        }
+        public bool OnFoot
+        {
+            get
+            {
+                return Mode >= ModeType.OnFootStarPortHangar;
+            }
+        }
 
         public override string ToString()
         {
-            return $"{MajorMode}: {Mode}";
+            return $"{MajorMode}, {Mode}, mc {Multicrew}, taxi {Taxi}";
         }
 
+        public bool Equals(UIMode other)
+        {
+            return Mode == other.Mode && MajorMode == other.MajorMode && Taxi == other.Taxi && Multicrew == other.Multicrew;
+        }
     }
 }

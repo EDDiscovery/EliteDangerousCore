@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2019 EDDiscovery development team
+ * Copyright 2016 - 2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,11 +10,11 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- *
  */
+
 using System;
 using System.Collections.Generic;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace EliteDangerousCore.UIEvents
 {
@@ -22,22 +22,22 @@ namespace EliteDangerousCore.UIEvents
     {
         public UIOverallStatus( DateTime time, bool refresh) : base(UITypeEnum.OverallStatus, time, refresh)
         {
+            Flags = new List<UITypeEnum>();     // empty list
         }
 
-        public UIOverallStatus() : base(UITypeEnum.OverallStatus, DateTime.UtcNow,false)
+        public UIOverallStatus() : this(DateTime.UtcNow,false)
         {
         }
 
-        public UIOverallStatus(UIMode.MajorModeType mm, UIMode.ModeType mt, List<UITypeEnum> list, int focus, UIPips.Pips pips, int fg, double fuel, double res, int cargo,
+        public UIOverallStatus(UIMode uim, List<UITypeEnum> list, int focus, UIPips.Pips pips, int fg, double fuel, double res, int cargo,
             UIPosition.Position pos, double heading, double radius, string legalstate, string bodyname,
             double health, bool lowh, double gravity, double temp, UITemperature.TempState tempstate, double oxygen, bool lowox,
-            string selw, string selwloc,
+            string selw, string selwloc, 
             FSDStateType fsd, bool breathableatmosphere,
             string dname, int did, long dsysaddr,
             DateTime time, bool refresh) : this(time, refresh)
         {
-            MajorMode = mm;
-            Mode = mt;
+            UIMode = uim;
             Flags = list;
             Focus = (UIGUIFocus.Focus)focus;
             Pips = pips;
@@ -61,13 +61,17 @@ namespace EliteDangerousCore.UIEvents
             BreathableAtmosphere = breathableatmosphere;
             SelectedWeapon = selw;
             SelectedWeapon_Localised = selwloc;
+            HandItem = SelectedWeapon != null ? ItemData.GetWeaponOrHandItem(SelectedWeapon) : null;
             DestinationName = dname;
             DestinationBodyID = did;
             DestinationSystemAddress = dsysaddr;
         }
 
-        public UIMode.MajorModeType MajorMode { get; private set; }
-        public UIMode.ModeType Mode { get; private set; }
+        public UIMode UIMode { get; private set; } = new UIMode(DateTime.MinValue, false);
+        public UIMode.MajorModeType MajorMode { get { return UIMode.MajorMode; } }
+        public UIMode.ModeType Mode { get { return UIMode.Mode; } }
+        public bool Multicrew { get { return UIMode.Multicrew; } }
+        public bool Taxi { get { return UIMode.Taxi; } }
         public List<UITypeEnum> Flags { get; private set; }
         public UIGUIFocus.Focus Focus { get; private set; }
         public UIPips.Pips Pips { get; private set; }
@@ -95,10 +99,15 @@ namespace EliteDangerousCore.UIEvents
         public FSDStateType FSDState { get; private set; }
         public string SelectedWeapon { get; private set; }      // may be null
         public string SelectedWeapon_Localised { get; private set; }      // may be null
+        public ItemData.HandItem HandItem { get; private set; } // Only set for weapons, and may be null even if SelectedWeapon set if unknown
         public string DestinationName { get; private set; }      // may be empty
         public int DestinationBodyID { get; private set; }      // may be null
-        public long DestinationSystemAddress { get; private set; }      
+        public long DestinationSystemAddress { get; private set; }
 
+        public override string ToString()
+        {
+            return $"MM: {MajorMode} M:{Mode} Body:{BodyName} FC:{Focus} Pips:{Pips} FG:{Firegroup} Fuel:{Fuel}/{Reserve} Cargo:{Cargo} Pos {Pos} Head:{Heading} Legal:{LegalState} Health:{Health} Gravity:{Gravity} Temp:{Temperature} FSD:{FSDState} Dest:{DestinationName} SelW:{SelectedWeapon}/{SelectedWeapon_Localised}/{HandItem?.Name}";
+        }
 
     }
 }

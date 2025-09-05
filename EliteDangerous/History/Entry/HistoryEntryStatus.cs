@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2023 EDDiscovery development team
+ * Copyright 2016 - 2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -54,18 +54,18 @@ namespace EliteDangerousCore
         public bool OnFoot { get { return TravelState >= TravelStateType.OnFootStarPort; } }
         public bool OnFootFleetCarrier { get { return TravelState == TravelStateType.OnFootFleetCarrier; } }
 
-        public bool IsDocked { get { return TravelState == HistoryEntryStatus.TravelStateType.Docked || TravelState == TravelStateType.MulticrewDocked || 
+        public bool IsDocked { get { return TravelState == TravelStateType.Docked || TravelState == TravelStateType.MulticrewDocked || 
                                             TravelState == TravelStateType.TaxiDocked || TravelState == TravelStateType.DropShipDocked; } }
 
-
-        public bool IsLandedInShipOrSRV { get
-            {
-                return TravelState == HistoryEntryStatus.TravelStateType.Landed || TravelState == HistoryEntryStatus.TravelStateType.SRV || 
-                    TravelState == HistoryEntryStatus.TravelStateType.MulticrewLanded || TravelState == HistoryEntryStatus.TravelStateType.MulticrewSRV;
-            }}
-
-        public bool IsInSupercruise { get { return TravelState == HistoryEntryStatus.TravelStateType.Supercruise || TravelState == TravelStateType.TaxiSupercruise || 
+        public bool IsInSupercruise { get { return TravelState == TravelStateType.Supercruise || TravelState == TravelStateType.TaxiSupercruise || 
                                             TravelState == TravelStateType.MulticrewSupercruise || TravelState == TravelStateType.DropShipSupercruise; } }
+
+        public bool IsLanded { get { return TravelState == TravelStateType.Landed || TravelState == TravelStateType.MulticrewLanded; } }
+        public bool IsSRV { get { return TravelState == TravelStateType.SRV || TravelState == TravelStateType.MulticrewSRV; } }
+        public bool IsFighter { get { return TravelState == TravelStateType.Fighter || TravelState == TravelStateType.MulticrewFighter; } }
+
+        public bool IsLandedInShipOrSRV { get { return TravelState == TravelStateType.Landed || TravelState == TravelStateType.SRV || 
+                    TravelState == TravelStateType.MulticrewLanded || TravelState == TravelStateType.MulticrewSRV; }}
 
         // true for OnCrewWithCaptain entries (they seem  to be marked with Multicrew) and true if entries are in physical multicrew
         public bool IsInMultiCrew { get { return TravelState >= TravelStateType.MulticrewDocked && TravelState <= TravelStateType.MulticrewFighter; } }     
@@ -83,8 +83,8 @@ namespace EliteDangerousCore
         public ulong ShipID { get; private set; } = ulong.MaxValue;
         public string ShipType { get; private set; } = "Unknown";         // and the ship nice name
         public string ShipTypeFD { get; private set; } = "Unknown";      // FD name
-        public bool IsSRV { get { return ItemData.IsSRV(ShipTypeFD); } }
-        public bool IsFighter { get { return ItemData.IsFighter(ShipTypeFD); } }
+        public bool IsShipSRV { get { return ItemData.IsSRV(ShipTypeFD); } }
+        public bool IsShipFighter { get { return ItemData.IsFighter(ShipTypeFD); } }
         public string OnCrewWithCaptain { get; private set; } = null;     // if not null, your in another multiplayer ship
         public bool IsOnCrewWithCaptain { get { return OnCrewWithCaptain != null; } }
         public bool IsInMultiPlayer { get { return IsOnCrewWithCaptain || IsInMultiCrew; } }       // we can be OnCrewWithCaptain with multicrew markers true, or just in physical multicrew 

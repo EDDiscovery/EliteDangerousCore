@@ -12,8 +12,6 @@
  * governing permissions and limitations under the License.
  */
 
-//#define VANITYADD
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,8 +38,8 @@ namespace EliteDangerousCore
 
             //foreach ( StationDefinitions.StationServices x in Enum.GetValues(typeof(StationDefinitions.StationServices))) System.Diagnostics.Debug.WriteLine($".{x}: {StationDefinitions.ToEnglish(x).AlwaysQuoteString()} @");
 
-#if VANITYADD
-            string csfile = @"c:\code\eddiscovery\elitedangerouscore\elitedangerous\FrontierData\items\itemmodules.cs";
+#if DEBUG
+            string csfile = @"c:\code\eddiscovery\elitedangerouscore\elitedangerous\FrontierData\items\ModuleList.cs";
             string infile = @"c:\code\newvanity.txt";
 
             if (System.IO.File.Exists(infile))
@@ -93,7 +91,7 @@ namespace EliteDangerousCore
                     }
                     else if (line.Trim().Length > 0)
                     {
-                        System.Diagnostics.Debug.WriteLine($"No data on this line {line}");
+                        //System.Diagnostics.Debug.WriteLine($"No data on this line {line}");
                     }
 
                 }
