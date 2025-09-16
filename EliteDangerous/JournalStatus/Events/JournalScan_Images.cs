@@ -34,7 +34,7 @@ namespace EliteDangerousCore.JournalEvents
                     return $"Bodies.Unknown";
                 }
 
-                return BodyToImages.StarTypeImageName(StarTypeID, nStellarMass, nSurfaceTemperature);
+                return BodyDefinitions.StarTypeImageName(StarTypeID, nStellarMass, nSurfaceTemperature);
             }
         }
 
@@ -48,7 +48,7 @@ namespace EliteDangerousCore.JournalEvents
                     return $"Bodies.Unknown";
                 }
 
-                return BodyToImages.PlanetClassImageName(PlanetTypeID, nSurfaceTemperature, AtmosphereComposition, AtmosphereProperty, AtmosphereID,
+                return BodyDefinitions.PlanetClassImageName(PlanetTypeID, nSurfaceTemperature, AtmosphereComposition, AtmosphereProperty, AtmosphereID,
                                                          Terraformable, nLandable, nMassEM, nTidalLock);
             }
         }

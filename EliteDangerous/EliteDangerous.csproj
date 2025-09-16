@@ -110,7 +110,7 @@
     <Compile Include="Bodies\GMO\GalacticMapObject.cs" />
     <Compile Include="Bodies\GMO\GalacticMapping.cs" />
     <Compile Include="FrontierData\Bindings\BindingsFile.cs" />
-    <Compile Include="FrontierData\Enumerations\BodyImages.cs" />
+    <Compile Include="FrontierData\Enumerations\BodyDefinitions.cs" />
     <Compile Include="FrontierData\Enumerations\EliteReleaseDates.cs" />
     <Compile Include="FrontierData\Enumerations\Planets.cs" />
     <Compile Include="FrontierData\BodyDesignations\BodyDesignationsDefaults.cs" />

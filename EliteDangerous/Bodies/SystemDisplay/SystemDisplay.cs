@@ -90,7 +90,7 @@ namespace EliteDangerousCore
             {
                 Random rnd = new Random(systemnode.System.Name.GetHashCode());         // always start with same seed so points are in same places
 
-                var notscannedbitmap = BodyToImages.GetStarImageNotScanned();
+                var notscannedbitmap = BodyDefinitions.GetStarImageNotScanned();
 
                 Point leftmiddle = new Point(leftmargin, topmargin + StarSize.Height * nodeheightratio / 2 / noderatiodivider);  // half down (h/2 * ratio)
 
@@ -125,7 +125,7 @@ namespace EliteDangerousCore
                     }
 
                     {  // Draw star
-                        Image barycentre =BodyToImages.GetBarycentreImage();
+                        Image barycentre =BodyDefinitions.GetBarycentreImage();
 
                         Point maxpos = DrawNode(starcontrols, starnode, historicmats, curmats,
                                 (starnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre: notscannedbitmap,
@@ -166,7 +166,7 @@ namespace EliteDangerousCore
                         double habzonestartls = hz != null ? hz.HabitableZoneInner : 0;
                         double habzoneendls = hz != null ? hz.HabitableZoneOuter : 0;
 
-                        Image beltsi = BodyToImages.GetBeltImage();
+                        Image beltsi = BodyDefinitions.GetBeltImage();
 
                         // process body and stars only
 

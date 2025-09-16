@@ -36,12 +36,12 @@ namespace EliteDangerousCore
             if (habzone)
                 backwash = Color.FromArgb(64, 0, 128, 0);       // transparent in case we have a non black background
 
-            Image barycentre = BodyToImages.GetBarycentreImage();
+            Image barycentre = BodyDefinitions.GetBarycentreImage();
 
             // draw the object, allow right shift
 
             Point maxtreepos = DrawNode(pc, planetnode, historicmats, curmats,
-                                (planetnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetPlanetImageNotScanned(),
+                                (planetnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyDefinitions.GetPlanetImageNotScanned(),
                                 leftmiddle, false, true, out Rectangle imagerect, out planetcentrex, planetsize, DrawLevel.PlanetLevel, rnd, rightclickplanet, rightclickmats, backwash: backwash);        // offset passes in the suggested offset, returns the centre offset
 
             if (planetnode.Children != null && ShowMoons)
@@ -69,7 +69,7 @@ namespace EliteDangerousCore
                         // draw moons, as they are underneath the planet, disable right shift
 
                         Point mmax = DrawNode(pc, moonnode, historicmats, curmats,
-                                (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetMoonImageNotScanned(),
+                                (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyDefinitions.GetMoonImageNotScanned(),
                                 moonposcentremid, true, false, out Rectangle moonimagepos, out int mooncentrex, moonsize, DrawLevel.MoonLevel, rnd, rightclickplanet, rightclickmats);
 
                         maxtreepos = new Point(Math.Max(maxtreepos.X, mmax.X), Math.Max(maxtreepos.Y, mmax.Y));
@@ -91,7 +91,7 @@ namespace EliteDangerousCore
                                     // draw submoon, allow right shift if xiscentre is false, as its the first submoon, then disallow right shift
 
                                     Point sbmax = DrawNode(pc, submoonnode, historicmats, curmats,
-                                            (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyToImages.GetMoonImageNotScanned(),
+                                            (moonnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre : BodyDefinitions.GetMoonImageNotScanned(),
                                             submoonpos, xiscentre, xiscentre == false, out Rectangle submoonimagepos, out int xsubmooncentre, moonsize, DrawLevel.MoonLevel, rnd, rightclickplanet, rightclickmats);
 
                                     if (xiscentre)

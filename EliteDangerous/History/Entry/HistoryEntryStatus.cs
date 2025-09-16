@@ -91,6 +91,7 @@ namespace EliteDangerousCore
         public string GameMode { get; private set; } = "Unknown";         // game mode, from LoadGame event, Unknown if not set or missing
         public string Group { get; private set; } = "";                   // group.. empty if not in group
         public bool Wanted { get; private set; } = false;
+        public int DockingPad { get; private set; } = 0;                   // set at Docking granted, cleared at docked, fsd etc
         public bool BodyApproached { get; private set; } = false;         // set at approach body, cleared at leave body or fsd jump
         public bool BookedDropship { get; private set; } = false;         // cleared on embark - need this to tell difference between booking a taxi or a dropship when entering the taxi
         public bool BookedTaxi { get; private set; } = false;             // cleared on embark - need this to tell difference between booking a taxi or a dropship when entering the taxi
@@ -124,6 +125,7 @@ namespace EliteDangerousCore
             Group = prevstatus.Group;
             Wanted = prevstatus.Wanted;
             BodyApproached = prevstatus.BodyApproached;
+            DockingPad = prevstatus.DockingPad;
             StationFaction = prevstatus.StationFaction;
             BookedDropship = prevstatus.BookedDropship;
             BookedTaxi = prevstatus.BookedTaxi;
@@ -176,6 +178,7 @@ namespace EliteDangerousCore
                             CurrentBoost = 1,
                             FSDJumpNextSystemAddress = null,
                             FSDJumpNextSystemName = null,
+                            DockingPad = 0,
                         };
 
                         if ( hes.StationName_Localised?.Contains("$") ?? false)
@@ -196,6 +199,7 @@ namespace EliteDangerousCore
                         Wanted = jcj.Wanted,
                         StationName_Localised = jcj.StationName_Localised.Alt(null),       // if empty string, set to null
                         StationType = jcj.StationType.Alt(null),
+                        DockingPad = 0,
                     };
                     break;
 
@@ -216,6 +220,7 @@ namespace EliteDangerousCore
                             StationName_Localised = null,
                             StationType = null,
                             StationFaction = null, // to clear
+                            DockingPad = 0,
                         };
                         break;
                     }
@@ -231,6 +236,7 @@ namespace EliteDangerousCore
                             BodyName = (prev.BodyApproached) ? prev.BodyName : jsexit.Body,
                             BodyType = (prev.BodyApproached) ? prev.BodyType : jsexit.BodyType,
                             BodyID = (prev.BodyApproached) ? prev.BodyID : jsexit.BodyID,
+                            DockingPad = 0,
                         };
                         break;
                     }
@@ -253,6 +259,7 @@ namespace EliteDangerousCore
                             StationType = null,
                             StationFaction = null, // to ensure
                             BodyApproached = false,
+                            DockingPad = 0,
                             CurrentBoost = 1,
                             FSDJumpNextSystemAddress = null,        // now jumped
                             FSDJumpNextSystemName = null,
@@ -294,6 +301,7 @@ namespace EliteDangerousCore
                         BookedDropship = false, //  to ensure
                         CurrentBoost = 1,
                         PowerPledgedThisLoadGame = null,
+                        DockingPad = 0,
                     };
                     break;
 
@@ -313,12 +321,8 @@ namespace EliteDangerousCore
                             StationType = jdocked.StationType.Alt("Station"),
                             StationFaction = jdocked.Faction,
                             CurrentBoost = 1,
+                            DockingPad = 0,
                         };
-
-                        if ( hes.StationName_Localised.Contains("$"))
-                        {
-
-                        }
 
                         break;
                     }
@@ -623,6 +627,21 @@ namespace EliteDangerousCore
                         }
                     }
                     break;
+
+                case JournalTypeEnum.DockingGranted:
+                    {
+                        JournalDockingGranted dg = (JournalDockingGranted)je;
+                        hes = new HistoryEntryStatus(prev) { DockingPad = dg.LandingPad };
+                    }
+                    break;
+
+                case JournalTypeEnum.DockingCancelled:
+                    {
+                        if ( prev.DockingPad >0  )
+                            hes = new HistoryEntryStatus(prev) { DockingPad = 0 };
+                    }
+                    break;
+
             }
 
             return hes;

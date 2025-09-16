@@ -13,14 +13,28 @@
  */
 
 using BaseUtils;
+using BaseUtils.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
-    public class BodyToImages
+    public class BodyDefinitions
     {
+        static public bool IsBodyNameRing(string bodyname)
+        {
+            if (bodyname.HasChars())
+            {
+                var elements = bodyname.ToLowerInvariant().Split(' ').ToList();        // split into spaced parts
+                // ends in ring and previous is a single character alpha letter (see starscanjournalscans.cs line 213 ish)
+                if (elements.Count > 0 && elements[elements.Count - 1].Equals("ring") && elements[elements.Count - 2].Length == 1 && char.IsLetter(elements[elements.Count - 2][0]))
+                    return true;
+            }
+
+            return false;
+        }
         static public string StarTypeImageName(EDStar StarTypeID, double? nStellarMass, double? nSurfaceTemperature)
         {
             string iconName = StarTypeID.ToString(); // fallback
@@ -872,7 +886,7 @@ namespace EliteDangerousCore
         // use for checking..
         static public void DebugDisplayStarColourKey(ExtendedControls.ExtPictureBox imagebox, Font font)
         {
-            var sil = BodyToImages.StarColourKey();
+            var sil = BodyDefinitions.StarColourKey();
             int i = 0;
             foreach (var kvp in sil)
             {
@@ -892,6 +906,7 @@ namespace EliteDangerousCore
                 i++;
             }
         }
+
     }
 
 }
