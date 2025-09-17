@@ -194,6 +194,7 @@ namespace EliteDangerousCore
                 ["Vulture"] = "Core Dynamics",
                 ["Mandalay"] = "Zorgon Peterson",
                 ["Corsair"] = "Gutamaya",
+                ["LakonMiner"] = "Lakon",
             };
 
             foreach (var kvp in Manu)
@@ -1302,6 +1303,31 @@ namespace EliteDangerousCore
             LatAcc = 0
         };
 
+        private static ShipProperties lakonminer = new ShipProperties()
+        {
+            FDID = "LakonMiner",
+            HullMass = 514F, // from loadout
+            Name = "Type-11 Prospector",
+            Speed = 280,            
+            Boost = 355,
+            HullCost = 67861850,    // from loadout, rest is tbd
+            Class = 2,
+            Shields = 235,
+            Armour = 270,
+            MinThrust = 65,
+            BoostCost = 19,
+            FuelReserve = 0.41,
+            HeatCap = 230,
+            HeatDispMin = 1.62,
+            HeatDispMax = 52.05,
+            FuelCost = 50,
+            Hardness = 65,
+            Crew = 2,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0
+        };
+
         private static ShipProperties panthermkii = new ShipProperties()
         {
             FDID = "Panthermkii",           
@@ -1360,6 +1386,7 @@ namespace EliteDangerousCore
             { "independant_trader",independant_trader},
             { "krait_mkii",krait_mkii},
             { "krait_light",krait_light},
+            { "lakonminer",lakonminer },
             { "mamba",mamba},
             { "mandalay",mandalay},
             { "orca",orca},
@@ -1494,3 +1521,4 @@ namespace EliteDangerousCore
 
     }
 }
+
