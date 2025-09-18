@@ -1556,6 +1556,13 @@ SECTION ShipSlots
 .ColonisationSuite: "Colonisation Suite" @
 .Cargo01: "Large Cargo 1" @
 .Cargo02: "Large Cargo 2" @
+.MediumMiningHardpoint1: "Medium Mining Hardpoint 1" @
+.MediumMiningHardpoint2: "Medium Mining Hardpoint 2" @
+.SmallMiningHardpoint1: "Small Mining Hardpoint 1" @
+.LargeMiningHardpoint1: "Large Mining Hardpoint 1" @
+.LimpetController01: "Limpet Controller 1" @
+.FighterBay01: "Fighter Bay 1" @
+.Hologram: "Hologram" @
 
 SECTION StationServices
 

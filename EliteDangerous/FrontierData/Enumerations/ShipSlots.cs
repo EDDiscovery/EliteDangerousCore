@@ -165,6 +165,13 @@ namespace EliteDangerousCore
             ColonisationSuite,  // trailblazers feb 25
             Cargo01,        // Panther clipper, july 25
             Cargo02,        // Panther clipper, july 25
+            MediumMiningHardpoint1, // type 11 prospector sep 25
+            MediumMiningHardpoint2, // type 11 prospector sep 25
+            SmallMiningHardpoint1, // type 11 prospector sep 25
+            LargeMiningHardpoint1, // type 11 prospector sep 25
+            LimpetController01, // type 11 prospector sep 25
+            FighterBay01, // type 11 prospector sep 25
+            Hologram, // type 11 prospector sep 25
         }
 
 
@@ -330,6 +337,14 @@ namespace EliteDangerousCore
             [Slot.ColonisationSuite] = "Colonisation Suite",
             [Slot.Cargo01] = "Large Cargo Slot 1",
             [Slot.Cargo02] = "Large Cargo Slot 2",
+
+            [Slot.MediumMiningHardpoint1] = "Medium Mining Hardpoint 1",
+            [Slot.MediumMiningHardpoint2] = "Medium Mining Hardpoint 2",
+            [Slot.SmallMiningHardpoint1] = "Small Mining Hardpoint 1",
+            [Slot.LargeMiningHardpoint1] = "Large Mining Hardpoint 1",
+            [Slot.LimpetController01] = "Limpet Controller 1",
+            [Slot.FighterBay01] = "Fighter Bay 1",
+            [Slot.Hologram] = "Hologram",
         };
 
         // maps the slot fdname to an enum
