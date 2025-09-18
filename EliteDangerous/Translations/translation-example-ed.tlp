@@ -1471,6 +1471,13 @@ D96AA577649F7B: "Turret Type 2" @
 BCC6D8B8761B2B: "Colonisation Suite" @
 1D10985EBE451F: "Large Cargo 1" @
 FA9AB13CECC85C: "Large Cargo 2" @
+915A0715B57347: "Medium Mining Hardpoint 1" @
+E104214FD34AC0: "Medium Mining Hardpoint 2" @
+5E6DE9C9A368F8: "Small Mining Hardpoint 1" @
+B682567449A543: "Large Mining Hardpoint 1" @
+F4A2558C583E61: "Limpet Controller 1" @
+0B523B44CCD4E7: "Fighter Bay 1" @
+09D463E32B04B2: "Hologram" @
 
 SECTION StationServices
 
