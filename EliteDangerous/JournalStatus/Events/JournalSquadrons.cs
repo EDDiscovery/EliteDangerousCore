@@ -199,5 +199,4 @@ namespace EliteDangerousCore.JournalEvents
             return BaseUtils.FieldBuilder.Build("", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), CurrentRankName_Localised);
         }
     }
-
 }

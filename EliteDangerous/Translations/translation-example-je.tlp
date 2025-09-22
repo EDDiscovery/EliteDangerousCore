@@ -153,6 +153,7 @@ SECTION JournalTypeEnum
 .ShipyardSell: "Shipyard Sell" @
 .ShipyardSwap: "Shipyard Swap" @
 .ShipyardTransfer: "Shipyard Transfer" @
+.ShipyardBankDeposit: "Shipyard Bank Deposit" @
 .ShipTargeted: "Ship Targeted" @
 .Shutdown: "Shutdown" @
 .SRVDestroyed: "SRV Destroyed" @
@@ -212,6 +213,7 @@ SECTION JournalTypeEnum
 .ProspectedAsteroid: "Prospected Asteroid" @
 .ReservoirReplenished: "Reservoir Replenished" @
 .SquadronStartup: "Squadron Startup" @
+.SquadronBankDeposit: "Squadron Bank Deposit" @
 .CarrierBankTransfer: "Carrier Bank Transfer" @
 .CarrierBuy: "Carrier Buy" @
 .CarrierCancelDecommission: "Carrier Cancel Decommission" @

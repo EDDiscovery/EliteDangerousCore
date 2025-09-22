@@ -251,6 +251,7 @@ namespace EliteDangerousCore
         ShipyardSwap = 870,
         ShipyardRedeem = 875,
         ShipyardTransfer = 880,
+        ShipyardBankDeposit = 879,
         ShipTargeted = 881,
         ShipLocker = 4031,
         Shutdown = 882,

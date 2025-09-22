@@ -581,4 +581,23 @@ namespace EliteDangerousCore.JournalEvents
             return string.Format("Redeemed and deployed ship {0} at {1} into shipyard".T(EDCTx.JournalEntry_ShipRedeem), ShipType, fid.WhereAmI);
         }
     }
+
+    [JournalEntryType(JournalTypeEnum.ShipyardBankDeposit)]
+    public class JournalShipyardBankDeposit : JournalEntry
+    {
+        public JournalShipyardBankDeposit(JObject evt) : base(evt, JournalTypeEnum.ShipyardBankDeposit)
+        {
+            ShipType = evt["ShipType"].Str("Unknown");
+            ShipTypeLocalised = evt["ShipType_Localised"].Str("Unknown");
+            MarketID = evt["MarketID"].Long();
+        }
+        public string ShipType { get; set; }
+        public string ShipTypeLocalised { get; set; }
+        public long MarketID { get; set; }
+        public override string GetInfo()
+        {
+            return ShipTypeLocalised.Alt(ShipType);
+        }
+    }
+
 }
