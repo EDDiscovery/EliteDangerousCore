@@ -213,7 +213,6 @@ SECTION JournalTypeEnum
 .ProspectedAsteroid: "Prospected Asteroid" @
 .ReservoirReplenished: "Reservoir Replenished" @
 .SquadronStartup: "Squadron Startup" @
-.SquadronBankDeposit: "Squadron Bank Deposit" @
 .CarrierBankTransfer: "Carrier Bank Transfer" @
 .CarrierBuy: "Carrier Buy" @
 .CarrierCancelDecommission: "Carrier Cancel Decommission" @

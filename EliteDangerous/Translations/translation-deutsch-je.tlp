@@ -153,6 +153,7 @@ SECTION JournalTypeEnum
 .ShipyardSell: "Shipyard Sell" => "Verkauf (Werft)"
 .ShipyardSwap: "Shipyard Swap" => "Austausch (Werft)"
 .ShipyardTransfer: "Shipyard Transfer" => "Schiffstransport"
+.ShipyardBankDeposit: "Shipyard Bank Deposit" @
 .ShipTargeted: "Ship Targeted" => "Schiff anvisiert"
 .Shutdown: "Shutdown" => "Herunterfahren"
 .SRVDestroyed: "SRV Destroyed" => "SRV zerstört"

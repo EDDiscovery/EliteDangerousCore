@@ -153,6 +153,7 @@ SECTION JournalTypeEnum
 .ShipyardSell: "Shipyard Sell" => "出售飞船"
 .ShipyardSwap: "Shipyard Swap" => "交换飞船"
 .ShipyardTransfer: "Shipyard Transfer" => "转移飞船"
+.ShipyardBankDeposit: "Shipyard Bank Deposit" @
 .ShipTargeted: "Ship Targeted" => "锁定飞船目标"
 .Shutdown: "Shutdown" => "退出游戏"
 .SRVDestroyed: "SRV Destroyed" => "SRV车被摧毁"

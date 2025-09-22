@@ -153,6 +153,7 @@ SECTION JournalTypeEnum
 .ShipyardSell: "Shipyard Sell" => "Sprzedaż Statku"
 .ShipyardSwap: "Shipyard Swap" => "Zamiana Statku"
 .ShipyardTransfer: "Shipyard Transfer" => "Przeniesienie Statku"
+.ShipyardBankDeposit: "Shipyard Bank Deposit" @
 .ShipTargeted: "Ship Targeted" => "Namierzenie Statku"
 .Shutdown: "Shutdown" => "Wyjście z Gry"
 .SRVDestroyed: "SRV Destroyed" => "SRV Zniszczony"

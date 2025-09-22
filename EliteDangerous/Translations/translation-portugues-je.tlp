@@ -153,6 +153,7 @@ SECTION JournalTypeEnum
 .ShipyardSell: "Shipyard Sell" @
 .ShipyardSwap: "Shipyard Swap" @
 .ShipyardTransfer: "Shipyard Transfer" @
+.ShipyardBankDeposit: "Shipyard Bank Deposit" @
 .ShipTargeted: "Ship Targeted" @
 .Shutdown: "Shutdown" @
 .SRVDestroyed: "SRV Destroyed" @
