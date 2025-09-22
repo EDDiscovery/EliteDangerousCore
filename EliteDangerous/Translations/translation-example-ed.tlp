@@ -1409,6 +1409,7 @@ SECTION ModulePartNames
 .Concord_Cannon: "Concord Cannon" @
 .Colonisation_Module: "Colonisation Module" @
 .Large_Cargo_Rack: "Large Cargo Rack" @
+.Mining_Volley_Repeater: "Mining Volley Repeater" @
 
 SECTION ShipSlots
 
