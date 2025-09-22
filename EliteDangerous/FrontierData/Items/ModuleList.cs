@@ -942,7 +942,7 @@ namespace EliteDangerousCore
                 { "int_multidronecontrol_universal_size7_class5", new ShipModule(129001930,ShipModule.ModuleTypes.UniversalMultiLimpetController,"Universal Multi Limpet Controller Class 7 Rating A"){ Cost = 8000000, Class = 7, Rating = "A", Mass = 140, Integrity = 200, PowerDraw = 1.1, BootTime = 6, Limpets = 8, Range = 9100, Speed = 500, MultiTargetSpeed = 60, FuelTransfer = 1, MaxRepairMaterialCapacity = 310, HackTime = 5, MinCargo = 5, MaxCargo = 10 } },
 
                 // Type 11 multi control
-                { "int_multidronecontrol_miningv2_size5_class5", new ShipModule(-1,ShipModule.ModuleTypes.UniversalMultiLimpetController,"Int Multidronecontrol Miningv 2 Size 5 Class 5") }, 
+                { "int_multidronecontrol_miningv2_size5_class5", new ShipModule(-1,ShipModule.ModuleTypes.UniversalMultiLimpetController,"Mining Multi Limpet Controller Class 3 Rating A") },
 
                 // Mine launches charges
 
@@ -3264,6 +3264,7 @@ namespace EliteDangerousCore
                 {"paintjob_adder_metallic_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Metallic Chrome") },
                 {"paintjob_adder_metallic2_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Metallic 2 Chrome") },
                 {"paintjob_adder_militaire_forest_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Militaire Forest Green") },
+                {"paintjob_adder_militarystripe_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Military Stripe Purple") },
                 {"paintjob_adder_militarystripe_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Military Stripe Red") },
                 {"paintjob_adder_pulse_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Pulse 1") },
                 {"paintjob_adder_pulse_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Adder Pulse 2") },
