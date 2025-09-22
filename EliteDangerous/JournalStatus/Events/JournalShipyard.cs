@@ -41,7 +41,7 @@ namespace EliteDangerousCore.JournalEvents
         public void Rescan(JObject evt)
         {
             var snloc = JournalFieldNaming.GetStationNames(evt);
-            Yard = new ShipYard(snloc.Item1,snloc.Item2, evt["StarSystem"].Str(), EventTimeUTC, evt["PriceList"]?.ToObjectQ<ShipYard.ShipyardItem[]>());
+            Yard = new ShipYard(snloc.Item1, snloc.Item2, evt["StarSystem"].Str(), EventTimeUTC, evt["PriceList"]?.ToObjectQ<ShipYard.ShipyardItem[]>());
             MarketID = evt["MarketID"].LongNull();
             Horizons = evt["Horizons"].BoolNull();
             AllowCobraMkIV = evt["AllowCobraMkIV"].BoolNull();
@@ -59,7 +59,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public JObject ToJSON()
         {
-            JArray itemlist = new JArray(Yard.Ships.Select(x => new JObject() { { "id", x.id }, { "ShipType", x.ShipType }, { "ShipType_Localised", x.ShipType_Localised },{ "ShipPrice", x.ShipPrice } }));
+            JArray itemlist = new JArray(Yard.Ships.Select(x => new JObject() { { "id", x.id }, { "ShipType", x.ShipType }, { "ShipType_Localised", x.ShipType_Localised }, { "ShipPrice", x.ShipPrice } }));
 
             JObject j = new JObject()
             {
@@ -82,7 +82,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Horizons { get; set; }
         public bool? AllowCobraMkIV { get; set; }
 
-        public override string GetInfo() 
+        public override string GetInfo()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
@@ -198,11 +198,11 @@ namespace EliteDangerousCore.JournalEvents
 
             if (StoreOldShip != null)
             {
-                sb.BuildCont("Stored".Tx()+": ", StoreOldShip);
+                sb.BuildCont("Stored".Tx() + ": ", StoreOldShip);
             }
             if (SellOldShip != null)
             {
-                sb.BuildCont("Sold".Tx()+": ", StoreOldShip, "Amount: ; cr;N0".Tx(), SellPrice);
+                sb.BuildCont("Sold".Tx() + ": ", StoreOldShip, "Amount: ; cr;N0".Tx(), SellPrice);
             }
             return sb.ToString();
         }
@@ -280,7 +280,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", ShipType, "Amount: ; cr;N0".Tx(), ShipPrice, "At".Tx()+": ", System);
+            return BaseUtils.FieldBuilder.Build("", ShipType, "Amount: ; cr;N0".Tx(), ShipPrice, "At".Tx() + ": ", System);
         }
 
         public JObject Json()            // create JSON of this record..
@@ -288,7 +288,7 @@ namespace EliteDangerousCore.JournalEvents
             JObject evt = new JObject();
             evt["timestamp"] = EventTimeUTC;
             evt["event"] = EventTypeStr;
-            if ( MarketID.HasValue )
+            if (MarketID.HasValue)
                 evt["MarketID"] = MarketID.Value;
             evt["ShipType"] = ShipTypeFD;
             evt["SellShipID"] = SellShipId;
@@ -312,7 +312,7 @@ namespace EliteDangerousCore.JournalEvents
             ShipId = evt["ShipID"].ULong();
 
             StoreOldShip = StoreOldShipFD = evt["StoreOldShip"].Str();      // does not have localisation
-            
+
             if (StoreOldShip.HasChars())    // if we have something, normalise
             {
                 StoreOldShipFD = JournalFieldNaming.NormaliseFDShipName(StoreOldShipFD);
@@ -397,8 +397,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Of ".Tx(), ShipType, "< from ".Tx(), FromSystem, "Distance: ; ly;0.0".Tx(), 
-                            Distance, "Price: ; cr;N0".Tx(), TransferPrice, "Transfer Time".Tx()+": ", FriendlyTransferTime);
+            return BaseUtils.FieldBuilder.Build("Of ".Tx(), ShipType, "< from ".Tx(), FromSystem, "Distance: ; ly;0.0".Tx(),
+                            Distance, "Price: ; cr;N0".Tx(), TransferPrice, "Transfer Time".Tx() + ": ", FriendlyTransferTime);
         }
     }
 
@@ -437,7 +437,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("At starport".Tx()+": ", ShipsHere?.Count(), "Other locations".Tx()+": ", ShipsRemote?.Count());
+            return BaseUtils.FieldBuilder.Build("At starport".Tx() + ": ", ShipsHere?.Count(), "Other locations".Tx() + ": ", ShipsRemote?.Count());
         }
 
         public override string GetDetailed()
@@ -452,7 +452,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (ShipsRemote != null)
             {
-                sb.AppendPrePad("Remote".Tx()+": ", System.Environment.NewLine + System.Environment.NewLine);
+                sb.AppendPrePad("Remote".Tx() + ": ", System.Environment.NewLine + System.Environment.NewLine);
 
                 foreach (StoredShip m in ShipsRemote)
                 {
@@ -469,13 +469,13 @@ namespace EliteDangerousCore.JournalEvents
                             "; ", m.Name,
                             "<", m.ShipType,
                             "< at ".Tx(), m.StarSystem,
-                            "Transfer Cost: ; cr;N0".Tx(), m.TransferPrice, "Time".Tx()+": ", m.TransferTimeString,
+                            "Transfer Cost: ; cr;N0".Tx(), m.TransferPrice, "Time".Tx() + ": ", m.TransferTimeString,
                             "Value: ; cr;N0".Tx(), m.Value, ";(Hot)".Tx(), m.Hot), System.Environment.NewLine);
                     }
                 }
             }
 
-            return sb.Length>0 ? sb.ToString() : null;
+            return sb.Length > 0 ? sb.ToString() : null;
         }
 
         public void Normalise(StoredShip[] s)
@@ -531,11 +531,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Ship".Tx()+": ", ShipType, "System".Tx()+": ", System, "Price: ; cr;N0".Tx(), ShipPrice);
+            return BaseUtils.FieldBuilder.Build("Ship".Tx() + ": ", ShipType, "System".Tx() + ": ", System, "Price: ; cr;N0".Tx(), ShipPrice);
         }
     }
 
-    
+
     [JournalEntryType(JournalTypeEnum.ShipyardRedeem)]
     public class JournalShipyardRedeem : JournalEntry
     {
@@ -568,7 +568,7 @@ namespace EliteDangerousCore.JournalEvents
             ShipFD = JournalFieldNaming.NormaliseFDShipName(evt["ShipType"].Str());
             ShipType = JournalFieldNaming.GetBetterShipName(ShipFD);
             ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
-            ShipId= evt["NewShipID"].ULong();
+            ShipId = evt["NewShipID"].ULong();
         }
 
         public string ShipType { get; set; }    // english
@@ -581,4 +581,24 @@ namespace EliteDangerousCore.JournalEvents
             return string.Format("Redeemed and deployed ship {0} at {1} into shipyard".Tx(), ShipType, fid.WhereAmI);
         }
     }
+
+
+    [JournalEntryType(JournalTypeEnum.ShipyardBankDeposit)]
+    public class JournalShipyardBankDeposit : JournalEntry
+    {
+        public JournalShipyardBankDeposit(JObject evt) : base(evt, JournalTypeEnum.ShipyardBankDeposit)
+        {
+            ShipType = evt["ShipType"].Str("Unknown");
+            ShipTypeLocalised = evt["ShipType_Localised"].Str("Unknown");
+            MarketID = evt["MarketID"].Long();
+        }
+        public string ShipType { get; set; }
+        public string ShipTypeLocalised { get; set; }
+        public long MarketID { get; set; }
+        public override string GetInfo()
+        {
+            return ShipTypeLocalised.Alt(ShipType);
+        }
+    }
 }
+
