@@ -1610,5 +1610,5 @@ SECTION StationServices
 .ConstructionServices: "Construction Services" @
 .RefineryContact: "Refinery Contact" => "Contacto de Refinería"
 .SystemColonisation: "System Colonisation" => "Colonización del Sistema"
-.SquadronBank: "! Squadron Bank !" @
+.SquadronBank: "Squadron Bank" @
 
