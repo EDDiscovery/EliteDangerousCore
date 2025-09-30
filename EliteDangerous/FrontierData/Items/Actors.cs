@@ -105,7 +105,9 @@ namespace EliteDangerousCore
              { "poi_turretplatforma", new Actor("Turret Platform A") },
 
              { "mega_defences", new Actor("Mega Defences") },
-             { "mega_turretbunkera", new Actor("Mega Turret A") },
+             { "mega_turretbunkera", new Actor("Mega Turret Type A") },
+             { "mega_turretplatforma", new Actor("Mega Platform Type A") },
+             { "mega_turretplatformb", new Actor("Mega Platform Type B") },
 
              { "scout", new Actor("Thargoid Scout") },
              { "scout_q", new Actor("Thargoid Scout (Q)") },
