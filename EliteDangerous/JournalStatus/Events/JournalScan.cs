@@ -117,6 +117,8 @@ namespace EliteDangerousCore.JournalEvents
         public bool IsNotPreviouslyMapped { get { return WasMapped.HasValue && WasMapped == false; } }    // true if its there, and its not mapped
         [PropertyNameAttribute("Has the body been previously mapped")]
         public bool IsPreviouslyMapped { get { return WasMapped.HasValue && WasMapped == true; } }    // true if its there, and its mapped
+        [PropertyNameAttribute("Was there a previous footfall on the body")]
+        public bool? WasFootfalled { get; private set; } 
 
         [PropertyNameAttribute("Mass of star or planet in KG")]
         public double? nMassKG { get { return IsPlanet ? nMassEM * BodyPhysicalConstants.oneEarth_KG : nStellarMass * BodyPhysicalConstants.oneSol_KG; } }
@@ -446,6 +448,7 @@ namespace EliteDangerousCore.JournalEvents
             DistanceFromArrivalLS = evt["DistanceFromArrivalLS"].Double();  // ALL 
             WasDiscovered = evt["WasDiscovered"].BoolNull();                // ALL new 3.4
             WasMapped = evt["WasMapped"].BoolNull();                        // ALL new 3.4
+            WasFootfalled = evt["WasFootfalled"].BoolNull();                // ALL new 4.2.1
 
             JArray parents = evt["Parents"].Array();                        // ALL will be null if parents is not an array (also if its Null)
             if (!parents.IsNull() && parents.IsArray)

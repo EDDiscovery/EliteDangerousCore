@@ -639,6 +639,7 @@ namespace EliteDangerousCore.JournalEvents
             Species_Localised = Species_Localised.Alt(Species);
             Genus = Genus.Alt("Unknown");
             Genus_Localised = Genus_Localised.Alt(Genus);
+            WasLogged = evt["WasLogged"].BoolNull();
 
             OrganicEstimatedValues.Values value = EventTimeUTC < EliteReleaseDates.Odyssey14 ? OrganicEstimatedValues.GetValuePreU14(Species) : OrganicEstimatedValues.GetValuePostU14(Species);
 
@@ -674,6 +675,8 @@ namespace EliteDangerousCore.JournalEvents
         public enum ScanTypeEnum { Log, Sample, Analyse };
         [PropertyNameAttribute("Log type")]
         public ScanTypeEnum ScanType { get; set; }     //Analyse, Log, Sample
+        [PropertyNameAttribute("Was it logged before")]
+        public bool? WasLogged { get; set; }
         [PropertyNameAttribute("Estimated realisable value cr")]
         public int? EstimatedValue { get; set; }       // set on analyse
         [PropertyNameAttribute("Potential value cr")]
@@ -691,7 +694,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             int? ev = ScanType == ScanTypeEnum.Analyse ? EstimatedValue : null;     // if analyse, its estimated value
             int? pev = ev == null ? PotentialEstimatedValue : null;                 // if not at analyse, its potential value
-            return BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "< @ ", fid.WhereAmI);
+            return BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "", WasLogged == null ? "" : WasLogged == false ? "Was not logged".Tx() : "Was Logged".Tx(), "< @ ", fid.WhereAmI);
         }
 
         // this sorts the list by date/time, then runs the algorithm that returns only the latest sample state for each key

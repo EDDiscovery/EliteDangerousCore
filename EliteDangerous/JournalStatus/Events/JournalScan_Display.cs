@@ -297,6 +297,12 @@ namespace EliteDangerousCore.JournalEvents
                 sb.AppendCR();
             }
 
+            if (WasFootfalled.HasValue && WasFootfalled.Value)
+            {
+                sb.AppendFormat("Already Footfalled".Tx() + "");
+                sb.AppendCR();
+            }
+
             if (EDSMDiscoveryCommander != null)
             {
                 sb.AppendFormat("Discovered by {0} on {1}".Tx()+ "", EDSMDiscoveryCommander, EDSMDiscoveryUTC.ToStringZulu());
