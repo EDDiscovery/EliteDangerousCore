@@ -121,6 +121,14 @@ namespace EliteDangerousCore.JournalEvents
                     information.Append(' ').Append((ev.EstimatedValueFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
                 }
             }
+            else if (js.WasDiscovered == false && js.WasMapped == false && js.WasFootfalled == true)
+            {
+                information.Append(" (Footfalled)".Tx());
+                if (showvalues)
+                {
+                    information.Append(' ').Append((ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
+                }
+            }
             else if (js.WasDiscovered == false && js.IsStar)
             {
                 if (showvalues)
