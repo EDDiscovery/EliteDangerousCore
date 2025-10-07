@@ -694,7 +694,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             int? ev = ScanType == ScanTypeEnum.Analyse ? EstimatedValue : null;     // if analyse, its estimated value
             int? pev = ev == null ? PotentialEstimatedValue : null;                 // if not at analyse, its potential value
-            return BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "", WasLogged == null ? "" : WasLogged == false ? "Was not logged".Tx() : "Was Logged".Tx(), "< @ ", fid.WhereAmI);
+            return BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "", WasLogged == null ? "" : WasLogged == false ? "Was not logged".Tx() : "Was logged".Tx(), "< @ ", fid.WhereAmI);
         }
 
         // this sorts the list by date/time, then runs the algorithm that returns only the latest sample state for each key
