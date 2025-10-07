@@ -60,6 +60,7 @@ namespace EliteDangerousCore
         public bool IsInSupercruise { get { return TravelState == TravelStateType.Supercruise || TravelState == TravelStateType.TaxiSupercruise || 
                                             TravelState == TravelStateType.MulticrewSupercruise || TravelState == TravelStateType.DropShipSupercruise; } }
 
+        public bool IsNormalSpace { get { return TravelState == TravelStateType.NormalSpace|| TravelState == TravelStateType.TaxiNormalSpace || TravelState == TravelStateType.MulticrewNormalSpace || TravelState == TravelStateType.DropShipNormalSpace; } }
         public bool IsLanded { get { return TravelState == TravelStateType.Landed || TravelState == TravelStateType.MulticrewLanded; } }
         public bool IsSRV { get { return TravelState == TravelStateType.SRV || TravelState == TravelStateType.MulticrewSRV; } }
         public bool IsFighter { get { return TravelState == TravelStateType.Fighter || TravelState == TravelStateType.MulticrewFighter; } }

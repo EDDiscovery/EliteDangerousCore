@@ -13,6 +13,7 @@
  */
 
 using EliteDangerousCore.JournalEvents;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
@@ -244,6 +245,13 @@ namespace EliteDangerousCore
                         jfsprev.Scooped += jfs.Scooped;
                         jfsprev.Total = jfs.Total;
                         //System.Diagnostics.Debug.WriteLine("Merge FS " + jfsprev.EventTimeUTC);
+                        return true;
+                    }
+                    else if ( je.EventTypeID == JournalTypeEnum.BuyMicroResources)
+                    {
+                        JournalBuyMicroResources jm = je as JournalBuyMicroResources;
+                        JournalBuyMicroResources jmprev = prev as JournalBuyMicroResources;
+                        jmprev.Merge(jm);
                         return true;
                     }
                     else if (je.EventTypeID == JournalTypeEnum.Friends) // merge friends

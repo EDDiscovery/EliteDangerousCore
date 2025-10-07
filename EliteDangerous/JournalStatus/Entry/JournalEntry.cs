@@ -22,6 +22,7 @@ using System.Data.Common;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 
 namespace EliteDangerousCore
@@ -55,6 +56,8 @@ namespace EliteDangerousCore
         public bool StartMarker { get { return (Synced & (int)SyncFlags.StartMarker) != 0; } }
         [QuickJSON.JsonIgnore()]
         public bool StopMarker { get { return (Synced & (int)SyncFlags.StopMarker) != 0; } }
+
+        public static string TranslatedEventName(JournalTypeEnum x) { return TranslatedEventNames[x]; }
 
         public virtual bool IsBeta { get { return TravelLogUnit.Get(TLUId)?.IsBeta ?? DefaultBetaFlag; } }        // TLUs are cached via the dictionary, no point also holding a local copy
         public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.IsHorizons ?? DefaultHorizonsFlag; } }  // horizons flag from loadgame
@@ -257,6 +260,7 @@ namespace EliteDangerousCore
         }
 
         // enum name, translated name, image
+        // optional filter for entries containing these methods
         static public List<Tuple<string, string, Image>> GetNameImageOfEvents(string[] methods = null, bool sort = false)
         {
             List<JournalTypeEnum> jevents = JournalEntry.GetEnumOfEvents(methods);
@@ -273,6 +277,26 @@ namespace EliteDangerousCore
             }
 
             return list;
+        }
+
+        // look at events containing the method FilterItems and return name, translated name, image
+        static public List<Tuple<string, string, Image>> GetNameImageOfEventsFilterItems()
+        {
+            string method = "FilterItems";
+
+            List<Tuple<string, string, Image>> ret = new List<Tuple<string, string, Image>>();
+
+            var list = JournalEntry.GetEnumOfEvents(new string[] { method });        // return list of these
+            foreach (var e in list)
+            {
+                // get FilterItems method handle and invoke, and then add to list
+                Type t = JournalEntry.TypeOfJournalEntry(e);
+                MethodInfo info = t.GetMethod(method, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+                List<Tuple<string, string, Image>> retlist = info.Invoke(null, new object[] { }) as List<Tuple<string, string, Image>>;
+                ret.AddRange(retlist);
+            }
+
+            return ret;
         }
 
         static public Tuple<string, string, Image> GetNameImageOfEvent(JournalTypeEnum ev)

@@ -188,8 +188,7 @@ namespace EliteDangerousCore
                 // if we discard the entry, or we merge it into previous, don't add
 
                 if (JournalEventsManagement.DiscardHistoryReadJournalRecordsFromHistory(je) ||          // discard due to its type
-                    JournalEventsManagement.DiscardJournalRecordDueToRepeat(je, hist.historylist) ||
-                    JournalEventsManagement.MergeJournalRecordsFromHistory(hist.hlastprocessed?.journalEntry, je) )
+                    JournalEventsManagement.DiscardJournalRecordDueToRepeat(je, hist.historylist) )
                 {
                     continue;
                 }
@@ -205,10 +204,19 @@ namespace EliteDangerousCore
 
                 //System.Diagnostics.Debug.WriteLine($"HE created {hecur.EventSummary} {hecur.GetInfo()}\r\n{hecur.GetDetailed()}");
                 // System.Diagnostics.Debug.WriteLine("++ {0} {1}", he.EventTimeUTC.ToString(), he.EntryType);
+                
+                // we reorder or remove some repeated frontier garbage
                 var reorderlist = hist.ReorderRemove(hecur);
 
                 foreach (var heh in reorderlist.EmptyIfNull())
                 {
+                    // now try and merge..
+                    if ( JournalEventsManagement.MergeJournalRecordsFromHistory(hist.historylist.LastOrDefault()?.journalEntry, heh.journalEntry) )
+                    {
+                        //System.Diagnostics.Debug.WriteLine($"History Merge {heh.journalEntry.EventTypeID}");
+                        continue; 
+                    }
+
                     heh.journalEntry.SetSystemNote();                // since we are displaying it, we can check here to see if a system note needs assigning
 
                     //if ( heh.EventTimeUTC > new DateTime(2021,8,1)) System.Diagnostics.Debug.WriteLine("   ++ {0} {1}", heh.EventTimeUTC.ToString(), heh.EntryType);
