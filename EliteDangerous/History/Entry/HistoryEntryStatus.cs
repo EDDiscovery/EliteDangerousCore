@@ -110,6 +110,8 @@ namespace EliteDangerousCore
                 DockingStationType == StationDefinitions.StarportTypes.Orbis ||
                     DockingStationType == StationDefinitions.StarportTypes.Coriolis || DockingStationType == StationDefinitions.StarportTypes.Bernal ||
                     DockingStationType == StationDefinitions.StarportTypes.Ocellus || DockingStationType == StationDefinitions.StarportTypes.AsteroidBase; } }
+        public bool IsDockingStationTypeCarrier { get { return DockingStationType == StationDefinitions.StarportTypes.FleetCarrier; } }
+
 
         private HistoryEntryStatus()
         {
@@ -655,7 +657,14 @@ namespace EliteDangerousCore
 
                 case JournalTypeEnum.DockingCancelled:
                     {
-                        if ( prev.DockingPad >0  )
+                        if (prev.DockingPad > 0)
+                            hes = new HistoryEntryStatus(prev) { DockingPad = 0, DockingStationType = StationDefinitions.StarportTypes.Unknown };
+                    }
+                    break;
+
+                case JournalTypeEnum.DockingTimeout:
+                    {
+                        if (prev.DockingPad > 0)
                             hes = new HistoryEntryStatus(prev) { DockingPad = 0, DockingStationType = StationDefinitions.StarportTypes.Unknown };
                     }
                     break;
