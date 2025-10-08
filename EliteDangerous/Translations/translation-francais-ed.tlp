@@ -921,9 +921,9 @@ F958260588E1AF: "Steel" => "Acier"
 
 SECTION EngineeringData
 
-05FC94B0147F09: "Engineer" => "Ingénieur "
-A60F2C73604F62: "Quality" => "Qualité "
-A5BADB0C4C0940: "Experimental Effect" => "Effet expérimental "
+05FC94B0147F09: "Engineer" => "Ingénieur"
+A60F2C73604F62: "Quality" => "Qualité"
+A5BADB0C4C0940: "Experimental Effect" => "Effet expérimental"
 C312376DA63393: "Original: ;;0.###" @
 75A08C2632AF12: "< (Worse); (Better)" => "< (Pire); (Meilleur)"
 
@@ -938,7 +938,7 @@ SECTION CommanderForm
 B26565C54E6DA2: "Default Map Color" => "Couleur par défaut de la carte"
 F3646F7AE1228F: "Home System" => "Système de base"
 2737A55B1A4751: "Inara Information (optional)" => "Information Inara (Optionnel)"
-BC5F6A124741B3: "Inara Name" => "Nom sur Inara "
+BC5F6A124741B3: "Inara Name" => "Nom sur Inara"
 8A77089A093CC5: "Inara API Key" => "Clé API Inara"
 137D072F2C9C3C: "Sync to Inara" => "Synchroniser avec Inara"
 C43E80AA3B8661: "EDDN" @
