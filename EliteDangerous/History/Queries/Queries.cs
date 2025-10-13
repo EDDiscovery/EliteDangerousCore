@@ -861,7 +861,8 @@ namespace EliteDangerousCore
                                 var re = new ResultEntry { HistoryEntry = he, FilterPassed = filterdescription };
                                 if (results.TryGetValue(key, out List<ResultEntry> value))       // if key already exists, maybe set HE to us, and update filters passed
                                 {
-                                    value.Add(re);
+                                    if (value.Find(x => x.FilterPassed == re.FilterPassed) == null)      // don't repeat entry per body
+                                        value.Add(re);
                                     //  System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC} `{filterdescription}` matched {key} added to list");
                                 }
                                 else

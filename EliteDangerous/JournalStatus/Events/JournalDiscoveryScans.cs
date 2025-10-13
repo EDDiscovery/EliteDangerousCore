@@ -92,6 +92,11 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("List of FSS signals")]
         public List<FSSSignal> Signals { get; set; }            // name used in action packs not changeable. Never null 
 
+        public bool IsSignalsOfSystem(long? address)
+        {
+            return Signals.Count > 0 && Signals[0].SystemAddress == address;
+        }
+
         // JSON export ZMQ, DLL, Web via JournalScan
 
         [JsonIgnore]
