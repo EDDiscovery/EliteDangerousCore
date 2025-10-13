@@ -819,6 +819,8 @@ namespace EliteDangerousCore
                         string key = null;
                         if (he.EntryType == JournalTypeEnum.FSSSignalDiscovered)
                         {
+                            // find real body name for signal, not the one in the history entry as it could be produced in the previous system
+
                             long? sysaddr = ((JournalFSSSignalDiscovered)he.journalEntry).Signals[0].SystemAddress;
                             if (sysaddr.HasValue && starscan.ScanDataBySysaddr.TryGetValue(sysaddr.Value, out StarScan.SystemNode sn))
                             {
@@ -861,7 +863,8 @@ namespace EliteDangerousCore
                                 var re = new ResultEntry { HistoryEntry = he, FilterPassed = filterdescription };
                                 if (results.TryGetValue(key, out List<ResultEntry> value))       // if key already exists, maybe set HE to us, and update filters passed
                                 {
-                                    value.Add(re);
+                                    if ( value.Find(x=>x.FilterPassed == re.FilterPassed) == null)      // don't repeat entry per body
+                                        value.Add(re);
                                     //  System.Diagnostics.Debug.WriteLine($"{he.EventTimeUTC} `{filterdescription}` matched {key} added to list");
                                 }
                                 else

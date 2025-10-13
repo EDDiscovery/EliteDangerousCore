@@ -357,9 +357,22 @@ namespace EliteDangerousCore
             }
             else if (he.journalEntry is IBodyNameAndID je)  // all entries under this type
             {
-                if ( (je.StarSystem != null && he.System.Name != je.StarSystem) || (je.SystemAddress != null && je.SystemAddress != he.System.SystemAddress))
+                if ((je.StarSystem != null && he.System.Name != je.StarSystem) || (je.SystemAddress != null && je.SystemAddress != he.System.SystemAddress))
                 {
                     System.Diagnostics.Debug.WriteLine($"IBodyNameAndID has a different system `{je.StarSystem}` {je.SystemAddress} vs current system `{he.System.Name}` {je.SystemAddress}");
+                }
+                else if (he.EntryType == JournalTypeEnum.Docked) 
+                {
+                    JournalDocked jd = he.journalEntry as JournalDocked;
+
+                    if (StationDefinitions.IsPlanetaryPort(he.Status.FDStationType ?? StationDefinitions.StarportTypes.Unknown) && he.Status.BodyID.HasValue)
+                    {
+                        StarScan.AddDocking(he.journalEntry as JournalDocked, he.System, he.Status.BodyID.Value);
+                    }
+                    else
+                    {
+                        StarScan.AddDocking(he.journalEntry as JournalDocked, he.System);
+                    }
                 }
                 else if (he.EntryType == JournalTypeEnum.ApproachSettlement)    // we need to process this uniquely, as it has information for starscan as well as body info
                 {
@@ -367,10 +380,10 @@ namespace EliteDangerousCore
 
                     // only interested in some in same system with system addr and bodyids, and we can then set the system name (missing from the event) so the AddBodyworks
 
-                    if (jas.Body.HasChars() && jas.BodyID.HasValue && he.System.SystemAddress.HasValue && he.System.SystemAddress == jas.SystemAddress )
+                    if (jas.Body.HasChars() && jas.BodyID.HasValue && he.System.SystemAddress.HasValue && he.System.SystemAddress == jas.SystemAddress)
                     {
                         jas.StarSystem = he.System.Name;           // fill in the missing system name 
-                        StarScan.AddBodyToBestSystem(je, he.System, pos, historylist); // ensure its in the DB - note BodyType = Settlement
+                        StarScan.AddBodyToBestSystem(jas, he.System, pos, historylist); // ensure its in the DB - note BodyType = Settlement
                         StarScan.AddApproachSettlement(jas, he.System);
                     }
                     else
@@ -384,8 +397,8 @@ namespace EliteDangerousCore
 
                     // only interested in some in same system with system addr and bodyids, and we can then set the system name (missing from the event) so the AddBodyworks
 
-                    if (jt.Body.HasChars() && jt.BodyID.HasValue && he.System.SystemAddress.HasValue && he.System.SystemAddress == jt.SystemAddress && 
-                                    jt.HasLatLong )  // some touchdowns don't come with lat/long, ignore them, they are not important
+                    if (jt.Body.HasChars() && jt.BodyID.HasValue && he.System.SystemAddress.HasValue && he.System.SystemAddress == jt.SystemAddress &&
+                                    jt.HasLatLong)  // some touchdowns don't come with lat/long, ignore them, they are not important
                     {
                         jt.StarSystem = he.System.Name;           // fill in the possibly missing system name 
                         StarScan.AddBodyToBestSystem(jt, he.System, pos, historylist); // ensure its in the DB - note BodyType = Settlement
@@ -400,7 +413,7 @@ namespace EliteDangerousCore
                 {
                     // only these have a Body of a planet/star/barycentre, the other types (station etc see the frontier doc which is right for a change) are not useful
 
-                    if (je.BodyType.EqualsIIC("Planet") || je.BodyType.EqualsIIC("Star") || je.BodyType.EqualsIIC("Barycentre"))        
+                    if (je.BodyType.EqualsIIC("Planet") || je.BodyType.EqualsIIC("Star") || je.BodyType.EqualsIIC("Barycentre"))
                     {
                         StarScan.AddBodyToBestSystem(je, he.System, pos, historylist);
                     }

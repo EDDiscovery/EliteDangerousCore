@@ -32,7 +32,7 @@ namespace EliteDangerousCore
 
         public Point DrawNode(List<ExtPictureBox.ImageElement> pc,
                             StarScan.ScanNode sn,
-                            List<MaterialCommodityMicroResource> historicmats,    // curmats may be null
+                            List<MaterialCommodityMicroResource> historicmats,    // historicmats may be null
                             List<MaterialCommodityMicroResource> curmats,    // curmats may be null
                             Image notscanned,               // image if scan data is null
                             Point position,                 // position is normally left/middle, unless xiscentre is set.

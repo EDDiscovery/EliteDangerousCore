@@ -79,6 +79,7 @@ namespace EliteDangerousCore
         public string BodyType { get; private set; }
         public string StationName_Localised { get; private set; }     // will be null when undocked (StationName_Localised)
         public string StationType { get; private set; }     // will be null when undocked, in english
+        public StationDefinitions.StarportTypes? FDStationType { get; private set; }     // will be null when undocked, in english
         public string StationFaction { get; private set; }  // will be null when undocked
         public long? MarketID { get; private set; } 
         public ulong ShipID { get; private set; } = ulong.MaxValue;
@@ -184,6 +185,7 @@ namespace EliteDangerousCore
                             Wanted = jloc.Wanted,
                             StationName_Localised = stationisfc ? prev.StationName_Localised : (jloc.StationName_Localised.Alt(jloc.Docked || locinstation ? jloc.Body : null)),
                             StationType = stationisfc ? prev.StationType : (jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType : null)),
+                            FDStationType = jloc.Docked ? jloc.FDStationType : default(StationDefinitions.StarportTypes?),
                             StationFaction = jloc.StationFaction,          // may be null
                             CurrentBoost = 1,
                             FSDJumpNextSystemAddress = null,
@@ -210,9 +212,9 @@ namespace EliteDangerousCore
                         Wanted = jcj.Wanted,
                         StationName_Localised = jcj.StationName_Localised.Alt(null),       // if empty string, set to null
                         StationType = jcj.StationType.Alt(null),
+                        FDStationType = jcj.FDStationType,
                         DockingPad = 0,
                         DockingStationType = StationDefinitions.StarportTypes.Unknown
-
                     };
                     break;
 
@@ -232,6 +234,7 @@ namespace EliteDangerousCore
                             BookedDropship = false,
                             StationName_Localised = null,
                             StationType = null,
+                            FDStationType = null,
                             StationFaction = null, // to clear
                             DockingPad = 0,
                             DockingStationType = StationDefinitions.StarportTypes.Unknown
@@ -274,6 +277,7 @@ namespace EliteDangerousCore
                             Wanted = jfsd.Wanted,
                             StationName_Localised = null,
                             StationType = null,
+                            FDStationType = null,
                             StationFaction = null, // to ensure
                             BodyApproached = false,
                             DockingPad = 0,
@@ -338,6 +342,7 @@ namespace EliteDangerousCore
                             Wanted = jdocked.Wanted,
                             StationName_Localised = jdocked.StationName_Localised.Alt("Unknown"),
                             StationType = jdocked.StationType.Alt("Station"),
+                            FDStationType = jdocked.FDStationType,
                             StationFaction = jdocked.Faction,
                             CurrentBoost = 1,
                             DockingPad = 0,
@@ -357,6 +362,7 @@ namespace EliteDangerousCore
                             MarketID = null,
                             StationName_Localised = null,
                             StationType = null,
+                            FDStationType = null,
                             StationFaction = null, // to clear
                         };
                         break;
@@ -395,6 +401,7 @@ namespace EliteDangerousCore
                                             TravelStateType.OnFootPlanet,
                         StationName_Localised = disem.HasStationTypeName ? disem.StationName_Localised.Alt("Unknown") : prev.StationName_Localised,       // copying it over due to missing station name/type
                         StationType = disem.HasStationTypeName ? disem.StationType : prev.StationType,
+                        FDStationType = disem.HasStationTypeName ? disem.FDStationType : prev.FDStationType,
                         CurrentBoost = 1,
                     };
                     break;

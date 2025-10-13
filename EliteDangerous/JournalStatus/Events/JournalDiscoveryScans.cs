@@ -92,6 +92,11 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("List of FSS signals")]
         public List<FSSSignal> Signals { get; set; }            // name used in action packs not changeable. Never null 
 
+        public bool IsSignalsOfSystem( long? address)
+        {
+            return Signals.Count > 0 && Signals[0].SystemAddress == address;
+        }
+
         // JSON export ZMQ, DLL, Web via JournalScan
 
         [JsonIgnore]
@@ -133,7 +138,7 @@ namespace EliteDangerousCore.JournalEvents
 
             var sb = new System.Text.StringBuilder(1024);
 
-            if (fid.NextJumpSystemName != null)
+            if (fid.NextJumpSystemName != null)     // this is set up by StartJump in HistoryStatus, and is passed thru so we can qualify its in another system
             {
                 sb.Append("@ ");
                 sb.Append(fid.NextJumpSystemName);

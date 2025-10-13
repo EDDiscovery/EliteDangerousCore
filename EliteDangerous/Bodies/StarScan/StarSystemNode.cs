@@ -27,6 +27,7 @@ namespace EliteDangerousCore
         {
             public ISystem System { get; set; }
 
+            // List of Stars in the system
             public SortedList<string, ScanNode> StarNodes { get; private set; } = new SortedList<string, ScanNode>(new CollectionStaticHelpers.BasicLengthBasedNumberComparitor<string>());   // node list
             
             [QuickJSON.JsonIgnore()]
@@ -36,6 +37,7 @@ namespace EliteDangerousCore
             public int? FSSTotalNonBodies { get; set; }     // if we have FSSDiscoveryScan, this will be set
             public List<JournalFSSSignalDiscovered> FSSSignalList { get; private set; } = new List<JournalFSSSignalDiscovered>();       // List of FSS Signals journal entries on this node, by add order
             public List<JournalCodexEntry> CodexEntryList { get; private set; } = new List<JournalCodexEntry>();
+            public List<IBodyFeature> Stations { get; private set; } = new List<IBodyFeature>();        // orbiting stations
 
             public SystemNode(ISystem sys)
             {
@@ -132,8 +134,25 @@ namespace EliteDangerousCore
             {
                 foreach (var b in Bodies())
                 {
-                    if (object.ReferenceEquals(b.ScanData,s))
+                    if (object.ReferenceEquals(b.ScanData, s))
                         return b;
+                }
+
+                return null;
+            }
+
+            // see if we have this name in either stations or on planets
+            public IBodyFeature FindFeature(string feature)
+            {
+                IBodyFeature station = Stations.Find(x => x.Name == feature);
+                if (station != null)
+                    return station;
+
+                foreach (var b in Bodies())
+                {
+                    IBodyFeature f = b.SurfaceFeatures?.Find(x => x.Name == feature || x.Name_Localised == feature);
+                    if (f != null)
+                        return f;
                 }
 
                 return null;

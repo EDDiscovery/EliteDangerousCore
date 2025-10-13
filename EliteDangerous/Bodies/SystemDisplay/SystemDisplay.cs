@@ -19,6 +19,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using static EliteDangerousCore.StarScan;
 
 namespace EliteDangerousCore
 {
@@ -44,60 +45,61 @@ namespace EliteDangerousCore
         public ContextMenuStrip ContextMenuStripBelts { get; set; } = null;      // if to assign a CMS
         public ContextMenuStrip ContextMenuStripMats { get; set; } = null;      // if to assign a CMS
         public ContextMenuStrip ContextMenuStripSignals { get; set; } = null;      // if to assign a CMS
-
-        public int ValueLimit { get; set; } = 50000;
-
-        public Point DisplayAreaUsed { get; private set; }  // used area to display in
         public Size StarSize { get; private set; }  // size of stars
-
-        public Font Font { get; set; } = null;              // these must be set before call
-        public Font FontUnderlined { get; set; } = null;
-        public Font LargerFont { get; set; } = null;
+        public int ValueLimit { get; set; } = 50000;        // which ones get the value star against them
+        public Font Font { get; set; } = null;              // must be set before call
+        public Font FontUnderlined { get; set; } = null;    // can be set if required.. if not Font is used
+        public Font FontLarge { get; set; } = null;         // can be set if required.. if not Font is used
         public Color BackColor { get; set; } = Color.Black;
         public Color LabelColor { get; set; } = Color.DarkOrange;
 
-
-        private Size beltsize, planetsize, moonsize, materialsize;
-        private int starfirstplanetspacerx;        // distance between star and first planet
-        private int starplanetgroupspacery;        // distance between each star/planet grouping 
-        private int planetspacerx;       // distance between each planet in a row
-        private int planetspacery;       // distance between each planet row
-        private int moonspacerx;        // distance to move moon across
-        private int moonspacery;        // distance to slide down moon vs planet
-        private int materiallinespacerxy;   // extra distance to add around material output
-        private int leftmargin;
-        private int topmargin;
-
-        const int noderatiodivider = 8;     // in eighth sizes
-        const int nodeheightratio = 12;     // nominal size 12/8th of Size
+        // After create, this holds the used display area
+        public Point DisplayAreaUsed { get; private set; }  
 
         public SystemDisplay()
         {
         }
-	
+
         #region Display
 
-        // draw scannode into an imagebox in widthavailable..
-        // curmats may be null
-        public void DrawSystem(ExtendedControls.ExtPictureBox imagebox, int widthavailable,
-                               StarScan.SystemNode systemnode, List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats,string opttext = null, string[] filter=  null ) 
-        {
-            imagebox.ClearImageList();  // does not clear the image, render will do that
 
-           // BodyToImages.DebugDisplayStarColourKey(imagebox, Font); enable for checking
-            
+        // Clears the imagebox, create the objects, render to imagebox
+        public void DrawSystemRender(ExtendedControls.ExtPictureBox imagebox, int widthavailable, SystemNode systemnode, 
+                               List<MaterialCommodityMicroResource> historicmats = null, List<MaterialCommodityMicroResource> curmats = null,
+                               string opttext = null, string[] bodytypefilter = null,
+                               Point? startpoint = null)
+        {
+            imagebox.ClearImageList();  
+            CreateSystemImages(imagebox, widthavailable, systemnode, historicmats, curmats, opttext, bodytypefilter, startpoint);
+            imagebox.Render();
+        }
+
+        // create images of system into an imagebox in widthavailable..  does not clear or render
+        // curmats and history may be null
+        // bodytype filters is star,body,barycentre,belt or all
+
+        public void CreateSystemImages(ExtendedControls.ExtPictureBox imagebox, int widthavailable,  SystemNode systemnode,
+                               List<MaterialCommodityMicroResource> historicmats = null, List<MaterialCommodityMicroResource> curmats = null,
+                               string titletext = null, string[] bodytypefilters = null,
+                               Point? startpoint = null)
+        {
+            System.Diagnostics.Debug.Assert(Font != null);
+
+            // BodyToImages.DebugDisplayStarColourKey(imagebox, Font); enable for checking
+
             if (systemnode != null)
             {
                 Random rnd = new Random(systemnode.System.Name.GetHashCode());         // always start with same seed so points are in same places
 
                 var notscannedbitmap = BodyDefinitions.GetStarImageNotScanned();
 
-                Point leftmiddle = new Point(leftmargin, topmargin + StarSize.Height * nodeheightratio / 2 / noderatiodivider);  // half down (h/2 * ratio)
+                // half down (h/2 * ratio)
+                Point leftmiddle = new Point(startpoint?.X ?? leftmargin, (startpoint?.Y ?? topmargin) + StarSize.Height * nodeheightratio / 2 / noderatiodivider);
 
-                if ( opttext != null )
+                if ( titletext != null )
                 {
                     ExtPictureBox.ImageElement lab = new ExtPictureBox.ImageElement();
-                    lab.TextAutoSize(new Point(leftmargin,0), new Size(500, 30), opttext, LargerFont, LabelColor, BackColor);
+                    lab.TextAutoSize(new Point(leftmargin,0), new Size(500, 30), titletext, FontLarge ?? Font, LabelColor, BackColor);
                     imagebox.Add(lab);
                     leftmiddle.Y += lab.Image.Height + 8;
                 }
@@ -105,15 +107,15 @@ namespace EliteDangerousCore
                 DisplayAreaUsed = leftmiddle;
                 List<ExtPictureBox.ImageElement> starcontrols = new List<ExtPictureBox.ImageElement>();
 
-                bool displaybelts = filter == null || (filter.Contains("belt") || filter.Contains("All"));
+                bool displaybelts = bodytypefilters == null || (bodytypefilters.Contains("belt") || bodytypefilters.Contains("All"));
 
                 Point maxitemspos = new Point(0, 0);
 
                 bool drawnsignals = false;      // set if we drawn signals against any of the stars
 
-                foreach (StarScan.ScanNode starnode in systemnode.StarNodes.Values)        // always has scan nodes
+                foreach (ScanNode starnode in systemnode.StarNodes.Values)        // always has scan nodes
                 {
-                    if (filter != null && starnode.IsBodyInFilter(filter, true) == false)       // if filter active, but no body or children in filter
+                    if (bodytypefilters != null && starnode.IsBodyInFilter(bodytypefilters, true) == false)       // if filter active, but no body or children in filter
                     {
                        // System.Diagnostics.Debug.WriteLine("SDUC Rejected " + starnode.fullname);
                         continue;
@@ -128,7 +130,7 @@ namespace EliteDangerousCore
                         Image barycentre =BodyDefinitions.GetBarycentreImage();
 
                         Point maxpos = DrawNode(starcontrols, starnode, historicmats, curmats,
-                                (starnode.NodeType == StarScan.ScanNodeType.barycentre) ? barycentre: notscannedbitmap,
+                                (starnode.NodeType == ScanNodeType.barycentre) ? barycentre: notscannedbitmap,
                                 leftmiddle, false, true, out Rectangle starimagepos, out int _, StarSize, DrawLevel.TopLevelStar, rnd, ContextMenuStripStars, ContextMenuStripMats);       // the last part nerfs the label down to the right position
 
                         maxitemspos = new Point(Math.Max(maxitemspos.X, maxpos.X), Math.Max(maxitemspos.Y, maxpos.Y));
@@ -149,17 +151,17 @@ namespace EliteDangerousCore
                     {
                         Point firstcolumn = leftmiddle;
 
-                        Queue<StarScan.ScanNode> belts;
+                        Queue<ScanNode> belts;
                         if (starnode.ScanData != null && (!starnode.ScanData.IsWebSourced || ShowWebBodies))  // have scandata on star, and its not edsm or allowed edsm
                         {
-                            belts = new Queue<StarScan.ScanNode>(starnode.Children.Values.Where(s => s.NodeType == StarScan.ScanNodeType.belt));    // find belts in children of star
+                            belts = new Queue<ScanNode>(starnode.Children.Values.Where(s => s.NodeType == ScanNodeType.belt));    // find belts in children of star
                         }
                         else
                         {
-                            belts = new Queue<StarScan.ScanNode>(); // empty array
+                            belts = new Queue<ScanNode>(); // empty array
                         }
 
-                        StarScan.ScanNode lastbelt = belts.Count != 0 ? belts.Dequeue() : null;
+                        ScanNode lastbelt = belts.Count != 0 ? belts.Dequeue() : null;
 
                         EliteDangerousCore.JournalEvents.JournalScan.HabZones hz = starnode.ScanData?.GetHabZones();
 
@@ -170,14 +172,14 @@ namespace EliteDangerousCore
 
                         // process body and stars only
 
-                        List<StarScan.ScanNode> planetsinorder = starnode.Children.Values.Where(s => s.NodeType == StarScan.ScanNodeType.planetmoonsubstar).ToList();
-                        var planetcentres = new Dictionary<StarScan.ScanNode, Point>();
+                        List<ScanNode> planetsinorder = starnode.Children.Values.Where(s => s.NodeType == ScanNodeType.planetmoonsubstar).ToList();
+                        var planetcentres = new Dictionary<ScanNode, Point>();
 
                         for (int pn = 0; pn < planetsinorder.Count; pn++)
                         {
-                            StarScan.ScanNode planetnode = planetsinorder[pn];
+                            ScanNode planetnode = planetsinorder[pn];
 
-                            if (filter != null && planetnode.IsBodyInFilter(filter, true) == false)       // if filter active, but no body or children in filter
+                            if (bodytypefilters != null && planetnode.IsBodyInFilter(bodytypefilters, true) == false)       // if filter active, but no body or children in filter
                             {
                                 //System.Diagnostics.Debug.WriteLine("SDUC Rejected " + planetnode.fullname);
                                 continue;
@@ -228,7 +230,7 @@ namespace EliteDangerousCore
                                     habzone =  dist >= habzonestartls && dist <= habzoneendls;
                                 }
 
-                                Point maxplanetpos = CreatePlanetTree(pc, planetnode, historicmats, curmats, leftmiddle, filter, habzone , out int centreplanet, rnd, ContextMenuStripPlanetsMoons, ContextMenuStripMats);
+                                Point maxplanetpos = CreatePlanetTree(pc, planetnode, historicmats, curmats, leftmiddle, bodytypefilters, habzone , out int centreplanet, rnd, ContextMenuStripPlanetsMoons, ContextMenuStripMats);
 
                                 Point pcnt = new Point(centreplanet, leftmiddle.Y);
 
@@ -286,9 +288,9 @@ namespace EliteDangerousCore
                         maxitemspos = leftmiddle = new Point(leftmargin, maxitemspos.Y + starplanetgroupspacery + StarSize.Height / 2);     // move back to left margin and move down to next position of star, allowing gap
 
                         // make a tree of the planets with their barycentres from the Parents information
-                        var barynodes = StarScan.ScanNode.PopulateBarycentres(planetsinorder);  // children always made, barynode tree
+                        var barynodes = ScanNode.PopulateBarycentres(planetsinorder);  // children always made, barynode tree
 
-                        //StarScan.ScanNode.DumpTree(barynodes, "TOP", 0);
+                        //ScanNode.DumpTree(barynodes, "TOP", 0);
 
                         List<ExtPictureBox.ImageElement> pcb = new List<ExtPictureBox.ImageElement>();
 
@@ -330,8 +332,6 @@ namespace EliteDangerousCore
 
                 imagebox.AddRange(starcontrols);
             }
-
-            imagebox.Render();      // replaces image..
         }
 
         void RepositionTree(List<ExtPictureBox.ImageElement> pc, int xoff, int yoff)
@@ -372,6 +372,22 @@ namespace EliteDangerousCore
         }
 
         #endregion
+
+
+        private Size beltsize, planetsize, moonsize, materialsize;
+        private int starfirstplanetspacerx;        // distance between star and first planet
+        private int starplanetgroupspacery;        // distance between each star/planet grouping 
+        private int planetspacerx;       // distance between each planet in a row
+        private int planetspacery;       // distance between each planet row
+        private int moonspacerx;        // distance to move moon across
+        private int moonspacery;        // distance to slide down moon vs planet
+        private int materiallinespacerxy;   // extra distance to add around material output
+        private int leftmargin;
+        private int topmargin;
+
+        const int noderatiodivider = 8;     // in eighth sizes
+        const int nodeheightratio = 12;     // nominal size 12/8th of Size
+
 
     }
 }

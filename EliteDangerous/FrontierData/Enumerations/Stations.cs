@@ -190,6 +190,12 @@ namespace EliteDangerousCore
             GameplayPOI,
         }
 
+        public static bool IsPlanetaryPort(StarportTypes t)
+        {
+            return t == StarportTypes.OnFootSettlement || t == StarportTypes.OnFootSettlement || t == StarportTypes.PlanetaryConstructionDepot || t == StarportTypes.DockablePlanetStation
+                || t == StarportTypes.CraterOutpost || t == StarportTypes.CraterPort;
+        }
+
         // maps the StationType field to an enum.
         // If null is passed in, its presumed field is missing and thus Unknown.
         public static StarportTypes StarportTypeToEnum(string fdname)

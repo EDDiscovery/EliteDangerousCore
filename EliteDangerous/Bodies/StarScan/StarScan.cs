@@ -149,6 +149,9 @@ namespace EliteDangerousCore
 
                 if (usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys))
                 {
+                    if (sys.Name.IsEmpty())
+                        System.Diagnostics.Debug.WriteLine($"WARNING - Spansh lookup with empty name of system is liable to errors - cant set body designation properly");
+
                     var lookupres = await Spansh.SpanshClass.GetBodiesListAsync(sys, usespansh);          // see if spansh has it cached or optionally look it up
 
                     if (lookupres != null)
@@ -156,8 +159,8 @@ namespace EliteDangerousCore
                         foreach (JournalScan js in lookupres.Bodies)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, lookupres.System.Name);
-                            System.Diagnostics.Debug.WriteLine($"FindSystemASync spansh add {lookupres.System.Name} {lookupres.System.SystemAddress} {js.BodyName}");
-                            ProcessJournalScan(js, lookupres.System, true);
+                            //System.Diagnostics.Debug.WriteLine($"FindSystemASync spansh add {lookupres.System.Name} {lookupres.System.SystemAddress} {js.BodyName} -> {js.BodyDesignation}");
+                            ProcessJournalScan(js, lookupres.System, true,debugout:false);
                         }
 
                         if (lookupres.BodyCount.HasValue)
@@ -174,6 +177,9 @@ namespace EliteDangerousCore
 
                     if (lookupres != null)
                     {
+                        if (sys.Name.IsEmpty())
+                            System.Diagnostics.Debug.WriteLine($"WARNING - Spansh lookup with empty name of system is liable to errors - cant set body designation properly");
+
                         foreach (JournalScan js in lookupres.Bodies)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, lookupres.System.Name);

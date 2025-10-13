@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bodies\StarScan\StarScanDocked.cs" />
+    <Compile Include="Bodies\SystemDisplay\SystemDisplayObject.cs" />
     <Compile Include="FrontierData\Enumerations\Carrier.cs" />
     <Compile Include="FrontierData\Items\ModuleList.cs" />
     <Compile Include="JournalStatus\Computers\FactionsStatsComputer.cs" />

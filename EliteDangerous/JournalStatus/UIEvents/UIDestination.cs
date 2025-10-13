@@ -22,15 +22,17 @@ namespace EliteDangerousCore.UIEvents
         {
         }
 
-        public UIDestination(string name, int body, long systemaddress, DateTime time, bool refresh) : this(time, refresh)
+        public UIDestination(string name, string nameloc, int? body, long? systemaddress, DateTime time, bool refresh) : this(time, refresh)
         {
-            Name = name; BodyID = body;SystemAddress = systemaddress;
+            Name = name; Name_Localised = nameloc;
+            BodyID = body;SystemAddress = systemaddress;
         }
 
-        public string Name { get; private set; }
-        public int BodyID { get; private set; }
-        public long SystemAddress { get; private set; }
-        public override string ToString()
+        public string Name { get; private set; }            // may be null, no destination
+        public string Name_Localised { get; private set; }            // may be null, not localised
+        public int? BodyID { get; private set; }            // may be null, no destination
+        public long? SystemAddress { get; private set; }        // may be null, no destination
+        public override string ToString()   
         {
             return $"{Name}: {BodyID}: {SystemAddress}";
         }

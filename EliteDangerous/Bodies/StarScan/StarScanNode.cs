@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace EliteDangerousCore
 {
@@ -32,7 +33,7 @@ namespace EliteDangerousCore
             ring             // rings at the last level : Selkana 9 A Ring : MainStar,9,A Ring
         };
 
-        [DebuggerDisplay("SN {FullName} {NodeType} lv {Level} bid {BodyID}")]
+        [DebuggerDisplay("SN {BodyDesignator} {NodeType} lv {Level} bid {BodyID}")]
         public partial class ScanNode
         {
             public ScanNodeType NodeType { get; internal set; }

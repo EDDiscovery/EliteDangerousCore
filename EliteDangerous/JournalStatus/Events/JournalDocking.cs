@@ -18,7 +18,7 @@ using System;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Docked)]
-    public class JournalDocked : JournalEntry, IStatsJournalEntry, ILocDocked
+    public class JournalDocked : JournalEntry, IStatsJournalEntry, ILocDocked, IBodyFeature
     {
         public JournalDocked(System.DateTime utc) : base(utc, JournalTypeEnum.Docked)
         {
@@ -109,6 +109,17 @@ namespace EliteDangerousCore.JournalEvents
         public LandingPadList LandingPads { get; set; } // 4.0 update 5, may be null
 
         public bool IsTrainingEvent { get; private set; }
+
+        // NOT in frontier data, but can be added on due to us receiving an approach settlement/touchdown first on a planetary port
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
+        public bool HasLatLong { get { return Latitude.HasValue && Longitude.HasValue; } }
+        public string Name => StationName;
+        public string Name_Localised => StationName_Localised;
+        public string Body { get; set; }                // name of body
+        public string BodyType { get;set; }
+        public int? BodyID { get; set; }
+        public string BodyDesignation { get; set; }     // copied in by star scan
 
         // these are EconomyDefinitions.Economies
         public bool HasAnyEconomyTypes(string[] fdnames)

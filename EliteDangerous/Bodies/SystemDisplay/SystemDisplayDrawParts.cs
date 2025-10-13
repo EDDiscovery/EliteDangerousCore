@@ -249,7 +249,7 @@ namespace EliteDangerousCore
                         int labcut = 0;
                         if (label[0] == '_')
                         {
-                            f = FontUnderlined;
+                            f = FontUnderlined ?? Font;
                             labcut = 1;
                         }
 

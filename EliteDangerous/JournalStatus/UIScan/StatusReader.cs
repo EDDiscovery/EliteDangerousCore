@@ -41,9 +41,10 @@ namespace EliteDangerousCore
         public double Health { get; set; } = NotPresent;
         public string SelectedWeapon { get; set; } = null;
         public string SelectedWeaponLocalised { get; set; } = null;
-        public string DestinationName { get; set; } = "";           // when you have set a target, a body, station, system
-        public long DestinationSystemAddress { get; set; } = 0;
-        public int DestinationBodyID { get; set; } = 0;
+        public string DestinationName { get; set; } = null;           // when you have set a target, a body, station, system
+        public string DestinationNameLoc { get; set; } = null;        // when you have a $.. id
+        public long? DestinationSystemAddress { get; set; } = null;
+        public int? DestinationBodyID { get; set; } = null;
 
         #endregion
 
@@ -68,9 +69,10 @@ namespace EliteDangerousCore
             BodyName = null;
             Oxygen = Temperature = Gravity = Health = NotPresent;
             SelectedWeapon = SelectedWeaponLocalised;
-            DestinationName = "";
-            DestinationSystemAddress = 0;
-            DestinationBodyID = 0;
+            DestinationName = null;
+            DestinationNameLoc = null;
+            DestinationSystemAddress = null;
+            DestinationBodyID = null;
             prev_json = null;
         }
 
@@ -258,25 +260,29 @@ namespace EliteDangerousCore
                     JObject destination = jo["Destination"].Object();
                     if (destination != null)
                     {
-                        string newdestination = destination["Name"].Str();
-                        int newbody = destination["Body"].Int(0);
-                        long newsys = destination["System"].Long(0);
+                        string newdestination = destination["Name"].StrNull();
+                        string newdestinationloc = destination["Name_Localised"].StrNull();
+                        int? newbody = destination["Body"].IntNull();
+                        long? newsys = destination["System"].LongNull();
 
-                        if (newdestination != DestinationName || newbody != DestinationBodyID || newsys != DestinationSystemAddress)       // if changed
+                        // present.. if changed
+                        if (newdestination != DestinationName || newdestinationloc != DestinationNameLoc || newbody != DestinationBodyID || newsys != DestinationSystemAddress) 
                         {
                             DestinationName = newdestination;
+                            DestinationNameLoc = newdestinationloc;
                             DestinationBodyID = newbody;
                             DestinationSystemAddress = newsys;
-                            events.Add(new UIEvents.UIDestination(DestinationName, DestinationBodyID, DestinationSystemAddress, EventTimeUTC, changedmajormode));
+                            events.Add(new UIEvents.UIDestination(DestinationName, DestinationNameLoc, DestinationBodyID, DestinationSystemAddress, EventTimeUTC, changedmajormode));
                             fireoverall = true;
                         }
                     }
-                    else if (DestinationName.HasChars())
+                    else if (DestinationName.HasChars() || DestinationBodyID !=null || DestinationSystemAddress != null)
                     {
-                        DestinationName = "";
-                        DestinationBodyID = 0;
-                        DestinationSystemAddress = 0;
-                        events.Add(new UIEvents.UIDestination(DestinationName, DestinationBodyID, DestinationSystemAddress, EventTimeUTC, changedmajormode));
+                        // cancel it
+                        DestinationNameLoc = DestinationName = null;
+                        DestinationBodyID = null;
+                        DestinationSystemAddress = null;
+                        events.Add(new UIEvents.UIDestination(DestinationName, DestinationNameLoc, DestinationBodyID, DestinationSystemAddress, EventTimeUTC, changedmajormode));
                         fireoverall = true;
                     }
 
@@ -369,7 +375,7 @@ namespace EliteDangerousCore
                                                                 Health, lowhealth, gravity, Temperature, tempstate, Oxygen, lowoxygen,
                                                                 SelectedWeapon, SelectedWeaponLocalised,
                                                                 fsdstate, breathableatmos,
-                                                                DestinationName, DestinationBodyID, DestinationSystemAddress,
+                                                                DestinationName, DestinationNameLoc, DestinationBodyID, DestinationSystemAddress,
                                                                 EventTimeUTC,
                                                                 changedmajormode));        // overall list of flags set
                     }

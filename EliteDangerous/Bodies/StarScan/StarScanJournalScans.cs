@@ -1,5 +1,5 @@
-﻿/*ye
- * Copyright © 2015 - 2023 EDDiscovery development team
+﻿/*
+ * Copyright 2015 - 2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -41,6 +41,7 @@ namespace EliteDangerousCore
                     jl = (JournalLocOrJump)he.journalEntry;
 
                     // get the body designation, given the je/system name
+                    // this corrects for instance LHS 3447 - > LHS 3447 A or uses the fixed table to correct
 
                     string designation = BodyDesignations.GetBodyDesignation(je, he.System.Name);
                     System.Diagnostics.Debug.Assert(designation != null);
@@ -73,9 +74,10 @@ namespace EliteDangerousCore
         // handle Aurioum B A BELT
         // Kyloasly OY-Q d5-906 13 1
 
-        private bool ProcessJournalScan(JournalScan sc, ISystem sys, bool reprocessPrimary = false, ScanNode oldnode = null)  // background or foreground.. FALSE if you can't process it
+        private bool ProcessJournalScan(JournalScan sc, ISystem sys, bool reprocessPrimary = false, ScanNode oldnode = null, bool debugout = false)  // background or foreground.. FALSE if you can't process it
         {
-          //  System.Diagnostics.Debug.WriteLine($"ProcessJournalScan `{sc.BodyName}` => `{sc.BodyDesignation}` : `{sys.Name}` {sys.SystemAddress}");
+            if (debugout)
+                System.Diagnostics.Debug.WriteLine($"ProcessJournalScan bn `{sc.BodyName}` => bd `{sc.BodyDesignation}` : `{sys.Name}` {sys.SystemAddress}");
 
             if (sc.SystemAddress.HasValue)
             {
@@ -93,6 +95,11 @@ namespace EliteDangerousCore
 
             // Extract elements from name, and extract if belt, top node type, if ring 
             List<string> elements = ExtractElementsJournalScan(sc, sys, out ScanNodeType starscannodetype, out bool isbeltcluster, out bool isring);
+
+            if (debugout)
+            {
+                foreach(var x in elements) System.Diagnostics.Debug.WriteLine($".. part `{x}`");
+            }
 
             // Bail out if no elements extracted
             if (elements.Count == 0)

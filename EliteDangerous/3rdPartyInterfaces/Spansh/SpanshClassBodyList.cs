@@ -348,8 +348,8 @@ namespace EliteDangerousCore.Spansh
                             {
                                 JObject entry = new JObject
                                 {
-                                    ["InnerRad"] = node["inner_radius"],
-                                    ["OuterRad"] = node["outer_radius"],
+                                    ["InnerRad"] = node["innerRadius"],
+                                    ["OuterRad"] = node["outerRadius"],
                                     ["MassMT"] = node["mass"],
                                     ["Name"] = node["name"],
                                     ["RingClass"] = "eRingClass_" + node["type"].Str().Replace(" ", ""),

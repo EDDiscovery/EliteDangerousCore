@@ -75,7 +75,7 @@ namespace EliteDangerousCore
         }
 
         // Find system node. sys can be an address, a name, or a name and address (address takes precedence).
-        private SystemNode FindSystemNode(ISystem sys)
+        public SystemNode FindSystemNode(ISystem sys)
         {
             if (sys.SystemAddress.HasValue && ScanDataBySysaddr.TryGetValue(sys.SystemAddress.Value, out SystemNode sn))
                 return sn;
@@ -84,6 +84,17 @@ namespace EliteDangerousCore
                 return sn;                                                          
 
             return null;
+        }
+
+        // find the system with this address, thru us first, then the cache. May return null
+        public ISystem FindByAddressWithCache(long address, WebExternalDataLookup lookup = WebExternalDataLookup.None)
+        {
+            ISystem sys = new SystemClass("", address);
+            SystemNode systemnode = FindSystemNode(sys);
+            if (systemnode != null)
+                return systemnode.System;
+            else
+                return SystemCache.FindSystem(sys, lookup);
         }
 
         // scan the history and try and find the best star system this bodyname is associated with
