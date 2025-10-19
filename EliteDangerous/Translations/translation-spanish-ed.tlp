@@ -1491,7 +1491,7 @@ BCF0B075B87A0B: "Flight Controller" => "Controlador de Vuelo"
 CE58D89A4E21CC: "Interstellar Factors Contact" => "Contacto de Interstellar Factors"
 E2CCAE04963449: "Initiatives" @
 DF9FFF10547920: "Livery" => "Diseño"
-87E1A3CD31659F: "Missions Generated" @
+87E1A3CD31659F: "Missions Generated" => "Misiones Generadas"
 4C43E25D84B7F8: "On Dock Mission" @
 47B3D6DC1170FA: "Refuel" => "Repostar"
 3CCF7127AB2FFF: "Restock" => "Reaprovisionar"
@@ -1500,6 +1500,6 @@ AD038C447F5DE3: "Social Space" => "Espacio Social"
 D286137F857962: "Station Menu" => "Menú de la Estación"
 BB15267B3070D3: "Station Operations" => "Operaciones de la Estación"
 221B7518505747: "Tuning" @
-60200FB3E2E83B: "Construction Services" @
+60200FB3E2E83B: "Construction Services" => "Servicios de Construcción"
 AA300EF7059881: "Refinery Contact" => "Contacto de Refinería"
 2E40E3A594EE09: "System Colonisation" => "Colonización del Sistema"
