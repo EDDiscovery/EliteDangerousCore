@@ -168,9 +168,17 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan s, ISystem system)
         {
-            foreach( var star in Route.EmptyIfNull())
+            foreach (var star in Route.EmptyIfNull())
             {
                 s.AddLocation(new SystemClass(star.StarSystem, star.SystemAddress, star.StarPos.X, star.StarPos.Y, star.StarPos.Z));     // we use our data to fill in 
+            }
+        }
+
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
+        {
+            foreach (var star in Route.EmptyIfNull())
+            {
+                s.GetOrAddSystem(new SystemClass(star.StarSystem, star.SystemAddress, star.StarPos.X, star.StarPos.Y, star.StarPos.Z));     // we use our data to fill in 
             }
         }
 

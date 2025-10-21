@@ -831,9 +831,9 @@ namespace EliteDangerousCore
                                 System.Diagnostics.Debug.WriteLine($"Query FSD No system found for {he.EventTimeUTC} {sysaddr}");
                             }
                         }
-                        else if (he.journalEntry is IBodyNameIDOnly)
+                        else if (he.journalEntry is IBodyNameAndID)
                         {
-                            key = (he.journalEntry as IBodyNameIDOnly).BodyName;
+                            key = (he.journalEntry as IBodyNameAndID).Body;
                         }
                         else if (he.EntryType == JournalTypeEnum.CodexEntry)
                         {

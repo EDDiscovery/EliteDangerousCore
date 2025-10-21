@@ -72,7 +72,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan s, ISystem system)
         {
-            s.AddBarycentre(this,system);
+            s.AddBarycentre(this, system);
+        }
+
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
+        {
+            s.AddBarycentre(this, system);
         }
 
         public override string GetInfo()

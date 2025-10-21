@@ -76,6 +76,12 @@ namespace EliteDangerousCore
 
         private bool ProcessJournalScan(JournalScan sc, ISystem sys, bool reprocessPrimary = false, ScanNode oldnode = null, bool debugout = false)  // background or foreground.. FALSE if you can't process it
         {
+            //if (sc.BodyID == null)
+            //    System.Diagnostics.Debug.WriteLine($"Scan {sc.EventTimeUTC} No BodyID");
+            //if ( sc.Parents == null && sc.BodyID != 0 )
+            //    System.Diagnostics.Debug.WriteLine($"Scan {sc.EventTimeUTC} No Parents");
+            //if ( sc.SystemAddress == null && sys.SystemAddress == null )
+            //    System.Diagnostics.Debug.WriteLine($"Scan {sc.EventTimeUTC} No system address");
             if (debugout)
                 System.Diagnostics.Debug.WriteLine($"ProcessJournalScan bn `{sc.BodyName}` => bd `{sc.BodyDesignation}` : `{sys.Name}` {sys.SystemAddress}");
 

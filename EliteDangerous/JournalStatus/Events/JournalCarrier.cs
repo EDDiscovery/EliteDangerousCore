@@ -1137,6 +1137,10 @@ namespace EliteDangerousCore.JournalEvents
         {
             s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
+        {
+            s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
+        }
 
         public override string GetInfo()        // carrier jump
         {

@@ -26,7 +26,7 @@ namespace EliteDangerousCore.JournalEvents
 
     [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} {BodyDesignation} s{IsStar} p{IsPlanet}")]
     [JournalEntryType(JournalTypeEnum.Scan)]
-    public partial class JournalScan : JournalEntry, IStarScan, IBodyNameIDOnly
+    public partial class JournalScan : JournalEntry, IStarScan, IBodyNameAndID
     {
         [PropertyNameAttribute("Is it a star")]
         public bool IsStar { get { return StarType != null; } }
@@ -47,6 +47,12 @@ namespace EliteDangerousCore.JournalEvents
         public string ScanType { get; private set; }                        // 3.0 scan type  Basic, Detailed, NavBeacon, NavBeaconDetail, (3.3) AutoScan, or empty for older ones
         [PropertyNameAttribute("Frontier body name")]
         public string BodyName { get; private set; }                        // direct (meaning no translation)
+
+        [PropertyNameAttribute("Frontier body name")]
+        public string Body => BodyName;
+        [PropertyNameAttribute("Basic type, Planet, Star, Ring")]
+        public string BodyType => IsPlanet ? "Planet" : IsStar ? "Star" : "Ring";
+
         [PropertyNameAttribute("Internal Frontier ID, is empty for older scans")]
         public int? BodyID { get; private set; }                            // direct
         [PropertyNameAttribute("Name of star")]
@@ -103,6 +109,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool IsOrbitingPlanet { get { return Parents?.FirstOrDefault()?.Type == "Planet"; } }
         [PropertyNameAttribute("Orbiting a star")]
         public bool IsOrbitingStar { get { return Parents?.FirstOrDefault()?.Type == "Star"; } }
+
+        [PropertyNameAttribute("No Parents or All Parents are barycentres")]
+        public bool IsAllParentsBarycentre { get { return Parents == null || Parents.Count(x => x.IsBarycentre) == Parents.Count; } }
 
         [PropertyNameAttribute("Has the body been previously discovered - older scans do not have this field")]
         public bool? WasDiscovered { get; private set; }                    // direct, 3.4, indicates whether the body has already been discovered
@@ -759,6 +768,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan s, ISystem system)     // no action in this class, historylist.cs does the adding itself instead of using this. 
         {                                                       // Class interface is marked so you know its part of the gang
+        }
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)     
+        {
+            s.AddScan(this, system); 
         }
 
         #endregion

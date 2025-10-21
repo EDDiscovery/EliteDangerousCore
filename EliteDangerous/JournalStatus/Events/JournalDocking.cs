@@ -114,12 +114,14 @@ namespace EliteDangerousCore.JournalEvents
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
         public bool HasLatLong { get { return Latitude.HasValue && Longitude.HasValue; } }
-        public string Name => StationName;
-        public string Name_Localised => StationName_Localised;
-        public string Body { get; set; }                // name of body
-        public string BodyType { get;set; }
-        public int? BodyID { get; set; }
-        public string BodyDesignation { get; set; }     // copied in by star scan
+       
+        public string Name => StationName;      // IBodyFeature
+        public string Name_Localised => StationName_Localised; // IBodyFeature
+        
+        public string Body { get; set; }                // IBodyAndID copied in by star scan from a surface feature noted
+        public int? BodyID { get; set; } = null;         // IBodyAndID copied in by star scan
+        public string BodyType { get; set; } = "Station";   // IBodyAndID copied in by star scan, default Station
+        public string BodyDesignation { get; set; }     // IBodyAndID copied in by star scan
 
         // these are EconomyDefinitions.Economies
         public bool HasAnyEconomyTypes(string[] fdnames)

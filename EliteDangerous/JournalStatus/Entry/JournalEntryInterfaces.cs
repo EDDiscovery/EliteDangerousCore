@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using static BaseUtils.TypeHelpers;
 
 namespace EliteDangerousCore
 {
@@ -44,20 +45,15 @@ namespace EliteDangerousCore
 
     public interface IStarScan
     {
-        void AddStarScan( StarScan s, ISystem system);
-    }
-
-    public interface IBodyNameIDOnly        // used for query system
-    {
-        string BodyName { get; }
-        int? BodyID { get; }
+        void AddStarScan(StarScan s, ISystem system);
+        void AddStarScan(StarScan2.StarScan s, ISystem system);
     }
 
     public interface IBodyNameAndID     // events containing body information
     {
         DateTime EventTimeUTC { get; }
         string Body { get; }
-        string BodyType { get; }
+        string BodyType { get; }        // Planet, Star, Ring, Station, PlanetaryRing, Barycentre : (ours) Signals
         int? BodyID { get; }
         string BodyDesignation { get; set; }    // such as Sol 3 for BodyName = Earth, or null if not unique
         string StarSystem { get; }

@@ -402,6 +402,12 @@ namespace EliteDangerousCore.JournalEvents
         {
             s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
+        {
+            var sys = new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z);
+            s.GetOrAddSystem( sys);     // we use our data to fill in 
+            s.AddBody(this, sys);
+        }
 
     }
 
@@ -452,6 +458,10 @@ namespace EliteDangerousCore.JournalEvents
         public void AddStarScan(StarScan s, ISystem system)
         {
             s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
+        }
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
+        {
+            s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
         public override string GetInfo()        // fsdjump
@@ -588,8 +598,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan s, ISystem system)
         {
-            if ( IsHyperspace )
-                s.AddLocation(new SystemClass(StarSystem,SystemAddress));      // add so there is placeholder
+            if (IsHyperspace)
+                s.AddLocation(new SystemClass(StarSystem, SystemAddress));      // add so there is placeholder
+        }
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
+        {
+            if (IsHyperspace)
+                s.GetOrAddSystem( new SystemClass(StarSystem, SystemAddress));      // add so there is placeholder
         }
     }
 }

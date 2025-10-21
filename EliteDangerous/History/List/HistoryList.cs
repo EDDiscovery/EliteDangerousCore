@@ -37,6 +37,7 @@ namespace EliteDangerousCore
         public ShipYardList Shipyards { get; private set; } = new ShipYardList(); // yards in space (not meters)
         public OutfittingList Outfitting { get; private set; } = new OutfittingList();        // outfitting on stations
         public StarScan StarScan { get; private set; } = new StarScan();      // the results of scanning
+        public StarScan2.StarScan StarScan2 { get; private set; } = new StarScan2.StarScan();      // the results of scanning NG
 
         // not in any particular order.  Each entry is pointing to the HE of the last time you entered the system (if your in there a while, no more updates are made)
         public Dictionary<string, HistoryEntry> Visited { get; private set; } = new Dictionary<string, HistoryEntry>(StringComparer.InvariantCultureIgnoreCase);  
@@ -283,6 +284,46 @@ namespace EliteDangerousCore
                 }
             }
 #endif
+
+            // DEBUG!
+
+            foreach( HistoryEntry h in hist.historylist.Where(x=>x.EntryType == JournalTypeEnum.Scan))
+            {
+                //hist.StarScan2.AddScan(h.journalEntry as JournalScan, h.System);
+            }
+
+            //var mhs = hist.historylist.Where(x => (x.System.Name.Contains("Epsilon")) && (x.journalEntry is IStarScan) ).ToList();      // unique names
+            //var mhs = hist.historylist.Where(x => (x.System.Name.Contains("Scheau Prao ME-M c22-21")) && (x.journalEntry is IStarScan) ).ToList(); // A ring
+            //var mhs = hist.historylist.Where(x => (x.System.Name.Contains("Wepe XO-R b50-1")) && (x.journalEntry is IStarScan) ).ToList();
+            // var mhs = hist.historylist.Where(x => (x.System.Name.Contains("Prieluia QI-Q c19-31")) && (x.journalEntry is IStarScan) ).ToList();
+            var mhs = hist.historylist.Where(x => (x.System.Name.Equals("Sol")) && (x.journalEntry is JournalScan || x.journalEntry is JournalScanBaryCentre || x.journalEntry is IBodyNameAndID) ).ToList();
+
+            //var mhs = hist.historylist.Where(x => (x.journalEntry is JournalScan) ).ToList();
+            StarScan2.StarScan ss2 = new StarScan2.StarScan();
+            ss2.Debug(mhs);
+            ss2.DumpTree();
+
+//            var mhs = hist.historylist.Where(x => (x.journalEntry is IStarScan)).ToList();
+            //var mhs = hist.historylist.Where(x => (x.journalEntry is IStarScan)).ToList();
+            
+ 
+        }
+
+        class TestBody : IBodyNameAndID
+        {
+            public DateTime EventTimeUTC { get; set; }
+
+            public string Body { get; set; }
+
+            public string BodyType { get; set; }
+
+            public int? BodyID { get; set; }
+
+            public string BodyDesignation { get; set; }
+
+            public string StarSystem { get; set; }
+
+            public long? SystemAddress { get; set; }
         }
 
         private void AddToVisitsScan(Action<string> logerror)
@@ -354,6 +395,7 @@ namespace EliteDangerousCore
             else if (he.journalEntry is IStarScan)      // a star scan type takes precendence
             {
                 (he.journalEntry as IStarScan).AddStarScan(StarScan, he.System);
+                //   (he.journalEntry as IStarScan).AddStarScan(StarScan2, he.System);
             }
             else if (he.journalEntry is IBodyNameAndID je)  // all entries under this type
             {
@@ -361,17 +403,19 @@ namespace EliteDangerousCore
                 {
                     System.Diagnostics.Debug.WriteLine($"IBodyNameAndID has a different system `{je.StarSystem}` {je.SystemAddress} vs current system `{he.System.Name}` {je.SystemAddress}");
                 }
-                else if (he.EntryType == JournalTypeEnum.Docked) 
+                else if (he.EntryType == JournalTypeEnum.Docked)
                 {
                     JournalDocked jd = he.journalEntry as JournalDocked;
 
                     if (StationDefinitions.IsPlanetaryPort(he.Status.FDStationType ?? StationDefinitions.StarportTypes.Unknown) && he.Status.BodyID.HasValue)
                     {
                         StarScan.AddDocking(he.journalEntry as JournalDocked, he.System, he.Status.BodyID.Value);
+                     //   StarScan2.AddDocking(jd, he.System, he.Status.BodyID.Value);
                     }
                     else
                     {
                         StarScan.AddDocking(he.journalEntry as JournalDocked, he.System);
+                    //    StarScan2.AddDocking(jd, he.System);
                     }
                 }
                 else if (he.EntryType == JournalTypeEnum.ApproachSettlement)    // we need to process this uniquely, as it has information for starscan as well as body info
@@ -385,6 +429,8 @@ namespace EliteDangerousCore
                         jas.StarSystem = he.System.Name;           // fill in the missing system name 
                         StarScan.AddBodyToBestSystem(jas, he.System, pos, historylist); // ensure its in the DB - note BodyType = Settlement
                         StarScan.AddApproachSettlement(jas, he.System);
+
+                       // StarScan2.AddApproachSettlement(jas, he.System);
                     }
                     else
                     {
@@ -403,24 +449,31 @@ namespace EliteDangerousCore
                         jt.StarSystem = he.System.Name;           // fill in the possibly missing system name 
                         StarScan.AddBodyToBestSystem(jt, he.System, pos, historylist); // ensure its in the DB - note BodyType = Settlement
                         StarScan.AddTouchdown(jt, he.System);
+
+                      //  StarScan2.AddTouchdown(jt, he.System);
                     }
                     else
                     {
                         if (jt.BodyID.HasValue) System.Diagnostics.Debug.WriteLine($"Starscan touchdown rejected {he.EventTimeUTC} {he.System.Name} {jt.BodyID} {jt.Body} {jt.Latitude} {jt.Longitude}");
                     }
                 }
-                else if (je.Body.HasChars())    // we can add here with bodyid = null, so just check body
-                {
-                    // only these have a Body of a planet/star/barycentre, the other types (station etc see the frontier doc which is right for a change) are not useful
-
-                    if (je.BodyType.EqualsIIC("Planet") || je.BodyType.EqualsIIC("Star") || je.BodyType.EqualsIIC("Barycentre"))
-                    {
-                        StarScan.AddBodyToBestSystem(je, he.System, pos, historylist);
-                    }
-                }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine($"Starscan bodyid rejected {he.EventTimeUTC} {he.System.Name} {je.BodyID} {je.Body} {je.BodyType}");
+                   // StarScan2.AddBody(je, he.System);
+
+                    if (je.Body.HasChars())    // we can add here with bodyid = null, so just check body
+                    {
+                        // only these have a Body of a planet/star/barycentre, the other types (station etc see the frontier doc which is right for a change) are not useful
+
+                        if (je.BodyType.EqualsIIC("Planet") || je.BodyType.EqualsIIC("Star") || je.BodyType.EqualsIIC("Barycentre"))
+                        {
+                            StarScan.AddBodyToBestSystem(je, he.System, pos, historylist);
+                        }
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Starscan bodyid rejected {he.EventTimeUTC} {he.System.Name} {je.BodyID} {je.Body} {je.BodyType}");
+                    }
                 }
             }
         }
