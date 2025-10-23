@@ -31,6 +31,9 @@ namespace EliteDangerousCore.JournalEvents
             StationName_Localised = snl.Item2;
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());  // may not be there
             StationType = StationDefinitions.ToEnglish(FDStationType);
+            if (StationDefinitions.IsPlanetaryPort(FDStationType))
+                BodyType = BodyDefinitions.BodyType.Settlement;
+
             StationState = StationDefinitions.StarportStateToEnum( evt["StationState"].Str("None") );    // missed, added, nov 22, only on bad starports.  Default None
             StarSystem = evt["StarSystem"].Str();
             SystemAddress = evt["SystemAddress"].LongNull();
@@ -119,8 +122,8 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised => StationName_Localised; // IBodyFeature
         
         public string Body { get; set; }                // IBodyAndID copied in by star scan from a surface feature noted
-        public int? BodyID { get; set; } = null;         // IBodyAndID copied in by star scan
-        public string BodyType { get; set; } = "Station";   // IBodyAndID copied in by star scan, default Station
+        public int? BodyID { get; set; } = null;         // IBodyAndID copied in by star scan for surface settlements only
+        public BodyDefinitions.BodyType BodyType { get; set; } = BodyDefinitions.BodyType.Station;   // IBodyAndID copied in by star scan, default Station
         public string BodyDesignation { get; set; }     // IBodyAndID copied in by star scan
 
         // these are EconomyDefinitions.Economies

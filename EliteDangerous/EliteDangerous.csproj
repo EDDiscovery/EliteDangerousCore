@@ -57,6 +57,10 @@
     <Compile Include="Bodies\StarScan2\StarScanSystemNode.cs" />
     <Compile Include="Bodies\StarScan2\StarScanBodyNode.cs" />
     <Compile Include="Bodies\StarScan2\StarScan.cs" />
+    <Compile Include="Bodies\StarScan2\SystemDisplay.cs" />
+    <Compile Include="Bodies\StarScan2\SystemDisplayDrawParts.cs" />
+    <Compile Include="Bodies\StarScan2\SystemDisplayDrawNode.cs" />
+    <Compile Include="Bodies\StarScan2\SystemDisplayPlanetTree.cs" />
     <Compile Include="Bodies\StarScan\StarScanDocked.cs" />
     <Compile Include="Bodies\SystemDisplay\SystemDisplayObject.cs" />
     <Compile Include="FrontierData\Enumerations\Carrier.cs" />

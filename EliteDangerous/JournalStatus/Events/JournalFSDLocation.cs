@@ -257,7 +257,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             Body = evt["Body"].Str();
             BodyID = evt["BodyID"].IntNull();
-            BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
+            BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
             DistFromStarLS = evt["DistFromStarLS"].DoubleNull();
 
             Latitude = evt["Latitude"].DoubleNull();
@@ -308,7 +308,7 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportTypes FDStationType { get; set; } // will be Unknown if not docked
         public string Body { get; set; }
         public int? BodyID { get; set; }
-        public string BodyType { get; set; }
+        public BodyDefinitions.BodyType BodyType { get; set; }
         public string BodyDesignation { get; set; }
         public double? DistFromStarLS { get; set; }
 
@@ -425,7 +425,7 @@ namespace EliteDangerousCore.JournalEvents
             BoostUsed = evt["BoostUsed"].Int();         
             Body = evt["Body"].StrNull();
             BodyID = evt["BodyID"].IntNull();
-            BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
+            BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
 
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
@@ -449,7 +449,7 @@ namespace EliteDangerousCore.JournalEvents
         public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
         public string Body { get; set; }
         public int? BodyID { get; set; }
-        public string BodyType { get; set; }
+        public BodyDefinitions.BodyType BodyType { get; set; }
 
         public bool? Taxi { get; set; }
         public bool? Multicrew { get; set; }

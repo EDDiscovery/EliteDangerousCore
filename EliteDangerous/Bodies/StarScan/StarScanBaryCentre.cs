@@ -43,7 +43,7 @@ namespace EliteDangerousCore
                         {
                             if (scannode.ScanData.Parents[i].BodyID == jsa.BodyID)
                             {
-                                scannode.ScanData.Parents[i].Barycentre = jsa;
+                         // tbd       scannode.ScanData.Parents[i].Barycentre = jsa;
                             }
                         }
                     }

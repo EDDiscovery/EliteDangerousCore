@@ -1097,7 +1097,7 @@ namespace EliteDangerousCore.JournalEvents
 
             Body = evt["Body"].Str();
             BodyID = evt["BodyID"].IntNull();
-            BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
+            BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
             DistFromStarLS = evt["DistFromStarLS"].DoubleNull();
 
             JToken jm = evt["EDDMapColor"];
@@ -1115,7 +1115,7 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportTypes FDStationType { get; set; } // fdname
         public string Body { get; set; }
         public int? BodyID { get; set; }
-        public string BodyType { get; set; }
+        public BodyDefinitions.BodyType BodyType { get; set; }
         public string BodyDesignation { get; set; }
         public double? DistFromStarLS { get; set; }
 

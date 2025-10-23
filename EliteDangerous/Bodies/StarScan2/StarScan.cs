@@ -12,45 +12,192 @@
  * governing permissions and limitations under the License.
  */
 
-using BaseUtils.Win32Constants;
+using BaseUtils;
 using EliteDangerousCore.JournalEvents;
 using System.Collections.Generic;
-using System.Linq;
+using System.Drawing;
+using System.IO;
 
 namespace EliteDangerousCore.StarScan2
 {
     public partial class StarScan
     {
-        private Dictionary<long, SystemNode> SystemNodes { get; set; } = new Dictionary<long, SystemNode>();
-        
-        private List<JournalScanBaryCentre> pendingbarycentres = new List<JournalScanBaryCentre>();    
+        #region Public IF
 
-        // called when we have a new system. 
-        public SystemNode GetOrAddSystem(ISystem sys)      
+        // try and find the address, if we know it, else null
+        public ISystem FindSystemInfo(string sysname)
         {
-            if (sys.SystemAddress.HasValue)
+            return systemNodesByName.TryGetValue(sysname, out var node) ? node.System : null;
+        }
+
+        // Find system, optinally do weblookup
+        // null if not found
+        public SystemNode FindSystemSynchronous(ISystem sys, WebExternalDataLookup weblookup = WebExternalDataLookup.None)    
+        {
+            //System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
+            System.Diagnostics.Debug.Assert(sys != null);
+
+            if (sys.SystemAddress.HasValue || sys.Name.HasChars())      // we have good enough data (should have)
+            {
+                bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
+                bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
+
+                if (usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys))
+                {
+                    var lookupres = Spansh.SpanshClass.GetBodiesList(sys, usespansh);          // see if spansh has it cached or optionally look it up
+                    if (lookupres != null)
+                    {
+                        foreach (JournalScan js in lookupres.Bodies)
+                        {
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, lookupres.System.Name);
+                            //System.Diagnostics.Debug.WriteLine($"FindSystemSync spansh add {lookupres.System.Name} {js.BodyName}");
+                            AddScan(js, sys);
+                        }
+
+                        if (lookupres.BodyCount.HasValue)
+                            SetFSSDiscoveryScan(lookupres.BodyCount, null, lookupres.System);
+
+                        if (weblookup == WebExternalDataLookup.SpanshThenEDSM)      // we got something, for this option, we are fine, don't use edsm
+                            useedsm = false;
+                    }
+                }
+
+                if (useedsm && !EDSM.EDSMClass.HasBodyLookupOccurred(sys))
+                {
+                    var lookupres = EDSM.EDSMClass.GetBodiesList(sys, useedsm);            // see if edsm has it cached or optionally look it up
+                    if (lookupres != null)
+                    {
+                        foreach (JournalScan js in lookupres.Bodies)
+                        {
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, lookupres.System.Name);
+                            //System.Diagnostics.Debug.WriteLine($"FindSystemSync edsn add {lookupres.System.Name} {lookupres.System.SystemAddress} {js.BodyName}");
+                            AddScan(js, sys);
+                        }
+                    }
+                }
+
+                if (sys.SystemAddress.HasValue && systemNodesByAddress.TryGetValue(sys.SystemAddress.Value, out var systemNode))
+                {
+                    return systemNode;
+                }
+                else if (systemNodesByName.TryGetValue(sys.Name, out var systemNode1))
+                {
+                    return systemNode1;
+                }
+                else if (oldsystemNodesByName.TryGetValue(sys.Name, out var systemNode2))
+                {
+                    return systemNode2;
+                }
+            }
+
+            return null;
+        }
+
+        // you must be returning void to use this..
+        // Sys can be an address, a name, or a name and address. address takes precedence
+        public async System.Threading.Tasks.Task<SystemNode> FindSystemAsync(ISystem sys, WebExternalDataLookup weblookup = WebExternalDataLookup.None)    // Find the system. Optionally do a EDSM web lookup
+        {
+            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
+            System.Diagnostics.Debug.Assert(sys != null);
+
+            if (sys.SystemAddress.HasValue || sys.Name.HasChars())      // we have good enough data (should have)
+            {
+                bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
+                bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
+
+                if (usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys))
+                {
+                    if (sys.Name.IsEmpty())
+                        System.Diagnostics.Debug.WriteLine($"WARNING - Spansh lookup with empty name of system is liable to errors - cant set body designation properly");
+
+                    var lookupres = await Spansh.SpanshClass.GetBodiesListAsync(sys, usespansh);          // see if spansh has it cached or optionally look it up
+
+                    if (lookupres != null)
+                    {
+                        foreach (JournalScan js in lookupres.Bodies)
+                        {
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, lookupres.System.Name);
+                            //System.Diagnostics.Debug.WriteLine($"FindSystemASync spansh add {lookupres.System.Name} {lookupres.System.SystemAddress} {js.BodyName} -> {js.BodyDesignation}");
+                            AddScan(js, sys);
+                        }
+
+                        if (lookupres.BodyCount.HasValue)
+                            SetFSSDiscoveryScan(lookupres.BodyCount, null, lookupres.System);
+
+                        if (weblookup == WebExternalDataLookup.SpanshThenEDSM)      // we got something, for this option, we are fine, don't use edsm
+                            useedsm = false;
+                    }
+                }
+
+                if (useedsm && !EDSM.EDSMClass.HasBodyLookupOccurred(sys))     // using edsm, no lookup, go
+                {
+                    var lookupres = await EliteDangerousCore.EDSM.EDSMClass.GetBodiesListAsync(sys, useedsm);
+
+                    if (lookupres != null)
+                    {
+                        if (sys.Name.IsEmpty())
+                            System.Diagnostics.Debug.WriteLine($"WARNING - Spansh lookup with empty name of system is liable to errors - cant set body designation properly");
+
+                        foreach (JournalScan js in lookupres.Bodies)
+                        {
+                            js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, lookupres.System.Name);
+                            //System.Diagnostics.Debug.WriteLine($"FindSystemSync edsn add {lookupres.System.Name} {lookupres.System.SystemAddress} {js.BodyName}");
+                            AddScan(js, sys);
+                        }
+                    }
+                }
+
+                if (sys.SystemAddress.HasValue && systemNodesByAddress.TryGetValue(sys.SystemAddress.Value, out var systemNode))
+                {
+                    return systemNode;
+                }
+                else if (systemNodesByName.TryGetValue(sys.Name, out var systemNode1))
+                {
+                    return systemNode1;
+                }
+                else if (oldsystemNodesByName.TryGetValue(sys.Name, out var systemNode2))
+                {
+                    return systemNode2;
+                }
+            }
+
+            return null;
+        }
+
+        #endregion
+
+        #region Called by Events
+
+        // called to make sure we have a system. If system address, we use the address system, else we assign to the old tree
+        public SystemNode GetOrAddSystem(ISystem sys, bool forceold = false)      
+        {
+            // if we have older system info without systemaddress, we created the nodes in systemnodesbyname. 
+            // as soon the system has a system address, we will abandon the old info and recreate using the new one, as we can't rely on the old stuff
+            if (sys.SystemAddress.HasValue && !forceold)
             {
                 // System.Diagnostics.Debug.WriteLine($"SS2 Add {je.EventTimeUTC} {je.EventTypeID} {sys.Name} {sys.SystemAddress} {sys.HasCoordinate}");
 
-                // find system node, if not, make it.  If its there, see if we have xyz co-ords
-                if (!SystemNodes.TryGetValue(sys.SystemAddress.Value, out SystemNode node))
+                // find system node, if not, make it.  
+                if (!systemNodesByAddress.TryGetValue(sys.SystemAddress.Value, out SystemNode node))
                 {
                     node = new SystemNode(sys);
-                    SystemNodes.Add(sys.SystemAddress.Value, node);
-                }
-                else if (sys.HasCoordinate && !node.System.HasCoordinate)
-                {
-                    node.ResetSystem(sys);
-                    //System.Diagnostics.Debug.WriteLine($"SS2 Update co-ords of {je.EventTimeUTC} {je.EventTypeID} {sys.Name}");
+                    systemNodesByAddress.Add(sys.SystemAddress.Value, node);        // make a new node
+                    systemNodesByName[sys.Name] = node;                             // point name node to our new node
                 }
 
                 return node;
             }
-            else
+            else if (sys.Name.HasChars())      // older name only ones
             {
-                // System.Diagnostics.Debug.WriteLine($"SS2 Can't Add {je.EventTimeUTC} {je.EventTypeID} {sys.Name} {sys.HasCoordinate}");
-                return null;
+                if (!oldsystemNodesByName.TryGetValue(sys.Name, out SystemNode node))
+                {
+                    node = new SystemNode(sys);
+                    oldsystemNodesByName.Add(sys.Name, node);
+                }
+                return node;
             }
+
+            return null;
         }
 
         // called when we have a body in this system
@@ -67,24 +214,22 @@ namespace EliteDangerousCore.StarScan2
 
                 //System.Diagnostics.Debug.WriteLine($"Add Body {body.EventTimeUTC} bid:{body.BodyID} type:{body.BodyType} `{body.Body}` -> `{ownname}` in `{sys.Name}` {sys.SystemAddress}");
 
-                if (sc.BodyType == "Station")
+                if (sc.BodyType == BodyDefinitions.BodyType.Station)
                 {
 
                 }
-                else if (sc.BodyType == "Planet")
+                else if (sc.BodyType == BodyDefinitions.BodyType.Planet)
                 {
-                    if (stdname)
+                    if (stdname)        // its a standard name patterned after star
                     {
-                        // its a standard name patterned after star
                         sn.GetOrMakeStandardBodyNode(ownname, sc.BodyID, sys.Name);
                     }
-                    else
+                    else  // non standard
                     {
-                        // non standard
                         sn.GetOrMakeNonStandardBody(ownname, sc.BodyID, sys.Name);
                     }
                 }
-                else if (sc.BodyType == "Star")
+                else if (sc.BodyType == BodyDefinitions.BodyType.Star)
                 {
                     if (stdname)
                     {
@@ -95,17 +240,17 @@ namespace EliteDangerousCore.StarScan2
                         sn.GetOrMakeNonStandardStar(sc.Body, sc.BodyID, sys.Name);
                     }
                 }
-                else if (sc.BodyType == "PlanetaryRing")
+                else if (sc.BodyType == BodyDefinitions.BodyType.PlanetaryRing)
                 {
                     //  System.Diagnostics.Debug.WriteLine($"Add Planet Ring {body.EventTimeUTC} bid:{body.BodyID} type:{body.BodyType} `{body.Body}` {body.SystemAddress}");
                 }
-                else if (sc.BodyType == "Barycentre")
+                else if (sc.BodyType == BodyDefinitions.BodyType.Barycentre)
                 {
                     //System.Diagnostics.Debug.WriteLine($"Add Barycentre {body.EventTimeUTC} bid:{body.BodyID} type:{body.BodyType} `{body.Body}` {body.SystemAddress}");
                 }
                 else
                 {
-                    System.Diagnostics.Debug.Assert(true);
+                    //System.Diagnostics.Debug.Assert(true);
                 }
             }
             else
@@ -115,121 +260,249 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-
         public void AddScan(JournalScan sc, ISystem sys)
         {
-            // reject older scans without bodyid, system address
-
-            if (sc.BodyID != null && (sc.BodyID == 0 || sc.Parents != null) && sys.SystemAddress != null && sc.SystemAddress != null && true)     // if we have basic info
+            // triage for scans with full info
+            if (sc.BodyID != null && (sc.BodyID == 0 || sc.Parents != null) && sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have modern info 
             {
-                if (sc.SystemAddress != null && sc.SystemAddress != sys.SystemAddress)          // if we are arguing about the system address
+                SystemNode sn = GetOrAddSystem(sys);
+                System.Diagnostics.Debug.Assert(sn != null);
+
+                bool stdname = sc.BodyName.StartsWith(sys.Name) && sc.BodyName.Length > sys.Name.Length;
+                string ownname = stdname ? sc.BodyName.Substring(sys.Name.Length).Trim() : sc.BodyName;
+
+                if (stdname)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Add Scan Differ SystemAddress {sc.EventTimeUTC} bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress}");
+                    System.Diagnostics.Debug.WriteLine($"Add Scan Std format {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
+                    sn.GetOrMakeStandardBodyNode(ownname, sc.BodyID, sys.Name, sc);
                 }
                 else
                 {
-                    SystemNode sn = GetOrAddSystem(sys);
-                    System.Diagnostics.Debug.Assert(sn != null);
+                    System.Diagnostics.Debug.WriteLine($"Add Scan NonStd format {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
+                    sn.GetOrMakeNonStandardBodyFromScan(sc, sys, ownname);
+                }
+            }
+            else if (sys.Name != null)      // else dump them into the older structure
+            {
+                SystemNode sn = GetOrAddSystem(sys, true);
+                System.Diagnostics.Debug.Assert(sn != null);
 
-                    bool stdname = sc.BodyName.StartsWith(sys.Name) && sc.BodyName.Length > sys.Name.Length;
-                    string ownname = stdname ? sc.BodyName.Substring(sys.Name.Length).Trim() : sc.BodyName;
+                bool stdname = sc.BodyName.StartsWith(sys.Name) && sc.BodyName.Length > sys.Name.Length;
+                string ownname = stdname ? sc.BodyName.Substring(sys.Name.Length).Trim() : sc.BodyName;
 
-                    if (stdname)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Add Scan Std format {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
-                        sn.GetOrMakeStandardBodyNode(ownname, sc.BodyID, sys.Name, sc);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Add Scan NonStd format {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
-                        sn.GetOrMakeNonStandardBodyFromScan(sc, sys, ownname);
-                    }
-
-                    // any scan barycentres we may be able to process now for this system
-
-                    List<JournalScanBaryCentre> todelete = new List<JournalScanBaryCentre>();
-                    foreach (JournalScanBaryCentre sbe in pendingbarycentres.Where(x=>x.SystemAddress == sys.SystemAddress))
-                    {
-                        if ( sn.AddBaryCentreScan(sbe) != null)
-                            todelete.Add(sbe);
-                    }
-
-                    foreach(var sbe in todelete)
-                        pendingbarycentres.Remove(sbe);
+                if (stdname)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Add OLD Scan Std format {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
+                    sn.GetOrMakeStandardBodyNode(ownname, sc.BodyID, sys.Name, sc);
+                }
+                else if (sc.BodyID != null && (sc.BodyID == 0 || sc.Parents != null))
+                {
+                    System.Diagnostics.Debug.WriteLine($"Add OLD Scan NonStd format {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
+                    sn.GetOrMakeNonStandardBodyFromScan(sc, sys, ownname);
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Add OLD Scan NonStd format {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
+                    sn.GetOrMakeNonStandardBody(ownname, sc.BodyID, sys.Name, sc);
                 }
             }
         }
+
         public void AddBarycentre(JournalScanBaryCentre sc, ISystem sys, bool saveit = true)
         {
             if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have basic info
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
-                if (sn.AddBaryCentreScan(sc) == null)        // can't assign, process
-                    pendingbarycentres.Add(sc);
+                if (sn.AddBaryCentreScan(sc) == null)        // can't assign, store in pending
+                    AddPending(sys.SystemAddress.Value, sc);
             }
         }
 
-        public bool AddCodexEntryToSystem(JournalCodexEntry jsd, bool saveprocessinglater = true)
+        public void AddCodexEntryToSystem(JournalCodexEntry sc, ISystem sys)
         {
-            return false;
+            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. 
+            {
+                SystemNode sn = GetOrAddSystem(sys);
+                System.Diagnostics.Debug.Assert(sn != null);
+                if ( sn.AddCodexEntryToSystem(sc) == null) // can't assign, store in pending
+                    AddPending(sys.SystemAddress.Value, sc);
+            }
         }
 
-        public bool AddFSSBodySignalsToSystem(JournalFSSBodySignals jsaa, ISystem sys)
+        public void AddFSSBodySignalsToSystem(JournalFSSBodySignals sc, ISystem sys)
         {
-            return false;
+            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
+            {
+                SystemNode sn = GetOrAddSystem(sys);
+                System.Diagnostics.Debug.Assert(sn != null);
+                if (sn.AddFSSBodySignalsToSystem(sc) == null) // can't assign, store in pending
+                    AddPending(sys.SystemAddress.Value, sc);
+            }
+        }
+
+        public void AddSAASignals(JournalSAASignalsFound sc, ISystem sys)
+        {
+            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
+            {
+                SystemNode sn = GetOrAddSystem(sys);
+                System.Diagnostics.Debug.Assert(sn != null);
+                if (sn.AddSAASignalsToSystem(sc) == null) // can't assign, store in pending
+                    AddPending(sys.SystemAddress.Value, sc);
+            }
         }
 
         public void SetFSSDiscoveryScan(int? bodycount, int? nonbodycount, ISystem sys)
         {
-
+            if (sys.SystemAddress != null )     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
+            {
+                SystemNode sn = GetOrAddSystem(sys);
+                System.Diagnostics.Debug.Assert(sn != null);
+                sn.SetCount(bodycount, nonbodycount);
+            }
         }
 
-        public bool AddFSSSignalsDiscovered(JournalFSSSignalDiscovered jsd, bool saveprocessinglater = true)
+        // these might not be in the right system, if not, we need to pend it until it is.
+        public bool AddFSSSignalsDiscovered(JournalFSSSignalDiscovered sc, bool pendit = true)
         {
+            if (sc.Signals[0].SystemAddress.HasValue)     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
+            {
+                if (systemNodesByAddress.TryGetValue(sc.Signals[0].SystemAddress.Value, out SystemNode sn))     // if we have it
+                {
+                    sn.AddFSSSignalsDiscovered(sc.Signals);
+                    return true;
+                }
+                else if ( pendit )
+                    AddPending(sc.Signals[0].SystemAddress.Value, sc);
+            }
             return false;
         }
 
-        public bool AddSAASignals(JournalSAASignalsFound jsaa, ISystem sys)
+        public void AddScanOrganic(JournalScanOrganic sc, ISystem sys)
         {
-            return false;
+            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
+            {
+                SystemNode sn = GetOrAddSystem(sys);
+                System.Diagnostics.Debug.Assert(sn != null);
+                if (sn.AddScanOrganicToBody(sc) == null) // can't assign, store in pending
+                    AddPending(sys.SystemAddress.Value, sc);
+            }
         }
 
-        public bool AddScanOrganic(JournalScanOrganic jsaa, ISystem sys)
+
+        public void AddApproachSettlement(JournalApproachSettlement sc, ISystem sys)
         {
-            return false;
+            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress && sc.BodyID != null)     // if we have basic info. First ones did not have body ID
+            {
+                SystemNode sn = GetOrAddSystem(sys);
+                System.Diagnostics.Debug.Assert(sn != null);
+                if (sn.AddSurfaceFeatureToBody(sc) == null) // can't assign, store in pending
+                    AddPending(sys.SystemAddress.Value, sc);
+            }
+        }
+
+        public void AddTouchdown(JournalTouchdown sc, ISystem sys)
+        {
+            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress && sc.BodyID != null)     // if we have basic info. First ones did not have body ID
+            {
+                SystemNode sn = GetOrAddSystem(sys);
+                System.Diagnostics.Debug.Assert(sn != null);
+                if (sn.AddSurfaceFeatureToBody(sc) == null) // can't assign, store in pending
+                    AddPending(sys.SystemAddress.Value, sc);
+            }
         }
 
 
-        public bool AddSAAScan(JournalSAAScanComplete jsaa, ISystem sys)
+        public void AddSAAScan(JournalSAAScanComplete sc, ISystem sys)
         {
-            return false;
+            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress )     // if we have basic info. 
+            {
+                SystemNode sn = GetOrAddSystem(sys);
+                System.Diagnostics.Debug.Assert(sn != null);
+                if (sn.AddSAAScanToBody(sc) == null) // can't assign, store in pending
+                    AddPending(sys.SystemAddress.Value, sc);
+            }
         }
         
-        public void AddDocking(JournalDocked jd, ISystem sys, int bodyid)
+        public void AddDocking(JournalDocked sc, ISystem sys)
         {
-
-        }
-        public void AddDocking(JournalDocked jd, ISystem sys)
-        {
-
-        }
-
-        public void AddApproachSettlement(JournalApproachSettlement jd, ISystem sys)
-        {
-
+            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress )     // if we have basic info. 
+            {
+                SystemNode sn = GetOrAddSystem(sys);
+                System.Diagnostics.Debug.Assert(sn != null);
+                if (sn.AddDockingToBody(sc) == null) // can't assign, store in pending
+                    AddPending(sys.SystemAddress.Value, sc);
+            }
         }
 
-        public void AddTouchdown(JournalTouchdown jd, ISystem sys)
-        {
+        #endregion
 
+        #region Post creation clean up
+
+        // Given the pending list, assign it to the database of systems
+        public void AssignPending()
+        {
+            List<long> todeletesys = new List<long>();
+
+            foreach (var kvp in pendingsystemaddressevents)
+            {
+                SystemNode sn = systemNodesByAddress[kvp.Key];       // must be there, can't not be
+
+                if (AssignPending(sn, kvp.Value))
+                    todeletesys.Add(kvp.Key);
+            }
+
+            foreach (var sysaddress in todeletesys)
+                pendingsystemaddressevents.Remove(sysaddress);
+         
+            foreach (var kvp in pendingsystemaddressevents)
+            {
+                System.Diagnostics.Debug.WriteLine($"StarScan Pending left system {kvp.Key} count {kvp.Value.Count}");
+            }
         }
 
-        // IBodyNameAndID : ApproachBody, LeaveBody, CarrierJump, Location, SupercruiseExit
-        // IBodyFeature : ApproachSettlement, BJournalDocked, JournalTouchdown
+        public void ClearPending()
+        {
+            pendingsystemaddressevents.Clear();
+        }
 
-        // debug - run these thru
-        public void Debug(List<HistoryEntry> hist)
+        // read in a set of JSON lines exported from say HistoryList.cs:294 and run it thru starscan 2 and the display system
+
+        public static void ProcessFromFile(string filename, string displaytodir, int width)
+        {
+            string[] jsonlines = FileHelpers.TryReadAllLinesFromFile(filename);
+            string lastsystemname = "";
+
+            List<HistoryEntry> helist = new List<HistoryEntry>();       // create He's
+            HistoryEntry last = null;
+            foreach (string line in jsonlines)
+            {
+                JournalEntry entry = JournalEntry.CreateJournalEntry(line);
+                if (entry is JournalFSDJump fsd)
+                    lastsystemname = fsd.StarSystem;
+                HistoryEntry he1 = HistoryEntry.FromJournalEntry(entry, last, null);
+                helist.Add(he1);
+                last = he1;
+            }
+
+            StarScan2.StarScan ss2 = new StarScan2.StarScan();
+            ss2.ProcessFromHistory(helist);
+            ss2.DumpTree();
+            StarScan2.SystemDisplay sd = new StarScan2.SystemDisplay();
+            sd.Font = new System.Drawing.Font("Arial", 10);
+            sd.SetSize(64);
+            sd.TextBackColor = Color.Transparent;
+
+            ISystem syst = ss2.FindSystemInfo(lastsystemname);
+            StarScan2.SystemNode sssol = ss2.FindSystemSynchronous(syst);
+            ExtendedControls.ExtPictureBox imagebox = new ExtendedControls.ExtPictureBox();
+            imagebox.FillColor = Color.AliceBlue;
+            sd.DrawSystemRender(imagebox, width, sssol);
+            imagebox.Image.Save(Path.Combine(displaytodir,$"{lastsystemname}.png"));
+        }
+
+        // run these history entries thru the star scanner
+        public void ProcessFromHistory(List<HistoryEntry> hist)
         {
             foreach (var he in hist)
             {
@@ -240,47 +513,126 @@ namespace EliteDangerousCore.StarScan2
                     else
                         System.Diagnostics.Debug.WriteLine($"\r\n{he.EntryType}: in {he.System.Name}");
                     (he.journalEntry as IStarScan).AddStarScan(this, he.System);
-                    //DumpTree();
                 }
                 else if ( he.journalEntry is JournalDocked dck)
                 {
-                    if (StationDefinitions.IsPlanetaryPort(he.Status.FDStationType ?? StationDefinitions.StarportTypes.Unknown) && he.Status.BodyID.HasValue)
+                    if (dck.BodyType == BodyDefinitions.BodyType.Settlement)        // if its a settlement, fill in missing body info
                     {
                         dck.BodyID = he.Status.BodyID;
-                        dck.BodyType = "Settlement";
                         dck.Body = he.Status.BodyName;
+                    }
 
-                        AddDocking(he.journalEntry as JournalDocked, he.System, he.Status.BodyID.Value);
-                        //   StarScan2.AddDocking(jd, he.System, he.Status.BodyID.Value);
-                    }
-                    else
-                    {
-                        dck.BodyType = "Station";
-                        AddDocking(he.journalEntry as JournalDocked, he.System);
-                        //    StarScan2.AddDocking(jd, he.System);
-                    }
+                    AddDocking(dck, he.System);
                 }
                 else if (he.journalEntry is IBodyNameAndID bi)
                 {
                     System.Diagnostics.Debug.WriteLine($"\r\n{he.EntryType}: `{bi.Body}`:{bi.BodyID} in {he.System.Name}");
                     AddBody(he.journalEntry as IBodyNameAndID, he.System);
-                    DumpTree();
                 }
             }
+
+            AssignPending();
         }
 
         public void DumpTree()
         {
-            foreach (var kvp in SystemNodes)
+            foreach (var kvp in systemNodesByAddress)
             {
                 kvp.Value.DumpTree();
-
-                //foreach (var b in kvp.Value.Bodies(x=>x.BodyID>=2,false))
-                //{
-                //    System.Diagnostics.Debug.WriteLine($"Yield body {b.OwnName} id {b.BodyID}");
-                //}
             }
         }
+
+        #endregion
+
+        #region Helpers
+
+        private bool AssignPending(SystemNode sn, List<JournalEntry> jelist)
+        {
+            List<JournalEntry> todelete = new List<JournalEntry>();
+
+            foreach (var je in jelist)
+            {
+                if (je is JournalScanBaryCentre sb)
+                {
+                    if (sn.AddBaryCentreScan(sb) != null)
+                        todelete.Add(je);
+                }
+                else if (je is JournalCodexEntry cd)
+                {
+                    if (sn.AddCodexEntryToSystem(cd) != null)
+                        todelete.Add(je);
+                }
+                else if (je is JournalFSSBodySignals bs)
+                {
+                    if (sn.AddFSSBodySignalsToSystem(bs) != null)
+                        todelete.Add(je);
+                }
+                else if (je is JournalSAASignalsFound saa)
+                {
+                    if (sn.AddSAASignalsToSystem(saa) != null)
+                        todelete.Add(je);
+                }
+                else if (je is JournalFSSSignalDiscovered sd)
+                {
+                    if (AddFSSSignalsDiscovered(sd, false))
+                        todelete.Add(je);
+                }
+                else if (je is JournalScanOrganic so)
+                {
+                    if (sn.AddScanOrganicToBody(so) != null)
+                        todelete.Add(je);
+                }
+                else if (je is IBodyFeature ass)
+                {
+                    if (sn.AddSurfaceFeatureToBody(ass) != null)
+                        todelete.Add(je);
+                }
+                else if (je is JournalSAAScanComplete saasc)
+                {
+                    if (sn.AddSAAScanToBody(saasc) != null)
+                        todelete.Add(je);
+                }
+                else
+                {
+                    System.Diagnostics.Debug.Assert(false, "Star Scan 2 Not handled event");
+                }
+
+            }
+
+            if (todelete.Count == jelist.Count) // if all gone
+            {
+                return true;
+            }
+            else
+            {
+                foreach (var sbe in todelete)       // can't delete all, just this
+                    jelist.Remove(sbe);
+
+                return false;
+            }
+        }
+
+
+        private void AddPending(long systemaddress, JournalEntry sc)
+        {
+            if (!pendingsystemaddressevents.TryGetValue(systemaddress, out List<JournalEntry> jelist))
+            {
+                pendingsystemaddressevents[systemaddress] = new List<JournalEntry>();
+            }
+            pendingsystemaddressevents[systemaddress].Add(sc);
+
+        }
+
+        #endregion
+
+        #region vars
+        private Dictionary<long, SystemNode> systemNodesByAddress { get; set; } = new Dictionary<long, SystemNode>();       // by address
+        private Dictionary<string, SystemNode> systemNodesByName { get; set; } = new Dictionary<string, SystemNode>();       // by name.
+        private Dictionary<string, SystemNode> oldsystemNodesByName { get; set; } = new Dictionary<string, SystemNode>();       // by name, old scans without full data parents/bodyid
+
+        private Dictionary<long, List<JournalEntry>> pendingsystemaddressevents = new Dictionary<long, List<JournalEntry>>();   // list of pending entries because their bodies are not yet available
+
+        #endregion
 
     }
 }

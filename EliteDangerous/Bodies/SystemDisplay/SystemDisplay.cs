@@ -127,7 +127,7 @@ namespace EliteDangerousCore
                     }
 
                     {  // Draw star
-                        Image barycentre =BodyDefinitions.GetBarycentreImage();
+                        Image barycentre = BodyDefinitions.GetBarycentreImage();
 
                         Point maxpos = DrawNode(starcontrols, starnode, historicmats, curmats,
                                 (starnode.NodeType == ScanNodeType.barycentre) ? barycentre: notscannedbitmap,

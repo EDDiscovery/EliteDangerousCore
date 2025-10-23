@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using static BaseUtils.TypeHelpers;
 
@@ -51,7 +52,8 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Frontier body name")]
         public string Body => BodyName;
         [PropertyNameAttribute("Basic type, Planet, Star, Ring")]
-        public string BodyType => IsPlanet ? "Planet" : IsStar ? "Star" : "Ring";
+
+        public BodyDefinitions.BodyType BodyType => IsPlanet ? BodyDefinitions.BodyType.Planet : IsStar ? BodyDefinitions.BodyType.Star : BodyDefinitions.BodyType.Ring;
 
         [PropertyNameAttribute("Internal Frontier ID, is empty for older scans")]
         public int? BodyID { get; private set; }                            // direct
@@ -104,11 +106,11 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Parent body information. First is nearest body")]
         public List<BodyParent> Parents { get; private set; }
         [PropertyNameAttribute("Orbiting a barycentre")]
-        public bool IsOrbitingBarycentre { get { return Parents?.FirstOrDefault()?.Type == "Null"; } }
+        public bool IsOrbitingBarycentre { get { return Parents?.FirstOrDefault()?.Type == BodyParent.BodyType.Null; } }
         [PropertyNameAttribute("Orbiting a planet")]
-        public bool IsOrbitingPlanet { get { return Parents?.FirstOrDefault()?.Type == "Planet"; } }
+        public bool IsOrbitingPlanet { get { return Parents?.FirstOrDefault()?.Type == BodyParent.BodyType.Planet; } }
         [PropertyNameAttribute("Orbiting a star")]
-        public bool IsOrbitingStar { get { return Parents?.FirstOrDefault()?.Type == "Star"; } }
+        public bool IsOrbitingStar { get { return Parents?.FirstOrDefault()?.Type == BodyParent.BodyType.Star; } }
 
         [PropertyNameAttribute("No Parents or All Parents are barycentres")]
         public bool IsAllParentsBarycentre { get { return Parents == null || Parents.Count(x => x.IsBarycentre) == Parents.Count; } }
@@ -467,7 +469,14 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         foreach (var kvp in parent)
                         {
-                            Parents.Add(new BodyParent { Type = kvp.Key, BodyID = kvp.Value.Int() });
+                            if (Enum.TryParse<BodyParent.BodyType>(kvp.Key, true, out BodyParent.BodyType res))
+                            {
+                                Parents.Add(new BodyParent { Type = res, BodyID = kvp.Value.Int() });
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.Assert(false, "Bad parent body type");
+                            }
                         }
                     }
                 }

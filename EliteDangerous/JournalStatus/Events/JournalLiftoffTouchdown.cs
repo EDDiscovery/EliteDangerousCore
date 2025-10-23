@@ -91,7 +91,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? OnPlanet { get; set; }
 
         // IBodyFeature only
-        public string BodyType { get { return "Planet"; } }
+        public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
         public string Name { get { return "Touchdown".Tx(); } }
         public string Name_Localised { get { return "Touchdown".Tx(); } }
         public string BodyDesignation { get; set; }

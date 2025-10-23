@@ -243,10 +243,10 @@ namespace EliteDangerousCore.Spansh
             station.DistanceRefSystem = 0;
 
             station.Body = bodyname;
-            station.BodyType = bodytype;
+            station.BodyType = BodyDefinitions.GetBodyType(bodytype);
             station.BodySubType = bodysubtype;
 
-            station.IsPlanetary = station.BodyType == "Planet";
+            station.IsPlanetary = station.BodyType == BodyDefinitions.BodyType.Planet;
 
             station.StarSystem = station.System.Name;
             station.SystemAddress = station.System.SystemAddress;
@@ -589,7 +589,7 @@ namespace EliteDangerousCore.Spansh
                             station.System = new SystemClass(evt["system_name"].Str(), evt["system_id64"].LongNull(), evt["system_x"].Double(), evt["system_y"].Double(), evt["system_z"].Double(), SystemSource.FromSpansh);
 
                             station.Body = evt["body_name"].StrNull();
-                            station.BodyType = evt["body_type"].StrNull();
+                            station.BodyType = BodyDefinitions.GetBodyType(evt["body_type"].Str());
                             station.BodySubType = evt["body_subtype"].StrNull();
                             station.DistanceToArrival = evt["distance_to_arrival"].Double();
 

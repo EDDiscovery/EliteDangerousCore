@@ -15,6 +15,7 @@
  */
 using EliteDangerousCore.DB;
 using QuickJSON;
+using System;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
@@ -62,7 +63,7 @@ namespace EliteDangerousCore.JournalEvents
             SystemAddress = evt["SystemAddress"].LongNull();
             Body = evt["Body"].Str();
             BodyID = evt["BodyID"].IntNull();
-            BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
+            BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
         }
@@ -71,7 +72,7 @@ namespace EliteDangerousCore.JournalEvents
         public long? SystemAddress { get; set; }
         public string Body { get; set; }
         public int? BodyID { get; set; }
-        public string BodyType { get; set; }
+        public BodyDefinitions.BodyType BodyType { get; set; }
         public string BodyDesignation { get; set; }
 
         public bool? Taxi { get; set; }             //4.0 alpha 4

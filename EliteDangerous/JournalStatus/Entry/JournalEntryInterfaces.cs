@@ -53,7 +53,7 @@ namespace EliteDangerousCore
     {
         DateTime EventTimeUTC { get; }
         string Body { get; }
-        string BodyType { get; }        // Planet, Star, Ring, Station, PlanetaryRing, Barycentre : (ours) Signals
+        BodyDefinitions.BodyType BodyType { get; }       
         int? BodyID { get; }
         string BodyDesignation { get; set; }    // such as Sol 3 for BodyName = Earth, or null if not unique
         string StarSystem { get; }

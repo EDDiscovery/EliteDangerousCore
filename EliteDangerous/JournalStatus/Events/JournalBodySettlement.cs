@@ -33,7 +33,7 @@ namespace EliteDangerousCore.JournalEvents
         public long? SystemAddress { get; set; }
         public string Body { get; set; }
         public int? BodyID { get; set; }
-        public string BodyType { get { return "Planet"; } }
+        public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
         public string BodyDesignation { get; set; }
 
         public override string SummaryName(ISystem sys)
@@ -66,7 +66,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Body { get; set; }
         public int? BodyID { get; set; }
         public string BodyDesignation { get; set; }
-        public string BodyType { get { return "Planet"; } }
+        public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
 
         public override string SummaryName(ISystem sys)
         {
@@ -125,7 +125,7 @@ namespace EliteDangerousCore.JournalEvents
         public long? SystemAddress { get; set; } // may be null
         public int? BodyID { get; set; } // may be null
         public string BodyName { get; set; }        // from event, may be null
-        public string BodyType { get { return "Settlement"; } }
+        public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Settlement;
         public GovernmentDefinitions.Government StationGovernment { get; set; }// may be null
         public string StationGovernment_Localised { get; set; }// may be null
         public EconomyDefinitions.Economy StationEconomy { get; set; }// may be null

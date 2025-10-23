@@ -39,6 +39,7 @@ namespace EliteDangerousCore.JournalEvents
             public double OuterRad { get; set; }
             [PropertyNameAttribute("Width m")]
             public double Width { get { return OuterRad - InnerRad; } }
+            public string SemiMajorAxisLSKM { get { return (InnerRad >= BodyPhysicalConstants.oneLS_m / 10 ? ((InnerRad / BodyPhysicalConstants.oneLS_m).ToString("N1") + "ls") : ((InnerRad / 1000).ToString("N0") + "km")); } }
 
             public void Normalise()
             {
@@ -102,20 +103,21 @@ namespace EliteDangerousCore.JournalEvents
         [System.Diagnostics.DebuggerDisplay("BodyParent {Type} {BodyID}")]
         public class BodyParent
         {
-            [PropertyNameAttribute("Type of node, Null = barycentre, Planet, Star")]
-            public string Type { get; set; }
+            public enum BodyType { Planet, Null, Star, Ring };    
+            [PropertyNameAttribute("Type of node, Null = barycentre, Planet, Star, Ring (Beltcluster)")]
+            public BodyType Type { get; set; }
             [PropertyNameAttribute("Frontier body ID")]
             public int BodyID { get; set; }
             [PropertyNameAttribute("Is node a barycentre")]
-            public bool IsBarycentre { get { return Type.Equals("Null", StringComparison.InvariantCultureIgnoreCase); } }
+            public bool IsBarycentre { get { return Type == BodyType.Null; } }
             [PropertyNameAttribute("Is node a star")]
-            public bool IsStar { get { return Type.Equals("Star", StringComparison.InvariantCultureIgnoreCase); } }
+            public bool IsStar { get { return Type == BodyType.Star; } }
             [PropertyNameAttribute("Is node a planet")]
-            public bool IsPlanet { get { return Type.Equals("Planet", StringComparison.InvariantCultureIgnoreCase); } }
-            [PropertyNameAttribute("Is node a ring")]
-            public bool IsRing { get { return Type.Equals("Ring", StringComparison.InvariantCultureIgnoreCase); } }
-            [PropertyNameAttribute("Properties of the barycentre")]
-            public JournalScanBaryCentre Barycentre { get; set; }        // set by star scan system if its a barycentre
+            public bool IsPlanet { get { return Type == BodyType.Planet; } }
+            [PropertyNameAttribute("Is node a ring (Beltcluster)")]
+            public bool IsRing { get { return Type == BodyType.Ring; } }            
+            //[PropertyNameAttribute("Properties of the barycentre")]
+            //public JournalScanBaryCentre Barycentre { get; set; }        // set by star scan system if its a barycentre
         }
 
 

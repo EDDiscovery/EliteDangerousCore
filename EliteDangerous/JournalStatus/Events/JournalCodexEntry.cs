@@ -118,7 +118,7 @@ namespace EliteDangerousCore.JournalEvents
         }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
-            s.AddCodexEntryToSystem(this);
+            s.AddCodexEntryToSystem(this,system);
         }
 
         public override string GetInfo()

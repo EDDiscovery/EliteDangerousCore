@@ -338,13 +338,14 @@ namespace EliteDangerousCore.JournalEvents
                 sb.AppendCR();
             }
 
-            if ( Parents!=null && Parents.Count > 0 && Parents[0].Barycentre != null)      // dec 22 bug here on edsm data received a empty parent array- be more defensive
-            { 
-                JournalScanBaryCentre barycentrejs = Parents[0].Barycentre;
-                sb.AppendLine("Barycentre: " + barycentrejs.BodyID.ToString());
-                sb.AppendLine("  " + barycentrejs.GetInfo());            // verified it exists
-                sb.AppendLine("  " + barycentrejs.GetDetailed());        // verified it exists
-            }
+            // TBD
+            //if ( Parents!=null && Parents.Count > 0 && Parents[0].Barycentre != null)      // dec 22 bug here on edsm data received a empty parent array- be more defensive
+            //{ 
+            //    JournalScanBaryCentre barycentrejs = Parents[0].Barycentre;
+            //    sb.AppendLine("Barycentre: " + barycentrejs.BodyID.ToString());
+            //    sb.AppendLine("  " + barycentrejs.GetInfo());            // verified it exists
+            //    sb.AppendLine("  " + barycentrejs.GetDetailed());        // verified it exists
+            //}
 
 
 #if DEBUG

@@ -209,15 +209,6 @@ namespace EliteDangerousCore
             return s;
         }
 
-        static public string NormaliseBodyType(string s)            // FD slot name, anything to do.. leave in as there might be in the future
-        {
-            if (s == null)
-                return "Unknown";
-            else if (s.Equals("Null",StringComparison.InvariantCultureIgnoreCase))
-                s = "Barycentre";
-            return s;
-        }
-
         static public Tuple<string, string> GetStationNames(JObject evt, string root = "StationName")
         {
             var sn = evt[root].Str();

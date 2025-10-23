@@ -44,7 +44,7 @@ namespace EliteDangerousCore
                             var sd = sn.ScanData;
                             var sp = sd.Parents[i];
 
-                            if (sp.Type == "Null")      // any barycenters found in Parents array..
+                            if (sp.Type == JournalEvents.JournalScan.BodyParent.BodyType.Null)      // any barycenters found in Parents array..
                             {
                                 ScanNode bodynode = null;   // this is the body under the barynode
 
@@ -53,7 +53,7 @@ namespace EliteDangerousCore
                                     int bodyid = sd.Parents[i - 1].BodyID;                  // pick up the body ID of the previous entry
                                     bodynode = nodes.Find((x) => x.BodyID == bodyid);       // see if its in the node list, may fail of course if not scanned etc
 
-                                    if (bodynode == null && sd.Parents[i - 1].Type == "Null")   // if can't find, and its another barycentre, add a new dummy barycentre node
+                                    if (bodynode == null && sd.Parents[i - 1].Type == JournalEvents.JournalScan.BodyParent.BodyType.Null)   // if can't find, and its another barycentre, add a new dummy barycentre node
                                     {
                                         bodynode = new ScanNode() { BodyID = bodyid, NodeType = ScanNodeType.barycentre, BodyDesignator = "Created Barynode " + bodyid,
                                                                     OwnName = bodyid.ToString("00000") };

@@ -362,7 +362,7 @@ namespace EliteDangerousCore.JournalEvents
         public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
 
         public string Body => BodyName;
-        public string BodyType => "Signals";
+        public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Signals;
         public string BodyDesignation { get { return BodyName; } set { BodyName = value; } }
 
         public string StarSystem => throw new NotImplementedException();
@@ -625,7 +625,7 @@ namespace EliteDangerousCore.JournalEvents
         public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
 
         public string Body => BodyName;
-        public string BodyType => "Signals";
+        public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Signals;
         public string BodyDesignation { get { return BodyName; } set { BodyName = value; } }
 
         public string StarSystem => "Unknown";

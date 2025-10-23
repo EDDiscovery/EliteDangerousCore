@@ -266,7 +266,7 @@ namespace EliteDangerousCore
             List<JournalScan.BodyParent> ancestors = sc.Parents?.AsEnumerable()?.ToList();      // this includes Rings, Barycentres(Nulls) that frontier put into the list..
 
             // remove all rings and barycenters first, since thats not in our element list. We just want the bodies and belts
-            List<JournalScan.BodyParent> ancestorbodies = ancestors?.Where(a => a.Type == "Star" || a.Type == "Planet" || a.Type == "Belt")?.Reverse()?.ToList();
+            List<JournalScan.BodyParent> ancestorbodies = ancestors?.Where(a => a.Type == JournalScan.BodyParent.BodyType.Star || a.Type == JournalScan.BodyParent.BodyType.Planet || a.Type == JournalScan.BodyParent.BodyType.Ring)?.Reverse()?.ToList();
 
             // but we need to add back the barycenter at the top, since we do add that that in the element list
             if (ancestorbodies != null && ancestorbodies.Count>0 && starscannodetype == ScanNodeType.barycentre)      
@@ -379,7 +379,7 @@ namespace EliteDangerousCore
                         {
                             if (systemnode.Barycentres.TryGetValue(sc.Parents[i].BodyID, out JournalScanBaryCentre jsa))
                             {
-                                sc.Parents[i].Barycentre = jsa;
+                             // TBD   sc.Parents[i].Barycentre = jsa;
                             }
                         }
                     }

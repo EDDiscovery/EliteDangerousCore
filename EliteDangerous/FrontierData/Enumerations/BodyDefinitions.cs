@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2023 EDDiscovery development team
+ * Copyright 2023-2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -23,6 +23,27 @@ namespace EliteDangerousCore
 {
     public class BodyDefinitions
     {
+        public enum BodyType
+        {
+            Unknown,
+            Planet, Star, Ring, Station, PlanetaryRing, Barycentre, StellarRing,
+            Settlement, Signals  //EDD addition
+        };
+
+        static public BodyType GetBodyType(string bt)
+        {
+            if (bt == null || bt.Length == 0)           // not present
+                return BodyType.Unknown;
+            else if (bt.Equals("Null", StringComparison.InvariantCultureIgnoreCase))
+                return BodyType.Barycentre;
+            Enum.TryParse<BodyType>(bt, true, out BodyType btn);
+            if (btn == BodyType.Unknown)
+            {
+
+            }
+            return btn;
+        }
+
         static public bool IsBodyNameRing(string bodyname)
         {
             if (bodyname.HasChars())

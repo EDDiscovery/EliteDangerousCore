@@ -14,9 +14,13 @@
 
 //#define LISTSCANS
 
+using BaseUtils;
+using BaseUtils.Win32Constants;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 
 namespace EliteDangerousCore
@@ -285,28 +289,16 @@ namespace EliteDangerousCore
             }
 #endif
 
-            // DEBUG!
+            // Dump scan data to debug, copy to a file, use StarScan2.ProcessFromFile to check the star scanner
 
-            foreach( HistoryEntry h in hist.historylist.Where(x=>x.EntryType == JournalTypeEnum.Scan))
-            {
-                //hist.StarScan2.AddScan(h.journalEntry as JournalScan, h.System);
-            }
+            string sysname = "Prieluia QI-Q c19-31";
+            var mhs = hist.historylist.Where(x => (x.System.Name.Equals(sysname)) && (x.journalEntry is IStarScan || x.journalEntry is IBodyNameAndID || x.journalEntry is JournalFSDJump)).ToList();
+            var jsonlines = mhs.Select(x => x.journalEntry.GetJsonString());
+            FileHelpers.TryWriteAllLinesToFile($@"c:\code\{sysname}.json", jsonlines.ToArray());
 
-            //var mhs = hist.historylist.Where(x => (x.System.Name.Contains("Epsilon")) && (x.journalEntry is IStarScan) ).ToList();      // unique names
-            //var mhs = hist.historylist.Where(x => (x.System.Name.Contains("Scheau Prao ME-M c22-21")) && (x.journalEntry is IStarScan) ).ToList(); // A ring
-            //var mhs = hist.historylist.Where(x => (x.System.Name.Contains("Wepe XO-R b50-1")) && (x.journalEntry is IStarScan) ).ToList();
-            // var mhs = hist.historylist.Where(x => (x.System.Name.Contains("Prieluia QI-Q c19-31")) && (x.journalEntry is IStarScan) ).ToList();
-            var mhs = hist.historylist.Where(x => (x.System.Name.Equals("Sol")) && (x.journalEntry is JournalScan || x.journalEntry is JournalScanBaryCentre || x.journalEntry is IBodyNameAndID) ).ToList();
 
-            //var mhs = hist.historylist.Where(x => (x.journalEntry is JournalScan) ).ToList();
-            StarScan2.StarScan ss2 = new StarScan2.StarScan();
-            ss2.Debug(mhs);
-            ss2.DumpTree();
+      
 
-//            var mhs = hist.historylist.Where(x => (x.journalEntry is IStarScan)).ToList();
-            //var mhs = hist.historylist.Where(x => (x.journalEntry is IStarScan)).ToList();
-            
- 
         }
 
         class TestBody : IBodyNameAndID
@@ -315,7 +307,7 @@ namespace EliteDangerousCore
 
             public string Body { get; set; }
 
-            public string BodyType { get; set; }
+            public BodyDefinitions.BodyType BodyType { get; set; }
 
             public int? BodyID { get; set; }
 
@@ -465,7 +457,7 @@ namespace EliteDangerousCore
                     {
                         // only these have a Body of a planet/star/barycentre, the other types (station etc see the frontier doc which is right for a change) are not useful
 
-                        if (je.BodyType.EqualsIIC("Planet") || je.BodyType.EqualsIIC("Star") || je.BodyType.EqualsIIC("Barycentre"))
+                        if (je.BodyType == BodyDefinitions.BodyType.Planet || je.BodyType == BodyDefinitions.BodyType.Star || je.BodyType == BodyDefinitions.BodyType.Barycentre)
                         {
                             StarScan.AddBodyToBestSystem(je, he.System, pos, historylist);
                         }

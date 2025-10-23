@@ -76,7 +76,7 @@ namespace EliteDangerousCore
         public string BodyName { get; private set; }
         public int? BodyID { get; private set; }
         public bool HasBodyID { get { return BodyID.HasValue && BodyID.Value >= 0; } }
-        public string BodyType { get; private set; }
+        public BodyDefinitions.BodyType BodyType { get; private set; }
         public string StationName_Localised { get; private set; }     // will be null when undocked (StationName_Localised)
         public string StationType { get; private set; }     // will be null when undocked, in english
         public StationDefinitions.StarportTypes? FDStationType { get; private set; }     // will be null when undocked, in english
@@ -184,7 +184,7 @@ namespace EliteDangerousCore
                             BodyName = jloc.Body,
                             Wanted = jloc.Wanted,
                             StationName_Localised = stationisfc ? prev.StationName_Localised : (jloc.StationName_Localised.Alt(jloc.Docked || locinstation ? jloc.Body : null)),
-                            StationType = stationisfc ? prev.StationType : (jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType : null)),
+                            StationType = stationisfc ? prev.StationType : (jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType.ToString() : null)),
                             FDStationType = jloc.Docked ? jloc.FDStationType : default(StationDefinitions.StarportTypes?),
                             StationFaction = jloc.StationFaction,          // may be null
                             CurrentBoost = 1,
@@ -228,7 +228,7 @@ namespace EliteDangerousCore
                                                             TravelStateType.Supercruise,
 
                             BodyName = !prev.BodyApproached ? curStarSystem : prev.BodyName,
-                            BodyType = !prev.BodyApproached ? "Star" : prev.BodyType,
+                            BodyType = !prev.BodyApproached ? BodyDefinitions.BodyType.Star : prev.BodyType,
                             BodyID = !prev.BodyApproached ? -1 : prev.BodyID,
                             BookedTaxi = false,
                             BookedDropship = false,
@@ -272,7 +272,7 @@ namespace EliteDangerousCore
                                                 TravelStateType.Supercruise,
                             MarketID = null,
                             BodyID = -1,
-                            BodyType = "Star",
+                            BodyType = BodyDefinitions.BodyType.Star,
                             BodyName = jfsd.StarSystem,
                             Wanted = jfsd.Wanted,
                             StationName_Localised = null,
@@ -517,7 +517,7 @@ namespace EliteDangerousCore
                     hes = new HistoryEntryStatus(prev)
                     {
                         BodyApproached = false,
-                        BodyType = "Star",
+                        BodyType = BodyDefinitions.BodyType.Star,
                         BodyName = curStarSystem,
                         BodyID = -1,
                     };
