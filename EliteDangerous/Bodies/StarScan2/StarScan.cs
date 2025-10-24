@@ -249,8 +249,10 @@ namespace EliteDangerousCore.StarScan2
 
         public void AddScan(JournalScan sc, ISystem sys)
         {
+            bool hasparentbodyid = sc.BodyID != null && (sc.BodyID == 0 || sc.Parents != null);     // no body/parent tree makes the scan problematc to make
+
             // triage for scans with full info
-            if (sc.BodyID != null && (sc.BodyID == 0 || sc.Parents != null) && sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have modern info 
+            if (hasparentbodyid && sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have modern info 
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -267,15 +269,15 @@ namespace EliteDangerousCore.StarScan2
                 if (stdname)
                 {
                     System.Diagnostics.Debug.WriteLine($"Add Scan Std format {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
-                    sn.GetOrMakeStandardBodyNodeFromScan(sc, ownname, sc.BodyID, sys.Name);
+                    sn.GetOrMakeStandardBodyNodeFromScan(sc, ownname, sys.Name);
                 }
                 else
                 {
                     System.Diagnostics.Debug.WriteLine($"Add Scan NonStd format {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
-                    sn.GetOrMakeNonStandardBodyFromScan(sc, sys, ownname);
+                    sn.GetOrMakeNonStandardBodyFromScan(sc, sys.Name, ownname);
                 }
             }
-            else if (sys.Name != null)      // else dump them into the older structure
+            else if (sys.Name != null)      // we may have some modern info, but not all
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -283,19 +285,21 @@ namespace EliteDangerousCore.StarScan2
                 bool stdname = sc.BodyName.StartsWith(sys.Name) && sc.BodyName.Length > sys.Name.Length;
                 string ownname = stdname ? sc.BodyName.Substring(sys.Name.Length).Trim() : sc.BodyName;
 
-                bool hasparentbodyid = sc.BodyID != null && (sc.BodyID == 0 || sc.Parents != null);     // no body/parent tree makes the scan problematc to make
                 if (!hasparentbodyid)
                     sn.OldScansPresent = true;          // record it
 
-                if (stdname)
+                if (sys.Name == "Sol" && sc.BodyName.StartsWith("Procyon"))         // Robert had this situation
+                    return;
+
+                if (stdname && hasparentbodyid)
                 {
                     System.Diagnostics.Debug.WriteLine($"Add OLD Scan Std format {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
-                    sn.GetOrMakeStandardBodyNodeFromScan(sc, ownname, sc.BodyID, sys.Name);
+                    sn.GetOrMakeStandardBodyNodeFromScan(sc, ownname, sys.Name);
                 }
                 else if (hasparentbodyid)
                 {
                     System.Diagnostics.Debug.WriteLine($"Add OLD Scan NonStd format with Parents {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
-                    sn.GetOrMakeNonStandardBodyFromScan(sc, sys, ownname);
+                    sn.GetOrMakeNonStandardBodyFromScan(sc, sys.Name, ownname);
                 }
                 else
                 {
@@ -505,6 +509,8 @@ namespace EliteDangerousCore.StarScan2
             StarScan2.StarScan ss2 = new StarScan2.StarScan();
             ss2.ProcessFromHistory(helist);
             ss2.DumpTree();
+            
+            
             StarScan2.SystemDisplay sd = new StarScan2.SystemDisplay();
             sd.Font = new System.Drawing.Font("Arial", 10);
             sd.SetSize(64);
@@ -515,7 +521,7 @@ namespace EliteDangerousCore.StarScan2
             ExtendedControls.ExtPictureBox imagebox = new ExtendedControls.ExtPictureBox();
             imagebox.FillColor = Color.AliceBlue;
             sd.DrawSystemRender(imagebox, width, sssol);
-            imagebox.Image.Save(Path.Combine(displaytodir,$"{lastsystemname}.png"));
+            imagebox.Image.Save(Path.Combine(displaytodir, $"{lastsystemname}.png"));
         }
 
         // run these history entries thru the star scanner
@@ -526,11 +532,16 @@ namespace EliteDangerousCore.StarScan2
                 if (he.journalEntry is IStarScan ss)
                 {
                     if (he.journalEntry is JournalScan js)
+                    {
                         System.Diagnostics.Debug.WriteLine($"\r\n{he.EntryType}: `{js.BodyName}` ID: {js.BodyID} - {js.ParentList()} ");
+                        (he.journalEntry as IStarScan).AddStarScan(this, he.System);
+                        DumpTree();
+                    }
                     else
+                    {
                         System.Diagnostics.Debug.WriteLine($"\r\n{he.EntryType}: in {he.System.Name}");
-                    (he.journalEntry as IStarScan).AddStarScan(this, he.System);
-                   // DumpTree();
+                        (he.journalEntry as IStarScan).AddStarScan(this, he.System);
+                    }
                 }
                 else if ( he.journalEntry is JournalDocked dck)
                 {

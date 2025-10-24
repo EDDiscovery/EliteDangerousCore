@@ -321,12 +321,15 @@ namespace EliteDangerousCore.StarScan2
             if (BodyType != BodyClass.System)
             {
                 if (BodyID < 0)
-                    bid += ".?";
+                    bid += ".??";
                 else
-                    bid += $".{BodyID}";
-                string pad = new string(' ', bid.Length + 3);
+                    bid += $".{BodyID,2}";
 
-                System.Diagnostics.Debug.WriteLine($"{bid} : `{OwnName}` `{FDName}` {BodyType} scname:`{Scan?.BodyName}` P:{Scan?.ParentList()} sma {SMA} isMapped {IsMapped} Effmap {WasMappedEfficiently}");
+                string front = bid.PadRight(15);
+                string names = $"`{FDName}` | `{OwnName}`".PadRight(40);
+                string pad = new string(' ', front.Length + 3);
+
+                System.Diagnostics.Debug.WriteLine($"{front} : {names} {BodyType.ToString().PadRight(15)} scname:`{Scan?.BodyName}` P:{Scan?.ParentList()} sma {SMA} isMapped {IsMapped} Effmap {WasMappedEfficiently}");
                 foreach (var x in CodexEntries.EmptyIfNull())
                     System.Diagnostics.Debug.WriteLine($"{pad}CX:{x.GetInfo()}");
                 foreach (var x in Signals.EmptyIfNull())

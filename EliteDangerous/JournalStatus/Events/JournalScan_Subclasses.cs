@@ -103,7 +103,7 @@ namespace EliteDangerousCore.JournalEvents
         [System.Diagnostics.DebuggerDisplay("BodyParent {Type} {BodyID}")]
         public class BodyParent
         {
-            public enum BodyType { Planet, Null, Star, Ring };    
+            public enum BodyType { Planet, Null, Star, Ring , Unknown};    
             [PropertyNameAttribute("Type of node, Null = barycentre, Planet, Star, Ring (Beltcluster)")]
             public BodyType Type { get; set; }
             [PropertyNameAttribute("Frontier body ID")]
@@ -115,9 +115,14 @@ namespace EliteDangerousCore.JournalEvents
             [PropertyNameAttribute("Is node a planet")]
             public bool IsPlanet { get { return Type == BodyType.Planet; } }
             [PropertyNameAttribute("Is node a ring (Beltcluster)")]
-            public bool IsRing { get { return Type == BodyType.Ring; } }            
+            public bool IsRing { get { return Type == BodyType.Ring; } }
             //[PropertyNameAttribute("Properties of the barycentre")]
             //public JournalScanBaryCentre Barycentre { get; set; }        // set by star scan system if its a barycentre
+
+            public BodyParent()
+            { }
+            public BodyParent(BodyType t, int id)
+            { Type = t; BodyID = id; }
         }
 
 
