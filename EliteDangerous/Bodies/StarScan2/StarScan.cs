@@ -17,6 +17,7 @@ using EliteDangerousCore.JournalEvents;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 
 namespace EliteDangerousCore.StarScan2
 {
@@ -83,10 +84,6 @@ namespace EliteDangerousCore.StarScan2
                 else if (systemNodesByName.TryGetValue(sys.Name, out var systemNode1))
                 {
                     return systemNode1;
-                }
-                else if (oldsystemNodesByName.TryGetValue(sys.Name, out var systemNode2))
-                {
-                    return systemNode2;
                 }
             }
 
@@ -155,10 +152,6 @@ namespace EliteDangerousCore.StarScan2
                 {
                     return systemNode1;
                 }
-                else if (oldsystemNodesByName.TryGetValue(sys.Name, out var systemNode2))
-                {
-                    return systemNode2;
-                }
             }
 
             return null;
@@ -169,30 +162,38 @@ namespace EliteDangerousCore.StarScan2
         #region Called by Events
 
         // called to make sure we have a system. If system address, we use the address system, else we assign to the old tree
-        public SystemNode GetOrAddSystem(ISystem sys, bool forceold = false)      
+        public SystemNode GetOrAddSystem(ISystem sys)      
         {
             // if we have older system info without systemaddress, we created the nodes in systemnodesbyname. 
             // as soon the system has a system address, we will abandon the old info and recreate using the new one, as we can't rely on the old stuff
-            if (sys.SystemAddress.HasValue && !forceold)
+            if (sys.SystemAddress.HasValue)
             {
                 // System.Diagnostics.Debug.WriteLine($"SS2 Add {je.EventTimeUTC} {je.EventTypeID} {sys.Name} {sys.SystemAddress} {sys.HasCoordinate}");
 
-                // find system node, if not, make it.  
+                // find system node by address, 
                 if (!systemNodesByAddress.TryGetValue(sys.SystemAddress.Value, out SystemNode node))
                 {
-                    node = new SystemNode(sys);
-                    systemNodesByAddress.Add(sys.SystemAddress.Value, node);        // make a new node
-                    systemNodesByName[sys.Name] = node;                             // point name node to our new node
+                    // if not found, check name
+                    if (systemNodesByName.TryGetValue(sys.Name, out node))     // if previously by name only
+                    {
+                        systemNodesByAddress.Add(sys.SystemAddress.Value, node);        // add the new address into the node tree also
+                    }
+                    else
+                    {
+                        node = new SystemNode(sys);
+                        systemNodesByAddress.Add(sys.SystemAddress.Value, node);        // make a new node
+                        systemNodesByName[sys.Name] = node;                             // point name node to our new node
+                    }
                 }
 
                 return node;
             }
-            else if (sys.Name.HasChars())      // older name only ones
+            else if (sys.Name.HasChars())      // name only ones
             {
-                if (!oldsystemNodesByName.TryGetValue(sys.Name, out SystemNode node))
+                if (!systemNodesByName.TryGetValue(sys.Name, out SystemNode node))
                 {
                     node = new SystemNode(sys);
-                    oldsystemNodesByName.Add(sys.Name, node);
+                    systemNodesByName.Add(sys.Name, node);
                 }
                 return node;
             }
@@ -220,25 +221,11 @@ namespace EliteDangerousCore.StarScan2
                 }
                 else if (sc.BodyType == BodyDefinitions.BodyType.Planet)
                 {
-                    if (stdname)        // its a standard name patterned after star
-                    {
-                        sn.GetOrMakeStandardBodyNode(ownname, sc.BodyID, sys.Name);
-                    }
-                    else  // non standard
-                    {
-                        sn.GetOrMakeNonStandardBody(ownname, sc.BodyID, sys.Name);
-                    }
+                    sn.GetOrMakeDiscreteBody(ownname, sc.BodyID.Value, sys.Name);
                 }
                 else if (sc.BodyType == BodyDefinitions.BodyType.Star)
                 {
-                    if (stdname)
-                    {
-                        sn.GetOrMakeStandardBodyNode(ownname, sc.BodyID, sys.Name);
-                    }
-                    else
-                    {
-                        sn.GetOrMakeNonStandardStar(sc.Body, sc.BodyID, sys.Name);
-                    }
+                    sn.GetOrMakeDiscreteStar(sc.Body, sc.BodyID, sys.Name);
                 }
                 else if (sc.BodyType == BodyDefinitions.BodyType.PlanetaryRing)
                 {
@@ -268,13 +255,19 @@ namespace EliteDangerousCore.StarScan2
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
 
+                if (sn.OldScansPresent)                 // we don't mix old scans with new scans. Old scans without parents trees are problematic
+                {
+                    sn.OldScansPresent = false;
+                    sn.Clear();
+                }
+
                 bool stdname = sc.BodyName.StartsWith(sys.Name) && sc.BodyName.Length > sys.Name.Length;
                 string ownname = stdname ? sc.BodyName.Substring(sys.Name.Length).Trim() : sc.BodyName;
 
                 if (stdname)
                 {
                     System.Diagnostics.Debug.WriteLine($"Add Scan Std format {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
-                    sn.GetOrMakeStandardBodyNode(ownname, sc.BodyID, sys.Name, sc);
+                    sn.GetOrMakeStandardBodyNodeFromScan(sc, ownname, sc.BodyID, sys.Name);
                 }
                 else
                 {
@@ -284,26 +277,33 @@ namespace EliteDangerousCore.StarScan2
             }
             else if (sys.Name != null)      // else dump them into the older structure
             {
-                SystemNode sn = GetOrAddSystem(sys, true);
+                SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
 
                 bool stdname = sc.BodyName.StartsWith(sys.Name) && sc.BodyName.Length > sys.Name.Length;
                 string ownname = stdname ? sc.BodyName.Substring(sys.Name.Length).Trim() : sc.BodyName;
 
+                bool hasparentbodyid = sc.BodyID != null && (sc.BodyID == 0 || sc.Parents != null);     // no body/parent tree makes the scan problematc to make
+                if (!hasparentbodyid)
+                    sn.OldScansPresent = true;          // record it
+
                 if (stdname)
                 {
                     System.Diagnostics.Debug.WriteLine($"Add OLD Scan Std format {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
-                    sn.GetOrMakeStandardBodyNode(ownname, sc.BodyID, sys.Name, sc);
+                    sn.GetOrMakeStandardBodyNodeFromScan(sc, ownname, sc.BodyID, sys.Name);
                 }
-                else if (sc.BodyID != null && (sc.BodyID == 0 || sc.Parents != null))
+                else if (hasparentbodyid)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Add OLD Scan NonStd format {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
+                    System.Diagnostics.Debug.WriteLine($"Add OLD Scan NonStd format with Parents {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
                     sn.GetOrMakeNonStandardBodyFromScan(sc, sys, ownname);
                 }
                 else
                 {
                     System.Diagnostics.Debug.WriteLine($"Add OLD Scan NonStd format {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
-                    sn.GetOrMakeNonStandardBody(ownname, sc.BodyID, sys.Name, sc);
+                    
+                    // we have no placement info, just store it.
+                    BodyNode bn = sn.GetOrMakeDiscreteBody(ownname, sc.BodyID, sys.Name);
+                    bn.SetScan(sc);
                 }
             }
         }
@@ -466,7 +466,21 @@ namespace EliteDangerousCore.StarScan2
             pendingsystemaddressevents.Clear();
         }
 
+        #endregion
+
+        #region Debug tools
+
         // read in a set of JSON lines exported from say HistoryList.cs:294 and run it thru starscan 2 and the display system
+
+        public static void ProcessAllFromDirectory(string dir, string filepattern, string displaytodir, int width)
+        {
+            FileInfo[] find = Directory.EnumerateFiles(dir, filepattern , SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).OrderBy(p => p.LastWriteTime).ToArray();
+
+            foreach (var x in find)
+            {
+                ProcessFromFile(x.FullName, displaytodir, width);   
+            }
+        }
 
         public static void ProcessFromFile(string filename, string displaytodir, int width)
         {
@@ -477,12 +491,15 @@ namespace EliteDangerousCore.StarScan2
             HistoryEntry last = null;
             foreach (string line in jsonlines)
             {
-                JournalEntry entry = JournalEntry.CreateJournalEntry(line);
-                if (entry is JournalFSDJump fsd)
-                    lastsystemname = fsd.StarSystem;
-                HistoryEntry he1 = HistoryEntry.FromJournalEntry(entry, last, null);
-                helist.Add(he1);
-                last = he1;
+                if (line.HasChars() && !line.StartsWith("//"))
+                {
+                    JournalEntry entry = JournalEntry.CreateJournalEntry(line);
+                    if (entry is JournalFSDJump fsd)
+                        lastsystemname = fsd.StarSystem;
+                    HistoryEntry he1 = HistoryEntry.FromJournalEntry(entry, last, null);
+                    helist.Add(he1);
+                    last = he1;
+                }
             }
 
             StarScan2.StarScan ss2 = new StarScan2.StarScan();
@@ -513,6 +530,7 @@ namespace EliteDangerousCore.StarScan2
                     else
                         System.Diagnostics.Debug.WriteLine($"\r\n{he.EntryType}: in {he.System.Name}");
                     (he.journalEntry as IStarScan).AddStarScan(this, he.System);
+                   // DumpTree();
                 }
                 else if ( he.journalEntry is JournalDocked dck)
                 {
@@ -526,8 +544,9 @@ namespace EliteDangerousCore.StarScan2
                 }
                 else if (he.journalEntry is IBodyNameAndID bi)
                 {
-                    System.Diagnostics.Debug.WriteLine($"\r\n{he.EntryType}: `{bi.Body}`:{bi.BodyID} in {he.System.Name}");
+                //    System.Diagnostics.Debug.WriteLine($"\r\n{he.EntryType}: `{bi.Body}`:{bi.BodyID} in {he.System.Name}");
                     AddBody(he.journalEntry as IBodyNameAndID, he.System);
+                  //  DumpTree();
                 }
             }
 
@@ -536,7 +555,7 @@ namespace EliteDangerousCore.StarScan2
 
         public void DumpTree()
         {
-            foreach (var kvp in systemNodesByAddress)
+            foreach (var kvp in systemNodesByName)
             {
                 kvp.Value.DumpTree();
             }
@@ -628,7 +647,6 @@ namespace EliteDangerousCore.StarScan2
         #region vars
         private Dictionary<long, SystemNode> systemNodesByAddress { get; set; } = new Dictionary<long, SystemNode>();       // by address
         private Dictionary<string, SystemNode> systemNodesByName { get; set; } = new Dictionary<string, SystemNode>();       // by name.
-        private Dictionary<string, SystemNode> oldsystemNodesByName { get; set; } = new Dictionary<string, SystemNode>();       // by name, old scans without full data parents/bodyid
 
         private Dictionary<long, List<JournalEntry>> pendingsystemaddressevents = new Dictionary<long, List<JournalEntry>>();   // list of pending entries because their bodies are not yet available
 

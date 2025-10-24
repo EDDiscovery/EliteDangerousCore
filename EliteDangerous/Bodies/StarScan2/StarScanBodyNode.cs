@@ -21,12 +21,13 @@ using static EliteDangerousCore.StarScan;
 
 namespace EliteDangerousCore.StarScan2
 {
-    [System.Diagnostics.DebuggerDisplay("`{OwnName}` {BodyID} {BodyType} : CB{ChildBodies.Count} Cx{CodexEntries?.Count} FSS{FSSSignalList?.Count} Org{Organics?.Count} Gen {Genuses?.Count}")]
+    [System.Diagnostics.DebuggerDisplay("`{OwnName}` `{FDName}` {BodyID} {BodyType} : CB{ChildBodies.Count} Cx{CodexEntries?.Count} FSS{FSSSignalList?.Count} Org{Organics?.Count} Gen {Genuses?.Count}")]
 
     public partial class BodyNode
     {
-       // public string BodyName { get; private set; }
+        // public string BodyName { get; private set; }
         public string OwnName { get; private set; }
+        public string FDName { get; private set; }
         public int BodyID { get; private set; }
 
         public enum BodyClass { System,             // top level Bodies object in SystemNode
@@ -62,17 +63,19 @@ namespace EliteDangerousCore.StarScan2
         public List<IBodyFeature> SurfaceFeatures { get; internal set; } = null;
         public bool IsMapped { get; private set; }                   // recorded here since the scan data can be replaced by a better version later.
         public bool WasMappedEfficiently { get; private set; }
-        public BodyNode(string ownname, BodyClass bc, int bid, BodyNode parent)
+        public BodyNode(string ownname, string fdname, BodyClass bc, int bid, BodyNode parent)
         {
             OwnName = ownname;
+            FDName = fdname;
             BodyType = bc;
             BodyID = bid;
             Parent = parent;
         }
 
-        public BodyNode(string ownname, JournalScan.BodyParent nt, int bid, BodyNode parent)
+        public BodyNode(string ownname, string fdname, JournalScan.BodyParent nt, int bid, BodyNode parent)
         {
             OwnName = ownname;
+            FDName = fdname;
             BodyType = nt.IsStar ? BodyNode.BodyClass.Star : nt.IsBarycentre ? BodyNode.BodyClass.Barycentre : nt.IsRing ? BodyNode.BodyClass.BeltCluster : BodyNode.BodyClass.PlanetMoon;
             BodyID = bid;
             Parent = parent;
@@ -83,9 +86,10 @@ namespace EliteDangerousCore.StarScan2
             BodyID = bid;
         }
 
-        public void ResetBodyName(string name)
+        public void ResetBodyName(string name, string fdname)
         {
             OwnName = name;
+            FDName = fdname;
         }
 
         // copy all data to nd
@@ -312,27 +316,33 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        public void DumpTree(int level)
+        public void DumpTree(string bid)
         {
-            var pad = new string(' ', level*2);
+            if (BodyType != BodyClass.System)
+            {
+                if (BodyID < 0)
+                    bid += ".?";
+                else
+                    bid += $".{BodyID}";
+                string pad = new string(' ', bid.Length + 3);
 
-            System.Diagnostics.Debug.WriteLine($"{pad}`{OwnName}` type {BodyType} bid {BodyID} scname:`{Scan?.BodyName}` sma {SMA} isMapped {IsMapped} Effmap {WasMappedEfficiently}");
-            foreach (var x in CodexEntries.EmptyIfNull())
-                System.Diagnostics.Debug.WriteLine($"{pad}  {x.GetInfo()}");
-            foreach (var x in Signals.EmptyIfNull())
-                System.Diagnostics.Debug.WriteLine($"{pad}  {x.Type_Localised ?? x.Type} {x.Count}");
-            foreach (var x in Genuses.EmptyIfNull())
-                System.Diagnostics.Debug.WriteLine($"{pad}  {x.Genus_Localised ?? x.Genus}");
-            foreach (var x in FSSSignalList.EmptyIfNull())
-                System.Diagnostics.Debug.WriteLine($"{pad}  {x.SignalName_Localised ?? x.SignalName} {x.USSType}");
-            foreach (var x in Organics.EmptyIfNull())
-                System.Diagnostics.Debug.WriteLine($"{pad}  {x.GetInfo()}");
-            foreach (var x in SurfaceFeatures.EmptyIfNull())
-                System.Diagnostics.Debug.WriteLine($"{pad}  {x.BodyType} {x.Name_Localised??x.Name}");
-
+                System.Diagnostics.Debug.WriteLine($"{bid} : `{OwnName}` `{FDName}` {BodyType} scname:`{Scan?.BodyName}` P:{Scan?.ParentList()} sma {SMA} isMapped {IsMapped} Effmap {WasMappedEfficiently}");
+                foreach (var x in CodexEntries.EmptyIfNull())
+                    System.Diagnostics.Debug.WriteLine($"{pad}CX:{x.GetInfo()}");
+                foreach (var x in Signals.EmptyIfNull())
+                    System.Diagnostics.Debug.WriteLine($"{pad}S:{x.Type_Localised ?? x.Type} {x.Count}");
+                foreach (var x in Organics.EmptyIfNull())
+                    System.Diagnostics.Debug.WriteLine($"{pad}O:{x.GetInfo()}");
+                foreach (var x in Genuses.EmptyIfNull())
+                    System.Diagnostics.Debug.WriteLine($"{pad}G:{x.Genus_Localised ?? x.Genus}");
+                foreach (var x in FSSSignalList.EmptyIfNull())
+                    System.Diagnostics.Debug.WriteLine($"{pad}FSS:{x.SignalName_Localised ?? x.SignalName} {x.USSType}");
+                foreach (var x in SurfaceFeatures.EmptyIfNull())
+                    System.Diagnostics.Debug.WriteLine($"{pad}SF:{x.BodyType} {x.Name_Localised ?? x.Name}");
+            }
 
             foreach (var x in ChildBodies) 
-                x.DumpTree(level + 1);
+                x.DumpTree(bid);
         }
     }
 }

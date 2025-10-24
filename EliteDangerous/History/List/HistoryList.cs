@@ -244,6 +244,8 @@ namespace EliteDangerousCore
                 System.Diagnostics.Debug.WriteLine($"StarScan could not assign {s.Item1.EventTimeUTC} {s.Item1.GetType().Name} {s.Item2?.Name ?? "???"} {s.Item2?.SystemAddress}");
             }
 
+            hist.StarScan2.AssignPending();
+
             // dump all events info+detailed to file, useful for checking formatting
             //JournalTest.DumpHistoryGetInfoDescription(hist, @"c:\code\out.log");      
 
@@ -291,31 +293,11 @@ namespace EliteDangerousCore
 
             // Dump scan data to debug, copy to a file, use StarScan2.ProcessFromFile to check the star scanner
 
-            string sysname = "Prieluia QI-Q c19-31";
+            string sysname = "Skaude AA-A h294";
             var mhs = hist.historylist.Where(x => (x.System.Name.Equals(sysname)) && (x.journalEntry is IStarScan || x.journalEntry is IBodyNameAndID || x.journalEntry is JournalFSDJump)).ToList();
             var jsonlines = mhs.Select(x => x.journalEntry.GetJsonString());
             FileHelpers.TryWriteAllLinesToFile($@"c:\code\{sysname}.json", jsonlines.ToArray());
 
-
-      
-
-        }
-
-        class TestBody : IBodyNameAndID
-        {
-            public DateTime EventTimeUTC { get; set; }
-
-            public string Body { get; set; }
-
-            public BodyDefinitions.BodyType BodyType { get; set; }
-
-            public int? BodyID { get; set; }
-
-            public string BodyDesignation { get; set; }
-
-            public string StarSystem { get; set; }
-
-            public long? SystemAddress { get; set; }
         }
 
         private void AddToVisitsScan(Action<string> logerror)
@@ -352,6 +334,33 @@ namespace EliteDangerousCore
                 }
             }
 
+#if false
+            // StarScan2 processing
+
+            if (he.journalEntry is IStarScan ss)
+            {
+                (he.journalEntry as IStarScan).AddStarScan(StarScan2, he.System);
+            }
+            else if (he.journalEntry is JournalDocked dck)
+            {
+                if (dck.BodyType == BodyDefinitions.BodyType.Settlement)        // if its a settlement, fill in missing body info
+                {
+                    dck.BodyID = he.Status.BodyID;
+                    dck.Body = he.Status.BodyName;
+                }
+
+                StarScan2.AddDocking(dck, he.System);
+            }
+            else if (he.journalEntry is IBodyNameAndID bi)
+            {
+                System.Diagnostics.Debug.WriteLine($"\r\n{he.EntryType}: `{bi.Body}`:{bi.BodyID} in {he.System.Name}");
+                StarScan2.AddBody(he.journalEntry as IBodyNameAndID, he.System);
+            }
+#endif
+
+
+            // StarScan Old processing
+
             if (he.EntryType == JournalTypeEnum.Scan)       // may need to do a history match, so intercept
             {
                 JournalScan js = he.journalEntry as JournalScan;
@@ -387,7 +396,6 @@ namespace EliteDangerousCore
             else if (he.journalEntry is IStarScan)      // a star scan type takes precendence
             {
                 (he.journalEntry as IStarScan).AddStarScan(StarScan, he.System);
-                //   (he.journalEntry as IStarScan).AddStarScan(StarScan2, he.System);
             }
             else if (he.journalEntry is IBodyNameAndID je)  // all entries under this type
             {
@@ -402,12 +410,10 @@ namespace EliteDangerousCore
                     if (StationDefinitions.IsPlanetaryPort(he.Status.FDStationType ?? StationDefinitions.StarportTypes.Unknown) && he.Status.BodyID.HasValue)
                     {
                         StarScan.AddDocking(he.journalEntry as JournalDocked, he.System, he.Status.BodyID.Value);
-                     //   StarScan2.AddDocking(jd, he.System, he.Status.BodyID.Value);
                     }
                     else
                     {
                         StarScan.AddDocking(he.journalEntry as JournalDocked, he.System);
-                    //    StarScan2.AddDocking(jd, he.System);
                     }
                 }
                 else if (he.EntryType == JournalTypeEnum.ApproachSettlement)    // we need to process this uniquely, as it has information for starscan as well as body info
@@ -421,8 +427,6 @@ namespace EliteDangerousCore
                         jas.StarSystem = he.System.Name;           // fill in the missing system name 
                         StarScan.AddBodyToBestSystem(jas, he.System, pos, historylist); // ensure its in the DB - note BodyType = Settlement
                         StarScan.AddApproachSettlement(jas, he.System);
-
-                       // StarScan2.AddApproachSettlement(jas, he.System);
                     }
                     else
                     {
@@ -441,8 +445,6 @@ namespace EliteDangerousCore
                         jt.StarSystem = he.System.Name;           // fill in the possibly missing system name 
                         StarScan.AddBodyToBestSystem(jt, he.System, pos, historylist); // ensure its in the DB - note BodyType = Settlement
                         StarScan.AddTouchdown(jt, he.System);
-
-                      //  StarScan2.AddTouchdown(jt, he.System);
                     }
                     else
                     {
@@ -451,8 +453,6 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                   // StarScan2.AddBody(je, he.System);
-
                     if (je.Body.HasChars())    // we can add here with bodyid = null, so just check body
                     {
                         // only these have a Body of a planet/star/barycentre, the other types (station etc see the frontier doc which is right for a change) are not useful
