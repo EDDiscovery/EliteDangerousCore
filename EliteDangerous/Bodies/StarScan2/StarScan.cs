@@ -247,9 +247,15 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
+        // Add a scan
+        // Three sorts of scan 1) Modern (sysaddr,bodyid,parents) 2) Older (bodyid,parents) and 3) Ancient (nothing)
+        // 
+
         public void AddScan(JournalScan sc, ISystem sys)
         {
             bool hasparentbodyid = sc.BodyID != null && (sc.BodyID == 0 || sc.Parents != null);     // no body/parent tree makes the scan problematc to make
+            bool hassystemaddress = sc.SystemAddress.HasValue;
+
 
             // triage for scans with full info
             if (hasparentbodyid && sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have modern info 
@@ -269,12 +275,12 @@ namespace EliteDangerousCore.StarScan2
                 if (stdname)
                 {
                     System.Diagnostics.Debug.WriteLine($"Add Scan Std format {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
-                    sn.GetOrMakeStandardBodyNodeFromScan(sc, ownname, sys.Name);
+                    sn.GetOrMakeStandardBodyNodeFromScanWithParents(sc, ownname, sys.Name);
                 }
                 else
                 {
                     System.Diagnostics.Debug.WriteLine($"Add Scan NonStd format {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
-                    sn.GetOrMakeNonStandardBodyFromScan(sc, sys.Name, ownname);
+                    sn.GetOrMakeNonStandardBodyFromScanWithParents(sc, sys.Name, ownname);
                 }
             }
             else if (sys.Name != null)      // we may have some modern info, but not all
@@ -294,12 +300,12 @@ namespace EliteDangerousCore.StarScan2
                 if (stdname && hasparentbodyid)
                 {
                     System.Diagnostics.Debug.WriteLine($"Add OLD Scan Std format {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
-                    sn.GetOrMakeStandardBodyNodeFromScan(sc, ownname, sys.Name);
+                    sn.GetOrMakeStandardBodyNodeFromScanWithParents(sc, ownname, sys.Name);
                 }
                 else if (hasparentbodyid)
                 {
                     System.Diagnostics.Debug.WriteLine($"Add OLD Scan NonStd format with Parents {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}");
-                    sn.GetOrMakeNonStandardBodyFromScan(sc, sys.Name, ownname);
+                    sn.GetOrMakeNonStandardBodyFromScanWithParents(sc, sys.Name, ownname);
                 }
                 else
                 {

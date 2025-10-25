@@ -54,12 +54,16 @@ namespace EliteDangerousCore.StarScan2
             return value;
         }
 
-        public BodyNode FindBodyInTree(int id,string fdname)
+        public BodyNode FindBodyInTree(int id, string fdname)
         {
             if (bodybyid.TryGetValue(id, out BodyNode value))
                 return value;
             else
-                return Bodies(x=>x.FDName.EqualsIIC(fdname), true).FirstOrDefault();
+                return Bodies(x => x.FDName.EqualsIIC(fdname), true).FirstOrDefault();
+        }
+        public BodyNode FindBodyInTree(string fdname)
+        {
+            return Bodies(x => x.FDName.EqualsIIC(fdname), true).FirstOrDefault();
         }
 
         // return all bodies, or return all bodies matching a Predicate, or return first match
@@ -67,83 +71,17 @@ namespace EliteDangerousCore.StarScan2
         {
             return SystemBodies.Bodies(find, stoponfind);
         }
-        
-
-        // aim is to fill out the partnames with the same number of parents and scan (so 3 parents = 4 entries) and align them
-        // this is more complicated to get right that it ever looks.
-
-        static public void AlignParentsName(List<JournalScan.BodyParent> parents, string subname, out List<string> partnames)
-        {
-            partnames = new List<string>();
-
-            StringParser sp = new StringParser(subname);
-
-            while (!sp.IsEOL)
-            {
-                if (sp.IsStringMoveOn(out string found,StringComparison.InvariantCultureIgnoreCase,true, "A Belt Cluster", "B Belt Cluster","A Ring","B Ring"))
-                {
-                    partnames.Add(found);
-                }
-                else
-                {
-                    partnames.Add(sp.NextWord());
-                }
-            }
-
-            //global::System.Diagnostics.Debug.WriteLine($"Split Name to: {string.Join(", ", partnames)}");
-
-            int partno = partnames.Count - 1;       // backwards, since parents is
-
-            // parents[0] is the parent of the scan, [1] is the grandfather, etc.. last is the star/null
-
-            for (int i = -1; i < parents.Count; i++)
-            {
-                if (i == -1)          //  entry 0 is not in parents array (don't want to change it) and represents the scan ID itself, which the name must have
-                {
-                    //global::System.Diagnostics.Debug.WriteLine($"Match {partsout[partno]} with SCAN");
-                    partno--;
-                }
-                else 
-                {
-                    var nt = parents[i];
-
-                    // we only need to see if its a potential bary name if the node is a barycentre.
-                    // this is picking up stuff like Skaude AA-A h294 AB 1 a where the barycentre name is mentioned
-                    bool itsabarycentre = nt.IsBarycentre && partno >= 0 && partnames[partno].Length>1 ? partnames[partno].HasAll(x => char.IsUpper(x)) : false;
-
-                    if (nt.IsBarycentre && (partno > 0 || !itsabarycentre))      // barycenter, either at sub part of name (past start) or its not a barycentre name at root
-                    {
-                        //global::System.Diagnostics.Debug.WriteLine($"Skip insert barycentre at {i}");
-                        partnames.Insert(partno+1, DefaultNameOfBC);
-                    }
-                    else if (partno >= 0)
-                    {
-                        //global::System.Diagnostics.Debug.WriteLine($"Match {partsout[partno]} with {parents[i].Type}");
-                        partno--;
-                    }
-                    else
-                    {
-                        //global::System.Diagnostics.Debug.WriteLine($"Out of name parts for {parents[i].Type}");
-                        partnames.Insert(0, nt.IsStar ? DefaultNameOfUnknownStar : nt.IsBarycentre ? DefaultNameOfBC : DefaultNameOfUnknownBody);
-                    }
-                }
-            }
-
-          //  global::System.Diagnostics.Debug.WriteLine($"Scan Name Normalised: {string.Join(", ", partnames)}");
-        }
-
 
         // Get or make a standard named body node Scheau Prao ME-M c22-21 A 1 a etc with a parents list
         // given a own name like "A 1 a" or "1 a" or "1" make nodes down the tree if they don't exist, return final node.
         // we never use this to make a top level star
-        public BodyNode GetOrMakeStandardBodyNodeFromScan(JournalScan sc, string subname, string systemname)
+        public BodyNode GetOrMakeStandardBodyNodeFromScanWithParents(JournalScan sc, string subname, string systemname)
         {
             // we align the parents field and the subname parts together
 
             AlignParentsName(sc.Parents, subname, out List<string> partnames);
 
             global::System.Diagnostics.Debug.WriteLine($"Scan `{sc.BodyName}`:{sc.BodyID} Name Normalised: {string.Join(", ", partnames)}");
-
 
             int pno = sc.Parents.Count - 1;
             BodyNode cur = SystemBodies;
@@ -157,21 +95,15 @@ namespace EliteDangerousCore.StarScan2
 
                 // checking we have not put it in the wrong place before (due to discrete adds)
             
-                BodyNode prevassigned = FindBodyInTree(nt.BodyID);
-                if (prevassigned != null && prevassigned.Parent != cur)
-                {
-                    RemoveIncorrectBody(prevassigned);
+                BodyNode subbody = FindBodyInTree(nt.BodyID);          // find ID anywhere..
 
+                if (subbody != null && subbody.Parent != cur)           // if there, but not here, remove and make again
+                {
+                    RemoveIncorrectBody(subbody);
+                    subbody = null;
                 }
 
-                // see if its there..
-
-                var subbody = cur.ChildBodies.Find(x => x.BodyID == nt.BodyID);
-
-                //if (subbody == null) don't think need this
-                    //subbody = cur.ChildBodies.Find(x => x.OwnName == partnames[partno]);
-
-                // if not, make it
+                // not there..
 
                 if (subbody == null)
                 {
@@ -182,13 +114,6 @@ namespace EliteDangerousCore.StarScan2
                 }
                 else
                 {
-                    //if (subbody.BodyID != nt.BodyID)      // no need only finding by ID
-                    //{
-                    //    global::System.Diagnostics.Debug.Assert(subbody.BodyID == -1);
-                    //    subbody.ResetBodyID(nt.BodyID);     
-                    //    bodybyid[nt.BodyID] = subbody;
-                    //}
-
                     // see if we now have a better name for the thing
                     if (subbody.FDName.StartsWith("Unknown ") && !partnames[partno].StartsWith("Unknown ") )
                     {
@@ -208,23 +133,20 @@ namespace EliteDangerousCore.StarScan2
 
             // check to see if in wrong place
 
-            BodyNode body = FindBodyInTree(sc.BodyID.Value);
-            if (body != null && body.Parent != cur)
+            BodyNode body = FindBodyInTree(sc.BodyID.Value);        // find ID anywhere
+
+            if (body != null && body.Parent != cur)                 // if there but not in correct place, remove
             {
                 RemoveIncorrectBody(body);
                 body = null;
             }
-
-            if (body == null)                                        // else try and match by name
-                body = cur.ChildBodies.Find(x => x.OwnName.EqualsIIC(ownname));
 
             if (body == null)
             {
                 // if we found it, but we did not find it here, its been placed in a default place by the system in
                 // GetOrMakeNonStandardBodyNode.  We need to remove it, and possibly remove that auto star as well
 
-                BodyNode prevassigned = FindBodyInTree(sc.BodyID.Value, sc.BodyName);
-
+                BodyNode prevassigned = FindBodyInTree(sc.BodyName);       // double check its not somewhere else..
                 if (prevassigned != null)
                     RemoveIncorrectBody(prevassigned);
 
@@ -236,15 +158,6 @@ namespace EliteDangerousCore.StarScan2
             }
             else
             {
-                if (body.BodyID != sc.BodyID.Value)     // check here to see if we have a bid for this node, and its not been set before. This occurs due to scans with parent arrays
-                {
-                    global::System.Diagnostics.Debug.Assert(body.BodyID == -1); // error we previously set it
-
-                    //global::System.Diagnostics.Debug.WriteLine($"Reset body id of body `{body.OwnName}` from {body.BodyID} to {pbid}");
-                    body.ResetBodyID(sc.BodyID.Value);
-                    bodybyid[sc.BodyID.Value] = body;
-                }
-
                 body.ResetBodyName(ownname, subname);
             }
 
@@ -263,8 +176,8 @@ namespace EliteDangerousCore.StarScan2
             return body;
         }
 
-        // we have a lower level body with a parents tree
-        public BodyNode GetOrMakeNonStandardBodyFromScan(JournalScan sc, string systemname, string ownname)
+        // Non standard name with Parents
+        public BodyNode GetOrMakeNonStandardBodyFromScanWithParents(JournalScan sc, string systemname, string ownname)
         {
             BodyNode cur = SystemBodies;
 
@@ -274,50 +187,45 @@ namespace EliteDangerousCore.StarScan2
             {
                 var nt = sc.Parents[pno];
 
-                var plistbody = cur.ChildBodies.Find(x => x.BodyID == nt.BodyID);
+                BodyNode subbody = FindBodyInTree(nt.BodyID);
+                BodyNode previdassigned = subbody;
 
-                // if not, make it
-                if (plistbody == null)
+                if ( subbody != null && subbody.Parent != cur)
                 {
-                    // maybe we need to check for these as well... just see if its there somewhere but not here
-                    BodyNode previdassigned = FindBodyInTree(nt.BodyID);
-
-                    plistbody = new BodyNode(previdassigned?.OwnName ?? (nt.IsBarycentre ? DefaultNameOfBC : DefaultNameOfUnknownBody), previdassigned?.FDName ?? "",nt, nt.BodyID, cur);
-
-                    if (previdassigned != null)
-                    {
-                        //previdassigned.MoveStarDataTo(plistbody);
-                        RemoveIncorrectBody(previdassigned);
-                    }
-
-                    cur.ChildBodies.Add(plistbody);
-                    bodybyid[nt.BodyID] = plistbody;
-                    global::System.Diagnostics.Debug.WriteLine($"  Add Parent Tree Body {nt.BodyID} type {plistbody.BodyType} in {systemname} below `{cur.OwnName}`:{cur.BodyID}");
+                    RemoveIncorrectBody(subbody);
+                    subbody = null;
                 }
 
-                cur = plistbody;
+                if (subbody == null)
+                {
+                    // maybe we need to check for these as well... just see if its there somewhere but not here
+
+                    subbody = new BodyNode(previdassigned?.OwnName ?? (nt.IsBarycentre ? DefaultNameOfBC : DefaultNameOfUnknownBody), previdassigned?.FDName ?? "",nt, nt.BodyID, cur);
+
+                    cur.ChildBodies.Add(subbody);
+                    bodybyid[nt.BodyID] = subbody;
+                    global::System.Diagnostics.Debug.WriteLine($"  Add {subbody.BodyType} `{subbody.OwnName}` `{subbody.FDName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}");
+                }
+
+                cur = subbody;
                 pno--;
             }
 
-            // now at the parent node, see if we made it before
-            var body = cur.ChildBodies.Find(x => x.BodyID == sc.BodyID.Value);
+            BodyNode body = FindBodyInTree(sc.BodyID.Value);        // find ID anywhere
+
+            if (body != null && body.Parent != cur)                 // if there but not in correct place, remove
+            {
+                RemoveIncorrectBody(body);
+                body = null;
+            }
 
             if (body == null)
             {
-                // have we previously made it, record that its there
-
                 body = new BodyNode(sc.BodyName, sc.BodyName, sc.IsStar ? BodyNode.BodyClass.Star : sc.IsPlanet ? BodyNode.BodyClass.PlanetMoon : BodyNode.BodyClass.BeltClusterBody, sc.BodyID.Value, cur);
-
-                // if we found it, but we did not find it here, its been placed in a default place by the system in
-                // GetOrMakeNonStandardxxx.  We need to remove it, and possibly remove that auto star as well
-
-                BodyNode prevassigned = FindBodyInTree(sc.BodyID.Value, sc.BodyName);
-                if (prevassigned != null)
-                    RemoveIncorrectBody(prevassigned);
 
                 cur.ChildBodies.Add(body);
                 bodybyid[sc.BodyID.Value] = body;
-                global::System.Diagnostics.Debug.WriteLine($"  Add `{sc.BodyName}`:{sc.BodyID} type {body.BodyType} Scan below `{cur.OwnName}`:{cur.BodyID}");
+                global::System.Diagnostics.Debug.WriteLine($"  Add {body.BodyType} `{body.OwnName}` `{body.FDName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}");
             }
             else
             {
@@ -330,10 +238,10 @@ namespace EliteDangerousCore.StarScan2
                 AddBaryCentreName(cur, sc.BodyName);
             }
             
-            ProcessBeltsOrRings(body,sc, sc.BodyName, systemname);
-
             body.SetScan(sc); // update or add scan BEFORE sorting - we may have added it before without a scan
             Sort(cur);          // then sort with into
+            
+            ProcessBeltsOrRings(body, sc, sc.BodyName, systemname);
 
             return body;
         }
@@ -538,6 +446,69 @@ namespace EliteDangerousCore.StarScan2
         }
 
         #region Helpers
+
+        // aim is to fill out the partnames with the same number of parents and scan (so 3 parents = 4 entries) and align them
+        // this is more complicated to get right that it ever looks.
+        static public void AlignParentsName(List<JournalScan.BodyParent> parents, string subname, out List<string> partnames)
+        {
+            partnames = new List<string>();
+
+            StringParser sp = new StringParser(subname);
+
+            while (!sp.IsEOL)
+            {
+                if (sp.IsStringMoveOn(out string found, StringComparison.InvariantCultureIgnoreCase, true, "A Belt Cluster", "B Belt Cluster", "A Ring", "B Ring"))
+                {
+                    partnames.Add(found);
+                }
+                else
+                {
+                    partnames.Add(sp.NextWord());
+                }
+            }
+
+            //global::System.Diagnostics.Debug.WriteLine($"Split Name to: {string.Join(", ", partnames)}");
+
+            int partno = partnames.Count - 1;       // backwards, since parents is
+
+            // parents[0] is the parent of the scan, [1] is the grandfather, etc.. last is the star/null
+
+            for (int i = -1; i < parents.Count; i++)
+            {
+//tbd
+                if (i == -1)          //  entry 0 is not in parents array (don't want to change it) and represents the scan ID itself, which the name must have
+                {
+                    //global::System.Diagnostics.Debug.WriteLine($"Match {partsout[partno]} with SCAN");
+                    partno--;
+                }
+                else
+                {
+                    var nt = parents[i];
+
+                    // we only need to see if its a potential bary name if the node is a barycentre.
+                    // this is picking up stuff like Skaude AA-A h294 AB 1 a where the barycentre name is mentioned
+                    bool itsabarycentre = nt.IsBarycentre && partno >= 0 && partnames[partno].Length > 1 ? partnames[partno].HasAll(x => char.IsUpper(x)) : false;
+
+                    if (nt.IsBarycentre && (partno > 0 || !itsabarycentre))      // barycenter, either at sub part of name (past start) or its not a barycentre name at root
+                    {
+                        //global::System.Diagnostics.Debug.WriteLine($"Skip insert barycentre at {i}");
+                        partnames.Insert(partno + 1, DefaultNameOfBC);
+                    }
+                    else if (partno >= 0)
+                    {
+                        //global::System.Diagnostics.Debug.WriteLine($"Match {partsout[partno]} with {parents[i].Type}");
+                        partno--;
+                    }
+                    else
+                    {
+                        //global::System.Diagnostics.Debug.WriteLine($"Out of name parts for {parents[i].Type}");
+                        partnames.Insert(0, nt.IsStar ? DefaultNameOfUnknownStar : nt.IsBarycentre ? DefaultNameOfBC : DefaultNameOfUnknownBody);
+                    }
+                }
+            }
+
+            //  global::System.Diagnostics.Debug.WriteLine($"Scan Name Normalised: {string.Join(", ", partnames)}");
+        }
 
         // Any rings around the bodies are added, including stars and planets, as children of the body
         // the belt data is recorded in each body
