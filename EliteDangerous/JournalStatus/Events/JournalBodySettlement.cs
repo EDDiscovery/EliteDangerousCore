@@ -13,13 +13,14 @@
  * 
  *
  */
+using EliteDangerousCore.StarScan2;
 using QuickJSON;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.ApproachBody)]
-    public class JournalApproachBody : JournalEntry, IBodyNameAndID
+    public class JournalApproachBody : JournalEntry, IBodyNameAndID, IStarScan
     {
         public JournalApproachBody(JObject evt) : base(evt, JournalTypeEnum.ApproachBody)
         {
@@ -34,8 +35,6 @@ namespace EliteDangerousCore.JournalEvents
         public string Body { get; set; }
         public int? BodyID { get; set; }
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
-        public string BodyDesignation { get; set; }
-
         public override string SummaryName(ISystem sys)
         {
             string sn = base.SummaryName(sys);
@@ -48,10 +47,15 @@ namespace EliteDangerousCore.JournalEvents
         {
             return "In ".Tx()+ StarSystem;
         }
+
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            s.AddBody(this, system);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.LeaveBody)]
-    public class JournalLeaveBody : JournalEntry, IBodyNameAndID
+    public class JournalLeaveBody : JournalEntry, IBodyNameAndID, IStarScan
     {
         public JournalLeaveBody(JObject evt) : base(evt, JournalTypeEnum.LeaveBody)
         {
@@ -65,7 +69,6 @@ namespace EliteDangerousCore.JournalEvents
         public long? SystemAddress { get; set; }
         public string Body { get; set; }
         public int? BodyID { get; set; }
-        public string BodyDesignation { get; set; }
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
 
         public override string SummaryName(ISystem sys)
@@ -79,10 +82,15 @@ namespace EliteDangerousCore.JournalEvents
         {
             return "In ".Tx()+ StarSystem;
         }
+
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            s.AddBody(this, system);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.ApproachSettlement)]
-    public class JournalApproachSettlement : JournalEntry, IBodyFeature
+    public class JournalApproachSettlement : JournalEntry, IBodyFeature, IStarScan
     {
         public JournalApproachSettlement(JObject evt) : base(evt, JournalTypeEnum.ApproachSettlement)
         {
@@ -140,7 +148,6 @@ namespace EliteDangerousCore.JournalEvents
 
         // IBodyFeature only
         public string Body { get { return BodyName; } }     // this is an alias
-        public string BodyDesignation { get; set; }
         public string StarSystem { get; set; }      // filled in by StarScan::AddApproachSettlement
 
         public override string GetInfo()
@@ -178,6 +185,10 @@ namespace EliteDangerousCore.JournalEvents
                 return null;
         }
 
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            s.AddApproachSettlement(this, system);
+        }
     }
 
 

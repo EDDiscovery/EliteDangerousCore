@@ -12,13 +12,14 @@
  * governing permissions and limitations under the License.
  */
 
+using EliteDangerousCore.StarScan2;
 using QuickJSON;
 using System;
 
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Docked)]
-    public class JournalDocked : JournalEntry, IStatsJournalEntry, ILocDocked, IBodyFeature
+    public class JournalDocked : JournalEntry, IStatsJournalEntry, ILocDocked, IBodyFeature, IStarScan
     {
         public JournalDocked(System.DateTime utc) : base(utc, JournalTypeEnum.Docked)
         {
@@ -124,7 +125,6 @@ namespace EliteDangerousCore.JournalEvents
         public string Body { get; set; }                // IBodyAndID copied in by star scan from a surface feature noted
         public int? BodyID { get; set; } = null;         // IBodyAndID copied in by star scan for surface settlements only
         public BodyDefinitions.BodyType BodyType { get; set; } = BodyDefinitions.BodyType.Station;   // IBodyAndID copied in by star scan, default Station
-        public string BodyDesignation { get; set; }     // IBodyAndID copied in by star scan
 
         // these are EconomyDefinitions.Economies
         public bool HasAnyEconomyTypes(string[] fdnames)
@@ -188,6 +188,11 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Faction.HasChars())
                 stats.Docking(system,this);
+        }
+
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            // implemented in historylist as some info may need copying in
         }
     }
 

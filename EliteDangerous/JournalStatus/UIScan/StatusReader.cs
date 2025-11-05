@@ -76,7 +76,7 @@ namespace EliteDangerousCore
             prev_json = null;
         }
 
-        public List<UIEvent> Scan()
+        public Tuple<List<JournalEntry>, List<UIEvent>> Scan()
         {
             if (File.Exists(statusfile))
             {
@@ -394,12 +394,11 @@ namespace EliteDangerousCore
                         }
                     }
 #endif
-
-                    return events;
+                    return new Tuple<List<JournalEntry>, List<UIEvent>>(null, events);
                 }
             }
 
-            return new List<UIEvent>();
+            return new Tuple<List<JournalEntry>, List<UIEvent>>(null, null);
         }
 
         #endregion

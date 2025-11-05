@@ -17,6 +17,7 @@ using EliteDangerousCore.DB;
 using System.Linq;
 using System.Text;
 using System.Data.Common;
+using EliteDangerousCore.StarScan2;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -309,7 +310,6 @@ namespace EliteDangerousCore.JournalEvents
         public string Body { get; set; }
         public int? BodyID { get; set; }
         public BodyDefinitions.BodyType BodyType { get; set; }
-        public string BodyDesignation { get; set; }
         public double? DistFromStarLS { get; set; }
 
         public double? Latitude { get; set; }
@@ -398,10 +398,6 @@ namespace EliteDangerousCore.JournalEvents
             return sb.Length>0 ? sb.ToString() : null;
         }
 
-        public void AddStarScan(StarScan s, ISystem system)
-        {
-            s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
-        }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             var sys = new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z);
@@ -455,10 +451,6 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Multicrew { get; set; }
 
         public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".Tx(), StarSystem); }
-        public void AddStarScan(StarScan s, ISystem system)
-        {
-            s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
-        }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
@@ -535,7 +527,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.FSDTarget)]
-    public class JournalFSDTarget : JournalEntry
+    public class JournalFSDTarget : JournalEntry, IStarScan
     {
         public JournalFSDTarget(JObject evt) : base(evt, JournalTypeEnum.FSDTarget)
         {
@@ -553,6 +545,11 @@ namespace EliteDangerousCore.JournalEvents
         public long SystemAddress { get; set; }
         public int? RemainingJumpsInRoute { get; set; }
         public string FriendlyStarClass { get; set; }
+
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress));
+        }
 
         public override string GetInfo()
         {
@@ -596,11 +593,6 @@ namespace EliteDangerousCore.JournalEvents
                 return "Supercruise".Tx();
         }
 
-        public void AddStarScan(StarScan s, ISystem system)
-        {
-            if (IsHyperspace)
-                s.AddLocation(new SystemClass(StarSystem, SystemAddress));      // add so there is placeholder
-        }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             if (IsHyperspace)

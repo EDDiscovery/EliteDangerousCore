@@ -16,6 +16,7 @@ using EliteDangerousCore.DB;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -82,27 +83,29 @@ namespace EliteDangerousCore
             while( lastfilled < historylist.Count)
             {
                 var he = historylist[lastfilled];
-                if ( he.EntryType == JournalTypeEnum.Scan && he.ScanNode == null)
+                if ( he.EntryType == JournalTypeEnum.Scan && he.BodyNode == null)
                 {
                     // if we have two scans of the same body, the starscan always replaces the journal scan with the latest.
                     // Don't try and find the scan node from the web
 
-                    var sysnode = StarScan.FindSystemSynchronous(he.System);
+                    var sn = StarScan2.FindSystemSynchronous(he.System);
 
                     // prob not null, but check. 
-                    if ( sysnode != null)
+                    if ( sn != null)
                     {
                         var js = he.journalEntry as JournalEvents.JournalScan;
-                        if (js.BodyID.HasValue && sysnode.NodesByID.TryGetValue(js.BodyID.Value, out StarScan.ScanNode sn))     // find by bodyid
-                            he.ScanNode = sn;
+                        if (js.BodyID.HasValue && sn.TryGetBody(js.BodyID.Value, out var bn))     // find by bodyid
+                        {
+                            he.BodyNode = bn;
+                        }
                         else
                         {
-                            var jscan = sysnode?.Find(he.journalEntry as JournalEvents.JournalScan);        // else find by journal entry
-                            he.ScanNode = jscan;
+                            var bn2 = sn.Bodies(x => x.Scan == he.journalEntry,true).FirstOrDefault();              // find in body nodes one where scan = this entry
+                            he.BodyNode = bn2;
                         }
 
-                        if ( he.ScanNode == null )
-                            System.Diagnostics.Debug.WriteLine($"Fill Scan Node failed for {he.System}");
+                        if ( he.BodyNode == null )
+                            System.Diagnostics.Debug.WriteLine($"WARNING Fill Scan Node failed for {he.System} : {js.BodyName}");
                     }
                 }
                 lastfilled++;

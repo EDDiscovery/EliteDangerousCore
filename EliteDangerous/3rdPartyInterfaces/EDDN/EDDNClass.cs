@@ -696,27 +696,9 @@ namespace EliteDangerousCore.EDDN
                 }
             }
 
-            string bodydesig = journal.BodyDesignation ?? journal.BodyName;
-
             RemoveCommonKeys(message);
 
             message = message.Filter( AllowedFieldsScan);
-
-            // For now test if its a different name ( a few exception for like sol system with named planets)  To catch a rare out of sync bug in historylist.
-
-            if (!bodydesig.StartsWith(system.Name, StringComparison.InvariantCultureIgnoreCase))  
-            {
-                System.Diagnostics.Debug.WriteLine($"Reject scan send to EDDN due to DB ${bodydesig} not starting with {system.Name}");
-                // previously, it was either rejected or sent thru the test EDDN point, now just reject it
-                return null;
-
-                //if (journal.BodyDesignation != null || System.Text.RegularExpressions.Regex.IsMatch(journal.BodyName, " [A-Z][A-Z]-[A-Z] [a-h][0-9]", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
-                //{
-                    //return null;
-                //}
-                //message["IsUnknownBody"] = true;
-                //msg["$schemaRef"] = GetEDDNJournalSchemaRef(true);
-            }
 
             message["odyssey"] = journal.IsOdyssey;     // new may 21
             message["horizons"] = journal.IsHorizons;

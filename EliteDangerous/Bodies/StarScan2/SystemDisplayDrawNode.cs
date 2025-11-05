@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace EliteDangerousCore.StarScan2
 {
@@ -43,7 +44,8 @@ namespace EliteDangerousCore.StarScan2
                             Random random,                  // for random placements
                             System.Windows.Forms.ContextMenuStrip rightclickmenubody,  // any right click CMS to assign
                             System.Windows.Forms.ContextMenuStrip rightclickmenumats,  // any right click CMS to assign
-                            Color? backwash = null         // optional back wash on image 
+                            Color? backwash = null,         // optional back wash on image 
+                            bool notext = false             // don't put text at bottom
                 )
         {
             //System.Diagnostics.Debug.WriteLine($"DrawNode {bn.OwnName} at {position} xiscentre {xiscentre} : size {size}");
@@ -57,358 +59,302 @@ namespace EliteDangerousCore.StarScan2
 
             string presentationname = bn.OwnName;
 #if DEBUG
-            presentationname += $"({bn.BodyID} {bn.BodyType})";
+            if (bn.CanonicalNameNoSystemName().HasChars())
+                presentationname += " | " + bn.CanonicalNameNoSystemName();
+            //presentationname += $"({bn.BodyID} {bn.BodyType})";
+            presentationname += $"({bn.BodyID})";
 #endif
 
-            // has a scan and its our scan, or we are showing web data..
+            // determine if star or planet.  We can normally for new modern scans rely on bn.Bodytype
+            // for older scans the item is marked Unknown so lets see if the scan gives an idea
 
-            if (bn.BodyType == BodyNode.BodyClass.Star || bn.BodyType == BodyNode.BodyClass.PlanetMoon)
+            if (sc != null && (!sc.IsWebSourced || ShowWebBodies) && !sc.IsBeltClusterBody)     // scan and we have source allowed and its not a BC body
             {
-                if (sc != null && (!sc.IsWebSourced || ShowWebBodies))
+                string overlaytext = "";
+                var nodelabels = new string[2] { "", "" };
+
+                nodelabels[0] = presentationname;
+                if (sc.IsWebSourced)
+                    nodelabels[0] = "_" + nodelabels[0];
+
+                bool toplevelstar = false;
+
+                if (sc.IsStar)                                      // Make node information for star
                 {
-                    string overlaytext = "";
-                    var nodelabels = new string[2] { "", "" };
+                    if (ShowStarClasses)
+                        overlaytext = sc.StarClassificationAbv;
 
-                    nodelabels[0] = presentationname;
-                    if (sc.IsWebSourced)
-                        nodelabels[0] = "_" + nodelabels[0];
+                    if (sc.nStellarMass.HasValue && ShowStarMass)
+                        nodelabels[1] = nodelabels[1].AppendPrePad($"{sc.nStellarMass.Value:N2} SM", Environment.NewLine);
 
-                    bool toplevelstar = false;
-
-                    if (sc.IsStar)                                      // Make node information for star
+                    toplevelstar = bn.IsTopLevel(bn.BodyType);
+                    if (toplevelstar)
                     {
-                        if (ShowStarClasses)
-                            overlaytext = sc.StarClassificationAbv;
+                        if (sc.nAge.HasValue && ShowStarAge)
+                            nodelabels[1] = nodelabels[1].AppendPrePad($"{sc.nAge.Value:N0} MY", Environment.NewLine);
 
-                        if (sc.nStellarMass.HasValue && ShowStarMass)
-                            nodelabels[1] = nodelabels[1].AppendPrePad($"{sc.nStellarMass.Value:N2} SM", Environment.NewLine);
-
-                        toplevelstar = bn.IsTopLevel(bn.BodyType);
-                        if (toplevelstar)
+                        if (ShowHabZone)
                         {
-                            if (sc.nAge.HasValue && ShowStarAge)
-                                nodelabels[1] = nodelabels[1].AppendPrePad($"{sc.nAge.Value:N0} MY", Environment.NewLine);
-
-                            if (ShowHabZone)
+                            HabZones hz = sc.GetHabZones();
+                            if (hz != null)
                             {
-                                var habZone = sc.GetHabZoneStringLs();
-                                if (habZone.HasChars())
-                                    nodelabels[1] = nodelabels[1].AppendPrePad($"{habZone}", Environment.NewLine);
+                                nodelabels[1] = nodelabels[1].AppendPrePad($"{hz.GetHabZoneStringLs()}", Environment.NewLine);
                             }
                         }
-                    }
-                    else
-                    {                                                   // Make node information for planets
-                        if (ShowPlanetClasses)
-                            overlaytext = Planets.PlanetAbv(sc.PlanetTypeID);
-
-                        if ((sc.IsLandable || ShowAllG) && sc.nSurfaceGravity != null)
-                        {
-                            nodelabels[1] = nodelabels[1].AppendPrePad($"{(sc.nSurfaceGravity / BodyPhysicalConstants.oneGee_m_s2):N2}g", Environment.NewLine);
-                        }
-
-                        if (ShowPlanetMass && sc.nMassEM.HasValue)
-                        {
-                            nodelabels[1] = nodelabels[1].AppendPrePad(sc.MassEMMM, Environment.NewLine);
-                        }
-                    }
-
-                    if (ShowDist && sc.DistanceFromArrivalLS > 0)         // show distance, and not 0 (thus main star)
-                    {
-                        if (bn.IsTopLevel(bn.BodyType))
-                        {
-                            string s1 = sc.DistanceFromArrivalLS < 10 ? $"{sc.DistanceFromArrivalLS:N1}ls" : $"{sc.DistanceFromArrivalLS:N0}ls";
-
-                            if (sc.IsOrbitingBarycentre)          // if in orbit of barycentre
-                            {
-                                string s = s1;
-                                if (sc.nSemiMajorAxis.HasValue)
-                                    s += "/" + sc.SemiMajorAxisLSKM;
-                                nodelabels[1] = nodelabels[1].AppendPrePad(s, Environment.NewLine);
-                            }
-                            else
-                            {
-                                //System.Diagnostics.Debug.WriteLine(sn.ScanData.BodyName + " SMA " + sn.ScanData.nSemiMajorAxis + " " + sn.ScanData.DistanceFromArrivalm);
-                                string s2 = sc.nSemiMajorAxis.HasValue && Math.Abs(sc.nSemiMajorAxis.Value - sc.DistanceFromArrivalm) > BodyPhysicalConstants.oneAU_m ? ("/" + sc.SemiMajorAxisLSKM) : "";
-                                nodelabels[1] = nodelabels[1].AppendPrePad(s1 + s2, Environment.NewLine);
-                            }
-                        }
-                        else
-                        {
-                            if (!sc.IsOrbitingBarycentre && sc.nSemiMajorAxis.HasValue)          // if not in orbit of barycentre
-                            {
-                                nodelabels[1] = nodelabels[1].AppendPrePad($"{(sc.nSemiMajorAxis / BodyPhysicalConstants.oneLS_m):N0}ls", Environment.NewLine);
-                            }
-                        }
-                    }
-
-#if DEBUG
-                    //nodelabels[1] = nodelabels[1] + $" ID:{sc.BodyID}";
-#endif
-
-                    //nodelabels[1] = nodelabels[1].AppendPrePad(appendlabeltext, Environment.NewLine);
-
-                    //  nodelabels[1] = nodelabels[1].AppendPrePad("" + sn.ScanData?.BodyID, Environment.NewLine);
-
-                    bool valuable = sc.GetEstimatedValues().EstimatedValue(sc.WasDiscovered, sc.WasMapped, true, true, false) >= ValueLimit;
-                    bool isdiscovered = sc.IsPreviouslyDiscovered && sc.IsPlanet;
-                    int numiconoverlays = ShowOverlays ? ((sc.Terraformable ? 1 : 0) + (sc.HasMeaningfulVolcanism ? 1 : 0) +
-                                        (valuable ? 1 : 0) + (sc.Mapped ? 1 : 0) + (isdiscovered ? 1 : 0) + (sc.IsPreviouslyMapped ? 1 : 0) +
-                                        (bn.Signals != null ? 1 : 0) + (bn.Organics != null ? 1 : 0)
-                                        ) : 0;
-
-                    bool materialsicon = sc.HasMaterials && !ShowMaterials;
-
-                    int bitmapheight = size.Height * nodeheightratio / noderatiodivider;        // what height it is in units of noderatiodivider
-
-                    // work out the width multipler dependent on what we draw
-                    int imagewidthmultiplier16th = (sc.HasRingsOrBelts && !toplevelstar) ? 31 : materialsicon || sc.IsLandable ? 20 : 16;
-                    // area used by image+optional overlay for planet image
-                    int imagewidtharea = imagewidthmultiplier16th * size.Width / 16;
-
-                    // this is the minimum divider for icon area to give width of icon based on height
-                    const int minicondivider = 4;
-                    // this divider is a max of number of icons and min divider
-                    int iconsizedivider = Math.Max(numiconoverlays, minicondivider);
-                    // space between icons if wanted
-                    const int iconvspacing = 0;
-                    // get icon size, bitmap height minus iconvspacing parts / divider.. (ie. 125 with 6 icons = 125-(6-1)*1 = 120 / 6 = 20
-                    int iconsize = (bitmapheight - iconvspacing * (numiconoverlays - 1)) / iconsizedivider;
-                    // actual area width, which is only set to iconsize if we have icons
-                    int iconwidtharea = numiconoverlays > 0 ? iconsize : 0;
-
-                    //System.Diagnostics.Debug.WriteLine($"..DrawNode {sn.OwnName} imagewidtharea {imagewidtharea} iconsize {iconsize} total {imagewidtharea+iconsize}");
-
-                    // total width, of icon and image area
-                    int bitmapwidth = iconwidtharea + imagewidtharea;
-
-                    Bitmap bmp = new Bitmap(bitmapwidth, bitmapheight);
-
-                    using (Graphics g = Graphics.FromImage(bmp))
-                    {
-                        if (backwash.HasValue)
-                        {
-                            using (Brush b = new SolidBrush(backwash.Value))
-                            {
-                                g.FillRectangle(b, new Rectangle(0, 0, bitmapwidth, bitmapheight));
-                            }
-                        }
-
-                        int imageleft = iconwidtharea + imagewidtharea / 2 - size.Width / 2;  // calculate where the left of the image is 
-                        int imagetop = bitmapheight / 2 - size.Height / 2;                  // and the top
-
-                        if ((sc.WaterGiant || !sc.GasWorld) && (sc.HasAtmosphericComposition || sc.HasAtmosphere))            // show atmosphere as it is shown in game
-                        {
-                            g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Atmosphere"), imageleft, imagetop, size.Width, size.Height);
-                        }
-
-                        Bitmap nodeimage = bn.BodyType == BodyNode.BodyClass.Star ? (Bitmap)BaseUtils.Icons.IconSet.GetIcon(sc.StarTypeImageName) :
-                                           bn.BodyType == BodyNode.BodyClass.PlanetMoon ? (Bitmap)BaseUtils.Icons.IconSet.GetIcon(sc.PlanetClassImageName) :
-                                           (Bitmap)BaseUtils.Icons.IconSet.GetIcon("TBD");
-
-                        //.BodyType == BodyNode.BodyClass.BeltCluster ? (Bitmap)BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt") :
-
-                        g.DrawImage(nodeimage, imageleft, imagetop, size.Width, size.Height);
-
-                        if (sc.IsLandable)
-                        {
-                            int offset = size.Height * 4 / 16;
-                            int scale = 5;
-                            g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Landable"), new Rectangle(imageleft + size.Width / 2 - offset * scale / 2,
-                                                                                            imagetop + size.Height / 2 - offset * scale / 2, offset * scale, offset * scale));
-                        }
-
-                        if (sc.HasRingsOrBelts && !toplevelstar)
-                        {
-                            g.DrawImage(sc.Rings.Count() > 1 ? BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingGap") : BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingOnly"),
-                                            new Rectangle(imageleft - size.Width / 2, imagetop, size.Width * 2, size.Height));
-                        }
-
-                        int ss = bn.SurfaceFeatureListSettlementsCount();
-                        if (ss > 0)
-                        {
-                            using (Brush b = new SolidBrush(Color.FromArgb(255, 255, 255, 255)))
-                            {
-                                for (int i = 0; i < ss; i++)    // draw the number of settlements and pick alternately a random pos on X and top/bottom flick
-                                {
-                                    int hpos = imageleft + size.Width / 3 + random.Next(size.Width / 3);
-                                    int vpos = (i % 2 == 0 ? imagetop + size.Height / 4 : imagetop + size.Height * 5 / 8) + random.Next(size.Width / 8);
-                                    //System.Diagnostics.Debug.WriteLine($"Draw {sn.OwnName} settlement {hpos} {vpos}");
-                                    g.FillRectangle(b, new Rectangle(hpos, vpos, 2, 2));
-                                }
-                            }
-                        }
-
-                        if (numiconoverlays > 0)
-                        {
-                            int vpos = 0;
-
-                            if (sc.Terraformable)
-                            {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Terraformable"), new Rectangle(0, vpos, iconsize, iconsize));
-                                vpos += iconsize + iconvspacing;
-                            }
-
-                            if (sc.HasMeaningfulVolcanism) //this renders below the terraformable icon if present
-                            {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Volcanism"), new Rectangle(0, vpos, iconsize, iconsize));
-                                vpos += iconsize + iconvspacing;
-                            }
-
-                            if (valuable)
-                            {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.HighValue"), new Rectangle(0, vpos, iconsize, iconsize));
-                                vpos += iconsize + iconvspacing;
-                            }
-
-                            if (sc.Mapped)
-                            {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Mapped"), new Rectangle(0, vpos, iconsize, iconsize));
-                                vpos += iconsize + iconvspacing;
-                            }
-
-                            if (sc.IsPreviouslyMapped)
-                            {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.MappedByOthers"), new Rectangle(0, vpos, iconsize, iconsize));
-                                vpos += iconsize + iconvspacing;
-                            }
-
-                            if (isdiscovered)
-                            {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.DiscoveredByOthers"), new Rectangle(0, vpos, iconsize, iconsize));
-                                vpos += iconsize + iconvspacing;
-                            }
-
-                            if (bn.Signals != null)
-                            {
-                                string image = "Controls.Scan.Bodies.Signals";
-                                bool containsgeo = JournalSAASignalsFound.ContainsGeo(bn.Signals);
-                                if (JournalSAASignalsFound.ContainsBio(bn.Signals))
-                                    image = containsgeo ? "Controls.Scan.Bodies.SignalsGeoBio" : "Controls.Scan.Bodies.SignalsBio";
-                                else if (containsgeo)
-                                    image = "Controls.Scan.Bodies.SignalsGeo";
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon(image), new Rectangle(0, vpos, iconsize, iconsize));
-                                vpos += iconsize + iconvspacing;
-                            }
-
-                            if (bn.Organics != null)
-                            {
-                                string imagename = bn.CountBioSignals == bn.CountOrganicsScansAnalysed ? "Journal.ScanOrganic" : "Controls.OrganicIncomplete";
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon(imagename), new Rectangle(0, vpos, iconsize, iconsize));
-                                vpos += iconsize + iconvspacing;
-                            }
-                        }
-
-                        if (materialsicon)
-                        {
-                            Image mm = BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.MaterialMore");
-                            g.DrawImage(mm, new Rectangle(bmp.Width - mm.Width, bmp.Height - mm.Height, mm.Width, mm.Height));
-                        }
-
-                        if (overlaytext.HasChars())
-                        {
-                            float ii;
-                            if (imageintensities.ContainsKey(nodeimage))        // find cache
-                            {
-                                ii = imageintensities[nodeimage];
-                                //System.Diagnostics.Debug.WriteLine("Cached Image intensity of " + sn.fullname + " " + ii);
-                            }
-                            else
-                            {
-                                var imageintensity = nodeimage.Function(BitMapHelpers.BitmapFunction.Brightness, nodeimage.Width * 3 / 8, nodeimage.Height * 3 / 8, nodeimage.Width * 2 / 8, nodeimage.Height * 2 / 8);
-                                ii = imageintensity.Item2;
-                                imageintensities[nodeimage] = ii;
-                                //System.Diagnostics.Debug.WriteLine("Calculated Image intensity of " + sn.fullname + " " + ii);
-                            }
-
-                            Color text = ii > 0.3f ? Color.Black : Color.FromArgb(255, 200, 200, 200);
-
-                            using (Font f = new Font(Font.Name, size.Width / 5.0f))
-                            {
-                                using (Brush b = new SolidBrush(text))
-                                {
-                                    g.DrawString(overlaytext, f, b, new Rectangle(iconwidtharea, 0, bitmapwidth - iconwidtharea, bitmapheight), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
-                                }
-                            }
-                        }
-                    }
-
-                    // need left middle, if xiscentre, translate to it
-                    Point postoplot = xiscentre ? new Point(position.X - imagewidtharea / 2 - iconwidtharea, position.Y) : position;
-
-                    //if (drawtype == DrawLevel.NoText)
-                    //  nodelabels = null;
-
-                    //System.Diagnostics.Debug.WriteLine("Body " + sc.BodyName + " plot at "  + postoplot + " " + bmp.Size + " " + (postoplot.X+imageleft) + "," + (postoplot.Y-bmp.Height/2+imagetop));
-                    endpoint = CreateImageAndLabel(pc, bmp, postoplot, bmp.Size, shiftrightifneeded, out imagepos, nodelabels, sc.DisplayString(historicmats, curmats), rightclickmenubody);
-
-                    int xshift = imagepos.X - postoplot.X;          // we may have shifted right if shiftrightifneeded is on, need to take account in imagexcentre
-
-                    imagexcentre = (xiscentre ? position.X : postoplot.X + iconwidtharea + imagewidtharea / 2) + xshift;  // where the x centre of the planet is
-
-                    //System.Diagnostics.Debug.WriteLine($"Draw {nodelabels[0]} at leftmid {postoplot}  out pos {imagepos} centre {imagexcentre}");
-
-                    if (sc.HasMaterials && ShowMaterials)
-                    {
-                        Point matpos = new Point(endpoint.X + 4, position.Y);
-                        Point endmat = CreateMaterialNodes(pc, sc, historicmats, curmats, matpos, materialsize, rightclickmenumats);
-                        endpoint = new Point(Math.Max(endpoint.X, endmat.X), Math.Max(endpoint.Y, endmat.Y)); // record new right point..
                     }
                 }
                 else
+                {                                                   // Make node information for planets
+                    if (ShowPlanetClasses)
+                        overlaytext = Planets.PlanetAbv(sc.PlanetTypeID);
+
+                    if ((sc.IsLandable || ShowAllG) && sc.nSurfaceGravity != null)
+                    {
+                        nodelabels[1] = nodelabels[1].AppendPrePad($"{(sc.nSurfaceGravity / BodyPhysicalConstants.oneGee_m_s2):N2}g", Environment.NewLine);
+                    }
+
+                    if (ShowPlanetMass && sc.nMassEM.HasValue)
+                    {
+                        nodelabels[1] = nodelabels[1].AppendPrePad(sc.MassEMMM, Environment.NewLine);
+                    }
+                }
+
+                if (ShowDist && sc.DistanceFromArrivalLS > 0)         // show distance, and not 0 (thus main star)
                 {
-                    // NOT SCANNED
-                    var tooltip = new System.Text.StringBuilder(256);
-
-                    tooltip.AppendLine(presentationname);
-                    tooltip.AppendLine("No scan data available".Tx());
-                    tooltip.AppendCR();
-
-                    string addtext = "";
-
-                    if (bn.SurfaceFeatures != null)
+                    if (bn.IsTopLevel(bn.BodyType))
                     {
-                        tooltip.AppendFormat("Surface features".Tx());
-                        tooltip.Append(":");
-                        SurfaceFeatureList(tooltip, bn.SurfaceFeatures, 4, false, Environment.NewLine);
-                        tooltip.AppendCR();
+                        string s1 = sc.DistanceFromArrivalLS < 10 ? $"{sc.DistanceFromArrivalLS:N1}ls" : $"{sc.DistanceFromArrivalLS:N0}ls";
+
+                        if (sc.IsOrbitingBarycentre)          // if in orbit of barycentre
+                        {
+                            string s = s1;
+                            if (sc.nSemiMajorAxis.HasValue)
+                                s += "/" + sc.SemiMajorAxisLSKM;
+                            nodelabels[1] = nodelabels[1].AppendPrePad(s, Environment.NewLine);
+                        }
+                        else
+                        {
+                            //System.Diagnostics.Debug.WriteLine(sn.ScanData.BodyName + " SMA " + sn.ScanData.nSemiMajorAxis + " " + sn.ScanData.DistanceFromArrivalm);
+                            string s2 = sc.nSemiMajorAxis.HasValue && Math.Abs(sc.nSemiMajorAxis.Value - sc.DistanceFromArrivalm) > BodyPhysicalConstants.oneAU_m ? ("/" + sc.SemiMajorAxisLSKM) : "";
+                            nodelabels[1] = nodelabels[1].AppendPrePad(s1 + s2, Environment.NewLine);
+                        }
                     }
-                    if (bn.Signals != null)
+                    else
                     {
-                        tooltip.AppendFormat("Signals".Tx());
-                        tooltip.Append(":");
-                        JournalSAASignalsFound.SignalList(tooltip, bn.Signals, 4, false, false, Environment.NewLine);
-                        tooltip.AppendCR();
+                        if (!sc.IsOrbitingBarycentre && sc.nSemiMajorAxis.HasValue)          // if not in orbit of barycentre
+                        {
+                            nodelabels[1] = nodelabels[1].AppendPrePad($"{(sc.nSemiMajorAxis / BodyPhysicalConstants.oneLS_m):N0}ls", Environment.NewLine);
+                        }
                     }
-                    if (bn.Genuses != null)
+                }
+
+#if DEBUG
+                //nodelabels[1] = nodelabels[1] + $" ID:{sc.BodyID}";
+#endif
+
+                bool valuable = sc.GetEstimatedValues().EstimatedValue(sc.WasDiscovered, sc.WasMapped, true, true, false) >= ValueLimit;
+                bool isdiscovered = sc.IsPreviouslyDiscovered && sc.IsPlanet;
+                int numiconoverlays = ShowOverlays ? ((sc.Terraformable ? 1 : 0) + (sc.HasMeaningfulVolcanism ? 1 : 0) +
+                                    (valuable ? 1 : 0) + (sc.Mapped ? 1 : 0) + (isdiscovered ? 1 : 0) + (sc.IsPreviouslyMapped ? 1 : 0) +
+                                    (bn.Signals != null ? 1 : 0) + (bn.Organics != null ? 1 : 0)
+                                    ) : 0;
+
+                bool materialsicon = sc.HasMaterials && !ShowMaterials;
+
+                int bitmapheight = size.Height * nodeheightratio / noderatiodivider;        // what height it is in units of noderatiodivider
+
+                // work out the width multipler dependent on what we draw
+                int imagewidthmultiplier16th = (sc.HasRingsOrBelts && !toplevelstar) ? 31 : materialsicon || sc.IsLandable ? 20 : 16;
+                // area used by image+optional overlay for planet image
+                int imagewidtharea = imagewidthmultiplier16th * size.Width / 16;
+
+                // this is the minimum divider for icon area to give width of icon based on height
+                const int minicondivider = 4;
+                // this divider is a max of number of icons and min divider
+                int iconsizedivider = Math.Max(numiconoverlays, minicondivider);
+                // space between icons if wanted
+                const int iconvspacing = 0;
+                // get icon size, bitmap height minus iconvspacing parts / divider.. (ie. 125 with 6 icons = 125-(6-1)*1 = 120 / 6 = 20
+                int iconsize = (bitmapheight - iconvspacing * (numiconoverlays - 1)) / iconsizedivider;
+                // actual area width, which is only set to iconsize if we have icons
+                int iconwidtharea = numiconoverlays > 0 ? iconsize : 0;
+
+                //System.Diagnostics.Debug.WriteLine($"..DrawNode {sn.OwnName} imagewidtharea {imagewidtharea} iconsize {iconsize} total {imagewidtharea+iconsize}");
+
+                // total width, of icon and image area
+                int bitmapwidth = iconwidtharea + imagewidtharea;
+
+                Bitmap bmp = new Bitmap(bitmapwidth, bitmapheight);
+
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    if (backwash.HasValue)
                     {
-                        tooltip.AppendFormat("Genuses".Tx());
-                        tooltip.Append(":");
-                        JournalSAASignalsFound.GenusList(tooltip, bn.Genuses, 4, false, false, Environment.NewLine);
-                        tooltip.AppendCR();
+                        using (Brush b = new SolidBrush(backwash.Value))
+                        {
+                            g.FillRectangle(b, new Rectangle(0, 0, bitmapwidth, bitmapheight));
+                        }
                     }
-                    if (bn.Organics != null)
+
+                    int imageleft = iconwidtharea + imagewidtharea / 2 - size.Width / 2;  // calculate where the left of the image is 
+                    int imagetop = bitmapheight / 2 - size.Height / 2;                  // and the top
+
+                    if ((sc.WaterGiant || !sc.GasWorld) && (sc.HasAtmosphericComposition || sc.HasAtmosphere))            // show atmosphere as it is shown in game
                     {
-                        tooltip.AppendFormat("Organics".Tx());
-                        tooltip.Append(":");
-                        JournalScanOrganic.OrganicList(tooltip, bn.Organics, 4, false, Environment.NewLine);
-                        tooltip.AppendCR();
-
+                        g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Atmosphere"), imageleft, imagetop, size.Width, size.Height);
                     }
 
-                    tooltip.Append(addtext);
-                    tooltip.AppendCR();
+                    Image nodeimage = sc.IsStar ? BaseUtils.Icons.IconSet.GetIcon(sc.StarTypeImageName) :
+                                        sc.IsPlanet ? BaseUtils.Icons.IconSet.GetIcon(sc.PlanetClassImageName) :
+                                        BodyDefinitions.GetStarImageNotScanned();
 
-                    var nodelabels = new string[] { presentationname };
+                    //.BodyType == BodyNode.BodyClass.BeltCluster ? (Bitmap)BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt") :
 
-                    //if (drawtype == DrawLevel.NoText)
-                    //  nodelabels = null;
+                    g.DrawImage(nodeimage, imageleft, imagetop, size.Width, size.Height);
 
-                    Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
+                    if (sc.IsLandable)
+                    {
+                        int offset = size.Height * 4 / 16;
+                        int scale = 5;
+                        g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Landable"), new Rectangle(imageleft + size.Width / 2 - offset * scale / 2,
+                                                                                        imagetop + size.Height / 2 - offset * scale / 2, offset * scale, offset * scale));
+                    }
 
-                    endpoint = CreateImageAndLabel(pc, (Bitmap)BodyDefinitions.GetStarImageNotScanned(), postoplot, size, shiftrightifneeded, out imagepos, nodelabels, tooltip.ToString(), rightclickmenubody, false, backwash);
+                    if (sc.HasRingsOrBelts && !toplevelstar)
+                    {
+                        g.DrawImage(sc.Rings.Count() > 1 ? BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingGap") : BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingOnly"),
+                                        new Rectangle(imageleft - size.Width / 2, imagetop, size.Width * 2, size.Height));
+                    }
 
-                    imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the not scanned thing is
+                    int ss = bn.SurfaceFeatureListSettlementsCount();
+                    if (ss > 0)
+                    {
+                        using (Brush b = new SolidBrush(Color.FromArgb(255, 255, 255, 255)))
+                        {
+                            for (int i = 0; i < ss; i++)    // draw the number of settlements and pick alternately a random pos on X and top/bottom flick
+                            {
+                                int hpos = imageleft + size.Width / 3 + random.Next(size.Width / 3);
+                                int vpos = (i % 2 == 0 ? imagetop + size.Height / 4 : imagetop + size.Height * 5 / 8) + random.Next(size.Width / 8);
+                                //System.Diagnostics.Debug.WriteLine($"Draw {sn.OwnName} settlement {hpos} {vpos}");
+                                g.FillRectangle(b, new Rectangle(hpos, vpos, 2, 2));
+                            }
+                        }
+                    }
+
+                    if (numiconoverlays > 0)
+                    {
+                        int vpos = 0;
+
+                        if (sc.Terraformable)
+                        {
+                            g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Terraformable"), new Rectangle(0, vpos, iconsize, iconsize));
+                            vpos += iconsize + iconvspacing;
+                        }
+
+                        if (sc.HasMeaningfulVolcanism) //this renders below the terraformable icon if present
+                        {
+                            g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Volcanism"), new Rectangle(0, vpos, iconsize, iconsize));
+                            vpos += iconsize + iconvspacing;
+                        }
+
+                        if (valuable)
+                        {
+                            g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.HighValue"), new Rectangle(0, vpos, iconsize, iconsize));
+                            vpos += iconsize + iconvspacing;
+                        }
+
+                        if (sc.Mapped)
+                        {
+                            g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Mapped"), new Rectangle(0, vpos, iconsize, iconsize));
+                            vpos += iconsize + iconvspacing;
+                        }
+
+                        if (sc.IsPreviouslyMapped)
+                        {
+                            g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.MappedByOthers"), new Rectangle(0, vpos, iconsize, iconsize));
+                            vpos += iconsize + iconvspacing;
+                        }
+
+                        if (isdiscovered)
+                        {
+                            g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.DiscoveredByOthers"), new Rectangle(0, vpos, iconsize, iconsize));
+                            vpos += iconsize + iconvspacing;
+                        }
+
+                        if (bn.Signals != null)
+                        {
+                            string image = "Controls.Scan.Bodies.Signals";
+                            bool containsgeo = JournalSAASignalsFound.ContainsGeo(bn.Signals);
+                            if (JournalSAASignalsFound.ContainsBio(bn.Signals))
+                                image = containsgeo ? "Controls.Scan.Bodies.SignalsGeoBio" : "Controls.Scan.Bodies.SignalsBio";
+                            else if (containsgeo)
+                                image = "Controls.Scan.Bodies.SignalsGeo";
+                            g.DrawImage(BaseUtils.Icons.IconSet.GetIcon(image), new Rectangle(0, vpos, iconsize, iconsize));
+                            vpos += iconsize + iconvspacing;
+                        }
+
+                        if (bn.Organics != null)
+                        {
+                            string imagename = bn.CountBioSignals == bn.CountOrganicsScansAnalysed ? "Journal.ScanOrganic" : "Controls.OrganicIncomplete";
+                            g.DrawImage(BaseUtils.Icons.IconSet.GetIcon(imagename), new Rectangle(0, vpos, iconsize, iconsize));
+                            vpos += iconsize + iconvspacing;
+                        }
+                    }
+
+                    if (materialsicon)
+                    {
+                        Image mm = BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.MaterialMore");
+                        g.DrawImage(mm, new Rectangle(bmp.Width - mm.Width, bmp.Height - mm.Height, mm.Width, mm.Height));
+                    }
+
+                    if (overlaytext.HasChars())
+                    {
+                        float ii;
+                        if (imageintensities.ContainsKey(nodeimage))        // find cache
+                        {
+                            ii = imageintensities[nodeimage];
+                            //System.Diagnostics.Debug.WriteLine("Cached Image intensity of " + sn.fullname + " " + ii);
+                        }
+                        else
+                        {
+                            var imageintensity =((Bitmap)nodeimage).Function(BitMapHelpers.BitmapFunction.Brightness, nodeimage.Width * 3 / 8, nodeimage.Height * 3 / 8, nodeimage.Width * 2 / 8, nodeimage.Height * 2 / 8);
+                            ii = imageintensity.Item2;
+                            imageintensities[nodeimage] = ii;
+                            //System.Diagnostics.Debug.WriteLine("Calculated Image intensity of " + sn.fullname + " " + ii);
+                        }
+
+                        Color text = ii > 0.3f ? Color.Black : Color.FromArgb(255, 200, 200, 200);
+
+                        using (Font f = new Font(Font.Name, size.Width / 5.0f))
+                        {
+                            using (Brush b = new SolidBrush(text))
+                            {
+                                g.DrawString(overlaytext, f, b, new Rectangle(iconwidtharea, 0, bitmapwidth - iconwidtharea, bitmapheight), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+                            }
+                        }
+                    }
+                }
+
+                // need left middle, if xiscentre, translate to it
+                Point postoplot = xiscentre ? new Point(position.X - imagewidtharea / 2 - iconwidtharea, position.Y) : position;
+
+                if (notext)
+                    nodelabels = null;
+
+                //System.Diagnostics.Debug.WriteLine("Body " + sc.BodyName + " plot at "  + postoplot + " " + bmp.Size + " " + (postoplot.X+imageleft) + "," + (postoplot.Y-bmp.Height/2+imagetop));
+                endpoint = CreateImageAndLabel(pc, bmp, postoplot, bmp.Size, shiftrightifneeded, out imagepos, nodelabels, sc.DisplayText(historicmats, curmats), rightclickmenubody);
+
+                int xshift = imagepos.X - postoplot.X;          // we may have shifted right if shiftrightifneeded is on, need to take account in imagexcentre
+
+                imagexcentre = (xiscentre ? position.X : postoplot.X + iconwidtharea + imagewidtharea / 2) + xshift;  // where the x centre of the planet is
+
+                //System.Diagnostics.Debug.WriteLine($"Draw {nodelabels[0]} at leftmid {postoplot}  out pos {imagepos} centre {imagexcentre}");
+
+                if (sc.HasMaterials && ShowMaterials)
+                {
+                    Point matpos = new Point(endpoint.X + 4, position.Y);
+                    Point endmat = CreateMaterialNodes(pc, sc, historicmats, curmats, matpos, materialsize, rightclickmenumats);
+                    endpoint = new Point(Math.Max(endpoint.X, endmat.X), Math.Max(endpoint.Y, endmat.Y)); // record new right point..
                 }
             }
             else if (bn.BodyType == BodyNode.BodyClass.Barycentre)
@@ -423,11 +369,14 @@ namespace EliteDangerousCore.StarScan2
 
                 String tooltip = string.Format("Barycentre of {0}".Tx(), presentationname);
 
+                if (notext)
+                    nodelabels = null;
+
                 endpoint = CreateImageAndLabel(pc, BodyDefinitions.GetBarycentreImage(), postoplot, size, shiftrightifneeded, out imagepos, nodelabels, tooltip, rightclickmenubody, false, backwash);
 
                 imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the not scanned thing is
             }
-            else if (bn.BodyType == BodyNode.BodyClass.BeltCluster)// || bn.BodyType == BodyNode.BodyClass.StellarBelts)
+            else if (bn.BodyType == BodyNode.BodyClass.BeltCluster)
             {
                 var tooltip = new System.Text.StringBuilder(256);
 
@@ -441,7 +390,7 @@ namespace EliteDangerousCore.StarScan2
                 {
                     if (snc.Scan != null)
                     {
-                        snc.Scan.DisplaySummary(tooltip);
+                        snc.Scan.DisplayText(tooltip);
                         tooltip.AppendCR();
                     }
                 }
@@ -452,8 +401,9 @@ namespace EliteDangerousCore.StarScan2
 
                 string sma = bn.BeltData?.SemiMajorAxisLSKM ?? "";
                 var nodelabels = new string[] { presentationname.AppendPrePad(sma, Environment.NewLine) };
-                //if (drawtype == DrawLevel.NoText)
-                //  nodelabels = null;
+
+                if (notext)
+                    nodelabels = null;
 
                 endpoint = CreateImageAndLabel(pc, BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt"), postoplot, bmpsize, shiftrightifneeded, out imagepos, nodelabels,
                                     tooltip.ToString(), rightclickmenubody, false, backwash);
@@ -462,44 +412,83 @@ namespace EliteDangerousCore.StarScan2
             }
             else if (bn.BodyType == BodyNode.BodyClass.BeltClusterBody)
             {
+                var tooltip = new System.Text.StringBuilder(256);
+                bn.Scan?.DisplayText(tooltip);
+
                 var nodelabels = new string[] { presentationname};
+                if (notext)
+                    nodelabels = null;
 
                 Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
-                Size bmpsize = new Size(size.Width/2, size.Height/2);
+                Size bmpsize = new Size(size.Width / 2, size.Height / 2);
 
                 endpoint = CreateImageAndLabel(pc, BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.SizeLarge"), postoplot, bmpsize, shiftrightifneeded, out imagepos, nodelabels,
-                                    "", rightclickmenubody, false, backwash);
+                                    tooltip.ToString(), rightclickmenubody, false, backwash);
 
                 imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the belt is
             }
-            else
+            else    // no scan, not one of the ones above, therefore unknown
             {
-                System.Diagnostics.Debug.Assert(false, "Can't display");
+                // NOT SCANNED
+                var tooltip = new System.Text.StringBuilder(256);
+
+                tooltip.AppendLine(presentationname);
+                tooltip.AppendLine("No scan data available".Tx());
+                tooltip.AppendCR();
+
+                string addtext = "";
+
+                if (bn.Features != null)
+                {
+                    tooltip.AppendFormat("Surface features".Tx());
+                    tooltip.Append(":");
+                    JournalScan.DisplaySurfaceFeatures(tooltip, bn.Features, 4, false, Environment.NewLine);
+                    tooltip.AppendCR();
+                }
+                if (bn.Signals != null)
+                {
+                    tooltip.AppendFormat("Signals".Tx());
+                    tooltip.Append(":");
+                    JournalSAASignalsFound.SignalList(tooltip, bn.Signals, 4, false, false, Environment.NewLine);
+                    tooltip.AppendCR();
+                }
+                if (bn.Genuses != null)
+                {
+                    tooltip.AppendFormat("Genuses".Tx());
+                    tooltip.Append(":");
+                    JournalSAASignalsFound.GenusList(tooltip, bn.Genuses, 4, false, false, Environment.NewLine);
+                    tooltip.AppendCR();
+                }
+                if (bn.Organics != null)
+                {
+                    tooltip.AppendFormat("Organics".Tx());
+                    tooltip.Append(":");
+                    JournalScanOrganic.OrganicList(tooltip, bn.Organics, 4, false, Environment.NewLine);
+                    tooltip.AppendCR();
+
+                }
+
+                tooltip.Append(addtext);
+                tooltip.AppendCR();
+
+                var nodelabels = new string[] { presentationname };
+
+                Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
+
+                if (notext)
+                    nodelabels = null;
+
+                endpoint = CreateImageAndLabel(pc, BodyDefinitions.GetStarImageNotScanned(), postoplot, size, shiftrightifneeded, out imagepos, nodelabels, tooltip.ToString(), rightclickmenubody, false, backwash);
+
+                imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the not scanned thing is
             }
 
             return endpoint;
         }
 
 
-        static public void SurfaceFeatureList(System.Text.StringBuilder sb, List<IBodyFeature> list, int indent, bool indentfirst, string separ = ", ")        // default is environment.newline
-        {
-            string inds = new string(' ', indent);
-
-            int index = 0;
-            foreach (var ibf in list)
-            {
-                //System.Diagnostics.Debug.WriteLine($"{s.ScanType} {s.Genus_Localised} {s.Species_Localised}");
-                if (indent > 0 && (index > 0 || indentfirst))       // if indent, and its either not first or allowed to indent first
-                    sb.Append(inds);
-
-                sb.Append($"{EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(ibf.EventTimeUTC)} : {ibf.Name_Localised ?? ibf.Name} {ibf.Latitude:0.####}, {ibf.Longitude:0.####}");
-
-                if (index++ < list.Count - 1)     // if another to go, separ
-                    sb.Append(separ);
-            }
-        }
-
-        private Dictionary<Bitmap, float> imageintensities = new Dictionary<Bitmap, float>();       // cached
+  
+        private Dictionary<Image, float> imageintensities = new Dictionary<Image, float>();       // cached
     }
 
 }

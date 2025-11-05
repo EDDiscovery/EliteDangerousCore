@@ -58,10 +58,6 @@ namespace EliteDangerousCore.JournalEvents
         public int NonBodyCount { get; set; }
         public string SystemName { get; set; }      // not always present, may be null
         public long? SystemAddress { get; set; }
-        public void AddStarScan(StarScan s, ISystem system)
-        {
-            s.SetFSSDiscoveryScan(BodyCount, NonBodyCount, system);
-        }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             s.SetFSSDiscoveryScan(BodyCount, NonBodyCount, system);
@@ -131,10 +127,6 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Count of other signals")]
         public int CountOtherSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Other).Count() ?? 0; } }
 
-        public void AddStarScan(StarScan s, ISystem system)
-        {
-            s.AddFSSSignalsDiscoveredToSystem(this);
-        }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             s.AddFSSSignalsDiscovered(this);
@@ -273,11 +265,9 @@ namespace EliteDangerousCore.JournalEvents
         public int EfficiencyTarget { get; set; }
         public long? SystemAddress { get; set; }    // 3.5
 
-        public void AddStarScan(StarScan s, ISystem system)     // no action in this class, historylist.cs does the adding itself instead of using this. 
-        {                                                       // Class interface is marked so you know its part of the gang
-        }
-        public void AddStarScan(StarScan2.StarScan s, ISystem system)     // no action in this class, historylist.cs does the adding itself instead of using this. 
-        {                                                       // Class interface is marked so you know its part of the gang
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)     
+        {
+            s.AddSAAScan(this, system);
         }
 
         public override string SummaryName(ISystem sys)
@@ -363,8 +353,6 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Body => BodyName;
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Signals;
-        public string BodyDesignation { get { return BodyName; } set { BodyName = value; } }
-
         public string StarSystem => throw new NotImplementedException();
 
         [System.Diagnostics.DebuggerDisplay("{Type} {Count}")]
@@ -508,10 +496,6 @@ namespace EliteDangerousCore.JournalEvents
             return showit && contains > 0 ? (object)contains : "";
         }
 
-        public void AddStarScan(StarScan s, ISystem system)
-        {
-            s.AddSAASignalsFoundToBestSystem(this, system);
-        }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             s.AddSAASignals(this, system);
@@ -626,14 +610,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Body => BodyName;
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Signals;
-        public string BodyDesignation { get { return BodyName; } set { BodyName = value; } }
-
         public string StarSystem => "Unknown";
 
-        public void AddStarScan(StarScan s, ISystem system)
-        {
-            s.AddFSSBodySignalsToSystem(this, system);
-        }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             s.AddFSSBodySignalsToSystem(this, system);
@@ -717,11 +695,6 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Estimated or potential value cr")]
         public int Value { get { return EstimatedValue.HasValue ? EstimatedValue.Value : PotentialEstimatedValue.HasValue ? PotentialEstimatedValue.Value : 0; } }
 
-        public void AddStarScan(StarScan s, ISystem system)
-        {
-            //System.Diagnostics.Debug.WriteLine($"Add ScanOrganic {ScanType} {Genus_Localised} {Species_Localised}");
-            s.AddScanOrganicToSystem(this, system);
-        }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             //System.Diagnostics.Debug.WriteLine($"Add ScanOrganic {ScanType} {Genus_Localised} {Species_Localised}");

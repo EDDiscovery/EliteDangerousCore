@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2019-2023 EDDiscovery development team
+ * Copyright 2025-2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -19,7 +19,6 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using static EliteDangerousCore.StarScan;
 
 namespace EliteDangerousCore.StarScan2
 {
@@ -58,7 +57,7 @@ namespace EliteDangerousCore.StarScan2
                                List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats, string[] filter,
                                 Random rnd, ContextMenuStrip rightclickplanet, ContextMenuStrip rightclickmats)
         {
-            List<BodyNode> bodiestodisplay = parent.ChildBodies.Where(s => s.BodyType == BodyNode.BodyClass.PlanetMoon || s.BodyType == BodyNode.BodyClass.Star || s.BodyType == BodyNode.BodyClass.Barycentre || s.BodyType == BodyNode.BodyClass.BeltClusterBody).ToList();
+            List<BodyNode> bodiestodisplay = parent.ChildBodies.Where(s=> s.BodyType != BodyNode.BodyClass.PlanetaryRing).ToList();
 
             if (bodiestodisplay.Count > 0 && ShowMoons)
             {
@@ -66,38 +65,38 @@ namespace EliteDangerousCore.StarScan2
                 {
                     BodyNode moonnode = bodiestodisplay[mn];
 
-                    if (filter != null && moonnode.IsBodyTypeInFilter(filter, true) == false)       // if filter active, but no body or children in filter
-                        continue;
-
-                    bool nonwebscans = moonnode.DoesNodeHaveNonWebScansBelow();                     // is there any scans here, either at this node or below?
-
-                    if (nonwebscans || ShowWebBodies)
+                    if (filter == null || moonnode.IsBodyTypeInFilter(filter, true) == true)       // if filter active, and active or children active in filter
                     {
-                        // draw moon controlled by caller for positioning.
-                        // the first moon under a planet will be xcentre=true rightshift=false
-                        // the second moon will be xcentre=true rightshift=false
-                        // the first submoon under a moon will be xcentre=false, rightshift=true
-                        // the second submoon under a moon will be xcentre=true, rightshift=false
-                        // its all very complicated and took Robby a while to remember!
+                        bool nonwebscans = moonnode.DoesNodeHaveNonWebScansBelow();                // is there any scans here, either at this node or below?
 
-                        Point mmax = DrawNode(pc, moonnode, historicmats, curmats,  pos, xiscentre, shiftrightifreq, out Rectangle moonimagepos, out int mooncentrex, moonsize, rnd, rightclickplanet, rightclickmats);
-
-                        maxtreepos = new Point(Math.Max(maxtreepos.X, mmax.X), Math.Max(maxtreepos.Y, mmax.Y));
-
-                        Point submoonpos = new Point(mmax.X + moonspacerx, pos.Y);      // left/middle, same level
-                        // we draw the submoon tree with centrex off but allowing shift right to account for label
-                        maxtreepos = DrawTree(pc, moonnode, submoonpos, false, true, maxtreepos, historicmats, curmats, filter, rnd, rightclickplanet, rightclickmats);
-
-                        // now, if xiscentre is on, we just move down, if its off, we use the output mooncentrex and turn xiscentre on and shiftright off
-                        if (xiscentre)
+                        if (nonwebscans || ShowWebBodies)
                         {
-                            pos = new Point(pos.X, maxtreepos.Y + moonspacery + moonsize.Height / 2);
-                        }
-                        else
-                        {
-                            pos = new Point(mooncentrex, maxtreepos.Y + moonspacery + moonsize.Height / 2);
-                            xiscentre = true;       // now go to centre placing
-                            shiftrightifreq = false;
+                            // draw moon controlled by caller for positioning.
+                            // the first moon under a planet will be xcentre=true rightshift=false
+                            // the second moon will be xcentre=true rightshift=false
+                            // the first submoon under a moon will be xcentre=false, rightshift=true
+                            // the second submoon under a moon will be xcentre=true, rightshift=false
+                            // its all very complicated and took Robby a while to remember!
+
+                            Point mmax = DrawNode(pc, moonnode, historicmats, curmats, pos, xiscentre, shiftrightifreq, out Rectangle moonimagepos, out int mooncentrex, moonsize, rnd, rightclickplanet, rightclickmats);
+
+                            maxtreepos = new Point(Math.Max(maxtreepos.X, mmax.X), Math.Max(maxtreepos.Y, mmax.Y));
+
+                            Point submoonpos = new Point(mmax.X + moonspacerx, pos.Y);      // left/middle, same level
+                            // we draw the submoon tree with centrex off but allowing shift right to account for label
+                            maxtreepos = DrawTree(pc, moonnode, submoonpos, false, true, maxtreepos, historicmats, curmats, filter, rnd, rightclickplanet, rightclickmats);
+
+                            // now, if xiscentre is on, we just move down, if its off, we use the output mooncentrex and turn xiscentre on and shiftright off
+                            if (xiscentre)
+                            {
+                                pos = new Point(pos.X, maxtreepos.Y + moonspacery + moonsize.Height / 2);
+                            }
+                            else
+                            {
+                                pos = new Point(mooncentrex, maxtreepos.Y + moonspacery + moonsize.Height / 2);
+                                xiscentre = true;       // now go to centre placing
+                                shiftrightifreq = false;
+                            }
                         }
                     }
                 }

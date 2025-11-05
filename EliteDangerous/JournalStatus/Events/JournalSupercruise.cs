@@ -14,6 +14,7 @@
  *
  */
 using EliteDangerousCore.DB;
+using EliteDangerousCore.StarScan2;
 using QuickJSON;
 using System;
 using System.Linq;
@@ -55,7 +56,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.SupercruiseExit)]
-    public class JournalSupercruiseExit : JournalEntry, IBodyNameAndID
+    public class JournalSupercruiseExit : JournalEntry, IBodyNameAndID, IStarScan
     {
         public JournalSupercruiseExit(JObject evt) : base(evt, JournalTypeEnum.SupercruiseExit)
         {
@@ -73,11 +74,15 @@ namespace EliteDangerousCore.JournalEvents
         public string Body { get; set; }
         public int? BodyID { get; set; }
         public BodyDefinitions.BodyType BodyType { get; set; }
-        public string BodyDesignation { get; set; }
 
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }
         public JournalSupercruiseDestinationDrop DestinationDrop { get; set; }       // update 15 associated destination drop. 
+
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            s.AddBody(this, system);
+        }
 
         public override string GetInfo()
         {
@@ -92,6 +97,8 @@ namespace EliteDangerousCore.JournalEvents
             info += BaseUtils.FieldBuilder.Build("",Body, "< in ".Tx(), StarSystem, "Type".Tx()+": ", BodyType);
             return info;
         }
+
+
     }
 
     [JournalEntryType(JournalTypeEnum.SupercruiseDestinationDrop)]

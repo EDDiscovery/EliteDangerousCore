@@ -1116,7 +1116,6 @@ namespace EliteDangerousCore.JournalEvents
         public string Body { get; set; }
         public int? BodyID { get; set; }
         public BodyDefinitions.BodyType BodyType { get; set; }
-        public string BodyDesignation { get; set; }
         public double? DistFromStarLS { get; set; }
 
         public long? MarketID { get; set; }
@@ -1132,10 +1131,6 @@ namespace EliteDangerousCore.JournalEvents
                 return string.Format("Jumped with carrier {0} to {1}".Tx(), StationName, Body);
             else
                 return string.Format("Carrier jumped to {0}".Tx(), Body);
-        }
-        public void AddStarScan(StarScan s, ISystem system)
-        {
-            s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {

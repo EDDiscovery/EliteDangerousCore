@@ -25,22 +25,18 @@ namespace EliteDangerousCore.JournalEvents
 {
     // JSON export thru ZMQ/DLLs/Web
 
-    [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} {BodyDesignation} s{IsStar} p{IsPlanet}")]
+    [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} s{IsStar} p{IsPlanet}")]
     [JournalEntryType(JournalTypeEnum.Scan)]
     public partial class JournalScan : JournalEntry, IStarScan, IBodyNameAndID
     {
         [PropertyNameAttribute("Is it a star")]
         public bool IsStar { get { return StarType != null; } }
-        [PropertyNameAttribute("Is it a belt or cluster")]
-        public bool IsBeltCluster { get { return StarType == null && PlanetClass == null; } }
+        [PropertyNameAttribute("Is it a belt cluster body")]
+        public bool IsBeltClusterBody { get { return StarType == null && PlanetClass == null && BodyName.Contains("Belt Cluster "); } }
+        [PropertyNameAttribute("Is it a planetary ring")]
+        public bool IsPlanetaryRing { get { return StarType == null && PlanetClass == null && BodyName.EndWithIIC(" Ring"); } }
         [PropertyNameAttribute("Is it a planet")]
         public bool IsPlanet { get { return PlanetClass != null; } }
-
-        [PropertyNameAttribute("EDD logical name for well known bodies, such as Sol 3 (Earth)")]
-        public string BodyDesignation { get; set; }
-
-        [PropertyNameAttribute("EDD logical name or journal name")]
-        public string BodyDesignationOrName { get { return BodyDesignation ?? BodyName; } }
 
         ////////////////////////////////////////////////////////////////////// ALL
 
@@ -108,9 +104,9 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Orbiting a barycentre")]
         public bool IsOrbitingBarycentre { get { return Parents?.FirstOrDefault()?.Type == BodyParent.BodyType.Null; } }
         [PropertyNameAttribute("Orbiting a planet")]
-        public bool IsOrbitingPlanet { get { return Parents?.FirstOrDefault()?.Type == BodyParent.BodyType.Planet; } }
+        public bool IsOrbitingPlanet { get { return BodyParent.IsOrbiting(Parents, BodyParent.BodyType.Planet); } }
         [PropertyNameAttribute("Orbiting a star")]
-        public bool IsOrbitingStar { get { return Parents?.FirstOrDefault()?.Type == BodyParent.BodyType.Star; } }
+        public bool IsOrbitingStar { get { return BodyParent.IsOrbiting(Parents, BodyParent.BodyType.Star); ; } }
 
         [PropertyNameAttribute("No Parents or All Parents are barycentres")]
         public bool IsAllParentsBarycentre { get { return Parents == null || Parents.Count(x => x.IsBarycentre) == Parents.Count; } }
@@ -743,25 +739,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetDetailed()
         {
-            return DisplayString(includefront: true);
-        }
-
-        public string ShortInformation()
-        {
-            if (IsStar)
-            {
-
-                return BaseUtils.FieldBuilder.Build("Mass: ;SM;0.00".Tx(), nStellarMass,
-                                                "Age: ;my;0.0".Tx(), nAge,
-                                                "Radius".Tx()+": ", RadiusText,
-                                                "Dist".Tx()+": ", DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
-            }
-            else
-            {
-                return BaseUtils.FieldBuilder.Build("Mass".Tx()+": ", MassEMMM,
-                                                 "Radius".Tx()+": ", RadiusText,
-                                                 "Dist".Tx()+": ", DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
-            }
+            return DisplayText(includefront: true);
         }
 
         // this structure is reflected by JournalFilterSelector to allow a journal class to add extra filter items to the journal filter lists. Its in use!
@@ -775,9 +753,6 @@ namespace EliteDangerousCore.JournalEvents
             };
         }
 
-        public void AddStarScan(StarScan s, ISystem system)     // no action in this class, historylist.cs does the adding itself instead of using this. 
-        {                                                       // Class interface is marked so you know its part of the gang
-        }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)     
         {
             s.AddScan(this, system); 

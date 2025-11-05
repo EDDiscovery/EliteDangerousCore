@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 - 2023 EDDiscovery development team
+ * Copyright 2016 - 2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    [DebuggerDisplay("Event {journalEntry.EventTypeID} {System.Name} ({System.X,nq},{System.Y,nq},{System.Z,nq}) {journalEntry.EventTimeUTC} Inx:{Index} JID:{journalEntry.Id}")]
+    [System.Diagnostics.DebuggerDisplay("Event {journalEntry.EventTypeID} {System.Name} ({System.X,nq},{System.Y,nq},{System.Z,nq}) {journalEntry.EventTimeUTC} Inx:{Index} JID:{journalEntry.Id}")]
     public class HistoryEntry           // DONT store commander ID.. this history is externally filtered on it.
     {
         #region Public Variables
@@ -111,7 +111,7 @@ namespace EliteDangerousCore
         public uint Engineering { get; private set; }       // generation index
 
         [QuickJSON.JsonIgnore()]
-        public StarScan.ScanNode ScanNode { get; set; } // only for journal scan, and only after you called FillScanNode in history list.
+        public StarScan2.BodyNode BodyNode { get; set; }    // only for journal scan, and only after you called FillScanNode in history list.
 
         #endregion
 
@@ -316,5 +316,36 @@ namespace EliteDangerousCore
         }
 
         #endregion
+
+        #region Debug
+        static public List<Tuple<int,HistoryEntry>> CreateFromFile(string filename)
+        {
+            string[] textfile = BaseUtils.FileHelpers.TryReadAllLinesFromFile(filename);
+
+            if (textfile != null)
+            {
+                List<Tuple<int,HistoryEntry>> helist = new List<Tuple<int, HistoryEntry>> ();
+                HistoryEntry last = null;
+
+                for( int linenom1 = 0; linenom1 < textfile.Length; linenom1++ ) 
+                {
+                    string  line = textfile[linenom1];
+                    if (line.HasChars() && !line.StartsWith("//"))
+                    {
+                        JournalEntry entry = JournalEntry.CreateJournalEntry(line);
+                        HistoryEntry he1 = HistoryEntry.FromJournalEntry(entry, last, null);
+                        helist.Add(new Tuple<int,HistoryEntry>(linenom1+1,he1));
+                        last = he1;
+                    }
+                }
+
+                return helist;
+            }
+
+            return null;
+        }
+
+        #endregion
+
     }
 }

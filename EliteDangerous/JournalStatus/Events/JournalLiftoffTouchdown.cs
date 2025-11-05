@@ -13,6 +13,7 @@
  *
  *
  */
+using EliteDangerousCore.StarScan2;
 using QuickJSON;
 using System.Linq;
 
@@ -59,7 +60,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.Touchdown)]
-    public class JournalTouchdown : JournalEntry, IBodyFeature, IIdentifiers
+    public class JournalTouchdown : JournalEntry, IBodyFeature, IIdentifiers, IStarScan
     {
         public JournalTouchdown(JObject evt) : base(evt, JournalTypeEnum.Touchdown)
         {
@@ -94,7 +95,11 @@ namespace EliteDangerousCore.JournalEvents
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
         public string Name { get { return "Touchdown".Tx(); } }
         public string Name_Localised { get { return "Touchdown".Tx(); } }
-        public string BodyDesignation { get; set; }
+
+        public void AddStarScan(StarScan s, ISystem system)
+        {
+            s.AddTouchdown(this, system);
+        }
 
         public override string GetInfo()
         {

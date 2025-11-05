@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016 - 2024 EDDiscovery development team
+ * Copyright 2016 - 2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -16,21 +16,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static BaseUtils.TypeHelpers;
 
 namespace EliteDangerousCore.JournalEvents
 {
-    public partial class JournalScan 
+    public partial class JournalScan
     {
-        public string DisplayString(List<MaterialCommodityMicroResource> historicmatlist = null,
+        public string DisplayText(List<MaterialCommodityMicroResource> historicmatlist = null,
                                                         List<MaterialCommodityMicroResource> currentmatlist = null,
                                                         bool includefront = true)
         {
             var sb = new StringBuilder(1024);
-            DisplaySummary(sb, historicmatlist, currentmatlist, includefront);
+            DisplayText(sb, historicmatlist, currentmatlist, includefront);
             return sb.ToString();
         }
 
-        public void DisplaySummary(StringBuilder sb, List<MaterialCommodityMicroResource> historicmatlist = null,
+        public void DisplayText(StringBuilder sb, List<MaterialCommodityMicroResource> historicmatlist = null,
                                                         List<MaterialCommodityMicroResource> currentmatlist = null,
                                                         bool includefront = true)
         {
@@ -84,7 +85,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (nMassEM.HasValue)
                 {
-                    sb.Append("Mass".Tx()+": ");
+                    sb.Append("Mass".Tx() + ": ");
                     sb.AppendSPC();
                     sb.Append(MassEMMM);
                     sb.AppendCR();
@@ -92,7 +93,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (nRadius.HasValue)
                 {
-                    sb.AppendFormat("Radius".Tx()+": ");
+                    sb.AppendFormat("Radius".Tx() + ": ");
                     sb.AppendSPC();
                     sb.Append(RadiusText);
                     sb.AppendCR();
@@ -111,7 +112,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (HasPlanetaryComposition)
                 {
-                    DisplayComposition(sb,4);
+                    DisplayComposition(sb, 4);
                 }
             }
 
@@ -165,9 +166,9 @@ namespace EliteDangerousCore.JournalEvents
             if (nEccentricity.HasValue)
             {
                 if (nEccentricity < 0.9)
-                    sb.AppendFormat("Orbital Eccentricity".Tx()+": "+ "{0:0.000}", nEccentricity.Value);
-                else 
-                    sb.AppendFormat("Orbital Eccentricity".Tx()+": "+ "{0:0.000000}", nEccentricity.Value);
+                    sb.AppendFormat("Orbital Eccentricity".Tx() + ": " + "{0:0.000}", nEccentricity.Value);
+                else
+                    sb.AppendFormat("Orbital Eccentricity".Tx() + ": " + "{0:0.000000}", nEccentricity.Value);
                 sb.AppendCR();
             }
 
@@ -223,9 +224,9 @@ namespace EliteDangerousCore.JournalEvents
             if (HasRingsOrBelts)
             {
                 if (HasRings)
-                    sb.AppendFormat(Rings.Count() == 1 ? "Ring".Tx(): "Rings".Tx(), ""); // OLD translator files had "Rings{0}" so supply an empty string just in case
+                    sb.AppendFormat(Rings.Count() == 1 ? "Ring".Tx() : "Rings".Tx(), ""); // OLD translator files had "Rings{0}" so supply an empty string just in case
                 else
-                    sb.AppendFormat(Rings.Count() == 1 ? "Belt".Tx(): "Belts".Tx(), ""); // OLD translator files had "Belt{0}" so supply an empty string just in case
+                    sb.AppendFormat(Rings.Count() == 1 ? "Belt".Tx() : "Belts".Tx(), ""); // OLD translator files had "Belt{0}" so supply an empty string just in case
 
                 sb.Append(": ");
 
@@ -240,7 +241,9 @@ namespace EliteDangerousCore.JournalEvents
 
             if (IsStar)
             {
-                HabZoneText(sb, true);
+                HabZones hz = GetHabZones();
+                if ( hz != null)
+                    hz.HabZoneText(sb, true);
             }
 
             if (Mapped)
@@ -256,50 +259,50 @@ namespace EliteDangerousCore.JournalEvents
 
             ScanEstimatedValues ev = GetEstimatedValues();
 
-            sb.AppendFormat("Current value: {0:N0}".Tx()+ "", ev.EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsWebSourced));
+            sb.AppendFormat("Current value: {0:N0}".Tx() + "", ev.EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsWebSourced));
             sb.AppendCR();
 
             if (ev.EstimatedValueFirstDiscoveredFirstMapped > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
             {
-                string msg = "First Discovered+Mapped value: {0:N0}/{1:N0}e".Tx()+ "";
+                string msg = "First Discovered+Mapped value: {0:N0}/{1:N0}e".Tx() + "";
                 sb.AppendFormat(msg, ev.EstimatedValueFirstDiscoveredFirstMapped, ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently);
                 sb.AppendCR();
             }
 
             if (ev.EstimatedValueFirstMapped > 0 && (!WasMapped.HasValue || !WasMapped.Value))    // if was not mapped
             {
-                sb.AppendFormat("First Mapped value: {0:N0}/{1:N0}e".Tx()+ "", ev.EstimatedValueFirstMapped, ev.EstimatedValueFirstMappedEfficiently);
+                sb.AppendFormat("First Mapped value: {0:N0}/{1:N0}e".Tx() + "", ev.EstimatedValueFirstMapped, ev.EstimatedValueFirstMappedEfficiently);
                 sb.AppendCR();
             }
 
             if (ev.EstimatedValueFirstDiscovered > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
             {
-                sb.AppendFormat("First Discovered value: {0:N0}".Tx()+ "", ev.EstimatedValueFirstDiscovered);
+                sb.AppendFormat("First Discovered value: {0:N0}".Tx() + "", ev.EstimatedValueFirstDiscovered);
                 sb.AppendCR();
             }
 
             if (ev.EstimatedValueFirstDiscovered > 0) // if we have extra details, on planets, show the base value
             {
-                sb.AppendFormat("Mapped value: {0:N0}/{1:N0}e".Tx()+ "", ev.EstimatedValueMapped, ev.EstimatedValueMappedEfficiently);
+                sb.AppendFormat("Mapped value: {0:N0}/{1:N0}e".Tx() + "", ev.EstimatedValueMapped, ev.EstimatedValueMappedEfficiently);
                 sb.AppendCR();
-                sb.AppendFormat("Base Estimated value: {0:N0}".Tx()+ "", ev.EstimatedValueBase);
+                sb.AppendFormat("Base Estimated value: {0:N0}".Tx() + "", ev.EstimatedValueBase);
                 sb.AppendCR();
             }
 
             if (WasDiscovered.HasValue && WasDiscovered.Value)
             {
-                sb.AppendFormat("Already Discovered".Tx()+ "");
+                sb.AppendFormat("Already Discovered".Tx() + "");
                 sb.AppendCR();
             }
             if (WasMapped.HasValue && WasMapped.Value)
             {
-                sb.AppendFormat("Already Mapped".Tx()+ "");
+                sb.AppendFormat("Already Mapped".Tx() + "");
                 sb.AppendCR();
             }
 
             if (EDSMDiscoveryCommander != null)
             {
-                sb.AppendFormat("Discovered by {0} on {1}".Tx()+ "", EDSMDiscoveryCommander, EDSMDiscoveryUTC.ToStringZulu());
+                sb.AppendFormat("Discovered by {0} on {1}".Tx() + "", EDSMDiscoveryCommander, EDSMDiscoveryUTC.ToStringZulu());
                 sb.AppendCR();
             }
 
@@ -307,7 +310,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 sb.Append("Surface features".Tx());
                 sb.Append(": ");
-                StarScan.SurfaceFeatureList(sb, SurfaceFeatures, 4, false, Environment.NewLine);
+                DisplaySurfaceFeatures(sb, SurfaceFeatures, 4, false, Environment.NewLine);
                 sb.AppendCR();
             }
             if (Signals != null)
@@ -338,29 +341,266 @@ namespace EliteDangerousCore.JournalEvents
                 sb.AppendCR();
             }
 
-            // TBD
-            //if ( Parents!=null && Parents.Count > 0 && Parents[0].Barycentre != null)      // dec 22 bug here on edsm data received a empty parent array- be more defensive
-            //{ 
-            //    JournalScanBaryCentre barycentrejs = Parents[0].Barycentre;
-            //    sb.AppendLine("Barycentre: " + barycentrejs.BodyID.ToString());
-            //    sb.AppendLine("  " + barycentrejs.GetInfo());            // verified it exists
-            //    sb.AppendLine("  " + barycentrejs.GetDetailed());        // verified it exists
-            //}
+            sb.AppendLine($"Body ID {BodyID} : {ParentList()}");
+        }
 
+        public string SurveyorInfoLine(ISystem sys,
+                               bool hasminingsignals, bool hasgeosignals, bool hasbiosignals, bool hasthargoidsignals, bool hasguardiansignals, bool hashumansignals, bool hasothersignals,
+                               bool hasscanorganics,
+                               bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showTemp, bool showRings,
+                               int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
+        {
+            JournalScan js = this;
 
-#if DEBUG
-            if ( Parents != null)
+            var information = new StringBuilder();
+
+            string bodyname = js.BodyName.ReplaceIfStartsWith(sys.Name);
+
+            // Name
+            information.Append(bodyname);
+
+            // symbols
+            if (js.Mapped)  // let the cmdr see that this body is already mapped
+                information.Append(" \u24C2");
+
+            if (js.CountOrganicsScansAnalysed > 0) // if scanned
             {
-                sb.AppendLine($"Body ID {BodyID}");
-                foreach (var x in Parents)
-                    sb.AppendLine($"Parent {x.BodyID} {x.Type}");
+                if (js.CountOrganicsScansAnalysed == js.CountBioSignals)   // and show organic scan situation - fully with a tick
+                    information.Append(" \u232C\u2713");
+                else
+                    information.Append(" \u232C");  // partial
             }
 
-#endif
+            information.Append(" is a ".Tx());
 
-            //scanText.AppendFormat("BID+Parents: {0} - {1}", BodyID ?? -1, ParentList());
+            // Additional information
+            information.Append((js.IsStar) ? Stars.StarName(js.StarTypeID) + "." : null);
+            information.Append((js.CanBeTerraformable) ? @"terraformable ".Tx() : null);
+            information.Append((js.IsPlanet) ? Planets.PlanetNameTranslated(js.PlanetTypeID) + "." : null);
+            information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? @" Is tiny ".Tx() + "(" + RadiusText + ")." : null);
+            information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? @" Is large ".Tx() + "(" + RadiusText + ")." : null);
+            information.Append((js.IsLandable) ? @" Is landable.".Tx() : null);
+            information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? @" (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)" : null);
+            information.Append((js.HasAtmosphere && showAtmos) ? @" Atmosphere".Tx() + ": " + js.AtmosphereTranslated : null);
+            information.Append((js.IsLandable && js.nSurfaceTemperature.HasValue && showTemp) ? (string.Format(" Surface temperature: {0} K.".Tx(), Math.Round(js.nSurfaceTemperature.Value, 1, MidpointRounding.AwayFromZero))) : null);
+            information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? @" Has ".Tx() + js.VolcanismTranslated + "." : null);
+            information.Append((hasminingsignals) ? " Has mining signals.".Tx() : null);
+            information.Append((hasgeosignals) ? (string.Format(" Geological signals: {0}.".Tx(), js.CountGeoSignals)) : null);
+            information.Append((hasbiosignals) ? (string.Format(" Biological signals: {0}.".Tx(), js.CountBioSignals)) : null);
+            information.Append((hasthargoidsignals) ? (string.Format(" Thargoid signals: {0}.".Tx(), js.CountThargoidSignals)) : null);
+            information.Append((hasguardiansignals) ? (string.Format(" Guardian signals: {0}.".Tx(), js.CountGuardianSignals)) : null);
+            information.Append((hashumansignals) ? (string.Format(" Human signals: {0}.".Tx(), js.CountHumanSignals)) : null);
+            information.Append((hasothersignals) ? (string.Format(" 'Other' signals: {0}.".Tx(), js.CountOtherSignals)) : null);
+            information.Append((js.HasRingsOrBelts && showRings) ? @" Is ringed.".Tx() : null);
+            information.Append((js.nEccentricity >= eccentricityLimit) ? (string.Format(@" Has an high eccentricity of {0}.".Tx(), js.nEccentricity)) : null);
+            information.Append(hasscanorganics ? " Has been scanned for organics.".Tx() : null);
+
+            var ev = js.GetEstimatedValues();
+
+            if (js.WasMapped == true && js.WasDiscovered == true)
+            {
+                information.Append(" (Mapped & Discovered)".Tx());
+                if (showvalues)
+                {
+                    information.Append(' ').Append(ev.EstimatedValueMappedEfficiently.ToString("N0")).Append(" cr");
+                }
+            }
+            else if (js.WasMapped == true && js.WasDiscovered == false)
+            {
+                information.Append(" (Mapped)".Tx());
+                if (showvalues)
+                {
+                    information.Append(' ').Append(ev.EstimatedValueFirstMappedEfficiently.ToString("N0")).Append(" cr");
+                }
+            }
+            else if (js.WasDiscovered == true && js.WasMapped == false)
+            {
+                information.Append(" (Discovered)".Tx());
+                if (showvalues)
+                {
+                    information.Append(' ').Append((ev.EstimatedValueFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
+                }
+            }
+            else if (js.WasDiscovered == false && js.IsStar)
+            {
+                if (showvalues)
+                {
+                    information.Append(' ').Append((ev.EstimatedValueFirstDiscovered > 0 ? ev.EstimatedValueFirstDiscovered : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
+                }
+            }
+            else
+            {
+                if (showvalues)
+                {
+                    information.Append(' ').Append((ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
+                }
+            }
+
+            if (shortinfo)
+            {
+                information.Append(' ').Append(js.DisplayShortInformation());
+            }
+            else
+                information.Append(' ').Append(js.DistanceFromArrivalText);
+
+            return information.ToString();
+        }
+
+        public string DisplayShortInformation()
+        {
+            if (IsStar)
+            {
+                return BaseUtils.FieldBuilder.Build("Mass: ;SM;0.00".Tx(), nStellarMass,
+                                                "Age: ;my;0.0".Tx(), nAge,
+                                                "Radius".Tx() + ": ", RadiusText,
+                                                "Dist".Tx() + ": ", DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
+            }
+            else
+            {
+                return BaseUtils.FieldBuilder.Build("Mass".Tx() + ": ", MassEMMM,
+                                                 "Radius".Tx() + ": ", RadiusText,
+                                                 "Dist".Tx() + ": ", DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
+            }
+        }
+
+
+
+        // show material counts at the historic point and current.  Has trailing LF if text present.
+        public void DisplayMaterials(StringBuilder sb, int indent = 0, List<MaterialCommodityMicroResource> historicmatlist = null, List<MaterialCommodityMicroResource> currentmatlist = null)
+        {
+            if (HasMaterials)
+            {
+                string indents = new string(' ', indent);
+
+                sb.Append("Materials".Tx() + ": ");
+                sb.AppendSPC();
+
+                int index = 0;
+                foreach (KeyValuePair<string, double> mat in Materials)
+                {
+                    if (index++ > 0)
+                        sb.Append(indents);
+                    DisplayMaterial(sb, mat.Key, mat.Value, historicmatlist, currentmatlist);
+                }
+            }
+        }
+        // has trailing LF
+        public void DisplayMaterial(StringBuilder sb, string fdname, double percent, List<MaterialCommodityMicroResource> historicmatlist = null,
+                                                                      List<MaterialCommodityMicroResource> currentmatlist = null)
+        {
+            MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
+
+            if (mc != null && (historicmatlist != null || currentmatlist != null))
+            {
+                MaterialCommodityMicroResource historic = historicmatlist?.Find(x => x.Details == mc);
+                MaterialCommodityMicroResource current = ReferenceEquals(historicmatlist, currentmatlist) ? null : currentmatlist?.Find(x => x.Details == mc);
+                int? limit = mc.MaterialLimitOrNull();
+
+                string matinfo = historic?.Count.ToString() ?? "0";
+                if (limit != null)
+                    matinfo += "/" + limit.Value.ToString();
+
+                if (current != null && (historic == null || historic.Count != current.Count))
+                    matinfo += " Cur " + current.Count.ToString();
+
+                sb.AppendFormat("{0}: ({1}) {2} {3}% {4}", mc.TranslatedName, mc.Shortname, mc.TranslatedType, percent.ToString("N1"), matinfo);
+            }
+            else
+                sb.AppendFormat("{0}: {1}%", System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(fdname.ToLowerInvariant()),
+                                                            percent.ToString("N1"));
+            sb.AppendCR();
+        }
+
+        private void DisplayAtmosphere(StringBuilder sb, int indent = 0)     // has trailing LF
+        {
+            string indents = new string(' ', indent);
+
+            sb.Append("Atmospheric Composition".Tx() + ": ");
+            sb.AppendSPC();
+            int index = 0;
+            foreach (KeyValuePair<string, double> comp in AtmosphereComposition)
+            {
+                if (index++ > 0)
+                    sb.Append(indents);
+
+                sb.AppendFormat("{0}: {1}%", comp.Key, comp.Value.ToString("N2"));
+                sb.AppendCR();
+            }
+        }
+
+        private void DisplayComposition(StringBuilder sb, int indent = 0)   // has trailing LF
+        {
+            string indents = new string(' ', indent);
+
+            sb.Append("Planetary Composition".Tx() + ": ");
+            sb.AppendSPC();
+            int index = 0;
+            foreach (KeyValuePair<string, double> comp in PlanetComposition)
+            {
+                if (comp.Value > 0)
+                {
+                    if (index++ > 0)
+                        sb.Append(indents);
+                    sb.AppendFormat("{0}: {1}%", comp.Key, comp.Value.ToString("N2"));
+                    sb.AppendCR();
+                }
+            }
+        }
+
+        static public void DisplaySurfaceFeatures(System.Text.StringBuilder sb, List<IBodyFeature> list, int indent, bool indentfirst, string separ = ", ")        // default is environment.newline
+        {
+            string inds = new string(' ', indent);
+
+            int index = 0;
+            foreach (var ibf in list)
+            {
+                //System.Diagnostics.Debug.WriteLine($"{s.ScanType} {s.Genus_Localised} {s.Species_Localised}");
+                if (indent > 0 && (index > 0 || indentfirst))       // if indent, and its either not first or allowed to indent first
+                    sb.Append(inds);
+
+                sb.Append($"{EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(ibf.EventTimeUTC)} : {ibf.Name_Localised ?? ibf.Name} {ibf.Latitude:0.####}, {ibf.Longitude:0.####}");
+
+                if (index++ < list.Count - 1)     // if another to go, separ
+                    sb.Append(separ);
+            }
+        }
+
+        [PropertyNameAttribute(null)] // cancel
+        public string StarTypeImageName                      // property so its gets outputted via JSON
+        {
+            get
+            {
+                if (!IsStar)
+                {
+                    return $"Bodies.Unknown";
+                }
+
+                return BodyDefinitions.StarTypeImageName(StarTypeID, nStellarMass, nSurfaceTemperature);
+            }
+        }
+
+        [PropertyNameAttribute(null)]       // cancel
+        public string PlanetClassImageName       // property so its gets outputted via JSON
+        {
+            get
+            {
+                if (!IsPlanet)
+                {
+                    return $"Bodies.Unknown";
+                }
+
+                return BodyDefinitions.PlanetClassImageName(PlanetTypeID, nSurfaceTemperature, AtmosphereComposition, AtmosphereProperty, AtmosphereID,
+                                                         Terraformable, nLandable, nMassEM, nTidalLock);
+            }
+        }
+
+        public System.Drawing.Image GetImage()
+        {
+            return IsStar ? BaseUtils.Icons.IconSet.GetIcon(StarTypeImageName) :
+                   IsPlanet ? BaseUtils.Icons.IconSet.GetIcon(PlanetClassImageName) :
+                   IsBeltClusterBody ? BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.SizeLarge") :
+                   BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingOnly");
         }
     }
 }
-
 

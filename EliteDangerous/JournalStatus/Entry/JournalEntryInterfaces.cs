@@ -45,17 +45,15 @@ namespace EliteDangerousCore
 
     public interface IStarScan
     {
-        void AddStarScan(StarScan s, ISystem system);
         void AddStarScan(StarScan2.StarScan s, ISystem system);
     }
 
     public interface IBodyNameAndID     // events containing body information
     {
         DateTime EventTimeUTC { get; }
-        string Body { get; }
+        string Body { get; }                // Body name its on
         BodyDefinitions.BodyType BodyType { get; }       
         int? BodyID { get; }
-        string BodyDesignation { get; set; }    // such as Sol 3 for BodyName = Earth, or null if not unique
         string StarSystem { get; }
         long? SystemAddress { get; }
     }
@@ -65,7 +63,7 @@ namespace EliteDangerousCore
         double? Latitude { get; set; }
         double? Longitude { get; set; }
         bool HasLatLong { get; }
-        string Name { get; }
+        string Name { get; }                // name of installation/feature on body
         string Name_Localised { get; }
     }
 

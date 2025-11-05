@@ -158,7 +158,8 @@ namespace EliteDangerousCore
 
         static public JournalTypeEnum[] NeverReadFromDBEvents = new JournalTypeEnum[]
         {
-            JournalTypeEnum.Music, JournalTypeEnum.UnderAttack, JournalTypeEnum.FSDTarget, JournalTypeEnum.NavRouteClear, 
+            JournalTypeEnum.Music, JournalTypeEnum.UnderAttack, 
+            JournalTypeEnum.NavRouteClear, 
         };
 
         // These are discarded from history during reading database
@@ -169,7 +170,10 @@ namespace EliteDangerousCore
         {
             if (!EliteConfigInstance.InstanceOptions.DisableJournalRemoval)
             {
-                if ((je.EventTypeID == JournalTypeEnum.ShipTargeted && ((JournalShipTargeted)je).TargetLocked == false) )      // Shiptargeted knock out lost target ones
+                if (je.EventTypeID == JournalTypeEnum.FSDTarget)
+                    return true;
+
+                else if ((je.EventTypeID == JournalTypeEnum.ShipTargeted && ((JournalShipTargeted)je).TargetLocked == false) )      // Shiptargeted knock out lost target ones
                 {
                     return true;
                 }

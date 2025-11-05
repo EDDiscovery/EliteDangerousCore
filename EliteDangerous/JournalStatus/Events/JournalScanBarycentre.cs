@@ -70,10 +70,6 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Degrees")]
         public double MeanAnomaly { get; private set; }
 
-        public void AddStarScan(StarScan s, ISystem system)
-        {
-            s.AddBarycentre(this, system);
-        }
 
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
