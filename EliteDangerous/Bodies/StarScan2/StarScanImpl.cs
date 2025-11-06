@@ -12,8 +12,10 @@
  * governing permissions and limitations under the License.
  */
 
+using BaseUtils;
 using EliteDangerousCore.JournalEvents;
 using EliteDangerousCore.UIEvents;
+using System;
 using System.Collections.Generic;
 
 namespace EliteDangerousCore.StarScan2
@@ -66,7 +68,7 @@ namespace EliteDangerousCore.StarScan2
         }
 
         // called when we have a body in this system
-        public bool AddBody(IBodyNameAndID sc, ISystem sys)
+        public void AddBody(IBodyNameAndID sc, ISystem sys)
         {
             // we need this info to proceed.
 
@@ -80,37 +82,36 @@ namespace EliteDangerousCore.StarScan2
 
                 //global::System.Diagnostics.Debug.WriteLine($"Add Body {body.EventTimeUTC} bid:{body.BodyID} type:{body.BodyType} `{body.Body}` -> `{ownname}` in `{sys.Name}` {sys.SystemAddress}");
 
-                if (sc.BodyType == BodyDefinitions.BodyType.Station)
+                if (sc.BodyType == BodyDefinitions.BodyType.Station ||          // Supercruise Exit/Location
+                    sc.BodyType == BodyDefinitions.BodyType.PlanetaryRing ||    // Supercruise Exit/Location
+                    sc.BodyType == BodyDefinitions.BodyType.Barycentre          // Supercruise Exit/Location
+                    )        
                 {
-                    //tbd
+                  //  $"Add Body {sc.EventTypeStr} {sc.EventTimeUTC} : {sc.BodyType} `{sc.Body}` {sc.BodyID} ".DO();
+                    AddPending(sys.SystemAddress.Value, sc as JournalEntry);
                 }
-                else if (sc.BodyType == BodyDefinitions.BodyType.Planet)
+                else if (sc.BodyType == BodyDefinitions.BodyType.Planet ||      // ApproachBody/Leave Body/SupercruiseExit/Location
+                            sc.BodyType == BodyDefinitions.BodyType.Settlement || // ApproachSettlement via AddApproachSettlement
+                            sc.BodyType == BodyDefinitions.BodyType.Signals     // SAASignalsFound via AddSAASignals
+                            )
                 {
+                    //$"Add Body {sc.EventTypeStr} {sc.EventTimeUTC} : {sc.BodyType} `{sc.Body}` {sc.BodyID} ".DO();
                     lock (sn)
                     {
                         sn.GetOrMakeDiscreteBody(ownname, sc.BodyID.Value, sys.Name);
-                        return true;
                     }
                 }
-                else if (sc.BodyType == BodyDefinitions.BodyType.Star)
+                else if (sc.BodyType == BodyDefinitions.BodyType.Star)          // SupercruiseExit/Location
                 {
+                    //$"Add Body {sc.EventTypeStr} {sc.EventTimeUTC} : {sc.BodyType} `{sc.Body}` {sc.BodyID} ".DO();
                     lock (sn)
                     {
                         sn.GetOrMakeDiscreteStar(sc.Body, sc.BodyID, sys.Name);
-                        return true;
                     }
-                }
-                else if (sc.BodyType == BodyDefinitions.BodyType.PlanetaryRing)
-                {
-                    //  System.Diagnostics.Debug.WriteLine($"Add Planet Ring {body.EventTimeUTC} bid:{body.BodyID} type:{body.BodyType} `{body.Body}` {body.SystemAddress}");
-                }
-                else if (sc.BodyType == BodyDefinitions.BodyType.Barycentre)
-                {
-                    //System.Diagnostics.Debug.WriteLine($"Add Barycentre {body.EventTimeUTC} bid:{body.BodyID} type:{body.BodyType} `{body.Body}` {body.SystemAddress}");
                 }
                 else
                 {
-                    System.Diagnostics.Debug.Assert(true);
+                    System.Diagnostics.Debug.Assert(false);
                 }
             }
             else
@@ -118,20 +119,7 @@ namespace EliteDangerousCore.StarScan2
                 //System.Diagnostics.Debug.WriteLine($"Add NO SYS ADDR or mismatch {body.EventTimeUTC} bid:{body.BodyID} type:{body.BodyType} `{body.Body}` {body.SystemAddress} {sys.SystemAddress}");
 
             }
-
-            return false;
         }
-
-        // called when we have a new UI destination.
-        // not sure how to handle this, as we don't know if its a new location or body, and we don't get lat/long etc.
-        public void NewUIDestination(UIDestination ui)
-        {
-            if (ui.SystemAddress.HasValue && ui.BodyID.HasValue && TryGetSystem(ui.SystemAddress.Value, out SystemNode sn))
-            {
-                System.Diagnostics.Debug.WriteLine($"StarScan We could add {ui.SystemAddress.Value} : {ui.BodyID} {ui.Name}");
-            }
-        }
-
 
         // Add a scan
         // Three sorts of scan 1) Modern (sysaddr,bodyid,parents) 2) Older (bodyid,parents) and 3) Ancient (nothing)
@@ -240,20 +228,6 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        public void AddSAASignals(JournalSAASignalsFound sc, ISystem sys)
-        {
-            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
-            {
-                SystemNode sn = GetOrAddSystem(sys);
-                System.Diagnostics.Debug.Assert(sn != null);
-                lock (sn)
-                {
-                    if (sn.AddSAASignalsToSystem(sc) == null) // can't assign, store in pending
-                        AddPending(sys.SystemAddress.Value, sc);
-                }
-            }
-        }
-
         public void SetFSSDiscoveryScan(int? bodycount, int? nonbodycount, ISystem sys)
         {
             if (sys.SystemAddress != null )     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
@@ -302,21 +276,6 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-
-        public void AddApproachSettlement(JournalApproachSettlement sc, ISystem sys)
-        {
-            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress && sc.BodyID != null)     // if we have basic info. First ones did not have body ID
-            {
-                SystemNode sn = GetOrAddSystem(sys);
-                System.Diagnostics.Debug.Assert(sn != null);
-                lock (sn)
-                {
-                    if (sn.AddSurfaceFeatureToBody(sc) == null) // can't assign, store in pending
-                        AddPending(sys.SystemAddress.Value, sc);
-                }
-            }
-        }
-
         public void AddTouchdown(JournalTouchdown sc, ISystem sys)
         {
             if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress && sc.BodyID != null)     // if we have basic info. First ones did not have body ID
@@ -331,21 +290,68 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
+        // we get this for a body
+        public void AddApproachSettlement(JournalApproachSettlement sc, ISystem sys)
+        {
+            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress && sc.BodyID != null)     // if we have basic info. First ones did not have body ID
+            {
+                SystemNode sn = GetOrAddSystem(sys);
+                System.Diagnostics.Debug.Assert(sn != null);
 
-        public void AddSAAScan(JournalSAAScanComplete sc, ISystem sys)
+                AddBody(sc, sys);            // we can add a body 
+
+                lock (sn)
+                {
+                    if (sn.AddSurfaceFeatureToBody(sc) == null) // can't assign, store in pending
+                        AddPending(sys.SystemAddress.Value, sc);
+                }
+            }
+        }
+
+        // we can get this for a body HIP 17403 A 4 a, or a ring Borann A 2 B Ring
+        // SAASignalsFound always had bodyid and system
+        public void AddSAASignalsFound(JournalSAASignalsFound sc, ISystem sys)
+        {
+            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have filled in basic info
+            {
+                SystemNode sn = GetOrAddSystem(sys);
+                System.Diagnostics.Debug.Assert(sn != null);
+
+                if (!StarScan2.SystemNode.IsRingName(sc.BodyName))              // we can't add Rings, since we don't know the parent body ID and we don't have a cracker if its a std name
+                {
+                    AddBody(sc, sys);            // we can add a body
+                }
+
+                lock (sn)
+                {
+                    if (sn.AddSAASignalsFound(sc) == null) // can't assign, store in pending
+                        AddPending(sys.SystemAddress.Value, sc);
+                }
+            }
+        }
+
+        // we can get this for a body HIP 17403 A 4 a, or a ring Borann A 2 B Ring
+        public void AddSAAScanComplete(JournalSAAScanComplete sc, ISystem sys)
         {
             if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress )     // if we have basic info. 
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
+
+                if (!StarScan2.SystemNode.IsRingName(sc.BodyName))      // we can't add Rings, since we don't know the parent body ID and we don't have a cracker if its a std name
+                {
+                    AddBody(sc, sys);            // we can add a body
+                }
+
                 lock (sn)
                 {
-                    if (sn.AddSAAScanToBody(sc) == null) // can't assign, store in pending
+                    if (sn.AddSAAScanComplete(sc) == null) // can't assign, store in pending
                         AddPending(sys.SystemAddress.Value, sc);
                 }
             }
         }
         
+        // Add Docking, for a settlement we have augmented the information with BodyID/Body
         public void AddDocking(JournalDocked sc, ISystem sys)
         {
             if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress )     // if we have basic info. 
@@ -360,9 +366,18 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
+        public void AddDestinationSelected(JournalEDDDestinationSelected sc, ISystem sys)
+        {
+            if (sys.SystemAddress != null )
+            {
+                System.Diagnostics.Debug.WriteLine($"StarScan got call to add EDD Destination Selected {sc.TargetName_Localised ?? sc.TargetName}");
+            }
+        }
+
+
         #endregion
 
-  
+
         #region Helpers
 
         // Given a pending, reissue. SN is locked
@@ -390,7 +405,7 @@ namespace EliteDangerousCore.StarScan2
                 }
                 else if (je is JournalSAASignalsFound saa)
                 {
-                    if (sn.AddSAASignalsToSystem(saa) != null)
+                    if (sn.AddSAASignalsFound(saa) != null)
                         todelete.Add(je);
                 }
                 else if (je is JournalFSSSignalDiscovered sd)
@@ -410,10 +425,20 @@ namespace EliteDangerousCore.StarScan2
                 }
                 else if (je is JournalSAAScanComplete saasc)
                 {
-                    if (sn.AddSAAScanToBody(saasc) != null)
+                    if (sn.AddSAAScanComplete(saasc) != null)
                         todelete.Add(je);
                 }
-                else
+                else if (je is JournalSupercruiseExit)
+                {
+                    if (sn.AddLocation(je as IBodyFeature) != null)
+                        todelete.Add(je);
+                }
+                else if (je is JournalLocation)
+                {
+                    //if (sn.AddLocation(je as IBodyFeature) != null)
+                    //    todelete.Add(je);
+                }
+                else 
                 {
                     System.Diagnostics.Debug.Assert(false, "Star Scan 2 Not handled event");
                 }

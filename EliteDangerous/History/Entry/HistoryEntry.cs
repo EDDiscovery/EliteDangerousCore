@@ -265,7 +265,7 @@ namespace EliteDangerousCore
             return null;
         }
 
-        // always returns a string
+        // always returns a string - only performs GetInfo(fid) if required
         public string GetInfo()
         {
             string ret = journalEntry.GetInfo();
@@ -275,11 +275,8 @@ namespace EliteDangerousCore
                 { System = this.System, WhereAmI = this.WhereAmI, BodyName = this.Status.BodyName, NextJumpSystemName = this.Status.FSDJumpNextSystemName, NextJumpSystemAddress = this.Status.FSDJumpNextSystemAddress };
 
                 ret = journalEntry.GetInfo(fid);
-
-                if (ret == null)
-                    ret = "";
             }
-            return ret;
+            return ret ?? "";
         }
 
         // will return null if no detailed info

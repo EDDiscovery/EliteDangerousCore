@@ -590,7 +590,7 @@ namespace EliteDangerousCore.StarScan2
             Organics.Add(organic);
         }
 
-        public void AddSurfaceFeature(IBodyFeature sc)
+        public void AddFeatureOnlyIfNew(IBodyFeature sc)
         {
             if (Features == null)
                 Features = new List<IBodyFeature>();

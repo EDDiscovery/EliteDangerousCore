@@ -291,6 +291,7 @@ namespace EliteDangerousCore
 
         EDDItemSet = 2000,          // obsolete
         EDDCommodityPrices = 2010,
+        EDDDestinationSelected = 2020,
 
         // below are not events currently supported or icon rename events
 

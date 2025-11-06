@@ -127,6 +127,7 @@ namespace EliteDangerousCore.StarScan2
                 }
             });
             ss.DumpTree();
+            ss.AssignPending();
 
             //{ 
             //    ISystem syst = ss.FindISystem(system);

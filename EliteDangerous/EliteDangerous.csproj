@@ -167,6 +167,8 @@
     <Compile Include="JournalStatus\Entry\JournalTypeEnums.cs" />
     <Compile Include="JournalStatus\Computers\JournalStatsComputer.cs" />
     <Compile Include="JournalStatus\Scanner\Scanner.cs" />
+    <Compile Include="JournalStatus\UIEvents\UIDestination.cs" />
+    <Compile Include="JournalStatus\UIEvents\UIDocked.cs" />
     <Compile Include="Screenshots\ScreenShotConfigureForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -298,7 +300,6 @@
     <Compile Include="DB\System\SystemsDBGetStars.cs" />
     <Compile Include="DB\User\UserDatabase.cs" />
     <Compile Include="JournalStatus\UIEvents\UINPCCrewActive.cs" />
-    <Compile Include="JournalStatus\UIEvents\UIDestination.cs" />
     <Compile Include="JournalStatus\UIEvents\UINavRouteClear.cs" />
     <Compile Include="JournalStatus\UIEvents\UISrvHighBeam.cs" />
     <Compile Include="JournalStatus\UIEvents\UIFsdJump.cs" />
@@ -328,7 +329,6 @@
     <Compile Include="JournalStatus\UIEvents\UIPips.cs" />
     <Compile Include="JournalStatus\UIEvents\UIBeingInterdicted.cs" />
     <Compile Include="JournalStatus\UIEvents\UICargoScoopDeployed.cs" />
-    <Compile Include="JournalStatus\UIEvents\UIDocked.cs" />
     <Compile Include="JournalStatus\UIEvents\UIFlightAssist.cs" />
     <Compile Include="JournalStatus\UIEvents\UIFsdCharging.cs" />
     <Compile Include="JournalStatus\UIEvents\UIFsdCooldown.cs" />

@@ -67,7 +67,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string StarSystem { get; set; }
         public long? SystemAddress { get; set; }
-        public string Body { get; set; }
+        public string Body { get; set; }                
         public int? BodyID { get; set; }
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
 
@@ -130,8 +130,8 @@ namespace EliteDangerousCore.JournalEvents
         public double? Latitude { get; set; }    // 3.3
         public double? Longitude { get; set; }
         public bool HasLatLong { get { return Latitude.HasValue && Longitude.HasValue; } }  
-        public long? SystemAddress { get; set; } // may be null
-        public int? BodyID { get; set; } // may be null
+        public long? SystemAddress { get; set; }    // from event, may be null, filled in by AddStarScan below
+        public int? BodyID { get; set; }            // from event, may be null
         public string BodyName { get; set; }        // from event, may be null
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Settlement;
         public GovernmentDefinitions.Government StationGovernment { get; set; }// may be null
@@ -145,10 +145,9 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyFactionState { get; set; }       //may be null, in english
         public AllegianceDefinitions.Allegiance StationAllegiance { get; set; } //fdname, may be null
 
-
         // IBodyFeature only
-        public string Body { get { return BodyName; } }     // this is an alias
-        public string StarSystem { get; set; }      // filled in by StarScan::AddApproachSettlement
+        public string Body => BodyName;             // alias name, due to frontier not being consistent
+        public string StarSystem { get; set; }      // filled in by AddStarScan below
 
         public override string GetInfo()
         {
@@ -187,6 +186,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan s, ISystem system)
         {
+            StarSystem = system.Name;
+            if (SystemAddress == null)
+                SystemAddress = system.SystemAddress;
             s.AddApproachSettlement(this, system);
         }
     }

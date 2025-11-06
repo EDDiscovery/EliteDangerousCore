@@ -527,40 +527,97 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
+        // Always has a BodyID
         public BodyNode AddFSSBodySignalsToSystem(JournalFSSBodySignals sc)
         {
-            if (sc.BodyID.HasValue)
+            BodyNode body = FindBody(sc.BodyID);
+            if (body != null)
             {
-                BodyNode body = Bodies(x => x.BodyID == sc.BodyID, true).FirstOrDefault();       // find a body
-                if (body != null)
-                {
-                    body.AddSignals(sc.Signals);
-                    SignalGeneration++;
-                    return body;
-                }
-                else
-                    return null;
+                body.AddSignals(sc.Signals);
+                SignalGeneration++;
+                return body;
             }
             else
                 return null;
         }
-        public BodyNode AddSAASignalsToSystem(JournalSAASignalsFound sc)
+
+        // SAASignalsFound are on bodies or planetary rings
+        // will return null if we can't find it
+        // Note that we could have had a ring added by a body with the ring scan info, which does not have bodyid in the field, so body id is reset if found using name
+        public BodyNode AddSAASignalsFound(JournalSAASignalsFound sc)
         {
-            if (sc.BodyID.HasValue)
+            BodyNode body = FindBody(sc.BodyID);
+
+            if (body == null)
             {
-                BodyNode body = Bodies(x => x.BodyID == sc.BodyID, true).FirstOrDefault();       // find a body
+                body = FindCanonicalBodyName(sc.BodyName);
                 if (body != null)
                 {
-                    body.AddSignals(sc.Signals);
-                    SignalGeneration++;
-                    if (sc.Genuses?.Count > 0)
-                        body.AddGenuses(sc.Genuses);
-                    return body;
+                    (body.BodyID < 0).Assert("Reset SAA Signals Found without ID but ID is set");
+                    body.ResetBodyID(sc.BodyID);
+                    bodybyid[sc.BodyID] = body;
                 }
-                else
-                    return null;
+            }
+
+            if (body != null)
+            {
+                body.AddSignals(sc.Signals);
+                SignalGeneration++;
+                if (sc.Genuses?.Count > 0)
+                    body.AddGenuses(sc.Genuses);
+                return body;
             }
             else
+                return null;
+        }
+
+
+        // ScanComplete are on bodies or planetary rings
+        // will return null if we can't find it
+        // Note that we could have had a ring added by a body with the ring scan info, which does not have bodyid in the field, so body id is reset if found using name
+        public BodyNode AddSAAScanComplete(JournalSAAScanComplete sc)
+        {
+            BodyNode body = FindBody(sc.BodyID);
+
+            if (body == null)
+            {
+                body = FindCanonicalBodyName(sc.BodyName);
+                if (body != null)
+                {
+                    (body.BodyID < 0).Assert("Reset SAA Rings Found without ID but ID is set");
+                    body.ResetBodyID(sc.BodyID);
+                    bodybyid[sc.BodyID] = body;
+                }
+            }
+
+            if (body != null)
+            {
+                body.SetMapped(sc.ProbesUsed <= sc.EfficiencyTarget);
+                if (body.Scan != null)      // if the scan is there, we can set the value, otherwise lets pretend we did not find it and let the pending system deal with it
+                {
+                    body.Scan.SetMapped(body.IsMapped, body.WasMappedEfficiently);
+                    SignalGeneration++;
+                    return body;
+                }
+            }
+
+            return null;
+        }
+
+        // Location or Supercruise Exit produces an AddBody with Station/PlanetaryRing
+        public BodyNode AddLocation( IBodyFeature body)
+        {
+            BodyNode bn = FindBody(body.BodyID.Value);
+            if (bn != null)
+            {
+                $"Location found a body {bn.Name()}".DO();
+            }
+            else
+            {
+             //   systemBodies.AddSurfaceFeatureOnlyIfNew(body);
+                $"No body {body.Body}".DO();
+            }
+
                 return null;
         }
 
@@ -576,9 +633,10 @@ namespace EliteDangerousCore.StarScan2
             systemBodies.AddFSSSignals(signals);
             SignalGeneration++;
         }
+
         public BodyNode AddScanOrganicToBody(JournalScanOrganic sc)
         {
-            BodyNode body = Bodies(x => x.BodyID == sc.Body, true).FirstOrDefault();       // find a body
+            BodyNode body = FindBody(sc.Body);
             if (body != null)
             {
                 body.AddScanOrganics(sc);
@@ -588,12 +646,14 @@ namespace EliteDangerousCore.StarScan2
             else
                 return null;
         }
+
+        // Touchdown, approachsettlement
         public BodyNode AddSurfaceFeatureToBody(IBodyFeature sc)
         {
-            BodyNode body = Bodies(x => x.BodyID == sc.BodyID, true).FirstOrDefault();       // find a body
+            BodyNode body = FindBody(sc.BodyID.Value);
             if (body != null)
             {
-                body.AddSurfaceFeature(sc);
+                body.AddFeatureOnlyIfNew(sc);
                 SignalGeneration++;
                 return body;
             }
@@ -601,44 +661,36 @@ namespace EliteDangerousCore.StarScan2
                 return null;
         }
 
-        // will only return non null if we have a scan, so we can
-        public BodyNode AddSAAScanToBody(JournalSAAScanComplete sc)
-        {
-            BodyNode body = Bodies(x => x.BodyID == sc.BodyID, true).FirstOrDefault();       // find a body
-            if (body != null)
-            {
-                body.SetMapped(sc.ProbesUsed <= sc.EfficiencyTarget);
-                if (body.Scan != null)      // if the scan is there, we can set the value, otherwise lets pretend we did not find it and let the pending system deal with it
-                {
-                    body.Scan.SetMapped(body.IsMapped, body.WasMappedEfficiently);
-                    SignalGeneration++;
-                    return body;
-                }
-            }
-
-            return null;
-        }
-
+        // If its a settlement, we have augmented the docking event with BodyID/BodyName. Else we don't have body id
         public BodyNode AddDockingToBody(JournalDocked sc)
         {
             BodyNode bd = null;
-            if (sc.BodyID.HasValue)
+            if (sc.BodyID.HasValue)         // this makes it a settlement
             {
-                bd = Bodies(x => x.BodyID == sc.BodyID, true).FirstOrDefault();       // find a body
+                bd = FindBody(sc.BodyID.Value);
                 if (bd == null)
                     return null;            // don't have it now, so return try again
             }
             else
-                bd = systemBodies;
+                bd = systemBodies;          // else we don't know where it is, so assign to main list
 
             bd.AddDocking(sc);
             SignalGeneration++;
             return bd;
         }
 
-#endregion
+        #endregion
 
         #region Helpers
+
+        // Ring Name..
+        public static bool IsRingName(string name)
+        {
+            return name.EndsWith("A Ring", StringComparison.InvariantCultureIgnoreCase) ||
+                name.EndsWith("B Ring", StringComparison.InvariantCultureIgnoreCase) ||
+                name.EndsWith("C Ring", StringComparison.InvariantCultureIgnoreCase) ||
+                name.EndsWith("D Ring", StringComparison.InvariantCultureIgnoreCase);
+        }
 
         // Extract the part names from the subname, recognised combined text parts like belt clusters
         static public List<string> ExtractParts(string subname)
@@ -649,7 +701,7 @@ namespace EliteDangerousCore.StarScan2
 
             while (!sp.IsEOL)
             {
-                if (sp.IsStringMoveOn(out string found, StringComparison.InvariantCultureIgnoreCase, true, "A Belt Cluster", "B Belt Cluster", "A Ring", "B Ring"))
+                if (sp.IsStringMoveOn(out string found, StringComparison.InvariantCultureIgnoreCase, true, "A Belt Cluster", "B Belt Cluster", "A Ring", "B Ring" , "C Ring", "D Ring"))
                 {
                     partnames.Add(found);
                 }
@@ -716,37 +768,37 @@ namespace EliteDangerousCore.StarScan2
             {
                 foreach (StarPlanetRing ring in sc.Rings.DefaultIfEmpty())
                 {
-                    string beltname = ring.Name;
+                    string name = ring.Name;
 
                     // for beltclusters, we simplify the naming to make them match between Rings[] structure and the name given in the scan for the beltclusterbody
                     // for rings, we ensure the ownname is A-D Ring
 
-                    if (beltname.EndsWith("A Ring", StringComparison.InvariantCultureIgnoreCase))
-                        beltname = "A Ring";
-                    else if (beltname.EndsWith("B Ring", StringComparison.InvariantCultureIgnoreCase))
-                        beltname = "B Ring";
-                    else if (beltname.EndsWith("C Ring", StringComparison.InvariantCultureIgnoreCase))
-                        beltname = "C Ring";
-                    else if (beltname.EndsWith("D Ring", StringComparison.InvariantCultureIgnoreCase))
-                        beltname = "D Ring";
-                    else if (beltname.EndsWith("A Belt", StringComparison.InvariantCultureIgnoreCase))
-                        beltname = "A Belt Cluster";
-                    else if (beltname.EndsWith("B Belt", StringComparison.InvariantCultureIgnoreCase))
-                        beltname = "B Belt Cluster";
-                    else if (beltname.EndsWith("Galle Ring", StringComparison.InvariantCultureIgnoreCase) ||                // specials, just to remove debug assert
-                            beltname.EndsWith("Jupiter Halo Ring", StringComparison.InvariantCultureIgnoreCase) ||
-                            beltname.EndsWith("Asteroid Belt", StringComparison.InvariantCultureIgnoreCase)
+                    if (name.EndsWith("A Ring", StringComparison.InvariantCultureIgnoreCase))
+                        name = "A Ring";
+                    else if (name.EndsWith("B Ring", StringComparison.InvariantCultureIgnoreCase))
+                        name = "B Ring";
+                    else if (name.EndsWith("C Ring", StringComparison.InvariantCultureIgnoreCase))
+                        name = "C Ring";
+                    else if (name.EndsWith("D Ring", StringComparison.InvariantCultureIgnoreCase))
+                        name = "D Ring";
+                    else if (name.EndsWith("A Belt", StringComparison.InvariantCultureIgnoreCase))
+                        name = "A Belt Cluster";
+                    else if (name.EndsWith("B Belt", StringComparison.InvariantCultureIgnoreCase))
+                        name = "B Belt Cluster";
+                    else if (name.EndsWith("Galle Ring", StringComparison.InvariantCultureIgnoreCase) ||                // specials, just to remove debug assert
+                            name.EndsWith("Jupiter Halo Ring", StringComparison.InvariantCultureIgnoreCase) ||
+                            name.EndsWith("Asteroid Belt", StringComparison.InvariantCultureIgnoreCase)
                             )
                     { }
                     else
-                        (false).Assert($"Not coped with all types of ring naming {beltname}");
+                        (false).Assert($"Not coped with all types of ring naming {name}");
 
-                    $"  Add Belt/Ring object {beltname} to `{body.OwnName}`:{body.BodyID}".DO(debugid);
+                    $"  Add Belt/Ring object {name} to `{body.OwnName}`:{body.BodyID}".DO(debugid);
 
-                    var belt = body.ChildBodies.Find(x => x.OwnName == beltname);
+                    var belt = body.ChildBodies.Find(x => x.OwnName == name);
                     if (belt == null)
                     {
-                        belt = new BodyNode(beltname, body.BodyType == BodyNode.BodyClass.PlanetMoon ? BodyNode.BodyClass.PlanetaryRing : BodyNode.BodyClass.BeltCluster , BodyIDMarkerForAutoBodyBeltCluster, body, this);
+                        belt = new BodyNode(name, body.BodyType == BodyNode.BodyClass.PlanetMoon ? BodyNode.BodyClass.PlanetaryRing : BodyNode.BodyClass.BeltCluster , BodyIDMarkerForAutoBodyBeltCluster, body, this);
                         belt.SetCanonicalName(ring.Name);
                         body.ChildBodies.Add(belt);
                     }

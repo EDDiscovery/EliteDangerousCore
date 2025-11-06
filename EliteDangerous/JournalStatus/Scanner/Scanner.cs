@@ -332,11 +332,11 @@ namespace EliteDangerousCore
 
                 // split them into separate Event
 
-                foreach (var ev in evret.Item1)
+                foreach (var ev in evret.Item1.EmptyIfNull())
                 {
                     events.Add(new Events() { je = ev, sr = sw }); // feed an event in
                 }
-                foreach (var ev in evret.Item2)
+                foreach (var ev in evret.Item2.EmptyIfNull())
                 {
                     events.Add(new Events() { ui = ev, sr = sw });   // find in an ui event
                 }

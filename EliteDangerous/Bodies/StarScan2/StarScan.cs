@@ -210,9 +210,17 @@ namespace EliteDangerousCore.StarScan2
                 foreach (var sysaddress in todeletesys)
                     pendingsystemaddressevents.Remove(sysaddress);
 
+                // Debug, print out what is left
+
                 foreach (var kvp in pendingsystemaddressevents)
                 {
-                    System.Diagnostics.Debug.WriteLine($"StarScan Pending left system {kvp.Key} count {kvp.Value.Count}");
+                    SystemNode sn = systemNodesByAddress[kvp.Key];       // must be there, can't not be
+
+                    System.Diagnostics.Debug.WriteLine($"StarScan Pending left system {sn.System} count {kvp.Value.Count}");
+                    foreach ( var entry in kvp.Value)
+                    {
+                        System.Diagnostics.Debug.WriteLine($" .. {entry.EventTypeStr} {entry.GetInfo(sn.System)}");
+                    }
                 }
 
 #if DEBUG

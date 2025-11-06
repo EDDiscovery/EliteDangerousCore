@@ -45,7 +45,7 @@ namespace EliteDangerousCore.StarScan2
         public SystemNode(ISystem sys)
         {
             System = sys;
-          //  DebuggerHelpers.OutputControl += debugid;
+         //   DebuggerHelpers.OutputControl += debugid;
         }
 
         public void Clear()

@@ -18,6 +18,7 @@ using System;
 
 namespace EliteDangerousCore.JournalEvents
 {
+    [System.Diagnostics.DebuggerDisplay("Docked {StationName} {StationType} {StarSystem} {SystemAddress}")]
     [JournalEntryType(JournalTypeEnum.Docked)]
     public class JournalDocked : JournalEntry, IStatsJournalEntry, ILocDocked, IBodyFeature, IStarScan
     {

@@ -248,7 +248,7 @@ namespace EliteDangerousCore.JournalEvents
 
     [System.Diagnostics.DebuggerDisplay("{BodyName} {BodyID} {ProbesUsed} {EfficiencyTarget}")]
     [JournalEntryType(JournalTypeEnum.SAAScanComplete)]
-    public class JournalSAAScanComplete : JournalEntry, IStarScan
+    public class JournalSAAScanComplete : JournalEntry, IStarScan, IBodyNameAndID
     {
         public JournalSAAScanComplete(JObject evt) : base(evt, JournalTypeEnum.SAAScanComplete) // event came in about 12/12/18
         {
@@ -259,15 +259,24 @@ namespace EliteDangerousCore.JournalEvents
             SystemAddress = evt["SystemAddress"].LongNull();        // Early ones did not have it (before 11/12/19)
         }
 
-        public int BodyID { get; set; }
+        public int BodyID { get; set; }             // from events
         public string BodyName { get; set; }
         public int ProbesUsed { get; set; }
         public int EfficiencyTarget { get; set; }
-        public long? SystemAddress { get; set; }    // 3.5
+        public long? SystemAddress { get; set; }    // 3.5, filled in by AddStarScan for previous ones
+
+        // from IBodyNameAndID
+        public string Body => BodyName;
+        public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Signals;
+        int? IBodyNameAndID.BodyID => BodyID;
+        public string StarSystem { get; set; }      // filled in by AddStarScan
 
         public void AddStarScan(StarScan2.StarScan s, ISystem system)     
         {
-            s.AddSAAScan(this, system);
+            StarSystem = system.Name;
+            if (SystemAddress == null)          
+                SystemAddress = system.SystemAddress;
+            s.AddSAAScanComplete(this, system);
         }
 
         public override string SummaryName(ISystem sys)
@@ -316,7 +325,9 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Body name")]
         public string BodyName { get; set; }
         [PropertyNameAttribute("Frontier body ID")]
-        public int? BodyID { get; set; }        // acutally always set, set to ? to correspond to previous journal event types where BodyID may be missing
+        public int BodyID { get; set; }                         // always set
+        int? IBodyNameAndID.BodyID => BodyID;
+
         [PropertyNameAttribute("List of signals")]
         public List<SAASignal> Signals { get; set; }
         [PropertyNameAttribute("List of Genus (4.0v13+)")]
@@ -354,6 +365,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Body => BodyName;
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Signals;
         public string StarSystem => throw new NotImplementedException();
+
 
         [System.Diagnostics.DebuggerDisplay("{Type} {Count}")]
         public class SAASignal 
@@ -498,7 +510,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
-            s.AddSAASignals(this, system);
+            s.AddSAASignalsFound(this, system);
         }
 
         public void UpdateIdentifiers()
@@ -560,7 +572,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Body name")]
         public string BodyName { get; set; }
         [PropertyNameAttribute("Frontier body ID")]
-        public int? BodyID { get; set; }        // acutally always set, set to ? to correspond to previous journal event types where BodyID may be missing
+        public int BodyID { get; set; }                             // acutally always set
         [PropertyNameAttribute("List of signals")]
         public List<JournalSAASignalsFound.SAASignal> Signals { get; set; }
 
@@ -611,6 +623,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Body => BodyName;
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Signals;
         public string StarSystem => "Unknown";
+        int? IBodyNameAndID.BodyID => BodyID;
 
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {

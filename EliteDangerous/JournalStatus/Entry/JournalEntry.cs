@@ -101,6 +101,7 @@ namespace EliteDangerousCore
         {
             return null;
         }
+
         public virtual string GetDetailed() // may return null if no more data available
         {
             return null;
@@ -108,6 +109,30 @@ namespace EliteDangerousCore
         public virtual string GetDetailed(FillInformationData fid) // may return null if no more data available
         {
             return null;
+        }
+
+        // GetInfo/GetInfo(fid) always return string
+        public string GetInfo(ISystem sys, string wai = "?", string bn = "?", string nsn = "?", long nsa = 0)
+        {
+            string ret = GetInfo();
+            if (ret == null)
+            {
+                FillInformationData fid = new FillInformationData() { System = sys, WhereAmI = wai, BodyName = bn, NextJumpSystemName = nsn, NextJumpSystemAddress = nsa };
+                ret = GetInfo(fid);
+            }
+            return ret ?? "";
+        }
+
+        // GetDetailed/GetDetailed(fid) may return null
+        public string GetDetailed(ISystem sys, string wai = "?", string bn = "?", string nsn = "?", long nsa = 0)
+        {
+            string ret = GetDetailed();
+            if (ret == null)
+            {
+                FillInformationData fid = new FillInformationData() { System = sys, WhereAmI = wai, BodyName = bn, NextJumpSystemName = nsn, NextJumpSystemAddress = nsa };
+                ret = GetDetailed(fid);
+            }
+            return ret;
         }
 
         // the long name of it, such as Approach Body. May be overridden, is translated
