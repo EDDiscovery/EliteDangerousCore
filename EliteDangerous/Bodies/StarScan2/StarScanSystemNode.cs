@@ -45,7 +45,6 @@ namespace EliteDangerousCore.StarScan2
         public SystemNode(ISystem sys)
         {
             System = sys;
-         //   DebuggerHelpers.OutputControl += debugid;
         }
 
         public void Clear()
@@ -70,6 +69,14 @@ namespace EliteDangerousCore.StarScan2
         public BodyNode FindCanonicalBodyName(string fdname)        // matches HIP 1885 A 5 b, HIP 1885 A 2 A Ring etc
         {
             return Bodies(x => x.CanonicalName.EqualsIIC(fdname), true).FirstOrDefault();
+        }
+        public BodyNode FindCanonicalBodyNameType(string fdname, BodyDefinitions.BodyType bt)        
+        {
+            return Bodies(x => x.CanonicalName.EqualsIIC(fdname) && 
+                                ( (x.BodyType == BodyNode.BodyClass.Star && bt == BodyDefinitions.BodyType.Star) ||
+
+                                
+                                , true).FirstOrDefault();
         }
         public BodyNode FindCanonicalBodyNameWithWithoutSystem(string fdname)       // matches HIP 1885 A 5 b, A 5 b, HIP 1885 A 2 A Ring, A 2 A Ring etc
         {
@@ -145,7 +152,7 @@ namespace EliteDangerousCore.StarScan2
 
         public IBodyFeature GetFeature(string feature)
         {
-            IBodyFeature sysfeature = OrbitingStations.Find(x => x.Name.EqualsIIC(feature));
+            IBodyFeature sysfeature = OrbitingStations?.Find(x => x.Name.EqualsIIC(feature));
             if (sysfeature != null)
                 return sysfeature;
 

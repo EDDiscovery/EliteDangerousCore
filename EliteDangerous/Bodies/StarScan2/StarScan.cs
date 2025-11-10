@@ -14,6 +14,7 @@
 
 using BaseUtils;
 using EliteDangerousCore.JournalEvents;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,7 +43,7 @@ namespace EliteDangerousCore.StarScan2
                     {
                         foreach (JournalScan js in lookupres.Bodies)
                         {
-                            AddScan(js, sys);
+                            AddJournalScan(js, sys);
                         }
 
                         if (lookupres.BodyCount.HasValue)
@@ -60,7 +61,7 @@ namespace EliteDangerousCore.StarScan2
                     {
                         foreach (JournalScan js in lookupres.Bodies)
                         {
-                            AddScan(js, sys);
+                            AddJournalScan(js, sys);
                         }
                     }
                 }
@@ -95,7 +96,7 @@ namespace EliteDangerousCore.StarScan2
                     {
                         foreach (JournalScan js in lookupres.Bodies)
                         {
-                            AddScan(js, sys);
+                            AddJournalScan(js, sys);
                         }
 
                         if (lookupres.BodyCount.HasValue)
@@ -117,7 +118,7 @@ namespace EliteDangerousCore.StarScan2
 
                         foreach (JournalScan js in lookupres.Bodies)
                         {
-                            AddScan(js, sys);
+                            AddJournalScan(js, sys);
                         }
                     }
                 }
@@ -219,7 +220,7 @@ namespace EliteDangerousCore.StarScan2
                     System.Diagnostics.Debug.WriteLine($"StarScan Pending left system {sn.System} count {kvp.Value.Count}");
                     foreach ( var entry in kvp.Value)
                     {
-                        System.Diagnostics.Debug.WriteLine($" .. {entry.EventTypeStr} {entry.GetInfo(sn.System)}");
+                        System.Diagnostics.Debug.WriteLine($" .. {entry.EventTimeUTC} {entry.EventTypeStr} {entry.GetInfo(sn.System)}");
                     }
                 }
 
@@ -237,7 +238,14 @@ namespace EliteDangerousCore.StarScan2
                             {
                                 foreach (var p in bn.Scan.Parents.Where(x=>x.BodyID!=0 && x.IsBarycentre))
                                 {
-                                    (p.Barycentre != null).Assert("Barycentre not set");
+                                    if (p.Barycentre == null)
+                                    {
+                                        string s = $"WARNING !!! Barycentre not set in scan for {bn.Scan.EventTimeUTC} {bn.Scan.BodyName} {bn.Scan.BodyID} bid {bn.BodyID} {bn.Scan.ParentList()} {p.BodyID} {p.Type}";
+                                        System.Diagnostics.Debug.WriteLine(s);
+
+                                        FileHelpers.TryAppendToFile(@"c:\code\baryerrors.txt", s + Environment.NewLine);
+                                        (false).Assert(s);
+                                    }
                                 }
                             }
                         }

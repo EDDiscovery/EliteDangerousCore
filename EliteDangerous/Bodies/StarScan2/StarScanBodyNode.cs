@@ -522,8 +522,23 @@ namespace EliteDangerousCore.StarScan2
 
         public void SetScan(JournalScan sc)
         {
-            Scan = sc;
-            CanonicalName = sc.BodyName;
+            if (Scan != null)           // if previously scanned, we may have set some information into Parents list, which we need to keep
+            {
+                if ( Scan.Parents!=null)        // if previous had parents
+                {
+                    BodyParent.AreParentsSame(Scan.Parents, sc.Parents).Assert("StarScan Set Scan noted parents list changed on new scan- whats up Frontier!");
+                    sc.ResetParents(Scan.Parents);      // copy parents across to new scan, so we don't loose the barycentre info - bug found during testing 
+                }
+            }
+            
+            Scan = sc;                                  // copy across
+
+            Scan.Signals = Signals;                     // we point Signals and Genuses at the nodes signals and genuses for the Search system.  
+            Scan.Genuses = Genuses;                     // If these change by AddFSSBodySignals / AddFSSBodySignals they will change in sympathy
+            Scan.CodexEntries = CodexEntries;                 // set codex as well
+            Scan.SetMapped(IsMapped, WasMappedEfficiently);  // and we set the mapped/was mapped flag to the nodes setting set up by AddSAAScanComplete
+
+            CanonicalName = Scan.BodyName;
         }
 
         public void SetCanonicalName(string s)
@@ -590,14 +605,19 @@ namespace EliteDangerousCore.StarScan2
             Organics.Add(organic);
         }
 
-        public void AddFeatureOnlyIfNew(IBodyFeature sc)
+        public bool AddFeatureOnlyIfNew(IBodyFeature sc)
         {
             if (Features == null)
                 Features = new List<IBodyFeature>();
 
             var prev = Features.Find(x => x.Name == sc.Name);        // have we got it before?, if so, don't replace
-            if (prev == null)   
+            if (prev == null)
+            {
                 Features.Add(sc);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void SetMapped(bool efficently)
@@ -621,15 +641,15 @@ namespace EliteDangerousCore.StarScan2
 
         public void DumpTree(string bid, int level)
         {
-            if (BodyType != BodyClass.System)
+            if (level > 0)      // 0 is system level dump
             {
                 if (BodyID < 0)
                     bid += ".??";
                 else
                     bid += $".{BodyID,2}";
-
-                Dump(bid, level);
             }
+
+            Dump(bid, level);
 
             foreach (var x in ChildBodies)
                 x.DumpTree(bid, level + 1);
@@ -639,21 +659,21 @@ namespace EliteDangerousCore.StarScan2
         {
             string front = bid.PadRight(15);
             string names = (new string(' ', level) + (OwnName + " | " + (CanonicalName ?? "-"))).PadRight(40);
-            string pad = new string(' ', front.Length + 3);
+            string pad = new string(' ', front.Length + 3 + level + 3);
 
             System.Diagnostics.Debug.WriteLine($"{front} : {names} {BodyType.ToString().PadRight(15)} scname:`{Scan?.BodyName}` P:{Scan?.ParentList()} sma {SMA} isMapped {IsMapped} Effmap {WasMappedEfficiently}");
-            foreach (var x in CodexEntries.EmptyIfNull())
-                System.Diagnostics.Debug.WriteLine($"{pad}CX:{x.GetInfo()}");
-            foreach (var x in Signals.EmptyIfNull())
-                System.Diagnostics.Debug.WriteLine($"{pad}S:{x.Type_Localised ?? x.Type} {x.Count}");
-            foreach (var x in Organics.EmptyIfNull())
-                System.Diagnostics.Debug.WriteLine($"{pad}O:{x.GetInfo()}");
-            foreach (var x in Genuses.EmptyIfNull())
-                System.Diagnostics.Debug.WriteLine($"{pad}G:{x.Genus_Localised ?? x.Genus}");
-            foreach (var x in FSSSignalList.EmptyIfNull())
-                System.Diagnostics.Debug.WriteLine($"{pad}FSS:{x.SignalName_Localised ?? x.SignalName} {x.USSType}");
-            foreach (var x in Features.EmptyIfNull())
-                System.Diagnostics.Debug.WriteLine($"{pad}SF:{x.BodyType} {x.Name_Localised ?? x.Name}");
+        //    foreach (var x in CodexEntries.EmptyIfNull())
+        //        System.Diagnostics.Debug.WriteLine($"{pad}CX:{x.GetInfo()}");
+        //    foreach (var x in Signals.EmptyIfNull())
+        //        System.Diagnostics.Debug.WriteLine($"{pad}S:{x.Type_Localised ?? x.Type} {x.Count}");
+        //    foreach (var x in Organics.EmptyIfNull())
+        //        System.Diagnostics.Debug.WriteLine($"{pad}O:{x.GetInfo()}");
+        //    foreach (var x in Genuses.EmptyIfNull())
+        //        System.Diagnostics.Debug.WriteLine($"{pad}G:{x.Genus_Localised ?? x.Genus}");
+        //    foreach (var x in FSSSignalList.EmptyIfNull())
+        //        System.Diagnostics.Debug.WriteLine($"{pad}FSS:{x.SignalName_Localised ?? x.SignalName} {x.USSType}");
+        //    foreach (var x in Features.EmptyIfNull())
+        //        System.Diagnostics.Debug.WriteLine($"{pad}F:{x.BodyType} `{x.Name_Localised ?? x.Name}` {x.BodyID}");
         }
 
         #endregion
@@ -694,7 +714,7 @@ namespace EliteDangerousCore.StarScan2
 
         public static void Dump(NodePtr p, string bid, int level = 0)
         {
-            if (p.BodyNode.BodyType != BodyNode.BodyClass.System)
+            //if (p.BodyNode.BodyType != BodyNode.BodyClass.System)
             {
                 if (p.BodyNode.BodyID < 0)
                     bid += ".??";

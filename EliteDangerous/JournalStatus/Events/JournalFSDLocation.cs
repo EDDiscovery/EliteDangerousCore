@@ -238,7 +238,7 @@ namespace EliteDangerousCore.JournalEvents
 
     //When written: at startup, or when being resurrected at a station
     [JournalEntryType(JournalTypeEnum.Location)]
-    public class JournalLocation : JournalLocOrJump, IBodyNameAndID, IStarScan, ILocDocked
+    public class JournalLocation : JournalLocOrJump, IBodyFeature, IStarScan, ILocDocked
     {
         public JournalLocation(JObject evt) : base(evt, JournalTypeEnum.Location)      // all have evidence 16/3/2017
         {
@@ -307,14 +307,12 @@ namespace EliteDangerousCore.JournalEvents
         public string StationName_Localised { get; set; } // will be null if not docked
         public string StationType { get; set; } // will be null if not docked, english name
         public StationDefinitions.StarportTypes FDStationType { get; set; } // will be Unknown if not docked
-        public string Body { get; set; }
-        public int? BodyID { get; set; }
-        public BodyDefinitions.BodyType BodyType { get; set; }
+        public string Body { get; set; }        // only if on planet
+        public int? BodyID { get; set; }        // only if on planet
+        public BodyDefinitions.BodyType BodyType { get; set; }  // only if on planet
         public double? DistFromStarLS { get; set; }
-
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
-
+        public double? Latitude { get; set; }   // only if on planet
+        public double? Longitude { get; set; }  // only if on planet
         public long? MarketID { get; set; }
         public StationDefinitions.Classification MarketClass() { return MarketID != null ? StationDefinitions.Classify(MarketID.Value, FDStationType) : StationDefinitions.Classification.Unknown; }
 
@@ -333,6 +331,13 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Multicrew { get; set; }
         public bool? InSRV { get; set; }
         public bool? OnFoot { get; set; }
+
+        // IBodyFeature
+        public string BodyName => Body;
+        public bool HasLatLong => Latitude != null && Longitude != null;
+        public string Name => StationName ?? Body;                  // if we docked, feature name is the station, else its the body
+        public string Name_Localised => StationName_Localised ?? Body;
+
 
         public override string SummaryName(ISystem sys)     // Location
         {
@@ -398,11 +403,11 @@ namespace EliteDangerousCore.JournalEvents
             return sb.Length>0 ? sb.ToString() : null;
         }
 
-        public void AddStarScan(StarScan2.StarScan s, ISystem system)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
         {
             var sys = new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z);
             s.GetOrAddSystem( sys);     // we use our data to fill in 
-            s.AddBody(this, sys);
+            s.AddLocation(this, sys);
         }
 
     }
@@ -451,7 +456,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Multicrew { get; set; }
 
         public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".Tx(), StarSystem); }
-        public void AddStarScan(StarScan2.StarScan s, ISystem system)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
         {
             s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
@@ -546,7 +551,7 @@ namespace EliteDangerousCore.JournalEvents
         public int? RemainingJumpsInRoute { get; set; }
         public string FriendlyStarClass { get; set; }
 
-        public void AddStarScan(StarScan s, ISystem system)
+        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
         {
             s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress));
         }
@@ -593,7 +598,7 @@ namespace EliteDangerousCore.JournalEvents
                 return "Supercruise".Tx();
         }
 
-        public void AddStarScan(StarScan2.StarScan s, ISystem system)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
         {
             if (IsHyperspace)
                 s.GetOrAddSystem( new SystemClass(StarSystem, SystemAddress));      // add so there is placeholder

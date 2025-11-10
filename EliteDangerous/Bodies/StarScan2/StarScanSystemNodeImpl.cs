@@ -38,7 +38,9 @@ namespace EliteDangerousCore.StarScan2
 
             AlignParentsName(sc.Parents, subname, out List<string> partnames);
 
-            $"Scan `{sc.BodyName}`:{sc.BodyID} Name Normalised: {string.Join(", ", partnames)}".DO(debugid);
+            $"Scan {sc.EventTimeUTC} `{sc.BodyName}`:{sc.BodyID} Name Normalised: {string.Join(", ", partnames)}".DO(debugid);
+
+            CheckTree();
 
             int pno = sc.Parents.Count - 1;     // parents go backwards
             int partno = 0;                     // parts go forward
@@ -59,8 +61,7 @@ namespace EliteDangerousCore.StarScan2
 
                 if (subbody != null && subbody.Parent != cur)           // if there, but not here, remove and make again
                 {
-                    subbodyorphans = subbody.ChildBodies;               // we may have children assigned under it, we need to keep them in the tree
-                    RemoveIncorrectBody(subbody);
+                    subbodyorphans = RemoveIncorrectBody(subbody);
                     subbody = null;
                 }
 
@@ -119,14 +120,13 @@ namespace EliteDangerousCore.StarScan2
             BodyNode body = FindBody(sc.BodyID.Value);        // find ID anywhere
 
             if (body == null)
-                body = FindCanonicalBodyName(sc.BodyName);          // see if its anywhere else due to a misplace using the scan name, checking all scan names and ownnames in case its an autoplaced object
+                body = FindCanonicalBodyNameType(sc.BodyName,sc.BodyType);          // see if its anywhere else due to a misplace using the scan name, checking all scan names and ownnames in case its an autoplaced object
 
             List<BodyNode> orphans = null;
 
             if (body != null && body.Parent != cur)                 // if there but not in correct place, remove
             {
-                orphans = body.ChildBodies;
-                RemoveIncorrectBody(body);
+                orphans = RemoveIncorrectBody(body);
                 body = null;
             }
 
@@ -169,8 +169,11 @@ namespace EliteDangerousCore.StarScan2
         {
             global::System.Diagnostics.Debug.Assert(sc.BodyID == 0 || sc.Parents != null);
 
-            BodyNode cur = systemBodies;
+            $"Scan {sc.EventTimeUTC} `{sc.BodyName}`:{sc.BodyID} Non Standard with Parents {sc.ParentList()} ".DO(debugid);
 
+            CheckTree();
+
+            BodyNode cur = systemBodies;
             int pno = (sc.Parents?.Count ?? 0) - 1;
 
             while(pno >= 0)
@@ -183,8 +186,7 @@ namespace EliteDangerousCore.StarScan2
                 List<BodyNode> subbodyorphans = null;
                 if ( subbody != null && subbody.Parent != cur)
                 {
-                    subbodyorphans = subbody.ChildBodies;               // we may have children assigned under it, we need to keep them in the tree
-                    RemoveIncorrectBody(subbody);
+                    subbodyorphans = RemoveIncorrectBody(subbody);
                     subbody = null;
                 }
 
@@ -215,17 +217,18 @@ namespace EliteDangerousCore.StarScan2
                 pno--;
             }
 
+            CheckTree();
+
             BodyNode body = FindBody(sc.BodyID.Value);        // find ID anywhere
             
             if (body == null)                                       // no, check if its misplaced anywhere by the scan name
-                body = FindCanonicalBodyName(sc.BodyName);
+                body = FindCanonicalBodyNameType(sc.BodyName,sc.BodyType);
 
             List<BodyNode> orphans = null;
 
             if (body != null && body.Parent != cur)                 // if there but not in correct place, remove
             {
-                orphans = body.ChildBodies;
-                RemoveIncorrectBody(body);
+                orphans = RemoveIncorrectBody(body);
                 body = null;
             }
 
@@ -255,7 +258,9 @@ namespace EliteDangerousCore.StarScan2
             body.SetScan(sc); // update or add scan BEFORE sorting - we may have added it before without a scan
             
             Sort(cur);          // then sort with into
-            
+
+            CheckTree();
+
             ProcessBeltsOrRings(body, sc, sc.BodyName, systemname);
 
             CheckTree();
@@ -267,11 +272,13 @@ namespace EliteDangerousCore.StarScan2
         // given a own name like "A 1 a" or "1 a" or "1" make nodes down the tree if they don't exist, return final node.
         public BodyNode GetOrMakeStandardBodyNodeFromScanWithoutParents(JournalScan sc, string subname, string systemname)
         {
-            global::System.Diagnostics.Debug.Assert(sc.BodyID == null && sc.Parents == null);
-
             // extract all named parts
 
             var partnames = ExtractParts(subname);
+
+            $"Scan {sc.EventTimeUTC} `{sc.BodyName}`:{sc.BodyID} No Parents Name Normalised: {string.Join(", ", partnames)}".DO(debugid);
+
+            CheckTree();
 
             BodyNode cur = systemBodies;
 
@@ -310,13 +317,12 @@ namespace EliteDangerousCore.StarScan2
 
                 bool last = partno == partnames.Count - 1;
 
-                BodyNode subbody = last ? FindCanonicalBodyName(sc.BodyName) : null;     // see if its anywhere else due to a misplace for the last entry only
+                BodyNode subbody = last ? FindCanonicalBodyNameType(sc.BodyName,sc.BodyType) : null;     // see if its anywhere else due to a misplace for the last entry only
 
                 List<BodyNode> orphans = null;
                 if (subbody != null && subbody.Parent != cur)              // if there but not in correct place, remove
                 {
-                    orphans = subbody.ChildBodies;
-                    RemoveIncorrectBody(subbody);
+                    orphans = RemoveIncorrectBody(subbody);
                     subbody = null;
                 }
 
@@ -394,6 +400,8 @@ namespace EliteDangerousCore.StarScan2
         // check if its there by id or fdname, and then if not, make something up to hold it
         public BodyNode GetOrMakeDiscreteBody(string fdname, int? bid, string systemname)
         {
+            CheckTree();
+
             BodyNode body = bid.HasValue ? FindBody(bid.Value) : null;
 
             if (body == null)
@@ -433,6 +441,8 @@ namespace EliteDangerousCore.StarScan2
         //try and find it by ID or fdname, if not, make something
         public BodyNode GetOrMakeDiscreteStar(string fdname, int? bid, string systemname)
         {
+            CheckTree();
+
             string cutname = fdname.ReplaceIfStartsWith(systemname);
 
             BodyNode starbody = bid.HasValue ? FindBody(bid.Value) : null;
@@ -478,12 +488,15 @@ namespace EliteDangerousCore.StarScan2
             {
                 prevassigned.SetScan(sc);
                 Sort(prevassigned.Parent);      // and resort
-                $"  Add Baryscan to {sc.BodyID} in {System.Name}".DO(debugid);
+                $"  Add Baryscan to BodyID {sc.BodyID} in {System.Name}".DO(debugid);
                 BodyGeneration++;
                 BarycentreScans++;
 
                 // all entries where JSA BodyID occurs in parents list, lets add the barycentre info to it for use by queries
-                var scannodelist = Bodies(x => x.Scan?.Parents != null && x.Scan.Parents.FindIndex(y => y.BodyID == sc.BodyID) >= 0);   
+                var scannodelist = Bodies(x => x.Scan?.Parents != null && x.Scan.Parents.FindIndex(y => y.BodyID == sc.BodyID) >= 0).ToList();
+
+                if ( scannodelist.Count == 0)
+                    $"   .. No scans found with this barycentre in bodies list in {System.Name}".DO(debugid);
 
                 foreach (var scannode in scannodelist)
                 {
@@ -491,6 +504,7 @@ namespace EliteDangerousCore.StarScan2
                     {
                         if (scannode.Scan.Parents[i].BodyID == sc.BodyID)
                         {
+                            $"   .. Assign barycentre to scan node {scannode.Scan.BodyName}".DO(debugid);
                             scannode.Scan.Parents[i].Barycentre = sc;
                         }
                     }
@@ -503,14 +517,13 @@ namespace EliteDangerousCore.StarScan2
         }
 
 
-
-
         // Add a codex entry to best place, if body id, find it, else system bodies
         public BodyNode AddCodexEntryToSystem(JournalCodexEntry sc)
         {
             if (sc.BodyID.HasValue)
             {
-                BodyNode body = Bodies(x => x.BodyID == sc.BodyID, true).FirstOrDefault();       // find a body
+                BodyNode body = FindBody(sc.BodyID.Value);
+
                 if (body != null)
                 {
                     body.AddCodex(sc);
@@ -527,8 +540,34 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
+        // We have a body id, lets try and see if we can assign it to a bodyid less body!
+        public BodyNode AddBodyIDToBody(IBodyFeature sc)
+        {
+            if (sc.BodyID.HasValue)
+            {
+                BodyNode body = FindBody(sc.BodyID.Value);
+
+                if (body == null)       // if not found, we may be able to do add the body id to it 
+                {
+                    body = FindCanonicalBodyName(sc.BodyName);  // see if we can find it
+
+                    if (body != null && body.BodyID<0)      // found it, and not set, set it
+                    {
+                        (body.BodyID < 0).Assert("StarScan Body is not null");
+                        $"  Assign body ID {sc.BodyID} {sc.BodyName} in {System.Name}".DO(debugid);
+                        body.ResetBodyID(sc.BodyID.Value);
+                        bodybyid[sc.BodyID.Value] = body;
+                        BodyGeneration++;
+                        return body;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         // Always has a BodyID
-        public BodyNode AddFSSBodySignalsToSystem(JournalFSSBodySignals sc)
+        public BodyNode AddFSSBodySignalsToBody(JournalFSSBodySignals sc)
         {
             BodyNode body = FindBody(sc.BodyID);
             if (body != null)
@@ -582,6 +621,7 @@ namespace EliteDangerousCore.StarScan2
             if (body == null)
             {
                 body = FindCanonicalBodyName(sc.BodyName);
+                
                 if (body != null)
                 {
                     (body.BodyID < 0).Assert("Reset SAA Rings Found without ID but ID is set");
@@ -592,33 +632,45 @@ namespace EliteDangerousCore.StarScan2
 
             if (body != null)
             {
-                body.SetMapped(sc.ProbesUsed <= sc.EfficiencyTarget);
-                if (body.Scan != null)      // if the scan is there, we can set the value, otherwise lets pretend we did not find it and let the pending system deal with it
+                body.SetMapped(sc.ProbesUsed <= sc.EfficiencyTarget);       // record in body the mapped state
+
+                if (body.Scan != null)      // if the scan is there, we can set the value.  If another scan comes in the scan comes in the mapped flags will be copied from body. See SetScan
                 {
                     body.Scan.SetMapped(body.IsMapped, body.WasMappedEfficiently);
-                    SignalGeneration++;
-                    return body;
                 }
+
+                SignalGeneration++;
+                return body;
             }
 
             return null;
         }
 
-        // Location or Supercruise Exit produces an AddBody with Station/PlanetaryRing
-        public BodyNode AddLocation( IBodyFeature body)
+//        tbd system bodies should show up on scan display
+
+        // Location or Supercruise Exi, Station is only given to orbiting stations, and we don't know where they are, so system bodies
+        public BodyNode AddStation( IBodyFeature loc)
         {
-            BodyNode bn = FindBody(body.BodyID.Value);
-            if (bn != null)
+            (loc.BodyType == BodyDefinitions.BodyType.Station).Assert("Error called add station with another type");
+
+            BodyNode bn = FindBody(loc.BodyID.Value);
+            if (bn == null)
             {
-                $"Location found a body {bn.Name()}".DO();
+                if (systemBodies.AddFeatureOnlyIfNew(loc))
+                {
+                   // $"Station is new added to system bodies `{loc.BodyName}` {loc.BodyType} {loc.BodyID}".DO();
+                }
+                else
+                {
+                   // $"Station already there in system bodies `{loc.BodyName}` {loc.BodyType} {loc.BodyID}".DO();
+                }
+                return systemBodies;        // Do nothing, return this to indicate its processed.
             }
             else
             {
-             //   systemBodies.AddSurfaceFeatureOnlyIfNew(body);
-                $"No body {body.Body}".DO();
+               // $"Station already there `{loc.BodyName}` {loc.BodyType} {loc.BodyID} at {bn.Name()}".DO();
+                return bn;
             }
-
-                return null;
         }
 
         public void SetCount(int? bodycount, int? nonbodycount)
@@ -674,6 +726,7 @@ namespace EliteDangerousCore.StarScan2
             else
                 bd = systemBodies;          // else we don't know where it is, so assign to main list
 
+            //$"Add docking {sc.StationName} to body {bd.Name()}".DO();
             bd.AddDocking(sc);
             SignalGeneration++;
             return bd;
@@ -683,14 +736,6 @@ namespace EliteDangerousCore.StarScan2
 
         #region Helpers
 
-        // Ring Name..
-        public static bool IsRingName(string name)
-        {
-            return name.EndsWith("A Ring", StringComparison.InvariantCultureIgnoreCase) ||
-                name.EndsWith("B Ring", StringComparison.InvariantCultureIgnoreCase) ||
-                name.EndsWith("C Ring", StringComparison.InvariantCultureIgnoreCase) ||
-                name.EndsWith("D Ring", StringComparison.InvariantCultureIgnoreCase);
-        }
 
         // Extract the part names from the subname, recognised combined text parts like belt clusters
         static public List<string> ExtractParts(string subname)
@@ -787,7 +832,8 @@ namespace EliteDangerousCore.StarScan2
                         name = "B Belt Cluster";
                     else if (name.EndsWith("Galle Ring", StringComparison.InvariantCultureIgnoreCase) ||                // specials, just to remove debug assert
                             name.EndsWith("Jupiter Halo Ring", StringComparison.InvariantCultureIgnoreCase) ||
-                            name.EndsWith("Asteroid Belt", StringComparison.InvariantCultureIgnoreCase)
+                            name.EndsWith("Asteroid Belt", StringComparison.InvariantCultureIgnoreCase) ||
+                            name.EndsWith("The Belt", StringComparison.InvariantCultureIgnoreCase)
                             )
                     { }
                     else
@@ -811,21 +857,32 @@ namespace EliteDangerousCore.StarScan2
         }
 
         // body in wrong place, remove it, and possible remove the parents above if its an auto placed body with no children after removal
-        private void RemoveIncorrectBody(BodyNode prevassigned)
+        private List<BodyNode> RemoveIncorrectBody(BodyNode prevassigned)
         {
+            $"  Begin Remove Incorrect body `{prevassigned.OwnName}`:{prevassigned.BodyID}".DO();
+
+            prevassigned.SystemNode.DumpTree();
+
+            var orphans = prevassigned.ChildBodies;
+
             while (prevassigned?.Parent != null)
             {
-                $"  Remove Incorrect body `{prevassigned.OwnName}`:{prevassigned.BodyID}".DO(debugid);
+                //$"  Remove Incorrect body `{prevassigned.OwnName}`:{prevassigned.BodyID}".DO();
 
                 bodybyid.Remove(prevassigned.BodyID);           // ensure body ID list is removed
 
                 prevassigned.Parent.ChildBodies.Remove(prevassigned);       // remove this body at that point
 
                 if (prevassigned.Parent.BodyID < 0 && prevassigned.Parent.ChildBodies.Count == 0)   // if the parent does not have a valid bodyid, and it has no children now, recurse up to it
+                {
                     prevassigned = prevassigned.Parent;
+                    $"  .. recurse up to `{prevassigned.OwnName}`:{prevassigned.BodyID}".DO();
+                }
                 else
                     break;
             }
+
+            return orphans;
         }
 
         // orphans during a remove need adding back into new body, with the Parent (crucial) field adjusted
@@ -960,9 +1017,13 @@ namespace EliteDangerousCore.StarScan2
 
         const string debugid = "StarScan";
 
+        #endregion
+
+        #region Debug
+
         public void DumpTree()
         {
-            $"System `{System.Name}` {System.SystemAddress}: bodies {Bodies().Count()} ids {bodybyid.Count}".DO(debugid);
+            $"System `{System.Name}` {System.SystemAddress}: bodies {Bodies().Count()} ids {bodybyid.Count}".DO();
             systemBodies.DumpTree("S", 0);
             CheckTree();
         }
@@ -988,7 +1049,7 @@ namespace EliteDangerousCore.StarScan2
                 }
             }
 
-            (totalbodieswithids == bodybyid.Count).Assert("Not the same number of bodyids as nodes with Ids");
+            (totalbodieswithids == bodybyid.Count).Assert($"Not the same number of bodyids as nodes {totalbodieswithids} with Ids in bodybyid {bodybyid.Count}");
 
             CheckParents(systemBodies);
         }
@@ -1002,7 +1063,7 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        public bool DisplaySystem(int width, string displaytodir, int index = 0)
+        public bool DrawSystemToFolder(int width, string outputfolder, int index = -1)
         {
             StarScan2.SystemDisplay sd = new StarScan2.SystemDisplay();
             sd.Font = new System.Drawing.Font("Arial", 10);
@@ -1011,7 +1072,14 @@ namespace EliteDangerousCore.StarScan2
             ExtendedControls.ExtPictureBox imagebox = new ExtendedControls.ExtPictureBox();
             imagebox.FillColor = Color.AliceBlue;
             sd.DrawSystemRender(imagebox, width, this);
-            imagebox.Image?.Save(Path.Combine(displaytodir, $"{System.Name}-{index:000}.png"));
+            if (outputfolder != null)
+            {
+                string path = Path.Combine(outputfolder, $"{System.Name}");
+                if (index >= 0)
+                    path += $"-{index:000}";
+                path += ".png";
+                imagebox.Image?.Save(path);
+            }
             return imagebox.Image != null;
         }
 

@@ -63,5 +63,22 @@ namespace EliteDangerousCore
 
             return false;
         }
+
+        // check parents list is the same
+        public static bool AreParentsSame(List<BodyParent> cur, List<BodyParent> other)
+        {
+            if (other.Count == cur.Count)
+            {
+                for (int i = 0; i < cur.Count; i++)
+                {
+                    if (cur[i].Type != other[i].Type || cur[i].BodyID != other[i].BodyID)
+                        return false;
+                }
+                return true;
+            }
+
+            return false;
+        }
+
     }
 }

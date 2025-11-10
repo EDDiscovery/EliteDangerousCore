@@ -45,21 +45,19 @@ namespace EliteDangerousCore
 
     public interface IStarScan
     {
-        void AddStarScan(StarScan2.StarScan s, ISystem system);
+        void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus hes);
     }
 
-    public interface IBodyNameAndID     // events containing body information
+
+    public interface IBodyFeature  // events containing feature information on a body
     {
         DateTime EventTimeUTC { get; }
-        string Body { get; }                // Body name its on
-        BodyDefinitions.BodyType BodyType { get; }       
+        JournalTypeEnum EventTypeID { get; }
+        string BodyName { get; }
         int? BodyID { get; }
+        BodyDefinitions.BodyType BodyType { get; }
         string StarSystem { get; }
         long? SystemAddress { get; }
-    }
-
-    public interface IBodyFeature : IBodyNameAndID  // events containing feature information on a body
-    {   
         double? Latitude { get; set; }
         double? Longitude { get; set; }
         bool HasLatLong { get; }

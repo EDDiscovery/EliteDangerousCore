@@ -109,7 +109,7 @@ namespace EliteDangerousCore.JournalEvents
             return $"{Target_SystemAddress}:{Target_BodyID} {TargetName_Localised??TargetName} in {SystemName}";
         }
 
-        public void AddStarScan(StarScan s, ISystem system)
+        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
         {
             SystemName = system.Name;
             SystemAddress = system.SystemAddress;

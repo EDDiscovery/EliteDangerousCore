@@ -73,19 +73,22 @@ namespace EliteDangerousCore.StarScan2
                 colormap.OldColor = Color.White;    // this is the marker colour to replace
                 colormap.NewColor = fillc;
 
-                Bitmap mat = BaseUtils.BitMapHelpers.ReplaceColourInBitmap((Bitmap)BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Material"), new System.Drawing.Imaging.ColorMap[] { colormap });
+                lock (gdilock)
+                {
+                    Bitmap mat = BaseUtils.BitMapHelpers.ReplaceColourInBitmap((Bitmap)BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Material"), new System.Drawing.Imaging.ColorMap[] { colormap });
 
-                BaseUtils.BitMapHelpers.DrawTextCentreIntoBitmap(ref mat, abv, Font, fillc.GetBrightness() > 0.4f ? Color.Black : Color.White);
+                    BaseUtils.BitMapHelpers.DrawTextCentreIntoBitmap(ref mat, abv, Font, fillc.GetBrightness() > 0.4f ? Color.Black : Color.White);
 
-                var tooltip = new System.Text.StringBuilder(256);
-                sn.DisplayMaterial(tooltip, sd.Key, sd.Value, historicmats, curmats);
+                    var tooltip = new System.Text.StringBuilder(256);
+                    sn.DisplayMaterial(tooltip, sd.Key, sd.Value, historicmats, curmats);
 
-                ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(
-                                new Rectangle(matpos.X, matpos.Y, matsize.Width, matsize.Height), mat, tooltip + "\n\n" + "All " + matclicktext.ToString(), tooltip.ToString());
+                    ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(
+                                    new Rectangle(matpos.X, matpos.Y, matsize.Width, matsize.Height), mat, tooltip + "\n\n" + "All " + matclicktext.ToString(), tooltip.ToString());
 
-                ie.ContextMenuStrip = rightclickmenu;
+                    ie.ContextMenuStrip = rightclickmenu;
+                    pc.Add(ie);
 
-                pc.Add(ie);
+                }
 
                 maximum = new Point(Math.Max(maximum.X, matpos.X + matsize.Width), Math.Max(maximum.Y, matpos.Y + matsize.Height));
 
@@ -105,6 +108,7 @@ namespace EliteDangerousCore.StarScan2
         private Point DrawSignals(List<ExtPictureBox.ImageElement> pc, Point leftmiddle,
                                 List<FSSSignal> signallist,         // may be null
                                 List<JournalCodexEntry> codex,      // may be null
+                                List<IBodyFeature> stations,        // may be null
                                 int height, int shiftrightifreq, ContextMenuStrip rightclickmenu)
         {
             const int maxicons = 5;
@@ -129,6 +133,8 @@ namespace EliteDangerousCore.StarScan2
 
             count[7] = signallist.Count - (from x in count select x).Sum();        // set seven to signals left
 
+            count[0] += stations?.Count() ?? 0;         // stations are also present in this entry
+
             int icons;
             int knockout = 6;       // starting from this signal, work backwards knocking out if required
             while (true)
@@ -149,30 +155,33 @@ namespace EliteDangerousCore.StarScan2
                 count[8] = 1;
             }
 
-            Image[] images = new Image[]
+            lock (gdilock)
             {
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Stations"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Carriers"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Installations"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.NSP"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RES"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.CZ"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.USS"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Signals"),
-                BaseUtils.Icons.IconSet.GetIcon("Journal.CodexEntry"),
-            };
-
-            int vpos = height / 2 - iconsize * icons / 2;
-
-            using (Graphics g = Graphics.FromImage(bmp))
-            {
-                //    g.Clear(Color.FromArgb(20, 64, 64)); // debug
-                for (int i = 0; i < count.Length; i++)
+                Image[] images = new Image[]
                 {
-                    if (count[i] > 0)
+                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Stations"),
+                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Carriers"),
+                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Installations"),
+                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.NSP"),
+                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RES"),
+                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.CZ"),
+                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.USS"),
+                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Signals"),
+                    BaseUtils.Icons.IconSet.GetIcon("Journal.CodexEntry"),
+                };
+
+                int vpos = height / 2 - iconsize * icons / 2;
+
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    //    g.Clear(Color.FromArgb(20, 64, 64)); // debug
+                    for (int i = 0; i < count.Length; i++)
                     {
-                        g.DrawImage(images[i], new Rectangle(0, vpos, iconsize, iconsize));
-                        vpos += iconsize;
+                        if (count[i] > 0)
+                        {
+                            g.DrawImage(images[i], new Rectangle(0, vpos, iconsize, iconsize));
+                            vpos += iconsize;
+                        }
                     }
                 }
             }
@@ -200,10 +209,11 @@ namespace EliteDangerousCore.StarScan2
                 }
             }
 
+         //   add orbiting stations to tip tbd
             if (icons > 4)
                 leftmiddle.X += shiftrightifreq;
 
-            return CreateImageAndLabel(pc, bmp, leftmiddle, bmp.Size, false, out Rectangle _, new string[] { "" }, tip, rightclickmenu, false);
+            return CreateImageAndLabel(pc, bmp, leftmiddle, bmp.Size, false, out Rectangle _, new string[] { "" }, tip, rightclickmenu);
         }
 
 
@@ -211,6 +221,7 @@ namespace EliteDangerousCore.StarScan2
         // returns max point and in imageloc the area drawn
         // you can shift right if required so you don't clip right
         // return bot left accounting for label 
+        // ALL images must be drawn, not copied, as they must be owned.
         private Point CreateImageAndLabel(List<ExtPictureBox.ImageElement> pcs, 
                                     Image image, 
                                     Point leftmiddle, Size imagesize, 
@@ -219,12 +230,11 @@ namespace EliteDangerousCore.StarScan2
                                     string[] labels,  // may be null, no labels
                                     string ttext,
                                     ContextMenuStrip rightclickmenu,
-                                    bool imgowned = true, 
                                     Color? backwash = null
                                     )
         {
 
-            ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(new Rectangle(leftmiddle.X, leftmiddle.Y - imagesize.Height / 2, imagesize.Width, imagesize.Height), image, ttext, ttext, imgowned);
+            ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(new Rectangle(leftmiddle.X, leftmiddle.Y - imagesize.Height / 2, imagesize.Width, imagesize.Height), image, ttext, ttext, true);
 
             ie.ContextMenuStrip = rightclickmenu;
 

@@ -95,20 +95,10 @@ namespace EliteDangerousCore
 
             // StarScan2 processing
 
-            if (he.journalEntry is JournalDocked dck)       // check First
-            {
-                if (dck.BodyType == BodyDefinitions.BodyType.Settlement)        // if its a settlement, fill in missing body info
-                {
-                    dck.BodyID = he.Status.BodyID;
-                    dck.Body = he.Status.BodyName;
-                }
-
-                StarScan2.AddDocking(dck, he.System);
-            }
-            if (he.journalEntry is IStarScan ss)
-            {
-                (he.journalEntry as IStarScan).AddStarScan(StarScan2, he.System);
-            }
+            //if (he.journalEntry is IStarScan ss)
+            //{
+            //    (he.journalEntry as IStarScan).AddStarScan(StarScan2, he.System, he.Status);
+            //}
 
             if ((LastSystem == null || he.System.Name != LastSystem) && he.System.Name != "Unknown")   // if system is not last, we moved somehow (FSD, location, carrier jump), add
             {
@@ -196,7 +186,7 @@ namespace EliteDangerousCore
 
             if (tabledata != null)          // if not cancelled table read
             {
-                System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" Journal Creation of {tabledata.Count}");
+                System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" Journal Creation of {tabledata.Count} for Commander {cmdname}");
 
                 var jes = JournalEntry.CreateJournalEntries(tabledata, cancelRequested, 
                             (p) => reportProgress(p, $"Creating Cmdr. {cmdname} journal entries {(int)(tabledata.Count * p / 100):N0}/{tabledata.Count:N0}"),
@@ -277,6 +267,11 @@ namespace EliteDangerousCore
 
             hist.StarScan2.AssignPending();
 
+            // tbd
+            //hist.StarScan2.DrawAllSystemsToFolder(@"c:\code\AA");
+            hist.StarScan2.DrawAllSystemsToFolder(null);
+
+
             // dump all events info+detailed to file, useful for checking formatting
             //JournalTest.DumpHistoryGetInfoDescription(hist, @"c:\code\out.log");      
 
@@ -299,14 +294,11 @@ namespace EliteDangerousCore
                 }
             }
 
-            //foreach( var kvp in hist.StarScan.ScanDataByName) if (kvp.Value.System.SystemAddress == null) System.Diagnostics.Debug.WriteLine($"{kvp.Value.System.Name} no SA");
-
             //foreach (var x in Identifiers.Items) System.Diagnostics.Debug.WriteLine($"Identifiers {x.Key} = {x.Value}");
 
-            // Dump scan data to debug, copy to a file, use StarScan2.ProcessFromFile to check the star scanner
-
-            //string sysname = "Hagr";
-            //var mhs = hist.historylist.Where(x => (x.System.Name.EqualsIIC(sysname)) && (x.journalEntry is IStarScan || x.journalEntry is IBodyNameAndID || x.journalEntry is JournalFSDJump)).ToList();
+            //// Dump a systems entried to a debug file. Then use StarScan2.ProcessFromFile / Tests file to check the star scanner
+            //string sysname = "Leesti";
+            //var mhs = hist.historylist.Where(x => (x.System.Name.EqualsIIC(sysname)) && (x.journalEntry is IStarScan || x.journalEntry is IBodyFeature || x.journalEntry is JournalFSDJump)).ToList();
             //var jsonlines = mhs.Select(x => x.journalEntry.GetJsonString());
             //BaseUtils.FileHelpers.TryWriteAllLinesToFile($@"c:\code\eddiscovery\elitedangerouscore\elitedangerous\bodies\starscan2\tests\{sysname}.json", jsonlines.ToArray());
 

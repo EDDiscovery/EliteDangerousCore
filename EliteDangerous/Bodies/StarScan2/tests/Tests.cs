@@ -16,6 +16,7 @@ using BaseUtils;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace EliteDangerousCore.StarScan2
@@ -91,7 +92,6 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-
         static public void TestScans()
         {
             string outputdir = @"c:\code\AA";
@@ -99,16 +99,16 @@ namespace EliteDangerousCore.StarScan2
             EliteDangerousCore.StarScan2.StarScan.ProcessAllFromDirectory(path, "*.json", (ss2, mhs) =>
                     {
                         EliteDangerousCore.StarScan2.SystemNode sssol = ss2.FindSystemSynchronous(mhs.Last().Item2.System);
-                        sssol.DisplaySystem(1920, outputdir, 0);
+                        sssol.DrawSystemToFolder(1920, outputdir, 0);
                     });
 
         }
 
-        static public void TestScan(string system)
+        static public void TestScan(string system, string folder, string pictureoutfolder)
         {
-            string outputdir = @"c:\code\AA";
-            string file = $@"c:\code\eddiscovery\elitedangerouscore\elitedangerous\bodies\starscan2\tests\{system}.json";
+            string file = Path.Combine(folder, $"{system}.json");
             EliteDangerousCore.StarScan2.StarScan ss = new EliteDangerousCore.StarScan2.StarScan();
+            DebuggerHelpers.OutputControl += "StarScan";
 
             uint gen = 1817272;
             var hist = HistoryEntry.CreateFromFile(file);
@@ -122,7 +122,7 @@ namespace EliteDangerousCore.StarScan2
                     if (sssol.BodyGeneration != gen)
                     {
                         gen = sssol.BodyGeneration;
-                        sssol.DisplaySystem(1920, outputdir, mhe.Item1);
+                        sssol.DrawSystemToFolder(1920, pictureoutfolder, mhe.Item1);
                     }
                 }
             });

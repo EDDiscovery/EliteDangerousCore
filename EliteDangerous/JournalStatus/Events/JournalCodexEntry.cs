@@ -17,6 +17,7 @@ using QuickJSON;
 using EliteDangerousCore.DB;
 using System;
 using static BaseUtils.TypeHelpers;
+using System.Collections.Generic;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -112,7 +113,7 @@ namespace EliteDangerousCore.JournalEvents
                    Longitude == other.Longitude;
         }
 
-        public void AddStarScan(StarScan2.StarScan s, ISystem system)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
         {
             s.AddCodexEntryToSystem(this,system);
         }
@@ -145,6 +146,26 @@ namespace EliteDangerousCore.JournalEvents
                                                 ";Traits".Tx(), NewTraitsDiscovered,
                                                 "Nearest".Tx()+": ", NearestDestination_Localised
                                                 );
+        }
+
+        // print list, with optional indent, and separ.  Separ is not placed on last entry
+        // logtype = false localised, true ID
+        static public void CodexList(System.Text.StringBuilder sb, List<JournalCodexEntry> list, int indent, bool indentfirst, string separ = ", ")
+        {
+            if (list != null)
+            {
+                string inds = new string(' ', indent);
+                int index = 0;
+                foreach (var x in list)
+                {
+                    if (indent > 0 && (index > 0 || indentfirst))       // if indent, and its either not first or allowed to indent first
+                        sb.Append(inds);
+                    sb.AppendPrePad(x.GetInfo());
+
+                    if (index++ < list.Count - 1)     // if another to go, separ
+                        sb.Append(separ);
+                }
+            }
         }
 
         public void UpdateDB()

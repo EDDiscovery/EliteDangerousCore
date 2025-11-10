@@ -20,7 +20,7 @@ using System.Linq;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.Liftoff)]
-    public class JournalLiftoff : JournalEntry
+    public class JournalLiftoff : JournalEntry, IBodyFeature
     {
         public JournalLiftoff(JObject evt ) : base(evt, JournalTypeEnum.Liftoff)
         {
@@ -37,18 +37,25 @@ namespace EliteDangerousCore.JournalEvents
             OnStation = evt["OnStation"].BoolNull();
         }
 
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
         public bool? PlayerControlled { get; set; }
         public string NearestDestination { get; set; }
         public string NearestDestination_Localised { get; set; }
 
-        public string StarSystem { get; set; }      //4.0 alpha 4 on
-        public long? SystemAddress { get; set; }
-        public string Body { get; set; }
-        public int? BodyID { get; set; }
-        public bool? OnStation { get; set; }
+        public string StarSystem { get; set; }      // 4.0 alpha 4 on
+        public long? SystemAddress { get; set; }    // early ones did not have
+        public string Body { get; set; }            // early ones did not have
+        public int? BodyID { get; set; }            // early ones did not have
+        public bool? OnStation { get; set; }        
         public bool? OnPlanet { get; set; }
+
+        // IBodyfeature
+        public string BodyName => Body;
+        public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
+        public bool HasLatLong => true;
+        public string Name => null;
+        public string Name_Localised => null;
 
         public override string GetInfo() 
         {
@@ -86,17 +93,18 @@ namespace EliteDangerousCore.JournalEvents
 
         public string StarSystem { get; set; }      //4.0 alpha 4 on
         public long? SystemAddress { get; set; }
-        public string Body { get; set; }
-        public int? BodyID { get; set; }
+        public string Body { get; set; }            // early ones did not have
+        public int? BodyID { get; set; }            // early ones did not have
         public bool? OnStation { get; set; }
         public bool? OnPlanet { get; set; }
 
-        // IBodyFeature only
+        // IBodyfeature
+        public string BodyName => Body;
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
-        public string Name { get { return "Touchdown".Tx(); } }
-        public string Name_Localised { get { return "Touchdown".Tx(); } }
+        public string Name => null;
+        public string Name_Localised => null;
 
-        public void AddStarScan(StarScan s, ISystem system)
+        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
         {
             s.AddTouchdown(this, system);
         }

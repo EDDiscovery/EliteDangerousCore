@@ -97,7 +97,7 @@ namespace EliteDangerousCore
         public override string GetInfo()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Build("Station:", StationName, "System:", System.Name, "Body:", Body, "Lat:;;N4", Latitude, "Long:;;N4", Longitude, "Distance to Arrival:;ls;N1", DistanceToArrival);
+            sb.Build("Station:", StationName, "System:", System.Name, "Body:", BodyName, "Lat:;;N4", Latitude, "Long:;;N4", Longitude, "Distance to Arrival:;ls;N1", DistanceToArrival);
             sb.AppendPrePad(base.GetInfo(), global::System.Environment.NewLine);
             return sb.ToString();
         }

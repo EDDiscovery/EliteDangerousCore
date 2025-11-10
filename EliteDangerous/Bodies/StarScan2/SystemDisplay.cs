@@ -59,15 +59,18 @@ namespace EliteDangerousCore.StarScan2
         {
         }
 
-        // Clears the imagebox, create the objects, render to imagebox
+        // Clears the imagebox, create the objects, render to imagebox. Accepts systemnode = null to clear the display
         public void DrawSystemRender(ExtendedControls.ExtPictureBox imagebox, int widthavailable, SystemNode systemnode,
                                List<MaterialCommodityMicroResource> historicmats = null, List<MaterialCommodityMicroResource> curmats = null,
                                string opttext = null, string[] bodytypefilter = null,
                                Point? startpoint = null)
         {
             imagebox.ClearImageList();
-            var list = CreateSystemImages(widthavailable, systemnode, historicmats, curmats, opttext, bodytypefilter, startpoint);
-            imagebox.AddRange(list);
+            if (systemnode != null)
+            {
+                var list = CreateSystemImages(widthavailable, systemnode, historicmats, curmats, opttext, bodytypefilter, startpoint);
+                imagebox.AddRange(list);
+            }
             imagebox.Render();
         }
 
@@ -137,12 +140,13 @@ namespace EliteDangerousCore.StarScan2
                 }
 
                 // Draw signals (if required), if so move the cursor to the right of the draw
-                if (!drawnsignals && (systemnode.FSSSignals?.Count > 0 || systemnode.CodexEntries?.Count > 0))
+                if (!drawnsignals && (systemnode.FSSSignals?.Count > 0 || systemnode.CodexEntries?.Count > 0 || systemnode.OrbitingStations?.Count>0))
                 {
                     drawnsignals = true;
                     Point maxpos = DrawSignals(starcontrols, new Point(cursorlm.X + moonspacerx, cursorlm.Y),
                                                     systemnode.FSSSignals,      // may be null
                                                      systemnode.CodexEntries,      // may be null
+                                                     systemnode.OrbitingStations,      // may be null
                                                     starsize.Height * 6 / 4, 16, ContextMenuStripSignals);
 
                     DisplayAreaUsed = new Point(Math.Max(DisplayAreaUsed.X, maxpos.X), Math.Max(DisplayAreaUsed.Y, maxpos.Y));
@@ -164,8 +168,6 @@ namespace EliteDangerousCore.StarScan2
 
                     double habzonestartls = hz != null ? hz.HabitableZoneInner : 0;
                     double habzoneendls = hz != null ? hz.HabitableZoneOuter : 0;
-
-                    Image beltsi = BodyDefinitions.GetBeltImage();
 
                     foreach(BodyNode planetnode in starnode.ChildBodies)
                     {
@@ -238,11 +240,16 @@ namespace EliteDangerousCore.StarScan2
 
             if (!drawnsignals && (systemnode.FSSSignals?.Count > 0 || systemnode.CodexEntries?.Count > 0))  // if no stars were drawn, but signals..
             {
-                CreateImageAndLabel(starcontrols, BodyDefinitions.GetStarImageNotScanned(), cursorlm, starsize, true, out Rectangle starpos, new string[] { "" }, "", ContextMenuStripSignals, false);
-                Point maxpos = DrawSignals(starcontrols, new Point(starpos.Right + moonspacerx, cursorlm.Y),
-                                                    systemnode.FSSSignals, systemnode.CodexEntries,
+                lock (gdilock)
+                {
+                    CreateImageAndLabel(starcontrols, BodyDefinitions.GetImageNotScannedCloned(), cursorlm, starsize, true, out Rectangle starpos, new string[] { "" }, "", ContextMenuStripSignals);
+
+                    Point maxpos = DrawSignals(starcontrols, new Point(starpos.Right + moonspacerx, cursorlm.Y),
+                                                    systemnode.FSSSignals, systemnode.CodexEntries, systemnode.OrbitingStations,
                                                     starsize.Height * 6 / 4, 16, ContextMenuStripSignals);       // draw them, nothing else to follow
-                DisplayAreaUsed = new Point(Math.Max(DisplayAreaUsed.X, maxpos.X), Math.Max(DisplayAreaUsed.Y, maxpos.Y));
+
+                    DisplayAreaUsed = new Point(Math.Max(DisplayAreaUsed.X, maxpos.X), Math.Max(DisplayAreaUsed.Y, maxpos.Y));
+                }
             }
 
             return starcontrols;

@@ -74,6 +74,7 @@ namespace EliteDangerousCore
             DestinationNameLoc = null;
             DestinationSystemAddress = null;
             DestinationBodyID = null;
+            destinationSawChanged = false;
             prev_json = null;
         }
 
@@ -400,7 +401,7 @@ namespace EliteDangerousCore
                     {
                         if (!(uient is UIOverallStatus))        // dont report this, its due to individual ones
                         {
-                            System.Diagnostics.Trace.WriteLine($"UI Event {uient.EventTimeUTC} {uient.EventTypeStr} : {uient.ToString()}");
+                         //   System.Diagnostics.Trace.WriteLine($"UI Event {uient.EventTimeUTC} {uient.EventTypeStr} : {uient.ToString()}");
                             //BaseUtils.Variables v = new BaseUtils.Variables();
                             //v.AddPropertiesFieldsOfClass(uient, "", null, 2);
                             //foreach (var x in v.NameEnumuerable)

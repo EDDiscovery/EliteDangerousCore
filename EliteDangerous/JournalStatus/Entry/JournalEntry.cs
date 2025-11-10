@@ -12,6 +12,8 @@
  * governing permissions and limitations under the License.
  */
 
+#define MEASURE_INDIVIDUAL_PERFORMANCE
+
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
 using QuickJSON;
@@ -457,7 +459,7 @@ namespace EliteDangerousCore
 
                 // code to measure performance.. use this by turning off multitasking and either select individual or total time
 
-#if true
+#if MEASURE_INDIVIDUAL_PERFORMANCE
                 // measure each one
 
                 for (int j = 0; j < tabledata.Count; j++)
@@ -489,27 +491,29 @@ namespace EliteDangerousCore
                 ticks[JournalTypeEnum.Unknown] = new Stats() { ticks = ticks2 - ticks1, number = 1, type = JournalTypeEnum.Unknown };
 
 #endif
-                //{
-                //    var values = ticks.Values.ToList();
-                //    values.Sort(delegate (Stats left, Stats right) { return left.number.CompareTo(right.number); });
+//{
+//    var values = ticks.Values.ToList();
+//    values.Sort(delegate (Stats left, Stats right) { return left.number.CompareTo(right.number); });
 
-                //    System.Diagnostics.Debug.WriteLine($"-------------------- by number");
+//    System.Diagnostics.Debug.WriteLine($"-------------------- by number");
 
-                //    foreach (var x in values)
-                //        System.Diagnostics.Debug.WriteLine($"Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency} per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
-                //}
+//    foreach (var x in values)
+//        System.Diagnostics.Debug.WriteLine($"Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency} per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
+//}
 
-                //{
-                //    var values = ticks.Values.ToList();
-                //    values.Sort(delegate (Stats left, Stats right) { return ((double)left.ticks / left.number).CompareTo((double)right.ticks / right.number); });
+//{
+//    var values = ticks.Values.ToList();
+//    values.Sort(delegate (Stats left, Stats right) { return ((double)left.ticks / left.number).CompareTo((double)right.ticks / right.number); });
 
-                //    System.Diagnostics.Debug.WriteLine($"-------------------- by time ");
-                //    foreach (var x in values)
-                //    {
-                //        if (x.number > 50)
-                //            System.Diagnostics.Debug.WriteLine($"Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency} per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
-                //    }
-                //}
+//    System.Diagnostics.Debug.WriteLine($"-------------------- by time ");
+//    foreach (var x in values)
+//    {
+//        if (x.number > 50)
+//            System.Diagnostics.Debug.WriteLine($"Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency} per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
+//    }
+//}
+
+#if REPORT_PERFORMANCE
                 {
                     var values = ticks.Values.ToList();
                     values.Sort(delegate (Stats left, Stats right) { return left.ticks.CompareTo(right.ticks); });
@@ -517,9 +521,10 @@ namespace EliteDangerousCore
                     System.Diagnostics.Debug.WriteLine($"-------------------- by ticks ");
                     foreach (var x in values)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency}s per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
+                        System.Diagnostics.Debug.WriteLine($"Load Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency}s per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
                     }
                 }
+#endif
             }
 
             if (cancel.IsCancellationRequested)

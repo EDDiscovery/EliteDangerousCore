@@ -302,7 +302,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (EDSMDiscoveryCommander != null)
             {
-                sb.AppendFormat("Discovered by {0} on {1}".Tx() + "", EDSMDiscoveryCommander, EDSMDiscoveryUTC.ToStringZulu());
+                sb.AppendFormat("EDSM" + "Discovered by {0} on {1}".Tx() + "", EDSMDiscoveryCommander, EDSMDiscoveryUTC.ToStringZulu());
                 sb.AppendCR();
             }
 
@@ -333,6 +333,12 @@ namespace EliteDangerousCore.JournalEvents
                 sb.Append(": ");
                 JournalScanOrganic.OrganicList(sb, Organics, 4, false, Environment.NewLine);
                 sb.AppendCR();
+            }
+            if (CodexEntries != null)
+            {
+                sb.Append("Codexs".Tx());
+                sb.Append(": ");
+                JournalCodexEntry.CodexList(sb, CodexEntries, 4, false, Environment.NewLine);
             }
 
             if (ScanType.HasChars())        // early entries did not

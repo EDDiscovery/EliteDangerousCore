@@ -26,21 +26,20 @@ namespace EliteDangerousCore
         public enum BodyType
         {
             Unknown,
-            Planet, Star, Ring, Station, PlanetaryRing, Barycentre, StellarRing,
-            Settlement, Signals  //EDD addition
+            Planet, Star, Station, PlanetaryRing, Barycentre, StellarRing, AsteroidCluster, SmallBody
         };
 
         static public BodyType GetBodyType(string bt)
         {
             if (bt == null || bt.Length == 0)           // not present
                 return BodyType.Unknown;
-            else if (bt.Equals("Null", StringComparison.InvariantCultureIgnoreCase))
-                return BodyType.Barycentre;
-            Enum.TryParse<BodyType>(bt, true, out BodyType btn);
-            if (btn == BodyType.Unknown)
-            {
 
-            }
+            Enum.TryParse<BodyType>(bt, true, out BodyType btn);
+            
+            if ( btn == BodyType.Unknown && bt.Equals("Null", StringComparison.InvariantCultureIgnoreCase))
+                btn = BodyType.Barycentre;
+
+            System.Diagnostics.Debug.Assert(btn != BodyType.Unknown);
             return btn;
         }
 
@@ -56,6 +55,12 @@ namespace EliteDangerousCore
 
             return false;
         }
+
+        static public BodyType BodyTypeFromBodyNameRingOrPlanet(string bodyname)
+        {
+            return IsBodyNameRing(bodyname) ? BodyType.PlanetaryRing : BodyType.Planet;
+        }
+
         static public string StarTypeImageName(EDStar StarTypeID, double? nStellarMass, double? nSurfaceTemperature)
         {
             string iconName = StarTypeID.ToString(); // fallback
@@ -852,21 +857,29 @@ namespace EliteDangerousCore
             return $"Bodies.Planets.Terrestrial.{iconName}";
         }
 
-        static public System.Drawing.Image GetStarImageNotScanned()
+        static public System.Drawing.Image GetImageNotScanned()
         {
             return BaseUtils.Icons.IconSet.GetIcon($"Bodies.NotScanned");
         }
-        static public System.Drawing.Image GetPlanetImageNotScanned()
+        static public System.Drawing.Image GetImageNotScannedCloned()
         {
-            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.NotScanned");
+            Bitmap bm = new Bitmap(BaseUtils.Icons.IconSet.GetIcon($"Bodies.NotScanned"));
+            return bm;
         }
-        static public System.Drawing.Image GetMoonImageNotScanned()
+        static public System.Drawing.Image GetBarycentreImageCloned()
         {
-            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.NotScanned");
+            Bitmap bm = new Bitmap(BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Barycentre"));
+            return bm;
         }
-        static public System.Drawing.Image GetBarycentreImage()
+        static public System.Drawing.Bitmap GetBeltImageCloned()
         {
-            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Barycentre");
+            Bitmap belt = new Bitmap(BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Belt"));
+            return belt;
+        }
+        static public System.Drawing.Bitmap GetBeltBodyImageCloned()
+        {
+            Bitmap belt = new Bitmap(BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.SizeLarge"));
+            return belt;
         }
         static public System.Drawing.Image GetBeltImage()
         {

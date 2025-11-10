@@ -19,12 +19,51 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Web.UI.WebControls;
 
 namespace EliteDangerousCore.StarScan2
 {
     public partial class StarScan
     {
         #region Debug tools
+
+        // all systems, produce a display of them in folder!
+        public void DrawAllSystemsToFolder(string outputdir)
+        {
+            System.Diagnostics.Debug.WriteLine($"Draw {systemNodesByName.Count} systems for Cmdr {EDCommander.Current.Name}");
+            int threads = 28;
+            List<SystemNode> nodes = systemNodesByName.Values.Take(5000).ToList();
+            CountdownEvent cd = new CountdownEvent(threads);
+            for (int i = 0; i < threads; i++)
+            {
+                Thread t1 = new Thread(new ParameterizedThreadStart(DrawIt));
+                t1.Priority = ThreadPriority.Highest;
+                t1.Name = $"DrawAll {i}";
+                t1.Start(new Tuple<CountdownEvent, List<SystemNode>, int, int>(cd, nodes, nodes.Count / threads * i, nodes.Count / threads));
+            }
+
+            cd.Wait();
+            System.Diagnostics.Debug.WriteLine($"Draw {systemNodesByName.Count} systems for Cmdr {EDCommander.Current.Name} DONE DONE DONE");
+        }
+
+        static void DrawIt(Object o)
+        {
+            var control = (Tuple<CountdownEvent, List<SystemNode>, int, int>)o;
+
+            int count = control.Item4;
+            for (int i = control.Item3; count-- > 0; i++)
+            {
+                var sn = control.Item2[i];
+                lock (sn)
+                { 
+                    //System.Diagnostics.Debug.WriteLine($"Draw system {sn.System.Name} in thread");
+                    sn.DrawSystemToFolder(1920, null);
+                }
+            }
+            control.Item1.Signal();
+        }
+
 
         // read in a set of JSON lines exported from say HistoryList.cs:294 and run it thru starscan 2 and the display system
 
@@ -50,30 +89,18 @@ namespace EliteDangerousCore.StarScan2
             {
                 HistoryEntry he = mhe.Item2;
 
-                if (he.journalEntry is JournalDocked dck)
-                {
-                    if (dck.BodyType == BodyDefinitions.BodyType.Settlement)        // if its a settlement, fill in missing body info
-                    {
-                        dck.BodyID = he.Status.BodyID;
-                        dck.Body = he.Status.BodyName;
-                    }
-
-                    AddDocking(dck, he.System);
-                    perstep?.Invoke(this, mhe);
-                }
                 if (he.journalEntry is IStarScan ss)
                 {
                     if (he.journalEntry is JournalScan js)
                     {
                         System.Diagnostics.Debug.WriteLine($"\r\n{step} {he.EntryType}: `{js.BodyName}` ID: {js.BodyID} - {js.ParentList()} ");
-                        (he.journalEntry as IStarScan).AddStarScan(this, he.System);
                     }
                     else
                     {
                         System.Diagnostics.Debug.WriteLine($"\r\n{step} {he.EntryType}: in {he.System.Name}");
-                        (he.journalEntry as IStarScan).AddStarScan(this, he.System);
                     }
 
+                    (he.journalEntry as IStarScan).AddStarScan(this, he.System, he.Status);
                     perstep?.Invoke(this,mhe);
                     DumpTree();
                 }

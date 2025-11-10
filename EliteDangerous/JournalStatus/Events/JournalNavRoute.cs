@@ -166,7 +166,7 @@ namespace EliteDangerousCore.JournalEvents
             return false;
         }
 
-        public void AddStarScan(StarScan2.StarScan s, ISystem system)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
         {
             foreach (var star in Route.EmptyIfNull())
             {
