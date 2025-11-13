@@ -38,6 +38,7 @@ namespace EliteDangerousCore
             Theocracy,
             Engineer,
             Carrier,
+            Megaconstruction,
             Undefined,
         }
 

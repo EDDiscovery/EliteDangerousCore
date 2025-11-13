@@ -189,6 +189,7 @@ namespace EliteDangerousCore
             PlanetaryConstructionDepot,
             DockablePlanetStation,
             GameplayPOI,
+            Dodec,
         }
 
         // maps the StationType field to an enum.
