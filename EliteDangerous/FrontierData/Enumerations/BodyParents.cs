@@ -24,31 +24,32 @@ namespace EliteDangerousCore
     [System.Diagnostics.DebuggerDisplay("BodyParent {Type} {BodyID}")]
     public class BodyParent
     {
-        public enum BodyType { Planet, Null, Star, Ring, Unknown };
+        public enum ParentBodyType { Planet, Null, Star, Ring, Unknown };
+
         [PropertyNameAttribute("Type of node, Null = barycentre, Planet, Star, Ring (Beltcluster)")]
-        public BodyType Type { get; set; }
+        public ParentBodyType Type { get; set; }
         [PropertyNameAttribute("Frontier body ID")]
         public int BodyID { get; set; }
         [PropertyNameAttribute("Is node a barycentre")]
-        public bool IsBarycentre { get { return Type == BodyType.Null; } }
+        public bool IsBarycentre { get { return Type == ParentBodyType.Null; } }
         [PropertyNameAttribute("Is node a star")]
-        public bool IsStar { get { return Type == BodyType.Star; } }
+        public bool IsStar { get { return Type == ParentBodyType.Star; } }
         [PropertyNameAttribute("Is node a planet")]
-        public bool IsPlanet { get { return Type == BodyType.Planet; } }
-        [PropertyNameAttribute("Is node a Beltcluster")]
-        public bool IsBeltCluster { get { return Type == BodyType.Ring; } }
-        [PropertyNameAttribute("Is node a Beltcluster")]
-        public bool IsRing { get { return Type == BodyType.Ring; } }            // back compat
+        public bool IsPlanet { get { return Type == ParentBodyType.Planet; } }
+        [PropertyNameAttribute("Is node a Beltcluster/Stellar Ring")]
+        public bool IsStellarRing { get { return Type == ParentBodyType.Ring; } }
+        [PropertyNameAttribute("Is node a Beltcluster/Stellar Ring")]
+        public bool IsRing { get { return Type == ParentBodyType.Ring; } }            // back compat
 
         [PropertyNameAttribute("Properties of the barycentre")]
         public JournalScanBaryCentre Barycentre { get; set; }        // set by star scan system if its a barycentre, for the queries system so you can do Parents[2].Barycentre.SemiMajorAxis
 
         public BodyParent()
         { }
-        public BodyParent(BodyType t, int id)
+        public BodyParent(ParentBodyType t, int id)
         { Type = t; BodyID = id; }
 
-        public static bool IsOrbiting(List<BodyParent> items, BodyType t)
+        public static bool IsOrbiting(List<BodyParent> items, ParentBodyType t)
         {
             if (items != null)
             {

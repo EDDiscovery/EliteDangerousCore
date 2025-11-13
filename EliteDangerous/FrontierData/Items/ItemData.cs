@@ -29,16 +29,18 @@ namespace EliteDangerousCore
 
             AddExtraShipInfo();
 
-            // this ensures all is checked - use it against example.ex and check translator-ids.log
-            //foreach (var m in GetShipModules(true, true, true, true, true)) { string s = $"{m.Key} = {m.Value.TranslatedModName} {m.Value.TranslatedModTypeString}";  }
-
-            // for translator example.ex
-
-            //foreach (ShipSlots.Slot x in Enum.GetValues(typeof(ShipSlots.Slot))) System.Diagnostics.Debug.WriteLine($".{x}: {ShipSlots.ToEnglish(x).AlwaysQuoteString()} @");
-
-            //foreach ( StationDefinitions.StationServices x in Enum.GetValues(typeof(StationDefinitions.StationServices))) System.Diagnostics.Debug.WriteLine($".{x}: {StationDefinitions.ToEnglish(x).AlwaysQuoteString()} @");
 
 #if DEBUG
+            foreach (var m in GetShipModules(true, true, true, true, true)) { string s = $"{m.Key} = {m.Value.TranslatedModName} {m.Value.TranslatedModTypeString()}"; }
+            foreach (ShipSlots.Slot x in Enum.GetValues(typeof(ShipSlots.Slot))) { var p = ShipSlots.ToEnglish(x).AlwaysQuoteString(); }
+            foreach (GovernmentDefinitions.Government x in Enum.GetValues(typeof(GovernmentDefinitions.Government))) { var p = GovernmentDefinitions.ToLocalisedLanguage(x); }
+
+
+            foreach (StationDefinitions.StarportTypes x in Enum.GetValues(typeof(StationDefinitions.StarportTypes))) { var p = StationDefinitions.ToLocalisedLanguage(x); }
+            foreach (StationDefinitions.StarportState x in Enum.GetValues(typeof(StationDefinitions.StarportState))) { var p = StationDefinitions.ToLocalisedLanguage(x); }
+            foreach (StationDefinitions.StationServices x in Enum.GetValues(typeof(StationDefinitions.StationServices))) { var p = StationDefinitions.ToLocalisedLanguage(x); }
+
+
             string csfile = @"c:\code\eddiscovery\elitedangerouscore\elitedangerous\FrontierData\items\ModuleList.cs";
             string infile = @"c:\code\newvanity.txt";
 

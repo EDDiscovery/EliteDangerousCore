@@ -67,7 +67,7 @@ namespace EliteDangerousCore.StarScan2
 
                 // the bodyid should have found it. But for belts, they may have been added with an AutoID from the star ring info, but still be there with this name
                 // we need to only check belts because other items such as Unknown Barycentres all have the same names and may be picked up in error
-                if (subbody == null && nt.IsBeltCluster)                
+                if (subbody == null && nt.IsStellarRing)                
                     subbody = cur.ChildBodies.Find(x => x.OwnName == subbodyname);
 
                 // not there..
@@ -120,7 +120,7 @@ namespace EliteDangerousCore.StarScan2
             BodyNode body = FindBody(sc.BodyID.Value);        // find ID anywhere
 
             if (body == null)
-                body = FindCanonicalBodyNameType(sc.BodyName,sc.BodyType);          // see if its anywhere else due to a misplace using the scan name, checking all scan names and ownnames in case its an autoplaced object
+                body = FindCanonicalBodyNameType(sc.BodyName,sc.BodyType);  // see if its anywhere else due to a misplace using the scan name, checking all scan names and ownnames in case its an autoplaced object
 
             List<BodyNode> orphans = null;
 
@@ -144,7 +144,7 @@ namespace EliteDangerousCore.StarScan2
                 $"  Rename {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
             }
 
-            if (cur.BodyType == BodyNode.BodyClass.Barycentre)     // we can adjust the name of the BC above if possible
+            if (cur.BodyType == BodyDefinitions.BodyType.Barycentre)     // we can adjust the name of the BC above if possible
             {
                 AddBarycentreName(cur, ownname);
             }
@@ -165,7 +165,7 @@ namespace EliteDangerousCore.StarScan2
 
 
         // Non standard name with Parents
-        public BodyNode GetOrMakeNonStandardBodyFromScanWithParents(JournalScan sc, string systemname, string ownname)
+        public BodyNode GetOrMakeNonStandardBodyFromScanWithParents(JournalScan sc, string ownname, string systemname)
         {
             global::System.Diagnostics.Debug.Assert(sc.BodyID == 0 || sc.Parents != null);
 
@@ -193,7 +193,13 @@ namespace EliteDangerousCore.StarScan2
                 // Note: A star adds a belt clusters with ID<0 as its not given.  When a belt cluster body is defined however, it will be handled by the standard naming code (<star> A Belt Cluster 3)
                 // since the format is in std naming and the belt cluster ID will be corrected.  We should not be here going thru a ring definition sequence and encoutering a child with an autoid
 
-                (!nt.IsBeltCluster || cur.ChildBodies.Find(x => x.BodyID == BodyIDMarkerForAutoBodyBeltCluster) == null).Assert("We should not be here for a belt cluster ring");
+                // a stellar ring (belt cluster) should not have any bodies below with bodyidmarkers set..
+                if (nt.IsStellarRing && cur.ChildBodies.Find(x => x.BodyID == BodyIDMarkerForAutoBodyBeltCluster) != null)
+                {
+                    false.Assert($"StarScan belt cluster ID error for {sc.BodyName} in {systemname}");
+                }
+
+                
 
                 if (subbody == null)
                 {
@@ -247,7 +253,7 @@ namespace EliteDangerousCore.StarScan2
                 $"  Rename {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
             }
 
-            if (cur.BodyType == BodyNode.BodyClass.Barycentre)     // we can adjust the name of the BC above if possible
+            if (cur.BodyType == BodyDefinitions.BodyType.Barycentre)     // we can adjust the name of the BC above if possible
             {
                 AddBarycentreName(cur, sc.BodyName);
             }
@@ -300,11 +306,11 @@ namespace EliteDangerousCore.StarScan2
                 else if (!itsastar && !haveastar)         // not a star and we don't have a star yet, we need to start with a star
                 {
                     // find any star at top level
-                    var starbody = cur.ChildBodies.Find(x => x.BodyType == BodyNode.BodyClass.Star);
+                    var starbody = cur.ChildBodies.Find(x => x.BodyType == BodyDefinitions.BodyType.Star);
 
                     if ( starbody == null)       // if can't find a star
                     {
-                        starbody = new BodyNode(DefaultNameOfUnknownStar, BodyNode.BodyClass.Star, BodyIDMarkerForAutoBody, cur, this);
+                        starbody = new BodyNode(DefaultNameOfUnknownStar, BodyDefinitions.BodyType.Star, BodyIDMarkerForAutoBody, cur, this);
                         cur.ChildBodies.Add(starbody);
                         BodyGeneration++;
                         $"  Add {starbody.BodyType} `{starbody.OwnName}`:{starbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
@@ -334,14 +340,14 @@ namespace EliteDangerousCore.StarScan2
                 if (subbody == null)
                 {
                     // best try classifcation, by sc is last, else by other info from above
-                    BodyNode.BodyClass ty = last && sc.IsStar ? BodyNode.BodyClass.Star : 
-                                            last && sc.IsPlanet ? BodyNode.BodyClass.PlanetMoon :
-                                            last && sc.IsBeltClusterBody ? BodyNode.BodyClass.BeltClusterBody :
-                                            last && sc.IsPlanetaryRing ? BodyNode.BodyClass.PlanetaryRing:
-                                            itsabeltcluster ? BodyNode.BodyClass.BeltCluster : 
-                                            itsabarycentre ? BodyNode.BodyClass.Barycentre : 
-                                            itsastar ? BodyNode.BodyClass.Star : 
-                                            BodyNode.BodyClass.Unknown;
+                    BodyDefinitions.BodyType ty = last && sc.IsStar ? BodyDefinitions.BodyType.Star : 
+                                            last && sc.IsPlanet ? BodyDefinitions.BodyType.Planet :
+                                            last && sc.IsBeltClusterBody ? BodyDefinitions.BodyType.AsteroidCluster :
+                                            last && sc.IsPlanetaryRing ? BodyDefinitions.BodyType.PlanetaryRing:
+                                            itsabeltcluster ? BodyDefinitions.BodyType.StellarRing : 
+                                            itsabarycentre ? BodyDefinitions.BodyType.Barycentre : 
+                                            itsastar ? BodyDefinitions.BodyType.Star : 
+                                            BodyDefinitions.BodyType.Unknown;
 
                     subbody = new BodyNode(ownname, ty, BodyIDMarkerForAutoBody, cur, this);
                     cur.ChildBodies.Add(subbody);
@@ -374,10 +380,10 @@ namespace EliteDangerousCore.StarScan2
                 if (last)
                 {
                     // force class. We may have called it unknown before because it was in the middle of the naming list.
-                    BodyNode.BodyClass ty = sc.IsStar ? BodyNode.BodyClass.Star : sc.IsPlanet ? BodyNode.BodyClass.PlanetMoon : BodyNode.BodyClass.BeltClusterBody;
+                    BodyDefinitions.BodyType ty = sc.IsStar ? BodyDefinitions.BodyType.Star : sc.IsPlanet ? BodyDefinitions.BodyType.Planet : BodyDefinitions.BodyType.AsteroidCluster;
                     subbody.ResetClass(ty);
 
-                    if (cur.BodyType == BodyNode.BodyClass.Barycentre)     // we can adjust the name of the BC above if possible
+                    if (cur.BodyType == BodyDefinitions.BodyType.Barycentre)     // we can adjust the name of the BC above if possible
                     {
                         AddBarycentreName(cur, ownname);
                     }
@@ -398,27 +404,27 @@ namespace EliteDangerousCore.StarScan2
 
         // for IBodyNames without parent lists, marked as planet. 
         // check if its there by id or fdname, and then if not, make something up to hold it
-        public BodyNode GetOrMakeDiscreteBody(string fdname, int? bid, string systemname)
+        public BodyNode GetOrMakeDiscretePlanet(string fdname, int? bid, string systemname)
         {
             CheckTree();
 
             BodyNode body = bid.HasValue ? FindBody(bid.Value) : null;
 
             if (body == null)
-                body = FindCanonicalBodyName(fdname);
+                body = FindCanonicalBodyNameType(fdname, BodyDefinitions.BodyType.Planet);
 
             if (body == null)
             {
-                BodyNode starbody = Bodies(x => x.BodyType == BodyNode.BodyClass.Star, true).FirstOrDefault();       // find a star, any star, anywhere
+                BodyNode starbody = Bodies(x => x.BodyType == BodyDefinitions.BodyType.Star, true).FirstOrDefault();       // find a star, any star, anywhere
 
                 if (starbody == null)
                 {
-                    starbody = new BodyNode(DefaultNameOfUnknownStar, BodyNode.BodyClass.Star, BodyIDMarkerForAutoBody, systemBodies, this);       // assign under the main node
+                    starbody = new BodyNode(DefaultNameOfUnknownStar, BodyDefinitions.BodyType.Star, BodyIDMarkerForAutoBody, systemBodies, this);       // assign under the main node
                     systemBodies.ChildBodies.Add(starbody);
                     $"  Add Unknown Star for {fdname}:{bid} in {systemname}".DO(debugid);
                 }
 
-                body = new BodyNode(fdname, BodyNode.BodyClass.PlanetMoon, bid ?? -1, starbody, this);
+                body = new BodyNode(fdname, BodyDefinitions.BodyType.Planet, bid ?? -1, starbody, this);
                 body.SetCanonicalName(fdname);          // we set its canonical name to the fdname given
                 BodyGeneration++;
 
@@ -448,14 +454,14 @@ namespace EliteDangerousCore.StarScan2
             BodyNode starbody = bid.HasValue ? FindBody(bid.Value) : null;
 
             if (starbody == null)
-                starbody = FindCanonicalBodyName(fdname);
+                starbody = FindCanonicalBodyNameType(fdname,BodyDefinitions.BodyType.Star);
 
             if (starbody == null)
-                starbody = systemBodies.ChildBodies.Find(x => x.BodyType == BodyNode.BodyClass.Star && x.BodyID == BodyIDMarkerForAutoBody);          // try an autostar
+                starbody = systemBodies.ChildBodies.Find(x => x.BodyType == BodyDefinitions.BodyType.Star && x.BodyID == BodyIDMarkerForAutoBody);          // try an autostar
 
             if (starbody == null)
             {
-                starbody = new BodyNode(fdname, BodyNode.BodyClass.Star, bid ?? BodyIDMarkerForAutoBody, systemBodies, this);       // we don't know its placement, so we just place it under the systemnode, and we mark it as unknown (even if we know its BID because we want to mark it as autoplaced)
+                starbody = new BodyNode(fdname, BodyDefinitions.BodyType.Star, bid ?? BodyIDMarkerForAutoBody, systemBodies, this);       // we don't know its placement, so we just place it under the systemnode, and we mark it as unknown (even if we know its BID because we want to mark it as autoplaced)
                 starbody.SetCanonicalName(fdname);          // we set its canonical name to the fdname given
                 $"  Add Star `{fdname}`:-2 in {systemname}".DO(debugid);
                 BodyGeneration++;
@@ -549,7 +555,7 @@ namespace EliteDangerousCore.StarScan2
 
                 if (body == null)       // if not found, we may be able to do add the body id to it 
                 {
-                    body = FindCanonicalBodyName(sc.BodyName);  // see if we can find it
+                    body = FindCanonicalBodyNameType(sc.BodyName,sc.BodyType);  // see if we can find it
 
                     if (body != null && body.BodyID<0)      // found it, and not set, set it
                     {
@@ -589,7 +595,7 @@ namespace EliteDangerousCore.StarScan2
 
             if (body == null)
             {
-                body = FindCanonicalBodyName(sc.BodyName);
+                body = FindCanonicalBodyNameType(sc.BodyName, sc.BodyType);
                 if (body != null)
                 {
                     (body.BodyID < 0).Assert("Reset SAA Signals Found without ID but ID is set");
@@ -620,8 +626,9 @@ namespace EliteDangerousCore.StarScan2
 
             if (body == null)
             {
-                body = FindCanonicalBodyName(sc.BodyName);
-                
+                //body = FindCanonicalBodyNameType(sc.BodyName, sc.BodyType);
+                body = FindCanonicalBodyNameType(sc.BodyName,sc.BodyType);
+
                 if (body != null)
                 {
                     (body.BodyID < 0).Assert("Reset SAA Rings Found without ID but ID is set");
@@ -673,8 +680,9 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        public void SetCount(int? bodycount, int? nonbodycount)
+        public void SetFSSDiscoveryScan(int? bodycount, int? nonbodycount)
         {
+            $"Add FSS Discovery Scan Count {bodycount} {nonbodycount} to System in `{System.Name}`:{System.SystemAddress}".DO(debugid);
             FSSTotalBodies = bodycount;
             FSSTotalNonBodies = nonbodycount;
             BodyGeneration++;
@@ -682,6 +690,7 @@ namespace EliteDangerousCore.StarScan2
 
         public void AddFSSSignalsDiscovered(List<FSSSignal> signals)
         {
+            $"Add FSS Signals {signals.Count} to SystemBodies in `{System.Name}`:{System.SystemAddress}".DO(debugid);
             systemBodies.AddFSSSignals(signals);
             SignalGeneration++;
         }
@@ -833,18 +842,23 @@ namespace EliteDangerousCore.StarScan2
                     else if (name.EndsWith("Galle Ring", StringComparison.InvariantCultureIgnoreCase) ||                // specials, just to remove debug assert
                             name.EndsWith("Jupiter Halo Ring", StringComparison.InvariantCultureIgnoreCase) ||
                             name.EndsWith("Asteroid Belt", StringComparison.InvariantCultureIgnoreCase) ||
-                            name.EndsWith("The Belt", StringComparison.InvariantCultureIgnoreCase)
+                            name.EndsWith("The Belt", StringComparison.InvariantCultureIgnoreCase) ||
+                            name.EndsWith("Anahit Ring", StringComparison.InvariantCultureIgnoreCase) ||
+                            name.EndsWith("Vulcan Ring", StringComparison.InvariantCultureIgnoreCase)
                             )
                     { }
                     else
-                        (false).Assert($"Not coped with all types of ring naming {name}");
+                    {
+                        string s = $"StarScan {body.Name()} Unconventional ring name {name}";
+                        global::System.Diagnostics.Trace.WriteLine(s);
+                    }
 
                     $"  Add Belt/Ring object {name} to `{body.OwnName}`:{body.BodyID}".DO(debugid);
 
                     var belt = body.ChildBodies.Find(x => x.OwnName == name);
                     if (belt == null)
                     {
-                        belt = new BodyNode(name, body.BodyType == BodyNode.BodyClass.PlanetMoon ? BodyNode.BodyClass.PlanetaryRing : BodyNode.BodyClass.BeltCluster , BodyIDMarkerForAutoBodyBeltCluster, body, this);
+                        belt = new BodyNode(name, body.BodyType == BodyDefinitions.BodyType.Planet ? BodyDefinitions.BodyType.PlanetaryRing : BodyDefinitions.BodyType.StellarRing , BodyIDMarkerForAutoBodyBeltCluster, body, this);
                         belt.SetCanonicalName(ring.Name);
                         body.ChildBodies.Add(belt);
                     }
@@ -857,11 +871,10 @@ namespace EliteDangerousCore.StarScan2
         }
 
         // body in wrong place, remove it, and possible remove the parents above if its an auto placed body with no children after removal
+        // return orphans of the body. tree will be unstable until orphans put back
         private List<BodyNode> RemoveIncorrectBody(BodyNode prevassigned)
         {
-            $"  Begin Remove Incorrect body `{prevassigned.OwnName}`:{prevassigned.BodyID}".DO();
-
-            prevassigned.SystemNode.DumpTree();
+            //$"  Begin Remove Incorrect body `{prevassigned.OwnName}`:{prevassigned.BodyID}".DO();
 
             var orphans = prevassigned.ChildBodies;
 
@@ -876,7 +889,7 @@ namespace EliteDangerousCore.StarScan2
                 if (prevassigned.Parent.BodyID < 0 && prevassigned.Parent.ChildBodies.Count == 0)   // if the parent does not have a valid bodyid, and it has no children now, recurse up to it
                 {
                     prevassigned = prevassigned.Parent;
-                    $"  .. recurse up to `{prevassigned.OwnName}`:{prevassigned.BodyID}".DO();
+                    //$"  .. recurse up to `{prevassigned.OwnName}`:{prevassigned.BodyID}".DO();
                 }
                 else
                     break;
@@ -1013,7 +1026,7 @@ namespace EliteDangerousCore.StarScan2
         private const int BodyIDMarkerForAutoBodyBeltCluster = -3;
         
         private Dictionary<int, BodyNode> bodybyid = new Dictionary<int, BodyNode>();
-        private BodyNode systemBodies = new BodyNode("System", BodyNode.BodyClass.System, -1, null, null);       // root of all bodies
+        private BodyNode systemBodies = new BodyNode("System", BodyDefinitions.BodyType.System, -1, null, null);       // root of all bodies
 
         const string debugid = "StarScan";
 
@@ -1023,7 +1036,7 @@ namespace EliteDangerousCore.StarScan2
 
         public void DumpTree()
         {
-            $"System `{System.Name}` {System.SystemAddress}: bodies {Bodies().Count()} ids {bodybyid.Count}".DO();
+            global::System.Diagnostics.Trace.WriteLine($"System `{System.Name}` {System.SystemAddress}: bodies {Bodies().Count()} ids {bodybyid.Count}");
             systemBodies.DumpTree("S", 0);
             CheckTree();
         }
@@ -1035,21 +1048,21 @@ namespace EliteDangerousCore.StarScan2
             int totalbodieswithids = 0;
             foreach( var x in Bodies())
             {
-                (x.SystemNode == this).Assert("System Node not assigned to this");
+                (x.SystemNode == this).Assert($"StarScan System Node not assigned to this {x.Name()}");
                 if ( x.BodyID>=0 )
                 {
                     totalbodieswithids++;
 
                     if (bodybyid.TryGetValue(x.BodyID, out BodyNode v))
                     {
-                        (v == x).Assert("bodybyid not pointing to same place as ID");
+                        (v == x).Assert($"StarScan bodybyid not pointing to same place as ID for {x.Name()}");
                     }
                     else
-                        false.Assert("Missing bodyid in bodybyid");
+                        false.Assert($"StarScan Missing bodyid in bodybyid {x.Name()}");
                 }
             }
 
-            (totalbodieswithids == bodybyid.Count).Assert($"Not the same number of bodyids as nodes {totalbodieswithids} with Ids in bodybyid {bodybyid.Count}");
+            (totalbodieswithids == bodybyid.Count).Assert($"StarScan Not the same number of bodyids as nodes {totalbodieswithids} with Ids in bodybyid {bodybyid.Count}");
 
             CheckParents(systemBodies);
         }
@@ -1058,7 +1071,7 @@ namespace EliteDangerousCore.StarScan2
         {
             foreach( var x in body.ChildBodies)
             {
-                (x.Parent == body).Assert("bodybyid not pointing to same place as ID");
+                (x.Parent == body).Assert($"StarScan bodybyid not pointing to same place as ID for {x.Name()}");
                 CheckParents(x);
             }
         }

@@ -84,7 +84,6 @@ namespace EliteDangerousCore.StarScan2
         // run these history entries thru the star scanner
         public void ProcessFromHistory(List<Tuple<int,HistoryEntry>> mhs, Action<StarScan,Tuple<int,HistoryEntry>> perstep = null)
         {
-            int step = 0;
             foreach (var mhe in mhs)
             {
                 HistoryEntry he = mhe.Item2;
@@ -93,19 +92,17 @@ namespace EliteDangerousCore.StarScan2
                 {
                     if (he.journalEntry is JournalScan js)
                     {
-                        System.Diagnostics.Debug.WriteLine($"\r\n{step} {he.EntryType}: `{js.BodyName}` ID: {js.BodyID} - {js.ParentList()} ");
+                        System.Diagnostics.Debug.WriteLine($"\r\n{mhe.Item1} {he.EventTimeUTC} {he.EntryType}: `{js.BodyName}` ID: {js.BodyID} - {js.ParentList()};  in `{he.System.Name}`:{he.System.SystemAddress}");
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine($"\r\n{step} {he.EntryType}: in {he.System.Name}");
+                        System.Diagnostics.Debug.WriteLine($"\r\n{mhe.Item1} {he.EventTimeUTC} {he.EntryType}: in `{he.System.Name}`:{he.System.SystemAddress}");
                     }
 
                     (he.journalEntry as IStarScan).AddStarScan(this, he.System, he.Status);
                     perstep?.Invoke(this,mhe);
                     DumpTree();
                 }
-
-                step++;
             }
 
             AssignPending();

@@ -97,9 +97,9 @@ namespace EliteDangerousCore.JournalEvents
         public double? Longitude { get; set; }
 
         [PropertyNameAttribute("EDD assigned body name")]
-        public string EDDBodyName { get; set; }        // EDD addition, filled in in ED. Null for not known
+        public string EDDBodyName { get; set; }        // EDD addition, filled in in ED. Null for not known. EDDiscoveryNewController fills this in from the status json
         [PropertyNameAttribute("EDD assigned body ID")]
-        public int EDDBodyId { get; set; } = -1;       // EDD addition, filled in in ED.  -1 for not known
+        public int EDDBodyId { get; set; } = -1;       // EDD addition, filled in in ED.  -1 for not known. Copied from the BodyID in he.Status 
 
         public bool Equals(JournalCodexEntry other)
         {

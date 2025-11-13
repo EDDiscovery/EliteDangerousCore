@@ -1118,6 +1118,7 @@ D8D4559A372171: "Prison" @
 9DB9478502242D: "Prison Colony" @
 AB1A1F939BDE0E: "Theocracy" @
 0646F4AFD90C8F: "Undefined" @
+750A7CEF420603: "Megaconstruction" @
 
 SECTION EconomyTypes
 
@@ -1164,6 +1165,7 @@ E2407F2BA86D9F: "Space Construction Depot" @
 72D0849A72AB18: "Planetary Construction Depot" @
 2D68CF109D6809: "Dockable Planet Station" @
 D089EF39D4EA65: "Construction POI" @
+39A76A40856116: "Dodec" @
 
 SECTION PowerPlayStates
 

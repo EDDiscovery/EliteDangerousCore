@@ -93,12 +93,10 @@ namespace EliteDangerousCore
 
             Identifiers.Process(je);
 
-            // StarScan2 processing
-
-            //if (he.journalEntry is IStarScan ss)
-            //{
-            //    (he.journalEntry as IStarScan).AddStarScan(StarScan2, he.System, he.Status);
-            //}
+            if (he.journalEntry is IStarScan ss)
+            {
+                (he.journalEntry as IStarScan).AddStarScan(StarScan2, he.System, he.Status);
+            }
 
             if ((LastSystem == null || he.System.Name != LastSystem) && he.System.Name != "Unknown")   // if system is not last, we moved somehow (FSD, location, carrier jump), add
             {
@@ -251,8 +249,6 @@ namespace EliteDangerousCore
 
                     heh.journalEntry.SetSystemNote();                // since we are displaying it, we can check here to see if a system note needs assigning
 
-                    //if ( heh.EventTimeUTC > new DateTime(2021,8,1)) System.Diagnostics.Debug.WriteLine("   ++ {0} {1}", heh.EventTimeUTC.ToString(), heh.EntryType);
-
                     heh.Index = hist.historylist.Count; // store its index for quick ordering, after all removal etc
 
                     hist.historylist.Add(heh);        // then add to history
@@ -266,18 +262,6 @@ namespace EliteDangerousCore
             System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" History List Created {hist.Count}");
 
             hist.StarScan2.AssignPending();
-
-            // tbd
-            //hist.StarScan2.DrawAllSystemsToFolder(@"c:\code\AA");
-            hist.StarScan2.DrawAllSystemsToFolder(null);
-
-
-            // dump all events info+detailed to file, useful for checking formatting
-            //JournalTest.DumpHistoryGetInfoDescription(hist, @"c:\code\out.log");      
-
-            // foreach (var kvp in hist.IdentifierList.Items) System.Diagnostics.Debug.WriteLine($"IDList {kvp.Key} -> {kvp.Value}"); // debug
-
-            //for (int i = hist.Count - 10; i < hist.Count; i++)  System.Diagnostics.Debug.WriteLine("Hist {0} {1} {2}", hist[i].EventTimeUTC, hist[i].Indexno , hist[i].EventSummary);
 
             hist.CommanderId = commanderid;        // last thing, and this indicates history is loaded.
 
@@ -293,15 +277,6 @@ namespace EliteDangerousCore
                     break;
                 }
             }
-
-            //foreach (var x in Identifiers.Items) System.Diagnostics.Debug.WriteLine($"Identifiers {x.Key} = {x.Value}");
-
-            //// Dump a systems entried to a debug file. Then use StarScan2.ProcessFromFile / Tests file to check the star scanner
-            //string sysname = "Leesti";
-            //var mhs = hist.historylist.Where(x => (x.System.Name.EqualsIIC(sysname)) && (x.journalEntry is IStarScan || x.journalEntry is IBodyFeature || x.journalEntry is JournalFSDJump)).ToList();
-            //var jsonlines = mhs.Select(x => x.journalEntry.GetJsonString());
-            //BaseUtils.FileHelpers.TryWriteAllLinesToFile($@"c:\code\eddiscovery\elitedangerouscore\elitedangerous\bodies\starscan2\tests\{sysname}.json", jsonlines.ToArray());
-
         }
 
         // reorder/remove history entries to fix up some strange frontier behaviour

@@ -791,7 +791,7 @@ namespace EliteDangerousCore
                             // find real body name for signal, not the one in the history entry as it could be produced in the previous system
 
                             long? sysaddr = ((JournalFSSSignalDiscovered)he.journalEntry).Signals[0].SystemAddress;
-                            if (sysaddr.HasValue && starscan.TryGetSystem(sysaddr.Value, out var sn))
+                            if (sysaddr.HasValue && starscan.TryGetSystemNode(sysaddr.Value, out var sn))
                             {
                                 key = sn.System.Name;
                             }
@@ -813,7 +813,7 @@ namespace EliteDangerousCore
                         {
                             var so = he.journalEntry as JournalScanOrganic;
                             key = he.System.Name;       // default
-                            if (starscan.TryGetSystem(so.SystemAddress, out StarScan2.SystemNode sn))
+                            if (starscan.TryGetSystemNode(so.SystemAddress, out StarScan2.SystemNode sn))
                             {
                                 if (sn.TryGetBody(so.Body, out var bn))
                                     key = bn.Name();

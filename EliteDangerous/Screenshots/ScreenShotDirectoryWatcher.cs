@@ -154,7 +154,9 @@ namespace EliteDangerousCore.ScreenShots
         {
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);
 
-            if (e.FullPath.ToLowerInvariant().EndsWith(".bmp"))     // cause its a frontier bmp file..
+            string filename = Path.IsPathRooted(e.Name) ? e.Name : e.FullPath; // Work around https://github.com/mono/mono/issues/21677
+
+            if (filename.ToLowerInvariant().EndsWith(".bmp"))     // cause its a frontier bmp file..
             {
                 System.Diagnostics.Debug.WriteLine($"Screenshot file watch start a timer to wait for SS entry for {e.FullPath}");
 

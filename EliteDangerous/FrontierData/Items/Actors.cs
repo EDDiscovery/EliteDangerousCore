@@ -143,8 +143,12 @@ namespace EliteDangerousCore
              { "asteroidbase", new Actor("Asteroid Base") },
              { "bernalsphere", new Actor("Station") },
              { "coriolis", new Actor("Coriolis Station") },
+
              { "carrierdocka", new Actor("Carrier Dock A") },
              { "carrierdockb", new Actor("Carrier Dock B") },
+             { "carrierdocka_squadron", new Actor("Squadron Carrier Dock A") },
+             { "carrierdockb_squadron", new Actor("Squadron Carrier Dock B") },
+
              { "federation_capitalship", new Actor("Federation Capital Ship") },
 
              { "lizryder", new Actor("Engineer Liz Ryder") },

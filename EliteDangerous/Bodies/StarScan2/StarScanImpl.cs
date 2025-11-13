@@ -52,7 +52,15 @@ namespace EliteDangerousCore.StarScan2
                             systemNodesByName[sys.Name] = node;                             // point name node to our new node
                         }
                     }
-
+                    else
+                    {
+                        if ( sys.Name != node.System.Name)      // a system has been renamed by frontier..
+                        {
+                            $"StarScan Renamed system {node.System.Name} -> {sys.Name}".DO();
+                            node.RenamedSystem(sys);
+                            systemNodesByName[sys.Name] = node;     // we add it by name to this node, but leave the previous name also pointing to this node...
+                        }
+                    }
                     return node;
                 }
                 else if (sys.Name.HasChars())      // name only ones
@@ -100,7 +108,7 @@ namespace EliteDangerousCore.StarScan2
                     //$"Add Body {sc.EventTypeStr} {sc.EventTimeUTC} : {sc.BodyType} `{sc.BodyName}` {sc.BodyID} ".DO();
                     lock (sn)
                     {
-                        sn.GetOrMakeDiscreteBody(ownname, sc.BodyID.Value, sys.Name);
+                        sn.GetOrMakeDiscretePlanet(ownname, sc.BodyID.Value, sys.Name);
                     }
                 }
                 else if (sc.BodyType == BodyDefinitions.BodyType.Star)          // SupercruiseExit/Location
@@ -143,65 +151,111 @@ namespace EliteDangerousCore.StarScan2
         // Three sorts of scan 1) Modern (sysaddr,bodyid,parents) 2) Older (bodyid,parents) and 3) Ancient (nothing)
         // And two sorts of names standard (Skaude AA-A h294 AB 1 a) or non standard "Earth"
 
-        public void AddJournalScan(JournalScan sc, ISystem sys)
+        public void AddJournalScan(JournalScan sc, ISystem curlocsys)
         {
-            if (sys.Name == "Sol" && sc.BodyName.StartsWith("Procyon"))         // Robert had this situation
+            if (curlocsys.Name == "Sol" && sc.BodyName.StartsWith("Procyon"))         // Robert had this situation
                 return;
 
-            bool hasparentbodyid = sc.BodyID != null && (sc.BodyID == 0 || sc.Parents != null);     // no body/parent tree makes the scan problematc to make
 
-            bool stdname = sc.BodyName.StartsWith(sys.Name) && sc.BodyName.Length > sys.Name.Length;
-            string ownname = stdname ? sc.BodyName.Substring(sys.Name.Length).Trim() : sc.BodyName;
+            SystemNode sn = null;
 
-            // get system, either by full address or by name.
-            SystemNode sn = GetOrAddSystem(sys);
-            System.Diagnostics.Debug.Assert(sn != null);
+            //if ( sc.StarSystem == "HIP 63809")
+            //{
 
-            lock (sn)
+            //}
+
+            // so, we are going to use sc.systemaddress as the primary lookup method, then the sc.starsystem, then only use curlocsys as a fall back for very old scans, and we must have a system already to use curlocsys
+            // A log from StarTrash has scans occuring for the previous system in the current system - so we can't rely on curlocsys
+            // A log from Wags had scans on hip 63809 occuring in another system..
+            // 
+
+            lock (masterlock)
             {
-                // triage for scans with full info
-                if (hasparentbodyid)                        // if we have modern info 
+                if (sc.SystemAddress.HasValue || sc.StarSystem.HasChars())          // if it has a system address or a name, we only use this to detect the system node
                 {
-                    if (sn.OldScansPresent)                 // we don't mix old scans with new scans. Old scans without parents trees are problematic
+                    // if does not have a system address, or it failed, and we have a StarSystem in there
+                    if ((!sc.SystemAddress.HasValue || !systemNodesByAddress.TryGetValue(sc.SystemAddress.Value, out sn)) && sc.StarSystem.HasChars())     
                     {
-                        sn.OldScansPresent = false;
-                        sn.Clear();
-                    }
-
-                    if (stdname)
-                    {
-                    //    $"Add Scan Std format {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}".DO();
-                        sn.GetOrMakeStandardBodyNodeFromScanWithParents(sc, ownname, sys.Name);
-                    }
-                    else
-                    {
-                   //     $"Add Scan NonStd format {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}".DO();
-                        sn.GetOrMakeNonStandardBodyFromScanWithParents(sc, sys.Name, ownname);
+                        // if name failed
+                        if (!systemNodesByName.TryGetValue(sc.StarSystem, out sn))
+                        {
+                            sn = GetOrAddSystem(new SystemClass(sc.StarSystem, sc.SystemAddress));      // with or without system address, we can make the system anyway
+                        }
                     }
                 }
                 else
                 {
-                    sn.OldScansPresent = true;          // record it as an older scan node
+                    // we can't find it via the scan, try and see if its there using the current system. Don't try and make the system
 
-                    if (stdname )
+                    if (!curlocsys.SystemAddress.HasValue || !systemNodesByAddress.TryGetValue(curlocsys.SystemAddress.Value, out sn))      // if failed
+                        systemNodesByName.TryGetValue(curlocsys.Name, out sn);  // else try name
+                }
+            }
+
+            if (sn != null )
+            {
+                ISystem scansystem = sn.System;
+
+                bool hasparentbodyid = sc.BodyID != null && (sc.BodyID == 0 || sc.Parents != null);     // no body/parent tree makes the scan problematc to make
+
+                bool stdname = sc.BodyName.StartsWith(scansystem.Name) && sc.BodyName.Length > scansystem.Name.Length;      // work out if its standard naming
+                string ownname = stdname ? sc.BodyName.Substring(scansystem.Name.Length).Trim() : sc.BodyName;
+
+                lock (sn)
+                {
+                    // triage for scans with full info
+                    if (hasparentbodyid)                        // if we have modern info 
                     {
-                     //   $"Add OLD Scan Std format no parents {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress}".DO();
-                        sn.GetOrMakeStandardBodyNodeFromScanWithoutParents(sc, ownname, sys.Name);
-                    }
-                    else if ( sc.IsStar)
-                    {
-                        BodyNode bn = sn.GetOrMakeDiscreteStar(sc.BodyName, -1, sys.Name);
-                        bn.SetScan(sc);
+                        if (sn.OldScansPresent)                 // we don't mix old scans with new scans. Old scans without parents trees are problematic
+                        {
+                            sn.OldScansPresent = false;
+                            sn.Clear();
+                        }
+
+                        if (stdname)
+                        {
+                            //    $"Add Scan Std format {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}".DO();
+                            sn.GetOrMakeStandardBodyNodeFromScanWithParents(sc, ownname, scansystem.Name);
+                        }
+                        else
+                        {
+                            //     $"Add Scan NonStd format {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}".DO();
+                            sn.GetOrMakeNonStandardBodyFromScanWithParents(sc, ownname, scansystem.Name);
+                        }
                     }
                     else
                     {
-                        //  $"Add OLD Scan NonStd format no parents {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress}".DO();
-                        // we have no placement info, just store it.
-                        BodyNode bn = sn.GetOrMakeDiscreteBody(ownname, sc.BodyID, sys.Name);
-                        bn.SetScan(sc);
+                        sn.OldScansPresent = true;          // record it as an older scan node
+
+                        if (stdname)
+                        {
+                            //   $"Add OLD Scan Std format no parents {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress}".DO();
+                            sn.GetOrMakeStandardBodyNodeFromScanWithoutParents(sc, ownname, scansystem.Name);
+                        }
+                        else if (sc.IsStar)
+                        {
+                            BodyNode bn = sn.GetOrMakeDiscreteStar(sc.BodyName, -1, scansystem.Name);
+                            bn.SetScan(sc);
+                        }
+                        else
+                        {
+                            //  $"Add OLD Scan NonStd format no parents {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress}".DO();
+                            // we have no placement info, just store it.
+
+                            if (sc.BodyType == BodyDefinitions.BodyType.Planet)     // only adding planets here
+                            {
+                                BodyNode bn = sn.GetOrMakeDiscretePlanet(ownname, sc.BodyID, scansystem.Name);
+                                bn.SetScan(sc);
+                            }
+                        }
                     }
                 }
             }
+            else
+            {
+                $"StarScan Rejected Scan {sc.EventTimeUTC} {sc.BodyName} in `{sc.StarSystem}`:{sc.SystemAddress} found in `{curlocsys}` as missing evidence it was made in this system".DO();
+            }
+
         }
 
         public void AddBarycentre(JournalScanBaryCentre sc, ISystem sys, bool saveit = true)
@@ -241,7 +295,7 @@ namespace EliteDangerousCore.StarScan2
                 System.Diagnostics.Debug.Assert(sn != null);
                 lock (sn)
                 {
-                    sn.SetCount(bodycount, nonbodycount);
+                    sn.SetFSSDiscoveryScan(bodycount, nonbodycount);
                 }
             }
         }
@@ -251,7 +305,7 @@ namespace EliteDangerousCore.StarScan2
         {
             if (sc.Signals[0].SystemAddress.HasValue )
             {
-                if (TryGetSystem(sc.Signals[0].SystemAddress.Value, out SystemNode sn))     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
+                if (TryGetSystemNode(sc.Signals[0].SystemAddress.Value, out SystemNode sn))     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
                 {
                     lock (sn)
                     {

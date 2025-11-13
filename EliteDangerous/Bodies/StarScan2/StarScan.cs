@@ -38,7 +38,11 @@ namespace EliteDangerousCore.StarScan2
 
                 if (usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys))
                 {
+                    if (sys.Name.IsEmpty())
+                        System.Diagnostics.Debug.WriteLine($"StarScan WARNING - Spansh lookup with empty name of system is liable to errors - cant set body designation properly");
+
                     var lookupres = Spansh.SpanshClass.GetBodiesList(sys, usespansh);          // see if spansh has it cached or optionally look it up
+
                     if (lookupres != null)
                     {
                         foreach (JournalScan js in lookupres.Bodies)
@@ -66,7 +70,7 @@ namespace EliteDangerousCore.StarScan2
                     }
                 }
 
-                return FindSystem(sys);
+                return GetSystemNode(sys);
             }
 
             return null;
@@ -88,7 +92,7 @@ namespace EliteDangerousCore.StarScan2
                 if (usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys))
                 {
                     if (sys.Name.IsEmpty())
-                        System.Diagnostics.Debug.WriteLine($"WARNING - Spansh lookup with empty name of system is liable to errors - cant set body designation properly");
+                        System.Diagnostics.Debug.WriteLine($"StarScan WARNING - Spansh lookup with empty name of system is liable to errors - cant set body designation properly");
 
                     var lookupres = await Spansh.SpanshClass.GetBodiesListAsync(sys, usespansh);          // see if spansh has it cached or optionally look it up
 
@@ -123,14 +127,14 @@ namespace EliteDangerousCore.StarScan2
                     }
                 }
 
-                return FindSystem(sys);
+                return GetSystemNode(sys);
             }
 
             return null;
         }
 
         // Find system, primary thru address, if not by name
-        public SystemNode FindSystem(ISystem sys)
+        public SystemNode GetSystemNode(ISystem sys)
         {
             lock (masterlock)
             {
@@ -148,7 +152,7 @@ namespace EliteDangerousCore.StarScan2
         }
 
         // Find system, primary thru address, if not by name
-        public bool TryGetSystem(long addr, out SystemNode sn)
+        public bool TryGetSystemNode(long addr, out SystemNode sn)
         {
             lock (masterlock)
             {
@@ -156,15 +160,25 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
+        // Find system, primary thru address, if not by name
+        public bool TryGetSystemNode(string name, out SystemNode sn)
+        {
+            lock (masterlock)
+            {
+                return systemNodesByName.TryGetValue(name, out sn);
+            }
+        }
+
         // try and find the address, if we know it, else null
-        public ISystem FindISystem(string sysname)
+        public ISystem GetISystem(string sysname)
         {
             lock (masterlock)
             {
                 return systemNodesByName.TryGetValue(sysname, out var node) ? node.System : null;
             }
         }
-        public ISystem FindISystem(long addr)
+
+        public ISystem GetISystem(long addr)
         {
             lock (masterlock)
             {
@@ -172,7 +186,7 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        public ISystem FindISystemWithCache(long addr, WebExternalDataLookup lookup = WebExternalDataLookup.None)
+        public ISystem GetISystemWithCache(long addr, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
             lock (masterlock)
             {
@@ -199,12 +213,13 @@ namespace EliteDangerousCore.StarScan2
 
                 foreach (var kvp in pendingsystemaddressevents)
                 {
-                    SystemNode sn = systemNodesByAddress[kvp.Key];       // must be there, can't not be
-
-                    lock (sn)
+                    if (systemNodesByAddress.TryGetValue(kvp.Key, out SystemNode sn))       // turns out we need to check, as i've seen FSSSignalDiscovered on a system that has never been entered
                     {
-                        if (AssignPending(sn, kvp.Value))
-                            todeletesys.Add(kvp.Key);
+                        lock (sn)
+                        {
+                            if (AssignPending(sn, kvp.Value))
+                                todeletesys.Add(kvp.Key);
+                        }
                     }
                 }
 
@@ -215,12 +230,17 @@ namespace EliteDangerousCore.StarScan2
 
                 foreach (var kvp in pendingsystemaddressevents)
                 {
-                    SystemNode sn = systemNodesByAddress[kvp.Key];       // must be there, can't not be
-
-                    System.Diagnostics.Debug.WriteLine($"StarScan Pending left system {sn.System} count {kvp.Value.Count}");
-                    foreach ( var entry in kvp.Value)
+                    if (systemNodesByAddress.TryGetValue(kvp.Key, out SystemNode sn))       // turns out we need to check, as i've seen FSSSignalDiscovered on a system that has never been entered
                     {
-                        System.Diagnostics.Debug.WriteLine($" .. {entry.EventTimeUTC} {entry.EventTypeStr} {entry.GetInfo(sn.System)}");
+                        System.Diagnostics.Trace.WriteLine($"StarScan Pending left system {sn.System} count {kvp.Value.Count}");
+                        foreach (var entry in kvp.Value)
+                        {
+                            System.Diagnostics.Trace.WriteLine($" .. {entry.EventTimeUTC} {entry.EventTypeStr} {entry.GetInfo(sn.System)}");
+                        }
+                    }
+                    else
+                    {
+                        System.Diagnostics.Trace.WriteLine($"StarScan Pending events no system stored for {kvp.Key} Events {kvp.Value.Count} possible FSS Signal discovered but never entered system");
                     }
                 }
 
@@ -240,11 +260,11 @@ namespace EliteDangerousCore.StarScan2
                                 {
                                     if (p.Barycentre == null)
                                     {
-                                        string s = $"WARNING !!! Barycentre not set in scan for {bn.Scan.EventTimeUTC} {bn.Scan.BodyName} {bn.Scan.BodyID} bid {bn.BodyID} {bn.Scan.ParentList()} {p.BodyID} {p.Type}";
-                                        System.Diagnostics.Debug.WriteLine(s);
+                                        string s = $"StarScan Barycentre not set in scan for {bn.Scan.EventTimeUTC} {bn.Scan.BodyName} {bn.Scan.BodyID} bid {bn.BodyID} {bn.Scan.ParentList()} {p.BodyID} {p.Type} {EDCommander.Current.Name}";
+                                        System.Diagnostics.Trace.WriteLine(s);
 
-                                        FileHelpers.TryAppendToFile(@"c:\code\baryerrors.txt", s + Environment.NewLine);
-                                        (false).Assert(s);
+                                        //FileHelpers.TryAppendToFile(@"c:\code\baryerrors.txt", s + Environment.NewLine, makefile: true);
+                                        // (false).Assert(s);
                                     }
                                 }
                             }

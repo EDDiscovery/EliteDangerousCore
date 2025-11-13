@@ -46,7 +46,8 @@ namespace EliteDangerousCore.JournalEvents
         public string BodyName { get; private set; }                        // direct (meaning no translation)
 
         [PropertyNameAttribute("Basic type, Planet, Star, Ring")]
-        public BodyDefinitions.BodyType BodyType => IsPlanet ? BodyDefinitions.BodyType.Planet : IsStar ? BodyDefinitions.BodyType.Star : BodyDefinitions.BodyType.PlanetaryRing;
+        public BodyDefinitions.BodyType BodyType => IsPlanet ? BodyDefinitions.BodyType.Planet : IsStar ? BodyDefinitions.BodyType.Star : 
+                                                    IsBeltClusterBody ? BodyDefinitions.BodyType.AsteroidCluster : BodyDefinitions.BodyType.PlanetaryRing;
 
         [PropertyNameAttribute("Internal Frontier ID, is empty for older scans")]
         public int? BodyID { get; private set; }                            // direct
@@ -101,11 +102,11 @@ namespace EliteDangerousCore.JournalEvents
         public string ParentList() { return Parents != null ? string.Join(",", Parents.Select(x => x.Type + ":" + x.BodyID)) : ""; }     // not get on purpose
 
         [PropertyNameAttribute("Orbiting a barycentre")]
-        public bool IsOrbitingBarycentre { get { return Parents?.FirstOrDefault()?.Type == BodyParent.BodyType.Null; } }
+        public bool IsOrbitingBarycentre { get { return Parents?.FirstOrDefault()?.Type == BodyParent.ParentBodyType.Null; } }
         [PropertyNameAttribute("Orbiting a planet")]
-        public bool IsOrbitingPlanet { get { return BodyParent.IsOrbiting(Parents, BodyParent.BodyType.Planet); } }
+        public bool IsOrbitingPlanet { get { return BodyParent.IsOrbiting(Parents, BodyParent.ParentBodyType.Planet); } }
         [PropertyNameAttribute("Orbiting a star")]
-        public bool IsOrbitingStar { get { return BodyParent.IsOrbiting(Parents, BodyParent.BodyType.Star); ; } }
+        public bool IsOrbitingStar { get { return BodyParent.IsOrbiting(Parents, BodyParent.ParentBodyType.Star); ; } }
 
         [PropertyNameAttribute("No Parents or All Parents are barycentres")]
         public bool IsAllParentsBarycentre { get { return Parents == null || Parents.Count(x => x.IsBarycentre) == Parents.Count; } }
@@ -327,10 +328,6 @@ namespace EliteDangerousCore.JournalEvents
         public string DataSourceName { get { return DataSource != SystemSource.FromJournal ? DataSource.ToString().Replace("From", "") : ""; } }
         [PropertyNameAttribute("Is scan web sourced?")]
         public bool IsWebSourced { get { return DataSource != SystemSource.FromJournal; } }
-        [PropertyNameAttribute("EDSM first commander")]
-        public string EDSMDiscoveryCommander { get; private set; }                      // may be null if not known
-        [PropertyNameAttribute("EDSM first reported time UTC")]
-        public DateTime EDSMDiscoveryUTC { get; private set; }
 
         [PropertyNameAttribute("Signal information")]
         public List<JournalSAASignalsFound.SAASignal> Signals { get; set; }             // NOTE Augmented by StarScan - may be null
@@ -405,8 +402,7 @@ namespace EliteDangerousCore.JournalEvents
         public int CountSurfaceFeatures { get { return SurfaceFeatures?.Count ?? 0; } }
 
         [PropertyNameAttribute("Codex information")]
-        public List<JournalCodexEntry> CodexEntries {get;set; }                // NOTE Augmented by StarScan - may be null
-
+        public List<JournalCodexEntry> CodexEntries {get;set; }          // NOTE Augmented by StarScan - may be null
         [PropertyNameAttribute("Are there codex entries against this body")]
         public bool HasCodexEntries => CodexEntries?.Count > 0;   
 
@@ -468,7 +464,7 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         foreach (var kvp in parent)
                         {
-                            if (Enum.TryParse<BodyParent.BodyType>(kvp.Key, true, out BodyParent.BodyType res))
+                            if (Enum.TryParse<BodyParent.ParentBodyType>(kvp.Key, true, out BodyParent.ParentBodyType res))
                             {
                                 Parents.Add(new BodyParent { Type = res, BodyID = kvp.Value.Int() });
                             }
@@ -656,14 +652,6 @@ namespace EliteDangerousCore.JournalEvents
                 DataSource = SystemSource.FromEDSM;
             else if (evt["EDDFromSpanshBody"].Bool(false))
                 DataSource = SystemSource.FromSpansh;
-
-            // EDSM bodies fields
-            JToken discovery = evt["discovery"];
-            if (!discovery.IsNull())
-            {
-                EDSMDiscoveryCommander = discovery["commander"].StrNull();
-                EDSMDiscoveryUTC = discovery["date"].DateTimeUTC();
-            }
         }
 
         // special, for star scan node tree only, create a scan record with the contents of the journal scan bary centre info

@@ -28,7 +28,7 @@ namespace EliteDangerousCore.StarScan2
     {
         #region Public
         public ISystem System { get; private set; }     // may not have XYZ, will always have name and systemaddress
-        public bool HasCentreBarycentre { get { return systemBodies.ChildBodies.Count == 1 && systemBodies.ChildBodies[0].BodyType == BodyNode.BodyClass.Barycentre; } }
+        public bool HasCentreBarycentre { get { return systemBodies.ChildBodies.Count == 1 && systemBodies.ChildBodies[0].BodyType == BodyDefinitions.BodyType.Barycentre; } }
         public int? FSSTotalBodies { get; private set; }         // if we have FSSDiscoveryScan, this will be set
         public int? FSSTotalNonBodies { get; private set; }     // if we have FSSDiscoveryScan, this will be set
         public bool OldScansPresent { get; set; }               // if set, we have old scans
@@ -39,7 +39,7 @@ namespace EliteDangerousCore.StarScan2
         public List<FSSSignal> FSSSignals { get { return systemBodies.FSSSignalList; } }     // may be null, held in top level body
         public List<JournalCodexEntry> CodexEntries { get { return systemBodies.CodexEntries; } }     // may be null, held in top level body
         public List<IBodyFeature> OrbitingStations { get { return systemBodies.Features; } }     // may be null, held in top level body, Stations..
-        public BodyNode TopLevelBody() { return systemBodies.ChildBodies.Count == 1 && systemBodies.ChildBodies[0].BodyType == BodyNode.BodyClass.Barycentre ? systemBodies.ChildBodies[0] : systemBodies; }
+        public BodyNode TopLevelBody() { return systemBodies.ChildBodies.Count == 1 && systemBodies.ChildBodies[0].BodyType == BodyDefinitions.BodyType.Barycentre ? systemBodies.ChildBodies[0] : systemBodies; }
         public BodyNode TopLevel() { return systemBodies; }
 
         public SystemNode(ISystem sys)
@@ -47,9 +47,14 @@ namespace EliteDangerousCore.StarScan2
             System = sys;
         }
 
+        public void RenamedSystem(ISystem sys)
+        {
+            System = sys;
+        }
+
         public void Clear()
         {
-            systemBodies = new BodyNode("System", BodyNode.BodyClass.System, -1, null, null);       // clear
+            systemBodies = new BodyNode("System", BodyDefinitions.BodyType.System, -1, null, null);       // clear
             FSSTotalBodies = FSSTotalNonBodies = null;
             bodybyid.Clear();
             BodyGeneration = 0;
@@ -70,13 +75,9 @@ namespace EliteDangerousCore.StarScan2
         {
             return Bodies(x => x.CanonicalName.EqualsIIC(fdname), true).FirstOrDefault();
         }
-        public BodyNode FindCanonicalBodyNameType(string fdname, BodyDefinitions.BodyType bt)        
+        public BodyNode FindCanonicalBodyNameType(string fdname, BodyDefinitions.BodyType bt)        // better matching  - there are systems like Leesti where the star and planet are called the same
         {
-            return Bodies(x => x.CanonicalName.EqualsIIC(fdname) && 
-                                ( (x.BodyType == BodyNode.BodyClass.Star && bt == BodyDefinitions.BodyType.Star) ||
-
-                                
-                                , true).FirstOrDefault();
+            return Bodies(x => x.CanonicalName.EqualsIIC(fdname)  && x.BodyType == bt, true).FirstOrDefault();
         }
         public BodyNode FindCanonicalBodyNameWithWithoutSystem(string fdname)       // matches HIP 1885 A 5 b, A 5 b, HIP 1885 A 2 A Ring, A 2 A Ring etc
         {

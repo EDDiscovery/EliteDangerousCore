@@ -43,22 +43,11 @@ namespace EliteDangerousCore.StarScan2
 
         public int BodyID { get; private set; }
 
-        public enum BodyClass { System,             // top level SystemBodies object in SystemNode
-                                Star,               // a top level star, or a substar
-                                PlanetMoon,         // a planet or moon
-                                Barycentre,         // a barycentre ('Null' type in parents array)
-                                BeltCluster,        // a 'A Belt Cluster' name (`Ring` type in the parents array) - has BeltClusterBody underneath it
-                                                    // also from the journalscan of a star, the rings/belts of the star broken out into children. BeltData is set. See ProcessBelts.      
-                                BeltClusterBody,    // items under a belt cluster
-                                PlanetaryRing,      // Called "A Ring" or "B Ring", from a journalscan of the ring (Scan will be set), or from the journalscan of a planet with its ring structure broken into children, BeltData is set.
-                                Unknown,            // for older scans for tree bodies above scan, we mark Unknown
-                              
-                            };
-        public BodyClass BodyType { get; private set; }
+        public BodyDefinitions.BodyType BodyType { get; private set; }  // we share the bodytype with frontier, even though their names are a bit wierd
 
-        public bool IsStarOrPlanet { get { return BodyType == BodyClass.Star || BodyType == BodyClass.PlanetMoon; } }
-        public bool IsPlanetOrMoon { get { return BodyType == BodyClass.PlanetMoon; } }
-        public bool IsBarycentre { get { return BodyType == BodyClass.Barycentre; } }
+        public bool IsStarOrPlanet { get { return BodyType == BodyDefinitions.BodyType.Star || BodyType == BodyDefinitions.BodyType.Planet; } }
+        public bool IsPlanetOrMoon { get { return BodyType == BodyDefinitions.BodyType.Planet; } }
+        public bool IsBarycentre { get { return BodyType == BodyDefinitions.BodyType.Barycentre; } }
 
         public bool WebCreatedNode { get { return Scan?.DataSource == SystemSource.FromEDSM || Scan?.DataSource == SystemSource.FromSpansh; } }
 
@@ -82,7 +71,7 @@ namespace EliteDangerousCore.StarScan2
         public bool WasMappedEfficiently { get; private set; }
 
         // is this type at the top level of the tree. false if one above
-        public bool IsTopLevel(BodyClass bc)
+        public bool IsTopLevel(BodyDefinitions.BodyType bc)
         {
             BodyNode bn = Parent;
             while (bn != null)
@@ -119,9 +108,9 @@ namespace EliteDangerousCore.StarScan2
         {
             int depth = 0;
             BodyNode bn = Parent;
-            while (bn != null && bn.BodyType != BodyClass.System)
+            while (bn != null && bn.BodyType != BodyDefinitions.BodyType.System)
             {
-                if (bn.BodyType != BodyClass.Barycentre)      // don't count the top level barycentre or system as depth
+                if (bn.BodyType != BodyDefinitions.BodyType.Barycentre)      // don't count the top level barycentre or system as depth
                     depth++;
 
                 bn = bn.Parent;
@@ -132,9 +121,9 @@ namespace EliteDangerousCore.StarScan2
         public BodyNode GetParentIgnoreBC()
         {
             BodyNode bn = Parent;
-            while (bn != null && bn.BodyType != BodyClass.System)
+            while (bn != null && bn.BodyType != BodyDefinitions.BodyType.System)
             {
-                if (bn.BodyType != BodyClass.Barycentre)      // don't count the top level barycentre or the top system node
+                if (bn.BodyType != BodyDefinitions.BodyType.Barycentre)      // don't count the top level barycentre or the top system node
                     return bn;
 
                 bn = bn.Parent;
@@ -257,11 +246,11 @@ namespace EliteDangerousCore.StarScan2
 
         public int StarPlanetsScanned()      // This corresponds to FSSDiscoveryScan
         {
-            return Bodies(x => (x.BodyType == BodyNode.BodyClass.Star || x.BodyType == BodyNode.BodyClass.PlanetMoon) && x.Scan != null).Count();
+            return Bodies(x => (x.BodyType == BodyDefinitions.BodyType.Star || x.BodyType == BodyDefinitions.BodyType.Planet) && x.Scan != null).Count();
         }
         public int StarPlanetsScanned(bool includewebbodies)        // includewebbodies gives same total as above, false means only include ones which we have scanned
         {
-            return Bodies(x => (x.BodyType == BodyNode.BodyClass.Star || x.BodyType == BodyNode.BodyClass.PlanetMoon) && x.Scan != null && (includewebbodies || !x.Scan.IsWebSourced)).Count();
+            return Bodies(x => (x.BodyType == BodyDefinitions.BodyType.Star || x.BodyType == BodyDefinitions.BodyType.Planet) && x.Scan != null && (includewebbodies || !x.Scan.IsWebSourced)).Count();
         }
         public int StarsScanned()      // stars scanned
         {
@@ -277,11 +266,11 @@ namespace EliteDangerousCore.StarScan2
         }
         public int BeltClusters() // number of belt clusters
         {
-            return Bodies(b => b.BodyType == BodyNode.BodyClass.BeltCluster).Count();
+            return Bodies(b => b.BodyType == BodyDefinitions.BodyType.StellarRing).Count();
         }
         public int BeltClusterBodies() // number of belt clusters bodies
         {
-            return Bodies(b => b.BodyType == BodyNode.BodyClass.BeltClusterBody).Count();
+            return Bodies(b => b.BodyType == BodyDefinitions.BodyType.AsteroidCluster).Count();
         }
 
         public int CountGeoSignals { get { return Signals?.Where(x => x.IsGeo).Sum(y => y.Count) ?? 0; } }
@@ -379,7 +368,7 @@ namespace EliteDangerousCore.StarScan2
             var top = this;
             obj["NodeType"] = top.BodyType.ToString();
 
-            if (top.BodyType != BodyClass.System)
+            if (top.BodyType != BodyDefinitions.BodyType.System)
             {
                 obj["OwnName"] = top.OwnName;
                 obj["BodyName"] = top.Name();
@@ -466,7 +455,7 @@ namespace EliteDangerousCore.StarScan2
 
         #region Implementation For Creation
 
-        public BodyNode(string ownname, BodyClass bc, int bid, BodyNode parent, SystemNode sys)
+        public BodyNode(string ownname, BodyDefinitions.BodyType bc, int bid, BodyNode parent, SystemNode sys)
         {
             OwnName = ownname;
             BodyType = bc;
@@ -476,12 +465,12 @@ namespace EliteDangerousCore.StarScan2
         }
 
         public BodyNode(string ownname, JournalScan sc, int bid, BodyNode parent, SystemNode sys) :
-            this(ownname, sc.IsStar ? BodyNode.BodyClass.Star : sc.IsPlanet ? BodyNode.BodyClass.PlanetMoon : sc.IsPlanetaryRing ? BodyNode.BodyClass.PlanetaryRing : BodyNode.BodyClass.BeltClusterBody, bid, parent, sys)
+            this(ownname, sc.BodyType, bid, parent, sys)
         {
         }
 
         public BodyNode(string ownname, BodyParent nt, int bid, BodyNode parent, SystemNode sys) :
-            this(ownname, nt.IsStar? BodyNode.BodyClass.Star : nt.IsBarycentre? BodyNode.BodyClass.Barycentre : nt.IsBeltCluster? BodyNode.BodyClass.BeltCluster : BodyNode.BodyClass.PlanetMoon, bid, parent, sys )
+            this(ownname, nt.IsStar? BodyDefinitions.BodyType.Star : nt.IsBarycentre? BodyDefinitions.BodyType.Barycentre : nt.IsStellarRing? BodyDefinitions.BodyType.StellarRing : BodyDefinitions.BodyType.Planet, bid, parent, sys )
         {
         }
 
@@ -493,7 +482,7 @@ namespace EliteDangerousCore.StarScan2
         {
             OwnName = name;
         }
-        public void ResetClass(BodyClass ty)
+        public void ResetClass(BodyDefinitions.BodyType ty)
         {
             BodyType = ty;
         }
@@ -661,19 +650,19 @@ namespace EliteDangerousCore.StarScan2
             string names = (new string(' ', level) + (OwnName + " | " + (CanonicalName ?? "-"))).PadRight(40);
             string pad = new string(' ', front.Length + 3 + level + 3);
 
-            System.Diagnostics.Debug.WriteLine($"{front} : {names} {BodyType.ToString().PadRight(15)} scname:`{Scan?.BodyName}` P:{Scan?.ParentList()} sma {SMA} isMapped {IsMapped} Effmap {WasMappedEfficiently}");
-        //    foreach (var x in CodexEntries.EmptyIfNull())
-        //        System.Diagnostics.Debug.WriteLine($"{pad}CX:{x.GetInfo()}");
-        //    foreach (var x in Signals.EmptyIfNull())
-        //        System.Diagnostics.Debug.WriteLine($"{pad}S:{x.Type_Localised ?? x.Type} {x.Count}");
-        //    foreach (var x in Organics.EmptyIfNull())
-        //        System.Diagnostics.Debug.WriteLine($"{pad}O:{x.GetInfo()}");
-        //    foreach (var x in Genuses.EmptyIfNull())
-        //        System.Diagnostics.Debug.WriteLine($"{pad}G:{x.Genus_Localised ?? x.Genus}");
-        //    foreach (var x in FSSSignalList.EmptyIfNull())
-        //        System.Diagnostics.Debug.WriteLine($"{pad}FSS:{x.SignalName_Localised ?? x.SignalName} {x.USSType}");
-        //    foreach (var x in Features.EmptyIfNull())
-        //        System.Diagnostics.Debug.WriteLine($"{pad}F:{x.BodyType} `{x.Name_Localised ?? x.Name}` {x.BodyID}");
+            System.Diagnostics.Trace.WriteLine($"{front} : {names} {BodyType.ToString().PadRight(15)} scname:`{Scan?.BodyName}` P:{Scan?.ParentList()} sma {SMA} isMapped {IsMapped} Effmap {WasMappedEfficiently}");
+            foreach (var x in CodexEntries.EmptyIfNull())
+                System.Diagnostics.Trace.WriteLine($"{pad}CX:{x.GetInfo()}");
+            foreach (var x in Signals.EmptyIfNull())
+                System.Diagnostics.Trace.WriteLine($"{pad}S:{x.Type_Localised ?? x.Type} {x.Count}");
+            foreach (var x in Organics.EmptyIfNull())
+                System.Diagnostics.Trace.WriteLine($"{pad}O:{x.GetInfo()}");
+            foreach (var x in Genuses.EmptyIfNull())
+                System.Diagnostics.Trace.WriteLine($"{pad}G:{x.Genus_Localised ?? x.Genus}");
+            foreach (var x in FSSSignalList.EmptyIfNull())
+                System.Diagnostics.Trace.WriteLine($"{pad}FSS:{x.SignalName_Localised ?? x.SignalName} {x.USSType}");
+            foreach (var x in Features.EmptyIfNull())
+                System.Diagnostics.Trace.WriteLine($"{pad}F:{x.BodyType} `{x.Name_Localised ?? x.Name}` {x.BodyID}");
         }
 
         #endregion
@@ -703,9 +692,9 @@ namespace EliteDangerousCore.StarScan2
             {
                 var bp = BodiesNoBarycentres(bnc, x);
 
-                if (bn.BodyType == BodyNode.BodyClass.Barycentre && x.Parent != null)      // if this is a BC, and we have a parent, move the items up 1 level to the parent
+                if (bn.BodyType == BodyDefinitions.BodyType.Barycentre && x.Parent != null)      // if this is a BC, and we have a parent, move the items up 1 level to the parent
                     x.Parent.ChildBodies.Add(bp);
-                else if (bp.BodyNode.BodyType != BodyNode.BodyClass.Barycentre)        // exclude all BCs from adds
+                else if (bp.BodyNode.BodyType != BodyDefinitions.BodyType.Barycentre)        // exclude all BCs from adds
                     x.ChildBodies.Add(bp);
             }
 
@@ -714,7 +703,7 @@ namespace EliteDangerousCore.StarScan2
 
         public static void Dump(NodePtr p, string bid, int level = 0)
         {
-            //if (p.BodyNode.BodyType != BodyNode.BodyClass.System)
+            //if (p.BodyNode.BodyType != BodyDefinitions.BodyType.System)
             {
                 if (p.BodyNode.BodyID < 0)
                     bid += ".??";

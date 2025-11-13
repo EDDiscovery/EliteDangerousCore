@@ -188,6 +188,7 @@ namespace EliteDangerousCore
             PlanetaryConstructionDepot,
             DockablePlanetStation,
             GameplayPOI,
+            Dodec,
         }
 
         public static bool IsPlanetaryPort(StarportTypes t)

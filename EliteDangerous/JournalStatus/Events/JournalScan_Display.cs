@@ -300,12 +300,6 @@ namespace EliteDangerousCore.JournalEvents
                 sb.AppendCR();
             }
 
-            if (EDSMDiscoveryCommander != null)
-            {
-                sb.AppendFormat("EDSM" + "Discovered by {0} on {1}".Tx() + "", EDSMDiscoveryCommander, EDSMDiscoveryUTC.ToStringZulu());
-                sb.AppendCR();
-            }
-
             if (SurfaceFeatures != null)
             {
                 sb.Append("Surface features".Tx());

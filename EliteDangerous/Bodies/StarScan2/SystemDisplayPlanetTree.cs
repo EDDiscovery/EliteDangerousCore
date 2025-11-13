@@ -57,7 +57,7 @@ namespace EliteDangerousCore.StarScan2
                                List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats, string[] filter,
                                 Random rnd, ContextMenuStrip rightclickplanet, ContextMenuStrip rightclickmats)
         {
-            List<BodyNode> bodiestodisplay = parent.ChildBodies.Where(s=> s.BodyType != BodyNode.BodyClass.PlanetaryRing).ToList();
+            List<BodyNode> bodiestodisplay = parent.ChildBodies.Where(s=> s.BodyType != BodyDefinitions.BodyType.PlanetaryRing).ToList();
 
             if (bodiestodisplay.Count > 0 && ShowMoons)
             {

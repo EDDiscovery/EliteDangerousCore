@@ -212,7 +212,7 @@ namespace EliteDangerousCore.StarScan2
                                             sc.IsPlanet ? BaseUtils.Icons.IconSet.GetIcon(sc.PlanetClassImageName) :
                                             BodyDefinitions.GetImageNotScanned();
 
-                        //.BodyType == BodyNode.BodyClass.BeltCluster ? (Bitmap)BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt") :
+                        //.BodyType == BodyDefinitions.BodyType.BeltCluster ? (Bitmap)BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt") :
 
                         g.DrawImage(nodeimage, imageleft, imagetop, size.Width, size.Height);
 
@@ -369,7 +369,7 @@ namespace EliteDangerousCore.StarScan2
                     }
                 } // end gdi lock
             }
-            else if (bn.BodyType == BodyNode.BodyClass.Barycentre)
+            else if (bn.BodyType == BodyDefinitions.BodyType.Barycentre)
             {
                 string sma = bn.BarycentreScan?.SemiMajorAxisLSKM ?? "";
                 var nodelabels = new string[] { presentationname.AppendPrePad(sma, Environment.NewLine) };
@@ -391,7 +391,7 @@ namespace EliteDangerousCore.StarScan2
 
                 imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the not scanned thing is
             }
-            else if (bn.BodyType == BodyNode.BodyClass.BeltCluster)
+            else if (bn.BodyType == BodyDefinitions.BodyType.StellarRing)
             {
                 var tooltip = new System.Text.StringBuilder(256);
 
@@ -428,7 +428,7 @@ namespace EliteDangerousCore.StarScan2
 
                 imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the belt is
             }
-            else if (bn.BodyType == BodyNode.BodyClass.BeltClusterBody)
+            else if (bn.BodyType == BodyDefinitions.BodyType.AsteroidCluster)
             {
                 var tooltip = new System.Text.StringBuilder(256);
                 bn.Scan?.DisplayText(tooltip);

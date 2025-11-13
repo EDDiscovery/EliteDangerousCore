@@ -25,8 +25,21 @@ namespace EliteDangerousCore
     {
         public enum BodyType
         {
+            // shared between StarScan and Frontier BodyType fields
+            Planet,             // a Planet or moon
+            Star,               // a top level star, or a substar
+            Barycentre,         // a barycentre ('Null' type in parents array)
+            StellarRing,        // a belt cluster, 'A Belt Cluster' name (`Ring` type in the parents array) - has AsteroidCluster in StarScan underneath it
+            AsteroidCluster,    // a body under the belt cluster
+            PlanetaryRing,      // planet ring.  Called "A Ring" or "B Ring", from a journalscan of the ring (Scan will be set), or from the journalscan of a planet with its ring structure broken into children, BeltData is set.
+
+            // Frontier Bodytype only
+            Station,    // at a station
+            SmallBody,  // saw for comets, very few
+
+            // EDD Only
             Unknown,
-            Planet, Star, Station, PlanetaryRing, Barycentre, StellarRing, AsteroidCluster, SmallBody
+            System,          // top level SystemBodies object in SystemNode
         };
 
         static public BodyType GetBodyType(string bt)
