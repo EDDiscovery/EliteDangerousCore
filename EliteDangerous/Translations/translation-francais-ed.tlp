@@ -1164,6 +1164,7 @@ SECTION GovernmentTypes
 .Engineer: "Engineer" => "Atelier"
 .Carrier: "Carrier" => "Propriétaire privé"
 .Undefined: "Undefined" => "Non défini"
+.Megaconstruction: "Mega Construction" @
 
 SECTION EconomyTypes
 
@@ -1224,6 +1225,7 @@ SECTION StarportTypes
 .PlanetaryConstructionDepot: "Planetary Construction Depot" => "Dépôt de construction planétaire"
 .DockablePlanetStation: "Dockable Planet Station" => "Station planétaire amarrable"
 .GameplayPOI: "Construction POI" @
+.Dodec: "Dodec" @
 
 SECTION PowerPlayStates
 
