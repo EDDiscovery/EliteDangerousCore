@@ -189,7 +189,16 @@ namespace EliteDangerousCore.StarScan2
                                 habzone = dist >= habzonestartls && dist <= habzoneendls;
                             }
 
-                            Point maxplanetmoonspos = CreatePlanetTree(pc, planetnode, historicmats, curmats, cursorlm, bodytypefilters, habzone, out int centreplanet, rnd, ContextMenuStripBodies, ContextMenuStripMats);
+                            // we output the planetcentrx, which we use to base the moon positions
+
+                            Point maxplanetpos = DrawNode(pc, planetnode, historicmats, curmats,
+                                                    cursorlm, false, true, out Rectangle imagerect, out int centreplanet, planetsize, rnd, ContextMenuStripBodies, ContextMenuStripMats, backwash: habzone ? Color.FromArgb(64, 0, 128, 0) : default(Color?));        // offset passes in the suggested offset, returns the centre offset
+
+                            Point moonpos = new Point(centreplanet, maxplanetpos.Y + moonspacery + moonsize.Height / 2);
+
+                            // draw primary moons under the planet centred with no right shift allowed
+
+                            Point maxplanetmoonspos = DrawTree(pc, planetnode, moonpos, true, false, planetnode.BodyType == BodyDefinitions.BodyType.Barycentre, maxplanetpos, historicmats, curmats, bodytypefilters, rnd, ContextMenuStripBodies, ContextMenuStripMats);
 
                             Point pcnt = new Point(centreplanet, cursorlm.Y);       // centre planet point
 
