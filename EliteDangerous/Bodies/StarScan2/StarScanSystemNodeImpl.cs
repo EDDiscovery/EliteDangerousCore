@@ -965,9 +965,16 @@ namespace EliteDangerousCore.StarScan2
                         bcright = true;
                     }
 
-                   // $"Sort Compare `{lt}` with `{rt}`".DO(lvl);
+                    // $"Sort Compare `{lt}` with `{rt}`".DO(lvl);
 
-                    if (lt.Length == 1 && rt.Length == 1)      // 1-2-3 or a b c sort direct just comparing value
+                    double? smal = left.SMA;         // grab SMA from anything we have
+                    double? smar = right.SMA;
+
+                    if (smal.HasValue & smar.HasValue)
+                    {
+                        return smal.Value.CompareTo(smar.Value);
+                    }
+                    else if (lt.Length == 1 && rt.Length == 1)      // 1-2-3 or a b c sort direct just comparing value
                     {
                         return lt.CompareTo(rt);
                     }
@@ -981,15 +988,6 @@ namespace EliteDangerousCore.StarScan2
                         }
                         else
                         {
-                            double? smal = left.SMA;         // grab SMA from anything we have
-                            double? smar = right.SMA;
-
-                            if ( smal.HasValue && smar.HasValue)
-                            {
-                                //$"Sort Compare SMA `{lt}`:{smal}` with `{rt}`:{smar}".DO(lvl);
-                                return smal.Value.CompareTo(smar.Value);
-                            }
-
                             if (lt.Contains("Belt Cluster"))        // clusters first
                             {
                                 if (rt.Contains("Belt Cluster"))

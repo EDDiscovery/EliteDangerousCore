@@ -87,6 +87,8 @@ namespace EliteDangerousCore.StarScan2
             System.Diagnostics.Debug.Assert(systemnode != null);
             System.Diagnostics.Debug.Assert(!starsize.IsEmpty);
 
+            //systemnode.DumpTree();
+
 
             // BodyToImages.DebugDisplayStarColourKey(imagebox, Font); enable for checking
 

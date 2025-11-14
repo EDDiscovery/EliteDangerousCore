@@ -52,10 +52,12 @@ namespace EliteDangerousCore.StarScan2
                             // the second moon will be xcentre=true rightshift=false
                             // the first submoon under a moon will be xcentre=false, rightshift=true
                             // the second submoon under a moon will be xcentre=true, rightshift=false
-                            // if moveright then we always move right at this level - tweak used for top level planet barycentres
+                            // if moveright then we always move right at this level - tweak used for top level planet barycentres, which means these are planets . We use planetsize below if so
                             // its all very complicated and took Robby a while to remember!
 
-                            Point mmax = DrawNode(pc, moonnode, historicmats, curmats, pos, xiscentre, shiftrightifreq, out Rectangle moonimagepos, out int mooncentrex, moonsize, rnd, rightclickplanet, rightclickmats);
+                            Point mmax = DrawNode(pc, moonnode, historicmats, curmats, pos, xiscentre, shiftrightifreq, out Rectangle moonimagepos, out int mooncentrex, 
+                                            moveright && moonnode.BodyType != BodyDefinitions.BodyType.Barycentre ? planetsize : moonsize, 
+                                            rnd, rightclickplanet, rightclickmats);
 
                             maxtreepos = new Point(Math.Max(maxtreepos.X, mmax.X), Math.Max(maxtreepos.Y, mmax.Y));
 
@@ -68,6 +70,8 @@ namespace EliteDangerousCore.StarScan2
                             if (moveright)
                             {
                                 pos = new Point(maxtreepos.X + moonspacerx, pos.Y);
+                                shiftrightifreq = true;
+                                xiscentre = false;
                             }
                             else if (xiscentre)
                             {

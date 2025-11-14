@@ -608,7 +608,7 @@ namespace EliteDangerousCore
                         lock (he.BodyNode.SystemNode)   // no more changes to this system during processing
                         {
                             if (wantlevel)
-                                scandatavars["Level"] = he.BodyNode.GetDepthIgnoreBC().ToStringInvariant();
+                                scandatavars["Level"] = he.BodyNode.GetNameDepth().ToStringInvariant();
 
                             BodyNode parent = he.BodyNode.GetParentIgnoreBC();
 
@@ -624,7 +624,7 @@ namespace EliteDangerousCore
                                     if (parentjs != null) // if want parent scan data
                                     {
                                         scandatavars.AddPropertiesFieldsOfClass(parentjs, "Parent.", ignoretypes, 5, varsparent, ensuredoublerep: true, classsepar: ".");
-                                        scandatavars["Parent.Level"] = parent.GetDepthIgnoreBC().ToStringInvariant();
+                                        scandatavars["Parent.Level"] = parent.GetNameDepth().ToStringInvariant();
                                     }
                                 }
 
@@ -637,7 +637,7 @@ namespace EliteDangerousCore
                                     if (parentparentjs != null) // if want parent scan data
                                     {
                                         scandatavars.AddPropertiesFieldsOfClass(parentparentjs, "Parent.Parent.", ignoretypes, 5, varsgrandparent, ensuredoublerep: true, classsepar: ".");
-                                        scandatavars["Parent.Parent.Level"] = grandparent.GetDepthIgnoreBC().ToStringInvariant();
+                                        scandatavars["Parent.Parent.Level"] = grandparent.GetNameDepth().ToStringInvariant();
                                     }
                                 }
                             }

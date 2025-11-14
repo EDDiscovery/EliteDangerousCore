@@ -38,6 +38,8 @@ namespace EliteDangerousCore.StarScan2
         // without system name
         public string CanonicalNameNoSystemName() { return CanonicalName?.ReplaceIfStartsWith(SystemNode.System.Name); }
 
+        public int CanonicalNameDepth { get; private set; } = -1;       // set if a standard name to name depth
+
         // best name, either Canonicalname without system, or ownname
         public string Name() { return CanonicalName?.ReplaceIfStartsWith(SystemNode.System.Name) ?? OwnName; }
 
@@ -101,6 +103,12 @@ namespace EliteDangerousCore.StarScan2
             }
 
             return null;
+        }
+
+        // calculate name depth of body
+        public int GetNameDepth()
+        {
+            return CanonicalNameDepth == -1 ? GetDepthIgnoreBC() : CanonicalNameDepth;        // 0 is first
         }
 
         // calculate depth of body
@@ -491,7 +499,6 @@ namespace EliteDangerousCore.StarScan2
             Parent = p;
         }
 
-
         // copy all data to nd
         public void MoveStarDataTo(BodyNode nd)     
         {
@@ -528,11 +535,30 @@ namespace EliteDangerousCore.StarScan2
             Scan.SetMapped(IsMapped, WasMappedEfficiently);  // and we set the mapped/was mapped flag to the nodes setting set up by AddSAAScanComplete
 
             CanonicalName = Scan.BodyName;
+            CalculateCNDepth();
         }
 
         public void SetCanonicalName(string s)
         {
             CanonicalName = s;
+            CalculateCNDepth();
+        }
+
+        private void CalculateCNDepth()
+        {
+            bool stdname = CanonicalName.StartsWith(SystemNode.System.Name);
+            if (stdname)
+            {
+                if (CanonicalName == SystemNode.System.Name)        // if same name, its a level 0 star
+                {
+                    CanonicalNameDepth = 0;
+                }
+                else
+                {
+                    var count = SystemNode.ExtractParts(CanonicalName.Substring(SystemNode.System.Name.Length)).Count;
+                    CanonicalNameDepth = BodyType == BodyDefinitions.BodyType.Star && count == 1 ? 0 : count;       // if its a star and single named, its a star
+                }
+            }
         }
 
         public void SetScan(JournalScanBaryCentre sc)
@@ -650,7 +676,7 @@ namespace EliteDangerousCore.StarScan2
             string names = (new string(' ', level) + (OwnName + " | " + (CanonicalName ?? "-"))).PadRight(40);
             string pad = new string(' ', front.Length + 3 + level + 3);
 
-            System.Diagnostics.Trace.WriteLine($"{front} : {names} {BodyType.ToString().PadRight(15)} scname:`{Scan?.BodyName}` P:{Scan?.ParentList()} sma {SMA} isMapped {IsMapped} Effmap {WasMappedEfficiently}");
+            System.Diagnostics.Trace.WriteLine($"{front} : {names} {BodyType.ToString().PadRight(15)} scname:`{Scan?.BodyName}` P:{Scan?.ParentList()} CNL {CanonicalNameDepth} sma {SMA} isMapped {IsMapped} Effmap {WasMappedEfficiently}");
             foreach (var x in CodexEntries.EmptyIfNull())
                 System.Diagnostics.Trace.WriteLine($"{pad}CX:{x.GetInfo()}");
             foreach (var x in Signals.EmptyIfNull())
