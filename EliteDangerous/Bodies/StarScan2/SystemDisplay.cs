@@ -87,7 +87,7 @@ namespace EliteDangerousCore.StarScan2
             System.Diagnostics.Debug.Assert(systemnode != null);
             System.Diagnostics.Debug.Assert(!starsize.IsEmpty);
 
-            //systemnode.DumpTree();
+           // systemnode.DumpTree();
 
 
             // BodyToImages.DebugDisplayStarColourKey(imagebox, Font); enable for checking
@@ -200,7 +200,8 @@ namespace EliteDangerousCore.StarScan2
 
                             // draw primary moons under the planet centred with no right shift allowed
 
-                            Point maxplanetmoonspos = DrawTree(pc, planetnode, moonpos, true, false, planetnode.BodyType == BodyDefinitions.BodyType.Barycentre, maxplanetpos, historicmats, curmats, bodytypefilters, rnd, ContextMenuStripBodies, ContextMenuStripMats);
+                            Point maxplanetmoonspos = maxplanetpos;
+                            DrawTree(pc, planetnode, moonpos, true, false, planetnode.BodyType == BodyDefinitions.BodyType.Barycentre, ref maxplanetmoonspos, historicmats, curmats, bodytypefilters, rnd, ContextMenuStripBodies, ContextMenuStripMats);
 
                             Point pcnt = new Point(centreplanet, cursorlm.Y);       // centre planet point
 
