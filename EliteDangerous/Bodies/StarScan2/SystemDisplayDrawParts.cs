@@ -26,7 +26,7 @@ namespace EliteDangerousCore.StarScan2
     public partial class SystemDisplay
     {
         // draw into PC, from SN the material nodes
-        private Point CreateMaterialNodes(List<ExtPictureBox.ImageElement> pc, 
+        private Point CreateMaterialNodes(ExtPictureBox.ImageList pc, 
                                 JournalScan sn, 
                                 List<MaterialCommodityMicroResource> historicmats,      // may be null
                                 List<MaterialCommodityMicroResource> curmats,           // may be null
@@ -105,7 +105,7 @@ namespace EliteDangerousCore.StarScan2
         }
 
         // Create a signals list
-        private Point DrawSignals(List<ExtPictureBox.ImageElement> pc, Point leftmiddle,
+        private Point DrawSignals(ExtPictureBox.ImageList pc, Point leftmiddle,
                                 List<FSSSignal> signallist,         // may be null
                                 List<JournalCodexEntry> codex,      // may be null
                                 List<IBodyFeature> stations,        // may be null
@@ -222,7 +222,7 @@ namespace EliteDangerousCore.StarScan2
         // you can shift right if required so you don't clip right
         // return bot left accounting for label 
         // ALL images must be drawn, not copied, as they must be owned.
-        private Point CreateImageAndLabel(List<ExtPictureBox.ImageElement> pcs, 
+        private Point CreateImageAndLabel(ExtPictureBox.ImageList pcs, 
                                     Image image, 
                                     Point leftmiddle, Size imagesize, 
                                     bool shiftrightifneeded,                    // if the centre text exceed imagesize.width, shift the image right

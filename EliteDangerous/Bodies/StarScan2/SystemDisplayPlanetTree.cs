@@ -27,7 +27,7 @@ namespace EliteDangerousCore.StarScan2
         // Draw a tree.
         // Return our max tree position, and update maxtreepos total
         
-        private Point DrawTree(List<ExtPictureBox.ImageElement> pc, NodePtr parent, Point pos, 
+        private Point DrawTree(ExtPictureBox.ImageList pc, NodePtr parent, Point pos, 
                                bool xiscentre, bool shiftrightifreq, bool moveright,
                                ref Point maxtreepos,
                                List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats, string[] filter,

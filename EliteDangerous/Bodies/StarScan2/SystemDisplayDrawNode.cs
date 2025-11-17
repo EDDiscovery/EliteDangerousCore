@@ -33,7 +33,7 @@ namespace EliteDangerousCore.StarScan2
 
         static object gdilock = new object();
 
-        public Point DrawNode(List<ExtPictureBox.ImageElement> pc,
+        public Point DrawNode(ExtPictureBox.ImageList pc,
                             BodyNode bn,
                             List<MaterialCommodityMicroResource> historicmats,    // historicmats may be null
                             List<MaterialCommodityMicroResource> curmats,    // curmats may be null

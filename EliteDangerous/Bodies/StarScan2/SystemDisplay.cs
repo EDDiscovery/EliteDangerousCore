@@ -17,6 +17,7 @@ using ExtendedControls;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace EliteDangerousCore.StarScan2
@@ -63,26 +64,44 @@ namespace EliteDangerousCore.StarScan2
         // Clears the imagebox, create the objects, render to imagebox. Accepts systemnode = null to clear the display
         public void DrawSystemRender(ExtendedControls.ExtPictureBox imagebox, int widthavailable, SystemNode systemnode,
                                List<MaterialCommodityMicroResource> historicmats = null, List<MaterialCommodityMicroResource> curmats = null,
-                               string opttext = null, string[] bodytypefilter = null,
-                               Point? startpoint = null)
+                               string opttext = null, string[] bodytypefilter = null
+                              )
         {
             imagebox.ClearImageList();
             if (systemnode != null)
             {
-                var list = CreateSystemImages(widthavailable, systemnode, historicmats, curmats, opttext, bodytypefilter, startpoint);
+                var list = CreateSystemImages(systemnode, new Point(0,0), widthavailable, historicmats, curmats, opttext, bodytypefilter);
                 imagebox.AddRange(list);
             }
             imagebox.Render();
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // create images of system into an imagebox in widthavailable..  does not clear or render
         // curmats and history may be null
         // bodytype filters is star,body,barycentre,belt or all
 
-        public List<ExtPictureBox.ImageElement> CreateSystemImages( int widthavailable, SystemNode systemnode,
+        public List<ExtPictureBox.ImageElement> CreateSystemImages(SystemNode systemnode, Point startpoint, int widthavailable,
                                List<MaterialCommodityMicroResource> historicmats = null, List<MaterialCommodityMicroResource> curmats = null,
-                               string titletext = null, string[] bodytypefilters = null,
-                               Point? startpoint = null)
+                               string titletext = null, 
+                               string[] bodytypefilters = null
+                               )
         {
             System.Diagnostics.Debug.Assert(Font != null);
             System.Diagnostics.Debug.Assert(systemnode != null);
@@ -93,9 +112,9 @@ namespace EliteDangerousCore.StarScan2
             Random rnd = new Random(systemnode.System.Name.GetHashCode());         // always start with same seed so points are in same places
 
             // this is the draw cursor, its left middle position, place at start point
-            Point cursorlm = new Point(startpoint?.X ?? leftmargin, (startpoint?.Y ?? topmargin) + starsize.Height * nodeheightratio / 2 / noderatiodivider);
+            Point cursorlm = new Point(startpoint.X, startpoint.Y + starsize.Height * nodeheightratio / 2 / noderatiodivider);
 
-            List<ExtPictureBox.ImageElement> starcontrols = new List<ExtPictureBox.ImageElement>();
+            ExtPictureBox.ImageList starcontrols = new ExtPictureBox.ImageList();
 
             if (titletext != null)
             {
@@ -115,6 +134,8 @@ namespace EliteDangerousCore.StarScan2
 
             NodePtr toplevelbodieslist = systemnode.BodiesSimplified(SimplifyDiagram);
 
+            ExtPictureBox.ImageList imageline = new ExtPictureBox.ImageList();
+
             foreach (NodePtr starnode in toplevelbodieslist.ChildBodies)       // go thru top level list..
             {
                 if (bodytypefilters != null && starnode.BodyNode.IsBodyTypeInFilter(bodytypefilters, true) == false)       // if filter active, but no body or children in filter
@@ -130,7 +151,7 @@ namespace EliteDangerousCore.StarScan2
 
                 {
                     // draw the star/barycentre, given this body node
-                    Point maxpos = DrawNode(starcontrols, starnode.BodyNode, historicmats, curmats,
+                    Point maxpos = DrawNode(imageline, starnode.BodyNode, historicmats, curmats,
                                             cursorlm, false, true, out Rectangle starimagepos, out int _, starsize, rnd, ContextMenuStripBodies, ContextMenuStripMats);
 
                     DisplayAreaUsed = new Point(Math.Max(DisplayAreaUsed.X, maxpos.X), Math.Max(DisplayAreaUsed.Y, maxpos.Y));
@@ -142,7 +163,7 @@ namespace EliteDangerousCore.StarScan2
                 if (!drawnsignals && (systemnode.FSSSignals?.Count > 0 || systemnode.CodexEntries?.Count > 0 || systemnode.OrbitingStations?.Count>0))
                 {
                     drawnsignals = true;
-                    Point maxpos = DrawSignals(starcontrols, new Point(cursorlm.X + moonspacerx, cursorlm.Y),
+                    Point maxpos = DrawSignals(imageline, new Point(cursorlm.X + moonspacerx, cursorlm.Y),
                                                     systemnode.FSSSignals,      // may be null
                                                      systemnode.CodexEntries,      // may be null
                                                      systemnode.OrbitingStations,      // may be null
@@ -178,7 +199,7 @@ namespace EliteDangerousCore.StarScan2
 
                         if (toplevelnode.BodyNode.DoesNodeHaveNonWebScansBelow() || ShowWebBodies)
                         {
-                            List<ExtPictureBox.ImageElement> pc = new List<ExtPictureBox.ImageElement>();
+                            ExtPictureBox.ImageList nodeimages = new ExtPictureBox.ImageList();
 
                             bool habzone = false;
 
@@ -191,73 +212,74 @@ namespace EliteDangerousCore.StarScan2
                             // we draw at drawpos the node
                             // we output the node x, which we use to base the sub body positions
 
-                            Point maxnodepos = DrawNode(pc, toplevelnode.BodyNode, historicmats, curmats,
+                            Point maxnodepos = DrawNode(nodeimages, toplevelnode.BodyNode, historicmats, curmats,
                                                     cursorlm, false, true, out Rectangle imagerect, out int centretoplevelnodex, planetsize, rnd, ContextMenuStripBodies, ContextMenuStripMats, backwash: habzone ? Color.FromArgb(64, 0, 128, 0) : default(Color?));        // offset passes in the suggested offset, returns the centre offset
 
-                            Point subbodypos;
-                            if (toplevelnode.BodyNode.BodyType == BodyDefinitions.BodyType.Barycentre)
-                            {
-                                Size sz = ExtPictureBox.Measure(pc);
-                                ExtPictureBox.Reposition(pc, 0, -sz.Height);
-                                subbodypos = new Point(centretoplevelnodex, cursorlm.Y);
-
-                            }
-                            else
-                            {
-                                subbodypos = new Point(centretoplevelnodex, maxnodepos.Y + moonspacery + moonsize.Height / 2);
-                            }
-
-
                             // place subbodies under the centre of the node, spaced down
-                            //Point subbodypos = new Point(centretoplevelnodex, maxnodepos.Y + moonspacery + moonsize.Height / 2);
+
+                            Point subbodypos = new Point(centretoplevelnodex, maxnodepos.Y + moonspacery + moonsize.Height / 2);
 
                             // draw primary moons under the planet centred with no right shift allowed
 
                             Point maxtreepos = maxnodepos;
-                            DrawTree(pc, toplevelnode, subbodypos, true, false, toplevelnode.BodyNode.BodyType == BodyDefinitions.BodyType.Barycentre, ref maxtreepos, historicmats, curmats, bodytypefilters, rnd, ContextMenuStripBodies, ContextMenuStripMats);
+                        //    DrawTree(nodeimages, toplevelnode, subbodypos, true, false, toplevelnode.BodyNode.BodyType == BodyDefinitions.BodyType.Barycentre, ref maxtreepos, historicmats, curmats, bodytypefilters, rnd, ContextMenuStripBodies, ContextMenuStripMats);
+
+                            //if (toplevelnode.BodyNode.IsBarycentre)
+                            //{
+                            //    if (!linehasbarycentre)
+                            //    {
+                            //        ExtPictureBox.Reposition(imageline, 0, nodeimagesize.Height);      // shift all we had drawn so far down
+                            //        linehasbarycentre = true;
+                            //    }
+                            //}
+                            //else if (linehasbarycentre)
+                            //{
+                            //    ExtPictureBox.Reposition(nodeimages, 0, nodeimagesize.Height);      // shift all we had down
+                            //}
 
                             if (maxtreepos.X > widthavailable)               // uh ohh too wide..
                             {
                                 int xoff = firstcolumn.X - cursorlm.X;              // shift in pixels to firstcolumn.x from the cursor point
                                 int yoff = (DisplayAreaUsed.Y + planetspacery) - (cursorlm.Y - planetsize.Height / 2);      // the current display area used, not including this draw, calculate the Y offset to apply
 
-                                ExtPictureBox.Reposition(pc, xoff, yoff);                     // shift co-ords of all you've drawn for this part
+                                nodeimages.Reposition(xoff, yoff);                     // shift co-ords of all you've drawn for this part
 
                                 maxtreepos = new Point(maxtreepos.X + xoff, maxtreepos.Y + yoff);     // add the shift on for the calculation of area used
 
                                 cursorlm = new Point(maxtreepos.X + planetspacerx, cursorlm.Y + yoff);   // and set the curpos to maxpos.x + spacer, remove the shift from curpos.y
+
+                                starcontrols.AddRange(imageline.Enumerable);       // add previous line
+                                imageline.Clear();                      // clear and start new line
+                                imageline.AddRange(nodeimages.Enumerable);
                             }
                             else
                             {
                                 cursorlm = new Point(maxtreepos.X + planetspacerx, cursorlm.Y);     // shift current pos right, plus a spacer, past this planet tree
+                                imageline.AddRange(nodeimages.Enumerable);
                             }
 
                             DisplayAreaUsed = new Point(Math.Max(DisplayAreaUsed.X, maxtreepos.X), Math.Max(DisplayAreaUsed.Y, maxtreepos.Y));
 
-                            starcontrols.AddRange(pc.ToArray());
                         }
                     }
                 }       // end children
 
-                // if always move down or children.. move down
-                if (NoPlanetStarsOnSameLine || starnode.BodyNode.ChildBodies.Count > 0)
+                // cursor move right as a default..
+                cursorlm = new Point(DisplayAreaUsed.X + starfirstplanetspacerx, cursorlm.Y);
+
+                // new star group upcoming..
+                // if always move down or children was drawn or too wide .. move down
+                if ( NoPlanetStarsOnSameLine || starnode.BodyNode.ChildBodies.Count > 0 || cursorlm.X + StarSize.Width > widthavailable)
                 {
                     // cursor back to start, move down below last draw
-                    cursorlm = new Point(startpoint?.X ?? leftmargin, DisplayAreaUsed.Y + starplanetgroupspacery + starsize.Height / 2);
-                }
-                else
-                {
-                    // cursor move right
-                    cursorlm = new Point(DisplayAreaUsed.X + starfirstplanetspacerx, cursorlm.Y);
+                    cursorlm = new Point(startpoint.X, DisplayAreaUsed.Y + starplanetgroupspacery + starsize.Height / 2);
 
-                    // unless too far right
-                    if (cursorlm.X + StarSize.Width > widthavailable) // if too far across..
-                    {
-                        cursorlm = new Point(startpoint?.X ?? leftmargin, DisplayAreaUsed.Y + starplanetgroupspacery + starsize.Height / 2);
-                    }
+                    starcontrols.AddRange(imageline.Enumerable);       // add previous line
+                    imageline.Clear();                      // clear and start new line
                 }
             }
-           
+
+            starcontrols.AddRange(imageline.Enumerable);
 
             if (!drawnsignals && (systemnode.FSSSignals?.Count > 0 || systemnode.CodexEntries?.Count > 0))  // if no stars were drawn, but signals..
             {
@@ -273,35 +295,35 @@ namespace EliteDangerousCore.StarScan2
                 }
             }
 
-            return starcontrols;
+            return starcontrols.Enumerable.ToList();
         }
 
-        public void DrawSingleObject(ExtendedControls.ExtPictureBox imagebox, StarScan2.BodyNode node,
-                                       List<MaterialCommodityMicroResource> historicmats = null, List<MaterialCommodityMicroResource> curmats = null,
-                                       Point? startpoint = null)
+        public void DrawSingleObject(ExtendedControls.ExtPictureBox imagebox, StarScan2.BodyNode node, Point startpoint,
+                                       List<MaterialCommodityMicroResource> historicmats = null, List<MaterialCommodityMicroResource> curmats = null)
+                                        
         {
             imagebox.ClearImageList();  // does not clear the image, render will do that
-            var ie = CreateSingleObject(node, historicmats, curmats, startpoint);
+            var ie = CreateSingleObject(node, startpoint, historicmats, curmats);
             imagebox.AddRange(ie);
             imagebox.Render();
         }
 
         // draw a single object to the imagebox
-        public List<ExtPictureBox.ImageElement> CreateSingleObject(BodyNode bn,
-                                       List<MaterialCommodityMicroResource> historicmats = null, List<MaterialCommodityMicroResource> curmats = null,
-                                       Point? startpoint = null)
+        public List<ExtPictureBox.ImageElement> CreateSingleObject(BodyNode bn, Point startpoint, 
+                                       List<MaterialCommodityMicroResource> historicmats = null, List<MaterialCommodityMicroResource> curmats = null)
+                                        
         {
             System.Diagnostics.Debug.Assert(Font != null);
 
-            Point leftmiddle = new Point(startpoint?.X ?? leftmargin, (startpoint?.Y ?? topmargin) + StarSize.Height * nodeheightratio / 2 / noderatiodivider);
+            Point cursorlm = new Point(startpoint.X, startpoint.Y + StarSize.Height * nodeheightratio / 2 / noderatiodivider);
 
-            List<ExtPictureBox.ImageElement> ie = new List<ExtPictureBox.ImageElement>();
+            ExtPictureBox.ImageList ie = new ExtPictureBox.ImageList();
 
             Random rnd = new Random(bn.Name().GetHashCode());         // always start with same seed so points are in same places
 
-            DrawNode(ie, bn, historicmats, curmats, leftmiddle, false, true, out Rectangle _, out int _, starsize, rnd, null, null);
+            DrawNode(ie, bn, historicmats, curmats, cursorlm, false, true, out Rectangle _, out int _, starsize, rnd, null, null);
 
-            return ie;
+            return ie.Enumerable.ToList();
         }
 
         public void SetSize(int stars)
@@ -315,10 +337,9 @@ namespace EliteDangerousCore.StarScan2
             starfirstplanetspacerx = Math.Min(stars / 2, 16);      // 16/2=8 to 16
             starplanetgroupspacery = Math.Min(stars / 2, 24);      // 16/2=8 to 24
             planetspacerx = Math.Min(stars / 4, 16);
-            topmargin = planetspacery = 40;     // enough space for a decent number of barycentres
+            planetspacery = 40;
             moonspacerx = Math.Min(stars / 4, 8);
             moonspacery = Math.Min(stars / 4, 8);
-            leftmargin = 8;
             materiallinespacerxy = 4;
         }
 
@@ -328,8 +349,7 @@ namespace EliteDangerousCore.StarScan2
         #region Implementation
 
 
-        private Size starsize;                   // size of stars
-        private Size planetsize, moonsize, materialsize;
+        private Size starsize,planetsize, moonsize, materialsize;
         private int starfirstplanetspacerx;        // distance between star and first planet
         private int starplanetgroupspacery;        // distance between each star/planet grouping 
         private int planetspacerx;       // distance between each planet in a row
@@ -337,8 +357,6 @@ namespace EliteDangerousCore.StarScan2
         private int moonspacerx;        // distance to move moon across
         private int moonspacery;        // distance to slide down moon vs planet
         private int materiallinespacerxy;   // extra distance to add around material output
-        private int leftmargin;
-        private int topmargin;
 
         const int noderatiodivider = 8;     // in eighth sizes
         const int nodeheightratio = 12;     // nominal size 12/8th of Size
