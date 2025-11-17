@@ -37,8 +37,8 @@ namespace EliteDangerousCore.StarScan2
         public uint BodyGeneration { get; private set; } = 0;        // changed after each body change
         public uint SignalGeneration { get; private set; } = 0;        // changed after each codex/signal/fss/genus change
         public List<FSSSignal> FSSSignals { get { return systemBodies.FSSSignalList; } }     // may be null, held in top level body
-        public List<JournalCodexEntry> CodexEntries { get { return systemBodies.CodexEntries; } }     // may be null, held in top level body
-        public List<IBodyFeature> OrbitingStations { get { return systemBodies.Features; } }     // may be null, held in top level body, Stations..
+        public List<JournalCodexEntry> CodexEntries { get { return systemBodies.CodexEntries; } }     // System Codex entries, may be null, held in top level body. Codex entries can also be against a body
+        public List<IBodyFeature> OrbitingStations { get { return systemBodies.Features; } }     // System orbiting stations, may be null, held in top level body.
         public BodyNode TopLevelBody() { return systemBodies.ChildBodies.Count == 1 && systemBodies.ChildBodies[0].BodyType == BodyDefinitions.BodyType.Barycentre ? systemBodies.ChildBodies[0] : systemBodies; }
         public BodyNode TopLevel() { return systemBodies; }
 
@@ -91,9 +91,48 @@ namespace EliteDangerousCore.StarScan2
         }
 
         // GO down tree and remove all barycentres, return NodePtr tree
-        public BodyNode.NodePtr BodiesNoBarycentres()
+        public NodePtr BodiesNoBarycentres()
         {
-            return systemBodies.BodiesNoBarycentres();
+            return NodePtr.BodiesNoBarycentres(systemBodies, null);
+        }
+
+        // GO down tree and remove all barycentres, return NodePtr tree
+        public NodePtr BodiesSimplified(bool simplify = true)
+        {
+            NodePtr nodelist = NodePtr.Bodies(TopLevelBody(), null);
+
+            if (simplify)
+            {
+                nodelist.Dump("", 0);
+
+                var movelist = new List<Tuple<NodePtr, NodePtr>>();
+
+                var barycentres = nodelist.ChildBodies.Where(x => x.BodyNode.IsBarycentre).ToList();
+                var orbitingbodies = nodelist.ChildBodies.Where(x => x.BodyNode.IsBodyOrbitingStar).ToList();       // these should not be directly under the primary barycentre
+
+                foreach (var barycent in barycentres)
+                {
+                    var bodiesunderthisbary = orbitingbodies.Where(x => x.BodyNode.CanonicalName?.Contains(" " + barycent.BodyNode.OwnName) ?? false).ToList();
+
+                    foreach (var x in bodiesunderthisbary)
+                    {
+                        $"StarScan Node {x.BodyNode.Name()} contains baryname {barycent.BodyNode.Name()} move to {barycent.BodyNode.Name()}".DO();
+                        movelist.Add(new Tuple<NodePtr, NodePtr>(x, barycent));
+                    }
+                }
+
+                NodePtr.Move(movelist);
+
+                foreach (var barycent in barycentres)
+                {
+                    NodePtr.Sort(barycent, true);
+
+                }
+
+                nodelist.Dump("", 0);
+            }
+
+            return nodelist;
         }
 
         public long ScanValue(bool includewebvalue)

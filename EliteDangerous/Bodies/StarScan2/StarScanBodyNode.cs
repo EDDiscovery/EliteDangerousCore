@@ -23,25 +23,28 @@ using System.Runtime.CompilerServices;
 namespace EliteDangerousCore.StarScan2
 {
     [System.Diagnostics.DebuggerDisplay("`{OwnName}` `{CanonicalName}` {BodyID} {BodyType} : CB{ChildBodies.Count} Cx{CodexEntries?.Count} FSS{FSSSignalList?.Count} Org{Organics?.Count} Gen {Genuses?.Count}")]
-
     public partial class BodyNode
     {
         #region Public
 
-        public string OwnName { get; private set; }     // own name (1,2,A,Mitterand Hollow) for scan names, or computed Barycentre name BC of A,B,C
-        public string CanonicalName { get; private set; }  // set on scans to js.BodyName, and on discrete body adds of names (Miterrand Hollow)
-                                                           // will contain the whole name (HIP 1885 A 5 b, HIP 1885 A 2 A Ring, HIP 1885 A A Belt Cluster 1)
-                                                           // will not be set on sub part names/barycentres. Be Null
+        // own name (1,2,A,Mitterand Hollow) for scan names, or computed Barycentre name BC of A,B,C
+        public string OwnName { get; private set; }     
 
+        // set on scans to js.BodyName, and on discrete body adds of names (Miterrand Hollow)
+        // will contain the whole name (HIP 1885 A 5 b, HIP 1885 A 2 A Ring, HIP 1885 A A Belt Cluster 1)
+        // will not be set on sub part names/barycentres. Be Null
+        public string CanonicalName { get; private set; }  
+                                                           
+        // always not null
         public string CanonicalNameOrOwnName => CanonicalName ?? OwnName;
 
-        // without system name
+        // without system name, may be null
         public string CanonicalNameNoSystemName() { return CanonicalName?.ReplaceIfStartsWith(SystemNode.System.Name); }
 
-        public int CanonicalNameDepth { get; private set; } = -1;       // set if a standard name to name depth
-
-        // best name, either Canonicalname without system, or ownname
+        // best name, either Canonicalname without system, or ownname, never null
         public string Name() { return CanonicalName?.ReplaceIfStartsWith(SystemNode.System.Name) ?? OwnName; }
+
+        public int CanonicalNameDepth { get; private set; } = -1;       // set if a standard name to name depth. -1 if non standard naming, else 0 are top level objects, 1 = planet, etc
 
         public int BodyID { get; private set; }
 
@@ -50,6 +53,7 @@ namespace EliteDangerousCore.StarScan2
         public bool IsStarOrPlanet { get { return BodyType == BodyDefinitions.BodyType.Star || BodyType == BodyDefinitions.BodyType.Planet; } }
         public bool IsPlanetOrMoon { get { return BodyType == BodyDefinitions.BodyType.Planet; } }
         public bool IsBarycentre { get { return BodyType == BodyDefinitions.BodyType.Barycentre; } }
+        public bool IsBodyOrbitingStar { get { return BodyType == BodyDefinitions.BodyType.Planet || BodyType == BodyDefinitions.BodyType.StellarRing || BodyType == BodyDefinitions.BodyType.SmallBody; } }
 
         public bool WebCreatedNode { get { return Scan?.DataSource == SystemSource.FromEDSM || Scan?.DataSource == SystemSource.FromSpansh; } }
 
@@ -111,7 +115,7 @@ namespace EliteDangerousCore.StarScan2
             return CanonicalNameDepth == -1 ? GetDepthIgnoreBC() : CanonicalNameDepth;        // 0 is first
         }
 
-        // calculate depth of body
+        // calculate depth of body with no BCs counting
         public int GetDepthIgnoreBC()
         {
             int depth = 0;
@@ -126,6 +130,7 @@ namespace EliteDangerousCore.StarScan2
             return depth;
         }
 
+        // find body parent above
         public BodyNode GetParentIgnoreBC()
         {
             BodyNode bn = Parent;
@@ -154,6 +159,7 @@ namespace EliteDangerousCore.StarScan2
 
             return bnl;
         }
+
         // accumulate all sibling bodies excluding barycentres, and if a barycentre is a sibling, returns its child bodies
         public List<BodyNode> GetChildBodiesNoBarycentres()
         {
@@ -353,6 +359,7 @@ namespace EliteDangerousCore.StarScan2
                 return string.Empty;
         }
 
+        // recursively generate json dump of bodies
         public static void ToJSON(JObject jo, BodyNode node)
         {
             node.ToJson(jo);
@@ -463,6 +470,14 @@ namespace EliteDangerousCore.StarScan2
 
         #region Implementation For Creation
 
+        public const string BCNamingPrefix = "BC of ";
+        public const string DefaultNameOfBC = "Unknown Barycentre";
+        public const string DefaultNameOfUnknownBody = "Unknown Body";
+        public const string DefaultNameOfUnknownStar = "Unknown Star";
+        public const string UnknownMarker = "Unknown";
+        public const int BodyIDMarkerForAutoBody = -2;
+        public const int BodyIDMarkerForAutoBodyBeltCluster = -3;
+
         public BodyNode(string ownname, BodyDefinitions.BodyType bc, int bid, BodyNode parent, SystemNode sys)
         {
             OwnName = ownname;
@@ -544,19 +559,35 @@ namespace EliteDangerousCore.StarScan2
             CalculateCNDepth();
         }
 
+        // We calculate for Eahlstan the name depth of the object if its a standard naming part!
         private void CalculateCNDepth()
         {
             bool stdname = CanonicalName.StartsWith(SystemNode.System.Name);
+
             if (stdname)
             {
                 if (CanonicalName == SystemNode.System.Name)        // if same name, its a level 0 star
                 {
                     CanonicalNameDepth = 0;
                 }
-                else
+                else 
                 {
-                    var count = SystemNode.ExtractParts(CanonicalName.Substring(SystemNode.System.Name.Length)).Count;
-                    CanonicalNameDepth = BodyType == BodyDefinitions.BodyType.Star && count == 1 ? 0 : count;       // if its a star and single named, its a star
+                    // split, into A 1 a etc, accounting for belt cluster ring combined names
+                    var parts = SystemNode.ExtractParts(CanonicalName.Substring(SystemNode.System.Name.Length));
+
+
+                    if (parts.Count > 0)        // protect against nonsense
+                    {
+                        // if it starts with a star or barycentre, reduce count by 1
+
+                        bool isstar = parts[0].Length == 1 && char.IsLetter(parts[0][0]);       // see StarScanSystemNodeImpt: GetOrMakeStandardBodyNodeFromScanWithoutParents
+                        bool isbarycentre = parts[0].Length>1 && parts[0].HasAll(x => char.IsUpper(x));
+
+                        if ( isstar || isbarycentre)
+                            CanonicalNameDepth = parts.Count - 1;
+                        else
+                            CanonicalNameDepth = parts.Count;
+                    }
                 }
             }
         }
@@ -653,6 +684,87 @@ namespace EliteDangerousCore.StarScan2
                 Features.Add(sc);
         }
 
+        // tell me what the sort order of this vs the right one is.
+        public int CompareTo(BodyNode right, bool ignoresma)
+        {
+            BodyNode left = this;
+
+            string lt = left.OwnName;
+            string rt = right.OwnName;
+            bool bcleft = false;
+            bool bcright = false;
+
+            // remove the BC of.. prefix to find the first name in the BC list - used for sort
+
+            if (lt.StartsWith(BCNamingPrefix))
+            {
+                lt = lt.Substring(BCNamingPrefix.Length);
+                int i = lt.IndexOf(',');
+                if (i >= 0)
+                    lt = lt.Substring(0, i).Trim();
+                bcleft = true;
+            }
+
+            if (rt.StartsWith(BCNamingPrefix))
+            {
+                rt = rt.Substring(BCNamingPrefix.Length);
+                int i = rt.IndexOf(',');
+                if (i >= 0)
+                    rt = rt.Substring(0, i).Trim();
+                bcright = true;
+            }
+
+            // $"Sort Compare `{lt}` with `{rt}`".DO(lvl);
+
+            double? smal = left.SMA;         // grab SMA from anything we have
+            double? smar = right.SMA;
+
+            if (smal.HasValue && smar.HasValue && !ignoresma)
+            {
+                $"Body Compare SMA {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
+                return smal.Value.CompareTo(smar.Value);
+            }
+            else 
+            if (lt.Length == 1 && rt.Length == 1)      // 1-2-3 or a b c sort direct just comparing value
+            {
+                $"Body Compare 1Char {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
+                return lt.CompareTo(rt);
+            }
+            else
+            {
+                int? lv = lt.InvariantParseIntNull();
+                int? rv = rt.InvariantParseIntNull();
+                if (lv.HasValue && rv.HasValue)
+                {
+                    $"Body Compare Number {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
+                    return lv.Value.CompareTo(rv.Value);
+                }
+                else
+                {
+                    $"Body Compare Other {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
+                    if (lt.Contains("Belt Cluster"))        // clusters first
+                    {
+                        if (rt.Contains("Belt Cluster"))
+                            return lt.CompareTo(rt);
+                        else
+                            return -1;
+                    }
+                    else if (rt.Contains("Belt Cluster"))
+                        return 1;
+                    else if (bcleft)                        // bc's to the end if they don't have SMAs
+                    {
+                        if (bcright)
+                            return lt.CompareTo(rt);            // default alpha
+                        else
+                            return 1;
+                    }
+                    else if (bcright)
+                        return -1;
+                    else
+                        return lt.CompareTo(rt);            // default alpha
+                }
+            }
+        }
 
         public void DumpTree(string bid, int level)
         {
@@ -672,11 +784,14 @@ namespace EliteDangerousCore.StarScan2
 
         public void Dump(string bid, int level = 0)
         {
-            string front = bid.PadRight(15);
-            string names = (new string(' ', level) + (OwnName + " | " + (CanonicalName ?? "-"))).PadRight(40);
+            string front = bid.PadRight(20);
+            string names = (new string(' ', level) + (OwnName + " | " + (CanonicalNameNoSystemName() ?? "-"))).PadRight(35);
             string pad = new string(' ', front.Length + 3 + level + 3);
+            int cn = GetNameDepth();
+            string cnl = cn >= 0 ? cn.ToString() : "";
+            string sma = SMA != null ? ((SMA / 1000.0).ToStringInvariant("N0") +"km") : "";
 
-            System.Diagnostics.Trace.WriteLine($"{front} : {names} {BodyType.ToString().PadRight(15)} scname:`{Scan?.BodyName}` P:{Scan?.ParentList()} CNL {CanonicalNameDepth} sma {SMA} isMapped {IsMapped} Effmap {WasMappedEfficiently}");
+            System.Diagnostics.Trace.WriteLine($"{front} : {cnl.PadRight(2)} : {names} : {BodyType.ToString().PadRight(15)} sma {sma}");
             foreach (var x in CodexEntries.EmptyIfNull())
                 System.Diagnostics.Trace.WriteLine($"{pad}CX:{x.GetInfo()}");
             foreach (var x in Signals.EmptyIfNull())
@@ -691,63 +806,9 @@ namespace EliteDangerousCore.StarScan2
                 System.Diagnostics.Trace.WriteLine($"{pad}F:{x.BodyType} `{x.Name_Localised ?? x.Name}` {x.BodyID}");
         }
 
-        #endregion
-
-        #region Body Nodes Pointers - used to exclude barycentres without distrubing the main tree
-
-        public class NodePtr
-        {
-            public BodyNode BodyNode { get; set; }          // pointer to node
-            public List<NodePtr> ChildBodies { get; set; } = new List<NodePtr>();   // to its child bodies
-            public NodePtr Parent { get; set; }         // and its parent
-        }
-
-        // GO down tree and remove all barycentres, return BodyNodePtr tree
-        public NodePtr BodiesNoBarycentres()
-        {
-            return BodiesNoBarycentres(this, null);
-        }
-
-        // GO down tree and remove all barycentres, return BodyNodePtr tree
-        public static NodePtr BodiesNoBarycentres(BodyNode bn, NodePtr parent)
-        {
-            var x = new NodePtr();
-            x.BodyNode = bn;
-            x.Parent = parent;
-            foreach (var bnc in bn.ChildBodies)
-            {
-                var bp = BodiesNoBarycentres(bnc, x);
-
-                if (bn.BodyType == BodyDefinitions.BodyType.Barycentre && x.Parent != null)      // if this is a BC, and we have a parent, move the items up 1 level to the parent
-                    x.Parent.ChildBodies.Add(bp);
-                else if (bp.BodyNode.BodyType != BodyDefinitions.BodyType.Barycentre)        // exclude all BCs from adds
-                    x.ChildBodies.Add(bp);
-            }
-
-            return x;
-        }
-
-        public static void Dump(NodePtr p, string bid, int level = 0)
-        {
-            //if (p.BodyNode.BodyType != BodyDefinitions.BodyType.System)
-            {
-                if (p.BodyNode.BodyID < 0)
-                    bid += ".??";
-                else
-                    bid += $".{p.BodyNode.BodyID,2}";
-
-                p.BodyNode.Dump(bid, level);
-            }
-
-            foreach (var x in p.ChildBodies)
-            {
-                Dump(x, bid, level + 1);
-            }
-
-        }
-
-        #endregion
 
 
     }
+
+    #endregion
 }

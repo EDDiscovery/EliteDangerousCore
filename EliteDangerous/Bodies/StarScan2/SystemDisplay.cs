@@ -40,6 +40,7 @@ namespace EliteDangerousCore.StarScan2
         public bool ShowStarClasses { get; set; } = true;
         public bool ShowDist { get; set; } = true;
         public bool NoPlanetStarsOnSameLine { get; set; } = true;
+        public bool SimplifyDiagram { get; set; } = true;   
         public ContextMenuStrip ContextMenuStripBodies { get; set; } = null;      // if to assign a CMS
         public ContextMenuStrip ContextMenuStripBelts { get; set; } = null;      // if to assign a CMS
         public ContextMenuStrip ContextMenuStripMats { get; set; } = null;      // if to assign a CMS
@@ -87,9 +88,6 @@ namespace EliteDangerousCore.StarScan2
             System.Diagnostics.Debug.Assert(systemnode != null);
             System.Diagnostics.Debug.Assert(!starsize.IsEmpty);
 
-           // systemnode.DumpTree();
-
-
             // BodyToImages.DebugDisplayStarColourKey(imagebox, Font); enable for checking
 
             Random rnd = new Random(systemnode.System.Name.GetHashCode());         // always start with same seed so points are in same places
@@ -116,24 +114,27 @@ namespace EliteDangerousCore.StarScan2
             bool drawnsignals = false;      // set if we drawn signals against any of the stars
 
             // skip over node ID if its a barycentre and jump down 1 level
-            BodyNode toplevelbodieslist = systemnode.TopLevelBody();
+            //BodyNode toplevelbodieslist = systemnode.TopLevelBody();
 
-            foreach (BodyNode starnode in toplevelbodieslist.ChildBodies)       // go thru top level list..
+            NodePtr toplevelbodieslist = systemnode.BodiesSimplified(SimplifyDiagram);
+
+
+            foreach (NodePtr starnode in toplevelbodieslist.ChildBodies)       // go thru top level list..
             {
-                if (bodytypefilters != null && starnode.IsBodyTypeInFilter(bodytypefilters, true) == false)       // if filter active, but no body or children in filter
+                if (bodytypefilters != null && starnode.BodyNode.IsBodyTypeInFilter(bodytypefilters, true) == false)       // if filter active, but no body or children in filter
                 {
-                    System.Diagnostics.Debug.WriteLine($"System Display Rejected {starnode.OwnName}");
+                    System.Diagnostics.Debug.WriteLine($"System Display Rejected {starnode.BodyNode.OwnName}");
                     continue;
                 }
 
-                if (!starnode.DoesNodeHaveNonWebScansBelow() && !ShowWebBodies)      // if we don't have any non web bodies at or under the node, and we are not showing web bodies, ignore
+                if (!starnode.BodyNode.DoesNodeHaveNonWebScansBelow() && !ShowWebBodies)      // if we don't have any non web bodies at or under the node, and we are not showing web bodies, ignore
                 {
                     continue;
                 }
 
                 {
                     // draw the star/barycentre, given this body node
-                    Point maxpos = DrawNode(starcontrols, starnode, historicmats, curmats,
+                    Point maxpos = DrawNode(starcontrols, starnode.BodyNode, historicmats, curmats,
                                             cursorlm, false, true, out Rectangle starimagepos, out int _, starsize, rnd, ContextMenuStripBodies, ContextMenuStripMats);
 
                     DisplayAreaUsed = new Point(Math.Max(DisplayAreaUsed.X, maxpos.X), Math.Max(DisplayAreaUsed.Y, maxpos.Y));
@@ -162,38 +163,38 @@ namespace EliteDangerousCore.StarScan2
 
                 // if child bodies
 
-                if (starnode.ChildBodies.Count > 0)
+                if (starnode.BodyNode.ChildBodies.Count > 0)
                 {
                     Point firstcolumn = cursorlm;           // record where the first body cursorlm is in case we need to shift to there
 
-                    HabZones hz = starnode.Scan?.GetHabZones();
+                    HabZones hz = starnode.BodyNode.Scan?.GetHabZones();
 
                     double habzonestartls = hz != null ? hz.HabitableZoneInner : 0;
                     double habzoneendls = hz != null ? hz.HabitableZoneOuter : 0;
 
-                    foreach(BodyNode planetnode in starnode.ChildBodies)
+                    foreach(NodePtr planetnode in starnode.ChildBodies)
                     {
-                        if (bodytypefilters != null && planetnode.IsBodyTypeInFilter(bodytypefilters, true) == false)       // if filter active, but no body or children in filter
+                        if (bodytypefilters != null && planetnode.BodyNode.IsBodyTypeInFilter(bodytypefilters, true) == false)       // if filter active, but no body or children in filter
                         {
                             //System.Diagnostics.Debug.WriteLine("SDUC Rejected " + planetnode.fullname);
                             continue;
                         }
 
-                        if (planetnode.DoesNodeHaveNonWebScansBelow() || ShowWebBodies)
+                        if (planetnode.BodyNode.DoesNodeHaveNonWebScansBelow() || ShowWebBodies)
                         {
                             List<ExtPictureBox.ImageElement> pc = new List<ExtPictureBox.ImageElement>();
 
                             bool habzone = false;
 
-                            if (ShowHabZone && planetnode.Scan != null && !planetnode.Scan.IsOrbitingBarycentre && planetnode.Scan.nSemiMajorAxis.HasValue)
+                            if (ShowHabZone && planetnode.BodyNode.Scan != null && !planetnode.BodyNode.Scan.IsOrbitingBarycentre && planetnode.BodyNode.Scan.nSemiMajorAxis.HasValue)
                             {
-                                double dist = planetnode.Scan.nSemiMajorAxis.Value / BodyPhysicalConstants.oneLS_m;  // m , converted to LS
+                                double dist = planetnode.BodyNode.Scan.nSemiMajorAxis.Value / BodyPhysicalConstants.oneLS_m;  // m , converted to LS
                                 habzone = dist >= habzonestartls && dist <= habzoneendls;
                             }
 
                             // we output the planetcentrx, which we use to base the moon positions
 
-                            Point maxplanetpos = DrawNode(pc, planetnode, historicmats, curmats,
+                            Point maxplanetpos = DrawNode(pc, planetnode.BodyNode, historicmats, curmats,
                                                     cursorlm, false, true, out Rectangle imagerect, out int centreplanet, planetsize, rnd, ContextMenuStripBodies, ContextMenuStripMats, backwash: habzone ? Color.FromArgb(64, 0, 128, 0) : default(Color?));        // offset passes in the suggested offset, returns the centre offset
 
                             Point moonpos = new Point(centreplanet, maxplanetpos.Y + moonspacery + moonsize.Height / 2);
@@ -201,7 +202,7 @@ namespace EliteDangerousCore.StarScan2
                             // draw primary moons under the planet centred with no right shift allowed
 
                             Point maxplanetmoonspos = maxplanetpos;
-                            DrawTree(pc, planetnode, moonpos, true, false, planetnode.BodyType == BodyDefinitions.BodyType.Barycentre, ref maxplanetmoonspos, historicmats, curmats, bodytypefilters, rnd, ContextMenuStripBodies, ContextMenuStripMats);
+                            DrawTree(pc, planetnode, moonpos, true, false, planetnode.BodyNode.BodyType == BodyDefinitions.BodyType.Barycentre, ref maxplanetmoonspos, historicmats, curmats, bodytypefilters, rnd, ContextMenuStripBodies, ContextMenuStripMats);
 
                             Point pcnt = new Point(centreplanet, cursorlm.Y);       // centre planet point
 
@@ -231,7 +232,7 @@ namespace EliteDangerousCore.StarScan2
                 }       // end children
 
                 // if always move down or children.. move down
-                if (NoPlanetStarsOnSameLine || starnode.ChildBodies.Count > 0)
+                if (NoPlanetStarsOnSameLine || starnode.BodyNode.ChildBodies.Count > 0)
                 {
                     // cursor back to start, move down below last draw
                     cursorlm = new Point(startpoint?.X ?? leftmargin, DisplayAreaUsed.Y + starplanetgroupspacery + starsize.Height / 2);

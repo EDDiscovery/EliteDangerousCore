@@ -104,7 +104,7 @@ namespace EliteDangerousCore.StarScan2
 
         }
 
-        static public void TestScan(string system, string folder, string pictureoutfolder)
+        static public void TestScan(string system, string folder, string pictureoutfolder,bool draweachone)
         {
             string file = Path.Combine(folder, $"{system}.json");
             if (File.Exists(file))
@@ -126,10 +126,19 @@ namespace EliteDangerousCore.StarScan2
                         if (sssol.BodyGeneration != gen)
                         {
                             gen = sssol.BodyGeneration;
-                            sssol.DrawSystemToFolder(1920, pictureoutfolder, mhe.Item1);
+                            if ( draweachone)
+                                sssol.DrawSystemToFolder(1920, pictureoutfolder, mhe.Item1);
                         }
                     }
                 });
+
+                if ( !draweachone)
+                {
+                    ISystem syst = ss.GetISystem(system);
+                    EliteDangerousCore.StarScan2.SystemNode sssol = ss.FindSystemSynchronous(syst);
+                    sssol.DrawSystemToFolder(1920, pictureoutfolder, -1);
+                }
+
                 ss.DumpTree();
                 ss.AssignPending();
             }

@@ -84,7 +84,7 @@ namespace EliteDangerousCore.StarScan2
                 else
                 {
                     // If we have a difference in name, the new name is not an unknown name, and the subbody is not a BC name
-                    if (subbody.OwnName != subbodyname && !subbodyname.StartsWith(UnknownMarker) && !subbody.OwnName.StartsWith(BCNamingPrefix)) 
+                    if (subbody.OwnName != subbodyname && !subbodyname.StartsWith(BodyNode.UnknownMarker) && !subbody.OwnName.StartsWith(BodyNode.BCNamingPrefix)) 
                     {
                         subbody.ResetBodyName(subbodyname);
                         Sort(cur);      // changed name, sort
@@ -194,18 +194,17 @@ namespace EliteDangerousCore.StarScan2
                 // since the format is in std naming and the belt cluster ID will be corrected.  We should not be here going thru a ring definition sequence and encoutering a child with an autoid
 
                 // a stellar ring (belt cluster) should not have any bodies below with bodyidmarkers set..
-                if (nt.IsStellarRing && cur.ChildBodies.Find(x => x.BodyID == BodyIDMarkerForAutoBodyBeltCluster) != null)
+                if (nt.IsStellarRing && cur.ChildBodies.Find(x => x.BodyID == BodyNode.BodyIDMarkerForAutoBodyBeltCluster) != null)
                 {
                     false.Assert($"StarScan belt cluster ID error for {sc.BodyName} in {systemname}");
                 }
-
-                
+               
 
                 if (subbody == null)
                 {
                     // maybe we need to check for these as well... just see if its there somewhere but not here
 
-                    subbody = new BodyNode(previdassigned?.OwnName ?? (nt.IsBarycentre ? DefaultNameOfBC : DefaultNameOfUnknownBody), nt, nt.BodyID, cur, this);
+                    subbody = new BodyNode(previdassigned?.OwnName ?? (nt.IsBarycentre ? BodyNode.DefaultNameOfBC : BodyNode.DefaultNameOfUnknownBody), nt, nt.BodyID, cur, this);
 
                     cur.ChildBodies.Add(subbody);
                     bodybyid[nt.BodyID] = subbody;
@@ -310,7 +309,7 @@ namespace EliteDangerousCore.StarScan2
 
                     if ( starbody == null)       // if can't find a star
                     {
-                        starbody = new BodyNode(DefaultNameOfUnknownStar, BodyDefinitions.BodyType.Star, BodyIDMarkerForAutoBody, cur, this);
+                        starbody = new BodyNode(BodyNode.DefaultNameOfUnknownStar, BodyDefinitions.BodyType.Star, BodyNode.BodyIDMarkerForAutoBody, cur, this);
                         cur.ChildBodies.Add(starbody);
                         BodyGeneration++;
                         $"  Add {starbody.BodyType} `{starbody.OwnName}`:{starbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
@@ -349,7 +348,7 @@ namespace EliteDangerousCore.StarScan2
                                             itsastar ? BodyDefinitions.BodyType.Star : 
                                             BodyDefinitions.BodyType.Unknown;
 
-                    subbody = new BodyNode(ownname, ty, BodyIDMarkerForAutoBody, cur, this);
+                    subbody = new BodyNode(ownname, ty, BodyNode.BodyIDMarkerForAutoBody, cur, this);
                     cur.ChildBodies.Add(subbody);
                     BodyGeneration++;
 
@@ -362,7 +361,7 @@ namespace EliteDangerousCore.StarScan2
                 {
                     // we always have real names for each part
 
-                    if (subbody.OwnName != ownname && !subbody.OwnName.StartsWith(BCNamingPrefix))                     
+                    if (subbody.OwnName != ownname && !subbody.OwnName.StartsWith(BodyNode.BCNamingPrefix))                     
                     {
                         subbody.ResetBodyName(ownname);     // just in case we made an incorrect one before
                         BodyGeneration++;
@@ -419,7 +418,7 @@ namespace EliteDangerousCore.StarScan2
 
                 if (starbody == null)
                 {
-                    starbody = new BodyNode(DefaultNameOfUnknownStar, BodyDefinitions.BodyType.Star, BodyIDMarkerForAutoBody, systemBodies, this);       // assign under the main node
+                    starbody = new BodyNode(BodyNode.DefaultNameOfUnknownStar, BodyDefinitions.BodyType.Star, BodyNode.BodyIDMarkerForAutoBody, systemBodies, this);       // assign under the main node
                     systemBodies.ChildBodies.Add(starbody);
                     $"  Add Unknown Star for {fdname}:{bid} in {systemname}".DO(debugid);
                 }
@@ -457,11 +456,11 @@ namespace EliteDangerousCore.StarScan2
                 starbody = FindCanonicalBodyNameType(fdname,BodyDefinitions.BodyType.Star);
 
             if (starbody == null)
-                starbody = systemBodies.ChildBodies.Find(x => x.BodyType == BodyDefinitions.BodyType.Star && x.BodyID == BodyIDMarkerForAutoBody);          // try an autostar
+                starbody = systemBodies.ChildBodies.Find(x => x.BodyType == BodyDefinitions.BodyType.Star && x.BodyID == BodyNode.BodyIDMarkerForAutoBody);          // try an autostar
 
             if (starbody == null)
             {
-                starbody = new BodyNode(fdname, BodyDefinitions.BodyType.Star, bid ?? BodyIDMarkerForAutoBody, systemBodies, this);       // we don't know its placement, so we just place it under the systemnode, and we mark it as unknown (even if we know its BID because we want to mark it as autoplaced)
+                starbody = new BodyNode(fdname, BodyDefinitions.BodyType.Star, bid ?? BodyNode.BodyIDMarkerForAutoBody, systemBodies, this);       // we don't know its placement, so we just place it under the systemnode, and we mark it as unknown (even if we know its BID because we want to mark it as autoplaced)
                 starbody.SetCanonicalName(fdname);          // we set its canonical name to the fdname given
                 $"  Add Star `{fdname}`:-2 in {systemname}".DO(debugid);
                 BodyGeneration++;
@@ -746,7 +745,7 @@ namespace EliteDangerousCore.StarScan2
         #region Helpers
 
 
-        // Extract the part names from the subname, recognised combined text parts like belt clusters
+        // Extract the part names from the subname, recognised composite text parts like belt clusters
         static public List<string> ExtractParts(string subname)
         {
             var partnames = new List<string>();
@@ -755,7 +754,11 @@ namespace EliteDangerousCore.StarScan2
 
             while (!sp.IsEOL)
             {
-                if (sp.IsStringMoveOn(out string found, StringComparison.InvariantCultureIgnoreCase, true, "A Belt Cluster", "B Belt Cluster", "A Ring", "B Ring" , "C Ring", "D Ring"))
+                // in Scans, its called A Belt
+                // other places its called A Belt Cluster
+                // split both off, checking belt cluster first in case we preprocessed it
+
+                if (sp.IsStringMoveOn(out string found, StringComparison.InvariantCultureIgnoreCase, true, "A Belt Cluster", "B Belt Cluster", "A Belt", "B Belt", "A Ring", "B Ring" , "C Ring", "D Ring"))
                 {
                     partnames.Add(found);
                 }
@@ -795,7 +798,7 @@ namespace EliteDangerousCore.StarScan2
                 if (nt.IsBarycentre && (partno > 0 || !itsabarycentre))      // barycenter, either at sub part of name (past start) or its not a barycentre name at root
                 {
                     //$"Skip insert barycentre at {i}".DO(lvl);
-                    partnames.Insert(partno + 1, DefaultNameOfBC);
+                    partnames.Insert(partno + 1, BodyNode.DefaultNameOfBC);
                 }
                 else if (partno >= 0)
                 {
@@ -805,7 +808,7 @@ namespace EliteDangerousCore.StarScan2
                 else
                 {
                     //$"Out of name parts for {parents[i].Type}".DO(lvl);
-                    partnames.Insert(0, nt.IsStar ? DefaultNameOfUnknownStar : nt.IsBarycentre ? DefaultNameOfBC : DefaultNameOfUnknownBody);
+                    partnames.Insert(0, nt.IsStar ? BodyNode.DefaultNameOfUnknownStar : nt.IsBarycentre ? BodyNode.DefaultNameOfBC : BodyNode.DefaultNameOfUnknownBody);
                 }
             }
 
@@ -858,7 +861,7 @@ namespace EliteDangerousCore.StarScan2
                     var belt = body.ChildBodies.Find(x => x.OwnName == name);
                     if (belt == null)
                     {
-                        belt = new BodyNode(name, body.BodyType == BodyDefinitions.BodyType.Planet ? BodyDefinitions.BodyType.PlanetaryRing : BodyDefinitions.BodyType.StellarRing , BodyIDMarkerForAutoBodyBeltCluster, body, this);
+                        belt = new BodyNode(name, body.BodyType == BodyDefinitions.BodyType.Planet ? BodyDefinitions.BodyType.PlanetaryRing : BodyDefinitions.BodyType.StellarRing , BodyNode.BodyIDMarkerForAutoBodyBeltCluster, body, this);
                         belt.SetCanonicalName(ring.Name);
                         body.ChildBodies.Add(belt);
                     }
@@ -911,10 +914,10 @@ namespace EliteDangerousCore.StarScan2
         // Extract, sort barycentre subnames into a list, remake the name of the BC 
         private static void AddBarycentreName(BodyNode cur, string subpart)
         {
-            bool defname = cur.OwnName.StartsWith(DefaultNameOfBC);
-            if (defname || cur.OwnName.StartsWith(BCNamingPrefix))       // if autonamed
+            bool defname = cur.OwnName.StartsWith(BodyNode.DefaultNameOfBC);
+            if (defname || cur.OwnName.StartsWith(BodyNode.BCNamingPrefix))       // if autonamed
             {
-                string scut = cur.OwnName.Substring(defname ? DefaultNameOfBC.Length : BCNamingPrefix.Length);
+                string scut = cur.OwnName.Substring(defname ? BodyNode.DefaultNameOfBC.Length : BodyNode.BCNamingPrefix.Length);
                 SortedSet<string> names = new SortedSet<string>(Comparer<string>.Create((a, b) => { return a.CompareAlphaInt(b); }));
 
                 string[] list = scut.SplitNoEmptyStartFinish(',');
@@ -923,7 +926,7 @@ namespace EliteDangerousCore.StarScan2
 
                 names.Add(subpart); // will remove dups
 
-                string n = BCNamingPrefix + string.Join(", ", names);
+                string n = BodyNode.BCNamingPrefix + string.Join(", ", names);
 
                 cur.ResetBodyName(n);
             }
@@ -931,97 +934,11 @@ namespace EliteDangerousCore.StarScan2
 
         private static void Sort(BodyNode cur)
         {
-          //  $"Sort tree for {cur.OwnName}:{cur.BodyID}".DO(lvl);
-            Sort(cur.ChildBodies);
+            $"Sort tree for {cur.OwnName}:{cur.BodyID}".DO();
+            cur.ChildBodies.Sort(delegate (BodyNode left, BodyNode right) { return left.CompareTo(right,false); });
         //    cur.DumpTree(2);
         }
 
-        private static void Sort(List<BodyNode> cur)
-        { 
-            cur.Sort(delegate (BodyNode left, BodyNode right)
-                {
-                    string lt = left.OwnName;
-                    string rt = right.OwnName;
-                    bool bcleft = false;
-                    bool bcright = false;
-
-                    // remove the BC of.. prefix to find the first name in the BC list - used for sort
-
-                    if (lt.StartsWith(BCNamingPrefix))
-                    {
-                        lt = lt.Substring(BCNamingPrefix.Length);
-                        int i = lt.IndexOf(',');
-                        if (i >= 0)
-                            lt = lt.Substring(0, i).Trim();
-                        bcleft = true;
-                    }
-
-                    if (rt.StartsWith(BCNamingPrefix))
-                    {
-                        rt = rt.Substring(BCNamingPrefix.Length);
-                        int i = rt.IndexOf(',');
-                        if (i >= 0)
-                            rt = rt.Substring(0, i).Trim();
-                        bcright = true;
-                    }
-
-                    // $"Sort Compare `{lt}` with `{rt}`".DO(lvl);
-
-                    double? smal = left.SMA;         // grab SMA from anything we have
-                    double? smar = right.SMA;
-
-                    if (smal.HasValue & smar.HasValue)
-                    {
-                        return smal.Value.CompareTo(smar.Value);
-                    }
-                    else if (lt.Length == 1 && rt.Length == 1)      // 1-2-3 or a b c sort direct just comparing value
-                    {
-                        return lt.CompareTo(rt);
-                    }
-                    else
-                    {
-                        int? lv = lt.InvariantParseIntNull();
-                        int? rv = rt.InvariantParseIntNull();
-                        if (lv.HasValue && rv.HasValue)
-                        {
-                            return lv.Value.CompareTo(rv.Value);
-                        }
-                        else
-                        {
-                            if (lt.Contains("Belt Cluster"))        // clusters first
-                            {
-                                if (rt.Contains("Belt Cluster"))
-                                    return lt.CompareTo(rt);
-                                else
-                                    return -1;
-                            }
-                            else if (rt.Contains("Belt Cluster"))
-                                return 1;
-                            else if (bcleft)                        // bc's to the end if they don't have SMAs
-                            {
-                                if (bcright)
-                                    return lt.CompareTo(rt);            // default alpha
-                                else
-                                    return 1;
-                            }
-                            else if (bcright)
-                                return -1;
-                            else
-                                return lt.CompareTo(rt);            // default alpha
-                        }
-                    }
-
-                });
-
-        }
-
-        private const string DefaultNameOfBC = "Unknown Barycentre";
-        private const string DefaultNameOfUnknownBody = "Unknown Body";
-        private const string DefaultNameOfUnknownStar = "Unknown Star";
-        private const string UnknownMarker = "Unknown";
-        private const string BCNamingPrefix = "BC of ";
-        private const int BodyIDMarkerForAutoBody = -2;
-        private const int BodyIDMarkerForAutoBodyBeltCluster = -3;
         
         private Dictionary<int, BodyNode> bodybyid = new Dictionary<int, BodyNode>();
         private BodyNode systemBodies = new BodyNode("System", BodyDefinitions.BodyType.System, -1, null, null);       // root of all bodies

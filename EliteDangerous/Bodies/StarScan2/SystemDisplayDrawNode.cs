@@ -59,12 +59,15 @@ namespace EliteDangerousCore.StarScan2
 
             JournalScan sc = bn.Scan;
 
-            string presentationname = bn.OwnName;
+            string presentationname = bn.Name();
 #if DEBUG
-            if (bn.CanonicalNameNoSystemName().HasChars())
-                presentationname += " | " + bn.CanonicalNameNoSystemName();
+//            if (bn.CanonicalNameNoSystemName().HasChars())
+  //              presentationname += " | " + bn.CanonicalNameNoSystemName();
             //presentationname += $"({bn.BodyID} {bn.BodyType})";
-            presentationname += $"({bn.BodyID})";
+            if ( bn.CanonicalNameDepth>=0)
+                presentationname += $"({bn.BodyID} L{bn.CanonicalNameDepth})";
+            else
+                presentationname += $"({bn.BodyID})";
 #endif
 
             // determine if star or planet.  We can normally for new modern scans rely on bn.Bodytype
@@ -158,7 +161,7 @@ namespace EliteDangerousCore.StarScan2
                 bool isdiscovered = sc.IsPreviouslyDiscovered && sc.IsPlanet;
                 int numiconoverlays = ShowOverlays ? ((sc.Terraformable ? 1 : 0) + (sc.HasMeaningfulVolcanism ? 1 : 0) +
                                     (valuable ? 1 : 0) + (sc.Mapped ? 1 : 0) + (isdiscovered ? 1 : 0) + (sc.IsPreviouslyMapped ? 1 : 0) +
-                                    (bn.Signals != null ? 1 : 0) + (bn.Organics != null ? 1 : 0) + (bn.CodexEntries!=null ? 1 : 0)
+                                    (bn.Signals != null ? 1 : 0) + (bn.Organics != null ? 1 : 0) + (bn.CodexEntries != null ? 1 : 0)
                                     ) : 0;
 
                 bool materialsicon = sc.HasMaterials && !ShowMaterials;
@@ -433,7 +436,7 @@ namespace EliteDangerousCore.StarScan2
                 var tooltip = new System.Text.StringBuilder(256);
                 bn.Scan?.DisplayText(tooltip);
 
-                var nodelabels = new string[] { presentationname};
+                var nodelabels = new string[] { presentationname };
                 if (notext)
                     nodelabels = null;
 
@@ -443,7 +446,7 @@ namespace EliteDangerousCore.StarScan2
                 lock (gdilock)
                 {
                     endpoint = CreateImageAndLabel(pc, BodyDefinitions.GetBeltBodyImageCloned(), postoplot, bmpsize, shiftrightifneeded, out imagepos, nodelabels,
-                                    tooltip.ToString(), rightclickmenubody,  backwash);
+                                    tooltip.ToString(), rightclickmenubody, backwash);
                 }
 
                 imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the belt is

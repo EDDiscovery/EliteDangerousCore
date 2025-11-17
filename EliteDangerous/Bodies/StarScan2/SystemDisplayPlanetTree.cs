@@ -27,13 +27,13 @@ namespace EliteDangerousCore.StarScan2
         // Draw a tree.
         // Return our max tree position, and update maxtreepos total
         
-        private Point DrawTree(List<ExtPictureBox.ImageElement> pc, BodyNode parent, Point pos, 
+        private Point DrawTree(List<ExtPictureBox.ImageElement> pc, NodePtr parent, Point pos, 
                                bool xiscentre, bool shiftrightifreq, bool moveright,
                                ref Point maxtreepos,
                                List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats, string[] filter,
                                Random rnd, ContextMenuStrip rightclickplanet, ContextMenuStrip rightclickmats)
         {
-            List<BodyNode> bodiestodisplay = parent.ChildBodies.Where(s => s.BodyType != BodyDefinitions.BodyType.PlanetaryRing).ToList();
+            List<NodePtr> bodiestodisplay = parent.ChildBodies.Where(s => s.BodyNode.BodyType != BodyDefinitions.BodyType.PlanetaryRing).ToList();
 
             Point maxours = pos;
 
@@ -41,11 +41,11 @@ namespace EliteDangerousCore.StarScan2
             {
                 for (int mn = 0; mn < bodiestodisplay.Count; mn++)
                 {
-                    BodyNode moonnode = bodiestodisplay[mn];
+                    NodePtr moonnode = bodiestodisplay[mn];
 
-                    if (filter == null || moonnode.IsBodyTypeInFilter(filter, true) == true)       // if filter active, and active or children active in filter
+                    if (filter == null || moonnode.BodyNode.IsBodyTypeInFilter(filter, true) == true)       // if filter active, and active or children active in filter
                     {
-                        bool nonwebscans = moonnode.DoesNodeHaveNonWebScansBelow();                // is there any scans here, either at this node or below?
+                        bool nonwebscans = moonnode.BodyNode.DoesNodeHaveNonWebScansBelow();                // is there any scans here, either at this node or below?
 
                         if (nonwebscans || ShowWebBodies)
                         {
@@ -59,8 +59,8 @@ namespace EliteDangerousCore.StarScan2
 
                             //System.Diagnostics.Debug.WriteLine($"Draw {moonnode.OwnName} at {pos}");
 
-                            Point mmax = DrawNode(pc, moonnode, historicmats, curmats, pos, xiscentre, shiftrightifreq, out Rectangle moonimagepos, out int mooncentrex, 
-                                            moveright && moonnode.BodyType != BodyDefinitions.BodyType.Barycentre ? planetsize : moonsize, 
+                            Point mmax = DrawNode(pc, moonnode.BodyNode, historicmats, curmats, pos, xiscentre, shiftrightifreq, out Rectangle moonimagepos, out int mooncentrex, 
+                                            moveright && moonnode.BodyNode.BodyType != BodyDefinitions.BodyType.Barycentre ? planetsize : moonsize, 
                                             rnd, rightclickplanet, rightclickmats);
 
                             maxours = new Point(Math.Max(maxours.X, mmax.X), Math.Max(maxours.Y, mmax.Y));      // and update maxours
