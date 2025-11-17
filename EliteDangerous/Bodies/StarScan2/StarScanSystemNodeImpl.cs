@@ -934,7 +934,7 @@ namespace EliteDangerousCore.StarScan2
 
         private static void Sort(BodyNode cur)
         {
-            $"Sort tree for {cur.OwnName}:{cur.BodyID}".DO();
+           // $"Sort tree for {cur.OwnName}:{cur.BodyID}".DO();
             cur.ChildBodies.Sort(delegate (BodyNode left, BodyNode right) { return left.CompareTo(right,false); });
         //    cur.DumpTree(2);
         }

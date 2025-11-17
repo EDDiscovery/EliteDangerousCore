@@ -721,13 +721,13 @@ namespace EliteDangerousCore.StarScan2
 
             if (smal.HasValue && smar.HasValue && !ignoresma)
             {
-                $"Body Compare SMA {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
+                //$"Body Compare SMA {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
                 return smal.Value.CompareTo(smar.Value);
             }
             else 
             if (lt.Length == 1 && rt.Length == 1)      // 1-2-3 or a b c sort direct just comparing value
             {
-                $"Body Compare 1Char {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
+                //$"Body Compare 1Char {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
                 return lt.CompareTo(rt);
             }
             else
@@ -736,12 +736,12 @@ namespace EliteDangerousCore.StarScan2
                 int? rv = rt.InvariantParseIntNull();
                 if (lv.HasValue && rv.HasValue)
                 {
-                    $"Body Compare Number {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
+                    //$"Body Compare Number {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
                     return lv.Value.CompareTo(rv.Value);
                 }
                 else
                 {
-                    $"Body Compare Other {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
+                    //$"Body Compare Other {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
                     if (lt.Contains("Belt Cluster"))        // clusters first
                     {
                         if (rt.Contains("Belt Cluster"))

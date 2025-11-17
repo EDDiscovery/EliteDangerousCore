@@ -95,8 +95,6 @@ namespace EliteDangerousCore.StarScan2
             // this is the draw cursor, its left middle position, place at start point
             Point cursorlm = new Point(startpoint?.X ?? leftmargin, (startpoint?.Y ?? topmargin) + starsize.Height * nodeheightratio / 2 / noderatiodivider);
 
-            DisplayAreaUsed = new Point(0, 0);      // accumulating image size
-
             List<ExtPictureBox.ImageElement> starcontrols = new List<ExtPictureBox.ImageElement>();
 
             if (titletext != null)
@@ -113,11 +111,9 @@ namespace EliteDangerousCore.StarScan2
 
             bool drawnsignals = false;      // set if we drawn signals against any of the stars
 
-            // skip over node ID if its a barycentre and jump down 1 level
-            //BodyNode toplevelbodieslist = systemnode.TopLevelBody();
+            // get node list, thru the preprocessor of BodiesSimplified
 
             NodePtr toplevelbodieslist = systemnode.BodiesSimplified(SimplifyDiagram);
-
 
             foreach (NodePtr starnode in toplevelbodieslist.ChildBodies)       // go thru top level list..
             {
@@ -172,59 +168,71 @@ namespace EliteDangerousCore.StarScan2
                     double habzonestartls = hz != null ? hz.HabitableZoneInner : 0;
                     double habzoneendls = hz != null ? hz.HabitableZoneOuter : 0;
 
-                    foreach(NodePtr planetnode in starnode.ChildBodies)
+                    foreach(NodePtr toplevelnode in starnode.ChildBodies)
                     {
-                        if (bodytypefilters != null && planetnode.BodyNode.IsBodyTypeInFilter(bodytypefilters, true) == false)       // if filter active, but no body or children in filter
+                        if (bodytypefilters != null && toplevelnode.BodyNode.IsBodyTypeInFilter(bodytypefilters, true) == false)       // if filter active, but no body or children in filter
                         {
                             //System.Diagnostics.Debug.WriteLine("SDUC Rejected " + planetnode.fullname);
                             continue;
                         }
 
-                        if (planetnode.BodyNode.DoesNodeHaveNonWebScansBelow() || ShowWebBodies)
+                        if (toplevelnode.BodyNode.DoesNodeHaveNonWebScansBelow() || ShowWebBodies)
                         {
                             List<ExtPictureBox.ImageElement> pc = new List<ExtPictureBox.ImageElement>();
 
                             bool habzone = false;
 
-                            if (ShowHabZone && planetnode.BodyNode.Scan != null && !planetnode.BodyNode.Scan.IsOrbitingBarycentre && planetnode.BodyNode.Scan.nSemiMajorAxis.HasValue)
+                            if (ShowHabZone && toplevelnode.BodyNode.Scan != null && !toplevelnode.BodyNode.Scan.IsOrbitingBarycentre && toplevelnode.BodyNode.Scan.nSemiMajorAxis.HasValue)
                             {
-                                double dist = planetnode.BodyNode.Scan.nSemiMajorAxis.Value / BodyPhysicalConstants.oneLS_m;  // m , converted to LS
+                                double dist = toplevelnode.BodyNode.Scan.nSemiMajorAxis.Value / BodyPhysicalConstants.oneLS_m;  // m , converted to LS
                                 habzone = dist >= habzonestartls && dist <= habzoneendls;
                             }
 
-                            // we output the planetcentrx, which we use to base the moon positions
+                            // we draw at drawpos the node
+                            // we output the node x, which we use to base the sub body positions
 
-                            Point maxplanetpos = DrawNode(pc, planetnode.BodyNode, historicmats, curmats,
-                                                    cursorlm, false, true, out Rectangle imagerect, out int centreplanet, planetsize, rnd, ContextMenuStripBodies, ContextMenuStripMats, backwash: habzone ? Color.FromArgb(64, 0, 128, 0) : default(Color?));        // offset passes in the suggested offset, returns the centre offset
+                            Point maxnodepos = DrawNode(pc, toplevelnode.BodyNode, historicmats, curmats,
+                                                    cursorlm, false, true, out Rectangle imagerect, out int centretoplevelnodex, planetsize, rnd, ContextMenuStripBodies, ContextMenuStripMats, backwash: habzone ? Color.FromArgb(64, 0, 128, 0) : default(Color?));        // offset passes in the suggested offset, returns the centre offset
 
-                            Point moonpos = new Point(centreplanet, maxplanetpos.Y + moonspacery + moonsize.Height / 2);
+                            Point subbodypos;
+                            if (toplevelnode.BodyNode.BodyType == BodyDefinitions.BodyType.Barycentre)
+                            {
+                                Size sz = ExtPictureBox.Measure(pc);
+                                ExtPictureBox.Reposition(pc, 0, -sz.Height);
+                                subbodypos = new Point(centretoplevelnodex, cursorlm.Y);
+
+                            }
+                            else
+                            {
+                                subbodypos = new Point(centretoplevelnodex, maxnodepos.Y + moonspacery + moonsize.Height / 2);
+                            }
+
+
+                            // place subbodies under the centre of the node, spaced down
+                            //Point subbodypos = new Point(centretoplevelnodex, maxnodepos.Y + moonspacery + moonsize.Height / 2);
 
                             // draw primary moons under the planet centred with no right shift allowed
 
-                            Point maxplanetmoonspos = maxplanetpos;
-                            DrawTree(pc, planetnode, moonpos, true, false, planetnode.BodyNode.BodyType == BodyDefinitions.BodyType.Barycentre, ref maxplanetmoonspos, historicmats, curmats, bodytypefilters, rnd, ContextMenuStripBodies, ContextMenuStripMats);
+                            Point maxtreepos = maxnodepos;
+                            DrawTree(pc, toplevelnode, subbodypos, true, false, toplevelnode.BodyNode.BodyType == BodyDefinitions.BodyType.Barycentre, ref maxtreepos, historicmats, curmats, bodytypefilters, rnd, ContextMenuStripBodies, ContextMenuStripMats);
 
-                            Point pcnt = new Point(centreplanet, cursorlm.Y);       // centre planet point
-
-                            if (maxplanetmoonspos.X > widthavailable)               // uh ohh too wide..
+                            if (maxtreepos.X > widthavailable)               // uh ohh too wide..
                             {
                                 int xoff = firstcolumn.X - cursorlm.X;              // shift in pixels to firstcolumn.x from the cursor point
                                 int yoff = (DisplayAreaUsed.Y + planetspacery) - (cursorlm.Y - planetsize.Height / 2);      // the current display area used, not including this draw, calculate the Y offset to apply
 
-                                RepositionTree(pc, xoff, yoff);                     // shift co-ords of all you've drawn for this part
+                                ExtPictureBox.Reposition(pc, xoff, yoff);                     // shift co-ords of all you've drawn for this part
 
-                                pcnt.X += xoff; pcnt.Y += yoff;                     // need to account for planet centre
+                                maxtreepos = new Point(maxtreepos.X + xoff, maxtreepos.Y + yoff);     // add the shift on for the calculation of area used
 
-                                maxplanetmoonspos = new Point(maxplanetmoonspos.X + xoff, maxplanetmoonspos.Y + yoff);     // add the shift on for the calculation of area used
-
-                                cursorlm = new Point(maxplanetmoonspos.X + planetspacerx, cursorlm.Y + yoff);   // and set the curpos to maxpos.x + spacer, remove the shift from curpos.y
+                                cursorlm = new Point(maxtreepos.X + planetspacerx, cursorlm.Y + yoff);   // and set the curpos to maxpos.x + spacer, remove the shift from curpos.y
                             }
                             else
                             {
-                                cursorlm = new Point(maxplanetmoonspos.X + planetspacerx, cursorlm.Y);     // shift current pos right, plus a spacer, past this planet tree
+                                cursorlm = new Point(maxtreepos.X + planetspacerx, cursorlm.Y);     // shift current pos right, plus a spacer, past this planet tree
                             }
 
-                            DisplayAreaUsed = new Point(Math.Max(DisplayAreaUsed.X, maxplanetmoonspos.X), Math.Max(DisplayAreaUsed.Y, maxplanetmoonspos.Y));
+                            DisplayAreaUsed = new Point(Math.Max(DisplayAreaUsed.X, maxtreepos.X), Math.Max(DisplayAreaUsed.Y, maxtreepos.Y));
 
                             starcontrols.AddRange(pc.ToArray());
                         }
@@ -318,14 +326,6 @@ namespace EliteDangerousCore.StarScan2
         #endregion
 
         #region Implementation
-
-        private void RepositionTree(List<ExtPictureBox.ImageElement> pc, int xoff, int yoff)
-        {
-            foreach (ExtPictureBox.ImageElement c in pc)
-            {
-                c.Translate(xoff, yoff);
-            }
-        }
 
 
         private Size starsize;                   // size of stars
