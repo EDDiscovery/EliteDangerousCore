@@ -103,7 +103,7 @@ namespace EliteDangerousCore.StarScan2
 
             if (simplify)
             {
-                nodelist.Dump("", 0);
+                //nodelist.Dump("", 0);
 
                 var movelist = new List<Tuple<NodePtr, NodePtr>>();
 
@@ -129,7 +129,7 @@ namespace EliteDangerousCore.StarScan2
 
                 }
 
-                nodelist.Dump("", 0);
+                //nodelist.Dump("", 0);
             }
 
             return nodelist;

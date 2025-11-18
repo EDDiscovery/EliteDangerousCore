@@ -26,48 +26,34 @@ namespace EliteDangerousCore.StarScan2
     public partial class SystemDisplay
     {
         // draws nodes for Star, PlanetMoon, Barycentre, BeltCluster, BeltClusterBody
-        // return right bottom of area used from curpos
-        // centre Y position is given by position.Y
-        // you can give either left position (position.X with xiscentre=false) or centre position (with xiscentre=true)
-        // if shiftrightifneeded then the whole image moves 
+        // return images
+        // body is painted centred on 0,0, text below
 
         static object gdilock = new object();
 
-        public Point DrawNode(ExtPictureBox.ImageList pc,
+        private ExtPictureBox.ImageList DrawNode(
                             BodyNode bn,
                             List<MaterialCommodityMicroResource> historicmats,    // historicmats may be null
                             List<MaterialCommodityMicroResource> curmats,    // curmats may be null
-                            Point position,                 // position is normally left/middle, unless xiscentre is set.
-                            bool xiscentre,                 // position.X is the centre to align to, not the left
-                            bool shiftrightifneeded,        // are we allowed to nerf the object right to allow for labels
-                            out Rectangle imagepos,         // this is the rectangle used by the node to draw into
-                            out int imagexcentre,           // this is the x centre of the image which may not be in the middle of the rectangle
                             Size size,                      // nominal size
                             Random random,                  // for random placements
-                            System.Windows.Forms.ContextMenuStrip rightclickmenubody,  // any right click CMS to assign
-                            System.Windows.Forms.ContextMenuStrip rightclickmenumats,  // any right click CMS to assign
+                            ContextMenuStrip rightclickmenubody,  // any right click CMS to assign
+                            ContextMenuStrip rightclickmenumats,  // any right click CMS to assign
                             Color? backwash = null,         // optional back wash on image 
                             bool notext = false             // don't put text at bottom
                 )
         {
-            //System.Diagnostics.Debug.WriteLine($"DrawNode {bn.OwnName} at {position} xiscentre {xiscentre} : size {size}");
+            //System.Diagnostics.Debug.WriteLine($"DrawNode {bn.OwnName} size {size}");
             //backwash = Color.FromArgb(128, 40, 40, 40); // debug
-
-            Point endpoint = position;
-            imagepos = Rectangle.Empty;
-            imagexcentre = 0;
 
             JournalScan sc = bn.Scan;
 
             string presentationname = bn.Name();
 #if DEBUG
-//            if (bn.CanonicalNameNoSystemName().HasChars())
-  //              presentationname += " | " + bn.CanonicalNameNoSystemName();
-            //presentationname += $"({bn.BodyID} {bn.BodyType})";
             if ( bn.CanonicalNameDepth>=0)
-                presentationname += $"({bn.BodyID} L{bn.CanonicalNameDepth})";
+                presentationname += $" ({bn.BodyID} L{bn.CanonicalNameDepth})";
             else
-                presentationname += $"({bn.BodyID})";
+                presentationname += $" ({bn.BodyID})";
 #endif
 
             // determine if star or planet.  We can normally for new modern scans rely on bn.Bodytype
@@ -350,26 +336,31 @@ namespace EliteDangerousCore.StarScan2
                     }
 
                     // need left middle, if xiscentre, translate to it
-                    Point postoplot = xiscentre ? new Point(position.X - imagewidtharea / 2 - iconwidtharea, position.Y) : position;
-
                     if (notext)
                         nodelabels = null;
 
                     //System.Diagnostics.Debug.WriteLine("Body " + sc.BodyName + " plot at "  + postoplot + " " + bmp.Size + " " + (postoplot.X+imageleft) + "," + (postoplot.Y-bmp.Height/2+imagetop));
-                    endpoint = CreateImageAndLabel(pc, bmp, postoplot, bmp.Size, shiftrightifneeded, out imagepos, nodelabels, sc.DisplayText(historicmats, curmats), rightclickmenubody);
-
-                    int xshift = imagepos.X - postoplot.X;          // we may have shifted right if shiftrightifneeded is on, need to take account in imagexcentre
-
-                    imagexcentre = (xiscentre ? position.X : postoplot.X + iconwidtharea + imagewidtharea / 2) + xshift;  // where the x centre of the planet is
+                    var il = CreateImageAndLabel(bmp, bmp.Size, nodelabels, sc.DisplayText(historicmats, curmats), rightclickmenubody
+                        //,backwash: Color.FromArgb(128, 0, 0, 255)
+                        );
 
                     //System.Diagnostics.Debug.WriteLine($"Draw {nodelabels[0]} at leftmid {postoplot}  out pos {imagepos} centre {imagexcentre}");
 
                     if (sc.HasMaterials && ShowMaterials)
                     {
-                        Point matpos = new Point(endpoint.X + 4, position.Y);
-                        Point endmat = CreateMaterialNodes(pc, sc, historicmats, curmats, matpos, materialsize, rightclickmenumats);
-                        endpoint = new Point(Math.Max(endpoint.X, endmat.X), Math.Max(endpoint.Y, endmat.Y)); // record new right point..
+                        Point matpos = new Point(il.Max.X, 0);
+                        
+                        var matimages = CreateMaterialNodes(sc, historicmats, curmats, materialsize, rightclickmenumats);
+                        
+                        if (il.Min.Y + matimages.Size.Height  > il[0].Location.Bottom)
+                            matimages.Shift(new Point(il.Max.X, il.Min.Y)); // shift to right completely, and move up to min Y
+                        else
+                            matimages.Shift(new Point(il[0].Location.Right, il.Min.Y)); // We can use a minimum shift right, as it fits under the first text
+
+                        il.AddRange(matimages);
                     }
+
+                    return il;
                 } // end gdi lock
             }
             else if (bn.BodyType == BodyDefinitions.BodyType.Barycentre)
@@ -380,8 +371,6 @@ namespace EliteDangerousCore.StarScan2
                 //if (drawtype == DrawLevel.NoText)
                 //  nodelabels = null;
 
-                Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
-
                 String tooltip = string.Format("Barycentre of {0}".Tx(), presentationname);
 
                 if (notext)
@@ -389,10 +378,9 @@ namespace EliteDangerousCore.StarScan2
 
                 lock (gdilock)
                 {
-                    endpoint = CreateImageAndLabel(pc, BodyDefinitions.GetBarycentreImageCloned(), postoplot, size, shiftrightifneeded, out imagepos, nodelabels, tooltip, rightclickmenubody, backwash);
+                    var il = CreateImageAndLabel(BodyDefinitions.GetBarycentreImageCloned(), size, nodelabels, tooltip, rightclickmenubody, backwash);
+                    return il;
                 }
-
-                imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the not scanned thing is
             }
             else if (bn.BodyType == BodyDefinitions.BodyType.StellarRing)
             {
@@ -415,8 +403,6 @@ namespace EliteDangerousCore.StarScan2
 
                 Size bmpsize = new Size(size.Width, planetsize.Height * nodeheightratio / noderatiodivider);
 
-                Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
-
                 string sma = bn.BeltData?.SemiMajorAxisLSKM ?? "";
                 var nodelabels = new string[] { presentationname.AppendPrePad(sma, Environment.NewLine) };
 
@@ -425,11 +411,10 @@ namespace EliteDangerousCore.StarScan2
 
                 lock (gdilock)
                 {
-                    endpoint = CreateImageAndLabel(pc, BodyDefinitions.GetBeltImageCloned(), postoplot, bmpsize, shiftrightifneeded, out imagepos, nodelabels,
+                    var il = CreateImageAndLabel(BodyDefinitions.GetBeltImageCloned(), bmpsize, nodelabels,
                                     tooltip.ToString(), rightclickmenubody, backwash);
+                    return il;
                 }
-
-                imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the belt is
             }
             else if (bn.BodyType == BodyDefinitions.BodyType.AsteroidCluster)
             {
@@ -440,16 +425,13 @@ namespace EliteDangerousCore.StarScan2
                 if (notext)
                     nodelabels = null;
 
-                Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
                 Size bmpsize = new Size(size.Width / 2, size.Height / 2);
 
                 lock (gdilock)
                 {
-                    endpoint = CreateImageAndLabel(pc, BodyDefinitions.GetBeltBodyImageCloned(), postoplot, bmpsize, shiftrightifneeded, out imagepos, nodelabels,
-                                    tooltip.ToString(), rightclickmenubody, backwash);
+                    var il = CreateImageAndLabel(BodyDefinitions.GetBeltBodyImageCloned(), bmpsize, nodelabels, tooltip.ToString(), rightclickmenubody, backwash);
+                    return il;
                 }
-
-                imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the belt is
             }
             else    // no scan, not one of the ones above, therefore unknown
             {
@@ -503,20 +485,15 @@ namespace EliteDangerousCore.StarScan2
 
                 var nodelabels = new string[] { presentationname };
 
-                Point postoplot = xiscentre ? new Point(position.X - size.Width / 2, position.Y) : position;
-
                 if (notext)
                     nodelabels = null;
 
                 lock (gdilock)
                 {
-                    endpoint = CreateImageAndLabel(pc, BodyDefinitions.GetImageNotScannedCloned(), postoplot, size, shiftrightifneeded, out imagepos, nodelabels, tooltip.ToString(), rightclickmenubody, backwash);
+                    var il = CreateImageAndLabel(BodyDefinitions.GetImageNotScannedCloned(), size, nodelabels, tooltip.ToString(), rightclickmenubody, backwash);
+                    return il;
                 }
-
-                imagexcentre = imagepos.Left + imagepos.Width / 2;                 // where the x centre of the not scanned thing is
             }
-
-            return endpoint;
         }
 
 

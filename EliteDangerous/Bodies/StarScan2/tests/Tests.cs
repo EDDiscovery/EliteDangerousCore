@@ -92,19 +92,19 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        static public void TestScans()
+        static public void TestScans(int width)
         {
             string outputdir = @"c:\code\AA";
             string path = @"c:\code\eddiscovery\elitedangerouscore\elitedangerous\bodies\starscan2\tests";
             EliteDangerousCore.StarScan2.StarScan.ProcessAllFromDirectory(path, "*.json", (ss2, mhs) =>
                     {
                         EliteDangerousCore.StarScan2.SystemNode sssol = ss2.FindSystemSynchronous(mhs.Last().Item2.System);
-                        sssol.DrawSystemToFolder(1920, outputdir, 0);
+                        sssol.DrawSystemToFolder(width, outputdir, 0);
                     });
 
         }
 
-        static public void TestScan(string system, string folder, string pictureoutfolder,bool draweachone)
+        static public void TestScan(string system, string folder, string pictureoutfolder,bool draweachone, int width)
         {
             string file = Path.Combine(folder, $"{system}.json");
             if (File.Exists(file))
@@ -127,7 +127,7 @@ namespace EliteDangerousCore.StarScan2
                         {
                             gen = sssol.BodyGeneration;
                             if ( draweachone)
-                                sssol.DrawSystemToFolder(1920, pictureoutfolder, mhe.Item1);
+                                sssol.DrawSystemToFolder(width, pictureoutfolder, mhe.Item1);
                         }
                     }
                 });
@@ -136,7 +136,7 @@ namespace EliteDangerousCore.StarScan2
                 {
                     ISystem syst = ss.GetISystem(system);
                     EliteDangerousCore.StarScan2.SystemNode sssol = ss.FindSystemSynchronous(syst);
-                    sssol.DrawSystemToFolder(1920, pictureoutfolder, -1);
+                    sssol.DrawSystemToFolder(width, pictureoutfolder, -1);
                 }
 
                 ss.DumpTree();

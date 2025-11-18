@@ -996,6 +996,7 @@ namespace EliteDangerousCore.StarScan2
             StarScan2.SystemDisplay sd = new StarScan2.SystemDisplay();
             sd.Font = new System.Drawing.Font("Arial", 10);
             sd.SetSize(64);
+            //.NoPlanetStarsOnSameLine = false;
             sd.TextBackColor = Color.Transparent;
             ExtendedControls.ExtPictureBox imagebox = new ExtendedControls.ExtPictureBox();
             imagebox.FillColor = Color.AliceBlue;

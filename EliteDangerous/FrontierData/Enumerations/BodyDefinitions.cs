@@ -884,6 +884,11 @@ namespace EliteDangerousCore
             Bitmap bm = new Bitmap(BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Barycentre"));
             return bm;
         }
+        static public System.Drawing.Image GetBarycentreLeftBarImageCloned()
+        {
+            Bitmap bm = new Bitmap(BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.BarycentreLeftBar"));
+            return bm;
+        }
         static public System.Drawing.Bitmap GetBeltImageCloned()
         {
             Bitmap belt = new Bitmap(BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Belt"));

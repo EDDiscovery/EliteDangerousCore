@@ -24,18 +24,49 @@ namespace EliteDangerousCore.StarScan2
 {
     public partial class SystemDisplay
     {
-        // Draw a tree.
-        // Return our max tree position, and update maxtreepos total
-        
-        private Point DrawTree(ExtPictureBox.ImageList pc, NodePtr parent, Point pos, 
-                               bool xiscentre, bool shiftrightifreq, bool moveright,
-                               ref Point maxtreepos,
-                               List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats, string[] filter,
-                               Random rnd, ContextMenuStrip rightclickplanet, ContextMenuStrip rightclickmats)
+
+        // draw the planet, then the tree below. Planet is at 0,0, tree below and right
+        private ExtPictureBox.ImageList DrawPlanetAndTree(NodePtr toplevelnode, double habzonestartls, double habzoneendls, 
+                                                        List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats, string[] filter,
+                                                        Random rnd, ContextMenuStrip rightclickplanet, ContextMenuStrip rightclickmats)
+        {
+            bool habzone = false;
+
+            if (ShowHabZone && toplevelnode.BodyNode.Scan != null && !toplevelnode.BodyNode.Scan.IsOrbitingBarycentre && toplevelnode.BodyNode.Scan.nSemiMajorAxis.HasValue)
+            {
+                double dist = toplevelnode.BodyNode.Scan.nSemiMajorAxis.Value / BodyPhysicalConstants.oneLS_m;  // m , converted to LS
+                habzone = dist >= habzonestartls && dist <= habzoneendls;
+            }
+
+            // Draw the planet node, centred at 0,0.
+
+            var planetnode = DrawNode(toplevelnode.BodyNode, historicmats, curmats,
+                                        planetsize, rnd, ContextMenuStripBodies, ContextMenuStripMats,
+                                        //backwash: Color.FromArgb(64, 0, 255, 0));
+                                        backwash: habzone ? Color.FromArgb(64, 0, 128, 0) : default(Color?));
+
+            //System.Diagnostics.Debug.WriteLine($"  planetnode node {planetnode.Size} {planetnode.Min} .. {planetnode.Max}");
+
+            // Draw the tree under the planet node at 0, planet node max + spacing
+            Point subbodypos = new Point(0, planetnode.Max.Y + moonspacery + moonsize.Height / 2);
+            var treeimages = DrawTree(toplevelnode, subbodypos, false, historicmats, curmats, filter, rnd, ContextMenuStripBodies, ContextMenuStripMats);
+            planetnode.AddRange(treeimages);
+
+            return planetnode;
+        }
+
+
+        // Draw a tree, return image list of tree. Top child body is at pos, others further down
+        private ExtPictureBox.ImageList DrawTree(NodePtr parent, 
+                                                 Point pos, bool shiftrightifreq,   // shift to pos, and maybe shift right to ensure no pixels left of pos.X
+                                                 List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats, string[] filter,
+                                                 Random rnd, ContextMenuStrip rightclickplanet, ContextMenuStrip rightclickmats)
         {
             List<NodePtr> bodiestodisplay = parent.ChildBodies.Where(s => s.BodyNode.BodyType != BodyDefinitions.BodyType.PlanetaryRing).ToList();
 
             Point maxours = pos;
+
+            ExtPictureBox.ImageList imageList = new ExtPictureBox.ImageList();
 
             if (bodiestodisplay.Count > 0 && ShowMoons)
             {
@@ -49,61 +80,35 @@ namespace EliteDangerousCore.StarScan2
 
                         if (nonwebscans || ShowWebBodies)
                         {
-                            // draw moon controlled by caller for positioning.
-                            // the first moon under a planet will be xcentre=true rightshift=false
-                            // the second moon will be xcentre=true rightshift=false
-                            // the first submoon under a moon will be xcentre=false, rightshift=true
-                            // the second submoon under a moon will be xcentre=true, rightshift=false
-                            // if moveright then we always move right at this level - tweak used for top level planet barycentres, which means these are planets . We use planetsize below if so
-                            // its all very complicated and took Robby a while to remember!
+                            //System.Diagnostics.Debug.WriteLine($"Draw {moonnode.BodyNode.Name()} at {pos}");
 
-                            //System.Diagnostics.Debug.WriteLine($"Draw {moonnode.OwnName} at {pos}");
+                            // draw the node, at 0,0. 
+                            var nodeimages = DrawNode(moonnode.BodyNode, historicmats, curmats, moonsize, rnd, rightclickplanet, rightclickmats);
 
-                            Point mmax = DrawNode(pc, moonnode.BodyNode, historicmats, curmats, pos, xiscentre, shiftrightifreq, out Rectangle moonimagepos, out int mooncentrex, 
-                                            moveright && moonnode.BodyNode.BodyType != BodyDefinitions.BodyType.Barycentre ? planetsize : moonsize, 
-                                            rnd, rightclickplanet, rightclickmats);
+                            if (shiftrightifreq)                                    // if ensuring we never have negative pixels
+                                nodeimages.Shift(new Point(-nodeimages.Min.X, 0));  // shift by minimum X right, do it before positioning
 
-                            maxours = new Point(Math.Max(maxours.X, mmax.X), Math.Max(maxours.Y, mmax.Y));      // and update maxours
+                            nodeimages.Shift(pos);                                  // move to pos
 
-                           // System.Diagnostics.Debug.WriteLine($" .. max {mmax} maxours {maxours}");
-
-                            if (moonnode.ChildBodies.Count > 0)
+                            if (moonnode.ChildBodies.Count > 0) 
                             {
-                                Point submoonpos = new Point(mmax.X + moonspacerx, pos.Y + planetsize.Height / 2);      // same y, but to the right of this image and 1/2 down
+                                Point submoonpos = new Point(nodeimages.Max.X + moonspacerx, pos.Y);      // same y, but to the right of this image
 
-                                // we draw the submoon tree with centrex off but allowing shift right to account for label. Move right is off as well, only used at top level
-                                Point maxsubtreepos = DrawTree(pc, moonnode, submoonpos, xiscentre: false, shiftrightifreq: true, moveright: false, ref maxtreepos, historicmats, curmats, filter, rnd, rightclickplanet, rightclickmats);
+                                // draw moon images to the right, with shifting right to ensure it does not come back into us
+                                var moonimages = DrawTree(moonnode, submoonpos, true, historicmats, curmats, filter, rnd, rightclickplanet, rightclickmats);
 
-                                maxours = new Point(Math.Max(maxours.X, maxsubtreepos.X), Math.Max(maxours.Y, maxsubtreepos.Y));
-
-                               // System.Diagnostics.Debug.WriteLine($" .. submoon tree at {submoonpos} giving {maxsubtreepos} maxours {maxours}");
+                                nodeimages.AddRange(moonimages);        // add moon images in to produce the overall W and H of this tree
                             }
 
-                            maxtreepos = new Point(Math.Max(maxtreepos.X, maxours.X), Math.Max(maxtreepos.Y, maxours.Y));       // update global total
+                            pos = new Point(pos.X, pos.Y + nodeimages.Size.Height + moonspacery);
 
-                            if (moveright)      // used at top level, if under a barycentre, to array them all left to right
-                            {
-                                pos = new Point(maxours.X + moonspacerx, pos.Y);
-                                shiftrightifreq = true;
-                                xiscentre = false;
-                            }
-                            else if (xiscentre) 
-                            {
-                                pos = new Point(pos.X, maxours.Y + moonspacery + moonsize.Height / 2);
-                            }
-                            else
-                            {
-                                pos = new Point(mooncentrex, maxours.Y + moonspacery + moonsize.Height / 2);
-                                xiscentre = true;       // now go to centre placing
-                                shiftrightifreq = false;
-                            }
-
+                            imageList.AddRange(nodeimages);
                         }
                     }
                 }
             }
 
-            return maxours;
+            return imageList;
         }
     }
 }
