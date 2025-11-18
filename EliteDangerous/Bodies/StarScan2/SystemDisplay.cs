@@ -106,7 +106,7 @@ namespace EliteDangerousCore.StarScan2
             foreach (NodePtr starnode in toplevelbodiestodisplay)       
             {
                 // draw at 0,0 the star node
-                var mainstar = DrawNode(starnode.BodyNode, historicmats, curmats,starsize, rnd, ContextMenuStripBodies, ContextMenuStripMats, backwash:Color.FromArgb(64,128,0,0));
+                var mainstar = DrawNode(starnode.BodyNode, historicmats, curmats, starsize, rnd, ContextMenuStripBodies, ContextMenuStripMats);//, backwash:Color.FromArgb(64,128,0,0));
                 //System.Diagnostics.Debug.WriteLine($"Mainstar node {mainstar.Size} {mainstar.Min} .. {mainstar.Max}");
 
                 mainstar.Tag = 0;       // mark as main star
