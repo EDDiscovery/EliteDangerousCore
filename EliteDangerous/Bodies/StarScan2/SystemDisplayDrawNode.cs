@@ -29,8 +29,6 @@ namespace EliteDangerousCore.StarScan2
         // return images
         // body is painted centred on 0,0, text below
 
-        static object gdilock = new object();
-
         private ExtPictureBox.ImageList DrawNode(
                             BodyNode bn,
                             List<MaterialCommodityMicroResource> historicmats,    // historicmats may be null
@@ -177,7 +175,6 @@ namespace EliteDangerousCore.StarScan2
 
                 Bitmap bmp = new Bitmap(bitmapwidth, bitmapheight);
 
-                lock (gdilock)      // accessing fixed GetIcon bits maps must be single threaded
                 {
                     using (Graphics g = Graphics.FromImage(bmp))
                     {
@@ -194,28 +191,26 @@ namespace EliteDangerousCore.StarScan2
 
                         if ((sc.WaterGiant || !sc.GasWorld) && (sc.HasAtmosphericComposition || sc.HasAtmosphere))            // show atmosphere as it is shown in game
                         {
-                            g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Atmosphere"), imageleft, imagetop, size.Width, size.Height);
+                            g.DrawImageLocked(BodyDefinitions.GetImageAtmosphere(), imageleft, imagetop, size.Width, size.Height);
                         }
 
                         Image nodeimage = sc.IsStar ? BaseUtils.Icons.IconSet.GetIcon(sc.StarTypeImageName) :
                                             sc.IsPlanet ? BaseUtils.Icons.IconSet.GetIcon(sc.PlanetClassImageName) :
                                             BodyDefinitions.GetImageNotScanned();
 
-                        //.BodyType == BodyDefinitions.BodyType.BeltCluster ? (Bitmap)BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Belt") :
-
-                        g.DrawImage(nodeimage, imageleft, imagetop, size.Width, size.Height);
+                        g.DrawImageLocked(nodeimage, imageleft, imagetop, size.Width, size.Height);
 
                         if (sc.IsLandable)
                         {
                             int offset = size.Height * 4 / 16;
                             int scale = 5;
-                            g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Landable"), new Rectangle(imageleft + size.Width / 2 - offset * scale / 2,
+                            g.DrawImageLocked(BodyDefinitions.GetImageLandable(), new Rectangle(imageleft + size.Width / 2 - offset * scale / 2,
                                                                                             imagetop + size.Height / 2 - offset * scale / 2, offset * scale, offset * scale));
                         }
 
                         if (sc.HasRingsOrBelts && !toplevelstar)
                         {
-                            g.DrawImage(sc.Rings.Count() > 1 ? BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingGap") : BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingOnly"),
+                            g.DrawImageLocked(sc.Rings.Count() > 1 ? BodyDefinitions.GetImageRingGap() : BodyDefinitions.GetImageRingOnly(),
                                             new Rectangle(imageleft - size.Width / 2, imagetop, size.Width * 2, size.Height));
                         }
 
@@ -240,89 +235,76 @@ namespace EliteDangerousCore.StarScan2
 
                             if (sc.Terraformable)
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Terraformable"), new Rectangle(0, vpos, iconsize, iconsize));
+                                g.DrawImageLocked(BodyDefinitions.GetImageTerraFormable(),new Rectangle(0, vpos, iconsize, iconsize));
                                 vpos += iconsize + iconvspacing;
                             }
 
                             if (sc.HasMeaningfulVolcanism) //this renders below the terraformable icon if present
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Volcanism"), new Rectangle(0, vpos, iconsize, iconsize));
+                                g.DrawImageLocked(BodyDefinitions.GetImageVolcanism(), new Rectangle(0, vpos, iconsize, iconsize));
                                 vpos += iconsize + iconvspacing;
                             }
 
                             if (valuable)
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.HighValue"), new Rectangle(0, vpos, iconsize, iconsize));
+                                g.DrawImageLocked(BodyDefinitions.GetImageHighValue(), new Rectangle(0, vpos, iconsize, iconsize));
                                 vpos += iconsize + iconvspacing;
                             }
 
                             if (sc.Mapped)
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Mapped"), new Rectangle(0, vpos, iconsize, iconsize));
+                                g.DrawImageLocked(BodyDefinitions.GetImageMapped(), new Rectangle(0, vpos, iconsize, iconsize));
                                 vpos += iconsize + iconvspacing;
                             }
 
                             if (sc.IsPreviouslyMapped)
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.MappedByOthers"), new Rectangle(0, vpos, iconsize, iconsize));
+                                g.DrawImageLocked( BodyDefinitions.GetImageMappedByOthers(), new Rectangle(0, vpos, iconsize, iconsize));
                                 vpos += iconsize + iconvspacing;
                             }
 
                             if (isdiscovered)
                             {
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.DiscoveredByOthers"), new Rectangle(0, vpos, iconsize, iconsize));
+                                g.DrawImageLocked(BodyDefinitions.GetImageDiscoveredByOthers(), new Rectangle(0, vpos, iconsize, iconsize));
                                 vpos += iconsize + iconvspacing;
                             }
 
                             if (bn.Signals != null)
                             {
-                                string image = "Controls.Scan.Bodies.Signals";
+                                Image img = BodyDefinitions.GetImageSignals();
                                 bool containsgeo = JournalSAASignalsFound.ContainsGeo(bn.Signals);
                                 if (JournalSAASignalsFound.ContainsBio(bn.Signals))
-                                    image = containsgeo ? "Controls.Scan.Bodies.SignalsGeoBio" : "Controls.Scan.Bodies.SignalsBio";
+                                    img = containsgeo ? BodyDefinitions.GetImageGeoBioSignals() : BodyDefinitions.GetImageBioSignals();
                                 else if (containsgeo)
-                                    image = "Controls.Scan.Bodies.SignalsGeo";
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon(image), new Rectangle(0, vpos, iconsize, iconsize));
+                                    img = BodyDefinitions.GetImageGeoSignals();
+
+                                g.DrawImageLocked(img, new Rectangle(0, vpos, iconsize, iconsize));
                                 vpos += iconsize + iconvspacing;
                             }
 
                             if (bn.Organics != null)
                             {
-                                string imagename = bn.CountBioSignals == bn.CountOrganicsScansAnalysed ? "Journal.ScanOrganic" : "Controls.OrganicIncomplete";
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon(imagename), new Rectangle(0, vpos, iconsize, iconsize));
+                                g.DrawImageLocked(bn.CountBioSignals == bn.CountOrganicsScansAnalysed  ? BodyDefinitions.GetImageOrganicsScanned(): BodyDefinitions.GetImageOrganicsIncomplete(),
+                                                        new Rectangle(0, vpos, iconsize, iconsize));
                                 vpos += iconsize + iconvspacing;
                             }
 
                             if (bn.CodexEntries != null)
                             {
-                                string imagename = "Journal.CodexEntry";
-                                g.DrawImage(BaseUtils.Icons.IconSet.GetIcon(imagename), new Rectangle(0, vpos, iconsize, iconsize));
+                                g.DrawImageLocked(BodyDefinitions.GetImageCodexEntry(), new Rectangle(0, vpos, iconsize, iconsize));
                                 vpos += iconsize + iconvspacing;
                             }
                         }
 
                         if (materialsicon)
                         {
-                            Image mm = BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.MaterialMore");
-                            g.DrawImage(mm, new Rectangle(bmp.Width - mm.Width, bmp.Height - mm.Height, mm.Width, mm.Height));
+                            var mm = BodyDefinitions.GetImageMoreMaterials();
+                            g.DrawImageLocked(mm, new Rectangle(bmp.Width - mm.Width, bmp.Height - mm.Height, mm.Width, mm.Height));
                         }
 
                         if (overlaytext.HasChars())
                         {
-                            float ii;
-                            if (imageintensities.ContainsKey(nodeimage))        // find cache
-                            {
-                                ii = imageintensities[nodeimage];
-                                //System.Diagnostics.Debug.WriteLine("Cached Image intensity of " + sn.fullname + " " + ii);
-                            }
-                            else
-                            {
-                                var imageintensity = ((Bitmap)nodeimage).Function(BitMapHelpers.BitmapFunction.Brightness, nodeimage.Width * 3 / 8, nodeimage.Height * 3 / 8, nodeimage.Width * 2 / 8, nodeimage.Height * 2 / 8);
-                                ii = imageintensity.Item2;
-                                imageintensities[nodeimage] = ii;
-                                //System.Diagnostics.Debug.WriteLine("Calculated Image intensity of " + sn.fullname + " " + ii);
-                            }
-
+                            float ii = nodeimage.CentralImageIntensity();
                             Color text = ii > 0.3f ? Color.Black : Color.FromArgb(255, 200, 200, 200);
 
                             using (Font f = new Font(Font.Name, size.Width / 5.0f))
@@ -376,11 +358,9 @@ namespace EliteDangerousCore.StarScan2
                 if (notext)
                     nodelabels = null;
 
-                lock (gdilock)
-                {
-                    var il = CreateImageAndLabel(BodyDefinitions.GetBarycentreImageCloned(), size, nodelabels, tooltip, rightclickmenubody, backwash);
-                    return il;
-                }
+                var img = BodyDefinitions.GetImageBarycentre().CloneLocked();
+                var il = CreateImageAndLabel(img, size, nodelabels, tooltip, rightclickmenubody, backwash);
+                return il;
             }
             else if (bn.BodyType == BodyDefinitions.BodyType.StellarRing)
             {
@@ -409,12 +389,10 @@ namespace EliteDangerousCore.StarScan2
                 if (notext)
                     nodelabels = null;
 
-                lock (gdilock)
-                {
-                    var il = CreateImageAndLabel(BodyDefinitions.GetBeltImageCloned(), bmpsize, nodelabels,
-                                    tooltip.ToString(), rightclickmenubody, backwash);
-                    return il;
-                }
+                var img = BodyDefinitions.GetImageBeltCluster().CloneLocked();
+                var il = CreateImageAndLabel(img, bmpsize, nodelabels,
+                                tooltip.ToString(), rightclickmenubody, backwash);
+                return il;
             }
             else if (bn.BodyType == BodyDefinitions.BodyType.AsteroidCluster)
             {
@@ -427,11 +405,9 @@ namespace EliteDangerousCore.StarScan2
 
                 Size bmpsize = new Size(size.Width / 2, size.Height / 2);
 
-                lock (gdilock)
-                {
-                    var il = CreateImageAndLabel(BodyDefinitions.GetBeltBodyImageCloned(), bmpsize, nodelabels, tooltip.ToString(), rightclickmenubody, backwash);
-                    return il;
-                }
+                var img = BodyDefinitions.GetImageBeltBody().CloneLocked();
+                var il = CreateImageAndLabel(img, bmpsize, nodelabels, tooltip.ToString(), rightclickmenubody, backwash);
+                return il;
             }
             else    // no scan, not one of the ones above, therefore unknown
             {
@@ -488,17 +464,13 @@ namespace EliteDangerousCore.StarScan2
                 if (notext)
                     nodelabels = null;
 
-                lock (gdilock)
-                {
-                    var il = CreateImageAndLabel(BodyDefinitions.GetImageNotScannedCloned(), size, nodelabels, tooltip.ToString(), rightclickmenubody, backwash);
-                    return il;
-                }
+                var img = BodyDefinitions.GetImageNotScanned().CloneLocked();
+                var il = CreateImageAndLabel(img, size, nodelabels, tooltip.ToString(), rightclickmenubody, backwash);
+                return il;
             }
         }
 
-
   
-        private Dictionary<Image, float> imageintensities = new Dictionary<Image, float>();       // cached
     }
 
 }

@@ -870,38 +870,97 @@ namespace EliteDangerousCore
             return $"Bodies.Planets.Terrestrial.{iconName}";
         }
 
+        static public System.Drawing.Image GetImageAtmosphere()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Atmosphere");
+        }
+        static public System.Drawing.Image GetImageLandable()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Landable");
+        }
+        static public System.Drawing.Image GetImageRingGap()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingGap");
+        }
+        static public System.Drawing.Image GetImageRingOnly()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingOnly");
+        }
+        static public System.Drawing.Image GetImageTerraFormable()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Terraformable");
+        }
+        static public System.Drawing.Image GetImageVolcanism()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Volcanism");
+        }
+        static public System.Drawing.Image GetImageHighValue()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.HighValue");
+        }
+        static public System.Drawing.Image GetImageMapped()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Mapped");
+        }
+        static public System.Drawing.Image GetImageMappedByOthers()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.MappedByOthers");
+        }
+        static public System.Drawing.Image GetImageDiscoveredByOthers()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.DiscoveredByOthers");
+        }
+        static public System.Drawing.Image GetImageCodexEntry()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Journal.CodexEntry");
+        }
+        static public System.Drawing.Image GetImageMoreMaterials()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.MaterialMore");
+        }
+        static public System.Drawing.Image GetImageOrganicsScanned()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Journal.ScanOrganic");
+        }
+        static public System.Drawing.Image GetImageOrganicsIncomplete()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.OrganicIncomplete");
+        }
+        static public System.Drawing.Image GetImageSignals()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Signals");
+        }
+        static public System.Drawing.Image GetImageGeoBioSignals()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.SignalsGeoBio");
+        }
+        static public System.Drawing.Image GetImageBioSignals()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.SignalsBio");
+        }
+        static public System.Drawing.Image GetImageGeoSignals()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.SignalsGeo");
+        }
         static public System.Drawing.Image GetImageNotScanned()
         {
             return BaseUtils.Icons.IconSet.GetIcon($"Bodies.NotScanned");
         }
-        static public System.Drawing.Image GetImageNotScannedCloned()
+        static public System.Drawing.Image GetImageBarycentre()
         {
-            Bitmap bm = new Bitmap(BaseUtils.Icons.IconSet.GetIcon($"Bodies.NotScanned"));
-            return bm;
+            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Barycentre");
         }
-        static public System.Drawing.Image GetBarycentreImageCloned()
+        static public System.Drawing.Image GetImageBarycentreLeftBar()
         {
-            Bitmap bm = new Bitmap(BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Barycentre"));
-            return bm;
+            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.BarycentreLeftBar");
         }
-        static public System.Drawing.Image GetBarycentreLeftBarImageCloned()
-        {
-            Bitmap bm = new Bitmap(BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.BarycentreLeftBar"));
-            return bm;
-        }
-        static public System.Drawing.Bitmap GetBeltImageCloned()
-        {
-            Bitmap belt = new Bitmap(BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Belt"));
-            return belt;
-        }
-        static public System.Drawing.Bitmap GetBeltBodyImageCloned()
-        {
-            Bitmap belt = new Bitmap(BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.SizeLarge"));
-            return belt;
-        }
-        static public System.Drawing.Image GetBeltImage()
+        static public System.Drawing.Image GetImageBeltCluster()
         {
             return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Belt");
+        }
+        static public System.Drawing.Image GetImageBeltBody()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.SizeLarge");
         }
 
         // return bitmaps of stars, cropped.  You own the bitmaps afterwards as images are cloned

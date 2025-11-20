@@ -20,6 +20,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using BaseUtils;
 
 namespace EliteDangerousCore.StarScan2
 {
@@ -72,22 +73,19 @@ namespace EliteDangerousCore.StarScan2
                 colormap.OldColor = Color.White;    // this is the marker colour to replace
                 colormap.NewColor = fillc;
 
-                lock (gdilock)
-                {
-                    Bitmap mat = BaseUtils.BitMapHelpers.CloneBitmapReplaceColour((Bitmap)BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Material"), 
-                                                        new System.Drawing.Imaging.ColorMap[] { colormap });
+                Bitmap mat = BaseUtils.BitMapHelpers.CloneReplaceColourLocked((Bitmap)BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Material"), 
+                                                    new System.Drawing.Imaging.ColorMap[] { colormap });
 
-                    BaseUtils.BitMapHelpers.DrawTextCentreIntoBitmap(ref mat, abv, Font, fillc.GetBrightness() > 0.4f ? Color.Black : Color.White);
+                BaseUtils.BitMapHelpers.DrawTextCentreIntoBitmap(ref mat, abv, Font, fillc.GetBrightness() > 0.4f ? Color.Black : Color.White);
 
-                    var tooltip = new System.Text.StringBuilder(256);
-                    sn.DisplayMaterial(tooltip, sd.Key, sd.Value, historicmats, curmats);
+                var tooltip = new System.Text.StringBuilder(256);
+                sn.DisplayMaterial(tooltip, sd.Key, sd.Value, historicmats, curmats);
 
-                    ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(
-                                    new Rectangle(matpos.X, matpos.Y, matsize.Width, matsize.Height), mat, tooltip + "\n\n" + "All " + matclicktext.ToString(), tooltip.ToString());
+                ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(
+                                new Rectangle(matpos.X, matpos.Y, matsize.Width, matsize.Height), mat, tooltip + "\n\n" + "All " + matclicktext.ToString(), tooltip.ToString());
 
-                    ie.ContextMenuStrip = rightclickmenu;
-                    images.Add(ie);
-                }
+                ie.ContextMenuStrip = rightclickmenu;
+                images.Add(ie);
 
                 if (++noperline == 4)
                 {
@@ -151,32 +149,29 @@ namespace EliteDangerousCore.StarScan2
                 count[8] = 1;
             }
 
-            lock (gdilock)
+            Image[] images = new Image[]
             {
-                Image[] images = new Image[]
-                {
-                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Stations"),
-                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Carriers"),
-                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Installations"),
-                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.NSP"),
-                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RES"),
-                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.CZ"),
-                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.USS"),
-                    BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Signals"),
-                    BaseUtils.Icons.IconSet.GetIcon("Journal.CodexEntry"),
-                };
+                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Stations"),
+                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Carriers"),
+                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Installations"),
+                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.NSP"),
+                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RES"),
+                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.CZ"),
+                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.USS"),
+                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Signals"),
+                BaseUtils.Icons.IconSet.GetIcon("Journal.CodexEntry"),
+            };
 
-                int vpos = height / 2 - iconsize * icons / 2;
+            int vpos = height / 2 - iconsize * icons / 2;
 
-                using (Graphics g = Graphics.FromImage(bmp))
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                for (int i = 0; i < count.Length; i++)
                 {
-                    for (int i = 0; i < count.Length; i++)
+                    if (count[i] > 0)
                     {
-                        if (count[i] > 0)
-                        {
-                            g.DrawImage(images[i], new Rectangle(0, vpos, iconsize, iconsize));
-                            vpos += iconsize;
-                        }
+                        g.DrawImageLocked(images[i], new Rectangle(0, vpos, iconsize, iconsize));
+                        vpos += iconsize;
                     }
                 }
             }
@@ -207,15 +202,15 @@ namespace EliteDangerousCore.StarScan2
             return CreateImageAndLabel(bmp, bmp.Size, new string[] { "" }, tip, rightclickmenu);
         }
 
-        // Draw Image and labels below it
+        // Draw Image and labels below it. Image is owned by us
         // Image is centred at 0,0 co-ords
         // Labels below
-        private ExtPictureBox.ImageList CreateImageAndLabel(    Image image, 
-                                                                Size imagesize, 
-                                                                string[] labels,  // may be null, no labels
-                                                                string tooltiptext,       // tooltip
-                                                                ContextMenuStrip rightclickmenu = null,
-                                                                Color? backwash = null
+        private ExtPictureBox.ImageList CreateImageAndLabel( Image image, 
+                                                             Size imagesize, 
+                                                             string[] labels,  // may be null, no labels
+                                                             string tooltiptext,       // tooltip
+                                                             ContextMenuStrip rightclickmenu = null,
+                                                             Color? backwash = null
                                                             )
         {
             var il = new ExtPictureBox.ImageList();

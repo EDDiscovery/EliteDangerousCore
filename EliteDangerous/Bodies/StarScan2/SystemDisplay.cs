@@ -167,14 +167,12 @@ namespace EliteDangerousCore.StarScan2
                                 }
                                 else
                                 {
+                                    var img = BodyDefinitions.GetImageBarycentreLeftBar().CloneLocked();
                                     // create a new bary dash with no text
-                                    lock (gdilock)
-                                    {
-                                        var barymarker2 = CreateImageAndLabel(BodyDefinitions.GetBarycentreLeftBarImageCloned(), moonsize, null, "");
-                                        // shift the image at 0,0 to the same centre as the bary1 first image (which is the bary marker image)
-                                        barymarker2.Shift(new Point(0, barymarker1[0].PositionCentre.Y));
-                                        planetandtree.AddRange(barymarker2);
-                                    }
+                                    var barymarker2 = CreateImageAndLabel(img, moonsize, null, "");
+                                    // shift the image at 0,0 to the same centre as the bary1 first image (which is the bary marker image)
+                                    barymarker2.Shift(new Point(0, barymarker1[0].PositionCentre.Y));
+                                    planetandtree.AddRange(barymarker2);
                                 }
 
                                 imagesets.Add(planetandtree);
@@ -192,12 +190,10 @@ namespace EliteDangerousCore.StarScan2
             // Draw signals (if required)
             if (!drawnsignals)
             {
-                lock (gdilock)
-                {
-                    var fakeplanet = CreateImageAndLabel(BodyDefinitions.GetImageNotScannedCloned(), starsize, new string[] { "" }, "", ContextMenuStripSignals);
-                    imagesets.Add(fakeplanet);
-                }
-
+                var img = BodyDefinitions.GetImageNotScanned().CloneLocked();
+                var fakeplanet = CreateImageAndLabel(img, starsize, new string[] { "" }, "", ContextMenuStripSignals);
+                imagesets.Add(fakeplanet);
+                
                 var signalimage = DrawSignals(systemnode.FSSSignals,      // may be null
                                                systemnode.CodexEntries,      // may be null
                                                systemnode.OrbitingStations,      // may be null
