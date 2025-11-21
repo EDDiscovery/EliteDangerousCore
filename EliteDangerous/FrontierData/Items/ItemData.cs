@@ -30,7 +30,7 @@ namespace EliteDangerousCore
             AddExtraShipInfo();
 
 #if DEBUG
-            foreach (var m in GetShipModules(true, true, true, true, true)) { string s = $"{m.Key} = {m.Value.TranslatedModName} {m.Value.TranslatedModTypeString()}"; }
+            foreach (var m in GetShipModules(true, true, true, true, true)) { string s = $"{m.Key} = {m.Value.TranslatedModName} {m.Value.TranslatedModTypeString}"; }
             foreach (ShipSlots.Slot x in Enum.GetValues(typeof(ShipSlots.Slot))) { var p = ShipSlots.ToEnglish(x).AlwaysQuoteString(); }
             foreach (GovernmentDefinitions.Government x in Enum.GetValues(typeof(GovernmentDefinitions.Government))) { var p = GovernmentDefinitions.ToLocalisedLanguage(x); }
             foreach (StationDefinitions.StarportTypes x in Enum.GetValues(typeof(StationDefinitions.StarportTypes))) { var p = StationDefinitions.ToLocalisedLanguage(x); }
