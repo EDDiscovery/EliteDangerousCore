@@ -186,18 +186,23 @@ namespace EliteDangerousCore.StarScan2
                 }
                 
                 // if we have a top level barycentre, and its a first, we shift the whole line down before it, and move the cursor down a line. Only do this once per line
-                if (nodesizeinfo?.Item1.IsBarycentre ?? false && firstbary)   
+                if (nodesizeinfo?.Item1.IsBarycentre ?? false)   
                 {
-                    int shiftamount = nodesizeinfo.Item2;
-                    for (int j = curlinestart; j < i; j++)      // all on current line, shift down
+                    if (firstbary)
                     {
-                        imagesets[j].Shift(new Point(0, shiftamount));
+                        int cursorshiftamount = nodesizeinfo.Item2 - planetsize.Height / 2;               // because of the icon, we can afford not to move down the whole shiftamount
+                        for (int j = curlinestart; j < i; j++)      // all on current line, shift down
+                        {
+                            imagesets[j].Shift(new Point(0, cursorshiftamount));
+                        }
+
+                        cursorlm.Y += cursorshiftamount;                          // move cursor down
+                        maxy += cursorshiftamount;
+
+                        firstbary = false;
                     }
 
-                    cursorlm.Y += shiftamount;                  // move cursor down
-                    maxy += shiftamount;
-                    entry.Shift(new Point(0, -shiftamount));
-                    firstbary = false;
+                    entry.Shift(new Point(0, -nodesizeinfo.Item2));     // but we need to move this up the whole amount to align the bit underneath it right
                 }
 
                 entry.Shift(new Point(leftpoint, cursorlm.Y));          // move the centre of the planet image to leftpoint,cursorlm.Y
