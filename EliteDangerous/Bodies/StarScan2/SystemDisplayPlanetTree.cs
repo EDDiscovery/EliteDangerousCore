@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using BaseUtils;
 using ExtendedControls;
 using System;
 using System.Collections.Generic;
@@ -24,91 +25,99 @@ namespace EliteDangerousCore.StarScan2
 {
     public partial class SystemDisplay
     {
+        // Draw the node and submoons. return image list of tree. Top parent body is at pos
+        // level 0 means draw under, level 1 to the right, level 2+ is to the right with right shift on
 
-        // draw the planet, then the tree below. Planet is at 0,0, tree below and right
-        private ExtPictureBox.ImageList DrawPlanetAndTree(NodePtr toplevelnode, double habzonestartls, double habzoneendls, 
-                                                        List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats, string[] filter,
-                                                        Random rnd, ContextMenuStrip rightclickplanet, ContextMenuStrip rightclickmats)
+        private ExtendedControls.ImageElement.List DrawTree(NodePtr node, Point parentpos, int displaylevel,  
+                                                 double habzonestartls, double habzoneendls,
+                                                 List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats, string[] bodytypefilters,
+                                                 Random rnd, ContextMenuStrip rightclickplanet, ContextMenuStrip rightclickmats)
         {
             bool habzone = false;
 
-            if (ShowHabZone && toplevelnode.BodyNode.Scan != null && !toplevelnode.BodyNode.Scan.IsOrbitingBarycentre && toplevelnode.BodyNode.Scan.nSemiMajorAxis.HasValue)
+            if (ShowHabZone && node.BodyNode.Scan != null && !node.BodyNode.Scan.IsOrbitingBarycentre && node.BodyNode.Scan.nSemiMajorAxis.HasValue)
             {
-                double dist = toplevelnode.BodyNode.Scan.nSemiMajorAxis.Value / BodyPhysicalConstants.oneLS_m;  // m , converted to LS
+                double dist = node.BodyNode.Scan.nSemiMajorAxis.Value / BodyPhysicalConstants.oneLS_m;  // m , converted to LS
                 habzone = dist >= habzonestartls && dist <= habzoneendls;
             }
 
-            // Draw the planet node, centred at 0,0.
 
-            var planetnode = DrawNode(toplevelnode.BodyNode, historicmats, curmats,
+            var imagelist = DrawNode(node.BodyNode, historicmats, curmats,
                                         planetsize, rnd, ContextMenuStripBodies, ContextMenuStripMats,
                                         //backwash: Color.FromArgb(64, 0, 255, 0));
                                         backwash: habzone ? Color.FromArgb(64, 0, 128, 0) : default(Color?));
 
-            //System.Diagnostics.Debug.WriteLine($"  planetnode node {planetnode.Size} {planetnode.Min} .. {planetnode.Max}");
+            int shiftdownamount = imagelist.Size.Height + moonspacery + moonsize.Height / 2;            // if we shift down, calc amount, which is image size + moonspacer to centre
 
-            // Draw the tree under the planet node at 0, planet node max + spacing
-            Point subbodypos = new Point(0, planetnode.Max.Y + moonspacery + moonsize.Height / 2);
-            var treeimages = DrawTree(toplevelnode, subbodypos, false, historicmats, curmats, filter, rnd, ContextMenuStripBodies, ContextMenuStripMats);
-            planetnode.AddRange(treeimages);
+            //string pad = new string(' ', displaylevel % 100 + (displaylevel >= 200 ? 4 : 0));
+            //System.Diagnostics.Debug.WriteLine($"{pad} {displaylevel} DrawNode of {node.BodyNode.Name()} {node.BodyNode.BodyType} at {parentpos} shiftdown {shiftdownamount}");
 
-            return planetnode;
-        }
+            imagelist.Tag = new Tuple<BodyNode,int>(node.BodyNode,shiftdownamount);
 
-
-        // Draw a tree, return image list of tree. Top child body is at pos, others further down
-        private ExtPictureBox.ImageList DrawTree(NodePtr parent, 
-                                                 Point pos, bool shiftrightifreq,   // shift to pos, and maybe shift right to ensure no pixels left of pos.X
-                                                 List<MaterialCommodityMicroResource> historicmats, List<MaterialCommodityMicroResource> curmats, string[] filter,
-                                                 Random rnd, ContextMenuStrip rightclickplanet, ContextMenuStrip rightclickmats)
-        {
-            List<NodePtr> bodiestodisplay = parent.ChildBodies.Where(s => s.BodyNode.BodyType != BodyDefinitions.BodyType.PlanetaryRing).ToList();
-
-            Point maxours = pos;
-
-            ExtPictureBox.ImageList imageList = new ExtPictureBox.ImageList();
-
-            if (bodiestodisplay.Count > 0 && ShowMoons)
+            if (ShowMoons)
             {
-                for (int mn = 0; mn < bodiestodisplay.Count; mn++)
+                // the 100 mod is just for sanity in debugging so when the debug strings are turned on you can get a nice debug output
+                // go back to level xx0 painting if barycentre so it paints under the barycentre icon
+                int sublevel = node.BodyNode.IsBarycentre ? (displaylevel/100*100+100) + 0: displaylevel + 1;      
+
+                // pick the line for the bodies, level 0 is directly below (child of top parent) and the rest are right of the image.
+                // Note this is a left point, the shiftright below ensures shifting away for levels 2+
+                Point subbodypos = (displaylevel%100) >= 1 && !node.BodyNode.IsBarycentre ? new Point(imagelist.Max.X + moonspacerx, 0) :   // right
+                                                                                            new Point(0, shiftdownamount);      // below
+
+                List<NodePtr> bodiestodisplay = node.ChildBodies.Where(b => b.BodyNode.BodyType != BodyDefinitions.BodyType.PlanetaryRing &&
+                                                                             (bodytypefilters == null || b.BodyNode.IsBodyTypeInFilter(bodytypefilters, true) == true) &&
+                                                                             (b.BodyNode.DoesNodeHaveNonWebScansBelow() || ShowWebBodies)
+                                                                        ).ToList();
+
+                if (bodiestodisplay.Count > 0)
                 {
-                    NodePtr moonnode = bodiestodisplay[mn];
+                   // System.Diagnostics.Debug.WriteLine($"{pad} {displaylevel} Draw moons of {node.BodyNode.Name()} starting at {subbodypos}");
 
-                    if (filter == null || moonnode.BodyNode.IsBodyTypeInFilter(filter, true) == true)       // if filter active, and active or children active in filter
+                    for (int i = 0; i < bodiestodisplay.Count; i++)
                     {
-                        bool nonwebscans = moonnode.BodyNode.DoesNodeHaveNonWebScansBelow();                // is there any scans here, either at this node or below?
+                        var moon = bodiestodisplay[i];
 
-                        if (nonwebscans || ShowWebBodies)
+                        if (i > 0 && node.BodyNode.IsBarycentre)          // put a -x on top of second further barys
                         {
-                            //System.Diagnostics.Debug.WriteLine($"Draw {moonnode.BodyNode.Name()} at {pos}");
+                            var img = BodyDefinitions.GetImageBarycentreLeftBar().CloneLocked();
+                            var barymarker2 = CreateImageAndLabel(img, moonsize, null, "");
+                            // shift the image at 0,0 to the same centre as the bary1 first image (which is the bary marker image) then shift upwards the image
+                            barymarker2.Shift(subbodypos);
+                            barymarker2.Shift(new Point(0, -shiftdownamount));
+                            imagelist.AddRange(barymarker2);
+                        }
 
-                            // draw the node, at 0,0. 
-                            var nodeimages = DrawNode(moonnode.BodyNode, historicmats, curmats, moonsize, rnd, rightclickplanet, rightclickmats);
+                        var moonimages = DrawTree(moon, subbodypos, sublevel, 0, 0, historicmats, curmats, bodytypefilters, rnd, rightclickplanet, rightclickmats);
+                        imagelist.AddRange(moonimages);        // add moon images in to produce the overall W and H of this tree
 
-                            if (shiftrightifreq)                                    // if ensuring we never have negative pixels
-                                nodeimages.Shift(new Point(-nodeimages.Min.X, 0));  // shift by minimum X right, do it before positioning
-
-                            nodeimages.Shift(pos);                                  // move to pos
-
-                            if (moonnode.ChildBodies.Count > 0) 
-                            {
-                                Point submoonpos = new Point(nodeimages.Max.X + moonspacerx, pos.Y);      // same y, but to the right of this image
-
-                                // draw moon images to the right, with shifting right to ensure it does not come back into us
-                                var moonimages = DrawTree(moonnode, submoonpos, true, historicmats, curmats, filter, rnd, rightclickplanet, rightclickmats);
-
-                                nodeimages.AddRange(moonimages);        // add moon images in to produce the overall W and H of this tree
-                            }
-
-                            pos = new Point(pos.X, pos.Y + nodeimages.Size.Height + moonspacery);
-
-                            imageList.AddRange(nodeimages);
+                        // barycentres moons move right
+                        if (node.BodyNode.IsBarycentre)
+                        {
+                            subbodypos = new Point(subbodypos.X + moonimages.Size.Width + moonspacerx, subbodypos.Y);
+                        }
+                        else
+                        {
+                            // else move down, clearing over the image pixels.  
+                            subbodypos = new Point(subbodypos.X, imagelist.Max.Y + moonspacery + moonsize.Height);
                         }
                     }
+
+                   // System.Diagnostics.Debug.WriteLine($"{pad} {displaylevel} END Draw moons of {node.BodyNode.Name()}");
                 }
+
             }
 
-            return imageList;
+            if ((displaylevel%100) >= 2 )        // objects under 1 get shifted right in total to make sure they don't hit our image
+            {
+                imagelist.ShiftRight();         // we are still in 0,0 land with the parent at this position
+            }
+
+            imagelist.Shift(parentpos);         // now shift into parent pos requested
+
+          //  System.Diagnostics.Debug.WriteLine($"{pad} {displaylevel} EndNode {node.BodyNode.Name()} at {parentpos} Sz {imagelist.Size}  {imagelist.Min} .. {imagelist.Max} ");
+            return imagelist;
         }
+
     }
 }

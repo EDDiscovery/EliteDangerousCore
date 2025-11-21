@@ -99,22 +99,21 @@ namespace EliteDangerousCore.StarScan2
             EliteDangerousCore.StarScan2.StarScan.ProcessAllFromDirectory(path, "*.json", (ss2, mhs) =>
                     {
                         EliteDangerousCore.StarScan2.SystemNode sssol = ss2.FindSystemSynchronous(mhs.Last().Item2.System);
-                        sssol.DrawSystemToFolder(width, outputdir, 0);
+                        sssol.DrawSystemToFile(Path.Combine(outputdir,sssol.System.Name.SafeFileString()));
                     });
 
         }
 
-        static public void TestScan(string system, string folder, string pictureoutfolder,bool draweachone, int width)
+        static public void TestScan(string system, string jsonfile, string outpath, bool draweachone, int width, bool showmaterials = true)
         {
-            string file = Path.Combine(folder, $"{system}.json");
-            if (File.Exists(file))
+            if (File.Exists(jsonfile))
             {
                 EliteDangerousCore.StarScan2.StarScan ss = new EliteDangerousCore.StarScan2.StarScan();
                 
-                DebuggerHelpers.OutputControl += "StarScan";        // turn on debugging
+              //  DebuggerHelpers.OutputControl += "StarScan";        // turn on debugging
 
                 uint gen = 1817272;
-                var hist = HistoryEntry.CreateFromFile(file);
+                var hist = HistoryEntry.CreateFromFile(jsonfile);
 
                 ss.ProcessFromHistory(hist, (ss2, mhe) =>
                 {
@@ -127,7 +126,7 @@ namespace EliteDangerousCore.StarScan2
                         {
                             gen = sssol.BodyGeneration;
                             if ( draweachone)
-                                sssol.DrawSystemToFolder(width, pictureoutfolder, mhe.Item1);
+                                sssol.DrawSystemToFile(outpath, width, showmaterials, mhe.Item1);
                         }
                     }
                 });
@@ -136,10 +135,10 @@ namespace EliteDangerousCore.StarScan2
                 {
                     ISystem syst = ss.GetISystem(system);
                     EliteDangerousCore.StarScan2.SystemNode sssol = ss.FindSystemSynchronous(syst);
-                    sssol.DrawSystemToFolder(width, pictureoutfolder, -1);
+                    sssol.DrawSystemToFile(outpath, width, showmaterials);
                 }
 
-                ss.DumpTree();
+                //ss.DumpTree();
                 ss.AssignPending();
             }
         }

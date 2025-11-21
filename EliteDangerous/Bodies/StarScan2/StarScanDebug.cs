@@ -28,11 +28,11 @@ namespace EliteDangerousCore.StarScan2
     {
         #region Debug tools
 
-        // all systems, produce a display of them in folder!
+        // all systems, produce a display of them in folder or just generate them if outputdir = null
         public void DrawAllSystemsToFolder(string outputdir)
         {
             System.Diagnostics.Debug.WriteLine($"Draw {systemNodesByName.Count} systems for Cmdr {EDCommander.Current.Name}");
-            int threads = 28;
+            int threads = 1;
             List<SystemNode> nodes = systemNodesByName.Values.Take(5000).ToList();
             CountdownEvent cd = new CountdownEvent(threads);
             for (int i = 0; i < threads; i++)
@@ -40,7 +40,7 @@ namespace EliteDangerousCore.StarScan2
                 Thread t1 = new Thread(new ParameterizedThreadStart(DrawIt));
                 t1.Priority = ThreadPriority.Highest;
                 t1.Name = $"DrawAll {i}";
-                t1.Start(new Tuple<CountdownEvent, List<SystemNode>, int, int>(cd, nodes, nodes.Count / threads * i, nodes.Count / threads));
+                t1.Start(new Tuple<CountdownEvent, List<SystemNode>, int, int,string>(cd, nodes, nodes.Count / threads * i, nodes.Count / threads, outputdir));
             }
 
             cd.Wait();
@@ -49,16 +49,20 @@ namespace EliteDangerousCore.StarScan2
 
         static void DrawIt(Object o)
         {
-            var control = (Tuple<CountdownEvent, List<SystemNode>, int, int>)o;
+            var control = (Tuple<CountdownEvent, List<SystemNode>, int, int,string>)o;
 
             int count = control.Item4;
             for (int i = control.Item3; count-- > 0; i++)
             {
                 var sn = control.Item2[i];
                 lock (sn)
-                { 
+                {
                     //System.Diagnostics.Debug.WriteLine($"Draw system {sn.System.Name} in thread");
-                    sn.DrawSystemToFolder(1920, null);
+
+                    string file = control.Item5 != null ? Path.Combine(control.Item5, sn.System.Name.SafeFileString()) : null;
+
+                    sn.DrawSystemToFile(file, 1920);
+
                 }
             }
             control.Item1.Signal();

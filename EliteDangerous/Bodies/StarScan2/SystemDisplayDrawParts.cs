@@ -21,13 +21,14 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using BaseUtils;
+using ExtendedControls.ImageElement;
 
 namespace EliteDangerousCore.StarScan2
 {
     public partial class SystemDisplay
     {
         // draw materials node, first at 0,0, across and down
-        private ExtPictureBox.ImageList CreateMaterialNodes( JournalScan sn, 
+        private ExtendedControls.ImageElement.List CreateMaterialNodes( JournalScan sn, 
                                             List<MaterialCommodityMicroResource> historicmats,      // may be null
                                             List<MaterialCommodityMicroResource> curmats,           // may be null
                                             Size matsize, 
@@ -39,7 +40,7 @@ namespace EliteDangerousCore.StarScan2
             var matclicktext = new System.Text.StringBuilder(256);
             sn.DisplayMaterials(matclicktext, 2, historicmats, curmats);
 
-            ExtPictureBox.ImageList images = new ExtPictureBox.ImageList();
+            ExtendedControls.ImageElement.List images = new ExtendedControls.ImageElement.List();
 
             foreach (KeyValuePair<string, double> sd in sn.Materials)
             {
@@ -73,6 +74,7 @@ namespace EliteDangerousCore.StarScan2
                 colormap.OldColor = Color.White;    // this is the marker colour to replace
                 colormap.NewColor = fillc;
 
+                // we clone the image, and colour replace it under GDI lock
                 Bitmap mat = BaseUtils.BitMapHelpers.CloneReplaceColourLocked((Bitmap)BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Material"), 
                                                     new System.Drawing.Imaging.ColorMap[] { colormap });
 
@@ -81,9 +83,9 @@ namespace EliteDangerousCore.StarScan2
                 var tooltip = new System.Text.StringBuilder(256);
                 sn.DisplayMaterial(tooltip, sd.Key, sd.Value, historicmats, curmats);
 
-                ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(
+                ExtendedControls.ImageElement.Element ie = new ExtendedControls.ImageElement.Element(
                                 new Rectangle(matpos.X, matpos.Y, matsize.Width, matsize.Height), mat, tooltip + "\n\n" + "All " + matclicktext.ToString(), tooltip.ToString());
-
+                ie.Name = sd.Key;
                 ie.ContextMenuStrip = rightclickmenu;
                 images.Add(ie);
 
@@ -100,7 +102,7 @@ namespace EliteDangerousCore.StarScan2
         }
 
         // Create a signals image, with single image at 0,0 centred
-        private ExtPictureBox.ImageList DrawSignals( List<FSSSignal> signallist,         // may be null
+        private ExtendedControls.ImageElement.List DrawSignals( List<FSSSignal> signallist,         // may be null
                                                      List<JournalCodexEntry> codex,      // may be null
                                                      List<IBodyFeature> stations,        // may be null
                                                      int height,  ContextMenuStrip rightclickmenu)
@@ -205,7 +207,7 @@ namespace EliteDangerousCore.StarScan2
         // Draw Image and labels below it. Image is owned by us
         // Image is centred at 0,0 co-ords
         // Labels below
-        private ExtPictureBox.ImageList CreateImageAndLabel( Image image, 
+        private ExtendedControls.ImageElement.List CreateImageAndLabel( Image image, 
                                                              Size imagesize, 
                                                              string[] labels,  // may be null, no labels
                                                              string tooltiptext,       // tooltip
@@ -213,7 +215,7 @@ namespace EliteDangerousCore.StarScan2
                                                              Color? backwash = null
                                                             )
         {
-            var il = new ExtPictureBox.ImageList();
+            var il = new ExtendedControls.ImageElement.List();
 
             Rectangle imagebox = new Rectangle(-imagesize.Width / 2, -imagesize.Height / 2, imagesize.Width, imagesize.Height);     // centre on 0,0
 
@@ -228,7 +230,8 @@ namespace EliteDangerousCore.StarScan2
                 }
             }
 
-            ExtPictureBox.ImageElement ie = new ExtPictureBox.ImageElement(imagebox, image, tooltiptext, tooltiptext, true);
+            ExtendedControls.ImageElement.Element ie = new ExtendedControls.ImageElement.Element(imagebox, image, tooltiptext, tooltiptext, true);
+            ie.Name = labels!=null ? labels[0] : "IL";
             il.Add(ie);
 
             ie.ContextMenuStrip = rightclickmenu;
@@ -249,16 +252,17 @@ namespace EliteDangerousCore.StarScan2
                             labcut = 1;
                         }
 
-                        ExtPictureBox.ImageElement labie = new ExtPictureBox.ImageElement();
+                        var labie = new ExtendedControls.ImageElement.Element();
 
                         using (var frmt = new StringFormat() { Alignment = StringAlignment.Center })
                         {
                             labie.TextCentreAutoSize(new Point(0, vpos), new Size(0, 1000), label.Substring(labcut), f, TextForeColor, TextBackColor, frmt: frmt);
                         }
 
+                        labie.Name = ie.Name;
                         il.Add(labie);
 
-                        vpos += labie.Location.Height;
+                        vpos += labie.Bounds.Height;
                     }
                 }
 

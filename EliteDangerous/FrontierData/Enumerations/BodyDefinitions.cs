@@ -1008,8 +1008,8 @@ namespace EliteDangerousCore
                     {
                         using (var bt = new SolidBrush(Color.FromArgb(255, 0, 255, 255)))
                         {
-                            g.FillRectangle(b, e.Location);
-                            g.DrawString($"{kvp.Key}", font, bt, new Point(e.Location.X, e.Location.Y + 20));
+                            g.FillRectangle(b, e.Bounds);
+                            g.DrawString($"{kvp.Key}", font, bt, new Point(e.Bounds.X, e.Bounds.Y + 20));
                         }
                     }
                 }, new Rectangle(x, y, 140, 40));

@@ -29,7 +29,7 @@ namespace EliteDangerousCore.StarScan2
         // return images
         // body is painted centred on 0,0, text below
 
-        private ExtPictureBox.ImageList DrawNode(
+        private ExtendedControls.ImageElement.List DrawNode(
                             BodyNode bn,
                             List<MaterialCommodityMicroResource> historicmats,    // historicmats may be null
                             List<MaterialCommodityMicroResource> curmats,    // curmats may be null
@@ -330,14 +330,12 @@ namespace EliteDangerousCore.StarScan2
 
                     if (sc.HasMaterials && ShowMaterials)
                     {
-                        Point matpos = new Point(il.Max.X, 0);
-                        
                         var matimages = CreateMaterialNodes(sc, historicmats, curmats, materialsize, rightclickmenumats);
                         
-                        if (il.Min.Y + matimages.Size.Height  > il[0].Location.Bottom)
+                        if (il.Min.Y + matimages.Size.Height > il[0].Bounds.Bottom)       // too big
                             matimages.Shift(new Point(il.Max.X, il.Min.Y)); // shift to right completely, and move up to min Y
                         else
-                            matimages.Shift(new Point(il[0].Location.Right, il.Min.Y)); // We can use a minimum shift right, as it fits under the first text
+                            matimages.Shift(new Point(il[0].Bounds.Right, il.Min.Y)); // We can use a minimum shift right to the planet image, as it fits under the first text
 
                         il.AddRange(matimages);
                     }

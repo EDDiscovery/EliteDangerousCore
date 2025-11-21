@@ -991,23 +991,23 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        public bool DrawSystemToFolder(int width, string outputfolder, int index = -1)
+        // output the image to a file (or just create it if path=null)
+        public bool DrawSystemToFile(string path, int width = 1920,  bool materials = true, int index = -1)
         {
             StarScan2.SystemDisplay sd = new StarScan2.SystemDisplay();
             sd.Font = new System.Drawing.Font("Arial", 10);
             sd.SetSize(64);
-            //.NoPlanetStarsOnSameLine = false;
+            sd.ShowMaterials = materials;
             sd.TextBackColor = Color.Transparent;
             ExtendedControls.ExtPictureBox imagebox = new ExtendedControls.ExtPictureBox();
             imagebox.FillColor = Color.AliceBlue;
             sd.DrawSystemRender(imagebox, width, this);
-            if (outputfolder != null)
+            if (path != null && imagebox.Image != null)
             {
-                string path = Path.Combine(outputfolder, $"{System.Name}");
                 if (index >= 0)
                     path += $"-{index:000}";
                 path += ".png";
-                imagebox.Image?.Save(path);
+                imagebox.Image.Save(path);
             }
             return imagebox.Image != null;
         }
