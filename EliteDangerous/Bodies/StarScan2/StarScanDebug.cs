@@ -59,7 +59,7 @@ namespace EliteDangerousCore.StarScan2
                 {
                     //System.Diagnostics.Debug.WriteLine($"Draw system {sn.System.Name} in thread");
 
-                    string file = control.Item5 != null ? Path.Combine(control.Item5, sn.System.Name.SafeFileString()) : null;
+                    string file = control.Item5 != null ? Path.Combine(control.Item5, sn.System.Name.SafeFileString()) + ".png" : null;
 
                     sn.DrawSystemToFile(file, 1920);
 

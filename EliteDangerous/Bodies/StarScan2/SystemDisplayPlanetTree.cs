@@ -47,7 +47,9 @@ namespace EliteDangerousCore.StarScan2
                                         //backwash: Color.FromArgb(64, 0, 255, 0));
                                         backwash: habzone ? Color.FromArgb(64, 0, 128, 0) : default(Color?));
 
-            int shiftdownamount = imagelist.Size.Height + moonspacery + moonsize.Height / 2;            // if we shift down, calc amount, which is image size + moonspacer to centre
+            // if we shift down, calc amount, which is image size + moonsize to centre
+
+            int shiftdownamount = imagelist.Size.Height + moonspacery + moonsize.Height / 2;            
 
             //string pad = new string(' ', displaylevel % 100 + (displaylevel >= 200 ? 4 : 0));
             //System.Diagnostics.Debug.WriteLine($"{pad} {displaylevel} DrawNode of {node.BodyNode.Name()} {node.BodyNode.BodyType} at {parentpos} shiftdown {shiftdownamount}");
@@ -78,7 +80,7 @@ namespace EliteDangerousCore.StarScan2
                     {
                         var moon = bodiestodisplay[i];
 
-                        if (i > 0 && node.BodyNode.IsBarycentre)          // put a -x on top of second further barys
+                        if (i > 0 && node.BodyNode.IsBarycentre)          // put a -x on top of second further barys of children
                         {
                             var img = BodyDefinitions.GetImageBarycentreLeftBar().CloneLocked();
                             var barymarker2 = CreateImageAndLabel(img, moonsize, null, "");
@@ -99,7 +101,7 @@ namespace EliteDangerousCore.StarScan2
                         else
                         {
                             // else move down, clearing over the image pixels.  
-                            subbodypos = new Point(subbodypos.X, imagelist.Max.Y + moonspacery + moonsize.Height);
+                            subbodypos = new Point(subbodypos.X, moonimages.Max.Y + moonspacery + moonsize.Height);
                         }
                     }
 

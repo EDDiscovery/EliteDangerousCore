@@ -48,26 +48,18 @@ namespace EliteDangerousCore.StarScan2
 
             // we go backwards thru the parents field, forwards thru the partname fields so they align, and pick them off
 
-            while (pno >= 0)        
+            while (pno >= 0)
             {
                 var nt = sc.Parents[pno];
                 string subbodyname = partnames[partno];
 
                 // checking we have not put it in the wrong place before (due to discrete adds)
-            
+
                 BodyNode subbody = FindBody(nt.BodyID);           // find ID anywhere.. 
-
-                List<BodyNode> subbodyorphans = null;
-
-                if (subbody != null && subbody.Parent != cur)           // if there, but not here, remove and make again
-                {
-                    subbodyorphans = RemoveIncorrectBody(subbody);
-                    subbody = null;
-                }
 
                 // the bodyid should have found it. But for belts, they may have been added with an AutoID from the star ring info, but still be there with this name
                 // we need to only check belts because other items such as Unknown Barycentres all have the same names and may be picked up in error
-                if (subbody == null && nt.IsStellarRing)                
+                if (subbody == null && nt.IsStellarRing)
                     subbody = cur.ChildBodies.Find(x => x.OwnName == subbodyname);
 
                 // not there..
@@ -77,18 +69,23 @@ namespace EliteDangerousCore.StarScan2
                     subbody = new BodyNode(subbodyname, nt, nt.BodyID, cur, this);
                     cur.ChildBodies.Add(subbody);
                     bodybyid[nt.BodyID] = subbody;
-                    BodyGeneration++;
                     Sort(cur);      // added, needs sorting
                     $"  Add {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                 }
                 else
                 {
+                    if (subbody.Parent != cur)                  // if there but not in correct place, move to correct place
+                    {
+                        ReassignParent(subbody, cur, nt.BodyID);
+                        Sort(cur);      // added, needs sorting
+                        $"  Move {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    }
+
                     // If we have a difference in name, the new name is not an unknown name, and the subbody is not a BC name
                     if (subbody.OwnName != subbodyname && !subbodyname.StartsWith(BodyNode.UnknownMarker) && !subbody.OwnName.StartsWith(BodyNode.BCNamingPrefix)) 
                     {
                         subbody.ResetBodyName(subbodyname);
                         Sort(cur);      // changed name, sort
-                        BodyGeneration++;
                         $"  Rename {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                     }
 
@@ -97,13 +94,9 @@ namespace EliteDangerousCore.StarScan2
                         (subbody.BodyID < 0).Assert();                      // double check we are not being double troubled by picking up something else which has an dupl name (such as Unknown Barycentre)
                         subbody.ResetBodyID(nt.BodyID);
                         bodybyid[nt.BodyID] = subbody;                      // changing ID does not change sort
-                        BodyGeneration++;
                         $"  Rebodyid {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                     }
                 }
-
-                if (subbodyorphans != null)
-                    AddOrphans(subbody, subbodyorphans);
 
                 CheckTree();
                 cur = subbody;
@@ -122,35 +115,34 @@ namespace EliteDangerousCore.StarScan2
             if (body == null)
                 body = FindCanonicalBodyNameType(sc.BodyName,sc.BodyType);  // see if its anywhere else due to a misplace using the scan name, checking all scan names and ownnames in case its an autoplaced object
 
-            List<BodyNode> orphans = null;
-
-            if (body != null && body.Parent != cur)                 // if there but not in correct place, remove
-            {
-                orphans = RemoveIncorrectBody(body);
-                body = null;
-            }
-
-            if (body == null)
+            if ( body == null )
             {
                 body = new BodyNode(ownname, sc, sc.BodyID.Value, cur, this);
                 cur.ChildBodies.Add(body);
                 bodybyid[sc.BodyID.Value] = body;
-                BodyGeneration++;
                 $"  Add {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
             }
-            else if ( ownname != body.OwnName )
+            else
             {
-                body.ResetBodyName(ownname);                        // make sure we are calling it by this part - this is the real name always
-                $"  Rename {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                if (body.Parent != cur)                 // if there but not in correct place, move to correct place
+                {
+                    ReassignParent(body, cur, sc.BodyID.Value);
+                    $"  Move {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                }
+
+                if (ownname != body.OwnName)
+                {
+                    body.ResetBodyName(ownname);                        // make sure we are calling it by this part - this is the real name always
+                    $"  Rename {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                }
             }
+
+            BodyGeneration++;
 
             if (cur.BodyType == BodyDefinitions.BodyType.Barycentre)     // we can adjust the name of the BC above if possible
             {
                 AddBarycentreName(cur, ownname);
             }
-
-            if (orphans != null)
-                AddOrphans(body, orphans);
 
             body.SetScan(sc);
 
@@ -181,14 +173,6 @@ namespace EliteDangerousCore.StarScan2
                 var nt = sc.Parents[pno];
 
                 BodyNode subbody = FindBody(nt.BodyID);
-                BodyNode previdassigned = subbody;
-
-                List<BodyNode> subbodyorphans = null;
-                if ( subbody != null && subbody.Parent != cur)
-                {
-                    subbodyorphans = RemoveIncorrectBody(subbody);
-                    subbody = null;
-                }
 
                 // Note: A star adds a belt clusters with ID<0 as its not given.  When a belt cluster body is defined however, it will be handled by the standard naming code (<star> A Belt Cluster 3)
                 // since the format is in std naming and the belt cluster ID will be corrected.  We should not be here going thru a ring definition sequence and encoutering a child with an autoid
@@ -198,23 +182,24 @@ namespace EliteDangerousCore.StarScan2
                 {
                     false.Assert($"StarScan belt cluster ID error for {sc.BodyName} in {systemname}");
                 }
-               
 
                 if (subbody == null)
                 {
-                    // maybe we need to check for these as well... just see if its there somewhere but not here
-
-                    subbody = new BodyNode(previdassigned?.OwnName ?? (nt.IsBarycentre ? BodyNode.DefaultNameOfBC : BodyNode.DefaultNameOfUnknownBody), nt, nt.BodyID, cur, this);
-
+                    subbody = new BodyNode(nt.IsBarycentre ? BodyNode.DefaultNameOfBC : BodyNode.DefaultNameOfUnknownBody, nt, nt.BodyID, cur, this);
                     cur.ChildBodies.Add(subbody);
                     bodybyid[nt.BodyID] = subbody;
-                    BodyGeneration++;
                     Sort(cur);
                     $"  Add {subbody.BodyType} `{subbody.OwnName}`:{subbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                 }
-
-                if (subbodyorphans != null)
-                    AddOrphans(subbody, subbodyorphans);
+                else
+                {
+                    if (subbody.Parent != cur)
+                    {
+                        ReassignParent(subbody, cur, nt.BodyID);
+                        Sort(cur);
+                        $"  Move {subbody.BodyType} `{subbody.OwnName}`:{subbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    }
+                }
 
                 CheckTree();
 
@@ -229,36 +214,34 @@ namespace EliteDangerousCore.StarScan2
             if (body == null)                                       // no, check if its misplaced anywhere by the scan name
                 body = FindCanonicalBodyNameType(sc.BodyName,sc.BodyType);
 
-            List<BodyNode> orphans = null;
-
-            if (body != null && body.Parent != cur)                 // if there but not in correct place, remove
-            {
-                orphans = RemoveIncorrectBody(body);
-                body = null;
-            }
-
             if (body == null)
             {
-                body = new BodyNode(sc.BodyName,sc, sc.BodyID.Value, cur, this);
+                body = new BodyNode(sc.BodyName, sc, sc.BodyID.Value, cur, this);
                 cur.ChildBodies.Add(body);
                 bodybyid[sc.BodyID.Value] = body;
-                BodyGeneration++;
                 $"  Add {body.BodyType} `{body.OwnName}`:{body.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
             }
-            else if ( body.OwnName != sc.BodyName)
+            else
             {
-                body.ResetBodyName(sc.BodyName);        // force the name we know on it
-                BodyGeneration++;
-                $"  Rename {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                if (body.Parent != cur)                 // if there but not in correct place, move to correct place
+                {
+                    ReassignParent(body, cur, sc.BodyID.Value);
+                    $"  Move {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                }
+
+                if (body.OwnName != sc.BodyName)
+                {
+                    body.ResetBodyName(sc.BodyName);        // force the name we know on it
+                    $"  Rename {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                }
             }
+
+            BodyGeneration++;
 
             if (cur.BodyType == BodyDefinitions.BodyType.Barycentre)     // we can adjust the name of the BC above if possible
             {
                 AddBarycentreName(cur, sc.BodyName);
             }
-
-            if (orphans != null)
-                AddOrphans(body, orphans);
 
             body.SetScan(sc); // update or add scan BEFORE sorting - we may have added it before without a scan
             
@@ -311,7 +294,6 @@ namespace EliteDangerousCore.StarScan2
                     {
                         starbody = new BodyNode(BodyNode.DefaultNameOfUnknownStar, BodyDefinitions.BodyType.Star, BodyNode.BodyIDMarkerForAutoBody, cur, this);
                         cur.ChildBodies.Add(starbody);
-                        BodyGeneration++;
                         $"  Add {starbody.BodyType} `{starbody.OwnName}`:{starbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                     }
                     
@@ -323,13 +305,6 @@ namespace EliteDangerousCore.StarScan2
                 bool last = partno == partnames.Count - 1;
 
                 BodyNode subbody = last ? FindCanonicalBodyNameType(sc.BodyName,sc.BodyType) : null;     // see if its anywhere else due to a misplace for the last entry only
-
-                List<BodyNode> orphans = null;
-                if (subbody != null && subbody.Parent != cur)              // if there but not in correct place, remove
-                {
-                    orphans = RemoveIncorrectBody(subbody);
-                    subbody = null;
-                }
 
                 // see if the ownname is under our node
                 if ( subbody == null)   
@@ -350,7 +325,6 @@ namespace EliteDangerousCore.StarScan2
 
                     subbody = new BodyNode(ownname, ty, BodyNode.BodyIDMarkerForAutoBody, cur, this);
                     cur.ChildBodies.Add(subbody);
-                    BodyGeneration++;
 
                     if (!last)      // sort, if not last. If last it will be sorted below
                         Sort(cur);
@@ -359,19 +333,21 @@ namespace EliteDangerousCore.StarScan2
                 }
                 else
                 {
+                    if ( subbody.Parent != cur)
+                    {
+                        ReassignParent(subbody, cur, BodyNode.BodyIDMarkerForAutoBody);
+                        $"  Move {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    }
+
                     // we always have real names for each part
 
                     if (subbody.OwnName != ownname && !subbody.OwnName.StartsWith(BodyNode.BCNamingPrefix))                     
                     {
                         subbody.ResetBodyName(ownname);     // just in case we made an incorrect one before
-                        BodyGeneration++;
                         Sort(cur);
                         $"  Rename {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                     }
                 }
-
-                if (orphans != null)
-                    AddOrphans(subbody, orphans);
 
                 CheckTree();
 
@@ -386,6 +362,8 @@ namespace EliteDangerousCore.StarScan2
                     {
                         AddBarycentreName(cur, ownname);
                     }
+
+                    BodyGeneration++;
 
                     subbody.SetScan(sc);            // set scan and canonical name
 
@@ -873,42 +851,39 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        // body in wrong place, remove it, and possible remove the parents above if its an auto placed body with no children after removal
-        // return orphans of the body. tree will be unstable until orphans put back
-        private List<BodyNode> RemoveIncorrectBody(BodyNode prevassigned)
+        // body in wrong place. Reassign to new parent
+        // Set the newparent to point to the child
+        private void ReassignParent(BodyNode body, BodyNode newparent, int newbodyid)
         {
-            //$"  Begin Remove Incorrect body `{prevassigned.OwnName}`:{prevassigned.BodyID}".DO();
+            (body != newparent).Assert("Reassign error");
+            $"  Reassign {System.Name} body `{body.Name()}`:{body.BodyID} to `{newparent.Name()}` with new {newbodyid}".DO(debugid);
 
-            var orphans = prevassigned.ChildBodies;
+            CheckTree();
 
-            while (prevassigned?.Parent != null)
+            BodyNode cur = body; // crucial Robert, don't mess about with body!
+
+            while (cur.Parent != null)     // System has a parent of null, so this should stop it
             {
-                //$"  Remove Incorrect body `{prevassigned.OwnName}`:{prevassigned.BodyID}".DO();
+                //$"  Remove Incorrect body `{cur.Name()}`:{cur.BodyID}".DO();
 
-                bodybyid.Remove(prevassigned.BodyID);           // ensure body ID list is removed
+                bodybyid.Remove(cur.BodyID);           // ensure body ID list is removed from body list - this will be added back in below for body code is simpler this way
 
-                prevassigned.Parent.ChildBodies.Remove(prevassigned);       // remove this body at that point
+                cur.Parent.ChildBodies.Remove(cur);       // remove this body at that point
 
-                if (prevassigned.Parent.BodyID < 0 && prevassigned.Parent.ChildBodies.Count == 0)   // if the parent does not have a valid bodyid, and it has no children now, recurse up to it
+                if (cur.Parent.BodyID < 0 && cur.Parent.ChildBodies.Count == 0)   // if the parent does not have a valid bodyid, and it has no children now, recurse up to it
                 {
-                    prevassigned = prevassigned.Parent;
+                    cur= cur.Parent;
                     //$"  .. recurse up to `{prevassigned.OwnName}`:{prevassigned.BodyID}".DO();
                 }
                 else
                     break;
             }
 
-            return orphans;
-        }
-
-        // orphans during a remove need adding back into new body, with the Parent (crucial) field adjusted
-        private void AddOrphans(BodyNode body, List<BodyNode> children)
-        {
-            foreach(var x in children)
-            {
-                x.ResetParent(body);
-                body.ChildBodies.Add(x);
-            }
+            body.ResetParent(newparent);        // point at new parent
+            body.ResetBodyID(newbodyid);
+            newparent.ChildBodies.Add(body);    // point at body
+            if ( newbodyid>=0)
+                bodybyid[body.BodyID] = body;   // ensure in bodybyid
         }
 
         // Extract, sort barycentre subnames into a list, remake the name of the BC 
@@ -939,9 +914,9 @@ namespace EliteDangerousCore.StarScan2
         //    cur.DumpTree(2);
         }
 
-        
-        private Dictionary<int, BodyNode> bodybyid = new Dictionary<int, BodyNode>();
-        private BodyNode systemBodies = new BodyNode("System", BodyDefinitions.BodyType.System, -1, null, null);       // root of all bodies
+
+        private Dictionary<int, BodyNode> bodybyid;
+        private BodyNode systemBodies;
 
         const string debugid = "StarScan";
 
@@ -957,7 +932,7 @@ namespace EliteDangerousCore.StarScan2
         }
 
         [System.Diagnostics.Conditional("DEBUG")]
-        [System.Diagnostics.DebuggerHidden]
+      //  [System.Diagnostics.DebuggerHidden]
         public void CheckTree()
         { 
             int totalbodieswithids = 0;
@@ -977,7 +952,7 @@ namespace EliteDangerousCore.StarScan2
                 }
             }
 
-            (totalbodieswithids == bodybyid.Count).Assert($"StarScan Not the same number of bodyids as nodes {totalbodieswithids} with Ids in bodybyid {bodybyid.Count}");
+            (totalbodieswithids == bodybyid.Count).Assert($"StarScan {System.Name} Not the same number of bodyids as nodes {totalbodieswithids} with Ids in bodybyid {bodybyid.Count}");
 
             CheckParents(systemBodies);
         }
@@ -992,7 +967,7 @@ namespace EliteDangerousCore.StarScan2
         }
 
         // output the image to a file (or just create it if path=null)
-        public bool DrawSystemToFile(string path, int width = 1920,  bool materials = true, int index = -1)
+        public bool DrawSystemToFile(string path, int width = 1920,  bool materials = true)
         {
             StarScan2.SystemDisplay sd = new StarScan2.SystemDisplay();
             sd.Font = new System.Drawing.Font("Arial", 10);
@@ -1002,13 +977,10 @@ namespace EliteDangerousCore.StarScan2
             ExtendedControls.ExtPictureBox imagebox = new ExtendedControls.ExtPictureBox();
             imagebox.FillColor = Color.AliceBlue;
             sd.DrawSystemRender(imagebox, width, this);
+
             if (path != null && imagebox.Image != null)
-            {
-                if (index >= 0)
-                    path += $"-{index:000}";
-                path += ".png";
                 imagebox.Image.Save(path);
-            }
+
             return imagebox.Image != null;
         }
 

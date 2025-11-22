@@ -29,7 +29,35 @@ namespace EliteDangerousCore.StarScan2
         public List<NodePtr> ChildBodies { get; set; } = new List<NodePtr>();   // to its child bodies
         public NodePtr Parent { get; set; }         // and its parent
 
-        // GO down tree and make node ptrs
+        // return Bodies in NodePtr tree matching predicate
+        public IEnumerable<NodePtr> Bodies(Predicate<BodyNode> find = null, bool stoponfind = false)
+        {
+            foreach (NodePtr sn in ChildBodies)        // check children
+            {
+                // global::System.Diagnostics.Debug.WriteLine($"TYield {sn.OwnName} bid {sn.BodyID}");
+
+                if (find == null || find(sn.BodyNode))
+                {
+                    yield return sn;
+                    if (find != null && stoponfind)
+                        yield break;
+                }
+
+                foreach (NodePtr c in sn.Bodies(find, stoponfind))          // recurse back up to go as deep as required
+                {
+                    if (find == null || find(c.BodyNode))
+                    {
+                        //  global::System.Diagnostics.Debug.WriteLine($"CYield {c.OwnName} bid {c.BodyID}");
+                        yield return c;
+
+                        if (find != null && stoponfind)
+                            yield break;
+                    }
+                }
+            }
+        }
+
+        // GO down tree and make node ptrs from BodyNodes
         public static NodePtr Bodies(BodyNode bn, NodePtr parent)
         {
             var x = new NodePtr();

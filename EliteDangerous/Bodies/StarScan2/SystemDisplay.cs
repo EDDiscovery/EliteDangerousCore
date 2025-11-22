@@ -242,9 +242,8 @@ namespace EliteDangerousCore.StarScan2
             materialsize = new Size(matsize, matsize);
 
             starplanetgroupspacery = 4;    
-            moonspacerx = Math.Min(stars / 4, 12);
-            moonspacery = Math.Min(stars / 4, 12);
-            moonspacery = 0;
+            moonspacerx = Math.Max(stars / 8, 4);
+            moonspacery = Math.Max(stars / 8, 4);
             materiallinespacerxy = 4;
         }
 

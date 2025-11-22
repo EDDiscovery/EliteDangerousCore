@@ -22,7 +22,7 @@ using System.Runtime.CompilerServices;
 
 namespace EliteDangerousCore.StarScan2
 {
-    [System.Diagnostics.DebuggerDisplay("`{OwnName}` `{CanonicalName}` {BodyID} {BodyType} : CB{ChildBodies.Count} Cx{CodexEntries?.Count} FSS{FSSSignalList?.Count} Org{Organics?.Count} Gen {Genuses?.Count}")]
+    [System.Diagnostics.DebuggerDisplay("`{OwnName}` : `{CanonicalName}` : {BodyID} : {BodyType} : CB{ChildBodies.Count} Cx{CodexEntries?.Count} FSS{FSSSignalList?.Count} Org{Organics?.Count} Gen {Genuses?.Count} Sig {Signals?.Count}")]
     public partial class BodyNode
     {
         #region Public
@@ -44,7 +44,8 @@ namespace EliteDangerousCore.StarScan2
         // best name, either Canonicalname without system, or ownname, never null
         public string Name() { return CanonicalName?.ReplaceIfStartsWith(SystemNode.System.Name) ?? OwnName; }
 
-        public int CanonicalNameDepth { get; private set; } = -1;       // set if a standard name to name depth. -1 if non standard naming, else 0 are top level objects, 1 = planet, etc
+        // set if a standard name to name depth. -1 if non standard naming, else 0 are top level objects, 1 = planet, etc
+        public int CanonicalNameDepth { get; private set; } = -1;       
 
         public int BodyID { get; private set; }
 
@@ -514,23 +515,6 @@ namespace EliteDangerousCore.StarScan2
             Parent = p;
         }
 
-        // copy all data to nd
-        public void MoveStarDataTo(BodyNode nd)     
-        {
-            nd.ChildBodies = ChildBodies;
-            nd.Scan = Scan;
-            nd.BarycentreScan = BarycentreScan;
-            nd.BeltData = BeltData;
-            nd.CodexEntries = CodexEntries;
-            nd.Signals = Signals;
-            nd.Genuses = Genuses;
-            nd.FSSSignalList = FSSSignalList;
-            nd.Organics = Organics;
-            nd.Features = Features;
-            nd.IsMapped = IsMapped;
-            nd.WasMappedEfficiently = WasMappedEfficiently;
-        }
-
         public void SetScan(JournalScan sc)
         {
             if (Scan != null)           // if previously scanned, we may have set some information into Parents list, which we need to keep
@@ -548,8 +532,8 @@ namespace EliteDangerousCore.StarScan2
             Scan.Genuses = Genuses;                     // If these change by AddFSSBodySignals / AddFSSBodySignals they will change in sympathy
             Scan.CodexEntries = CodexEntries;                 // set codex as well
             Scan.SetMapped(IsMapped, WasMappedEfficiently);  // and we set the mapped/was mapped flag to the nodes setting set up by AddSAAScanComplete
-
-            CanonicalName = Scan.BodyName;
+                
+            CanonicalName = Scan.BodyName;              // set the Canonical name given by frontier, and recalc the canonical name depth
             CalculateCNDepth();
         }
 
@@ -805,9 +789,6 @@ namespace EliteDangerousCore.StarScan2
             foreach (var x in Features.EmptyIfNull())
                 System.Diagnostics.Trace.WriteLine($"{pad}F:{x.BodyType} `{x.Name_Localised ?? x.Name}` {x.BodyID}");
         }
-
-
-
     }
 
     #endregion

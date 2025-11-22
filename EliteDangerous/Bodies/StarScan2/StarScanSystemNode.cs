@@ -45,6 +45,7 @@ namespace EliteDangerousCore.StarScan2
         public SystemNode(ISystem sys)
         {
             System = sys;
+            Clear();
         }
 
         public void RenamedSystem(ISystem sys)
@@ -54,9 +55,9 @@ namespace EliteDangerousCore.StarScan2
 
         public void Clear()
         {
-            systemBodies = new BodyNode("System", BodyDefinitions.BodyType.System, -1, null, null);       // clear
+            systemBodies = new BodyNode("System", BodyDefinitions.BodyType.System, -1, null, null);
+            bodybyid = new Dictionary<int, BodyNode>();
             FSSTotalBodies = FSSTotalNonBodies = null;
-            bodybyid.Clear();
             BodyGeneration = 0;
             $"Clear Scans of {System.SystemAddress} {System.Name}".DO(debugid);
         }
@@ -99,7 +100,7 @@ namespace EliteDangerousCore.StarScan2
         // GO down tree and remove all barycentres, return NodePtr tree
         public NodePtr BodiesSimplified(bool simplify = true)
         {
-            NodePtr nodelist = NodePtr.Bodies(TopLevelBody(), null);
+            NodePtr topnode = NodePtr.Bodies(TopLevelBody(), null);
 
             if (simplify)
             {
@@ -107,8 +108,10 @@ namespace EliteDangerousCore.StarScan2
 
                 var movelist = new List<Tuple<NodePtr, NodePtr>>();
 
-                var barycentres = nodelist.ChildBodies.Where(x => x.BodyNode.IsBarycentre).ToList();
-                var orbitingbodies = nodelist.ChildBodies.Where(x => x.BodyNode.IsBodyOrbitingStar).ToList();       // these should not be directly under the primary barycentre
+                // merge all crazy frontier barycentres with the same names together
+
+                var barycentres = topnode.ChildBodies.Where(x => x.BodyNode.IsBarycentre).ToList();
+                var orbitingbodies = topnode.ChildBodies.Where(x => x.BodyNode.IsBodyOrbitingStar).ToList();       // these should not be directly under the primary barycentre
 
                 foreach (var barycent in barycentres)
                 {
@@ -116,23 +119,34 @@ namespace EliteDangerousCore.StarScan2
 
                     foreach (var x in bodiesunderthisbary)
                     {
-                        $"StarScan Node {x.BodyNode.Name()} contains baryname {barycent.BodyNode.Name()} move to {barycent.BodyNode.Name()}".DO();
+                      //  $"StarScan Node {x.BodyNode.Name()} contains baryname {barycent.BodyNode.Name()} move to {barycent.BodyNode.Name()}".DO();
                         movelist.Add(new Tuple<NodePtr, NodePtr>(x, barycent));
                     }
                 }
 
+                // everything we give a name depth of 0 to must be at the top..
+
+                foreach( var np in topnode.Bodies())
+                {
+                    if( np.BodyNode.GetNameDepth() == 0 && np.Parent != topnode)
+                    {
+                        movelist.Add(new Tuple<NodePtr, NodePtr>(np, topnode));
+                    }
+                }
+                
                 NodePtr.Move(movelist);
 
                 foreach (var barycent in barycentres)
                 {
                     NodePtr.Sort(barycent, true);
-
                 }
+
+                topnode.ChildBodies.RemoveAll(y => y.ChildBodies.Count == 0 && y.BodyNode.IsBarycentre);
 
                 //nodelist.Dump("", 0);
             }
 
-            return nodelist;
+            return topnode;
         }
 
         public long ScanValue(bool includewebvalue)

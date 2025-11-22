@@ -29,6 +29,7 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.Scan)]
     public partial class JournalScan : JournalEntry, IStarScan, IBodyFeature
     {
+        // we can have scans of Planets, Stars, AsteroidClusters and Planetary rings as of Nov 25
         [PropertyNameAttribute("Is it a star")]
         public bool IsStar { get { return StarType != null; } }
         [PropertyNameAttribute("Is it a belt cluster body")]
