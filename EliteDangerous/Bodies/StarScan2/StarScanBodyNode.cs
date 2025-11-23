@@ -18,14 +18,13 @@ using QuickJSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace EliteDangerousCore.StarScan2
 {
     [System.Diagnostics.DebuggerDisplay("`{OwnName}` : `{CanonicalName}` : {BodyID} : {BodyType} : CB{ChildBodies.Count} Cx{CodexEntries?.Count} FSS{FSSSignalList?.Count} Org{Organics?.Count} Gen {Genuses?.Count} Sig {Signals?.Count}")]
     public partial class BodyNode
     {
-        #region Public
+        #region Public Interface
 
         // own name (1,2,A,Mitterand Hollow) for scan names, or computed Barycentre name BC of A,B,C
         public string OwnName { get; private set; }     
@@ -68,12 +67,13 @@ namespace EliteDangerousCore.StarScan2
         public StarPlanetRing BeltData { get; private set; } = null;        // type BeltClusterBody or PlanetaryRing
         public double? SMA { get { return Scan != null ? Scan.nSemiMajorAxis : BarycentreScan != null ? BarycentreScan.SemiMajorAxis : BeltData != null ? BeltData.InnerRad : default(double?); } }
 
-        public List<JournalCodexEntry> CodexEntries { get; private set; } = null;
         public List<JournalSAASignalsFound.SAASignal> Signals { get; private set; } = null;
         public List<JournalSAASignalsFound.SAAGenus> Genuses { get; private set; } = null;
-        public List<FSSSignal> FSSSignalList { get; private set; } = null;       // only for SystemBodies in StarScan.SystemNode
         public List<JournalScanOrganic> Organics { get; internal set; } = null;
         public List<IBodyFeature> Features { get; internal set; } = null;        // for SystemBodies, the orbiting stations, for other bodies touchdown/settlements
+        public List<JournalCodexEntry> CodexEntries { get; private set; } = null;
+
+        public List<FSSSignal> FSSSignalList { get; private set; } = null;       // only for SystemBodies in StarScan.SystemNode
         public bool IsMapped { get; private set; }                   // recorded here since the scan data can be replaced by a better version later.
         public bool WasMappedEfficiently { get; private set; }
 
@@ -479,13 +479,15 @@ namespace EliteDangerousCore.StarScan2
         public const int BodyIDMarkerForAutoBody = -2;
         public const int BodyIDMarkerForAutoBodyBeltCluster = -3;
 
-        public BodyNode(string ownname, BodyDefinitions.BodyType bc, int bid, BodyNode parent, SystemNode sys)
+        public BodyNode(string ownname, BodyDefinitions.BodyType bc, int bid, BodyNode parent, SystemNode sys, string cn = null)
         {
             OwnName = ownname;
             BodyType = bc;
             BodyID = bid;
             Parent = parent;
             SystemNode = sys;
+            CanonicalName = cn;
+            CalculateCNDepth();
         }
 
         public BodyNode(string ownname, JournalScan sc, int bid, BodyNode parent, SystemNode sys) :
@@ -528,52 +530,48 @@ namespace EliteDangerousCore.StarScan2
             
             Scan = sc;                                  // copy across
 
-            Scan.Signals = Signals;                     // we point Signals and Genuses at the nodes signals and genuses for the Search system.  
-            Scan.Genuses = Genuses;                     // If these change by AddFSSBodySignals / AddFSSBodySignals they will change in sympathy
-            Scan.CodexEntries = CodexEntries;                 // set codex as well
+            Scan.Signals = Signals;                     // we point Signals, Organics, Genuses, CodexEntries in Scan to us
+            Scan.Genuses = Genuses;                     // If they are null at this point the New will set them to the scan - bug found
+            Scan.Organics = Organics;                   // If these change by this code they will change in sympathy
+            Scan.SurfaceFeatures = Features;    
+            Scan.CodexEntries = CodexEntries;           
+            
             Scan.SetMapped(IsMapped, WasMappedEfficiently);  // and we set the mapped/was mapped flag to the nodes setting set up by AddSAAScanComplete
                 
             CanonicalName = Scan.BodyName;              // set the Canonical name given by frontier, and recalc the canonical name depth
             CalculateCNDepth();
         }
 
-        public void SetCanonicalName(string s)
+        public void ResetCanonicalName(string s)
         {
             CanonicalName = s;
             CalculateCNDepth();
         }
 
-        // We calculate for Eahlstan the name depth of the object if its a standard naming part!
-        private void CalculateCNDepth()
+        // Extract the part names from the standard naming, recognised composite text parts like belt clusters
+        static public List<string> ExtractPartsFromStandardName(string subname)
         {
-            bool stdname = CanonicalName.StartsWith(SystemNode.System.Name);
+            var partnames = new List<string>();
 
-            if (stdname)
+            StringParser sp = new StringParser(subname);
+
+            while (!sp.IsEOL)
             {
-                if (CanonicalName == SystemNode.System.Name)        // if same name, its a level 0 star
+                // in Scans, its called A Belt
+                // other places its called A Belt Cluster
+                // split both off, checking belt cluster first in case we preprocessed it
+
+                if (sp.IsStringMoveOn(out string found, StringComparison.InvariantCultureIgnoreCase, true, "A Belt Cluster", "B Belt Cluster", "A Belt", "B Belt", "A Ring", "B Ring", "C Ring", "D Ring"))
                 {
-                    CanonicalNameDepth = 0;
+                    partnames.Add(found);
                 }
-                else 
+                else
                 {
-                    // split, into A 1 a etc, accounting for belt cluster ring combined names
-                    var parts = SystemNode.ExtractParts(CanonicalName.Substring(SystemNode.System.Name.Length));
-
-
-                    if (parts.Count > 0)        // protect against nonsense
-                    {
-                        // if it starts with a star or barycentre, reduce count by 1
-
-                        bool isstar = parts[0].Length == 1 && char.IsLetter(parts[0][0]);       // see StarScanSystemNodeImpt: GetOrMakeStandardBodyNodeFromScanWithoutParents
-                        bool isbarycentre = parts[0].Length>1 && parts[0].HasAll(x => char.IsUpper(x));
-
-                        if ( isstar || isbarycentre)
-                            CanonicalNameDepth = parts.Count - 1;
-                        else
-                            CanonicalNameDepth = parts.Count;
-                    }
+                    partnames.Add(sp.NextWord());
                 }
             }
+
+            return partnames;
         }
 
         public void SetScan(JournalScanBaryCentre sc)
@@ -584,16 +582,14 @@ namespace EliteDangerousCore.StarScan2
         {
             BeltData = sc;
         }
-        public void AddCodex(JournalCodexEntry sc)
-        {
-            if ( CodexEntries == null)
-                CodexEntries = new List<JournalCodexEntry>();
-            CodexEntries.Add(sc);
-        }
         public void AddSignals(List<JournalSAASignalsFound.SAASignal> sc)
         {
             if (Signals == null)
-                Signals = new List<JournalSAASignalsFound.SAASignal>();    
+            {
+                Signals = new List<JournalSAASignalsFound.SAASignal>();
+                if (Scan != null)               // if we have a scan, we need to point the scan node to the Signals so it can see them
+                    Scan.Signals = Signals;
+            }
 
             foreach (var g in sc)
             {
@@ -605,7 +601,11 @@ namespace EliteDangerousCore.StarScan2
         public void AddGenuses(List<JournalSAASignalsFound.SAAGenus> sc)
         {
             if (Genuses == null)
+            {
                 Genuses = new List<JournalSAASignalsFound.SAAGenus>();
+                if (Scan != null)               // if we have a scan, we need to point the scan node to the item so it can see them
+                    Scan.Genuses = Genuses;
+            }
 
             foreach (var g in sc)
             {
@@ -614,6 +614,66 @@ namespace EliteDangerousCore.StarScan2
                     Genuses.Add(g);
             }
         }
+
+        public void AddScanOrganics(JournalScanOrganic organic)
+        {
+            if (Organics == null)
+            {
+                Organics = new List<JournalScanOrganic>();
+                if (Scan != null)               // if we have a scan, we need to point the scan node to the item so it can see them
+                    Scan.Organics = Organics;
+            }
+
+            Organics.Add(organic);
+        }
+
+        public bool AddFeatureOnlyIfNew(IBodyFeature sc)
+        {
+            if (Features == null)
+            {
+                Features = new List<IBodyFeature>();
+                if (Scan != null)
+                    Scan.SurfaceFeatures = Features;
+            }
+
+            var prev = Features.Find(x => x.Name == sc.Name);        // have we got it before?, if so, don't replace
+            if (prev == null)
+            {
+                Features.Add(sc);
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public void AddDocking(JournalDocked sc)
+        {
+            if (Features == null)
+            {
+                Features = new List<IBodyFeature>();
+                if (Scan != null)
+                    Scan.SurfaceFeatures = Features;
+            }
+
+            int index = Features.FindIndex(x => x.Name == sc.Name);
+
+            if (index >= 0) // got before, replace as we want a newer docking to be in there
+                Features[index] = sc;
+            else
+                Features.Add(sc);
+        }
+
+        public void AddCodex(JournalCodexEntry sc)
+        {
+            if (CodexEntries == null)
+            {
+                CodexEntries = new List<JournalCodexEntry>();
+                if (Scan != null)     // if we have a scan, we need to point the scan node to the Signals so it can see them
+                    Scan.CodexEntries = CodexEntries;
+            }
+            CodexEntries.Add(sc);
+        }
+
 
         public void AddFSSSignals(List<FSSSignal> signals)
         {
@@ -627,45 +687,9 @@ namespace EliteDangerousCore.StarScan2
                     FSSSignalList.Add(s);
             }
         }
-        public void AddScanOrganics(JournalScanOrganic organic)
-        {
-            if ( Organics == null )
-                Organics = new List<JournalScanOrganic>();
-
-            Organics.Add(organic);
-        }
-
-        public bool AddFeatureOnlyIfNew(IBodyFeature sc)
-        {
-            if (Features == null)
-                Features = new List<IBodyFeature>();
-
-            var prev = Features.Find(x => x.Name == sc.Name);        // have we got it before?, if so, don't replace
-            if (prev == null)
-            {
-                Features.Add(sc);
-                return true;
-            }
-            else
-                return false;
-        }
-
         public void SetMapped(bool efficently)
         {
             IsMapped = true; WasMappedEfficiently = efficently;
-        }
-
-        public void AddDocking(JournalDocked sc)
-        {
-            if (Features == null)
-                Features = new List<IBodyFeature>();
-
-            int index = Features.FindIndex(x => x.Name == sc.Name);
-
-            if (index >= 0) // got before, replace as we want a newer docking to be in there
-                Features[index]  = sc;
-            else
-                Features.Add(sc);
         }
 
         // tell me what the sort order of this vs the right one is.
@@ -789,7 +813,46 @@ namespace EliteDangerousCore.StarScan2
             foreach (var x in Features.EmptyIfNull())
                 System.Diagnostics.Trace.WriteLine($"{pad}F:{x.BodyType} `{x.Name_Localised ?? x.Name}` {x.BodyID}");
         }
-    }
 
-    #endregion
+        #endregion
+
+        #region Helpers
+
+        // We calculate for Eahlstan the name depth of the object if its a standard naming part!
+        private void CalculateCNDepth()
+        {
+            CanonicalNameDepth = -1;
+
+            bool stdname = CanonicalName?.StartsWith(SystemNode.System.Name) ?? false;          // if Canonical name == null, its false as well
+
+            if (stdname)
+            {
+                if (CanonicalName == SystemNode.System.Name)        // if same name, its a level 0 star
+                {
+                    CanonicalNameDepth = 0;
+                }
+                else
+                {
+                    // split, into A 1 a etc, accounting for belt cluster ring combined names
+                    var parts = ExtractPartsFromStandardName(CanonicalName.Substring(SystemNode.System.Name.Length));
+
+
+                    if (parts.Count > 0)        // protect against nonsense
+                    {
+                        // if it starts with a star or barycentre, reduce count by 1
+
+                        bool isstar = parts[0].Length == 1 && char.IsLetter(parts[0][0]);       // see StarScanSystemNodeImpt: GetOrMakeStandardBodyNodeFromScanWithoutParents
+                        bool isbarycentre = parts[0].Length > 1 && parts[0].HasAll(x => char.IsUpper(x));
+
+                        if (isstar || isbarycentre)
+                            CanonicalNameDepth = parts.Count - 1;
+                        else
+                            CanonicalNameDepth = parts.Count;
+                    }
+                }
+            }
+        }
+
+        #endregion
+    }
 }

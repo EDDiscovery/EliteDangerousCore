@@ -247,36 +247,36 @@ namespace EliteDangerousCore.StarScan2
                     if (bn.Features != null)
                     {
                         tooltip.AppendFormat("Surface features".Tx());
-                        tooltip.Append(":");
-                        JournalScan.DisplaySurfaceFeatures(tooltip, bn.Features, 4, false, Environment.NewLine);
+                        tooltip.Append(": " + Environment.NewLine);
+                        JournalScan.DisplaySurfaceFeatures(tooltip, bn.Features, 4, true, Environment.NewLine);
                         tooltip.AppendCR();
                     }
                     if (bn.Signals != null)
                     {
                         tooltip.AppendFormat("Signals".Tx());
-                        tooltip.Append(":");
-                        JournalSAASignalsFound.SignalList(tooltip, bn.Signals, 4, false, false, Environment.NewLine);
+                        tooltip.Append(": " + Environment.NewLine);
+                        JournalSAASignalsFound.SignalList(tooltip, bn.Signals, 4, true, false, Environment.NewLine);
                         tooltip.AppendCR();
                     }
                     if (bn.Genuses != null)
                     {
                         tooltip.AppendFormat("Genuses".Tx());
-                        tooltip.Append(":");
-                        JournalSAASignalsFound.GenusList(tooltip, bn.Genuses, 4, false, false, Environment.NewLine);
+                        tooltip.Append(": " + Environment.NewLine);
+                        JournalSAASignalsFound.GenusList(tooltip, bn.Genuses, 4, true, false, Environment.NewLine);
                         tooltip.AppendCR();
                     }
                     if (bn.Organics != null)
                     {
                         tooltip.AppendFormat("Organics".Tx());
-                        tooltip.Append(":");
-                        JournalScanOrganic.OrganicList(tooltip, bn.Organics, 4, false, Environment.NewLine);
+                        tooltip.Append(": " + Environment.NewLine);
+                        JournalScanOrganic.OrganicList(tooltip, bn.Organics, 4, true, Environment.NewLine);
                         tooltip.AppendCR();
                     }
                     if (bn.CodexEntries != null)
                     {
                         tooltip.Append("Codexs".Tx());
-                        tooltip.Append(": ");
-                        JournalCodexEntry.CodexList(tooltip, bn.CodexEntries, 4, false, Environment.NewLine);
+                        tooltip.Append(": " + Environment.NewLine);
+                        JournalCodexEntry.CodexList(tooltip, bn.CodexEntries, 4, true, Environment.NewLine);
                         tooltip.AppendCR();
                     }
 
@@ -402,6 +402,7 @@ namespace EliteDangerousCore.StarScan2
 
                         if (bn.Signals != null)
                         {
+                            System.Diagnostics.Debug.WriteLine($"{bn.Name()} signals {bn.Signals.Count}");
                             Image img = BodyDefinitions.GetImageSignals();
                             bool containsgeo = JournalSAASignalsFound.ContainsGeo(bn.Signals);
                             if (JournalSAASignalsFound.ContainsBio(bn.Signals))

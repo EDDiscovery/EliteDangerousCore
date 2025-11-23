@@ -1130,8 +1130,8 @@ namespace EliteDangerousCore.JournalEvents
         public double? Latitude { get => null; set { } }
         public double? Longitude { get => null; set { } }
         public bool HasLatLong => false;
-        public string Name => null;
-        public string Name_Localised => null;
+        public string Name => StationName;
+        public string Name_Localised => StationName_Localised;
 
         public override string SummaryName(ISystem sys)
         {

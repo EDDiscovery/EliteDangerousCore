@@ -53,6 +53,8 @@ namespace EliteDangerousCore
     {
         DateTime EventTimeUTC { get; }
         JournalTypeEnum EventTypeID { get; }
+        string EventTypeStr { get; }
+        string SummaryName(ISystem sys);
         string BodyName { get; }
         int? BodyID { get; }
         BodyDefinitions.BodyType BodyType { get; }

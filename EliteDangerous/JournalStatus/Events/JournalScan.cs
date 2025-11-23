@@ -330,6 +330,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Is scan web sourced?")]
         public bool IsWebSourced { get { return DataSource != SystemSource.FromJournal; } }
 
+
         [PropertyNameAttribute("Signal information")]
         public List<JournalSAASignalsFound.SAASignal> Signals { get; set; }             // NOTE Augmented by StarScan - may be null
         [JsonIgnore]
@@ -375,6 +376,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Count of uncategorised signals")]
         public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
 
+
         [PropertyNameAttribute("Genuses information")]
         public List<JournalSAASignalsFound.SAAGenus> Genuses { get; set; }          // NOTE Augmented by StarScan - may be null
         [PropertyNameAttribute("Any Genuses")]
@@ -383,8 +385,9 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Count of all genuses")]
         public int CountGenusus { get { return Genuses?.Count ?? 0; } }
 
+
         [PropertyNameAttribute("Organics information")]
-        public List<JournalScanOrganic> Organics { get; set; }  // can be null if nothing for this node, else a list of organics. Set up by StarScan
+        public List<JournalScanOrganic> Organics { get; set; }  // NOTE Augmented by StarScan - may be null
         [JsonIgnore]
         [PropertyNameAttribute("Any organic scans")]
         public bool ContainsOrganicsScans { get { return (Organics?.Count ?? 0) > 0; } }
@@ -398,7 +401,9 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Are there organics that haven't been analysed")]
         public bool UnanalysedBiosPresent { get { return CountOrganicsScansAnalysed != CountBioSignals; } }
         [PropertyNameAttribute("Surface features information")]
-        public List<IBodyFeature> SurfaceFeatures { get; set; }// can be null if nothing for this node, else a list of body features. Set up by StarScan
+
+
+        public List<IBodyFeature> SurfaceFeatures { get; set; } // NOTE Augmented by StarScan - may be null
         [PropertyNameAttribute("Count of surface featurss")]
         public int CountSurfaceFeatures { get { return SurfaceFeatures?.Count ?? 0; } }
 

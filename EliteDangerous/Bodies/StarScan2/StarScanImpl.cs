@@ -108,7 +108,10 @@ namespace EliteDangerousCore.StarScan2
                     //$"Add Body {sc.EventTypeStr} {sc.EventTimeUTC} : {sc.BodyType} `{sc.BodyName}` {sc.BodyID} ".DO();
                     lock (sn)
                     {
-                        sn.GetOrMakeDiscretePlanet(ownname, sc.BodyID.Value, sys.Name);
+                        if (stdname)
+                            sn.GetOrMakeStandardNamePlanet(sc.BodyName, ownname, sc.BodyID, sys.Name);
+                        else
+                            sn.GetOrMakeDiscretePlanet(ownname, sc.BodyID, sys.Name);
                     }
                 }
                 else if (sc.BodyType == BodyDefinitions.BodyType.Star)          // SupercruiseExit/Location
@@ -220,7 +223,7 @@ namespace EliteDangerousCore.StarScan2
                         else
                         {
                             //     $"Add Scan NonStd format {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}".DO();
-                            sn.GetOrMakeNonStandardBodyFromScanWithParents(sc, ownname, scansystem.Name);
+                            sn.GetOrMakeNonStandardBodyFromScanWithParents(sc, scansystem.Name);
                         }
                     }
                     else
@@ -244,7 +247,7 @@ namespace EliteDangerousCore.StarScan2
 
                             if (sc.BodyType == BodyDefinitions.BodyType.Planet)     // only adding planets here
                             {
-                                BodyNode bn = sn.GetOrMakeDiscretePlanet(ownname, sc.BodyID, scansystem.Name);
+                                BodyNode bn = stdname ? sn.GetOrMakeStandardNamePlanet(sc.BodyName, ownname, sc.BodyID, scansystem.Name) : sn.GetOrMakeDiscretePlanet(ownname, sc.BodyID, scansystem.Name);
                                 bn.SetScan(sc);
                             }
                         }

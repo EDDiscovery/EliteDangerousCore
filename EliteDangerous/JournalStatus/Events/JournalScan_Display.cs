@@ -116,6 +116,42 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
+            if (SurfaceFeatures != null)
+            {
+                sb.Append("Surface features".Tx());
+                sb.Append(": " + Environment.NewLine);
+                DisplaySurfaceFeatures(sb, SurfaceFeatures, 4, true, Environment.NewLine);
+                sb.AppendCR();
+            }
+            if (Signals != null)
+            {
+                sb.Append("Signals".Tx());
+                sb.Append(": " + Environment.NewLine);
+                JournalSAASignalsFound.SignalList(sb, Signals, 4, true, false, Environment.NewLine);
+                sb.AppendCR();
+            }
+            if (Genuses != null)
+            {
+                sb.Append("Genuses".Tx());
+                sb.Append(": " + Environment.NewLine);
+                JournalSAASignalsFound.GenusList(sb, Genuses, 4, true, false, Environment.NewLine);
+                sb.AppendCR();
+            }
+            if (Organics != null)
+            {
+                sb.Append("Organics".Tx());
+                sb.Append(": " + Environment.NewLine);
+                JournalScanOrganic.OrganicList(sb, Organics, 4, true, Environment.NewLine);
+                sb.AppendCR();
+            }
+            if (CodexEntries != null)
+            {
+                sb.Append("Codexs".Tx());
+                sb.Append(": " + Environment.NewLine);
+                JournalCodexEntry.CodexList(sb, CodexEntries, 4, true, Environment.NewLine);
+            }
+
+
             if (nSurfaceTemperature.HasValue)
             {
                 sb.AppendFormat("Surface Temp: {0}K".Tx(), nSurfaceTemperature.Value.ToString("N0"));
@@ -300,40 +336,6 @@ namespace EliteDangerousCore.JournalEvents
                 sb.AppendCR();
             }
 
-            if (SurfaceFeatures != null)
-            {
-                sb.Append("Surface features".Tx());
-                sb.Append(": ");
-                DisplaySurfaceFeatures(sb, SurfaceFeatures, 4, false, Environment.NewLine);
-                sb.AppendCR();
-            }
-            if (Signals != null)
-            {
-                sb.Append("Signals".Tx());
-                sb.Append(": ");
-                JournalSAASignalsFound.SignalList(sb, Signals, 4, false, false, Environment.NewLine);
-                sb.AppendCR();
-            }
-            if (Genuses != null)
-            {
-                sb.Append("Genuses".Tx());
-                sb.Append(": ");
-                JournalSAASignalsFound.GenusList(sb, Genuses, 4, false, false, Environment.NewLine);
-                sb.AppendCR();
-            }
-            if (Organics != null)
-            {
-                sb.Append("Organics".Tx());
-                sb.Append(": ");
-                JournalScanOrganic.OrganicList(sb, Organics, 4, false, Environment.NewLine);
-                sb.AppendCR();
-            }
-            if (CodexEntries != null)
-            {
-                sb.Append("Codexs".Tx());
-                sb.Append(": ");
-                JournalCodexEntry.CodexList(sb, CodexEntries, 4, false, Environment.NewLine);
-            }
 
             if (ScanType.HasChars())        // early entries did not
             {
@@ -558,7 +560,7 @@ namespace EliteDangerousCore.JournalEvents
                 if (indent > 0 && (index > 0 || indentfirst))       // if indent, and its either not first or allowed to indent first
                     sb.Append(inds);
 
-                sb.Append($"{EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(ibf.EventTimeUTC)} : {ibf.Name_Localised ?? ibf.Name} {ibf.Latitude:0.####}, {ibf.Longitude:0.####}");
+                sb.Append($"{EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(ibf.EventTimeUTC)} : {ibf.Name_Localised ?? ibf.Name ?? ibf.EventTypeStr} {ibf.Latitude:0.####}, {ibf.Longitude:0.####}");
 
                 if (index++ < list.Count - 1)     // if another to go, separ
                     sb.Append(separ);
