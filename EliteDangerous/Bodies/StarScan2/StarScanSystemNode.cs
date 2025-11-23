@@ -97,7 +97,7 @@ namespace EliteDangerousCore.StarScan2
             return NodePtr.BodiesNoBarycentres(systemBodies, null);
         }
 
-        // GO down tree and remove all barycentres, return NodePtr tree
+        // GO down tree and remove all barycentres, fix other stuff, return NodePtr tree
         public NodePtr BodiesSimplified(bool simplify = true)
         {
             NodePtr topnode = NodePtr.Bodies(TopLevelBody(), null);
@@ -142,6 +142,8 @@ namespace EliteDangerousCore.StarScan2
                 }
 
                 topnode.ChildBodies.RemoveAll(y => y.ChildBodies.Count == 0 && y.BodyNode.IsBarycentre);
+
+                NodePtr.Sort(topnode, true);
 
                 //nodelist.Dump("", 0);
             }
