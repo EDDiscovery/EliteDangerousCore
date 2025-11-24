@@ -68,7 +68,6 @@ namespace EliteDangerousCore.StarScan2
             control.Item1.Signal();
         }
 
-
         // read in a set of JSON lines exported from say HistoryList.cs:294 and run it thru starscan 2 and the display system
 
         public static void ProcessAllFromDirectory(string dir, string filepattern, Action<StarScan,List<Tuple<int,HistoryEntry>>> persystemaction = null)

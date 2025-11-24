@@ -29,9 +29,9 @@ namespace EliteDangerousCore
             Planet,             // a Planet or moon
             Star,               // a top level star, or a substar
             Barycentre,         // a barycentre ('Null' type in parents array)
-            StellarRing,        // a belt cluster, 'A Belt Cluster' name (`Ring` type in the parents array) - has AsteroidCluster in StarScan underneath it
+            StellarRing,        // a belt cluster, 'A Belt Cluster' name (`Ring` type in the parents array) - has AsteroidCluster underneath it
             AsteroidCluster,    // a body under the belt cluster
-            PlanetaryRing,      // planet ring.  Called "A Ring" or "B Ring", from a journalscan of the ring (Scan will be set), or from the journalscan of a planet with its ring structure broken into children, BeltData is set.
+            PlanetaryRing,      // a planet's ring.  Called "A Ring" or "B Ring", from a journalscan of the ring (Scan will be set), or from the journalscan of a planet with its ring structure broken into children, BeltData is set.
 
             // Frontier Bodytype only
             Station,    // at a station

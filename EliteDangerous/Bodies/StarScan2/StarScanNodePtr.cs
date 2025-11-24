@@ -12,16 +12,13 @@
  * governing permissions and limitations under the License.
  */
 
-using BaseUtils;
-using EliteDangerousCore.JournalEvents;
-using QuickJSON;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace EliteDangerousCore.StarScan2
 {
+    // NodePtrs allow creation of trees without effecting the BodyNode tree, and then manipulation of the tree before presentation
+
     [System.Diagnostics.DebuggerDisplay("`{BodyNode.OwnName}` `{BodyNode.CanonicalName}` {BodyNode.BodyID} {BodyNode.BodyType} : CB{BodyNode.ChildBodies.Count} Cx{BodyNode.CodexEntries?.Count} FSS{BodyNode.FSSSignalList?.Count} Org{BodyNode.Organics?.Count} Gen {BodyNode.Genuses?.Count}")]
     public class NodePtr
     {

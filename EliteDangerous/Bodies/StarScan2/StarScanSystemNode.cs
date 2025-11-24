@@ -17,8 +17,6 @@ using EliteDangerousCore.JournalEvents;
 using QuickJSON;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Linq;
 
 namespace EliteDangerousCore.StarScan2
@@ -32,25 +30,23 @@ namespace EliteDangerousCore.StarScan2
         public int? FSSTotalBodies { get; private set; }         // if we have FSSDiscoveryScan, this will be set
         public int? FSSTotalNonBodies { get; private set; }     // if we have FSSDiscoveryScan, this will be set
         public bool OldScansPresent { get; set; }               // if set, we have old scans
-        public int BarycentreScans { get; set; }                 // accumulated barycentre scans, used for tracking barycentre storage
-
+        public int BarycentreScans { get; set; }                 // accumulated barycentre scans, used for debug purposes to know we have stored a barycentre Scan in the tree
         public uint BodyGeneration { get; private set; } = 0;        // changed after each body change
-        public uint SignalGeneration { get; private set; } = 0;        // changed after each codex/signal/fss/genus change
+        public uint SignalGeneration { get; private set; } = 0;        // changed after each codex/signal/fss/genus/etc change
         public List<FSSSignal> FSSSignals { get { return systemBodies.FSSSignalList; } }     // may be null, held in top level body
         public List<JournalCodexEntry> CodexEntries { get { return systemBodies.CodexEntries; } }     // System Codex entries, may be null, held in top level body. Codex entries can also be against a body
         public List<IBodyFeature> OrbitingStations { get { return systemBodies.Features; } }     // System orbiting stations, may be null, held in top level body.
-        public BodyNode TopLevelBody() { return systemBodies.ChildBodies.Count == 1 && systemBodies.ChildBodies[0].BodyType == BodyDefinitions.BodyType.Barycentre ? systemBodies.ChildBodies[0] : systemBodies; }
+
+        // top level, whole tree
         public BodyNode TopLevel() { return systemBodies; }
+
+        // Top level body list, ignoring the central barycentre
+        public BodyNode TopLevelBody() { return systemBodies.ChildBodies.Count == 1 && systemBodies.ChildBodies[0].BodyType == BodyDefinitions.BodyType.Barycentre ? systemBodies.ChildBodies[0] : systemBodies; }
 
         public SystemNode(ISystem sys)
         {
             System = sys;
             Clear();
-        }
-
-        public void RenamedSystem(ISystem sys)
-        {
-            System = sys;
         }
 
         public void Clear()
@@ -61,6 +57,8 @@ namespace EliteDangerousCore.StarScan2
             BodyGeneration = 0;
             $"Clear Scans of {System.SystemAddress} {System.Name}".DO(debugid);
         }
+
+        // Find body, various ways
 
         public BodyNode FindBody(int id)
         {
@@ -91,13 +89,13 @@ namespace EliteDangerousCore.StarScan2
             return systemBodies.Bodies(find, stoponfind);
         }
 
-        // GO down tree and remove all barycentres, return NodePtr tree
+        // Go down tree and remove all barycentres, return NodePtr tree
         public NodePtr BodiesNoBarycentres()
         {
             return NodePtr.BodiesNoBarycentres(systemBodies, null);
         }
 
-        // GO down tree and remove all barycentres, fix other stuff, return NodePtr tree
+        // Go down tree and remove all barycentres, fix other stuff, return NodePtr tree
         public NodePtr BodiesSimplified(bool simplify = true)
         {
             NodePtr topnode = NodePtr.Bodies(TopLevelBody(), null);
@@ -165,10 +163,6 @@ namespace EliteDangerousCore.StarScan2
             return s;
         }
 
-        public int StarPlanetsScanned()      // This corresponds to FSSDiscoveryScan
-        {
-            return systemBodies.StarPlanetsScanned();
-        }
         public int StarPlanetsScanned(bool includewebbodies)        // includewebbodies gives same total as above, false means only include ones which we have scanned
         {
             return systemBodies.StarPlanetsScanned(includewebbodies);
@@ -178,7 +172,6 @@ namespace EliteDangerousCore.StarScan2
         {
             return systemBodies.StarsScanned();
         }
-
         public IEnumerable<BodyNode> GetStarsScanned()
         {
             return systemBodies.GetStarsScanned();
@@ -235,7 +228,17 @@ namespace EliteDangerousCore.StarScan2
             BodyNode.ToJSON(json, TopLevel());
             return json;
         }
- 
+
+        #endregion
+
+        #region Implementation
+
+        // called if detected a system name change
+        public void RenamedSystem(ISystem sys)
+        {
+            System = sys;
+        }
+
         #endregion
     }
 }

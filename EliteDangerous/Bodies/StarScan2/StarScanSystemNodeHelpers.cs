@@ -182,18 +182,20 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
+        // Sort tree
         private static void Sort(BodyNode cur)
         {
            // $"Sort tree for {cur.OwnName}:{cur.BodyID}".DO();
             cur.ChildBodies.Sort(delegate (BodyNode left, BodyNode right) { return left.CompareTo(right,false); });
-        //    cur.DumpTree(2);
         }
 
+        #endregion
+
+        #region System Node variables
 
         private Dictionary<int, BodyNode> bodybyid;
         private BodyNode systemBodies;
-
-        const string debugid = "StarScan";
+        private const string debugid = "StarScan";
 
         #endregion
 
@@ -207,7 +209,7 @@ namespace EliteDangerousCore.StarScan2
         }
 
         [System.Diagnostics.Conditional("DEBUG")]
-      //  [System.Diagnostics.DebuggerHidden]
+        [System.Diagnostics.DebuggerHidden]
         public void CheckTree()
         { 
             int totalbodieswithids = 0;

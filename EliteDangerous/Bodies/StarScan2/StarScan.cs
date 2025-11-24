@@ -151,7 +151,7 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        // Find system, primary thru address, if not by name
+        // Find system thru address
         public bool TryGetSystemNode(long addr, out SystemNode sn)
         {
             lock (masterlock)
@@ -160,7 +160,7 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        // Find system, primary thru address, if not by name
+        // Find system thru name
         public bool TryGetSystemNode(string name, out SystemNode sn)
         {
             lock (masterlock)
@@ -169,7 +169,7 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        // try and find the address, if we know it, else null
+        // try and find the ISystem of a name
         public ISystem GetISystem(string sysname)
         {
             lock (masterlock)
@@ -178,6 +178,7 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
+        // try and find the ISystem of an address
         public ISystem GetISystem(long addr)
         {
             lock (masterlock)
@@ -186,6 +187,7 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
+        // try and find the system thru address, using StarScan, and if not using the SystemCache/DB/Lookup
         public ISystem GetISystemWithCache(long addr, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
             lock (masterlock)
@@ -245,8 +247,7 @@ namespace EliteDangerousCore.StarScan2
                 }
 
 #if DEBUG
-
-                // Check barycentre info is properly stored in modern scans
+                // Check barycentre info is properly stored in modern scans- we may be missing them in the journal so its not a fatal error, just something to note in log
 
                 foreach( var kvp in systemNodesByAddress)
                 {
@@ -262,9 +263,6 @@ namespace EliteDangerousCore.StarScan2
                                     {
                                         string s = $"StarScan Barycentre not set in scan for {bn.Scan.EventTimeUTC} {bn.Scan.BodyName} {bn.Scan.BodyID} bid {bn.BodyID} {bn.Scan.ParentList()} {p.BodyID} {p.Type} {EDCommander.Current.Name}";
                                         System.Diagnostics.Trace.WriteLine(s);
-
-                                        //FileHelpers.TryAppendToFile(@"c:\code\baryerrors.txt", s + Environment.NewLine, makefile: true);
-                                        // (false).Assert(s);
                                     }
                                 }
                             }

@@ -60,7 +60,7 @@
     <Compile Include="FrontierData\Enumerations\BodyParents.cs" />
     <Compile Include="FrontierData\Enumerations\Rings.cs" />
     <Compile Include="Bodies\HabZones\HabZones.cs" />
-    <Compile Include="Bodies\StarScan2\StarScanImpl.cs" />
+    <Compile Include="Bodies\StarScan2\StarScanEvents.cs" />
     <Compile Include="Bodies\StarScan2\StarScanDebug.cs" />
     <Compile Include="Bodies\StarScan2\StarScanSystemNodeHelpers.cs" />
     <Compile Include="Bodies\StarScan2\StarScanSystemNode.cs" />

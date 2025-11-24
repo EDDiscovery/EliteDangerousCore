@@ -12,16 +12,14 @@
  * governing permissions and limitations under the License.
  */
 
+using BaseUtils;
 using EliteDangerousCore.JournalEvents;
-using ExtendedControls;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using BaseUtils;
-using ExtendedControls.ImageElement;
 
 namespace EliteDangerousCore.StarScan2
 {

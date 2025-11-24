@@ -129,10 +129,9 @@ namespace EliteDangerousCore.StarScan2
                          sc.BodyType == BodyDefinitions.BodyType.AsteroidCluster ||  // Supercruise Exit/Location
                          sc.BodyType == BodyDefinitions.BodyType.Barycentre)     // Supercruise Exit/Location
                 {
-                    // ignore it - nothing we can add here as we don't have parent tree
                     lock (sn)
                     {
-                        sn.AddBodyIDToBody(sc);
+                        sn.AddBodyIDToBody(sc);     // try and use this body id and assign it to an existing entry
                     }
                 }
                 else if ( sc.BodyType == BodyDefinitions.BodyType.SmallBody)        // super rare on comets, { "timestamp":"2020-10-03T15:31:57Z", "event":"SupercruiseExit", "StarSystem":"Liu Beserka", "SystemAddress":18265019196857, "Body":"Liu Beserka Comet 2", "BodyID":7, "BodyType":"SmallBody" }

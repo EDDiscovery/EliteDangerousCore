@@ -48,7 +48,9 @@ namespace EliteDangerousCore.StarScan2
 
         public int BodyID { get; private set; }
 
-        public BodyDefinitions.BodyType BodyType { get; private set; }  // we share the bodytype with frontier, even though their names are a bit wierd
+        // we share the bodytype with frontier, even though their names are a bit wierd
+        // the root node is called System and is held in StarScanSystemNode
+        public BodyDefinitions.BodyType BodyType { get; private set; }  
 
         public bool IsStarOrPlanet { get { return BodyType == BodyDefinitions.BodyType.Star || BodyType == BodyDefinitions.BodyType.Planet; } }
         public bool IsPlanetOrMoon { get { return BodyType == BodyDefinitions.BodyType.Planet; } }
@@ -57,27 +59,29 @@ namespace EliteDangerousCore.StarScan2
 
         public bool WebCreatedNode { get { return Scan?.DataSource == SystemSource.FromEDSM || Scan?.DataSource == SystemSource.FromSpansh; } }
 
+        // list of child bodies, sorted
         public List<BodyNode> ChildBodies { get; private set; } = new List<BodyNode>();
+        public BodyNode Parent { get; private set; } = null;            // null if bodytype=system, else always set
+        public SystemNode SystemNode { get; private set; } = null;      // null if bodytype=system, else always set
 
-        public BodyNode Parent { get; private set; } = null;            // null if SystemNode.SystemBodies, else always set
-        public SystemNode SystemNode { get; private set; } = null;      // null if SystemNode.SystemBodies, else always set
-
-        public JournalScan Scan { get; private set; } = null;                           // type Star/PlanetMoon/BeltClusterBody
+        // Data on body
+        public JournalScan Scan { get; private set; } = null;                           // type Star/Planet/AsteroidCluster/PlanetaryRing
         public JournalScanBaryCentre BarycentreScan { get; private set; } = null;       // type Barycentre
-        public StarPlanetRing BeltData { get; private set; } = null;        // type BeltClusterBody or PlanetaryRing
+        public StarPlanetRing BeltData { get; private set; } = null;                    // type AsteroidCluster or PlanetaryRing
+
         public double? SMA { get { return Scan != null ? Scan.nSemiMajorAxis : BarycentreScan != null ? BarycentreScan.SemiMajorAxis : BeltData != null ? BeltData.InnerRad : default(double?); } }
 
         public List<JournalSAASignalsFound.SAASignal> Signals { get; private set; } = null;
         public List<JournalSAASignalsFound.SAAGenus> Genuses { get; private set; } = null;
         public List<JournalScanOrganic> Organics { get; internal set; } = null;
-        public List<IBodyFeature> Features { get; internal set; } = null;        // for SystemBodies, the orbiting stations, for other bodies touchdown/settlements
+        public List<IBodyFeature> Features { get; internal set; } = null;               // for SystemBodies the orbiting stations, for other bodies touchdown/settlements/docking etc
         public List<JournalCodexEntry> CodexEntries { get; private set; } = null;
-
-        public List<FSSSignal> FSSSignalList { get; private set; } = null;       // only for SystemBodies in StarScan.SystemNode
-        public bool IsMapped { get; private set; }                   // recorded here since the scan data can be replaced by a better version later.
+        public List<FSSSignal> FSSSignalList { get; private set; } = null;              // only for SystemBodies in StarScan.SystemNode
+        
+        public bool IsMapped { get; private set; }                                      // recorded here since the scan data can be replaced by a better version later.
         public bool WasMappedEfficiently { get; private set; }
 
-        // is this type at the top level of the tree. false if one above
+        // is this type at the top level of the tree, no others of this type above. false if one above
         public bool IsTopLevel(BodyDefinitions.BodyType bc)
         {
             BodyNode bn = Parent;
@@ -110,6 +114,19 @@ namespace EliteDangerousCore.StarScan2
             return null;
         }
 
+        // give a body, return its star above which has a scan, N times.
+        public BodyNode GetStarAboveScanned(int times)
+        {
+            var bn = GetStarAboveWithScan(times);
+            if (bn == null && times == 0)
+            {
+                var star = SystemNode.GetStarsScanned().FirstOrDefault();        // did not find above, so just get the stats with scan list, and pick the first
+                return star;
+            }
+            else
+                return bn;
+        }
+
         // calculate name depth of body
         public int GetNameDepth()
         {
@@ -131,7 +148,7 @@ namespace EliteDangerousCore.StarScan2
             return depth;
         }
 
-        // find body parent above
+        // find body parent above ignoring BCs
         public BodyNode GetParentIgnoreBC()
         {
             BodyNode bn = Parent;
@@ -161,7 +178,7 @@ namespace EliteDangerousCore.StarScan2
             return bnl;
         }
 
-        // accumulate all sibling bodies excluding barycentres, and if a barycentre is a sibling, returns its child bodies
+        // accumulate all child bodies excluding barycentres, and if a barycentre is a sibling, returns its child bodies
         public List<BodyNode> GetChildBodiesNoBarycentres()
         {
             List<BodyNode> bnl = new List<BodyNode>(ChildBodies.Where(x => !x.IsBarycentre));
@@ -177,19 +194,7 @@ namespace EliteDangerousCore.StarScan2
             return bnl;
         }
 
-        // give a body, return its star above which has a scan, N times.
-        public BodyNode GetStarAboveScanned(int times)
-        {
-            var bn = GetStarAboveWithScan(times);
-            if (bn == null && times == 0)
-            {
-                var star = SystemNode.GetStarsScanned().FirstOrDefault();        // did not find above, so just get the stats with scan list, and pick the first
-                return star;
-            }
-            else
-                return bn;
-        }
-
+ 
         // filternames are either the Star/Planet IDs, or its the BodyType for other ones
         public bool IsBodyTypeInFilter(string[] filternames, bool checkchildren)
         {
@@ -301,14 +306,13 @@ namespace EliteDangerousCore.StarScan2
         public IBodyFeature FindSurfaceFeatureNear(double? latitude, double? longitude, double delta = 0.1)
         {
             if (latitude.HasValue && longitude.HasValue && Features != null)
-                return Features.Find(x => x.HasLatLong &&
-                                                       System.Math.Abs(x.Latitude.Value - latitude.Value) < delta && System.Math.Abs(x.Longitude.Value - longitude.Value) < delta);
+                return Features.Find(x => x.HasLatLong && System.Math.Abs(x.Latitude.Value - latitude.Value) < delta && System.Math.Abs(x.Longitude.Value - longitude.Value) < delta);
             else
                 return null;
         }
 
 
-        // return all child bodies down the tree, or return all bodies matching a Predicate, or just return first match
+        // return all child bodies down the tree, or return all bodies matching a Predicate, with either all or just return first match
         public IEnumerable<BodyNode> Bodies(Predicate<BodyNode> find = null, bool stoponfind = false)
         {
             foreach (BodyNode sn in ChildBodies)        // check children
@@ -336,7 +340,7 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        // Using info here, and the indicated journal scan node, return suryeyor info on this node
+        // Return the surveyor info line from this node
         public string SurveyorInfoLine(ISystem sys, bool showsignals, bool showorganics, bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showTemp, bool showRings,
                         int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
         {

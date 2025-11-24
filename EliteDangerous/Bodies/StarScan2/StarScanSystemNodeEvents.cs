@@ -14,10 +14,7 @@
 
 using BaseUtils;
 using EliteDangerousCore.JournalEvents;
-using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Linq;
 
 namespace EliteDangerousCore.StarScan2
@@ -453,6 +450,7 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //for IBodyNames without parent lists, marked as star
         //try and find it by ID or fdname, if not, make something
         public BodyNode GetOrMakeDiscreteStar(string fdname, int? bid, string systemname)
@@ -491,9 +489,8 @@ namespace EliteDangerousCore.StarScan2
             return starbody;
         }
 
-
-
-        // assign, we def need a previous entry to be able to assign.  Null if not found
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // baryscan. we def need a previous entry to be able to assign.  Null if not found
         public BodyNode AddBaryCentreScan(JournalScanBaryCentre sc)
         {
             BodyNode prevassigned = FindBody(sc.BodyID);
@@ -530,6 +527,7 @@ namespace EliteDangerousCore.StarScan2
         }
 
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Add a codex entry to best place, if body id, find it, else system bodies
         public BodyNode AddCodexEntryToSystem(JournalCodexEntry sc)
         {
@@ -553,7 +551,8 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        // We have a body id, lets try and see if we can assign it to a bodyid less body!
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // From a Location, We have a body id, lets try and see if we can assign it to a bodyid less body!
         public BodyNode AddBodyIDToBody(IBodyFeature sc)
         {
             if (sc.BodyID.HasValue)
@@ -579,6 +578,7 @@ namespace EliteDangerousCore.StarScan2
             return null;
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Always has a BodyID
         public BodyNode AddFSSBodySignalsToBody(JournalFSSBodySignals sc)
         {
@@ -593,7 +593,8 @@ namespace EliteDangerousCore.StarScan2
                 return null;
         }
 
-        // SAASignalsFound are on bodies or planetary rings
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // SAASignalsFound are on planets or planetary rings
         // will return null if we can't find it
         // Note that we could have had a ring added by a body with the ring scan info, which does not have bodyid in the field, so body id is reset if found using name
         public BodyNode AddSAASignalsFound(JournalSAASignalsFound sc)
@@ -624,7 +625,8 @@ namespace EliteDangerousCore.StarScan2
         }
 
 
-        // ScanComplete are on bodies or planetary rings
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // ScanComplete are on planets or planetary rings
         // will return null if we can't find it
         // Note that we could have had a ring added by a body with the ring scan info, which does not have bodyid in the field, so body id is reset if found using name
         public BodyNode AddSAAScanComplete(JournalSAAScanComplete sc)
@@ -660,9 +662,8 @@ namespace EliteDangerousCore.StarScan2
             return null;
         }
 
-//        tbd system bodies should show up on scan display
-
-        // Location or Supercruise Exi, Station is only given to orbiting stations, and we don't know where they are, so system bodies
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Location or Supercruise Exit, Station is only given to orbiting stations, and we don't know where they are, so system bodies
         public BodyNode AddStation( IBodyFeature loc)
         {
             (loc.BodyType == BodyDefinitions.BodyType.Station).Assert("Error called add station with another type");
@@ -687,6 +688,8 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Set FSSDiscoveryScan counters
         public void SetFSSDiscoveryScan(int? bodycount, int? nonbodycount)
         {
             $"Add FSS Discovery Scan Count {bodycount} {nonbodycount} to System in `{System.Name}`:{System.SystemAddress}".DO(debugid);
@@ -695,6 +698,8 @@ namespace EliteDangerousCore.StarScan2
             BodyGeneration++;
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Set FSS Signals discovered into system bodies
         public void AddFSSSignalsDiscovered(List<FSSSignal> signals)
         {
             $"Add FSS Signals {signals.Count} to SystemBodies in `{System.Name}`:{System.SystemAddress}".DO(debugid);
@@ -702,6 +707,8 @@ namespace EliteDangerousCore.StarScan2
             SignalGeneration++;
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Add an organic scan to the body if known
         public BodyNode AddScanOrganicToBody(JournalScanOrganic sc)
         {
             BodyNode body = FindBody(sc.Body);
@@ -715,7 +722,8 @@ namespace EliteDangerousCore.StarScan2
                 return null;
         }
 
-        // Touchdown, approachsettlement
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Add Touchdown, approachsettlement to the body if known
         public BodyNode AddSurfaceFeatureToBody(IBodyFeature sc)
         {
             BodyNode body = FindBody(sc.BodyID.Value);
@@ -729,6 +737,7 @@ namespace EliteDangerousCore.StarScan2
                 return null;
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // If its a settlement, we have augmented the docking event with BodyID/BodyName. Else we don't have body id
         public BodyNode AddDockingToBody(JournalDocked sc)
         {

@@ -13,7 +13,6 @@
  */
 
 using BaseUtils;
-using ExtendedControls;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -25,7 +24,6 @@ namespace EliteDangerousCore.StarScan2
     public partial class SystemDisplay
     {
         #region Public 
-
         public bool ShowWebBodies { get; set; }
         public bool ShowMoons { get; set; } = true;
         public bool ShowOverlays { get; set; } = true;
