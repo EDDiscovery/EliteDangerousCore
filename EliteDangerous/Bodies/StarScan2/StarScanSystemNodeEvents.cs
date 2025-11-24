@@ -139,6 +139,8 @@ namespace EliteDangerousCore.StarScan2
 
             body.SetScan(sc);
 
+            AssignBaryCentreScanToScans(sc);                            // any barycentres see if it has a baryscan and assign to sc
+
             Sort(cur);          // resort parent
 
             ProcessBeltsOrRings(body, sc, sc.BodyName,systemname);     // finally any belts/cluster or planetary rings need adding
@@ -233,7 +235,9 @@ namespace EliteDangerousCore.StarScan2
             }
 
             body.SetScan(sc); // update or add scan BEFORE sorting - we may have added it before without a scan
-            
+
+            AssignBaryCentreScanToScans(sc);                            // any barycentres see if it has a baryscan and assign to sc
+
             Sort(cur);          // then sort with into
 
             ProcessBeltsOrRings(body, sc, sc.BodyName, systemname);
@@ -493,7 +497,10 @@ namespace EliteDangerousCore.StarScan2
         // baryscan. we def need a previous entry to be able to assign.  Null if not found
         public BodyNode AddBaryCentreScan(JournalScanBaryCentre sc)
         {
+            // search to see if we have made the barycentre node already..
+
             BodyNode prevassigned = FindBody(sc.BodyID);
+            
             if (prevassigned != null)
             {
                 prevassigned.SetScan(sc);
@@ -502,30 +509,14 @@ namespace EliteDangerousCore.StarScan2
                 BodyGeneration++;
                 BarycentreScans++;
 
+                AssignBaryCentreScanToScans(sc);
+
                 // all entries where JSA BodyID occurs in parents list, lets add the barycentre info to it for use by queries
-                var scannodelist = Bodies(x => x.Scan?.Parents != null && x.Scan.Parents.FindIndex(y => y.BodyID == sc.BodyID) >= 0).ToList();
-
-                if ( scannodelist.Count == 0)
-                    $"   .. No scans found with this barycentre in bodies list in {System.Name}".DO(debugid);
-
-                foreach (var scannode in scannodelist)
-                {
-                    for (int i = 0; i < scannode.Scan.Parents.Count; i++)   // look thru the list, and assign at the correct level
-                    {
-                        if (scannode.Scan.Parents[i].BodyID == sc.BodyID)
-                        {
-                            $"   .. Assign barycentre to scan node {scannode.Scan.BodyName}".DO(debugid);
-                            scannode.Scan.Parents[i].Barycentre = sc;
-                        }
-                    }
-                }
-
                 return prevassigned;
             }
             else
                 return null;
         }
-
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Add a codex entry to best place, if body id, find it, else system bodies

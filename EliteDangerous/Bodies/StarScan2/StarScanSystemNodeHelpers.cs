@@ -182,6 +182,44 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
+        // check the scan parents, and if they are a barycentre, see if we have the node and if so set up its barycentre ptr.
+        // We may not have it yet due to sequencing (baryscan onto pending, scan in but node not assigned, pending calls AssignBaryCentreScanToScans(JournalScanBaryCentre sc) which then fills it in)
+        private void AssignBaryCentreScanToScans(JournalScan sc)
+        {
+            foreach(var x in sc.Parents.EmptyIfNull())
+            {
+                if (x.IsBarycentre && bodybyid.TryGetValue(x.BodyID, out BodyNode bn) && bn.BarycentreScan != null)
+                {
+                    x.Barycentre = bn.BarycentreScan;
+                    $"   .. Scan parent is a barycentre {x.BodyID} and we can assign a bary scan to it".DO(debugid);
+                }
+            }
+        }
+
+        // given a baryscentre scan, find all current scans which reference it and update the scan structure with this scan
+        private void AssignBaryCentreScanToScans(JournalScanBaryCentre sc)
+        {
+            // find all other bodies with a parent list which mention this barycentre
+            var scannodelist = Bodies(x => x.Scan?.Parents != null && x.Scan.Parents.FindIndex(y => y.BodyID == sc.BodyID) >= 0).ToList();
+
+            if (scannodelist.Count == 0)
+            {
+                $"   .. No scans found with this barycentre in bodies list in {System.Name}".DO(debugid);
+            }
+
+            foreach (var scannode in scannodelist)
+            {
+                for (int i = 0; i < scannode.Scan.Parents.Count; i++)   // look thru the list, and assign at the correct level
+                {
+                    if (scannode.Scan.Parents[i].BodyID == sc.BodyID)
+                    {
+                        $"   .. Assign barycentre to scan node {scannode.Scan.BodyName}".DO(debugid);
+                        scannode.Scan.Parents[i].Barycentre = sc;
+                    }
+                }
+            }
+        }
+
         // Sort tree
         private static void Sort(BodyNode cur)
         {
