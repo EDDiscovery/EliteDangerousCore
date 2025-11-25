@@ -402,7 +402,7 @@ namespace EliteDangerousCore.StarScan2
 
                         if (bn.Signals != null)
                         {
-                            System.Diagnostics.Debug.WriteLine($"{bn.Name()} signals {bn.Signals.Count}");
+                            //System.Diagnostics.Debug.WriteLine($"{bn.Name()} signals {bn.Signals.Count}");
                             Image img = BodyDefinitions.GetImageSignals();
                             bool containsgeo = JournalSAASignalsFound.ContainsGeo(bn.Signals);
                             if (JournalSAASignalsFound.ContainsBio(bn.Signals))
@@ -452,9 +452,7 @@ namespace EliteDangerousCore.StarScan2
                     if (notext)
                         nodelabels = null;
 
-                    var il = CreateImageAndLabel(bmp, bmp.Size, nodelabels, tooltip.ToString(), rightclickmenubody
-                        //,backwash: Color.FromArgb(128, 0, 0, 255)
-                        );
+                    var il = CreateImageAndLabel(bmp, bmp.Size, nodelabels, tooltip.ToString(), rightclickmenubody );
 
                     if (bn.Scan?.HasMaterials == true && ShowMaterials)
                     {

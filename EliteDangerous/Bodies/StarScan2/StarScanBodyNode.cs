@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace EliteDangerousCore.StarScan2
 {
-    [System.Diagnostics.DebuggerDisplay("`{OwnName}` : `{CanonicalName}` : {BodyID} : {BodyType} : CB{ChildBodies.Count} Cx{CodexEntries?.Count} FSS{FSSSignalList?.Count} Org{Organics?.Count} Gen {Genuses?.Count} Sig {Signals?.Count}")]
+    [System.Diagnostics.DebuggerDisplay("{BodyID} `{OwnName}` `{CanonicalName}` {BodyType} : CB{ChildBodies.Count} Cx{CodexEntries?.Count} FSS{FSSSignalList?.Count} Org{Organics?.Count} Gen {Genuses?.Count} Sig {Signals?.Count}")]
     public partial class BodyNode
     {
         #region Public Interface
@@ -50,8 +50,9 @@ namespace EliteDangerousCore.StarScan2
 
         // we share the bodytype with frontier, even though their names are a bit wierd
         // the root node is called System and is held in StarScanSystemNode
-        public BodyDefinitions.BodyType BodyType { get; private set; }  
+        public BodyDefinitions.BodyType BodyType { get; private set; }
 
+        public bool IsStar { get { return BodyType == BodyDefinitions.BodyType.Star; } }
         public bool IsStarOrPlanet { get { return BodyType == BodyDefinitions.BodyType.Star || BodyType == BodyDefinitions.BodyType.Planet; } }
         public bool IsPlanetOrMoon { get { return BodyType == BodyDefinitions.BodyType.Planet; } }
         public bool IsBarycentre { get { return BodyType == BodyDefinitions.BodyType.Barycentre; } }

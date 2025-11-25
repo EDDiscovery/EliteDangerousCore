@@ -40,7 +40,7 @@ namespace EliteDangerousCore.StarScan2
                 habzone = dist >= habzonestartls && dist <= habzoneendls;
             }
 
-
+            // drawn at 0,0
             var imagelist = DrawNode(node.BodyNode, historicmats, curmats,
                                         planetsize, rnd, ContextMenuStripBodies, ContextMenuStripMats,
                                         //backwash: Color.FromArgb(64, 0, 255, 0));
@@ -90,7 +90,6 @@ namespace EliteDangerousCore.StarScan2
                         }
 
                         var moonimages = DrawTree(moon, subbodypos, sublevel, 0, 0, historicmats, curmats, bodytypefilters, rnd, rightclickplanet, rightclickmats);
-                        imagelist.AddRange(moonimages);        // add moon images in to produce the overall W and H of this tree
 
                         // barycentres moons move right
                         if (node.BodyNode.IsBarycentre)
@@ -102,9 +101,11 @@ namespace EliteDangerousCore.StarScan2
                             // else move down, clearing over the image pixels.  
                             subbodypos = new Point(subbodypos.X, moonimages.Max.Y + moonspacery + moonsize.Height);
                         }
+
+                        imagelist.AddRange(moonimages);        // add moon images in to produce the overall W and H of this tree
                     }
 
-                   // System.Diagnostics.Debug.WriteLine($"{pad} {displaylevel} END Draw moons of {node.BodyNode.Name()}");
+                    // System.Diagnostics.Debug.WriteLine($"{pad} {displaylevel} END Draw moons of {node.BodyNode.Name()}");
                 }
 
             }
@@ -116,7 +117,8 @@ namespace EliteDangerousCore.StarScan2
 
             imagelist.Shift(parentpos);         // now shift into parent pos requested
 
-          //  System.Diagnostics.Debug.WriteLine($"{pad} {displaylevel} EndNode {node.BodyNode.Name()} at {parentpos} Sz {imagelist.Size}  {imagelist.Min} .. {imagelist.Max} ");
+            // System.Diagnostics.Debug.WriteLine($"{pad} {displaylevel} EndNode {node.BodyNode.Name()} at {parentpos} Sz {imagelist.Size}  {imagelist.Min} .. {imagelist.Max} ");
+
             return imagelist;
         }
 

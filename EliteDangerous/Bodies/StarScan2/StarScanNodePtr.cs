@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using BaseUtils;
 using System;
 using System.Collections.Generic;
 
@@ -19,7 +20,7 @@ namespace EliteDangerousCore.StarScan2
 {
     // NodePtrs allow creation of trees without effecting the BodyNode tree, and then manipulation of the tree before presentation
 
-    [System.Diagnostics.DebuggerDisplay("`{BodyNode.OwnName}` `{BodyNode.CanonicalName}` {BodyNode.BodyID} {BodyNode.BodyType} : CB{BodyNode.ChildBodies.Count} Cx{BodyNode.CodexEntries?.Count} FSS{BodyNode.FSSSignalList?.Count} Org{BodyNode.Organics?.Count} Gen {BodyNode.Genuses?.Count}")]
+    [System.Diagnostics.DebuggerDisplay("{BodyNode.BodyID} `{BodyNode.OwnName}` `{BodyNode.CanonicalName}` {BodyNode.BodyType} : CB{BodyNode.ChildBodies.Count} Cx{BodyNode.CodexEntries?.Count} FSS{BodyNode.FSSSignalList?.Count} Org{BodyNode.Organics?.Count} Gen {BodyNode.Genuses?.Count}")]
     public class NodePtr
     {
         public BodyNode BodyNode { get; set; }          // pointer to node
@@ -109,8 +110,10 @@ namespace EliteDangerousCore.StarScan2
         {
             foreach( var kvp in movelist)
             {
+              //  $"Move `{kvp.Item1.BodyNode.Name()}`:{kvp.Item1.BodyNode.BodyID} -> `{kvp.Item2.BodyNode.Name()}`:{kvp.Item2.BodyNode.BodyID}".DO();
                 kvp.Item2.ChildBodies.Add(kvp.Item1);
                 kvp.Item1.Parent.ChildBodies.Remove(kvp.Item1);
+                Sort(kvp.Item2,true);
             }
         }
 

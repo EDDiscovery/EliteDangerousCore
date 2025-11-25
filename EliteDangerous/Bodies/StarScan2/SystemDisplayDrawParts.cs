@@ -213,6 +213,9 @@ namespace EliteDangerousCore.StarScan2
                                                              Color? backwash = null
                                                             )
         {
+
+   //TextBackColor = Color.FromArgb(128, 64, 0, 0); backwash = TextBackColor;
+
             var il = new ExtendedControls.ImageElement.List();
 
             Rectangle imagebox = new Rectangle(-imagesize.Width / 2, -imagesize.Height / 2, imagesize.Width, imagesize.Height);     // centre on 0,0
@@ -255,6 +258,7 @@ namespace EliteDangerousCore.StarScan2
                         using (var frmt = new StringFormat() { Alignment = StringAlignment.Center })
                         {
                             labie.TextCentreAutoSize(new Point(0, vpos), new Size(0, 1000), label.Substring(labcut), f, TextForeColor, TextBackColor, frmt: frmt);
+                        //    System.Diagnostics.Debug.WriteLine($"ImageAndLabel `{label}` at {vpos} label size {labie.Size}");
                         }
 
                         labie.Name = ie.Name;
@@ -263,11 +267,9 @@ namespace EliteDangerousCore.StarScan2
                         vpos += labie.Bounds.Height;
                     }
                 }
-
-                // System.Diagnostics.Debug.WriteLine($"..Create Image and Label {leftmiddle} {size} {labels[0]} shiftright {laboff}");
             }
 
-            //System.Diagnostics.Debug.WriteLine(".. Max " + max);
+           // System.Diagnostics.Debug.WriteLine($"ImageAndLabel `{labels[0]}` Finals image {il.Size} {il.Min} .. {il.Max}");
 
             return il;
         }

@@ -451,7 +451,7 @@ namespace EliteDangerousCore.StarScan2
         {
             if (sys.SystemAddress != null )
             {
-                System.Diagnostics.Debug.WriteLine($"StarScan got call to add EDD Destination Selected {sc.TargetName_Localised ?? sc.TargetName}");
+                //System.Diagnostics.Debug.WriteLine($"StarScan got call to add EDD Destination Selected {sc.TargetName_Localised ?? sc.TargetName}");
             }
         }
 

@@ -108,38 +108,46 @@ namespace EliteDangerousCore.StarScan2
 
                 // merge all crazy frontier barycentres with the same names together
 
-                var barycentres = topnode.ChildBodies.Where(x => x.BodyNode.IsBarycentre).ToList();
-                var orbitingbodies = topnode.ChildBodies.Where(x => x.BodyNode.IsBodyOrbitingStar).ToList();       // these should not be directly under the primary barycentre
+                // distinct barycentre names
+                var barycentres = topnode.ChildBodies.Where(x => x.BodyNode.IsBarycentre).GroupBy(y=>y.BodyNode.OwnName).ToList();
 
-                foreach (var barycent in barycentres)
+                // every distinct bary name..
+                foreach( var bary in barycentres )
                 {
-                    var bodiesunderthisbary = orbitingbodies.Where(x => x.BodyNode.CanonicalName?.Contains(" " + barycent.BodyNode.OwnName) ?? false).ToList();
-
-                    foreach (var x in bodiesunderthisbary)
+                    int i = 0;
+                    foreach (var node in bary)      // every bary node with this bary.Key name
                     {
-                      //  $"StarScan Node {x.BodyNode.Name()} contains baryname {barycent.BodyNode.Name()} move to {barycent.BodyNode.Name()}".DO();
-                        movelist.Add(new Tuple<NodePtr, NodePtr>(x, barycent));
+                        if (i++ > 0)                // second on gets merged into first
+                        {
+                            foreach(var child in node.ChildBodies)
+                                movelist.Add(new Tuple<NodePtr, NodePtr>(child, bary.First()));
+                        }
                     }
+
+                    // any orbiting bodies with the bary name.. frontier stuff is so weird
+
+                    var orbitingbodies = topnode.ChildBodies.Where(x => x.BodyNode.IsBodyOrbitingStar && x.BodyNode.CanonicalNameNoSystemName()?.StartsWith(bary.Key) == true).ToList();       // these should not be directly under the primary barycentre
+
+                    foreach( var node in orbitingbodies)
+                        movelist.Add(new Tuple<NodePtr, NodePtr>(node, bary.First()));
                 }
 
-                // everything we give a name depth of 0 to must be at the top..
+                NodePtr.Move(movelist);
+                movelist.Clear();
 
-                foreach( var np in topnode.Bodies())
+                // everything we give a name depth of 0 and is a star to must be at the top..
+
+                foreach (var np in topnode.Bodies())
                 {
-                    if( np.BodyNode.GetNameDepth() == 0 && np.Parent != topnode)
+                    if (np.BodyNode.IsStar && np.BodyNode.GetNameDepth() == 0 && np.Parent != topnode)
                     {
                         movelist.Add(new Tuple<NodePtr, NodePtr>(np, topnode));
                     }
                 }
-                
+
                 NodePtr.Move(movelist);
 
-                foreach (var barycent in barycentres)
-                {
-                    NodePtr.Sort(barycent, true);
-                }
-
-                topnode.ChildBodies.RemoveAll(y => y.ChildBodies.Count == 0 && y.BodyNode.IsBarycentre);
+                topnode.ChildBodies.RemoveAll(y => y.ChildBodies.Count == 0 && y.BodyNode.IsBarycentre);        // empty barycentre clean up
 
                 NodePtr.Sort(topnode, true);
 
