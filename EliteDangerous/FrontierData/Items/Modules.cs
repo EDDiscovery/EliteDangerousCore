@@ -506,6 +506,7 @@ namespace EliteDangerousCore
             [OrderedPropertyNameAttribute(121, "")] public double? SCOAccelerationRate { get; set; }            // 'scoacc' factor
             [OrderedPropertyNameAttribute(122, "")] public double? SCOHeatGenerationRate { get; set; }          // 'scoheat' factor
             [OrderedPropertyNameAttribute(123, "")] public double? SCOControlInterference { get; set; }         // 'scoconint' factor
+            [OrderedPropertyNameAttribute(124, "t/s")] public double? SCOFuelDuringOvercharge { get; set; }     // 'scofuel' use during overdrive
 
             [OrderedPropertyNameAttribute(200, "%")] public double? HullStrengthBonus { get; set; }             // 'hullbst' % bonus over the ship information armour value
             [OrderedPropertyNameAttribute(201, "%")] public double? HullReinforcement { get; set; }             // 'hullrnf' units
@@ -539,6 +540,8 @@ namespace EliteDangerousCore
             [OrderedPropertyNameAttribute(260, "")] public double? BreachDamage { get; set; }                   // 'brcdmg'
             [OrderedPropertyNameAttribute(261, "%/FullI")] public double? BreachMin { get; set; }               // 'minbrc'
             [OrderedPropertyNameAttribute(262, "%/ZeroI")] public double? BreachMax { get; set; }               // 'maxbrc'
+            [OrderedPropertyNameAttribute(263, "%")] public double? BreachModuleDamageAfterBreach { get; set; } // 'brcpct'
+
 
             [OrderedPropertyNameAttribute(280, "deg")] public double? Jitter { get; set; }                      // 'jitter'
 

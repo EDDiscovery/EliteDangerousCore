@@ -154,7 +154,9 @@ namespace EliteDangerousCore
                         UIEvent fsdcharging = uievents.Find(x => x is UIFsdCharging);
                         if (fsdcharging != null)
                         {
-                            ((UIFsdCharging)fsdcharging).FsdCharging = CheckFlags(curflags2, StatusFlags2ReportedInOtherMessages.FSDHyperdriveCharging);
+                            var f = (UIFsdCharging)fsdcharging;
+                            f.FsdCharging = CheckFlags(curflags2, StatusFlags2ReportedInOtherMessages.FSDHyperdriveCharging);
+                            f.SupercruiseCharging = f.Charging && !f.FsdCharging;
                         }
 
                         fireoverall = true;
