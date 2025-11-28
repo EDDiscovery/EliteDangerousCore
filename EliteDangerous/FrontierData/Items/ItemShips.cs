@@ -158,6 +158,7 @@ namespace EliteDangerousCore
                 ["Asp"] = "Lakon",
                 ["Asp_Scout"] = "Lakon",
                 ["BelugaLiner"] = "Saud Kruger",
+                ["Explorer_NX"] = "Zorgon Peterson",
                 ["CobraMkIII"] = "Faulcon DeLacy",
                 ["CobraMkIV"] = "Faulcon DeLacy",
                 ["CobraMkV"] = "Faulcon DeLacy",
@@ -1283,7 +1284,7 @@ namespace EliteDangerousCore
             FDID = "Corsair",
             HullMass = 265F,
             Name = "Corsair",
-            Speed = 280,
+            Speed = 280,            // EDSY 27/11/25
             Boost = 355,
             HullCost = 76884160,
             Class = 2,
@@ -1294,13 +1295,14 @@ namespace EliteDangerousCore
             FuelReserve = 0.41,
             HeatCap = 230,
             HeatDispMin = 1.62,
-            HeatDispMax = 52.05,
+            HeatDispMax = 52,
             FuelCost = 50,
             Hardness = 65,
             Crew = 2,
             FwdAcc = 0,
             RevAcc = 0,
             LatAcc = 0
+
         };
 
         private static ShipProperties lakonminer = new ShipProperties()
@@ -1308,21 +1310,21 @@ namespace EliteDangerousCore
             FDID = "LakonMiner",
             HullMass = 514F, // from loadout
             Name = "Type-11 Prospector",
-            Speed = 280,            
-            Boost = 355,
-            HullCost = 67861850,    // from loadout, rest is tbd
+            Speed = 270,        // EDSY 27/11/25
+            Boost = 365,
+            HullCost = 66346710,        
             Class = 2,
-            Shields = 235,
-            Armour = 270,
-            MinThrust = 65,
-            BoostCost = 19,
-            FuelReserve = 0.41,
-            HeatCap = 230,
-            HeatDispMin = 1.62,
-            HeatDispMax = 52.05,
+            Shields = 275,
+            Armour = 350,
+            MinThrust = 70.5,
+            BoostCost = 25,
+            FuelReserve = 0.6,
+            HeatCap = 0,
+            HeatDispMin = 0,
+            HeatDispMax = 0,
             FuelCost = 50,
-            Hardness = 65,
-            Crew = 2,
+            Hardness = 58,
+            Crew = 3,
             FwdAcc = 0,
             RevAcc = 0,
             LatAcc = 0
@@ -1330,27 +1332,52 @@ namespace EliteDangerousCore
 
         private static ShipProperties panthermkii = new ShipProperties()
         {
-            FDID = "Panthermkii",           
+            FDID = "Panthermkii",
             HullMass = 1200F,   // game
             Name = "Panther Clipper Mk II",
-            Speed = 182,    // game
-            Boost = 252,    // game
-            HullCost = 301348585,   // game
-            Class = 3,  
-            Shields = 245,  // game
-            Armour = 1116,      // game
-            MinThrust = 30.769, //rest not synced
+            Speed = 180, // EDSY 27/11/25
+            Boost = 250,
+            HullCost = 286906165,
+            Class = 3,
+            Shields = 350,
+            Armour = 620,
+            MinThrust = 33.3,
             BoostCost = 19,
-            FuelReserve = 0.77,
-            HeatCap = 289,
-            HeatDispMin = 3.1,
-            HeatDispMax = 48.35,
+            FuelReserve = 1.11,
+            HeatCap = 329,
+            HeatDispMin = 0,
+            HeatDispMax = 62.5,
             FuelCost = 50,
-            Hardness = 65,
-            Crew = 4,       // game
-            FwdAcc = 20.03,
-            RevAcc = 10.11,
-            LatAcc = 10.03
+            Hardness = 70,
+            Crew = 4,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0
+        };
+
+        private static ShipProperties casianexplorer = new ShipProperties()
+        {
+            FDID = "Explorer_nx",
+            HullMass = 950F,   // game
+            Name = "Caspian Explorer",
+            Speed = 223,    // game
+            Boost = 308,    // game
+            HullCost = 33333333,   // ????
+            Class = 3,
+            Shields = 201,  // game
+            Armour = 621,      // game
+            MinThrust = 30.769, //????
+            BoostCost = 19, //????
+            FuelReserve = 0.77, //????
+            HeatCap = 289, //????
+            HeatDispMin = 3.1, //????
+            HeatDispMax = 48.35, //????
+            FuelCost = 50, //????
+            Hardness = 65,//????
+            Crew = 4,       //????
+            FwdAcc = 20.03, //????
+            RevAcc = 10.11,//????
+            LatAcc = 10.03//????
         };
 
         // MUST be after ship definitions else they are not constructed
@@ -1374,6 +1401,7 @@ namespace EliteDangerousCore
             { "diamondback",diamondback},
             { "dolphin",dolphin},
             { "eagle",eagle},
+            { "explorer_nx",casianexplorer},
             { "federation_dropship_mkii", federation_dropship_mkii},
             { "federation_corvette",federation_corvette},
             { "federation_dropship",federation_dropship},

@@ -508,7 +508,7 @@ namespace EliteDangerousCore
             [OrderedPropertyNameAttribute(87, "%")] public double? OptimalRotationModifier { get; set; }
             [OrderedPropertyNameAttribute(88, "%")] public double? MaximumRotationModifier { get; set; }
 
-            [OrderedPropertyNameAttribute(90, "")] public double? ThermalLoad { get; set; }                    // 'engheat' 'fsdheat' 'thmload'
+            [OrderedPropertyNameAttribute(90, "/s")] public double? ThermalLoad { get; set; }                    // 'engheat' 'fsdheat' 'thmload'
 
             [OrderedPropertyNameAttribute(100, "t")] public double? MaxFuelPerJump { get; set; }                // 'maxfuel'
             [OrderedPropertyNameAttribute(101, "")] public double? PowerConstant { get; set; }                  // 'fuelpower' Number
@@ -1077,6 +1077,11 @@ namespace EliteDangerousCore
                 { "lakonminer_armour_mirrored", new ShipModule(-1,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Type-11 Prospector Mirrored Surface Composite"){ Mass=63, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
                 { "lakonminer_armour_reactive", new ShipModule(-1,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Type-11 Prospector Reactive Surface Composite"){ Mass=63, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
+                { "explorer_nx_armour_grade1", new ShipModule(-1,ShipModule.ModuleTypes.LightweightAlloy,"Caspian Explorer Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
+                { "explorer_nx_armour_grade2", new ShipModule(-1,ShipModule.ModuleTypes.ReinforcedAlloy,"Caspian Explorer Reinforced Alloy"){ Mass=26, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
+                { "explorer_nx_armour_grade3", new ShipModule(-1,ShipModule.ModuleTypes.MilitaryGradeComposite,"Caspian Explorer Military Grade Composite"){ Mass=53, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
+                { "explorer_nx_armour_mirrored", new ShipModule(-1,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Caspian Explorer Mirrored Surface Composite"){ Mass=53, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
+                { "explorer_nx_armour_reactive", new ShipModule(-1,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Caspian Explorer Reactive Surface Composite"){ Mass=53, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
                 // Auto field maint
 
@@ -1518,6 +1523,7 @@ namespace EliteDangerousCore
                 { "int_hyperdrive_overcharge_size7_class4", new ShipModule(129030599,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive (SCO) Class 7 Rating B"){ Cost = 20515650, Class = 7, Rating = "B", Mass = 80, Integrity = 150, PowerDraw = 0.75, BootTime = 10, OptMass = 2700, ThermalLoad = 43, MaxFuelPerJump = 12.8, LinearConstant = 12, PowerConstant = 2.75, SCOSpeedIncrease = 46, SCOAccelerationRate = 0.04, SCOHeatGenerationRate = 130, SCOControlInterference = 0.64, SCOFuelDuringOvercharge = 3.08 } },
                 { "int_hyperdrive_overcharge_size7_class5", new ShipModule(129030600,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive (SCO) Class 7 Rating A"){ Cost = 61546940, Class = 7, Rating = "A", Mass = 80, Integrity = 164, PowerDraw = 0.9, BootTime = 10, OptMass = 3000, ThermalLoad = 43, MaxFuelPerJump = 13.1, LinearConstant = 13, PowerConstant = 2.75, SCOSpeedIncrease = 58, SCOAccelerationRate = 0.04, SCOHeatGenerationRate = 123.5, SCOControlInterference = 0.62, SCOFuelDuringOvercharge = 4.11 } },
 
+                { "int_hyperdrive_overcharge_size8_class5_overchargebooster_mkii", new ShipModule(-1,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive (SCO) Class 8 Rating A"){ Cost = 61546940, Class = 8, Rating = "A", Mass = 160, Integrity = 188, PowerDraw = 1.05, BootTime = 10, OptMass = 4670, ThermalLoad = 50, MaxFuelPerJump = 20.7, LinearConstant = 13, PowerConstant = 2.75, SCOSpeedIncrease = 42, SCOAccelerationRate = 0.04, SCOHeatGenerationRate = 123.5, SCOControlInterference = 0.624, SCOFuelDuringOvercharge = 4.11 } },
 
                 // wake scanner
 
@@ -2237,9 +2243,10 @@ namespace EliteDangerousCore
                 { "int_engine_size8_class4", new ShipModule(128064101,ShipModule.ModuleTypes.Thrusters,"Thrusters Class 8 Rating B"){ Cost = 54195500, Class = 8, Rating = "B", Mass = 256, Integrity = 180, PowerDraw = 9.9, BootTime = 0, MinMass = 1540, OptMass = 3080, MaxMass = 4620, EngineMinMultiplier = 93, EngineOptMultiplier = 100, EngineMaxMultiplier = 113, ThermalLoad = 1.3 } },
                 { "int_engine_size8_class5", new ShipModule(128064102,ShipModule.ModuleTypes.Thrusters,"Thrusters Class 8 Rating A"){ Cost = 162586490, Class = 8, Rating = "A", Mass = 160, Integrity = 165, PowerDraw = 10.8, BootTime = 0, MinMass = 1680, OptMass = 3360, MaxMass = 5040, EngineMinMultiplier = 96, EngineOptMultiplier = 100, EngineMaxMultiplier = 116, ThermalLoad = 1.3 } },
 
-
                 { "int_engine_size3_class5_fast", new ShipModule(128682013,ShipModule.ModuleTypes.EnhancedPerformanceThrusters,"Enhanced Performance Thrusters Class 3 Rating A"){ Cost = 5103950, Class = 3, Rating = "A", Mass = 5, Integrity = 55, PowerDraw = 5, BootTime = 0, MinMass = 70, OptMass = 90, MaxMass = 200, EngineMinMultiplier = 90, EngineOptMultiplier = 115, EngineMaxMultiplier = 137, ThermalLoad = 1.3, MinimumSpeedModifier = 90, OptimalSpeedModifier = 125, MaximumSpeedModifier = 160, MinimumAccelerationModifier = 90, OptimalAccelerationModifier = 110, MaximumAccelerationModifier = 120, MinimumRotationModifier = 90, OptimalRotationModifier = 110, MaximumRotationModifier = 130 } },
                 { "int_engine_size2_class5_fast", new ShipModule(128682014,ShipModule.ModuleTypes.EnhancedPerformanceThrusters,"Enhanced Performance Thrusters Class 2 Rating A"){ Cost = 1610080, Class = 2, Rating = "A", Mass = 2.5, Integrity = 40, PowerDraw = 4, BootTime = 0, MinMass = 50, OptMass = 60, MaxMass = 120, EngineMinMultiplier = 90, EngineOptMultiplier = 115, EngineMaxMultiplier = 137, ThermalLoad = 2, MinimumSpeedModifier = 90, OptimalSpeedModifier = 125, MaximumSpeedModifier = 160, MinimumAccelerationModifier = 90, OptimalAccelerationModifier = 110, MaximumAccelerationModifier = 120, MinimumRotationModifier = 90, OptimalRotationModifier = 110, MaximumRotationModifier = 130 } },
+                
+                { "int_engine_size7_class5_gravityoptimised_mkii", new ShipModule(-1,ShipModule.ModuleTypes.Thrusters,"Thrusters Class 7 Rating A Gravity Optimised"){ Cost = 51289110, Class = 7, Rating = "A", Mass = 80, Integrity = 144, PowerDraw = 9.12, BootTime = 0, MinMass = 1080, OptMass = 2160, MaxMass = 3240, EngineMinMultiplier = 96, EngineOptMultiplier = 100, EngineMaxMultiplier = 116, ThermalLoad = 1.3 } },
 
                 // XENO Scanners
 
@@ -2298,6 +2305,7 @@ namespace EliteDangerousCore
                 { "mandalay_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.CockpitType,"Mandalay Cockpit" ) },
                 { "corsair_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Corsair Cockpit") },
                 { "panthermkii_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Panther Clipper Mk II Cockpit") },
+                { "explorer_nx_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Caspian Explorer Cockpit") }, 
 
                 { "int_codexscanner", new ShipModule(999999947,ShipModule.ModuleTypes.Codex,"Codex Scanner" ) },
                 { "hpt_shipdatalinkscanner", new ShipModule(999999940,ShipModule.ModuleTypes.DataLinkScanner,"Hpt Shipdatalinkscanner" ) },
@@ -3123,6 +3131,12 @@ namespace EliteDangerousCore
                 {"decal_brewercorp_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Brewercorp 6") },
                 {"decal_bridgingthegap", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Bridgingthegap") },
                 {"decal_cannon", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Cannon") },
+                {"decal_caspianownersclub_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Caspianownersclub 1") },
+                {"decal_caspianownersclub_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Caspianownersclub 2") },
+                {"decal_caspianownersclub_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Caspianownersclub 3") },
+                {"decal_caspianownersclub_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Caspianownersclub 4") },
+                {"decal_caspianownersclub_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Caspianownersclub 5") },
+                {"decal_caspianownersclub_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Caspianownersclub 6") },
                 {"decal_cobweb", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Cobweb") },
                 {"decal_colonia_imigration_appeal", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Colonia Imigration Appeal") },
                 {"decal_combat_competent", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Combat Competent") },
@@ -3481,6 +3495,24 @@ namespace EliteDangerousCore
                 {"enginecustomisation_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Engine Customisation Red") },
                 {"enginecustomisation_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Engine Customisation White") },
                 {"enginecustomisation_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Engine Customisation Yellow") },
+                {"explorer_nx_holograma_01", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Explorer Nx Holograma 1") },
+                {"explorer_nx_holograma_02", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Explorer Nx Holograma 2") },
+                {"explorer_nx_holograma_03", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Explorer Nx Holograma 3") },
+                {"explorer_nx_holograma_04", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Explorer Nx Holograma 4") },
+                {"explorer_nx_holograma_05", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Explorer Nx Holograma 5") },
+                {"explorer_nx_holograma_06", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Explorer Nx Holograma 6") },
+                {"explorer_nx_shipkitb_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Explorer Nx Ship Kit B Bumper 1") },
+                {"explorer_nx_shipkitb_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Explorer Nx Ship Kit B Bumper 2") },
+                {"explorer_nx_shipkitb_bumper3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Explorer Nx Ship Kit B Bumper 3") },
+                {"explorer_nx_shipkitb_bumper4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Explorer Nx Ship Kit B Bumper 4") },
+                {"explorer_nx_shipkitb_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Explorer Nx Ship Kit B Spoiler 1") },
+                {"explorer_nx_shipkitb_spoiler2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Explorer Nx Ship Kit B Spoiler 2") },
+                {"explorer_nx_shipkitb_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Explorer Nx Ship Kit B Spoiler 3") },
+                {"explorer_nx_shipkitb_spoiler4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Explorer Nx Ship Kit B Spoiler 4") },
+                {"explorer_nx_shipkitb_wings1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Explorer Nx Ship Kit B Wings 1") },
+                {"explorer_nx_shipkitb_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Explorer Nx Ship Kit B Wings 2") },
+                {"explorer_nx_shipkitb_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Explorer Nx Ship Kit B Wings 3") },
+                {"explorer_nx_shipkitb_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Explorer Nx Ship Kit B Wings 4") },
                 {"federation_corvette_ppaisling_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Federation Corvette PP Aisling Spoiler 1") },
                 {"federation_corvette_ppaisling_spoiler2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Federation Corvette PP Aisling Spoiler 2") },
                 {"federation_corvette_ppaisling_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Federation Corvette PP Aisling Spoiler 3") },
@@ -6066,6 +6098,12 @@ namespace EliteDangerousCore
                 {"paintjob_empiretrader_war_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Imperial Clipper War Red") },
                 {"paintjob_empiretrader_war_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Imperial Clipper War White") },
                 {"paintjob_empiretrader_war_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Imperial Clipper War Yellow") },
+                {"paintjob_explorer_nx_03_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Explorer Nx 3 1") },
+                {"paintjob_explorer_nx_03_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Explorer Nx 3 2") },
+                {"paintjob_explorer_nx_03_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Explorer Nx 3 3") },
+                {"paintjob_explorer_nx_03_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Explorer Nx 3 4") },
+                {"paintjob_explorer_nx_03_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Explorer Nx 3 5") },
+                {"paintjob_explorer_nx_03_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Explorer Nx 3 6") },
                 {"paintjob_fedcorvette_powerplay2federation_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fedcorvette Powerplay 2 Federation 1") },
                 {"paintjob_fedcorvette_powerplay2federation_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fedcorvette Powerplay 2 Federation 2") },
                 {"paintjob_fedcorvette_powerplay2federation_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Fedcorvette Powerplay 2 Federation 3") },
