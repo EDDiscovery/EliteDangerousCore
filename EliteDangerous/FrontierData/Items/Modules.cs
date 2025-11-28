@@ -496,7 +496,7 @@ namespace EliteDangerousCore
             [OrderedPropertyNameAttribute(87, "%")] public double? OptimalRotationModifier { get; set; }
             [OrderedPropertyNameAttribute(88, "%")] public double? MaximumRotationModifier { get; set; }
 
-            [OrderedPropertyNameAttribute(90, "")] public double? ThermalLoad { get; set; }                    // 'engheat' 'fsdheat' 'thmload'
+            [OrderedPropertyNameAttribute(90, "/s")] public double? ThermalLoad { get; set; }                   // 'engheat' 'fsdheat' 'thmload'
 
             [OrderedPropertyNameAttribute(100, "t")] public double? MaxFuelPerJump { get; set; }                // 'maxfuel'
             [OrderedPropertyNameAttribute(101, "")] public double? PowerConstant { get; set; }                  // 'fuelpower' Number
