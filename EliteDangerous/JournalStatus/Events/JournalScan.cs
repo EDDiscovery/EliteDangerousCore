@@ -136,7 +136,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("OBAFGAKM,LTY,AeBe,N Neutron,H Black Hole,Proto (TTS,AeBe), Wolf (W,WN,WNC,WC,WO), Carbon (CS,C,CN,CJ,CHD), White Dwarfs (D,DA,DAB,DAO,DAZ,DAV,DB,DBZ,DBV,DO,DOV,DQ,DC,DCV,DX), others")]
         public EDStar StarTypeID { get; }                           // star type -> identifier
         [PropertyNameAttribute("Long Name (Orange Main Sequence..) localised")]
-        public string StarTypeText { get { return IsStar ? Stars.StarName(StarTypeID) : ""; } }   // Long form star name, from StarTypeID, localised
+        public string StarTypeText { get { return IsStar ? Stars.ToLocalisedLanguage(StarTypeID) : ""; } }   // Long form star name, from StarTypeID, localised
         [PropertyNameAttribute("Is it the main star")]
         public bool IsMainStar { get { return IsStar && (BodyName == StarSystem || BodyName == StarSystem + " A"); } }
         [PropertyNameAttribute("Ratio of Sol")]

@@ -43,7 +43,17 @@ namespace EliteDangerousCore
             });
         }
 
-        // find system name, from db, web if selected, optional GMO list
+        public static System.Threading.Tasks.Task<ISystem> FindSystemAsync(long address, WebExternalDataLookup lookup = WebExternalDataLookup.None)
+        {
+            return System.Threading.Tasks.Task.Run(() =>
+            {
+                return FindSystem(address, lookup);
+            });
+        }
+
+#endif
+
+        // synchronous, find system name, from db, web if selected, optional GMO list
         public static ISystem FindSystem(string name, GMO.GalacticMapping glist, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
             ISystem sys = FindSystem(name, lookup);
@@ -58,15 +68,22 @@ namespace EliteDangerousCore
 
             return sys;
         }
-#endif
 
+        // sychronous, find name 
         public static ISystem FindSystem(string name, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
             return FindSystem(new SystemClass(name), lookup);
         }
 
+        // sychronous, find address 
+        public static ISystem FindSystem(long address, WebExternalDataLookup lookup = WebExternalDataLookup.None)
+        {
+            return FindSystem(new SystemClass(address), lookup);
+        }
+
         // look up thru cache and db, and optionally edsm
         // thread safe
+        // find may or may not have name, if not, uses x/y/z
         public static ISystem FindSystem(ISystem find, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
             ISystem found;
@@ -79,21 +96,21 @@ namespace EliteDangerousCore
             {
                 found = SystemsDatabase.Instance.DBRead(conn => FindSystemInCacheDB(find, conn));
 
-                // if not found, checking edsm, and its a good name
+                // if not found, checking web, and its a good name
 #if !TESTHARNESS
-                if (found == null && lookup != WebExternalDataLookup.None && find.Name.HasChars() && find.Name != "UnKnown")
+                if (found == null && lookup != WebExternalDataLookup.None)
                 {
-                    if (lookup == WebExternalDataLookup.SpanshThenEDSM || lookup == WebExternalDataLookup.Spansh)
+                    if (lookup == WebExternalDataLookup.SpanshThenEDSM || lookup == WebExternalDataLookup.Spansh || lookup == WebExternalDataLookup.All)
                     {
-                        Spansh.SpanshClass sp = new Spansh.SpanshClass();       // proven 31 oct
+                        Spansh.SpanshClass sp = new Spansh.SpanshClass();    
 
-                        if (find.SystemAddress.HasValue)
+                        if (find.HasAddress)
                             found = sp.GetSystem(find.SystemAddress.Value);
-                        else
+                        else if ( found.HasName )
                             found = sp.GetSystem(find.Name);
                     }
 
-                    if (found == null && (lookup == WebExternalDataLookup.SpanshThenEDSM || lookup == WebExternalDataLookup.EDSM))
+                    if (found == null && (lookup == WebExternalDataLookup.SpanshThenEDSM || lookup == WebExternalDataLookup.EDSM || lookup == WebExternalDataLookup.All) && find.HasName)
                     {
                         EDSM.EDSMClass edsm = new EDSM.EDSMClass();
                         found = edsm.GetSystem(find.Name)?.FirstOrDefault();     // this may return null, an empty list, so first or default, or it may return null
@@ -114,20 +131,21 @@ namespace EliteDangerousCore
 
         // core find, with database
         // find in cache, find in db, add to cache
+        // find may or may not have name, if not, uses x/y/z
         public static ISystem FindSystemInCacheDB(ISystem find, SQLiteConnectionSystem cn)
         {
             ISystem orgsys = find;
 
             // Find it from the cache
 
-            ISystem found = FindCachedSystem(find);
+            ISystem found = FindCachedSystemByNameOrCoord(find);
 
             // if we have a db and its okay, and either not found, or found but with no main star info and the db does have star type info, check the db
             if (cn != null && !SystemsDatabase.Instance.DBUpdating && (found == null || (found.MainStarType == EDStar.Unknown && SystemsDatabase.Instance.HasStarType) ))
             {
                 //System.Diagnostics.Debug.WriteLine("Look up from DB " + sys.name + " " + sys.id_edsm);
 
-                bool findnameok = find.Name.HasChars() && find.Name != "UnKnown";
+                bool findnameok = find.HasName;
                 ISystem dbfound = null;
 
                 if (findnameok)            // if not found but has a good name
@@ -148,12 +166,15 @@ namespace EliteDangerousCore
                         dbfound.X = find.X; dbfound.Y = find.Y; dbfound.Z = find.Z;
                     }
 
-                    lock (cachelockobject)          // lock to prevent multi change over these classes
+                    if (findnameok)                             // if we have a name..
                     {
-                        if (systemsByName.ContainsKey(orgsys.Name))   // so, if name database already has name
-                            systemsByName[orgsys.Name].Remove(orgsys);  // and remove the ISystem if present on that orgsys
+                        lock (cachelockobject)          // lock to prevent multi change over these classes
+                        {
+                            if (systemsByName.ContainsKey(orgsys.Name))   // so, if name database already has name
+                                systemsByName[orgsys.Name].Remove(orgsys);  // and remove the ISystem if present on that orgsys
 
-                        AddToCache(dbfound);
+                            AddToCache(dbfound);
+                        }
                     }
 
                     found = dbfound;
@@ -182,18 +203,22 @@ namespace EliteDangerousCore
             }
         }
 
-        // find in cache, thread safe
-        public static ISystem FindCachedSystem(ISystem find)
+        // find in cache, thread safe,
+        // find may or may not have name, if not, uses x/y/z
+        public static ISystem FindCachedSystemByNameOrCoord(ISystem find)
         {
             List<ISystem> foundlist = new List<ISystem>();
             ISystem found = null;
 
-            lock (cachelockobject)          // Rob seen instances of it being locked together in multiple star distance threads, we need to serialise access to these two dictionaries
-            {                               // Concurrent dictionary no good, they could both be about to add the same thing at the same time and pass the contains test.
-                if (systemsByName.ContainsKey(find.Name))            // and all names cached
-                {
-                    List<ISystem> s = systemsByName[find.Name];
-                    foundlist.AddRange(s);
+            if (find.HasName)
+            {
+                lock (cachelockobject)          // Rob seen instances of it being locked together in multiple star distance threads, we need to serialise access to these two dictionaries
+                {                               // Concurrent dictionary no good, they could both be about to add the same thing at the same time and pass the contains test.
+                    if (systemsByName.ContainsKey(find.Name))            // and all names cached
+                    {
+                        List<ISystem> s = systemsByName[find.Name];
+                        foundlist.AddRange(s);
+                    }
                 }
             }
 
@@ -209,7 +234,9 @@ namespace EliteDangerousCore
         // add system to cache - trying to improve information as we get the same system
         public static void AddSystemToCache(ISystem system)
         {
-            var found = FindCachedSystem(system);
+            System.Diagnostics.Debug.Assert(system.Name.HasChars());
+
+            var found = FindCachedSystemByNameOrCoord(system);
 
             // if not found, or found is synthesised or found has no star type, AND the system has coord and name, add as it may be better
             if ((found == null || found.Source == SystemSource.Synthesised || found.MainStarType == EDStar.Unknown) && system.HasCoordinate == true && system.Name.HasChars())
@@ -574,16 +601,17 @@ namespace EliteDangerousCore
 
 #region Helpers
 
-        // add found to cache
+        // add found to cache - must have name
         // add to edsm id list if edsmid set
         // find or create a star list under name
         // if orgsys is set, then we can use its position to try and find a star match in the name found list
         static private void AddToCache(ISystem found, ISystem orgsys = null)
         {
+            System.Diagnostics.Debug.Assert(found.Name.HasChars());
+
             lock (cachelockobject)
             {
-               // System.Diagnostics.Debug.WriteLine($"SystemCache add {found.Name}");
-
+                // System.Diagnostics.Debug.WriteLine($"SystemCache add {found.Name}");
                 List<ISystem> byname;
 
                 if (!systemsByName.TryGetValue(found.Name, out byname))

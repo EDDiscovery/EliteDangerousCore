@@ -689,6 +689,14 @@ namespace EliteDangerousCore.StarScan2
             BodyGeneration++;
         }
 
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Navroute and StartJump call this to set the informed star class
+        public void SetStarClass(EDStar starclass)
+        {
+            StarClass = starclass;
+        }
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Set FSS Signals discovered into system bodies
         public void AddFSSSignalsDiscovered(List<FSSSignal> signals)

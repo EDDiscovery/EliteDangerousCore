@@ -27,6 +27,7 @@ namespace EliteDangerousCore.StarScan2
         #region Public
         public ISystem System { get; private set; }     // may not have XYZ, will always have name and systemaddress
         public bool HasCentreBarycentre { get { return systemBodies.ChildBodies.Count == 1 && systemBodies.ChildBodies[0].BodyType == BodyDefinitions.BodyType.Barycentre; } }
+        public EDStar StarClass { get; private set; }   // set by navroute and by startjump
         public int? FSSTotalBodies { get; private set; }         // if we have FSSDiscoveryScan, this will be set
         public int? FSSTotalNonBodies { get; private set; }     // if we have FSSDiscoveryScan, this will be set
         public bool OldScansPresent { get; set; }               // if set, we have old scans

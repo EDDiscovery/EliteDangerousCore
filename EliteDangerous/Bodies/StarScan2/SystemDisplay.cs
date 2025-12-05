@@ -51,6 +51,8 @@ namespace EliteDangerousCore.StarScan2
         public Color TextBackColor { get; set; } = Color.Transparent;
         public Color TextForeColor { get; set; } = Color.DarkOrange;
         public Size StarSize { get { return starsize; } }
+        public Size PlanetSize { get { return planetsize; } }
+        public Size MoonSize { get { return moonsize; } }
 
         // After create, this holds the used display area
         public Point DisplayAreaUsed { get; private set; }
@@ -62,13 +64,13 @@ namespace EliteDangerousCore.StarScan2
         // Clears the imagebox, create the objects, render to imagebox. Accepts systemnode = null to clear the display
         public void DrawSystemRender(ExtendedControls.ExtPictureBox imagebox, int widthavailable, SystemNode systemnode,
                                List<MaterialCommodityMicroResource> historicmats = null, List<MaterialCommodityMicroResource> curmats = null,
-                               string opttext = null, string[] bodytypefilter = null
+                               string titletext = null, string[] bodytypefilter = null
                               )
         {
             imagebox.ClearImageList();
             if (systemnode != null)
             {
-                var list = CreateSystemImages(systemnode, new Point(0,0), widthavailable, historicmats, curmats, opttext, bodytypefilter);
+                var list = CreateSystemImages(systemnode, new Point(0,0), widthavailable, historicmats, curmats, titletext, bodytypefilter);
                 imagebox.AddRange(list);
             }
             imagebox.Render();
@@ -84,8 +86,6 @@ namespace EliteDangerousCore.StarScan2
             System.Diagnostics.Debug.Assert(systemnode != null);
             System.Diagnostics.Debug.Assert(!starsize.IsEmpty);
 
-            // BodyToImages.DebugDisplayStarColourKey(imagebox, Font); enable for checking
-
             Random rnd = new Random(systemnode.System.Name.GetHashCode());         // always start with same seed so points are in same places
 
             NodePtr toplevelbodieslist = systemnode.BodiesSimplified(SimplifyDiagram);
@@ -97,9 +97,21 @@ namespace EliteDangerousCore.StarScan2
             // will be false if we need signals to be drawn, or true to fake that we drew them!
             bool drawnsignals = !(systemnode.FSSSignals?.Count > 0 || systemnode.CodexEntries?.Count > 0 || systemnode.OrbitingStations?.Count > 0);
 
-            List<ExtendedControls.ImageElement.List> imagesets = new List<ExtendedControls.ImageElement.List>();
+            ExtendedControls.ImageElement.List imageList = new ExtendedControls.ImageElement.List();    // final image list to report
+ 
+            int yoffset = starsize.Height * nodeheightratio / 2 / noderatiodivider;
+
+            if (titletext.HasChars())
+            {
+                var lab = new ExtendedControls.ImageElement.Element();
+                lab.TextAutoSize(new Point(startpoint.X, startpoint.Y), new Size(500, 30), titletext, FontLarge, TextForeColor, TextBackColor);
+                imageList.Add(lab);
+                yoffset += lab.Image.Height + 8;
+            }
 
             // we draw all image sets of the top level does and hold them. They are all aligned to 0,0 as the centre of the top body
+
+            List<ExtendedControls.ImageElement.List> imagesets = new List<ExtendedControls.ImageElement.List>();
 
             foreach (NodePtr starnode in toplevelbodiestodisplay)
             {
@@ -157,7 +169,6 @@ namespace EliteDangerousCore.StarScan2
 
             // Now position the image sets
 
-            int yoffset = starsize.Height * nodeheightratio / 2 / noderatiodivider;
             Point cursorlm = new Point(startpoint.X, startpoint.Y + yoffset);
             int curlinestart = 0;
             int maxy = 0;
@@ -210,14 +221,11 @@ namespace EliteDangerousCore.StarScan2
             }
 
             // accumulate and return image set
-
-            ExtendedControls.ImageElement.List imageList = new ExtendedControls.ImageElement.List();
             foreach (var entry in imagesets)
                 imageList.AddRange(entry);
 
             return imageList;
         }
-
 
 
         // draw a single object at 0,0 centred
@@ -229,6 +237,19 @@ namespace EliteDangerousCore.StarScan2
             Random rnd = new Random(bn.Name().GetHashCode());         // always start with same seed so points are in same places
             var image = DrawNode(bn, historicmats, curmats, size, rnd, null, null);
             return image;
+        }
+
+        // draw a single object at 0,0 centred
+        public ExtendedControls.ImageElement.List CreateStar(EDStar starclass, Size size, string tooltip = null)
+        {
+            System.Diagnostics.Debug.Assert(Font != null);
+
+            string imagename = BodyDefinitions.StarTypeImageName(starclass, 1.0, 5000);
+            var starimage = BaseUtils.Icons.IconSet.GetIcon(imagename).CloneLocked();
+
+            var nodelabels = new string[] { Stars.ToLocalisedLanguage(starclass) };
+            var il = CreateImageAndLabel(starimage, size, nodelabels, tooltip, null);
+            return il;
         }
 
         public void SetSize(int stars)

@@ -26,21 +26,19 @@ namespace EliteDangerousCore.StarScan2
 
         // Find system, optinally do weblookup
         // null if not found
+        // Sys can be an address, a name, or a name and address. address takes precedence
         public SystemNode FindSystemSynchronous(ISystem sys, WebExternalDataLookup weblookup = WebExternalDataLookup.None)    
         {
             //System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
             System.Diagnostics.Debug.Assert(sys != null);
 
-            if (sys.SystemAddress.HasValue || sys.Name.HasChars())      // we have good enough data (should have)
+            if (sys.HasAddress || sys.HasName)      // we have good enough data (should have)
             {
                 bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
                 bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
 
                 if (usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys))
                 {
-                    if (sys.Name.IsEmpty())
-                        System.Diagnostics.Debug.WriteLine($"StarScan WARNING - Spansh lookup with empty name of system is liable to errors - cant set body designation properly");
-
                     var lookupres = Spansh.SpanshClass.GetBodiesList(sys, usespansh);          // see if spansh has it cached or optionally look it up
 
                     if (lookupres != null)
@@ -84,7 +82,7 @@ namespace EliteDangerousCore.StarScan2
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
             System.Diagnostics.Debug.Assert(sys != null);
 
-            if (sys.SystemAddress.HasValue || sys.Name.HasChars())      // we have good enough data (should have)
+            if (sys.HasAddress || sys.HasName)      // we have good enough data (should have)
             {
                 bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
                 bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
@@ -195,7 +193,7 @@ namespace EliteDangerousCore.StarScan2
                 if (systemNodesByAddress.TryGetValue(addr, out var node) )
                     return node.System;
                 else
-                    return SystemCache.FindSystem(new SystemClass("",addr), lookup);
+                    return SystemCache.FindSystem(addr, lookup);
             }
         }
 

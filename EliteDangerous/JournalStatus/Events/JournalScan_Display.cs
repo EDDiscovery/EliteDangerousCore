@@ -376,7 +376,7 @@ namespace EliteDangerousCore.JournalEvents
             information.Append(" is a ".Tx());
 
             // Additional information
-            information.Append((js.IsStar) ? Stars.StarName(js.StarTypeID) + "." : null);
+            information.Append((js.IsStar) ? Stars.ToLocalisedLanguage(js.StarTypeID) + "." : null);
             information.Append((js.CanBeTerraformable) ? @"terraformable ".Tx() : null);
             information.Append((js.IsPlanet) ? Planets.PlanetNameTranslated(js.PlanetTypeID) + "." : null);
             information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? @" Is tiny ".Tx() + "(" + RadiusText + ")." : null);
