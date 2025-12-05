@@ -1074,7 +1074,7 @@ namespace EliteDangerousCore.JournalEvents
 
     //When written: when jumping with a fleet carrier
     [JournalEntryType(JournalTypeEnum.CarrierJump)]
-    public class JournalCarrierJump : JournalLocOrJump, IBodyNameAndID, IJournalJumpColor, IStarScan, ICarrierStats
+    public class JournalCarrierJump : JournalLocOrJump, IBodyFeature, IJournalJumpColor, IStarScan, ICarrierStats
     {
         public JournalCarrierJump(JObject evt) : base(evt, JournalTypeEnum.CarrierJump)
         {
@@ -1096,8 +1096,8 @@ namespace EliteDangerousCore.JournalEvents
             StationServices = StationDefinitions.ReadServicesFromJson(evt["StationServices"]);
 
             Body = evt["Body"].Str();
-            BodyID = evt["BodyID"].IntNull();
-            BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
+            BodyID = evt["BodyID"].Int();
+            BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
             DistFromStarLS = evt["DistFromStarLS"].DoubleNull();
 
             JToken jm = evt["EDDMapColor"];
@@ -1107,16 +1107,14 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public CarrierDefinitions.CarrierType CarrierType { get; } = CarrierDefinitions.CarrierType.UnknownType;        // stupid journal does not tell
-
         public bool Docked { get; set; }
         public string StationName { get; set; }         // from aprilish 2025, we get these even if we are not on it. Will be blank
         public string StationName_Localised { get; set; }       
         public string StationType { get; set; } // friendly station type
         public StationDefinitions.StarportTypes FDStationType { get; set; } // fdname
         public string Body { get; set; }
-        public int? BodyID { get; set; }
-        public string BodyType { get; set; }
-        public string BodyDesignation { get; set; }
+        public int BodyID { get; set; }
+        public BodyDefinitions.BodyType BodyType { get; set; }
         public double? DistFromStarLS { get; set; }
 
         public long? MarketID { get; set; }
@@ -1126,6 +1124,15 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StationServices[] StationServices { get; set; }
         public EconomyDefinitions.Economies[] StationEconomyList { get; set; }        // may be null
 
+        // IBodyNameAndID
+        public string BodyName => Body;
+        int? IBodyFeature.BodyID => BodyID;
+        public double? Latitude { get => null; set { } }
+        public double? Longitude { get => null; set { } }
+        public bool HasLatLong => false;
+        public string Name => StationName;
+        public string Name_Localised => StationName_Localised;
+
         public override string SummaryName(ISystem sys)
         {
             if (Docked)
@@ -1133,9 +1140,9 @@ namespace EliteDangerousCore.JournalEvents
             else
                 return string.Format("Carrier jumped to {0}".Tx(), Body);
         }
-        public void AddStarScan(StarScan s, ISystem system)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
         {
-            s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
+            s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
         public override string GetInfo()        // carrier jump

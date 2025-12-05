@@ -120,7 +120,7 @@ namespace EliteDangerousCore.DLL
                 bookedtaxi = he.Status.BookedTaxi,
 
                 bodyname = he.Status.BodyName ?? "Unknown",
-                bodytype = he.Status.BodyType ?? "Unknown",
+                bodytype = he.Status.BodyType.ToString(),
                 stationname = he.Status.StationName_Localised ?? "Unknown",
                 stationtype = he.Status.StationType ?? "Unknown",
                 stationfaction = he.Status.StationFaction ?? "Unknown",

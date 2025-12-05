@@ -521,6 +521,7 @@ namespace EliteDangerousCore
             ["RoundsPerShot"] = new string[] { nameof(ItemData.ShipModule.Rounds) },
             ["ReloadTime"] = new string[] { nameof(ItemData.ShipModule.ReloadTime) },
             ["BreachDamage"] = new string[] { nameof(ItemData.ShipModule.BreachDamage) },
+            ["BreachPercent"] = new string[] { nameof(ItemData.ShipModule.BreachModuleDamageAfterBreach), },
             ["MinBreachChance"] = new string[] { nameof(ItemData.ShipModule.BreachMin) },
             ["MaxBreachChance"] = new string[] { nameof(ItemData.ShipModule.BreachMax) },
             ["Jitter"] = new string[] { nameof(ItemData.ShipModule.Jitter) },

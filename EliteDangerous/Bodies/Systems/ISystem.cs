@@ -56,6 +56,9 @@ namespace EliteDangerousCore
         double DistanceSq(double x, double y, double z);
         bool Distance(ISystemBase other, double min, double max);
         bool Cuboid(ISystemBase other, double min, double max);
+
+        bool HasName { get; }
+        bool HasAddress { get; }
     }
 
     public interface ISystem : ISystemBase

@@ -102,6 +102,7 @@ namespace EliteDangerousCore.Spansh
 
 
         // System can be name, name and systemaddress, or systemaddress only (from jan 25)
+        // sys can have name or address
         static public BodiesResults GetBodiesList(ISystem sys, bool weblookup = true)
         {
             try
@@ -134,9 +135,9 @@ namespace EliteDangerousCore.Spansh
                         {
                             // System.Diagnostics.Debug.WriteLine($"Spansh Web Lookup complete no info {sys.Name} {sys.SystemAddress}");
                             // mark that we tried to lookup but we could not get any valid data
-                            if (sys.Name.HasChars())
+                            if (sys.HasName)
                                 BodyCache[sys.Name] = null;
-                            if (sys.SystemAddress.HasValue)
+                            if (sys.HasAddress)
                                 BodyCache[sys.SystemAddress.Value.ToStringInvariant()] = null;
                         }
                     }
@@ -173,9 +174,9 @@ namespace EliteDangerousCore.Spansh
 
                             // place the body in the cache under both its name and its system address. We return system normalised, bodies and bodycount (if known)
                             var cdata = new BodiesResults(sys, bodies, bodycount);
-                            if (sys.Name.HasChars())
+                            if (sys.HasName)
                                 BodyCache[sys.Name] = cdata;
-                            if (sys.SystemAddress.HasValue)
+                            if (sys.HasAddress)
                                 BodyCache[sys.SystemAddress.Value.ToStringInvariant()] = cdata;
 
                             // System.Diagnostics.Debug.WriteLine($"Spansh Web/File Lookup complete {sys.Name} {sys.SystemAddress} {bodies.Count} cache {fromcache}");

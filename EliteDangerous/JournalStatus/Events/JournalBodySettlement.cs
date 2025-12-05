@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright 2016-2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,31 +10,39 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- *
  */
+
+using EliteDangerousCore.StarScan2;
 using QuickJSON;
-using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.ApproachBody)]
-    public class JournalApproachBody : JournalEntry, IBodyNameAndID
+    public class JournalApproachBody : JournalEntry, IBodyFeature, IStarScan
     {
         public JournalApproachBody(JObject evt) : base(evt, JournalTypeEnum.ApproachBody)
         {
-            StarSystem = evt["StarSystem"].Str();
+            StarSystem = evt["StarSystem"].StrNull();
             SystemAddress = evt["SystemAddress"].LongNull();
             Body = evt["Body"].Str();
-            BodyID = evt["BodyID"].IntNull();
+            BodyID = evt["BodyID"].Int();
         }
 
-        public string StarSystem { get; set; }
-        public long? SystemAddress { get; set; }
-        public string Body { get; set; }
-        public int? BodyID { get; set; }
-        public string BodyType { get { return "Planet"; } }
-        public string BodyDesignation { get; set; }
+        public string StarSystem { get; set; }          // very early ones missed this
+        public long? SystemAddress { get; set; }        // always been there
+        public string Body { get; set; }                // always been there
+        public int BodyID { get; set; }                // always been there
+
+        // IBodyNameAndID
+        public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
+        public string BodyName => Body;
+        int? IBodyFeature.BodyID => BodyID;
+        public double? Latitude { get => null; set { } }
+        public double? Longitude { get => null; set { } }
+        public bool HasLatLong => false;
+        public string Name => null;
+        public string Name_Localised => null;
+
 
         public override string SummaryName(ISystem sys)
         {
@@ -48,25 +56,42 @@ namespace EliteDangerousCore.JournalEvents
         {
             return "In ".Tx()+ StarSystem;
         }
+
+        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
+        {
+            if ( StarSystem == null)
+                StarSystem = system.Name;
+            if (SystemAddress == null)
+                SystemAddress = system.SystemAddress;
+            s.AddLocation(this, system);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.LeaveBody)]
-    public class JournalLeaveBody : JournalEntry, IBodyNameAndID
+    public class JournalLeaveBody : JournalEntry, IBodyFeature, IStarScan
     {
         public JournalLeaveBody(JObject evt) : base(evt, JournalTypeEnum.LeaveBody)
         {
             StarSystem = evt["StarSystem"].Str();
             SystemAddress = evt["SystemAddress"].LongNull();
             Body = evt["Body"].Str();
-            BodyID = evt["BodyID"].IntNull();
+            BodyID = evt["BodyID"].Int();
         }
 
-        public string StarSystem { get; set; }
-        public long? SystemAddress { get; set; }
-        public string Body { get; set; }
-        public int? BodyID { get; set; }
-        public string BodyDesignation { get; set; }
-        public string BodyType { get { return "Planet"; } }
+        public string StarSystem { get; set; }      // always been there
+        public long? SystemAddress { get; set; }// always been there
+        public string Body { get; set; }                // always been there
+        public int BodyID { get; set; }        // always been there
+
+        // IBodyNameAndID
+        public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
+        public string BodyName => Body;
+        int? IBodyFeature.BodyID => BodyID;
+        public double? Latitude { get => null; set { } }
+        public double? Longitude { get => null; set { } }
+        public bool HasLatLong => false;
+        public string Name => null;
+        public string Name_Localised => null;
 
         public override string SummaryName(ISystem sys)
         {
@@ -79,10 +104,15 @@ namespace EliteDangerousCore.JournalEvents
         {
             return "In ".Tx()+ StarSystem;
         }
+
+        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
+        {
+            s.AddLocation(this, system);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.ApproachSettlement)]
-    public class JournalApproachSettlement : JournalEntry, IBodyFeature
+    public class JournalApproachSettlement : JournalEntry, IBodyFeature, IStarScan
     {
         public JournalApproachSettlement(JObject evt) : base(evt, JournalTypeEnum.ApproachSettlement)
         {
@@ -116,16 +146,18 @@ namespace EliteDangerousCore.JournalEvents
             //if (FactionState != null)  System.Diagnostics.Debug.WriteLine($"Faction {Faction} {FactionState} {FriendlyFactionState}");
         }
 
-        public string Name { get; set; }
-        public string Name_Localised { get; set; }
-        public long? MarketID { get; set; }
-        public double? Latitude { get; set; }    // 3.3
+        public string Name { get; set; }            // always there
+        public string Name_Localised { get; set; }  // there for $Ancient; etc
+        public string StationType => "OnFootSettlement";// Fixed to this, no information on specific type of planet station, aligned with Docked
+        public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.OnFootSettlement;     // Fixed to this, no information on specific type of planet station
+        public long? MarketID { get; set; }         // appears 2018
+        public double? Latitude { get; set; }       // 3.3
         public double? Longitude { get; set; }
         public bool HasLatLong { get { return Latitude.HasValue && Longitude.HasValue; } }  
-        public long? SystemAddress { get; set; } // may be null
-        public int? BodyID { get; set; } // may be null
+        public long? SystemAddress { get; set; }    // from event, may be null, 2019, filled in by AddStarScan below
+        public int? BodyID { get; set; }            // from event, may be null as 2016 ones did not have it in. 2019 it came in
         public string BodyName { get; set; }        // from event, may be null
-        public string BodyType { get { return "Settlement"; } }
+        public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
         public GovernmentDefinitions.Government StationGovernment { get; set; }// may be null
         public string StationGovernment_Localised { get; set; }// may be null
         public EconomyDefinitions.Economy StationEconomy { get; set; }// may be null
@@ -137,11 +169,8 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyFactionState { get; set; }       //may be null, in english
         public AllegianceDefinitions.Allegiance StationAllegiance { get; set; } //fdname, may be null
 
-
-        // IBodyFeature only
-        public string Body { get { return BodyName; } }     // this is an alias
-        public string BodyDesignation { get; set; }
-        public string StarSystem { get; set; }      // filled in by StarScan::AddApproachSettlement
+        // IBodyFeature 
+        public string StarSystem { get; set; }      // filled in by AddStarScan below
 
         public override string GetInfo()
         {
@@ -178,6 +207,13 @@ namespace EliteDangerousCore.JournalEvents
                 return null;
         }
 
+        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
+        {
+            StarSystem = system.Name;
+            if (SystemAddress == null)
+                SystemAddress = system.SystemAddress;
+            s.AddApproachSettlement(this, system);
+        }
     }
 
 

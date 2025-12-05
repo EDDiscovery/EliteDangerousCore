@@ -17,6 +17,7 @@ using QuickJSON;
 using EliteDangerousCore.DB;
 using System;
 using static BaseUtils.TypeHelpers;
+using System.Collections.Generic;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -96,9 +97,9 @@ namespace EliteDangerousCore.JournalEvents
         public double? Longitude { get; set; }
 
         [PropertyNameAttribute("EDD assigned body name")]
-        public string EDDBodyName { get; set; }        // EDD addition, filled in in ED. Null for not known
+        public string EDDBodyName { get; set; }        // EDD addition, filled in in ED. Null for not known. EDDiscoveryNewController fills this in from the status json
         [PropertyNameAttribute("EDD assigned body ID")]
-        public int EDDBodyId { get; set; } = -1;       // EDD addition, filled in in ED.  -1 for not known
+        public int EDDBodyId { get; set; } = -1;       // EDD addition, filled in in ED.  -1 for not known. Copied from the BodyID in he.Status 
 
         public bool Equals(JournalCodexEntry other)
         {
@@ -112,9 +113,9 @@ namespace EliteDangerousCore.JournalEvents
                    Longitude == other.Longitude;
         }
 
-        public void AddStarScan(StarScan s, ISystem system)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
         {
-            s.AddCodexEntryToSystem(this);
+            s.AddCodexEntryToSystem(this,system);
         }
 
         public override string GetInfo()
@@ -145,6 +146,26 @@ namespace EliteDangerousCore.JournalEvents
                                                 ";Traits".Tx(), NewTraitsDiscovered,
                                                 "Nearest".Tx()+": ", NearestDestination_Localised
                                                 );
+        }
+
+        // print list, with optional indent, and separ.  Separ is not placed on last entry
+        // logtype = false localised, true ID
+        static public void CodexList(System.Text.StringBuilder sb, List<JournalCodexEntry> list, int indent, bool indentfirst, string separ = ", ")
+        {
+            if (list != null)
+            {
+                string inds = new string(' ', indent);
+                int index = 0;
+                foreach (var x in list)
+                {
+                    if (indent > 0 && (index > 0 || indentfirst))       // if indent, and its either not first or allowed to indent first
+                        sb.Append(inds);
+                    sb.AppendPrePad(x.GetInfo());
+
+                    if (index++ < list.Count - 1)     // if another to go, separ
+                        sb.Append(separ);
+                }
+            }
         }
 
         public void UpdateDB()

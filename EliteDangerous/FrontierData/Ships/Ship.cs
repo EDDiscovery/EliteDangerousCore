@@ -231,7 +231,7 @@ namespace EliteDangerousCore
         public EliteDangerousCalculations.FSDSpec GetFSDSpec()
         {
             var module = GetShipModulePropertiesEngineered(ShipSlots.Slot.FrameShiftDrive);
-            if (module != null)
+            if (module?.PowerConstant != null)
             {
                 var spec = new EliteDangerousCalculations.FSDSpec(module.PowerConstant.Value, module.LinearConstant.Value, module.OptMass.Value, module.MaxFuelPerJump.Value);
                 var gmodules = FindShipModules(x => x.GetModuleUnengineered()?.ModType == ItemData.ShipModule.ModuleTypes.GuardianFSDBooster);

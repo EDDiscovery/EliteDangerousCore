@@ -1118,6 +1118,7 @@ D8D4559A372171: "Prison" @
 9DB9478502242D: "Prison Colony" @
 AB1A1F939BDE0E: "Theocracy" @
 0646F4AFD90C8F: "Undefined" @
+750A7CEF420603: "Megaconstruction" @
 
 SECTION EconomyTypes
 
@@ -1164,6 +1165,7 @@ E2407F2BA86D9F: "Space Construction Depot" @
 72D0849A72AB18: "Planetary Construction Depot" @
 2D68CF109D6809: "Dockable Planet Station" @
 D089EF39D4EA65: "Construction POI" @
+39A76A40856116: "Dodec" @
 
 SECTION PowerPlayStates
 
@@ -1375,6 +1377,7 @@ BE7DD45637B559: "Medium Hardpoint 2" @
 4BBD04305C4BF0: "Medium Hardpoint 3" @
 485F68ABD0CDE8: "Medium Hardpoint 4" @
 A7AB21F5CF19AE: "Medium Hardpoint 5" @
+890406A48C1D3F: "Medium Hardpoint 6" @
 77E9039F43F6E2: "Military Slot 1" @
 A22CCB7E4839AD: "Military Slot 2" @
 62898937228B9D: "Military Slot 3" @
@@ -1448,6 +1451,7 @@ B9F7EC2C516319: "Optional Slot 10 Class 4" @
 2E43536EE0228A: "Optional Slot 11 Class 2" @
 396FF2847C8FAD: "Optional Slot 11 Class 3" @
 7B3D33D0B5E58B: "Optional Slot 12 Class 1" @
+99231038FC49DD: "Optional Slot 13 Class 1" @
 EB2C412690A12A: "Optional Slot 13 Class 2" @
 F448DCEB3AF33F: "Optional Slot 14 Class 1" @
 EB2E26440F6DEA: "Small Hardpoint 1" @

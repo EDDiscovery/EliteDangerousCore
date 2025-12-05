@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using static BaseUtils.TypeHelpers;
 
 namespace EliteDangerousCore
 {
@@ -44,32 +45,25 @@ namespace EliteDangerousCore
 
     public interface IStarScan
     {
-        void AddStarScan( StarScan s, ISystem system);
+        void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus hes);
     }
 
-    public interface IBodyNameIDOnly        // used for query system
-    {
-        string BodyName { get; }
-        int? BodyID { get; }
-    }
 
-    public interface IBodyNameAndID     // events containing body information
+    public interface IBodyFeature  // events containing feature information on a body
     {
         DateTime EventTimeUTC { get; }
-        string Body { get; }
-        string BodyType { get; }
+        JournalTypeEnum EventTypeID { get; }
+        string EventTypeStr { get; }
+        string SummaryName(ISystem sys);
+        string BodyName { get; }
         int? BodyID { get; }
-        string BodyDesignation { get; set; }    // such as Sol 3 for BodyName = Earth, or null if not unique
+        BodyDefinitions.BodyType BodyType { get; }
         string StarSystem { get; }
         long? SystemAddress { get; }
-    }
-
-    public interface IBodyFeature : IBodyNameAndID  // events containing feature information on a body
-    {   
         double? Latitude { get; set; }
         double? Longitude { get; set; }
         bool HasLatLong { get; }
-        string Name { get; }
+        string Name { get; }                // name of installation/feature on body
         string Name_Localised { get; }
     }
 
