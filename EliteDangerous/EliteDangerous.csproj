@@ -135,7 +135,7 @@
     <Compile Include="FrontierData\Items\ItemData.cs" />
     <Compile Include="FrontierData\Items\ItemEngineers.cs" />
     <Compile Include="FrontierData\Items\ItemShips.cs" />
-    <Compile Include="FrontierData\Items\ItemActors.cs" />
+    <Compile Include="FrontierData\Items\Actors.cs" />
     <Compile Include="FrontierData\Items\ItemSuits.cs" />
     <Compile Include="FrontierData\Items\ItemWeapons.cs" />
     <Compile Include="JournalStatus\Events\JournalEmbarkDisembark.cs" />
@@ -211,7 +211,7 @@
     <Compile Include="FrontierData\Ships\ShipModulesInStore.cs" />
     <Compile Include="FrontierData\Ships\ShipList.cs" />
     <Compile Include="FrontierData\Ships\ShipModule.cs" />
-    <Compile Include="FrontierData\Items\ItemModules.cs" />
+    <Compile Include="FrontierData\Items\ModuleList.cs" />
     <Compile Include="JournalStatus\xNetLogs\NetLogClass.cs" />
     <Compile Include="JournalStatus\xNetLogs\NetLogReader.cs" />
     <Compile Include="FrontierData\Enumerations\Ranks.cs" />

@@ -137,6 +137,7 @@ namespace EliteDangerousCore
              { "outpostcriminal", new Actor("Criminal Outpost") },
              { "outpostcommercial", new Actor("Commercial Outpost") },
              { "outpostscientific", new Actor("Scientific Outpost") },
+             { "outpostmilitary", new Actor("Military Outpost") },
              { "outpost_weaponsplatform_depot", new Actor("Weapons Platform in depot") },
              { "megashipdockrehab", new Actor("Mega Ship Prison") },
              { "megashipdocka", new Actor("Mega Ship Dock A") },
