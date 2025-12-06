@@ -38,7 +38,7 @@ namespace EliteDangerousCore
             foreach (StationDefinitions.StationServices x in Enum.GetValues(typeof(StationDefinitions.StationServices))) { var p = StationDefinitions.ToLocalisedLanguage(x); }
 
 
-            string csfile = @"c:\code\eddiscovery2\elitedangerouscore\elitedangerous\FrontierData\items\itemmodules.cs";
+            string csfile = @"c:\code\eddiscovery2\elitedangerouscore\elitedangerous\FrontierData\items\modulelist.cs";
             string infile = @"c:\code\newvanity.txt";
 
             if (System.IO.File.Exists(infile))
