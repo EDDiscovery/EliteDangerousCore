@@ -202,7 +202,7 @@ namespace EliteDangerousCore.Spansh
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** SPANSH failed to decode star {name}");
+                System.Diagnostics.Trace.WriteLine($"*** SPANSH failed to decode star `{name}`");
                 return null;
             }
         }
@@ -266,6 +266,13 @@ namespace EliteDangerousCore.Spansh
 
             return null;
         }
+
+        public static JArray ReadFile(string file, ISystem foundsystem)
+        {
+            JToken tk = JToken.Parse(System.IO.File.ReadAllText(file));
+            return GetBodiesFromDump(tk.Object(), foundsystem, out int? bodycount);
+        }
+
         // return dump of bodies in journal scan format from the spansh dump format
         private static JArray GetBodiesFromDump(JObject json, ISystem foundsystem, out int? bodycount)
         {
@@ -307,7 +314,7 @@ namespace EliteDangerousCore.Spansh
 
                         evt["BodyID"] = so[dump ? "bodyId" : "body_id"];
                         evt["StarSystem"] = foundsystem.Name;
-                        evt["SystemAddress"] = foundsystem.SystemAddress.HasValue ? foundsystem.SystemAddress.Value : json["reference"]["id64"].Long();
+                        evt["SystemAddress"] = foundsystem.SystemAddress.HasValue ? foundsystem.SystemAddress.Value : json["reference"].I("id64").LongNull();
                         evt["DistanceFromArrivalLS"] = so[dump ? "distanceToArrival" : "distance_to_arrival"];
                         evt["WasDiscovered"] = true;        // obv, since spansh has the data
                         evt["WasMapped"] = false;
@@ -361,11 +368,17 @@ namespace EliteDangerousCore.Spansh
                         if (so["type"].Str() == "Star")
                         {
                             string spanshst = so[dump ? "subType" : "subtype"].Str();
-                            EDStar? startype = SpanshStarNameToEDStar(spanshst);
-                            evt["StarType"] = startype != null ? Stars.ToEnglish(startype.Value) : spanshst;        // so if we recognise it, use the text version of the enum. ToEnum should turn it back
+                            if (spanshst.HasChars())
+                            {
+                                EDStar? startype = SpanshStarNameToEDStar(spanshst);
+                                evt["StarType"] = startype != null ? Stars.ToEnglish(startype.Value) : spanshst;        // so if we recognise it, use the text version of the enum. ToEnum should turn it back
+                            }
+                            else
+                                evt["StarType"] = "Unknown";
+
                             //System.Diagnostics.Debug.WriteLine($"Spansh star type {evt["StarType"].Str()}");
 
-                            evt["StellarMass"] = so[dump ? "solarMasses" : "solar_masses"];
+                                evt["StellarMass"] = so[dump ? "solarMasses" : "solar_masses"];
                             evt["AbsoluteMagnitude"] = so["absoluteMagnitude"];
                             evt["Luminosity"] = so[dump ? "luminosity" : "luminosity_class"];
                             if (so[dump ? "spectralClass" : "spectral_class"].Str().Length > 1)       // coded as G2
@@ -375,8 +388,14 @@ namespace EliteDangerousCore.Spansh
                         else if (so["type"].Str() == "Planet")
                         {
                             string spanshpc = so[dump ? "subType" : "subtype"].Str();
-                            EDPlanet? planet = SpanshPlanetNameToEDPlanet(spanshpc);
-                            evt["PlanetClass"] = planet != null ? Planets.ToEnglish(planet.Value) : spanshpc;      // if recognised, turn back to string, with _ removed.
+
+                            if (spanshpc.HasChars())
+                            {
+                                EDPlanet? planet = SpanshPlanetNameToEDPlanet(spanshpc);
+                                evt["PlanetClass"] = planet != null ? Planets.ToEnglish(planet.Value) : spanshpc;      // if recognised, turn back to string, with _ removed.
+                            }
+                            else
+                                evt["PlanetClass"] = "Unknown";
 
                             //System.Diagnostics.Debug.WriteLine($"Spansh  planet class {spanshpc} -> {evt["PlanetClass"]}");
                         }
@@ -572,7 +591,7 @@ namespace EliteDangerousCore.Spansh
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** SPANSH failed to decode planet {name}");
+                System.Diagnostics.Trace.WriteLine($"*** SPANSH failed to decode planet `{name}`");
                 return null;
             }
         }
