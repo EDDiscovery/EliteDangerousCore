@@ -1530,6 +1530,14 @@ namespace EliteDangerousCore
 
                 { "int_hyperdrive_overcharge_size8_class5_overchargebooster_mkii", new ShipModule(129038968,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive (SCO) Class 8 Rating A"){ Cost = 82042060, Class = 8, Rating = "A", Mass = 160, Integrity = 188, PowerDraw = 1.05, BootTime = 10, OptMass = 4670, ThermalLoad = 50, MaxFuelPerJump = 6.8, LinearConstant = 11.067, PowerConstant = 2.5, SCOSpeedIncrease = 42, SCOAccelerationRate = 0.04, SCOHeatGenerationRate = 123.5, SCOControlInterference = 0.624, SCOFuelDuringOvercharge = 4.11 } },
 
+                // non real modules which sometimes appears in logs
+
+                { "int_hyperdrive_size8_class1", new ShipModule(128064133, ShipModule.ModuleTypes.FrameShiftDrive, "Frame Shift Drive Class 8 Rating E")  { PowerDraw=0.56, Mass=160 } },
+                { "int_hyperdrive_size8_class2", new ShipModule(128064134, ShipModule.ModuleTypes.FrameShiftDrive, "Frame Shift Drive Class 8 Rating D") { PowerDraw=0.63, Mass=64 } },
+                { "int_hyperdrive_size8_class3", new ShipModule(128064135, ShipModule.ModuleTypes.FrameShiftDrive, "Frame Shift Drive Class 8 Rating C") { PowerDraw=0.7, Mass=160 } },
+                { "int_hyperdrive_size8_class4", new ShipModule(128064136, ShipModule.ModuleTypes.FrameShiftDrive, "Frame Shift Drive Class 8 Rating B") { PowerDraw=0.88, Mass=256 } },
+                { "int_hyperdrive_size8_class5", new ShipModule(128064137, ShipModule.ModuleTypes.FrameShiftDrive, "Frame Shift Drive Class 8 Rating A") { PowerDraw=1.05, Mass=160 } },
+
                 // wake scanner
 
                 { "hpt_cloudscanner_size0_class1", new ShipModule(128662525,ShipModule.ModuleTypes.FrameShiftWakeScanner,"Frame Shift Wake Scanner Rating E"){ Cost = 13540, Class = 0, Rating = "E", Mass = 1.3, Integrity = 32, PowerDraw = 0.2, BootTime = 1, Range = 2000, Angle = 15, Time = 10 } },
