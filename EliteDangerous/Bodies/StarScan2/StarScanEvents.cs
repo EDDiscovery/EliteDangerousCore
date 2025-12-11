@@ -17,6 +17,7 @@ using EliteDangerousCore.JournalEvents;
 using EliteDangerousCore.UIEvents;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EliteDangerousCore.StarScan2
 {
@@ -31,22 +32,40 @@ namespace EliteDangerousCore.StarScan2
             {
                 (sys.Name.HasChars()).Assert("GetOrAddSystem Must have a name");
 
-                // if we have older system info without systemaddress, we created the nodes in systemnodesbyname. 
-                // as soon the system has a system address, we will abandon the old info and recreate using the new one, as we can't rely on the old stuff
-                if (sys.SystemAddress.HasValue)
+                if (sys.HasAddress)
                 {
                     // System.Diagnostics.Debug.WriteLine($"SS2 Add {je.EventTimeUTC} {je.EventTypeID} {sys.Name} {sys.SystemAddress} {sys.HasCoordinate}");
 
                     // find system node by address, 
+
                     if (!systemNodesByAddress.TryGetValue(sys.SystemAddress.Value, out SystemNode node))
                     {
-                        // if not found, check name
-                        if (systemNodesByName.TryGetValue(sys.Name, out node))     // if previously by name only
+                        // if not found an address, check name
+                        if (systemNodesByName.TryGetValue(sys.Name, out node))      // if we have a name
                         {
-                            systemNodesByAddress.Add(sys.SystemAddress.Value, node);        // add the new address into the node tree also
+                            // if the node does not have address, or the addresses match, we match and update the system node address list
+
+                            if ( !node.System.HasAddress || sys.SystemAddress == node.System.SystemAddress)   
+                            {
+                                systemNodesByAddress.Add(sys.SystemAddress.Value, node);        // add the new address into the node tree also
+                            }
+                            else
+                            {
+                                // here we found a name, but the system addresses do not match.. therefore a frontier double naming.
+
+                                $"StarScan Two systems with same name {node.System.NameAddress} with {sys.NameAddress}".DO();
+
+                                systemNodesByName.Remove(node.System.Name);                 // rename existing entry with NameAddress
+                                systemNodesByName.Add(node.System.NameAddress, node);        
+
+                                node = new SystemNode(sys);
+                                systemNodesByAddress.Add(sys.SystemAddress.Value, node);    // make a new node
+                                systemNodesByName[sys.NameAddress] = node;                  // store as name address pair
+                            }
                         }
-                        else
-                        {
+                        else if (!systemNodesByName.TryGetValue(sys.NameAddress, out node))      // if we don't have a nameAddress in there (due to a double name)
+                        { 
+                            // no address found, and no name, no name:address, new node
                             node = new SystemNode(sys);
                             systemNodesByAddress.Add(sys.SystemAddress.Value, node);        // make a new node
                             systemNodesByName[sys.Name] = node;                             // point name node to our new node
@@ -54,6 +73,7 @@ namespace EliteDangerousCore.StarScan2
                     }
                     else
                     {
+                        // we have a node with the address, primary key.
                         if ( sys.Name != node.System.Name)      // a system has been renamed by frontier..
                         {
                             $"StarScan Renamed system {node.System.Name} -> {sys.Name}".DO();
@@ -63,12 +83,21 @@ namespace EliteDangerousCore.StarScan2
                     }
                     return node;
                 }
-                else if (sys.Name.HasChars())      // name only ones
+                else if (sys.Name.HasChars())      
                 {
-                    if (!systemNodesByName.TryGetValue(sys.Name, out SystemNode node))
+                    // find by normal name
+                    if (!systemNodesByName.TryGetValue(sys.Name, out SystemNode node))    // not a name
                     {
-                        node = new SystemNode(sys);
-                        systemNodesByName.Add(sys.Name, node);
+                        // may be in there as Name:Address 
+                        var keyname = systemNodesByName.Keys.ToList().Find(x => x.StartsWith(sys.Name + ":"));      // look thru the keyname and try and find one starting with sys.Name
+
+                        if (keyname == null)    // nope, new.1
+                        {
+                            node = new SystemNode(sys);
+                            systemNodesByName.Add(sys.Name, node);
+                        }
+                        else
+                            node = systemNodesByName[keyname];
                     }
                     return node;
                 }
@@ -158,39 +187,26 @@ namespace EliteDangerousCore.StarScan2
             if (curlocsys.Name == "Sol" && sc.BodyName.StartsWith("Procyon"))         // Robert had this situation
                 return;
 
-
             SystemNode sn = null;
-
-            //if ( sc.StarSystem == "HIP 63809")
-            //{
-
-            //}
 
             // so, we are going to use sc.systemaddress as the primary lookup method, then the sc.starsystem, then only use curlocsys as a fall back for very old scans, and we must have a system already to use curlocsys
             // A log from StarTrash has scans occuring for the previous system in the current system - so we can't rely on curlocsys
             // A log from Wags had scans on hip 63809 occuring in another system..
-            // 
 
             lock (masterlock)
             {
-                if (sc.SystemAddress.HasValue || sc.StarSystem.HasChars())          // if it has a system address or a name, we only use this to detect the system node
+                // first try system address from the scan to find the entry.
+                if (!sc.SystemAddress.HasValue || !systemNodesByAddress.TryGetValue(sc.SystemAddress.Value, out sn))
                 {
-                    // if does not have a system address, or it failed, and we have a StarSystem in there
-                    if ((!sc.SystemAddress.HasValue || !systemNodesByAddress.TryGetValue(sc.SystemAddress.Value, out sn)) && sc.StarSystem.HasChars())     
+                    // failed, lets use the get/add system method as it does more extensive checks on this
+                    if (sc.StarSystem.HasChars() || sc.SystemAddress.HasValue)
                     {
-                        // if name failed
-                        if (!systemNodesByName.TryGetValue(sc.StarSystem, out sn))
-                        {
-                            sn = GetOrAddSystem(new SystemClass(sc.StarSystem, sc.SystemAddress));      // with or without system address, we can make the system anyway
-                        }
+                        sn = GetOrAddSystem(new SystemClass(sc.StarSystem, sc.SystemAddress));
                     }
-                }
-                else
-                {
-                    // we can't find it via the scan, try and see if its there using the current system. Don't try and make the system
-
-                    if (!curlocsys.SystemAddress.HasValue || !systemNodesByAddress.TryGetValue(curlocsys.SystemAddress.Value, out sn))      // if failed
-                        systemNodesByName.TryGetValue(curlocsys.Name, out sn);  // else try name
+                    else
+                    {
+                        sn = GetOrAddSystem(curlocsys);     // worse case
+                    }
                 }
             }
 

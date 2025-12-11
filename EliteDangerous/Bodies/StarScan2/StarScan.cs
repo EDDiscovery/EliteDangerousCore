@@ -45,7 +45,7 @@ namespace EliteDangerousCore.StarScan2
                     {
                         foreach (JournalScan js in lookupres.Bodies)
                         {
-                            AddJournalScan(js, sys);
+                            AddJournalScan(js, new SystemClass(js.StarSystem,js.SystemAddress));
                         }
 
                         if (lookupres.BodyCount.HasValue)
@@ -63,7 +63,7 @@ namespace EliteDangerousCore.StarScan2
                     {
                         foreach (JournalScan js in lookupres.Bodies)
                         {
-                            AddJournalScan(js, sys);
+                            AddJournalScan(js, new SystemClass(js.StarSystem, js.SystemAddress));
                         }
                     }
                 }

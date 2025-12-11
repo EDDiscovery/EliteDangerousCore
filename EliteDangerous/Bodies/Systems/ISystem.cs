@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2015 - 2023 EDDiscovery development team
+ * Copyright 2015 - 2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -51,6 +51,7 @@ namespace EliteDangerousCore
         object Tag { get; set; }        // Aux data on this isystem. Normally a string containing information on it
 
         string Key { get; }             // Primary Key for looking up an Isystem .  Systemaddress is preferred
+        string NameAddress { get; }     // Name address key
         double Distance(ISystemBase other);
         double Distance(double x, double y, double z);
         double DistanceSq(double x, double y, double z);

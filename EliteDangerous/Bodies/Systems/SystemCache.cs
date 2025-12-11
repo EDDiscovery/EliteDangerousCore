@@ -106,7 +106,7 @@ namespace EliteDangerousCore
 
                         if (find.HasAddress)
                             found = sp.GetSystem(find.SystemAddress.Value);
-                        else if ( found.HasName )
+                        else if ( find.HasName )
                             found = sp.GetSystem(find.Name);
                     }
 
