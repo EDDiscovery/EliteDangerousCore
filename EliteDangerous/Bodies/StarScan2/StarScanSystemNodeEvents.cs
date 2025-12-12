@@ -408,16 +408,17 @@ namespace EliteDangerousCore.StarScan2
                         return body;
                     }
                 }
+
+                return GetOrMakeDiscretePlanet(subname, bid, systemname);       // back up discrete planet
             }
             else
                 return body;
-
-            return GetOrMakeDiscretePlanet(subname, bid, systemname);   
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // for IBodyNames without parent lists, marked as planet. 
         // check if its there by id or fdname, and then if not, make something up to hold it
+        // only called if name is not standard
         public BodyNode GetOrMakeDiscretePlanet(string fdname, int? bid, string systemname)
         {
             BodyNode body = bid.HasValue ? FindBody(bid.Value) : null;
@@ -471,17 +472,27 @@ namespace EliteDangerousCore.StarScan2
 
             if (starbody == null)
             {
-                starbody = new BodyNode(fdname, BodyDefinitions.BodyType.Star, bid ?? BodyNode.BodyIDMarkerForAutoBody, systemBodies, this, fdname);       // we don't know its placement, so we just place it under the systemnode, and we mark it as unknown (even if we know its BID because we want to mark it as autoplaced)
+                starbody = new BodyNode(cutname, BodyDefinitions.BodyType.Star, bid ?? BodyNode.BodyIDMarkerForAutoBody, systemBodies, this, fdname);       // we don't know its placement, so we just place it under the systemnode, and we mark it as unknown (even if we know its BID because we want to mark it as autoplaced)
                 $"  Add Star `{fdname}`:-2 in {systemname}".DO(debugid);
                 BodyGeneration++;
                 systemBodies.ChildBodies.Add(starbody);
             }
             else
             {
-                starbody.ResetBodyName(fdname);
-                starbody.ResetCanonicalName(fdname);          // we set its canonical name to the fdname given
-                if (bid >= 0)
-                    starbody.ResetBodyID(bid.Value);
+                if (starbody.OwnName != cutname)
+                {
+                    starbody.ResetBodyName(cutname);                // lets set the name
+                }
+
+                if (starbody.CanonicalName != fdname)
+                {
+                    starbody.ResetCanonicalName(fdname);            // we set its canonical name to the fdname given
+                }
+
+                if (bid >= 0 && bid != starbody.BodyID)
+                {
+                    starbody.ResetBodyID(bid.Value);                // if we have a body id difference.
+                }
             }
 
             if (bid >= 0)
