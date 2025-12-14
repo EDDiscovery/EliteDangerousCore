@@ -137,7 +137,8 @@ namespace EliteDangerousCore
         {
             if (je is ICarrierStats cs)
             {
-                if (cs.CarrierType == CarrierDefinitions.CarrierType.UnknownType || cs.CarrierType == CarrierType)
+                // if carrier type matches, or a previous un carriertype journal entry and we are a fleet carrier
+                if (cs.CarrierType == CarrierType || (cs.CarrierType == CarrierDefinitions.CarrierType.UnknownType && CarrierType == CarrierDefinitions.CarrierType.FleetCarrier))
                 {
                     cs.UpdateCarrierStats(this, onfootfleetcarrier);
                 }
