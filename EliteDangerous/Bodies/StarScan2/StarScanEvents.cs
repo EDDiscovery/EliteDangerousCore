@@ -56,11 +56,13 @@ namespace EliteDangerousCore.StarScan2
                                 $"StarScan Two systems with same name {node.System.NameAddress} with {sys.NameAddress}".DO();
 
                                 systemNodesByName.Remove(node.System.Name);                 // rename existing entry with NameAddress
-                                systemNodesByName.Add(node.System.NameAddress, node);        
+                                systemNodesByName.Add(node.System.NameAddress, node);
 
                                 node = new SystemNode(sys);
                                 systemNodesByAddress.Add(sys.SystemAddress.Value, node);    // make a new node
                                 systemNodesByName[sys.NameAddress] = node;                  // store as name address pair
+
+                                systemNodesByNameDuplicated.Add(node.System.Name, node);    // the new node, add to the duplicate list, bare without repeats, so it can be found by name only
                             }
                         }
                         else if (!systemNodesByName.TryGetValue(sys.NameAddress, out node))      // if we don't have a nameAddress in there (due to a double name)
@@ -81,24 +83,19 @@ namespace EliteDangerousCore.StarScan2
                             systemNodesByName[sys.Name] = node;     // we add it by name to this node, but leave the previous name also pointing to this node...
                         }
                     }
+
                     return node;
                 }
                 else if (sys.Name.HasChars())      
                 {
-                    // find by normal name
-                    if (!systemNodesByName.TryGetValue(sys.Name, out SystemNode node))    // not a name
+                    // find by normal name in normal list or duplicated list
+                    if (!systemNodesByName.TryGetValue(sys.Name, out SystemNode node) &&            
+                        !systemNodesByNameDuplicated.TryGetValue(sys.Name, out node) )
                     {
-                        // may be in there as Name:Address 
-                        var keyname = systemNodesByName.Keys.ToList().Find(x => x.StartsWith(sys.Name + ":"));      // look thru the keyname and try and find one starting with sys.Name
-
-                        if (keyname == null)    // nope, new.1
-                        {
-                            node = new SystemNode(sys);
-                            systemNodesByName.Add(sys.Name, node);
-                        }
-                        else
-                            node = systemNodesByName[keyname];
+                        node = new SystemNode(sys);
+                        systemNodesByName.Add(sys.Name, node);
                     }
+
                     return node;
                 }
             }
@@ -561,6 +558,7 @@ namespace EliteDangerousCore.StarScan2
         #region vars
         private Dictionary<long, SystemNode> systemNodesByAddress { get; set; } = new Dictionary<long, SystemNode>();       // by address
         private Dictionary<string, SystemNode> systemNodesByName { get; set; } = new Dictionary<string, SystemNode>(StringComparer.InvariantCultureIgnoreCase);       // by name.
+        private Dictionary<string, SystemNode> systemNodesByNameDuplicated { get; set; } = new Dictionary<string, SystemNode>(StringComparer.InvariantCultureIgnoreCase);       // by name in duplication list
 
         private Dictionary<long, List<JournalEntry>> pendingsystemaddressevents = new Dictionary<long, List<JournalEntry>>();   // list of pending entries because their bodies are not yet available
 

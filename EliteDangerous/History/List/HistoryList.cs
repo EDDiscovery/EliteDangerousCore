@@ -213,6 +213,7 @@ namespace EliteDangerousCore
                         break;
 
                     reportProgress(100*eno/journalentries.Length, $"Creating Cmdr. {cmdname} history {(eno-1):N0}/{journalentries.Length:N0}");
+                 //   System.Diagnostics.Trace.WriteLine($" ..{je.EventTimeUTC} .. Journals {eno} {BaseUtils.AppTicks.TickCountLapDelta("HLL")}  ");
                 }
 
                 // Clean up "UnKnown" systems from EDSM log

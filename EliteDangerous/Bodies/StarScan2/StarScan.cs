@@ -140,7 +140,7 @@ namespace EliteDangerousCore.StarScan2
                 {
                     return systemNode;
                 }
-                else if (sys.Name.HasChars() && systemNodesByName.TryGetValue(sys.Name, out var systemNode1))
+                else if (sys.Name.HasChars() && (systemNodesByName.TryGetValue(sys.Name, out var systemNode1) || systemNodesByNameDuplicated.TryGetValue(sys.Name, out systemNode1)))
                 {
                     return systemNode1;
                 }
@@ -163,17 +163,14 @@ namespace EliteDangerousCore.StarScan2
         {
             lock (masterlock)
             {
-                return systemNodesByName.TryGetValue(name, out sn);
+                return systemNodesByName.TryGetValue(name, out sn) || systemNodesByNameDuplicated.TryGetValue(name, out sn);
             }
         }
 
         // try and find the ISystem of a name
-        public ISystem GetISystem(string sysname)
+        public ISystem GetISystem(string name)
         {
-            lock (masterlock)
-            {
-                return systemNodesByName.TryGetValue(sysname, out var node) ? node.System : null;
-            }
+            return TryGetSystemNode(name, out var systemNode) ? systemNode.System : null;
         }
 
         // try and find the ISystem of an address
@@ -197,7 +194,8 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        public List<SystemNode> AllNamedSystems => systemNodesByName.Values.ToList();
+        // This returns all system nodes, including any duplicates with same names as they are stored in the name list as name:address (the address array may be partially complete if scans are before 2018)
+        public List<SystemNode> AllSystemNodes => systemNodesByName.Values.ToList();
 
         #endregion
 
