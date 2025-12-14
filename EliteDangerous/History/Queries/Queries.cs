@@ -964,7 +964,7 @@ namespace EliteDangerousCore
                         {
                             var bodies = name == "BodiesPropertyCount" ? SystemNode.Bodies() : ParentStar.Bodies();
 
-                            foreach (var b in bodies)
+                            foreach (var b in bodies.EmptyIfNull())
                             {
                                 if (b.Scan != null)
                                 {
