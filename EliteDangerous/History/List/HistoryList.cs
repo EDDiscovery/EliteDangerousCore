@@ -250,7 +250,7 @@ namespace EliteDangerousCore
                         continue; 
                     }
 
-                    heh.journalEntry.SetSystemNote();                // since we are displaying it, we can check here to see if a system note needs assigning
+                    heh.journalEntry.CheckAndAssignSystemNote();                // since we are displaying it, we can check here to see if a system note needs assigning
 
                     heh.Index = hist.historylist.Count; // store its index for quick ordering, after all removal etc
 
