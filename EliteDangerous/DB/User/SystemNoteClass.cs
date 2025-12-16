@@ -212,19 +212,19 @@ namespace EliteDangerousCore.DB
             return sys;
         }
 
-        // we update our note, time, and set dirty true.  
+        // we update our note, time, and set dirty true.  text = NULL or empty means delete it 
         // commit to DB and to globals
-        public SystemNoteClass UpdateNote(string s, DateTime localtime, string journaltext)
+        public SystemNoteClass UpdateNote(string text, DateTime localtime, string journaltext)
         {
-            System.Diagnostics.Trace.Assert(s != null && journaltext != null);
+            System.Diagnostics.Trace.Assert(journaltext != null);
 
-            Note = s;
+            Note = text;
             LocalTimeLastCreatedEdited = localtime;
             JournalText = journaltext;
-            if ( UTCTimeCreated.Year < 2014)            // if an old note, create now
+            if (UTCTimeCreated.Year < 2014)            // if an old note, create now
                 UTCTimeCreated = DateTime.UtcNow;
 
-            if (s.Length == 0)        // empty ones delete the note
+            if (text.IsEmpty())        // empty ones delete the note
             {
                 System.Diagnostics.Debug.WriteLine($"System Note Delete {LocalTimeLastCreatedEdited} {JournalID} {SystemName} {Note}");
                 Delete();           // delete and remove note
@@ -237,6 +237,8 @@ namespace EliteDangerousCore.DB
                 return this;
             }
         }
+
+
 
         private static Dictionary<long, SystemNoteClass> notesbyjid = new Dictionary<long, SystemNoteClass>();
         private static Dictionary<string, SystemNoteClass> notesbyname = new Dictionary<string, SystemNoteClass>();

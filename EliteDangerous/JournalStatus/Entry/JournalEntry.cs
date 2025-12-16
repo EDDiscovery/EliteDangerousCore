@@ -146,21 +146,29 @@ namespace EliteDangerousCore
             //if (SNC != null) System.Diagnostics.Debug.WriteLine($"Journal System note found for {Id}");
         }
 
-        // update the note. If text is blank, delete it
+        // update the note. If text is null or blank, delete it
         public void UpdateSystemNote(string text, string system, bool sendtoedsm)
         {
-            System.Diagnostics.Trace.Assert(text != null && system != null);
+            System.Diagnostics.Trace.Assert(system != null);
 
             bool fsdentry = EventTypeID == JournalTypeEnum.FSDJump;
 
-            if (SNC == null)            // if no system note, we make one. Its a JID note unless its on a FSD jump, in which case its a system note. Syncs with EDSM in that case
-                SNC = SystemNoteClass.MakeNote(text, DateTime.Now, system, fsdentry ? 0 : Id, GetJson().ToString());        
-            else
-                SNC = SNC.UpdateNote(text, DateTime.Now, GetJson().ToString());    // and update info, and update our ref in case it has changed or gone null
+            // if no system note, we make one. Its a JID note unless its on a FSD jump, in which case its a system note. Syncs with EDSM in that case
 
-            if (SNC != null && sendtoedsm && fsdentry )    // if still have a note and send to esdm, and its on an FSD entry, then its a system note
+            if (SNC == null)        // if new SNC
+            {
+                if (text.HasChars())  // must have chars to assign it
+                    SNC = SystemNoteClass.MakeNote(text, DateTime.Now, system, fsdentry ? 0 : Id, GetJson().ToString());
+            }
+            else
+            {
+                SNC = SNC.UpdateNote(text, DateTime.Now, GetJson().ToString());    // and update info, and update our ref in case it has changed or gone null
+            }
+
+            if (SNC != null && sendtoedsm && fsdentry)    // if still have a note and send to esdm, and its on an FSD entry, then its a system note
                 EDSM.EDSMClass.SendComments(SNC.SystemName, SNC.Note);
         }
+
 
         #endregion
 

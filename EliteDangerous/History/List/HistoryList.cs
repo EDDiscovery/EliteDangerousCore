@@ -31,7 +31,8 @@ namespace EliteDangerousCore
         public SuitList SuitList { get; private set; } = new SuitList();
         public SuitLoadoutList SuitLoadoutList { get; private set; } = new SuitLoadoutList();
         public EngineerCrafting Engineering { get; private set; } = new EngineerCrafting();
-        public CarrierStats Carrier { get; private set; } = new CarrierStats(CarrierDefinitions.CarrierType.FleetCarrier);
+        public CarrierStats FleetCarrier { get; private set; } = new CarrierStats(CarrierDefinitions.CarrierType.FleetCarrier);
+        public CarrierStats SquadronCarrier { get; private set; } = new CarrierStats(CarrierDefinitions.CarrierType.SquadronCarrier);
         public Ledger CashLedger { get; private set; } = new Ledger();       // and the ledger..
         public ShipList ShipInformationList { get; private set; } = new ShipList();     // ship info
         public ShipYardList Shipyards { get; private set; } = new ShipYardList(); // yards in space (not meters)
@@ -80,7 +81,8 @@ namespace EliteDangerousCore
             Shipyards.Process(je);
             Outfitting.Process(je);
 
-            Carrier.Process(je,he.Status.OnFootFleetCarrier);
+            FleetCarrier.Process(je, he.Status.OnFootFleetCarrier);
+            SquadronCarrier.Process(je, he.Status.OnFootFleetCarrier);
 
             Tuple<Ship, ShipModulesInStore> ret = ShipInformationList.Process(je, he.WhereAmI, he.System ,he.Status.IsInMultiPlayer);
             he.UpdateShipInformation(ret.Item1);
@@ -222,7 +224,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            hist.Carrier.CheckCarrierJump(DateTime.UtcNow);         // lets see if a jump has completed.
+            hist.FleetCarrier.CheckCarrierJump(DateTime.UtcNow);         // lets see if a jump has completed.
 
             System.Diagnostics.Trace.WriteLine(BaseUtils.AppTicks.TickCountLapDelta("HLL").Item1 + $" History List Created {hist.Count}");
 
