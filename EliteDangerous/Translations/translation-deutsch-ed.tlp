@@ -1245,6 +1245,7 @@ SECTION PowerPlayStates
 
 SECTION ModuleTypeNames
 
+.Colonisation: "Colonisation" @
 .Pacifier_Frag_Cannon: "Pacifier Frag Cannon" => "Friedensstifter-Splitterkanone"
 .Cargo_Scanner: "Cargo Scanner" => "Verzeichnisscanner"
 .Guardian_Module_Reinforcement: "Guardian Module Reinforcement" => "Guardian-Modulverstärkung"
@@ -1412,6 +1413,7 @@ SECTION ModulePartNames
 .Colonisation_Module: "Colonisation Module" => "Kolonisierungsmodul"
 .Large_Cargo_Rack: "Large Cargo Rack" => "Großes Frachtgestell"
 .Mining_Volley_Repeater: "Mining Volley Repeater" => "Bergbau Salven-Repeater"
+.Lightweight_Alloy_(Default): "Lightweight Alloy (Default)" @
 
 SECTION ShipSlots
 
@@ -1455,6 +1457,7 @@ SECTION ShipSlots
 .MediumHardpoint3: "Medium Hardpoint 3" => "Mittlere Aufhängung 3"
 .MediumHardpoint4: "Medium Hardpoint 4" => "Mittlere Aufhängung 4"
 .MediumHardpoint5: "Medium Hardpoint 5" => "Mittlere Aufhängung 5"
+.MediumHardpoint6: "Medium Hardpoint 6" @
 .Military01: "Military Slot 1" => "Militärschacht 1"
 .Military02: "Military Slot 2" => "Militärschacht 2"
 .Military03: "Military Slot 3" => "Militärschacht 3"
@@ -1533,8 +1536,10 @@ SECTION ShipSlots
 .Slot11_Size2: "Optional Slot 11 Class 2" => "Optionaler Schacht 11 Klasse 2"
 .Slot11_Size3: "Optional Slot 11 Class 3" => "Optionaler Schacht 11 Klasse 3"
 .Slot12_Size1: "Optional Slot 12 Class 1" => "Optionaler Schacht 12 Klasse 1"
+.Slot13_Size1: "Optional Slot 13 Class 1" @
 .Slot13_Size2: "Optional Slot 13 Class 2" => "Optionaler Schacht 13 Klasse 1"
 .Slot14_Size1: "Optional Slot 14 Class 1" => "Optionaler Schacht 14 Klasse 1"
+.Slot14_Size2: "Optional Slot 14 Class 2" @
 .SmallHardpoint1: "Small Hardpoint 1" => "Kleine Aufhängung 1"
 .SmallHardpoint2: "Small Hardpoint 2" => "Kleine Aufhängung 2"
 .SmallHardpoint3: "Small Hardpoint 3" => "Kleine Aufhängung 3"

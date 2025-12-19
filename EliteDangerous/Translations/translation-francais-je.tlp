@@ -274,7 +274,9 @@ SECTION JournalTypeEnum
 .PowerplayMerits: "Powerplay Merits" => "Points de distinction Powerplay"
 .PowerplayRank: "Powerplay Rank" => "Rang Powerplay"
 .CarrierLocation: "Carrier location" => "Position du porte-vaisseaux"
-
+.CancelledSquadronApplication: "Cancelled Squadron Application" @
+.SquadronApplicationApproved: "Squadron Application Approved" @
+.SquadronApplicationRejected: "Squadron Application Rejected" @
 
 SECTION JournalCargo
 

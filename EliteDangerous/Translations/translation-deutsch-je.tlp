@@ -274,7 +274,9 @@ SECTION JournalTypeEnum
 .PowerplayMerits: "Powerplay Merits" => "Machtspielverdienst"
 .PowerplayRank: "Powerplay Rank" => "Machtspielrang"
 .CarrierLocation: "Carrier location" => "Carrierstandort"
-
+.CancelledSquadronApplication: "Cancelled Squadron Application" @
+.SquadronApplicationApproved: "Squadron Application Approved" @
+.SquadronApplicationRejected: "Squadron Application Rejected" @
 
 SECTION JournalCargo
 

@@ -1245,6 +1245,7 @@ SECTION PowerPlayStates
 
 SECTION ModuleTypeNames
 
+.Colonisation: "Colonisation" @
 .Pacifier_Frag_Cannon: "Pacifier Frag Cannon" @
 .Cargo_Scanner: "Cargo Scanner" @
 .Guardian_Module_Reinforcement: "Guardian Module Reinforcement" @
@@ -1412,6 +1413,7 @@ SECTION ModulePartNames
 .Colonisation_Module: "Colonisation Module" @
 .Large_Cargo_Rack: "Large Cargo Rack" @
 .Mining_Volley_Repeater: "Mining Volley Repeater" @
+.Lightweight_Alloy_(Default): "Lightweight Alloy (Default)" @
 
 SECTION ShipSlots
 
@@ -1455,6 +1457,7 @@ SECTION ShipSlots
 .MediumHardpoint3: "Medium Hardpoint 3" @
 .MediumHardpoint4: "Medium Hardpoint 4" @
 .MediumHardpoint5: "Medium Hardpoint 5" @
+.MediumHardpoint6: "Medium Hardpoint 6" @
 .Military01: "Military Slot 1" @
 .Military02: "Military Slot 2" @
 .Military03: "Military Slot 3" @
@@ -1533,8 +1536,10 @@ SECTION ShipSlots
 .Slot11_Size2: "Optional Slot 11 Class 2" @
 .Slot11_Size3: "Optional Slot 11 Class 3" @
 .Slot12_Size1: "Optional Slot 12 Class 1" @
+.Slot13_Size1: "Optional Slot 13 Class 1" @
 .Slot13_Size2: "Optional Slot 13 Class 2" @
 .Slot14_Size1: "Optional Slot 14 Class 1" @
+.Slot14_Size2: "Optional Slot 14 Class 2" @
 .SmallHardpoint1: "Small Hardpoint 1" @
 .SmallHardpoint2: "Small Hardpoint 2" @
 .SmallHardpoint3: "Small Hardpoint 3" @

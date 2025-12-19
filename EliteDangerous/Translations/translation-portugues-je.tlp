@@ -274,7 +274,9 @@ SECTION JournalTypeEnum
 .PowerplayMerits: "Powerplay Merits" @
 .PowerplayRank: "Powerplay Rank" @
 .CarrierLocation: "Carrier location" @
-
+.CancelledSquadronApplication: "Cancelled Squadron Application" @
+.SquadronApplicationApproved: "Squadron Application Approved" @
+.SquadronApplicationRejected: "Squadron Application Rejected" @
 
 SECTION JournalCargo
 
