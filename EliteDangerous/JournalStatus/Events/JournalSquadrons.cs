@@ -199,4 +199,45 @@ namespace EliteDangerousCore.JournalEvents
             return BaseUtils.FieldBuilder.Build("", Name, "Rank: ".T(EDCTx.JournalEntry_Rank), CurrentRankName_Localised);
         }
     }
+
+    [JournalEntryType(JournalTypeEnum.CancelledSquadronApplication)]
+    public class JournalCancelledSquadronApplication : JournalSquadronBase
+    {
+        public JournalCancelledSquadronApplication(JObject evt) : base(evt, JournalTypeEnum.CancelledSquadronApplication)
+        {
+        }
+
+        public override string GetInfo()
+        {
+            return Name;
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.SquadronApplicationApproved)]
+    public class JournalSquadronApplicationApproved : JournalSquadronBase
+    {
+        public JournalSquadronApplicationApproved(JObject evt) : base(evt, JournalTypeEnum.SquadronApplicationApproved)
+        {
+        }
+
+        public override string GetInfo()
+        {
+            return Name;
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.SquadronApplicationRejected)]
+    public class JournalSquadronApplicationRejected : JournalSquadronBase
+    {
+        public JournalSquadronApplicationRejected(JObject evt) : base(evt, JournalTypeEnum.SquadronApplicationRejected)
+        {
+        }
+
+        public override string GetInfo()
+        {
+            return Name;
+        }
+    }
+
+
 }
