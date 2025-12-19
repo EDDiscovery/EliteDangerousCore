@@ -1245,6 +1245,7 @@ SECTION PowerPlayStates
 
 SECTION ModuleTypeNames
 
+.Colonisation: "Colonisation" @
 .Pacifier_Frag_Cannon: "Pacifier Frag Cannon" @
 .Cargo_Scanner: "Cargo Scanner" @
 .Guardian_Module_Reinforcement: "Guardian Module Reinforcement" @
@@ -1412,6 +1413,7 @@ SECTION ModulePartNames
 .Colonisation_Module: "Colonisation Module" @
 .Large_Cargo_Rack: "Large Cargo Rack" @
 .Mining_Volley_Repeater: "Mining Volley Repeater" @
+.Lightweight_Alloy_(Default): "Lightweight Alloy (Default)" @
 
 SECTION ShipSlots
 
