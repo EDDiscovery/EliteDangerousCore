@@ -419,7 +419,7 @@ namespace EliteDangerousCore.StarScan2
                 lock (sn)
                 {
                     if (sn.AddSAASignalsFound(sc) == null) // can't assign, store in pending
-                        AddPending(sys.SystemAddress.Value, sc);
+                         AddPending(sys.SystemAddress.Value, sc);
                 }
             }
         }
@@ -482,42 +482,57 @@ namespace EliteDangerousCore.StarScan2
 
             foreach (var je in jelist)
             {
-                if (je is JournalScanBaryCentre sb)
+                if (je is JournalScanBaryCentre sb) 
                 {
                     if (sn.AddBaryCentreScan(sb) != null)
                         todelete.Add(je);
                 }
-                else if (je is JournalCodexEntry cd)
+                else if (je is JournalCodexEntry cd) 
                 {
                     if (sn.AddCodexEntryToSystem(cd) != null)
                         todelete.Add(je);
                 }
-                else if (je is JournalFSSBodySignals bs)
-                {
-                    if (sn.AddFSSBodySignalsToBody(bs) != null)
-                        todelete.Add(je);
-                }
-                else if (je is JournalSAASignalsFound saa)
-                {
-                    if (sn.AddSAASignalsFound(saa) != null)
-                        todelete.Add(je);
-                }
-                else if (je is JournalFSSSignalDiscovered sd)
+                else if (je is JournalFSSSignalDiscovered sd) 
                 {
                     if (AddFSSSignalsDiscovered(sd, false))
                         todelete.Add(je);
                 }
-                else if (je is JournalScanOrganic so)
+                else if (je is JournalScanOrganic so) 
                 {
                     if (sn.AddScanOrganicToBody(so) != null)
                         todelete.Add(je);
                 }
-                else if (je is JournalSAAScanComplete saasc)
+                else if (je is JournalTouchdown td) 
+                {
+                    if (sn.AddSurfaceFeatureToBody(td) != null)
+                        todelete.Add(je);
+                }
+                else if (je is JournalApproachSettlement ass) 
+                {
+                    if (sn.AddSurfaceFeatureToBody(ass) != null)
+                        todelete.Add(je);
+                }
+                else if (je is JournalFSSBodySignals bs)  
+                {
+                    if (sn.AddFSSBodySignalsToBody(bs) != null)
+                        todelete.Add(je);
+                }
+                else if (je is JournalSAASignalsFound saa) 
+                {
+                    if (sn.AddSAASignalsFound(saa) != null)
+                        todelete.Add(je);
+                }
+                else if (je is JournalSAAScanComplete saasc) 
                 {
                     if (sn.AddSAAScanComplete(saasc) != null)
                         todelete.Add(je);
                 }
-                else 
+                else if (je is JournalDocked dck)
+                {
+                    if (sn.AddDockingToBody(dck) != null) 
+                        todelete.Add(je);
+                }
+                else
                 {
                     System.Diagnostics.Debug.Assert(false, "Star Scan 2 Not handled event");
                 }

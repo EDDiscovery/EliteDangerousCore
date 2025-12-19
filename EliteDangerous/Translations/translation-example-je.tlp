@@ -249,7 +249,9 @@ DDDE2AEC826902: "Nav Route Clear" @
 02374D50F6A18D: "Powerplay Merits" @
 8062068144644D: "Powerplay Rank" @
 5668ADC227F38B: "Carrier Location" @
-
+00D83C2DDC1290: "Cancelled Squadron Application" @
+61CAC65A66E653: "Squadron Application Approved" @
+33646EA5A80A0A: "Squadron Application Rejected" @
 
 SECTION JournalCargo
 
