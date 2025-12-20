@@ -30,7 +30,7 @@ namespace EliteDangerousCore.Spansh
                                             bool loop, int maxlstoarrival,
                                             int minscanvalue,
                                             bool? usemappingvalue = null,
-                                            string bodytypes = null)
+                                            string[] bodytypes = null)
         {
             if (loop)               // don't give to if loop
                 to = null;
@@ -140,11 +140,12 @@ namespace EliteDangerousCore.Spansh
         }
 
         // return SPANSH GUID search ID
-        public string RequestNeutronRouter(string from, string to, int jumprange, int efficiency)
+        public string RequestNeutronRouter(string from, string to, int jumprange, int efficiency, bool overchargesupercharge)
         {
             string query = HTTPExtensions.MakeQuery("range", jumprange,
                            "from", from,
                            "to", to,
+                           "supercharge_multiplier" , overchargesupercharge ? 6 : 4,
                            "efficiency", efficiency);
             return RequestJob("route", query);
         }
