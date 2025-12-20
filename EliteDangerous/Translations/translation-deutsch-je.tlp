@@ -153,7 +153,7 @@ SECTION JournalTypeEnum
 .ShipyardSell: "Shipyard Sell" => "Verkauf (Werft)"
 .ShipyardSwap: "Shipyard Swap" => "Austausch (Werft)"
 .ShipyardTransfer: "Shipyard Transfer" => "Schiffstransport"
-.ShipyardBankDeposit: "Shipyard Bank Deposit" @
+.ShipyardBankDeposit: "Shipyard Bank Deposit" => "Werftbank Einzahlung"
 .ShipTargeted: "Ship Targeted" => "Schiff anvisiert"
 .Shutdown: "Shutdown" => "Herunterfahren"
 .SRVDestroyed: "SRV Destroyed" => "SRV zerstört"
@@ -274,9 +274,9 @@ SECTION JournalTypeEnum
 .PowerplayMerits: "Powerplay Merits" => "Machtspielverdienst"
 .PowerplayRank: "Powerplay Rank" => "Machtspielrang"
 .CarrierLocation: "Carrier location" => "Carrierstandort"
-.CancelledSquadronApplication: "Cancelled Squadron Application" @
-.SquadronApplicationApproved: "Squadron Application Approved" @
-.SquadronApplicationRejected: "Squadron Application Rejected" @
+.CancelledSquadronApplication: "Cancelled Squadron Application" => "Schwadronsantrag zurückgezogen"
+.SquadronApplicationApproved: "Squadron Application Approved" => "Schwadronsantrag angenommen"
+.SquadronApplicationRejected: "Squadron Application Rejected" => "Schwadronsantrag abgelehnt"
 
 SECTION JournalCargo
 
