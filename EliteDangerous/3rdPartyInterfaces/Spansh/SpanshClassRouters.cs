@@ -282,7 +282,7 @@ namespace EliteDangerousCore.Spansh
                                 nameof(cargo), cargo,
                                 nameof(algorithm), algorithm,
                                 "supercharge_multiplier", fsdspec.NeutronMultipler,
-                                "injection_multiplier", 2,
+                                "range_boost", fsdspec.FSDGuardianBoosterRange,
                                 "ship_build", json.ToString()
                                 );
                 return RequestJob("generic/route", query);
