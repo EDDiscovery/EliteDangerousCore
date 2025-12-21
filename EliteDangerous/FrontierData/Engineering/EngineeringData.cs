@@ -399,9 +399,13 @@ namespace EliteDangerousCore
                 {
                     foreach (var kvp in ItemData.ShipModule.GetPropertiesInOrder())     // all properties in the class
                     {
-                        dynamic modificationvalue = kvp.Key.GetValue(se);
-                        if (modificationvalue != null)
+                        // keys of propertyinfo/OrderedPropertyNameAttribute
+                        dynamic modificationvalue = kvp.Key.GetValue(se);       // get original value
+
+                        if (modificationvalue != null && kvp.Key.CanWrite)      // if non null, and settable..  and can write (may not, may be a get only item)
                         {
+                            // and we have not modified it directly above
+
                             if (!primarymodifiers.Contains(kvp.Key.Name))        // if not null, and we have not set it above..
                             {
                                 dynamic curvalue = kvp.Key.GetValue(original);        // get original value
