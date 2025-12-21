@@ -30,7 +30,7 @@ namespace EliteDangerousCore.Spansh
                                             bool loop, int maxlstoarrival,
                                             int minscanvalue,
                                             bool? usemappingvalue = null,
-                                            string bodytypes = null)
+                                            string[] bodytypes = null)
         {
             if (loop)               // don't give to if loop
                 to = null;
@@ -140,11 +140,12 @@ namespace EliteDangerousCore.Spansh
         }
 
         // return SPANSH GUID search ID
-        public string RequestNeutronRouter(string from, string to, int jumprange, int efficiency)
+        public string RequestNeutronRouter(string from, string to, int jumprange, int efficiency, bool overchargesupercharge)
         {
             string query = HTTPExtensions.MakeQuery("range", jumprange,
                            "from", from,
                            "to", to,
+                           "supercharge_multiplier", overchargesupercharge ? 6 : 4,
                            "efficiency", efficiency);
             return RequestJob("route", query);
         }
@@ -260,27 +261,29 @@ namespace EliteDangerousCore.Spansh
                 return new Tuple<string, List<ISystem>>(res.Item1, null);
         }
 
-        public string RequestGalaxyPlotter(string source, string destination, int cargo, bool is_supercharged, bool use_supercharge, bool use_injections, bool exclude_secondary,
+        public string RequestGalaxyPlotter(string source, string destination, int cargo, bool is_supercharged, bool use_supercharge,
+                                    bool use_injections, bool exclude_secondary, bool refuel_every_scoopable,
                                         Ship si, string algorithm = "optimistic")
         {
             var fsdspec = si.GetFSDSpec();
             if (fsdspec != null)
             {
-                var json = new JArray();
-                var obj = new JObject();
-                obj["data"] = si.JSONLoadout();
-                json.Add(obj);
+                var json = si.JSONLoadout(true);
                 System.Diagnostics.Debug.WriteLine($"JSON export to Spansh {json.ToString(true)}");
+                FileHelpers.TryWriteToFile(@"c:\code\galaxyplotter.json", json.ToString(true));
 
                 string query = HTTPExtensions.MakeQuery(nameof(source), source, nameof(destination), destination, nameof(is_supercharged), is_supercharged, nameof(use_supercharge), use_supercharge,
                                 nameof(use_injections), use_injections, nameof(exclude_secondary), exclude_secondary,
                                 "fuel_power", fsdspec.PowerConstant, "fuel_multiplier", fsdspec.FuelMultiplier,
                                 "optimal_mass", fsdspec.OptimalMass, "base_mass", si.UnladenMass, "tank_size", si.FuelCapacity, "internal_tank_size", si.ReserveFuelCapacity,
                                 "max_fuel_per_jump", fsdspec.MaxFuelPerJump,
+                                "refuel_every_scoopable", refuel_every_scoopable,
                                 nameof(cargo), cargo,
                                 nameof(algorithm), algorithm,
-                                "ship_build", json.ToString());
-
+                                "supercharge_multiplier", fsdspec.NeutronMultipler,
+                                "injection_multiplier", 2,
+                                "ship_build", json.ToString()
+                                );
                 return RequestJob("generic/route", query);
             }
             else
@@ -316,9 +319,9 @@ namespace EliteDangerousCore.Spansh
                         string notes = "";
 
                         if (used > 0)
-                            notes = notes.AppendPrePad($"Fuel used {used:N0}", Environment.NewLine);
+                            notes = notes.AppendPrePad($"Fuel used {used:N2}", Environment.NewLine);
 
-                        notes = notes.AppendPrePad($"Fuel in tank {tank:N0}", Environment.NewLine);
+                        notes = notes.AppendPrePad($"Fuel in tank {tank:N2}", Environment.NewLine);
 
                         if (has_neutron)
                             notes = notes.AppendPrePad("Neutron star", Environment.NewLine);
