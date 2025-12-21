@@ -456,7 +456,6 @@ namespace EliteDangerousCore
 
             // EDSY ordered
 
-
             [OrderedPropertyNameAttribute(0, "")] public string Mount { get; set; }                               // 'mount'
             [OrderedPropertyNameAttribute(1, "")] public string MissileType { get; set; }                         // 'missile'
 
@@ -618,6 +617,8 @@ namespace EliteDangerousCore
 
             [OrderedPropertyNameAttribute(1000, "cr")] public int? Cost { get; set; }
             [OrderedPropertyNameAttribute(1001, "cr")] public int? AmmoCost { get; set; }
+
+            [OrderedPropertyNameAttribute(2000, "")] public int FSDNeutronMultiplier => ModuleID == 129038968 ? 6 : 4;  // CASPIAN dodge until we decide, hopefully EDSY, encodes it in a variable
 
             const double WEAPON_CHARGE = 0.0;
 
@@ -1528,7 +1529,7 @@ namespace EliteDangerousCore
                 { "int_hyperdrive_overcharge_size8_class4", new ShipModule(129036579,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive (SCO) Class 8 Rating B"){ Cost = 20515650, Class = 8, Rating = "B", Mass = 160, Integrity = 169, PowerDraw = 0.88, BootTime = 10, OptMass = 4200, ThermalLoad = 50, MaxFuelPerJump = 20.4, LinearConstant = 12, PowerConstant = 2.9, SCOSpeedIncrease = 31, SCOAccelerationRate = 0.04, SCOHeatGenerationRate = 130, SCOControlInterference = 0.64, SCOFuelDuringOvercharge = 3.08 } },
                 { "int_hyperdrive_overcharge_size8_class5", new ShipModule(129036580,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive (SCO) Class 8 Rating A"){ Cost = 61546940, Class = 8, Rating = "A", Mass = 160, Integrity = 188, PowerDraw = 1.05, BootTime = 10, OptMass = 4670, ThermalLoad = 50, MaxFuelPerJump = 20.7, LinearConstant = 13, PowerConstant = 2.9, SCOSpeedIncrease = 42, SCOAccelerationRate = 0.04, SCOHeatGenerationRate = 123.5, SCOControlInterference = 0.624, SCOFuelDuringOvercharge = 4.11 } },
 
-                { "int_hyperdrive_overcharge_size8_class5_overchargebooster_mkii", new ShipModule(129038968,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive (SCO) Class 8 Rating A"){ Cost = 82042060, Class = 8, Rating = "A", Mass = 160, Integrity = 188, PowerDraw = 1.05, BootTime = 10, OptMass = 4670, ThermalLoad = 50, MaxFuelPerJump = 6.8, LinearConstant = 11.067, PowerConstant = 2.5, SCOSpeedIncrease = 42, SCOAccelerationRate = 0.04, SCOHeatGenerationRate = 123.5, SCOControlInterference = 0.624, SCOFuelDuringOvercharge = 4.11 } },
+                { "int_hyperdrive_overcharge_size8_class5_overchargebooster_mkii", new ShipModule(129038968,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive (SCO) Class 8 Rating A"){ Cost = 82042060, Class = 8, Rating = "A", Mass = 160, Integrity = 188, PowerDraw = 1.05, BootTime = 10, OptMass = 4670, ThermalLoad = 50, MaxFuelPerJump = 6.8, LinearConstant = 11.000, PowerConstant = 2.5025, SCOSpeedIncrease = 42, SCOAccelerationRate = 0.04, SCOHeatGenerationRate = 123.5, SCOControlInterference = 0.624, SCOFuelDuringOvercharge = 4.11 } },
 
                 // non real modules which sometimes appears in logs
 

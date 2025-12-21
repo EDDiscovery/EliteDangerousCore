@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BaseUtils;
 using EliteDangerousCore.JournalEvents;
 using QuickJSON;
 
@@ -233,7 +234,9 @@ namespace EliteDangerousCore
             var module = GetShipModulePropertiesEngineered(ShipSlots.Slot.FrameShiftDrive);
             if (module != null && module.PowerConstant.HasValue)
             {
-                var spec = new EliteDangerousCalculations.FSDSpec(module.PowerConstant.Value, module.LinearConstant.Value, module.OptMass.Value, module.MaxFuelPerJump.Value);
+                var spec = new EliteDangerousCalculations.FSDSpec(module.PowerConstant.Value, module.LinearConstant.Value, 
+                                        module.OptMass.Value, module.MaxFuelPerJump.Value, module.FSDNeutronMultiplier ); 
+
                 var gmodules = FindShipModules(x => x.GetModuleUnengineered()?.ModType == ItemData.ShipModule.ModuleTypes.GuardianFSDBooster);
                 if (gmodules.Length == 1)
                 {
@@ -1074,11 +1077,6 @@ namespace EliteDangerousCore
                     GetModuleInSlot(ShipSlots.Slot.FuelTank) != null && GetModuleInSlot(ShipSlots.Slot.Armour) != null;
         }
 
-        public string ToJSONCoriolis(out string errstring)
-        {
-            return JSONCoriolis(out errstring).ToString();
-        }
-        
         public JObject JSONCoriolis(out string errstring)
         {
             errstring = "";
@@ -1147,12 +1145,7 @@ namespace EliteDangerousCore
             return engineering;
         }
 
-        public string ToJSONLoadout()
-        {
-            return JSONLoadout().ToString();
-        }
-
-        public JObject JSONLoadout()
+        public JToken JSONLoadout(bool slef)
         {
             JObject jo = new JObject();
 
@@ -1189,8 +1182,8 @@ namespace EliteDangerousCore
             {
                 JObject module = new JObject();
 
-                module["Slot"] = sm.SlotFD.ToString();
-                module["Item"] = sm.ItemFD;
+                module["Slot"] = sm.SlotFD.ToString().ToLowerInvariant();
+                module["Item"] = sm.ItemFD.ToLowerInvariant();
                 module["On"] = sm.Enabled.HasValue ? sm.Enabled : true;
                 module["Priority"] = sm.Priority.HasValue ? sm.Priority : 0;
 
@@ -1205,7 +1198,18 @@ namespace EliteDangerousCore
 
             jo["Modules"] = mlist;
 
-            return jo;
+            if ( slef )
+            {
+                var jarray = new JArray();
+                var obj = new JObject();
+                string ver = System.Reflection.Assembly.GetEntryAssembly().GetAssemblyVersionString();
+                obj["header"] = new JObject() { ["appName"] = "EDDiscovery", ["appVersion"] = ver, ["appURL"] = "https://github.com/EDDiscovery/EDDiscovery" };
+                obj["data"] = jo;
+                jarray.Add(obj);
+                return jarray;
+            }
+            else
+                return jo;
         }
 
         #endregion
