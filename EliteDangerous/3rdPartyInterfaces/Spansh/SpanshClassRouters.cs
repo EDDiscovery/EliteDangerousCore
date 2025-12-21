@@ -141,14 +141,20 @@ namespace EliteDangerousCore.Spansh
         }
 
         // return SPANSH GUID search ID
-        public string RequestNeutronRouter(string from, string to, int jumprange, int efficiency, bool overchargesupercharge)
+        public string RequestNeutronRouter(string from, string to, double jumprange, int efficiency, Ship si)
         {
-            string query = HTTPExtensions.MakeQuery("range", jumprange,
-                           "from", from,
-                           "to", to,
-                           "supercharge_multiplier" , overchargesupercharge ? 6 : 4,
-                           "efficiency", efficiency);
-            return RequestJob("route", query);
+            var fsdspec = si.GetFSDSpec();
+            if (fsdspec != null)
+            {
+                string query = HTTPExtensions.MakeQuery("range", jumprange,
+                               "from", from,
+                               "to", to,
+                               "supercharge_multiplier", fsdspec.NeutronMultipler,
+                               "efficiency", efficiency);
+                return RequestJob("route", query);
+            }
+            else
+                return null;
         }
 
         public Tuple<string, List<ISystem>> TryGetNeutronRouter(string jobname)
