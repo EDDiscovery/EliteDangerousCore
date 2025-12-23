@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2023-2023 EDDiscovery development team
+ * Copyright 2023-2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -16,8 +16,7 @@ using BaseUtils;
 using QuickJSON;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Web;
+using System.Linq;
 
 namespace EliteDangerousCore.Spansh
 {
@@ -63,20 +62,41 @@ namespace EliteDangerousCore.Spansh
         }
 
 
-        public string RequestTradeRouter(string fromsystem, string fromstation,
-                                            int max_hops, double max_hop_distance,
+        public string RequestTradeRouter( string system, string station,
+                                            int max_hops, 
+                                            double max_hop_distance,
                                             long starting_capital,
                                             int max_cargo,
                                             int max_system_distance,
-                                            int max_agesec,
-                                            bool requires_large_pad, bool allow_prohibited, bool allow_planetary, bool avoid_loops, bool permit)
+                                            int max_price_age,
+                                            bool requires_large_pad, bool allow_planetary, bool allow_player_owned, bool allow_restricted_access,
+                                            bool allow_prohibited, bool unique, bool permit)
         {
-            string query = HTTPExtensions.MakeQuery(nameof(max_hops), max_hops, nameof(max_hop_distance), max_hop_distance,
-                           "system", fromsystem, "station", fromstation,
-                           nameof(starting_capital), starting_capital, nameof(max_cargo), max_cargo, nameof(max_system_distance), max_system_distance,
-                           "max_price_age", max_agesec,
-                           nameof(requires_large_pad), requires_large_pad, nameof(allow_prohibited), allow_prohibited, nameof(allow_planetary), allow_planetary,
-                           "unique", avoid_loops, nameof(permit), permit);
+            // Checked dec 23 2025
+            // max_hops=5&max_hop_distance=50&system=Col+285+Sector+OJ-Q+d5-88&station=Solanas+Enterprise&starting_capital=1000&max_cargo=7
+            // &max_system_distance=10000000&max_price_age=483209
+            // &requires_large_pad=1&allow_prohibited=1&allow_planetary=1&allow_player_owned=1&allow_restricted_access=1&unique=1&permit=1
+            // Query is `max_hops=5&max_hop_distance=25&system=Sol&station=Abimbola+Metallurgic+Reserve&starting_capital=1000&max_cargo=7
+            // &max_system_distance=1000000&max_price_age=2592000
+            // &requires_large_pad=1&allow_prohibited=1&allow_planetary=1&allow_player_owned=1&allow_restricted_access=1&unique=1&permit=1`
+
+            string query = HTTPExtensions.MakeQuery(        // name and order as per spansh query
+                           nameof(max_hops), max_hops, 
+                           nameof(max_hop_distance), max_hop_distance,
+                           nameof(system), system,                          
+                           nameof(station), station,
+                           nameof(starting_capital), starting_capital, 
+                           nameof(max_cargo), max_cargo, 
+                           nameof(max_system_distance), max_system_distance,
+                           nameof(max_price_age), max_price_age,
+                           nameof(requires_large_pad), requires_large_pad,
+                           nameof(allow_prohibited), allow_prohibited,
+                           nameof(allow_planetary), allow_planetary,
+                           nameof(allow_player_owned), allow_player_owned,
+                           nameof(allow_restricted_access), allow_restricted_access,
+                           nameof(unique), unique, 
+                           nameof(permit), permit);
+
 
             return RequestJob("trade/route", query);
         }
@@ -202,13 +222,17 @@ namespace EliteDangerousCore.Spansh
                 return new Tuple<string, List<ISystem>>(res.Item1, null);
         }
 
-        public string RequestFleetCarrierRouter(string source, List<string> destinations,
-                                            int capacity_used, bool calculate_starting_fuel)
+        public string RequestFleetCarrierRouter(string source, IEnumerable<string> destinations,
+                                            int capacity_used, bool calculate_starting_fuel, bool squadroncarrier)
         {
-            string query = HTTPExtensions.MakeQuery(nameof(source), source, nameof(capacity_used), capacity_used, nameof(calculate_starting_fuel), calculate_starting_fuel);
-            foreach (var d in destinations)
-                query += $"&destinations={HttpUtility.UrlEncode(d)}";
-
+            int capacity = squadroncarrier ? 60000 : 25000;
+            int mass = squadroncarrier ? 15000 : 25000;
+            string query = HTTPExtensions.MakeQuery(nameof(source), source,
+                                                    nameof(destinations), destinations.ToArray(),
+                                                    nameof(capacity), capacity,
+                                                    nameof(mass), mass,
+                                                    nameof(capacity_used), capacity_used,
+                                                    nameof(calculate_starting_fuel), calculate_starting_fuel);
             return RequestJob("fleetcarrier/route", query);
         }
 
@@ -353,7 +377,7 @@ namespace EliteDangerousCore.Spansh
 
         public string RequestExomastery(string from, string to, double jumprange, int radius,
                                             int maxsystems,
-                                            bool loop, int maxlstoarrival,
+                                            bool loop, int maxlstoarrival, bool avoid_thargoids,
                                             int minscanvalue)
         {
             if (loop)               // don't give to if loop
@@ -366,6 +390,7 @@ namespace EliteDangerousCore.Spansh
                            "max_results", maxsystems,
                            "max_distance", maxlstoarrival,
                            "min_value", minscanvalue,
+                           "avoid_thargoids", avoid_thargoids,
                            "loop", loop);
 
             return RequestJob("exobiology/route", query);
