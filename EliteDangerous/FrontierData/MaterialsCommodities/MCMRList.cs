@@ -19,7 +19,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("MatC {Details.Category} {Details.Name} {Details.FDName} count {Count}")]
+    [System.Diagnostics.DebuggerDisplay("MatC {Details.Category} {Details.Type} {Details.FDName} count {Count}")]
     public class MaterialCommodityMicroResource
     {
         public const int NoCounts = 2;

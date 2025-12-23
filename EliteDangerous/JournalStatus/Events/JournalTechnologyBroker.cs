@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright 2016-2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -19,7 +19,7 @@ using System.Linq;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.TechnologyBroker)]
-    public class JournalTechnologyBroker : JournalEntry
+    public class JournalTechnologyBroker : JournalEntry, ICommodityJournalEntry, IMaterialJournalEntry
     {
         public JournalTechnologyBroker(JObject evt) : base(evt, JournalTypeEnum.TechnologyBroker)
         {
@@ -106,6 +106,18 @@ namespace EliteDangerousCore.JournalEvents
                     sb.AppendPrePad(m.FriendlyName + ": " + m.Count.ToString(), ", ");
 
             return sb.Length>0 ? sb.ToString() : null;
+        }
+
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool insrv)
+        {
+            foreach (var cmd in CommodityList.EmptyIfNull())
+                mc.ChangeCommd(EventTimeUTC, cmd.Name, -cmd.Count, 0);
+        }
+
+        public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
+        {
+            foreach (var mat in MaterialList.EmptyIfNull())
+                mc.ChangeMat(EventTimeUTC, mat.Category, mat.Name, -mat.Count);
         }
     }
 }
