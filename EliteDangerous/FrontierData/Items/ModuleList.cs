@@ -303,11 +303,11 @@ namespace EliteDangerousCore
                 { "panthermkii_armour_mirrored", new ShipModule(129034274,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Panther Clipper Mk II Mirrored Surface Composite"){ Mass=150, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
                 { "panthermkii_armour_reactive", new ShipModule(129034275,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Panther Clipper Mk II Reactive Surface Composite"){ Mass=150, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
-                { "lakonminer_armour_grade1", new ShipModule(-1,ShipModule.ModuleTypes.LightweightAlloy,"Type-11 Prospector Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
-                { "lakonminer_armour_grade2", new ShipModule(-1,ShipModule.ModuleTypes.ReinforcedAlloy,"Type-11 Prospector Reinforced Alloy"){ Mass=32, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
-                { "lakonminer_armour_grade3", new ShipModule(-1,ShipModule.ModuleTypes.MilitaryGradeComposite,"Type-11 Prospector Military Grade Composite"){ Mass=63, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
-                { "lakonminer_armour_mirrored", new ShipModule(-1,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Type-11 Prospector Mirrored Surface Composite"){ Mass=63, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
-                { "lakonminer_armour_reactive", new ShipModule(-1,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Type-11 Prospector Reactive Surface Composite"){ Mass=63, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
+                { "lakonminer_armour_grade1", new ShipModule(-1,ShipModule.ModuleTypes.LightweightAlloy,"Type 11 Prospector Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
+                { "lakonminer_armour_grade2", new ShipModule(-1,ShipModule.ModuleTypes.ReinforcedAlloy,"Type 11 Prospector Reinforced Alloy"){ Mass=32, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
+                { "lakonminer_armour_grade3", new ShipModule(-1,ShipModule.ModuleTypes.MilitaryGradeComposite,"Type 11 Prospector Military Grade Composite"){ Mass=63, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
+                { "lakonminer_armour_mirrored", new ShipModule(-1,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Type 11 Prospector Mirrored Surface Composite"){ Mass=63, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
+                { "lakonminer_armour_reactive", new ShipModule(-1,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Type 11 Prospector Reactive Surface Composite"){ Mass=63, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
                 // mkii ablative explorer armour
                 { "explorer_nx_armour_grade1", new ShipModule(129036571,ShipModule.ModuleTypes.LightweightAlloy,"Caspian Explorer MKII Ablative Lightweight Alloy"){ Mass=15, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
@@ -1532,7 +1532,7 @@ namespace EliteDangerousCore
                 { "independent_fighter_cockpit", new ShipModule(899990002,ShipModule.ModuleTypes.CockpitType,"Independent Fighter Cockpit" ) },
                 { "krait_light_cockpit", new ShipModule(999999948,ShipModule.ModuleTypes.CockpitType,"Krait Phantom Cockpit" ) },
                 { "krait_mkii_cockpit", new ShipModule(999999946,ShipModule.ModuleTypes.CockpitType,"Krait Mk II Cockpit" ) },
-                { "lakonminer_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.CockpitType,"Type-11 Prospector Cockpit" ) },
+                { "lakonminer_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.CockpitType,"Type 11 Prospector Cockpit" ) },
                 { "mamba_cockpit", new ShipModule(999999949,ShipModule.ModuleTypes.CockpitType,"Mamba Cockpit" ) },
                 { "orca_cockpit", new ShipModule(999999922,ShipModule.ModuleTypes.CockpitType,"Orca Cockpit" ) },
                 { "python_cockpit", new ShipModule(999999924,ShipModule.ModuleTypes.CockpitType,"Python Cockpit" ) },
