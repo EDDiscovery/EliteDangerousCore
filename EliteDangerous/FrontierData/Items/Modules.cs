@@ -81,8 +81,8 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Empire Trader", "Imperial Clipper");
             candidatename = candidatename.Replace("Krait Light", "Krait Phantom");
             candidatename = candidatename.Replace("Ferdelance", "Fer De Lance");
-            candidatename = candidatename.Replace("Type 9 Military ", "Type 10 Defender ");
-            candidatename = candidatename.Replace("Type 9 Militarystripe", "Type 9 Stripe");
+            candidatename = candidatename.Replace("Type 9 Military ", "Type-10 Defender ");
+            candidatename = candidatename.Replace("Type 9 Militarystripe", "Type-9 Stripe");
             candidatename = candidatename.Replace("Belugaliner", "Beluga Liner");
             candidatename = candidatename.Replace("Ppaisling", "PP Aisling");
             candidatename = candidatename.Replace("MK I Ii", "MK III");
@@ -117,9 +117,15 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Pp Pranavantal", "Pp Prana Vantal");
             candidatename = candidatename.Replace("Pp Yurigrom", "Pp Yuri Grom");
             candidatename = candidatename.Replace("Explorer Nx", "Caspian Explorer");
-            candidatename = candidatename.Replace(" lakonminer", " Type 11 Prospector", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace(" lakonminer", " Type-11 Prospector", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace("ownersclub", " Owners Club", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace("brewercorporation", "Brewer Corporation", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 6", "Type-6", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 7", "Type-7", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 8", "Type-8", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 9", "Type-9", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 10", "Type-10", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 11", "Type-11", StringComparison.InvariantCultureIgnoreCase);
             return candidatename;
         }
 
