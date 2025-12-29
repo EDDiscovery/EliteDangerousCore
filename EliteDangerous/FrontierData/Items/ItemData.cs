@@ -145,7 +145,7 @@ namespace EliteDangerousCore
                     }
                 }
 
-                foreach( var vm in vanitymodules)
+                foreach (var vm in vanitymodules)
                 {
                     string org = vm.Value.EnglishModName;
                     string text = GenerateCandidateModuleName(org);
@@ -174,15 +174,14 @@ namespace EliteDangerousCore
 
                     // auto update cs file - this breaks the debugger note and causes it to notice text updates. Just ignore
 
-
                     if (System.IO.File.Exists(csfile))
                     {
                         string[] itemmodules = System.IO.File.ReadAllLines(csfile);
                         List<string> newfile = new List<string>();
-                        bool done = false;
+
                         for (int i = 0; i < itemmodules.Length; i++)
                         {
-                            if (!done && itemmodules[i].Contains("vanitymodules = new Dictionary"))
+                            if (itemmodules[i].Contains("vanitymodules = new Dictionary"))
                             {
                                 newfile.Add(itemmodules[i]);
                                 newfile.Add("            {");
@@ -191,14 +190,11 @@ namespace EliteDangerousCore
 
                                 while (!itemmodules[++i].Contains("};"))        // go to line with };
                                     ;
-
-                                done = true;
                             }
 
                             newfile.Add(itemmodules[i]);
                         }
 
-                        System.Diagnostics.Debug.Assert(done == true);
                         System.IO.File.WriteAllLines(csfile, newfile);
 
                         System.Diagnostics.Trace.WriteLine($"*** UPDATED CS FILE");
