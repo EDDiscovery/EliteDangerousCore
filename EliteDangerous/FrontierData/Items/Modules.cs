@@ -119,6 +119,12 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace(" lakonminer", " Type 11 Prospector", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace("ownersclub", " Owners Club", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace("brewercorporation", "Brewer Corporation", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 6", "Type-6", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 7", "Type-7", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 8", "Type-8", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 9", "Type-9", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 10", "Type-10", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 11", "Type-11", StringComparison.InvariantCultureIgnoreCase);
             return candidatename;
         }
 
