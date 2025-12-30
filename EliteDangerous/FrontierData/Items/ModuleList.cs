@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2024 EDDiscovery development team
+ * Copyright 2016-2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -12,11 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
-using BaseUtils;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace EliteDangerousCore
 {
@@ -7599,11 +7595,11 @@ namespace EliteDangerousCore
                 {"paintjob_type9_military_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Vibrant Purple") },
                 {"paintjob_type9_military_vibrant_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Vibrant Red") },
                 {"paintjob_type9_military_vibrant_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Vibrant Yellow") },
-                {"paintjob_type9_militarystripe_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Stripe Blue") },
-                {"paintjob_type9_militarystripe_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Stripe Green") },
-                {"paintjob_type9_militarystripe_orange", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Stripe Orange") },
-                {"paintjob_type9_militarystripe_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Stripe Purple") },
-                {"paintjob_type9_militarystripe_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Stripe Red") },
+                {"paintjob_type9_militarystripe_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Military Stripe Blue") },
+                {"paintjob_type9_militarystripe_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Military Stripe Green") },
+                {"paintjob_type9_militarystripe_orange", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Military Stripe Orange") },
+                {"paintjob_type9_militarystripe_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Military Stripe Purple") },
+                {"paintjob_type9_militarystripe_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Military Stripe Red") },
                 {"paintjob_type9_militarystripe_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Stripe Yellow") },
                 {"paintjob_type9_salvage_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Salvage 1") },
                 {"paintjob_type9_salvage_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Salvage 2") },
