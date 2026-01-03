@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016-2022 EDDiscovery development team
+ * Copyright 2016-2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -20,6 +20,7 @@ using System.Data;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace EliteDangerousCore.DB
 {
@@ -495,84 +496,112 @@ namespace EliteDangerousCore.DB
                 deviation = dv; cumulativewpdist = wdl; disttowaypoint = dtwp; }
         }
 
-        static Point3D P3D(ISystem s)
+        // given position, and possibly manual index mode (-1 auto, >=0 index)
+        // return info on last and next systems
+        public ClosestInfo ClosestTo(ISystem currentsystem, int index)
         {
-            return new Point3D(s.X, s.Y, s.Z);
-        }
-
-        public ClosestInfo ClosestTo(ISystem currentsystem)
-        {
-            Point3D currentsystemp3d = P3D(currentsystem);
-
             var knownsystems = SystemsWithCoordinates();
 
             if (knownsystems.Count < 1)     // need at least one
                 return null;
 
-            double mininterceptdist = Double.MaxValue;
-            int wpto = -1;     // which waypoint are we between, N.. N+1
+            Point3D currentsystemp3d = P3D(currentsystem);
 
-            double closesttodist = Double.MaxValue;
-            int closestto = -1;
-
-            for (int i = 0; i < knownsystems.Count; i++)
+            if (index >= 0)
             {
-                if (i > 0)
-                {
-                    Point3D lastp3d = P3D(knownsystems[i - 1].Item1);
-                    Point3D top3d = P3D(knownsystems[i].Item1);
+                index = Math.Min(Math.Max(0,index), knownsystems.Count-1);
 
-                    double disttostart = currentsystemp3d.Distance(lastp3d);
-                    double disttoend = currentsystemp3d.Distance(top3d);
-                    double distbetween = lastp3d.Distance(top3d);
+                double distto = currentsystemp3d.Distance(P3D(knownsystems[index].Item1));
+                double cumldist = CumulativeDistance(knownsystems[index].Item1, knownsystems);
 
-                    double interceptvalue = lastp3d.InterceptPercentageDistance(top3d, currentsystemp3d, out double distancefrominterceptpoint);       //dist to intercept point on line note.
+                // need to use name, as this class does not know about system address so can't compare ISystem
 
-                    //System.Diagnostics.Debug.WriteLine($"From {knownsystems[i - 1].Item1} to {knownsystems[i].Item1} intercept {interceptvalue:N5} Point Distance from path {distancefrominterceptpoint:N5} Distance to Start {disttostart:N5} end {disttoend:N5}");
+                bool atlast = index > 0 && currentsystem.Name.EqualsIIC(knownsystems[index - 1].Item1.Name);
+                // report back last if we are at last, others
+                return new ClosestInfo( atlast ? knownsystems[index - 1].Item1 : null,           
+                                        knownsystems[index].Item1,
+                                        knownsystems[0].Item1,
+                                        knownsystems.Last().Item1,
+                                        index,
+                                        atlast ? knownsystems[index - 1].Item3.Note : "",
+                                        knownsystems[index].Item3.Note,
+                                        0,       // deviation from path
+                                        cumldist,
+                                        distto);
 
-                    if (interceptvalue >= -0.01 && interceptvalue < 1.01        // allow a little margin in the intercept point for randomness
-                            && (distancefrominterceptpoint <= mininterceptdist || disttostart <= 2)        // if closer to line than last, or we are very close to the start
-                            && distancefrominterceptpoint < distbetween)        // and we are not stupidly far from the path
-                    {
-                        //System.Diagnostics.Debug.WriteLine($"   chosen ");
-                        wpto = i;
-                        mininterceptdist = distancefrominterceptpoint;
-                    }
-                }
-
-                double disttofirstpoint = currentsystemp3d.Distance(P3D(knownsystems[i].Item1));
-
-                if (disttofirstpoint < closesttodist)       // find the closest waypoint
-                {
-                    closesttodist = disttofirstpoint;
-                    closestto = i;
-                }
-            }
-
-            if (wpto == -1)        // if not on path
-            {
-                wpto = closestto;
-                mininterceptdist = -1;
-                //System.Diagnostics.Debug.WriteLine("Not on path, closest to" + knownsystems[closestto].ToString());
             }
             else
             {
-                //System.Diagnostics.Debug.WriteLine("Lies on line to WP" + interceptendpoint + " " + knownsystems[interceptendpoint].ToString());
+                double mininterceptdist = Double.MaxValue;
+                int wpto = -1;     // which waypoint are we between, N.. N+1
+
+                double closesttodist = Double.MaxValue;
+                int closestto = -1;
+
+                for (int i = 0; i < knownsystems.Count; i++)
+                {
+                    if (i > 0)
+                    {
+                        Point3D lastp3d = P3D(knownsystems[i - 1].Item1);
+                        Point3D top3d = P3D(knownsystems[i].Item1);
+
+                        double disttostart = currentsystemp3d.Distance(lastp3d);
+                        double disttoend = currentsystemp3d.Distance(top3d);
+                        double distbetween = lastp3d.Distance(top3d);
+
+                        double interceptvalue = lastp3d.InterceptPercentageDistance(top3d, currentsystemp3d, out double distancefrominterceptpoint);       //dist to intercept point on line note.
+
+                        //System.Diagnostics.Debug.WriteLine($"From {knownsystems[i - 1].Item1} to {knownsystems[i].Item1} intercept {interceptvalue:N5} Point Distance from path {distancefrominterceptpoint:N5} Distance to Start {disttostart:N5} end {disttoend:N5}");
+
+                        if (interceptvalue >= -0.01 && interceptvalue < 1.01        // allow a little margin in the intercept point for randomness
+                                && (distancefrominterceptpoint <= mininterceptdist || disttostart <= 2)        // if closer to line than last, or we are very close to the start
+                                && distancefrominterceptpoint < distbetween)        // and we are not stupidly far from the path
+                        {
+                            //System.Diagnostics.Debug.WriteLine($"   chosen ");
+                            wpto = i;
+                            mininterceptdist = distancefrominterceptpoint;
+                        }
+                    }
+
+                    double disttofirstpoint = currentsystemp3d.Distance(P3D(knownsystems[i].Item1));
+
+                    if (disttofirstpoint < closesttodist)       // find the closest waypoint
+                    {
+                        closesttodist = disttofirstpoint;
+                        closestto = i;
+                    }
+                }
+
+                if (wpto == -1)        // if not on path
+                {
+                    wpto = closestto;
+                    mininterceptdist = -1;
+                    //System.Diagnostics.Debug.WriteLine("Not on path, closest to" + knownsystems[closestto].ToString());
+                }
+                else
+                {
+                    //System.Diagnostics.Debug.WriteLine("Lies on line to WP" + interceptendpoint + " " + knownsystems[interceptendpoint].ToString());
+                }
+
+                double disttowaypoint = currentsystemp3d.Distance(P3D(knownsystems[wpto].Item1));
+                double cumldist = CumulativeDistance(knownsystems[wpto].Item1, knownsystems);
+
+                return new ClosestInfo(wpto > 0 ? knownsystems[wpto - 1].Item1 : null,
+                                        knownsystems[wpto].Item1,
+                                        knownsystems[0].Item1,
+                                        knownsystems.Last().Item1,
+                                        knownsystems[wpto].Item2,
+                                        wpto > 0 ? knownsystems[wpto - 1].Item3.Note : "",
+                                        knownsystems[wpto].Item3.Note,
+                                        mininterceptdist,       // deviation from path
+                                        cumldist,
+                                        disttowaypoint);        // distance to waypoint
             }
+        }
 
-            double distto = currentsystemp3d.Distance(P3D(knownsystems[wpto].Item1));
-            double cumldist = CumulativeDistance(knownsystems[wpto].Item1, knownsystems);
-
-            return new ClosestInfo(wpto > 0 ? knownsystems[wpto - 1].Item1 : null,
-                                    knownsystems[wpto].Item1,
-                                    knownsystems[0].Item1,
-                                    knownsystems.Last().Item1,
-                                    knownsystems[wpto].Item2,
-                                    wpto > 0 ? knownsystems[wpto - 1].Item3.Note : "",
-                                    knownsystems[wpto].Item3.Note,
-                                    mininterceptdist,       // deviation from path
-                                    cumldist,
-                                    distto);
+        static Point3D P3D(ISystem s)
+        {
+            return new Point3D(s.X, s.Y, s.Z);
         }
 
         public void TestHarness2()       // fly the route and debug the closestto.. keep this for testing
@@ -582,8 +611,8 @@ namespace EliteDangerousCore.DB
 
             System.Diagnostics.Debug.WriteLine($"At {cursys.Name} @ {cursys.X:N5}, {cursys.Y:N5}, {cursys.Z:N5}");
 
-            ClosestInfo closest = ClosestTo(cursys);
-            System.Diagnostics.Debug.WriteLine($"           Closest gave {closest.lastsystem?.Name} ->{ closest.nextsystem.Name}");
+            ClosestInfo closest = ClosestTo(cursys,-1);
+            System.Diagnostics.Debug.WriteLine($"           Closest gave {closest.lastsystem?.Name} ->{closest.nextsystem.Name}");
         }
 
         public void TestHarness()       // fly the route and debug the closestto.. keep this for testing
@@ -595,7 +624,7 @@ namespace EliteDangerousCore.DB
 
                 if (cursys != null)
                 {
-                    ClosestInfo closest = ClosestTo(cursys);
+                    ClosestInfo closest = ClosestTo(cursys,-1);
 
                     if (closest != null)
                     {
