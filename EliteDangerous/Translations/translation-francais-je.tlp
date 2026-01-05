@@ -1,6 +1,7 @@
 ﻿
 SECTION JournalTypeEnum
 
+C7EC98CED613F9: "EDD Destination Selected" @
 94A37CFA0C8992: "Afmu Repairs" => "Réparation UMTA"
 D2F34790ECB3BA: "Approach Body" => "Approche du corps"
 5FB514306EBAE2: "Approach Settlement" => "Approche d'avant-poste planétaire"
@@ -134,6 +135,7 @@ ECE8DF43B4E578: "Set User Ship Name" => "Définir le nom du vaisseau"
 4E29C0CE3E9D61: "Shipyard Sell" => "Chantier Naval : Vente"
 270AB9D553AFE5: "Shipyard Swap" => "Chantier Naval : Échange"
 7E6D4BF9F2AA3F: "Shipyard Transfer" => "Chantier Naval : Transfert"
+86188917717CAE: "Shipyard Bank Deposit" @
 7908BD051ADB46: "Ship Targeted" => "Vaisseau ciblé"
 7FDDB7D8D1D60B: "Shutdown" => "Arrêt"
 CAAACBDEADF1BF: "SRV Destroyed" => "VRS détruit"
@@ -248,7 +250,9 @@ DDDE2AEC826902: "Nav Route Clear" => "Effacement d'itinéraire de navigation"
 02374D50F6A18D: "Powerplay Merits" => "Points de distinction Powerplay"
 8062068144644D: "Powerplay Rank" => "Rang Powerplay"
 5668ADC227F38B: "Carrier Location" => "Position du porte-vaisseaux"
-
+00D83C2DDC1290: "Cancelled Squadron Application" @
+61CAC65A66E653: "Squadron Application Approved" @
+33646EA5A80A0A: "Squadron Application Rejected" @
 
 SECTION JournalCargo
 
@@ -263,35 +267,35 @@ BF03B90D446D74: ";Traits" => ";Caractéristiques"
 
 SECTION CommunityGoal
 
-768E0C1C69573F: "Title" => "Titre "
-0855009C46728A: "At" => "À "
-A99BE3DA0C9DA2: "Expires" => "Expire "
+768E0C1C69573F: "Title" => "Titre"
+0855009C46728A: "At" => "À"
+A99BE3DA0C9DA2: "Expires" => "Expire"
 636C2C3E755471: "Not Complete;Complete" => "Pas terminé;Terminé"
-0DB16A8C94160B: "Current Total" => "Total actuel "
-982D5A73469ACE: "Contribution" => "Contribution "
-D431FC74CD845B: "Num Contributors" => "Nb Contributeurs "
-E9BB68A65645DF: "Player % Band" => "Joueur % bande "
-7BBFBA05C8A45A: "Top Rank" => "Rang dans le top "
+0DB16A8C94160B: "Current Total" => "Total actuel"
+982D5A73469ACE: "Contribution" => "Contribution"
+D431FC74CD845B: "Num Contributors" => "Nb Contributeurs"
+E9BB68A65645DF: "Player % Band" => "Joueur % bande"
+7BBFBA05C8A45A: "Top Rank" => "Rang dans le top"
 F944307E983058: "Not In Top Rank;In Top Rank" => "Pas dans le top;Dans le top"
-B065C5EEE9CF43: "Tier Reached" => "Niveau atteint "
-4D963CFAB70D8C: "Bonus" => "Bonus "
+B065C5EEE9CF43: "Tier Reached" => "Niveau atteint"
+4D963CFAB70D8C: "Bonus" => "Bonus"
 7654BB6A1342A8: "Top Tier Name" => "Nom du top niveau"
 72819B6B953E71: "TT. Bonus" @
 
 SECTION FSSSignal
 
-16D19F8245DA02: "Threat Level" => "Niveau de menace "
-A6E0A89081909E: ";Station" => ";Station "
-F8AF3031BB50C4: ";Carrier" => ";Porte-vaisseaux "
-7E861CF6FC0928: ";Megaship" => ";Méga-vaisseaux "
-F810904826BC3A: ";Installation" => ";Installation "
-20C226FB3237BB: "Last Seen" => "Dernière vue "
+16D19F8245DA02: "Threat Level" => "Niveau de menace"
+A6E0A89081909E: ";Station" => ";Station"
+F8AF3031BB50C4: ";Carrier" => ";Porte-vaisseaux"
+7E861CF6FC0928: ";Megaship" => ";Méga-vaisseaux"
+F810904826BC3A: ";Installation" => ";Installation"
+20C226FB3237BB: "Last Seen" => "Dernière vue"
 
 SECTION JournalFSSDiscoveryScan
 
 90D81BB977D5B7: "Progress: ;%;N1" => "Progression : ; %;N1"
-B091D64170AFAF: "Bodies" => "Corps "
-8D7BF5BF136E81: "Others" => "Autres "
+B091D64170AFAF: "Bodies" => "Corps"
+8D7BF5BF136E81: "Others" => "Autres"
 
 SECTION JournalFSSSignalDiscovered
 
@@ -305,10 +309,10 @@ SECTION JournalCommodityPricesBase
 BBB81F7CA96417: "Prices on ; items" => "Prix de ; marchandises"
 C45A6B5C9F13D9: "< at " => "< à "
 46FE700B99EAD5: "< in " => "< dans "
-D446B632E23844: "Items to buy" => "Marchandises à acheter "
+D446B632E23844: "Items to buy" => "Marchandises à acheter"
 38892DF3CDB24B: "{0}: {1} sell {2} Diff {3} {4}%  " => "{0} : {1} vend {2} Diff {3} {4} %  "
 0E5A14D01A6CE1: "{0}: {1}  " @
-9E0595F4B34B89: "Sell only Items" => "Marchandises uniquement vendables "
+9E0595F4B34B89: "Sell only Items" => "Marchandises uniquement vendables"
 
 SECTION JournalEngineerProgress
 
@@ -328,10 +332,10 @@ SECTION JournalLeaveBody
 SECTION JournalLocOrJump
 
 A1F7BF2AD4BEB6: "<;(Wanted) " => "<;(recherché) "
-182D37EC74BF3C: "Population" => "Population "
+182D37EC74BF3C: "Population" => "Population"
 6B3FB6468F5B3C: "Inf: ;%" => "Influence : ; %"
-20682CE886E023: "Pending State" => "Statut imminent "
-A65110A78F3D51: "Recovering State" => "Récupération de statut "
+20682CE886E023: "Pending State" => "Statut imminent"
+A65110A78F3D51: "Recovering State" => "Récupération de statut"
 
 SECTION JournalFuelScoop
 
@@ -339,7 +343,7 @@ SECTION JournalFuelScoop
 
 SECTION JournalLoadout
 
-04E9462C0FF02B: "Modules" => "Modules "
+04E9462C0FF02B: "Modules" => "Modules"
 
 SECTION JournalLocation
 
@@ -349,24 +353,24 @@ SECTION JournalLocOrJump
 
 E298B0EC36231C: "Type " @
 F6551977CCE103: "< in system " => "< dans le système "
-115686EAF61F61: "Happiness" => "Bonheur "
+115686EAF61F61: "Happiness" => "Bonheur"
 9BF00A5AD1074F: "Reputation: ;%;N1" => "Réputation : ; %;N1"
 B88C0272084C40: ";Squadron System" => ";Système d'escadron"
 CAB4C00BAF5433: ";Happiest System" => ";Système le plus heureux"
 077DC88F4AAFF0: ";Home System" => ";Système de base"
-6BE989FCF3D7AF: "Active State" => "Statut courant "
+6BE989FCF3D7AF: "Active State" => "Statut courant"
 
 SECTION JournalMissionAccepted
 
 3283C6A6480226: "< from " => "< de "
-BA8F571E0F93E1: "Expiry" => "Expiration "
-03ECFA6479FA3A: "Influence" => "Influence "
+BA8F571E0F93E1: "Expiry" => "Expiration"
+03ECFA6479FA3A: "Influence" => "Influence"
 3A4F33142BB77B: "Reward: ; cr;N0" => "Récompense : ; cr;N0"
 4B0AAE097D7790: "; (Wing)" => "; (Escadrille)"
-DCAC5D49C54C3C: "Deliver" => "Livraison "
-4266916B95C358: "Target Type" => "Type de cible "
-594D59A3A18111: "Kill Count" => "Nb de mort "
-66E12969C225CC: "Count" => "Nb "
+DCAC5D49C54C3C: "Deliver" => "Livraison"
+4266916B95C358: "Target Type" => "Type de cible"
+594D59A3A18111: "Kill Count" => "Nb de mort"
+66E12969C225CC: "Count" => "Nb"
 
 SECTION JournalMaterialDiscovered
 
@@ -410,7 +414,7 @@ C0FFAB3C44DC69: "< on " => "< à "
 
 SECTION JournalRepairDrone
 
-DC04075740AF45: "Hull" => "Coque "
+DC04075740AF45: "Hull" => "Coque"
 
 SECTION JournalReputation
 
@@ -466,7 +470,7 @@ F2242B579D81E1: "No Volcanism" => "Pas d'activité volcanique"
 E452781D716535: "Orbital Period: {0} days" => "Période de révolution : {0} jours"
 9C92D7D1E0B506: "Semi Major Axis: {0:0.00}AU" => "Demi-grand axe : {0:0.00} UA"
 1C861A7F7D3C80: "Semi Major Axis: {0}km" => "Demi-grand axe : {0} km"
-FD157443DE4822: "Orbital Eccentricity" => "Excentricité orbitale "
+FD157443DE4822: "Orbital Eccentricity" => "Excentricité orbitale"
 24D86E4E8473EB: "Orbital Inclination: {0:0.000}°" => "Inclinaison orbitale : {0:0.000}°"
 575CB9E18B9880: "Arg Of Periapsis: {0:0.000}°" => "Argument du périastre : {0:0.000}°"
 04EFF963D056A3: "Absolute Magnitude: {0:0.00}" => "Magnitude absolue : {0:0.00}"
@@ -481,8 +485,8 @@ B285F06D312CA2: "Tidally locked" => "Rotation synchrone"
 6682A019C4883F: "Mapped value: {0:N0}/{1:N0}e" => "Valeur cartographié estimée : {0:N0}/{1:N0} e"
 C467DD57E52397: "Discovered by {0} on {1}" => "Découvert par {0} le {1}"
 854F99DFC01A9F: " - Others stars not considered" => " - autres étoiles non prises en compte"
-5046A1063B521B: "Atmospheric Composition" => "Atmosphère "
-D8F3372588C7F1: "Planetary Composition" => "Composition "
+5046A1063B521B: "Atmospheric Composition" => "Atmosphère"
+D8F3372588C7F1: "Planetary Composition" => "Composition"
 E9B087E594BA11: " - Habitable Zone, {0} ({1}-{2} AU)," => " - Zone habitable, {0} ({1}-{2} UA),"
 CF39B2D7E183F0: " - Metal Rich planets, {0} ({1}-{2} AU)," => " - Planètes riches en métaux :, {0} ({1}-{2} UA),"
 0E2916E8281391: " - Water Worlds, {0} ({1}-{2} AU)," => " - Mondes aquatiques : {0} ({1}-{2} UA)"
@@ -490,25 +494,25 @@ CF39B2D7E183F0: " - Metal Rich planets, {0} ({1}-{2} AU)," => " - Planètes rich
 5B1F0120B3CD0F: " - Ammonia Worlds, {0} ({1}-{2} AU)," => " - Mondes ammoniacs : {0} ({1}-{2} UA)"
 C379074215EC59: " - Icy Planets, {0} (from {1} AU)" => " - Planètes glacées : {0} (de {1} AU)"
 8669CDDA694B59: "Dist: ;ls;0.0" => "Dist : ; sl;0.0"
-56A9DD3BD69226: "Dist" => "Dist "
+56A9DD3BD69226: "Dist" => "Dist"
 94820B8DEE66A2: "Efficiently" => "Efficacement"
 97E379A834EF5E: "First Discovered+Mapped value: {0:N0}/{1:N0}e" => "Valeur de première découverte + carto : {0:N0}/{1:N0} e"
 F42A5A3B540E51: "First Mapped value: {0:N0}/{1:N0}e" => "Valeur de première carto : {0:N0}/{1:N0} e"
 AC983DAC73C35D: "Scan Type: {0}" => "Type de scan : {0}"
-187199564DF54F: "Inferred Circumstellar zones" => "Zones habitable "
+187199564DF54F: "Inferred Circumstellar zones" => "Zones habitable"
 AEF0ABF930C73C: "Ascending Node: {0:0.000}°" => "Nœud ascendant : {0:0.000}°"
 4853FB66BD4B2E: "Mean Anomaly: {0:0.000}°" => "Anomalie moyenne : {0:0.000}°"
 
 SECTION JournalSAAScanComplete
 
-6934B3123D3109: "Probes" => "Sondes "
-030E6445D2280E: "Efficiency Target" => "Bonus d'efficacité "
+6934B3123D3109: "Probes" => "Sondes"
+030E6445D2280E: "Efficiency Target" => "Bonus d'efficacité"
 
 SECTION JournalScreenshot
 
-2C3CAFA4DB3F3E: "File" => "Fichier "
-A58DDF50C5EA5C: "Width" => "Largeur "
-3F608B4935EAD6: "Height" => "Hauteur "
+2C3CAFA4DB3F3E: "File" => "Fichier"
+A58DDF50C5EA5C: "Width" => "Largeur"
+3F608B4935EAD6: "Height" => "Hauteur"
 
 SECTION JournalSearchAndRescue
 
@@ -518,11 +522,11 @@ SECTION JournalSellExplorationData
 
 SECTION JournalSendText
 
-14766B11B99F48: "Msg" => "Msg "
+14766B11B99F48: "Msg" => "Msg"
 
 SECTION JournalSetUserShipName
 
-E0049A66519CAE: "On" => "Pour "
+E0049A66519CAE: "On" => "Pour"
 
 SECTION JournalShipTargeted
 
@@ -553,14 +557,14 @@ SECTION JournalStatistics
 
 SECTION BankAccountClass
 
-B4ACE12F412DDB: "Wealth: ; cr;N0" => "Fortune : ; cr;N0"
+B4ACE12F412DDB: "Wealth: ; cr;N0" => "Actifs actuels : ; cr;N0"
 3888D1B39FDB3E: "Spent on Ships: ; cr;N0" => "Dépensé en vaisseaux : ; cr;N0"
 925B37A547FC62: "Spent on Outfitting: ; cr;N0" => "Dépensé en équipements : ; cr;N0"
 CA5AE6964925EF: "Spent on Repairs: ; cr;N0" => "Dépensé en réparation : ; cr;N0"
 3B4309CF7D3EBA: "Spent on Fuel: ; cr;N0" => "Dépensé en carburant : ; cr;N0"
 6F932A67AF5610: "Spent on Ammo: ; cr;N0" => "Dépensé en munitions : ; cr;N0"
-A8D8DE55E0CEFF: "Insurance Claims: ;;N0" => "Droits à l'assurance : ;;N0"
-EAC3D580980EB3: "Spent on Insurance: ; cr;N0" => "Dépensé en assurance : ; cr;N0"
+A8D8DE55E0CEFF: "Insurance Claims: ;;N0" => "Demandes d'indemnisation : ;;N0"
+EAC3D580980EB3: "Spent on Insurance: ; cr;N0" => "Dépensé en demandes d'indemnisation : ; cr;N0"
 C12549552820D1: "Owned ships: ;;N0" => "Vaisseaux possédés : ;;N0"
 19BBE8B062D51D: "Spent on Suits: ; cr;N0" => "Dépensé en combinaisons : ; cr;N0"
 E8963EC51B4BDC: "Spent on Weapons: ; cr;N0" => "Dépensé en armes de poing : ; cr;N0"
@@ -573,25 +577,25 @@ D06DBE4E150485: "Premium Stock bought: ;;N0" => "Articles premium achetés : ;;N
 SECTION CombatClass
 
 D87058E44CF706: "Bounties: ;;N0" => "Primes : ;;N0"
-75FBC8535363DA: "Bounty Profits: ; cr;N0" => "Gains des primes : ; cr;N0"
+75FBC8535363DA: "Bounty Profits: ; cr;N0" => "Bénéfices des primes : ; cr;N0"
 297080499B404B: "Combat Bonds: ;;N0" => "Récompenses de combat : ;;N0"
-C93F978697AB89: "Combat Bond Profits: ; cr;N0" => "Gains des récompenses de combat : ; cr;N0"
+C93F978697AB89: "Combat Bond Profits: ; cr;N0" => "Bénéfices des récompenses de combat : ; cr;N0"
 D3557FF491189F: "Assassinations: ;;N0" => "Assassinats : ;;N0"
-166E250877B392: "Assassination Profits: ; cr;N0" => "Gains des assassinats : ; cr;N0"
+166E250877B392: "Assassination Profits: ; cr;N0" => "Bénéfices des assassinats : ; cr;N0"
 DCB6489A56E114: "Highest Reward: ; cr;N0" => "Récompense la plus élevée : ; cr;N0"
 EBA2ABF1C21F3B: "Skimmers Killed: ;;N0" => "Drones sentinelles détruits : ;;N0"
 C407F7BE10A0EA: "Surface Combat Bonds: ;;N0" => "Récompenses de combat de surface : ;;N0"
-B6CFA7A45807A4: "Surface Combat Bonds Profits: ; cr;N0" => "Gains des récompenses de combat de surface : ; cr;N0"
-ACB06FD3BEC5CB: "Vehicles Destroyed on Foot: ;;N0" => "Véhicules détruits à pied : ;;N0"
-DA8FDAA8DDCA8A: "Ships Destroyed on Foot: ;;N0" => "Vaisseaux détruits à pied : ;;N0"
-939976AD53D882: "Dropships Taken: ;;N0" => "Transport de troupes pris : ;;N0"
+B6CFA7A45807A4: "Surface Combat Bonds Profits: ; cr;N0" => "Bénéfices des récompenses de combat de surface : ; cr;N0"
+ACB06FD3BEC5CB: "Vehicles Destroyed on Foot: ;;N0" => "Véhicules détruits lors de sorties à pied : ;;N0"
+DA8FDAA8DDCA8A: "Ships Destroyed on Foot: ;;N0" => "Vaisseaux détruits lors de sorties à pied : ;;N0"
+939976AD53D882: "Dropships Taken: ;;N0" => "Transport de troupes utilisés : ;;N0"
 18DFAE630A6BFB: "Dropships Booked: ;;N0" => "Transport de troupes réservés : ;;N0"
 04CE11E4316C1F: "Dropships Cancelled: ;;N0" => "Transport de troupes annulés : ;;N0"
 B8D22F38632CF6: "High Intensity Conflict Zones fought: ;;N0" => "Zones de conflit de forte intensité : ;;N0"
 EA963F15E8EB0F: "Medium Intensity Conflict Zones fought: ;;N0" => "Zones de conflit d'intensité moyenne : ;;N0"
 B0C41E693F2B16: "Low Intensity Conflict Zones fought: ;;N0" => "Zones de conflit de faible intensité : ;;N0"
 080A8FE8876778: "Total Conflict Zones fought: ;;N0" => "Zones de conflit au total : ;;N0"
-2FF418F245D56C: "High Intensity Conflict Zones won: ;;N0" => "Victoires de zones de conflit de forte : ;;N0"
+2FF418F245D56C: "High Intensity Conflict Zones won: ;;N0" => "Victoires de zones de conflit de forte intensité : ;;N0"
 B8B77AAC06992D: "Medium Intensity Conflict Zones won: ;;N0" => "Victoires de zones de conflit d'intensité moyenne : ;;N0"
 408F5291A5A252: "Low Intensity Conflict Zones won: ;;N0" => "Victoires de zones de conflit de faible intensité : ;;N0"
 DAC56992EC2707: "Total Conflict Zones won: ;;N0" => "Victoires de zones de conflit au total : ;;N0"
@@ -627,15 +631,15 @@ C712999A7B19C8: "Goods Stolen: ;;N0" => "Marchandises volées : ;;N0"
 SECTION SmugglingClass
 
 B0F905CB4B5542: "Black Markets: ;;N0" => "Marchés noir : ;;N0"
-72871CA443A5A8: "Black Market Profits: ; cr;N0" => "Gain aux marchés noir : ; cr;N0"
+72871CA443A5A8: "Black Market Profits: ; cr;N0" => "Bénéfices aux marchés noir : ; cr;N0"
 2B5233DD646F8C: "Resources Smuggled: ;;N0" => "Ressources passées en contrebande : ;;N0"
-9A25DE94D5E63A: "Average Profit: ; cr;N0" => "Gain moyen : ; cr;N0"
+9A25DE94D5E63A: "Average Profit: ; cr;N0" => "Bénéfice moyen : ; cr;N0"
 209D79F561CC37: "Highest Single Transaction: ; cr;N0" => "Meilleure transaction unique : ; cr;N0"
 
 SECTION TradingClass
 
 D1E02E23CB8EB9: "Markets Traded: ;;N0" => "Nombre de marché utilisé : ;;N0"
-9A081920BFF8EC: "Profits: ; cr;N0" => "Gains : ; cr;N0"
+9A081920BFF8EC: "Profits: ; cr;N0" => "Bénéfices : ; cr;N0"
 426DCC84DD33AA: "No. of Resources: ;;N0" => "Nb. de ressources : ;;N0"
 D74459B88E7874: "Data Sold: ;;N0" => "Données vendus : ;;N0"
 FD405DA3224FF6: "Goods Sold: ;;N0" => "Marchandises vendues : ;;N0"
@@ -655,7 +659,7 @@ B483C046BC30D5: "Highest Payout: ; cr;N0" => "Paiement le plus élevé : ; cr;N0
 E02E8A73E32E90: "Total Distance: ; ly;N0" => "Distance totale : ; al;N0"
 BC86F52FD15F34: "No of Jumps: ;;N0" => "Nb de sauts : ;;N0"
 09F1BE8C639618: "Greatest Distance: ; ly;N0" => "Plus grande distance : ; al;N0"
-25FA47C8047A82: "Time Played" => "Temps de jeu "
+25FA47C8047A82: "Time Played" => "Temps de jeu"
 E2C5232144C21F: "Distance Travelled on Foot: ; m;N0" => "Distance parcourue à pied : ; m;N0"
 6D8865C83FB7A3: "Efficient Scans: ;;N0" => "Scans efficace : ;;N0"
 12B8B3C0A12010: "Shuttle Journeys: ;;N0" => "Trajets en navette : ;;N0"
@@ -677,7 +681,7 @@ DF7229C84BAEB0: "Passengers Disgruntled: ;;N0" => "Passagers mécontents : ;;N0"
 SECTION SearchAndRescueClass
 
 5926A1B4848462: "Total Items Rescued: ;;N0" => "Nb d'objets secourus : ;;N0"
-647A63AFE926DC: "Profit: ; cr;N0" => "Gain : ; cr;N0"
+647A63AFE926DC: "Profit: ; cr;N0" => "Bénéfices : ; cr;N0"
 F64FD229D3203E: "Total Rescue Transactions: ;;N0" => "Nb de transaction de rescousse : ;;N0"
 71BA45909C35DF: "Legal Salvage Value - Surface: ; cr;N0" => "Valeur des récupérations légales en surface : ; cr;N0"
 C420B66B6443B9: "Legal Salvage Value - Settlements: ; cr;N0" => "Valeur des récupérations légales dans les installations : ; cr;N0"
@@ -715,9 +719,9 @@ FDBB95B8322925: "Total Wages: ; cr;N0" => "Total salaires : ; cr;N0"
 
 SECTION MulticrewClass
 
-8CE2E6C39769DC: "Total Time" => "Temps total "
-B8759E7DAEEB15: "Gunner Time" => "Temps en artilleur "
-A2D11970FCAA8C: "Fighter Time" => "Temps en chasseur "
+8CE2E6C39769DC: "Total Time" => "Temps total"
+B8759E7DAEEB15: "Gunner Time" => "Temps en artilleur"
+A2D11970FCAA8C: "Fighter Time" => "Temps en chasseur"
 90AAB0386139D2: "Credits: ; cr;N0" => "Crédits : ; cr;N0"
 DBAF8C40DD5627: "Fines: ; cr;N0" => "Amendes : ; cr;N0"
 
@@ -737,7 +741,7 @@ AE91D30D46C5B5: "Assets Spent in Trade: ;;N0" => "Actifs dépensés : ;;N0"
 
 SECTION CQCClass
 
-709AA3D79B426B: "Profits from CQC: ; cr;N0" => "Gains : ; cr;N0"
+709AA3D79B426B: "Profits from CQC: ; cr;N0" => "Bénéfices : ; cr;N0"
 00349FB8CBDB9C: "K/D Ratio: ;;N2" => "Ratio KD (Tué/Mort) : ;;N2"
 E4491AAB65268C: "Kills: ;;N0" => "Tués : ;;N0"
 8A742F1F88A782: "Win/Loss Ratio: ;;N2" => "Victoire/Défaite : ;;N2"
@@ -768,9 +772,9 @@ SECTION ExobiologyClass
 889C4F3E680F31: "Unique Genus Encountered: ;;N0" => "Genres uniques découvertes : ;;N0"
 62AD18CDFF82CF: "Unique Species Encountered: ;;N0" => "Espèces uniques découvertes : ;;N0"
 8FF7FDBB3F88D4: "Unique Variants Encountered: ;;N0" => "Variantes uniques découvertes : ;;N0"
-F5FB6D22DE8F7C: "Profit from Organic Data: ; cr;N0" => "Gains en données organiques : ; cr;N0"
+F5FB6D22DE8F7C: "Profit from Organic Data: ; cr;N0" => "Bénéfices en données organiques : ; cr;N0"
 BB0AD0456BB312: "Organic Data Registered: ;;N0" => "Données organiques enregistrées : ;;N0"
-88FC3DE3AF29FC: "Profit from First Logged: ; cr;N0" => "Gains de premiers enregistrements : ; cr;N0"
+88FC3DE3AF29FC: "Profit from First Logged: ; cr;N0" => "Bénéfices en premiers enregistrements : ; cr;N0"
 29AA43113CD409: "First Logged: ;;N0" => "Premiers enregistrements : ;;N0"
 C9B976D6F69603: "Systems with Organic Life: ;;N0" => "Systèmes dotés de formes de vie organique : ;;N0"
 7E01A2D46F53D7: "Planets with Organic Life: ;;N0" => "Planètes dotés de formes de vie organique : ;;N0"
@@ -783,9 +787,36 @@ SECTION ThargoidsClass
 66D1BD86691E46: "Thargoids killed: ;;N0" => "Thargoids abattus : ;;N0"
 A244B487DEE654: "Thargoid structures: ;;N0" => "Structures Thargoids : ;;N0"
 6B68D6D3D64B30: "Total encounters: ;;N0" => "Rencontres au total : ;;N0"
-6BE262170622C0: "Last seen in" => "Dernier aperçu "
-7E967FB5DA23E0: "Last seen on" => "Date "
-24CD0F239B6A95: "Last ship involved" => "Dernier vaisseau "
+6BE262170622C0: "Last seen in" => "Dernier aperçu"
+7E967FB5DA23E0: "Last seen on" => "Date"
+24CD0F239B6A95: "Last ship involved" => "Dernier vaisseau"
+
+SECTION SquadronClass
+
+728152AC715A16: "Credits deposited in bank: ; cr;N0" => "Crédits déposés dans la banque de l'escadron : ; cr;N0"
+EB57915CBECF14: "Credits withdrawn from bank: ; cr;N0" => "Crédits retirés dans la banque de l'escadron : ; cr;N0"
+E70876095D9995: "Times commodities were deposited: ;;N0" => "Marchandises déposées : ;;N0"
+979B4B21F1883F: "Value of deposited commodities: ; cr;N0" => "Valeur des marchandises déposées : ; cr;N0"
+B24A06E2BEC8D8: "Times commodities were withdrawn: ;;N0" => "Marchandises retirées : ;;N0"
+40841B34E7F547: "Value of withdrawn commodities: ; cr;N0" => "Valeur des marchandises retirées : ; cr;N0"
+532366FEE4659B: "Times personal assets were deposited: ;;N0" => "Actifs personnels déposées : ;;N0"
+258C2CFBA5DF38: "Value of deposited personal assets: ; cr;N0" => "Valeur des actifs personnels déposées : ; cr;N0"
+A0D1DF478B9E21: "Times personal assets were withdrawn: ;;N0" => "Actifs personnels retirées : ;;N0"
+0FE848AD4253FE: "Value of withdrawn personal assets: ; cr;N0" => "Valeur des actifs personnels retirées : ; cr;N0"
+F73282F8B718CE: "Times ships were deposited: ;;N0" => "Vaisseaux déposées : ;;N0"
+88249FB2AC381A: "Value of deposited ships: ; cr;N0" => "Valeur des vaisseaux déposées : ; cr;N0"
+AE039D8838F8C7: "Highest contribution for Aegis leaderboard: ;;N0" => "Record de contribution au classement défense anti-xénomorphes : ;;N0"
+5F4D0AC904A2BC: "Highest contribution for BGS leaderboard: ;;N0" => "Record de contribution au classement soutien de la faction : ;;N0"
+6CACA73BD9B708: "Highest contribution for Bounty leaderboard: ;;N0" => "Record de contribution au classement chasse aux primes : ;;N0"
+F79C7D4454593E: "Highest contribution for Colonisation Contribution leaderboard: ;;N0" => "Record de contribution au classement colonisation de système : ;;N0"
+CBBFDE8AB0958F: "Highest contribution for Combat leaderboard: ;;N0" => "Record de contribution au classement combat : ;;N0"
+CC3330138638FF: "Highest contribution for CQC leaderboard: ;;N0" => "Record de contribution au classement CQC : ;;N0"
+BDC6D8E52A2CA6: "Highest contribution for Exploration leaderboard: ;;N0" => "Record de contribution au classement exploration : ;;N0"
+54C7DFF1A1B6F4: "Highest contribution for Mining leaderboard: ;;N0" => "Record de contribution au classement minage : ;;N0"
+4C83A8A9F5B221: "Highest contribution for Powerplay leaderboard: ;;N0" => "Record de contribution au classement luttes d'influence galactiques : ;;N0"
+E5F44644D71624: "Highest contribution for Trade leaderboard: ;;N0" => "Record de contribution au classement commerce : ;;N0"
+4DC4A4CFA653D6: "Highest contribution for Illicit Trade leaderboard: ;;N0" => "Record de contribution au classement commerce (marché noir) : ;;N0"
+DD290F0A316A20: "Times squadron got a podium place: ;;N0" => "Podiums obtenus : ;;N0"
 
 SECTION JournalStoredModules
 
@@ -795,10 +826,10 @@ SECTION JournalSupercruiseExit
 
 SECTION JournalStoredShips
 
-EC5905CB483B0B: "At starport" => "Dans ce spatioport "
-A9DB6CA00CA90B: "Other locations" => "Ailleurs "
+EC5905CB483B0B: "At starport" => "Dans ce spatioport"
+A9DB6CA00CA90B: "Other locations" => "Ailleurs"
 6D3B4BD0DFDCB4: "; cr;N0" @
-C93F6536DCFBEE: "Remote" => "Distant "
+C93F6536DCFBEE: "Remote" => "Distant"
 3E3FE90EA447B7: "<; in transit" => "<; en transit"
 
 SECTION JournalSuperCruiseEntry
@@ -811,7 +842,7 @@ SECTION JournalUnderAttack
 
 SECTION JournalNavRoute
 
-502FB9BD86B143: "{0} jumps" => "{0} sauts "
+502FB9BD86B143: "{0} jumps" => "{0} sauts"
 
 SECTION JournalApproachBody
 
@@ -821,7 +852,7 @@ SECTION JournalEntry
 3DEBAFED05C80C: "{0} days {1} hours {2} minutes" => "{0} jours {1} heures {2} minutes"
 C427C71598A102: "Hyperspace" => "Hyperespace"
 AA10128899005B: "Supercruise" => "Super-navigation"
-ABC4DE9A615B76: "Victim faction" => "Faction de la victime "
+ABC4DE9A615B76: "Victim faction" => "Faction de la victime"
 67077E5976E34E: "<, due to " => "<, attendu à "
 4BD46DBA6B624D: "< on faction " => "< à la faction "
 8995BB11D7A6E8: "Against " => "Contre "
@@ -835,13 +866,13 @@ A962DFA691CE85: "Amount: ; cr;N0" => "Montant : ; cr;N0"
 5E022CEF16D434: "; items" => "; marchandises"
 9DF713AF0B27BF: "<; (Mission Cargo)" => "<; (Cargaison de mission)"
 26CD6A7BF77DBD: ";Abandoned" => ";Abandonné"
-770B6A2A562593: "PowerPlay" => "PowerPlay "
-5B0F7590D06F96: "Collected" => "Récupéré "
+770B6A2A562593: "PowerPlay" => "PowerPlay"
+5B0F7590D06F96: "Collected" => "Récupéré"
 C0A9D54E4D7923: "< of " => "< de "
 2449D652417BC4: "of " => "de "
-EEA956CDE875F0: "Delivered" => "Livré "
-EFAF83C9C08BA6: "Update, Collected" => "Mise à jour, Récupéré "
-0995BCD9E22E34: "To Go" => "Reste "
+EEA956CDE875F0: "Delivered" => "Livré"
+EFAF83C9C08BA6: "Update, Collected" => "Mise à jour, Récupéré"
+0995BCD9E22E34: "To Go" => "Reste"
 50BDD4D6D6E2F6: "Progress Left: ;%;N1" => "Reste à faire : ; %;N1"
 3C3CCCA0A46F8A: ";Stolen" => ";Volé"
 7BE44386C602D7: "Starting Package" => "Paquet de démarrage"
@@ -851,52 +882,52 @@ C54AD6BB838817: "; fired" => "; viré"
 20282D7E9CB678: "Hired: ;" => "Embauche : ;"
 14C60EE946D100: "< of faction " => "< de la faction"
 AC931D89719A85: ";Telepresence" => ";Téléprésence"
-C3F104D1365744: "Role" => "Rôle "
-FA4417824B6B53: "Crew Member" => "Membre d'équipage "
+C3F104D1365744: "Role" => "Rôle"
+FA4417824B6B53: "Crew Member" => "Membre d'équipage"
 D8798F1C63F24D: ";Due to Crime" => "; à cause du crime"
-0A98B391C30338: "Captain" => "Capitaine "
+0A98B391C30338: "Captain" => "Capitaine"
 387A7F12EE6A16: "< from faction " => "< de la faction"
 AA9FB409388CA4: "{0} in ship type {1} rank {2}" => "{0} dans le vaisseau type {1} rang {2}"
 A63E6BD61A80ED: "Killed by " => "Tué par "
 96E930300EB555: "Boom!" => "Boom !"
-E31D972229DE38: "Option" => "Option "
+E31D972229DE38: "Option" => "Option"
 C8BA46A3C90F93: ";Bankrupt" => ";Banqueroute"
-B0D1107B426FB8: "New bodies discovered" => "Nouveaux corps découverts "
+B0D1107B426FB8: "New bodies discovered" => "Nouveaux corps découverts"
 ECCC4CD2A3B35D: ";(Wanted)" => ";(Recherché)"
 EF6F6B19531B71: ";Active Fine" => ";Amende impayée"
 79B918DF2A6E1E: "< in state " => "< dans le statut "
-2179F6518767A0: "Station services" => "Services de la station "
-7AB35C38FC4EB9: "Economies" => "Économies "
+2179F6518767A0: "Station services" => "Services de la station"
+7AB35C38FC4EB9: "Economies" => "Économies"
 33C98BED0FDE5C: "< on pad " => "< sur la plate-forme "
-B56631BC889045: "Cockpit" => "Cockpit "
-408DF9CD449307: "Corrosion" => "Corrosion "
+B56631BC889045: "Cockpit" => "Cockpit"
+408DF9CD449307: "Corrosion" => "Corrosion"
 3CDF4084F0BA2A: "Total Cost: ; cr;N0" => "Coût total : ; cr;N0"
 6D23A438BB2054: "Total Sale: ; cr;N0" => "Vente totale : ; cr;N0"
 7624811212F417: "each: ; cr;N0" => "chaque : ; cr;N0"
 B90EBC91B3A742: "Drones" @
 51195EF23F030B: "Price: ; cr;N0" => "Prix : ; cr;N0"
-06992D2C6A4FD0: "Blueprint" => "Plan "
-D8169782B57C7A: "Material" => "Matériau "
-42A0FD97255454: "TotalQuantity" => "Quantité Totale "
-9085D8627BED7E: "In Slot" => "Dans l'emplacement "
-CFADBD7A577133: "By" => "Par "
+06992D2C6A4FD0: "Blueprint" => "Plan"
+D8169782B57C7A: "Material" => "Matériau"
+42A0FD97255454: "TotalQuantity" => "Quantité Totale"
+9085D8627BED7E: "In Slot" => "Dans l'emplacement"
+CFADBD7A577133: "By" => "Par"
 F3E92663BBE826: "Bonus: ; cr;N0" @
-ACBB9E004BB3EA: "Discovered" => "Découvert "
+ACBB9E004BB3EA: "Discovered" => "Découvert"
 903937A1820E07: "NPC Controlled;" => ", contrôlé par des PNJ;"
-BBD80CF7E2DED5: "Build" => "Build "
-88BE9D62D71BAB: "Part" => "Partie "
+BBD80CF7E2DED5: "Build" => "Build"
+88BE9D62D71BAB: "Part" => "Partie"
 4E54D83E64A56D: "Credits: ;;N0" => "Crédits : ;;N0"
 88027E516ABD34: "Not Landed;Landed" => "En vol;Apponté"
 DB39EF29AA8E17: "Fuel Level: ;;0.0" => "Niveau de carburant : ;;0.0"
 9875F4471A80C2: "Capacity: ;;0.0" => "Capacité : ;;0.0"
 7C7D492381C592: "Cash total differs, adjustment" => "Total d'argent différent, ajustement"
-50905F52C647BD: "Number of Statuses" => "Nombre de statuts "
-C3E839DF608469: "Online" => "En ligne "
-E01FA717BACCF9: "Offline" => "Hors ligne "
-2AA1CF3369C989: "Unfriended" => "Plus amis "
-FF59B80FE424C3: "Declined" => "Refus "
-7032F347790214: "Requested Friend" => "Demande d'amis "
-D3FC1E3648741C: "Added Friend" => "Amis ajouté "
+50905F52C647BD: "Number of Statuses" => "Nombre de statuts"
+C3E839DF608469: "Online" => "En ligne"
+E01FA717BACCF9: "Offline" => "Hors ligne"
+2AA1CF3369C989: "Unfriended" => "Plus amis"
+FF59B80FE424C3: "Declined" => "Refus"
+7032F347790214: "Requested Friend" => "Demande d'amis"
+D3FC1E3648741C: "Added Friend" => "Amis ajouté"
 564B6CEAE398EC: ";Submitted" => ";Soumis"
 7394520AEF05D7: "< (NPC);(Player)" => "< (PNJ);(Joueur)"
 EFBA445DCE4D4D: "Failed to interdict;Interdicted" => "Échec de l'interdiction;Interdiction"
@@ -907,16 +938,16 @@ EFBA445DCE4D4D: "Failed to interdict;Interdicted" => "Échec de l'interdiction;I
 B965812110F44B: "Not Stolen;Stolen" => "Non volé;Volé"
 94CF760FC133A6: "Market;BlackMarket" => "Marché;Marché noir"
 6774408DE640A0: "< ; items" => "< ; marchandises"
-E6560D9C298E72: "Sold" => "Vendu "
-27548C4FC95D7C: "Received" => "Reçu "
-A733B809D2F123: "Active" => "Actif "
-09FEF5D8D9A3C8: "Failed" => "Échoué "
-1798B3BA42EE08: "Completed" => "Terminé "
-45EAAD8B8CE857: "Settlement" => "Installation "
-2C09302558D86A: "Donation" => "Don "
-3AF114B6246603: "Permits" => "Permis "
-2F4F4B7FBC81BC: "Rewards" => "Récompenses "
-226D7EC9AFB279: "Fine" => "Amende "
+E6560D9C298E72: "Sold" => "Vendu"
+27548C4FC95D7C: "Received" => "Reçu"
+A733B809D2F123: "Active" => "Actif"
+09FEF5D8D9A3C8: "Failed" => "Échoué"
+1798B3BA42EE08: "Completed" => "Terminé"
+45EAAD8B8CE857: "Settlement" => "Installation"
+2C09302558D86A: "Donation" => "Don"
+3AF114B6246603: "Permits" => "Permis"
+2F4F4B7FBC81BC: "Rewards" => "Récompenses"
+226D7EC9AFB279: "Fine" => "Amende"
 A9E6320C912D31: "Mission name" => "Nom de la mission"
 52979E47A64B7F: ";(Hot)" => ";(Chaud)"
 4C2D86B2C1FF6D: "Hull Health: ;%;N1" => "Intég. Coque : ; %;N1"
@@ -925,53 +956,54 @@ A9E6320C912D31: "Mission name" => "Nom de la mission"
 F0DB993787E3F4: "Rebuy: ; cr;N0" => "Rachat : ; cr;N0"
 DBDAABE93AE174: "< into " => "< dans "
 BAC8E74F0524D9: " on " => " sur "
-4DB98AF9E39320: "Replaced by" => "Remplacé par "
-405F45092D843A: "Modifications" => "Modifications "
+4DB98AF9E39320: "Replaced by" => "Remplacé par"
+405F45092D843A: "Modifications" => "Modifications"
 127EA66ADF07B7: ", Swapped with " => ", Échangé avec "
 B06383A94B7BE1: "Transfer Cost: ; cr;N0" => "Coût de transfert : ; cr;N0"
 400BDDE7F69B52: "Value: ; cr;N0" => "Valeur : ; cr;N0"
-F398AE993C17B4: "Total modules" => "Total des modules "
-F10983CD704614: "Into ship" => "Dans le vaisseau "
-AD277E4A02CD50: "Transfer Time" => "Temps de transfert "
-4B8A3E370AEDAF: "Music Track" => "Piste musicale "
+F398AE993C17B4: "Total modules" => "Total des modules"
+F10983CD704614: "Into ship" => "Dans le vaisseau"
+AD277E4A02CD50: "Transfer Time" => "Temps de transfert"
+4B8A3E370AEDAF: "Music Track" => "Piste musicale"
 194DFB1A2EC6C7: "Wages for " => "Salaires pour "
 0FC9A117F3B233: " items available" => " équipements disponibles"
 166D76AE76F567: "No Passengers" => "Pas de passagers"
-12473AE7FBD7A8: "Merits" => "Points de distinction "
-B66C4B2775554E: "Votes" => "Votes "
-8B6EFFD47EFDEC: "Pledged" => "Engagé "
-C65D5243E9C5E6: "From Power" => "De la puissance "
-BF2C7EF9644B5F: "To Power" => "à la puissance "
-DFAE9A3323B18F: ", Systems" => ", systèmes "
+12473AE7FBD7A8: "Merits" => "Points de distinction"
+B66C4B2775554E: "Votes" => "Votes"
+8B6EFFD47EFDEC: "Pledged" => "Engagé"
+C65D5243E9C5E6: "From Power" => "De la puissance"
+BF2C7EF9644B5F: "To Power" => "à la puissance"
+DFAE9A3323B18F: ", Systems" => ", systèmes"
 FD31761D9B4004: "Shield ;;N1" => "Bouclier ;;N1"
 FBA2A215328E6A: "Lost Target" => "Cible perdue"
 11530A93A09C51: "Shields Down;Shields Up" => "Bouclier KO;Bouclier OK"
 CEB1994BDE5913: "Latitude: ;°;F4" @
 FDCDCA316D9694: "Longitude: ;°;F4" @
-8A24E40402207B: "Num" => "Num "
+8A24E40402207B: "Num" => "Num"
 B8A54799BE1F4D: "Ships" => "Vaisseaux"
 4CD90C4218A40C: "Distance: ; ly;0.0" => "Distance : ; al;0.0"
-8AA2DD0F5E9E76: "Threat" => "Menace "
+8AA2DD0F5E9E76: "Threat" => "Menace"
 267537A7006640: "Remaining Jumps" => "Sauts restants"
-76B1EBC80AA9A9: "Nearest" => "Plus proche "
-FBB3C38F715793: "Old" => "Vieux "
-6403F2B7EB2AAA: "New" => "Nouveau "
-FCC451567343E0: "Near" => "Proche "
+76B1EBC80AA9A9: "Nearest" => "Plus proche"
+FBB3C38F715793: "Old" => "Vieux"
+6403F2B7EB2AAA: "New" => "Nouveau"
+FCC451567343E0: "Near" => "Proche"
 183284B4FB3416: "On Foot at {0}" => "À pied sur {0}"
 F638A697CC8692: "Fuel: ; tons;0.0" => "Carburant : ; t;0.0"
 82E2B91027511A: "Taxi" @
-3C769675CD0F12: "Pilot" => "Pilote "
+3C769675CD0F12: "Pilot" => "Pilote"
 C6BDFB2221032F: "Redeemed and deployed ship {0} at {1} into shipyard" => "Vaisseau {0} racheté et déployé au chantier naval {1}"
 13E8B7503843F9: "Redeem ship {0} at {1}, available to deploy" => "Rachat du vaisseau {0} à {1}, disponible au déploiement"
 
 SECTION JournalCarrierJump
 
 EF41C8690CDA9E: "Jumped with carrier {0} to {1}" => "Saut avec porte-vaisseaux {0} vers {1}"
-DE8CC5C4DD7104: "Carrier jumped to {0}" @
+DE8CC5C4DD7104: "Carrier jumped to {0}" => "Saut du porte-vaisseaux vers {0}"
 
 SECTION JournalCarrier
 
-808572574FD987: "Call Sign" => "Ident "
+808572574FD987: "Call Sign" => "Ident"
+8359F3D1A48C34: "Carrier Type" => "Type de porte-vaisseaux"
 B15D8F8451444C: "Jump Range: ; ly;0.0" => "Portée de saut : ; al;0.0"
 4ABDD513D53A4E: "Carrier Balance: ; cr;N0" => "Solde du porte-vaisseaux : ; cr;N0"
 F913B2BD65130A: "Reserve Balance: ; cr;N0" => "Allocation hebdomadaire : ; cr;N0"
@@ -983,21 +1015,21 @@ A1D0A288C23201: "Tax Rate Rearm: ;;N1" => "Taxes armurerie : ;;N1"
 FE3B97CFEA3000: "Tax Rate Outfitting: ;;N1" => "Taxes équipement : ;;N1"
 23275021E7D52C: "Tax Rate Refuel: ;;N1" => "Taxes ravitaillement en carburant : ;;N1"
 10780F361BBC72: "Tax Rate Repair: ;;N1" => "Taxes réparation : ;;N1"
-7246FA5C1BB112: "Total Capacity" => "Capacité totale "
-2E330C845EDFD7: "Cargo Space Reserved" => "Espace cargaison réservé "
-8D639F579B9C33: "Ship Packs" => "Pack de vaisseaux "
-502849675D7247: "Module Packs" => "Pack de modules "
-C8E72CE20762EF: "Free Space" => "Espace libre "
+7246FA5C1BB112: "Total Capacity" => "Capacité totale"
+2E330C845EDFD7: "Cargo Space Reserved" => "Espace cargaison réservé"
+8D639F579B9C33: "Ship Packs" => "Pack de vaisseaux"
+502849675D7247: "Module Packs" => "Pack de modules"
+C8E72CE20762EF: "Free Space" => "Espace libre"
 19E9DAB67C02BA: "To " => "Vers "
 8E49CF8A52E094: "Body " => "Corps "
 E8C3CE0D2A99CF: "Refund: ; cr;N0" => "Remboursement : ; cr;N0"
 B446E9EA0AD9CF: "at UTC " => "à UTC "
 1669AEFA581C8D: "Deposit: ; cr;N0" => "Dépôt : ; cr;N0"
 396161812AC722: "Withdraw: ; cr;N0" => "Retrait : ; cr;N0"
-430D32076EB256: "Operation" => "Opération "
-5BD44EBE63CD3B: "Tier" => "Tier "
-BFF04E12429E0D: "Cancel Sell of" => "Annulation de vente "
-2F81A22DE0AF5E: "Access" => "Accès "
+430D32076EB256: "Operation" => "Opération"
+5BD44EBE63CD3B: "Tier" => "Tier"
+BFF04E12429E0D: "Cancel Sell of" => "Annulation de vente"
+2F81A22DE0AF5E: "Access" => "Accès"
 DB5E11964705C3: ";Allow Notorious" => ";Autorise notoriété"
 87D31ED8B95512: "Amount: ;;N0" => "Quantité : ;;N0"
 543A5FFBD800E5: "Fuel Level: ;;N0" => "Niveau de carburant : ;;N0"
@@ -1011,7 +1043,7 @@ SECTION JournalMicroResources
 SECTION JournalScanInfo
 
 50C9F6207A37F8: " is a " => " est un(e) "
-0574C953EE5588: " Atmosphere" => "Atmosphère "
+0574C953EE5588: " Atmosphere" => "Atmosphère"
 331B8B83C09885: " Surface temperature: {0} K." => " Température de surface : {0} K."
 0606F2F9983136: "terraformable " @
 7C5BAE6C336788: " Is tiny " => " Est minuscule(e)"
@@ -1051,6 +1083,7 @@ CA4B1A71D2F677: "Repair Crews" => "Équipes de réparation"
 CF7C02B2B0079B: "Concourse Bar" => "Bar du hall principal"
 F157DA72429B0A: "Vista Genomics" @
 AA5680B5B5B241: "Pioneer Supplies" @
+F1A87D41F026EE: "Squadron Bank" => "Banque d'escadron"
 
 SECTION JournalScanOrganics
 

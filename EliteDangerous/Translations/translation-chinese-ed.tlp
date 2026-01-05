@@ -1149,7 +1149,7 @@ DA33E1B7E0C4EA: "Construction" => "建造中"
 
 SECTION StarportTypes
 
-6E4C6A39225E73: "Asteroid Base" => "小行星基地"
+E4C6A39225E73: "Asteroid Base" => "小行星基地"
 570C8ADC370DE1: "Coriolis" => "八面立方(Coriolis)"
 1815546AA3D985: "Megaship" => "巨型飞船"
 FB3178D94F9E42: "Ocellus" => "单眼(Ocellus)"
@@ -1164,6 +1164,7 @@ E2407F2BA86D9F: "Space Construction Depot" => "太空建造基地"
 72D0849A72AB18: "Planetary Construction Depot" => "行星建造基地"
 2D68CF109D6809: "Dockable Planet Station" => "可对接行星空间站"
 D089EF39D4EA65: "Construction POI" => "建造兴趣点(POI)"
+9A76A40856116: "Dodec" @
 
 SECTION PowerPlayStates
 

@@ -13,7 +13,9 @@
  * 
  *
  */
+using EliteDangerousCore.DB;
 using System;
+using static EliteDangerousCore.ItemData;
 
 namespace EliteDangerousCore.UIEvents
 {
@@ -85,6 +87,11 @@ namespace EliteDangerousCore.UIEvents
             public bool ValidAltitude { get { return Altitude != InvalidValue; } }
             public double Altitude { get; set; }
             public bool AltitudeFromAverageRadius { get; set; }
+
+            public override string ToString()
+            {
+                return $"Lat:{Latitude} Lon:{Longitude}" + (ValidAltitude ? $" Alt:{Altitude}" :"");
+            }
         }
     }
 }

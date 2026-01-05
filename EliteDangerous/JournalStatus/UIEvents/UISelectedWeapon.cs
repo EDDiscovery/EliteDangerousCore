@@ -24,18 +24,20 @@ namespace EliteDangerousCore.UIEvents
         {
         }
 
-        public UISelectedWeapon(string status, string loc, DateTime time, bool refresh) : this(time, refresh)
+        public UISelectedWeapon(string weapon, string loc, DateTime time, bool refresh) : this(time, refresh)
         {
-            SelectedWeapon = status;
+            SelectedWeapon = weapon;
             SelectedWeapon_Localised = loc;
+            HandItem = weapon != null ? ItemData.GetWeaponOrHandItem(weapon) : null;
         }
 
-        public string SelectedWeapon { get; private set; } // may be null, meaning not known
+        public string SelectedWeapon { get; private set; } // may be null, meaning not known. 
         public string SelectedWeapon_Localised { get; private set; } // may be null, meaning not known
+        public ItemData.HandItem HandItem { get; private set; }     // Only set for weapons, and may be null even if SelectedWeapon set if unknown
 
         public override string ToString()
         {
-            return $"{SelectedWeapon}: {SelectedWeapon_Localised}";
+            return $"{SelectedWeapon}:{SelectedWeapon_Localised} {HandItem?.Name}";
         }
 
     }

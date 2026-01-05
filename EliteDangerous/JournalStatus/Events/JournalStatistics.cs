@@ -40,23 +40,20 @@ namespace EliteDangerousCore.JournalEvents
             CQC = evt["CQC"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("CQC")?.ToObjectQ<CQCClass>() ?? new CQCClass();
             Exobiology = evt["Exobiology"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("Exobiology")?.ToObject<ExobiologyClass>() ?? new ExobiologyClass();
             Thargoids = evt["TG_ENCOUNTERS"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("TGENCOUNTER")?.ToObjectQ<ThargoidsClass>() ?? new ThargoidsClass();
+            Squadron = evt["Squadron"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("Squadron")?.ToObjectQ<SquadronClass>() ?? new SquadronClass();
 
             //if (evt["TG_ENCOUNTERS"] != null)                 System.Diagnostics.Debug.WriteLine($"Thargoid read {Thargoids.Format("  ")}");
 
-            FLEETCARRIER = evt["FLEETCARRIER"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("FLEETCARRIER")?.ToObject<FLEETCARRIERClass>(true) ?? new FLEETCARRIERClass();
-            JToken dt = evt["FLEETCARRIER"].I("FLEETCARRIER_DISTANCE_TRAVELLED");   // this is a classic frontier eff up
-            if ( dt !=null)
-            {
-                if (dt.IsString)        // used to be 292929 LY
-                {
-                    string s = dt.Str("0 LY");
-                    int i = s.IndexOf(" ");
-                    if (i >= 0)
-                        FLEETCARRIER.DISTANCETRAVELLED = s.Substring(0, i).InvariantParseDouble(0);
-                }
-                else
-                    FLEETCARRIER.DISTANCETRAVELLED = dt.Double(0);
-            }            
+            // frontier, in their stupidity, wrote travelleddistance sometimes in double sometimes in "double LY". Deal with it directly.
+
+            FLEETCARRIER = evt["FLEETCARRIER"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("FLEETCARRIER")
+                        ?.ToObject<FLEETCARRIERClass>(true,
+                            customconverter: (mi, v) => {
+                                var d = (v is string vs) ? vs.Replace(" LY", "", StringComparison.InvariantCultureIgnoreCase).InvariantParseDouble(0) : v;
+                                //System.Diagnostics.Debug.WriteLine($"Fleet custom {v} -> {d}"); 
+                                return d;
+                            }) ?? new FLEETCARRIERClass();
+
         }
 
         public BankAccountClass BankAccount { get; set; }
@@ -76,6 +73,7 @@ namespace EliteDangerousCore.JournalEvents
         public FLEETCARRIERClass FLEETCARRIER { get; set; }
         public ExobiologyClass Exobiology { get; set; }
         public ThargoidsClass Thargoids { get; set; }
+        public SquadronClass Squadron { get; set; }
 
         public override string GetInfo()
         {
@@ -101,7 +99,8 @@ namespace EliteDangerousCore.JournalEvents
                         "CQC".Tx()+ Environment.NewLine + CQC?.Format() + Environment.NewLine +
                         "Fleetcarrier".Tx()+ Environment.NewLine + FLEETCARRIER?.Format() + Environment.NewLine +
                         "Exobiology".Tx()+ Environment.NewLine + Exobiology.Format() + Environment.NewLine +
-                        "Thargoids".Tx()+ Environment.NewLine + Thargoids.Format();
+                        "Thargoids".Tx()+ Environment.NewLine + Thargoids.Format() + Environment.NewLine +
+                        "Squadron".Tx() + Environment.NewLine + Squadron.Format();
         }
 
         public void Ledger(Ledger mcl)
@@ -556,8 +555,8 @@ public string Format(string frontline = "    ")
             public long TRADESPENDTOTAL { get; set; }
             public long STOLENPROFITTOTAL { get; set; }
             public int STOLENSPENDTOTAL { get; set; }
-            [JsonIgnore]        // ignore it for auto convert due to frontier changing from string to double
-            public double DISTANCETRAVELLED { get; set; }
+            [JsonCustomFormat]        
+            public double DISTANCETRAVELLED { get; set; }       // needs special processing as Frontier sometimes wrote "2 LY"
             public int TOTALJUMPS { get; set; }
             public int SHIPYARDSOLD { get; set; }
             public long SHIPYARDPROFIT { get; set; }
@@ -644,9 +643,66 @@ public string Format(string frontline = "    ")
                     "Thargoids killed: ;;N0".Tx(), KILLED + TGSCOUTCOUNT,
                     "Thargoid structures: ;;N0".Tx(), IMPRINT,
                     "Total encounters: ;;N0".Tx(), TOTAL,
-                    "Last seen in".Tx()+": ", TOTALLASTSYSTEM,
-                    "Last seen on".Tx()+": ", TOTALLASTTIMESTAMP,
-                    "Last ship involved".Tx()+": ", TOTALLASTSHIP);
+                    "Last seen in".Tx() + ": ", TOTALLASTSYSTEM,
+                    "Last seen on".Tx() + ": ", TOTALLASTTIMESTAMP,
+                    "Last ship involved".Tx() + ": ", TOTALLASTSHIP);
+            }
+        }
+
+        public class SquadronClass
+        {
+            public long BankCreditsDeposited { get; set; }
+            public long BankCreditsWithdrawn { get; set; }
+            public int BankCommoditiesDepositedNum { get; set; }
+            public long BankCommoditiesDepositedValue { get; set; }
+            public int BankCommoditiesWithdrawnNum { get; set; }
+            public long BankCommoditiesWithdrawnValue { get; set; }
+            public int BankPersonalAssetsDepositedNum { get; set; }
+            public long BankPersonalAssetsDepositedValue { get; set; }
+            public int BankPersonalAssetsWithdrawnNum { get; set; }
+            public long BankPersonalAssetsWithdrawnValue { get; set; }
+            public int BankShipsDepositedNum { get; set; }
+            public long BankShipsDepositedValue { get; set; }
+            public long Leaderboardaegishighestcontribution { get; set; }
+            public long Leaderboardbgshighestcontribution { get; set; }
+            public long Leaderboardbountyhighestcontribution { get; set; }
+            public long Leaderboardcolonisationcontributionhighestcontribution { get; set; }
+            public long Leaderboardcombathighestcontribution { get; set; }
+            public long Leaderboardcqchighestcontribution { get; set; }
+            public long Leaderboardexplorationhighestcontribution { get; set; }
+            public long Leaderboardmininghighestcontribution { get; set; }
+            public long Leaderboardpowerplayhighestcontribution { get; set; }
+            public long Leaderboardtradehighestcontribution { get; set; }
+            public long Leaderboardtradeillicithighestcontribution { get; set; }
+            public int Leaderboardpodiums { get; set; }
+
+            public string Format(string frontline = "    ")
+            {
+                return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
+                    "Credits deposited in bank: ; cr;N0".Tx(), BankCreditsDeposited,
+                    "Credits withdrawn from bank: ; cr;N0".Tx(), BankCreditsWithdrawn,
+                    "Times commodities were deposited: ;;N0".Tx(), BankCommoditiesDepositedNum,
+                    "Value of deposited commodities: ; cr;N0".Tx(), BankCommoditiesDepositedValue,
+                    "Times commodities were withdrawn: ;;N0".Tx(), BankCommoditiesWithdrawnNum,
+                    "Value of withdrawn commodities: ; cr;N0".Tx(), BankCommoditiesWithdrawnValue,
+                    "Times personal assets were deposited: ;;N0".Tx(), BankPersonalAssetsDepositedNum,
+                    "Value of deposited personal assets: ; cr;N0".Tx(), BankPersonalAssetsDepositedValue,
+                    "Times personal assets were withdrawn: ;;N0".Tx(), BankPersonalAssetsWithdrawnNum,
+                    "Value of withdrawn personal assets: ; cr;N0".Tx(), BankPersonalAssetsWithdrawnValue,
+                    "Times ships were deposited: ;;N0".Tx(), BankShipsDepositedNum,
+                    "Value of deposited ships: ; cr;N0".Tx(), BankShipsDepositedValue,
+                    "Highest contribution for Aegis leaderboard: ;;N0".Tx(), Leaderboardaegishighestcontribution,
+                    "Highest contribution for BGS leaderboard: ;;N0".Tx(), Leaderboardbgshighestcontribution,
+                    "Highest contribution for Bounty leaderboard: ;;N0".Tx(), Leaderboardbountyhighestcontribution,
+                    "Highest contribution for Colonisation Contribution leaderboard: ;;N0".Tx(), Leaderboardcolonisationcontributionhighestcontribution,
+                    "Highest contribution for Combat leaderboard: ;;N0".Tx(), Leaderboardcombathighestcontribution,
+                    "Highest contribution for CQC leaderboard: ;;N0".Tx(), Leaderboardcqchighestcontribution,
+                    "Highest contribution for Exploration leaderboard: ;;N0".Tx(), Leaderboardexplorationhighestcontribution,
+                    "Highest contribution for Mining leaderboard: ;;N0".Tx(), Leaderboardmininghighestcontribution,
+                    "Highest contribution for Powerplay leaderboard: ;;N0".Tx(), Leaderboardpowerplayhighestcontribution,
+                    "Highest contribution for Trade leaderboard: ;;N0".Tx(), Leaderboardtradehighestcontribution,
+                    "Highest contribution for Illicit Trade leaderboard: ;;N0".Tx(), Leaderboardtradeillicithighestcontribution,
+                    "Times squadron got a podium place: ;;N0".Tx(), Leaderboardpodiums);                
             }
         }
     }

@@ -1,0 +1,127 @@
+﻿/*
+ * Copyright 2025 - 2025 EDDiscovery development team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+using BaseUtils;
+using System;
+using System.Collections.Generic;
+
+namespace EliteDangerousCore.StarScan2
+{
+    // NodePtrs allow creation of trees without effecting the BodyNode tree, and then manipulation of the tree before presentation
+
+    [System.Diagnostics.DebuggerDisplay("{BodyNode.BodyID} `{BodyNode.OwnName}` `{BodyNode.CanonicalName}` {BodyNode.BodyType} : CB{BodyNode.ChildBodies.Count} Cx{BodyNode.CodexEntries?.Count} FSS{BodyNode.FSSSignalList?.Count} Org{BodyNode.Organics?.Count} Gen {BodyNode.Genuses?.Count}")]
+    public class NodePtr
+    {
+        public BodyNode BodyNode { get; set; }          // pointer to node
+        public List<NodePtr> ChildBodies { get; set; } = new List<NodePtr>();   // to its child bodies
+        public NodePtr Parent { get; set; }         // and its parent
+
+        // return Bodies in NodePtr tree matching predicate
+        public IEnumerable<NodePtr> Bodies(Predicate<BodyNode> find = null, bool stoponfind = false)
+        {
+            foreach (NodePtr sn in ChildBodies)        // check children
+            {
+                // global::System.Diagnostics.Debug.WriteLine($"TYield {sn.OwnName} bid {sn.BodyID}");
+
+                if (find == null || find(sn.BodyNode))
+                {
+                    yield return sn;
+                    if (find != null && stoponfind)
+                        yield break;
+                }
+
+                foreach (NodePtr c in sn.Bodies(find, stoponfind))          // recurse back up to go as deep as required
+                {
+                    if (find == null || find(c.BodyNode))
+                    {
+                        //  global::System.Diagnostics.Debug.WriteLine($"CYield {c.OwnName} bid {c.BodyID}");
+                        yield return c;
+
+                        if (find != null && stoponfind)
+                            yield break;
+                    }
+                }
+            }
+        }
+
+        // GO down tree and make node ptrs from BodyNodes
+        public static NodePtr Bodies(BodyNode bn, NodePtr parent)
+        {
+            var x = new NodePtr();
+            x.BodyNode = bn;
+            x.Parent = parent;
+            foreach (var bnc in bn.ChildBodies)
+            {
+                var bp = Bodies(bnc, x);
+                x.ChildBodies.Add(bp);
+            }
+
+            return x;
+        }
+
+        // GO down tree and remove all barycentres, return BodyNodePtr tree
+        public static NodePtr BodiesNoBarycentres(BodyNode bn, NodePtr parent)
+        {
+            var x = new NodePtr();
+            x.BodyNode = bn;
+            x.Parent = parent;
+            foreach (var bnc in bn.ChildBodies)
+            {
+                var bp = BodiesNoBarycentres(bnc, x);
+
+                if (bn.BodyType == BodyDefinitions.BodyType.Barycentre && x.Parent != null)      // if this is a BC, and we have a parent, move the items up 1 level to the parent
+                    x.Parent.ChildBodies.Add(bp);
+                else if (bp.BodyNode.BodyType != BodyDefinitions.BodyType.Barycentre)        // exclude all BCs from adds
+                    x.ChildBodies.Add(bp);
+            }
+
+            return x;
+        }
+
+        public void Dump(string bid, int level = 0)
+        {
+            if ( level > 0)
+            {
+                if (BodyNode.BodyID < 0)
+                    bid += ".??";
+                else
+                    bid += $".{BodyNode.BodyID,2}";
+
+            }
+
+            BodyNode.Dump(bid, level);
+
+            foreach (var x in ChildBodies)
+                x.Dump(bid, level + 1);
+        }
+
+        public static void Move(IEnumerable<Tuple<NodePtr,NodePtr>> movelist)
+        {
+            foreach( var kvp in movelist)
+            {
+              //  $"Move `{kvp.Item1.BodyNode.Name()}`:{kvp.Item1.BodyNode.BodyID} -> `{kvp.Item2.BodyNode.Name()}`:{kvp.Item2.BodyNode.BodyID}".DO();
+                kvp.Item2.ChildBodies.Add(kvp.Item1);
+                kvp.Item1.Parent.ChildBodies.Remove(kvp.Item1);
+                Sort(kvp.Item2,true);
+            }
+        }
+
+        public static void Sort(NodePtr np, bool ignoresma)
+        {
+            np.ChildBodies.Sort(delegate (NodePtr left, NodePtr right) { return left.BodyNode.CompareTo(right.BodyNode,ignoresma); });
+        }
+
+
+    }
+}

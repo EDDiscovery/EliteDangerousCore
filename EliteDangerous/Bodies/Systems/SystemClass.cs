@@ -21,6 +21,9 @@ namespace EliteDangerousCore
     // Useful for creation of test doubles
     public class SystemClassBase : ISystemBase
     {
+        public bool HasName => Name.HasChars() && Name != "UnKnown";
+        public bool HasAddress => SystemAddress.HasValue;
+
         public const float XYZScalar = 128.0F;     // scaling between DB stored values and floats
 
         static public float IntToFloat(int pos) { return (float)pos / XYZScalar; }
@@ -52,7 +55,10 @@ namespace EliteDangerousCore
         public object Tag { get; set; }
 
         [QuickJSON.JsonIgnore()]
-        public string Key { get { return SystemAddress != null ? SystemAddress.ToStringInvariant() : Name; } }
+        public string Key { get { return SystemAddress.HasValue ? SystemAddress.ToStringInvariant() : Name; } }
+
+        [QuickJSON.JsonIgnore()]
+        public string NameAddress { get { return Name + ":" + (SystemAddress.HasValue ? SystemAddress.ToStringInvariant() : ""); } }
 
         public SystemClassBase()
         {
@@ -143,7 +149,7 @@ namespace EliteDangerousCore
         }
     }
 
-    [DebuggerDisplay("System {Name} ({X,nq},{Y,nq},{Z,nq}) {SystemAddress} {MainStarType} {Source}")]
+    [DebuggerDisplay("System `{Name}`:{SystemAddress} ({X,nq},{Y,nq},{Z,nq}) {MainStarType} {Source}")]
     public class SystemClass : SystemClassBase, ISystem
     {
         public SystemClass() : base()

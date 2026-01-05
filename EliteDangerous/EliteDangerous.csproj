@@ -37,8 +37,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="QuickJSON, Version=2.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)\packages\RJKJSoft.QuickJSON.2.9.0\lib\net48\QuickJSON.dll</HintPath>
+    <Reference Include="QuickJSON, Version=2.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)\packages\RJKJSoft.QuickJSON.2.10.0\lib\net48\QuickJSON.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,6 +54,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bodies\StarScan2\StarScanNodePtr.cs" />
+    <Compile Include="Bodies\StarScan2\StarScanSystemNodeEvents.cs" />
+    <Compile Include="Bodies\StarScan2\SystemDisplayPlanetTree.cs" />
+    <Compile Include="FrontierData\Enumerations\BodyParents.cs" />
+    <Compile Include="FrontierData\Enumerations\Rings.cs" />
+    <Compile Include="Bodies\HabZones\HabZones.cs" />
+    <Compile Include="Bodies\StarScan2\StarScanEvents.cs" />
+    <Compile Include="Bodies\StarScan2\StarScanDebug.cs" />
+    <Compile Include="Bodies\StarScan2\StarScanSystemNodeHelpers.cs" />
+    <Compile Include="Bodies\StarScan2\StarScanSystemNode.cs" />
+    <Compile Include="Bodies\StarScan2\StarScanBodyNode.cs" />
+    <Compile Include="Bodies\StarScan2\StarScan.cs" />
+    <Compile Include="Bodies\StarScan2\SystemDisplay.cs" />
+    <Compile Include="Bodies\StarScan2\SystemDisplayDrawParts.cs" />
+    <Compile Include="Bodies\StarScan2\SystemDisplayDrawNode.cs" />
+    <Compile Include="Bodies\StarScan2\tests\Tests.cs" />
+    <Compile Include="FrontierData\Enumerations\Carrier.cs" />
+    <Compile Include="FrontierData\Items\ModuleList.cs" />
     <Compile Include="JournalStatus\Computers\FactionsStatsComputer.cs" />
     <Compile Include="JournalStatus\Computers\JournalStatsInfo.cs" />
     <Compile Include="Config\EliteConfigInstance.cs" />
@@ -108,10 +126,9 @@
     <Compile Include="Bodies\GMO\GalacticMapObject.cs" />
     <Compile Include="Bodies\GMO\GalacticMapping.cs" />
     <Compile Include="FrontierData\Bindings\BindingsFile.cs" />
-    <Compile Include="FrontierData\Enumerations\BodyImages.cs" />
+    <Compile Include="FrontierData\Enumerations\BodyDefinitions.cs" />
     <Compile Include="FrontierData\Enumerations\EliteReleaseDates.cs" />
     <Compile Include="FrontierData\Enumerations\Planets.cs" />
-    <Compile Include="FrontierData\BodyDesignations\BodyDesignationsDefaults.cs" />
     <Compile Include="FrontierData\Enumerations\CommodityPrices.cs" />
     <Compile Include="FrontierData\Enumerations\FSDSpec.cs" />
     <Compile Include="DB\User\EDCommander.cs" />
@@ -119,7 +136,6 @@
     <Compile Include="FrontierData\Enumerations\FrontierFolder.cs" />
     <Compile Include="JournalStatus\Events\JournalColonisation.cs" />
     <Compile Include="JournalStatus\Entry\JournalTest.cs" />
-    <Compile Include="Bodies\StarScan\StarScanFSSDiscoveryScan.cs" />
     <Compile Include="JournalStatus\Stats\EngineerCrafting.cs" />
     <Compile Include="DB\User\CommanderForm.cs">
       <SubType>Form</SubType>
@@ -131,19 +147,16 @@
     <Compile Include="History\List\HistoryListFill.cs" />
     <Compile Include="History\Queries\Queries.cs" />
     <Compile Include="FrontierData\Items\ItemData.cs" />
-    <Compile Include="FrontierData\Items\ItemEngineers.cs" />
-    <Compile Include="FrontierData\Items\ItemShips.cs" />
-    <Compile Include="FrontierData\Items\ItemActors.cs" />
-    <Compile Include="FrontierData\Items\ItemSuits.cs" />
-    <Compile Include="FrontierData\Items\ItemWeapons.cs" />
+    <Compile Include="FrontierData\Items\Engineers.cs" />
+    <Compile Include="FrontierData\Items\Ships.cs" />
+    <Compile Include="FrontierData\Items\Actors.cs" />
+    <Compile Include="FrontierData\Items\Suits.cs" />
+    <Compile Include="FrontierData\Items\HandItems.cs" />
     <Compile Include="JournalStatus\Events\JournalEmbarkDisembark.cs" />
     <Compile Include="JournalStatus\Events\JournalCarrier.cs" />
     <Compile Include="JournalStatus\Events\JournalScan_Helpers.cs" />
-    <Compile Include="JournalStatus\Events\JournalScan_Surveyor.cs" />
     <Compile Include="JournalStatus\Events\JournalScan_Display.cs" />
-    <Compile Include="JournalStatus\Events\JournalScan_Subclasses.cs" />
     <Compile Include="JournalStatus\Events\JournalScanBarycentre.cs" />
-    <Compile Include="JournalStatus\Events\JournalScan_Images.cs" />
     <Compile Include="JournalStatus\Events\JournalWeapons.cs" />
     <Compile Include="JournalStatus\Events\JournalTaxiDropShip.cs" />
     <Compile Include="JournalStatus\Events\JournalSuits.cs" />
@@ -156,6 +169,8 @@
     <Compile Include="JournalStatus\Entry\JournalTypeEnums.cs" />
     <Compile Include="JournalStatus\Computers\JournalStatsComputer.cs" />
     <Compile Include="JournalStatus\Scanner\Scanner.cs" />
+    <Compile Include="JournalStatus\UIEvents\UIDestination.cs" />
+    <Compile Include="JournalStatus\UIEvents\UIDocked.cs" />
     <Compile Include="Screenshots\ScreenShotConfigureForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,25 +185,7 @@
     <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassSystems.cs" />
     <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassStation.cs" />
     <Compile Include="3rdPartyInterfaces\Spansh\SpanshClass.cs" />
-    <Compile Include="Bodies\StarScan\StarScanApproachTouchdown.cs" />
-    <Compile Include="Bodies\StarScan\StarScanFSSBodySignals.cs" />
-    <Compile Include="Bodies\StarScan\StarScanBaryCentre.cs" />
-    <Compile Include="Bodies\StarScan\StarScanLocation.cs" />
-    <Compile Include="Bodies\StarScan\StarScanNodeInfo.cs" />
-    <Compile Include="Bodies\StarScan\StarScanNodeBaryCentre.cs" />
-    <Compile Include="Bodies\StarScan\StarScanScanOrganic.cs" />
-    <Compile Include="Bodies\StarScan\StarScanCodex.cs" />
-    <Compile Include="Bodies\StarScan\StarSystemNodeTree.cs" />
-    <Compile Include="Bodies\StarScan\StarSystemNode.cs" />
-    <Compile Include="Bodies\StarScan\StarScanNode.cs" />
-    <Compile Include="Bodies\StarScan\StarScanHelpers.cs" />
-    <Compile Include="FrontierData\BodyDesignations\BodyDesignation.cs" />
-    <Compile Include="Bodies\StarScan\StarScanJournalScans.cs" />
-    <Compile Include="Bodies\StarScan\StarScanBodyID.cs" />
-    <Compile Include="Bodies\StarScan\StarScanFSSSignalsDiscovered.cs" />
-    <Compile Include="Bodies\StarScan\StarScanSAASignalsFound.cs" />
-    <Compile Include="Bodies\StarScan\StarScanSAAScan.cs" />
-    <Compile Include="FrontierData\Items\Identifiers.cs" />
+    <Compile Include="FrontierData\Enumerations\Identifiers.cs" />
     <Compile Include="JournalStatus\Stats\Carrier.cs" />
     <Compile Include="JournalStatus\Stats\Stats.cs" />
     <Compile Include="JournalStatus\UIScan\StatusReader.cs" />
@@ -209,7 +206,7 @@
     <Compile Include="FrontierData\Ships\ShipModulesInStore.cs" />
     <Compile Include="FrontierData\Ships\ShipList.cs" />
     <Compile Include="FrontierData\Ships\ShipModule.cs" />
-    <Compile Include="FrontierData\Items\ItemModules.cs" />
+    <Compile Include="FrontierData\Items\Modules.cs" />
     <Compile Include="JournalStatus\xNetLogs\NetLogClass.cs" />
     <Compile Include="JournalStatus\xNetLogs\NetLogReader.cs" />
     <Compile Include="FrontierData\Enumerations\Ranks.cs" />
@@ -218,7 +215,6 @@
     <Compile Include="FrontierData\Ships\StoredShips.cs" />
     <Compile Include="FrontierData\Ships\ShipYard.cs" />
     <Compile Include="Bodies\StarDistances\StarDistanceComputer.cs" />
-    <Compile Include="Bodies\StarScan\StarScan.cs" />
     <Compile Include="Bodies\Systems\SystemClass.cs" />
     <Compile Include="History\Entry\HistoryTravel.cs" />
     <Compile Include="History\Entry\HistoryEntry.cs" />
@@ -305,13 +301,7 @@
     <Compile Include="DB\System\SystemsDBGetLists.cs" />
     <Compile Include="DB\System\SystemsDBGetStars.cs" />
     <Compile Include="DB\User\UserDatabase.cs" />
-    <Compile Include="Bodies\SystemDisplay\SystemDisplayDrawParts.cs" />
-    <Compile Include="Bodies\SystemDisplay\SystemDisplayPlanetTree.cs" />
-    <Compile Include="Bodies\SystemDisplay\SystemDisplayNodes.cs" />
-    <Compile Include="Bodies\SystemDisplay\SystemDisplay.cs" />
-    <Compile Include="Bodies\SystemDisplay\SystemDisplayBarycentres.cs" />
     <Compile Include="JournalStatus\UIEvents\UINPCCrewActive.cs" />
-    <Compile Include="JournalStatus\UIEvents\UIDestination.cs" />
     <Compile Include="JournalStatus\UIEvents\UINavRouteClear.cs" />
     <Compile Include="JournalStatus\UIEvents\UISrvHighBeam.cs" />
     <Compile Include="JournalStatus\UIEvents\UIFsdJump.cs" />
@@ -341,7 +331,6 @@
     <Compile Include="JournalStatus\UIEvents\UIPips.cs" />
     <Compile Include="JournalStatus\UIEvents\UIBeingInterdicted.cs" />
     <Compile Include="JournalStatus\UIEvents\UICargoScoopDeployed.cs" />
-    <Compile Include="JournalStatus\UIEvents\UIDocked.cs" />
     <Compile Include="JournalStatus\UIEvents\UIFlightAssist.cs" />
     <Compile Include="JournalStatus\UIEvents\UIFsdCharging.cs" />
     <Compile Include="JournalStatus\UIEvents\UIFsdCooldown.cs" />

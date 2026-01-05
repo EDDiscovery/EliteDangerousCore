@@ -1,6 +1,7 @@
 ﻿
 SECTION JournalTypeEnum
 
+C7EC98CED613F9: "EDD Destination Selected" @
 94A37CFA0C8992: "Afmu Repairs" => "模组维护工具"
 D2F34790ECB3BA: "Approach Body" => "接近星体"
 5FB514306EBAE2: "Approach Settlement" => "接近地表移民地"
@@ -134,6 +135,7 @@ ECE8DF43B4E578: "Set User Ship Name" => "设定飞船名称"
 4E29C0CE3E9D61: "Shipyard Sell" => "出售飞船"
 270AB9D553AFE5: "Shipyard Swap" => "交换飞船"
 7E6D4BF9F2AA3F: "Shipyard Transfer" => "转移飞船"
+86188917717CAE: "Shipyard Bank Deposit" @
 7908BD051ADB46: "Ship Targeted" => "锁定飞船目标"
 7FDDB7D8D1D60B: "Shutdown" => "退出游戏"
 CAAACBDEADF1BF: "SRV Destroyed" => "SRV车被摧毁"
@@ -248,7 +250,9 @@ DDDE2AEC826902: "Nav Route Clear" => "清除导航路线"
 02374D50F6A18D: "Powerplay Merits" => "权力游戏(Powerplay)功绩点"
 8062068144644D: "Powerplay Rank" => "权力游戏(Powerplay)等级"
 5668ADC227F38B: "Carrier Location" => "航母定位"
-
+00D83C2DDC1290: "Cancelled Squadron Application" @
+61CAC65A66E653: "Squadron Application Approved" @
+33646EA5A80A0A: "Squadron Application Rejected" @
 
 SECTION JournalCargo
 
@@ -786,6 +790,33 @@ A244B487DEE654: "Thargoid structures: ;;N0" => "发现的Thargoid结构: ;;N0"
 6BE262170622C0: "Last seen in" => "最后出现于星系"
 7E967FB5DA23E0: "Last seen on" => "最后出现于日期"
 24CD0F239B6A95: "Last ship involved" => "最后使用飞船"
+
+SECTION SquadronClass
+
+728152AC715A16: "Credits deposited in bank: ; cr;N0" @
+EB57915CBECF14: "Credits withdrawn from bank: ; cr;N0" @
+E70876095D9995: "Times commodities were deposited: ;;N0" @
+979B4B21F1883F: "Value of deposited commodities: ; cr;N0" @
+B24A06E2BEC8D8: "Times commodities were withdrawn: ;;N0" @
+40841B34E7F547: "Value of withdrawn commodities: ; cr;N0" @
+532366FEE4659B: "Times personal assets were deposited: ;;N0" @
+258C2CFBA5DF38: "Value of deposited personal assets: ; cr;N0" @
+A0D1DF478B9E21: "Times personal assets were withdrawn: ;;N0" @
+0FE848AD4253FE: "Value of withdrawn personal assets: ; cr;N0" @
+F73282F8B718CE: "Times ships were deposited: ;;N0" @
+88249FB2AC381A: "Value of deposited ships: ; cr;N0" @
+AE039D8838F8C7: "Highest contribution for Aegis leaderboard: ;;N0" @
+5F4D0AC904A2BC: "Highest contribution for BGS leaderboard: ;;N0" @
+6CACA73BD9B708: "Highest contribution for Bounty leaderboard: ;;N0" @
+F79C7D4454593E: "Highest contribution for Colonisation Contribution leaderboard: ;;N0" @
+CBBFDE8AB0958F: "Highest contribution for Combat leaderboard: ;;N0" @
+CC3330138638FF: "Highest contribution for CQC leaderboard: ;;N0" @
+BDC6D8E52A2CA6: "Highest contribution for Exploration leaderboard: ;;N0" @
+54C7DFF1A1B6F4: "Highest contribution for Mining leaderboard: ;;N0" @
+4C83A8A9F5B221: "Highest contribution for Powerplay leaderboard: ;;N0" @
+E5F44644D71624: "Highest contribution for Trade leaderboard: ;;N0" @
+4DC4A4CFA653D6: "Highest contribution for Illicit Trade leaderboard: ;;N0" @
+DD290F0A316A20: "Times squadron got a podium place: ;;N0" @
 
 SECTION JournalStoredModules
 

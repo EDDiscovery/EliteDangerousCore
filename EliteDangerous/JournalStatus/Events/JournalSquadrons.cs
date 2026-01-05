@@ -17,6 +17,7 @@ using QuickJSON;
 using System;
 using System.Linq;
 using System.Text;
+using static BaseUtils.IntRangeList;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -25,9 +26,18 @@ namespace EliteDangerousCore.JournalEvents
         public JournalSquadronBase(JObject evt, JournalTypeEnum e) : base(evt, e)
         {
             Name = evt["SquadronName"].Str();
+            SquadronID = evt["SquadronID"].Int();
         }
 
         public string Name { get; set; }
+        public int SquadronID { get; set; }
+
+        protected RankDefinitions.SquadronRank GetRank(JToken evt, bool newrank, string idfield)
+        {
+            //bool oldrank = EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards;
+            int value = evt[idfield].Int() + (newrank ? (int)RankDefinitions.SquadronRank.Rank0 : 0);
+            return (RankDefinitions.SquadronRank)value;
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.AppliedToSquadron)]
@@ -35,6 +45,10 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalAppliedToSquadron(JObject evt) : base(evt, JournalTypeEnum.AppliedToSquadron)
         {
+        }
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("", Name);
         }
     }
 
@@ -52,6 +66,10 @@ namespace EliteDangerousCore.JournalEvents
         public JournalInvitedToSquadron(JObject evt) : base(evt, JournalTypeEnum.InvitedToSquadron)
         {
         }
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("", Name);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.JoinedSquadron)]
@@ -59,6 +77,10 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalJoinedSquadron(JObject evt) : base(evt, JournalTypeEnum.JoinedSquadron)
         {
+        }
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("", Name);
         }
     }
 
@@ -68,6 +90,10 @@ namespace EliteDangerousCore.JournalEvents
         public JournalKickedFromSquadron(JObject evt) : base(evt, JournalTypeEnum.KickedFromSquadron)
         {
         }
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("", Name);
+        }
     }
 
     [JournalEntryType(JournalTypeEnum.LeftSquadron)]
@@ -75,6 +101,10 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalLeftSquadron(JObject evt) : base(evt, JournalTypeEnum.LeftSquadron)
         {
+        }
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("", Name);
         }
     }
 
@@ -98,18 +128,31 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSquadronRankBase(JObject evt, JournalTypeEnum e) : base(evt, e)
         {
-            OldRank = (RankDefinitions.SquadronRank)evt["OldRank"].Int();
-            NewRank = (RankDefinitions.SquadronRank)evt["NewRank"].Int();
-        }
+            bool newformat = evt.Contains("OldRankName") || evt.Contains("NewRankName");
 
+            OldRank = GetRank(evt, newformat, "OldRank");
+            NewRank = GetRank(evt, newformat, "NewRank");
+
+            // Vanguards + have these fields, older ones don't, but fill in
+            OldRankName = evt["OldRankName"].Str(RankDefinitions.FriendlyName(OldRank));
+            NewRankName = evt["NewRankName"].Str(RankDefinitions.FriendlyName(NewRank));
+
+            OldRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["OldRankName_Localised"].Str(), OldRankName);
+            NewRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["NewRankName_Localised"].Str(), NewRankName);
+        }
+        
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Name, "Old".Tx()+": ", RankDefinitions.FriendlyName(OldRank), 
-                            "New".Tx()+": ", RankDefinitions.FriendlyName(NewRank));
+            return BaseUtils.FieldBuilder.Build("", Name, "Old".Tx() + ": ", OldRankName_Localised,
+                        "New".Tx() + ": ", NewRankName_Localised);
         }
-
+        
         public RankDefinitions.SquadronRank OldRank { get; set; }
         public RankDefinitions.SquadronRank NewRank { get; set; }
+        public string OldRankName { get; set; }                 // always filled,even for older squadrons
+        public string NewRankName { get; set; }
+        public string OldRankName_Localised { get; set; }
+        public string NewRankName_Localised { get; set; }
     }
 
 
@@ -142,14 +185,57 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSquadronStartup(JObject evt) : base(evt, JournalTypeEnum.SquadronStartup)
         {
-            CurrentRank = (RankDefinitions.SquadronRank)evt["CurrentRank"].Int();
+            CurrentRank = GetRank(evt, evt.Contains("CurrentRankName"), "CurrentRank");
+            CurrentRankName = evt["CurrentRankName"].Str(RankDefinitions.FriendlyName(CurrentRank));
+            CurrentRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["CurrentRankName_Localised"].Str(), CurrentRankName);
         }
 
         public RankDefinitions.SquadronRank CurrentRank { get; set; }
+        public string CurrentRankName { get; set; }     // always filled in
+        public string CurrentRankName_Localised { get; set; }     // always filled in
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Name, "Rank".Tx()+": ", RankDefinitions.FriendlyName(CurrentRank));
+            return BaseUtils.FieldBuilder.Build("", Name, "Rank".Tx() + ": ", CurrentRankName_Localised);
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.CancelledSquadronApplication)]
+    public class JournalCancelledSquadronApplication : JournalSquadronBase
+    {
+        public JournalCancelledSquadronApplication(JObject evt) : base(evt, JournalTypeEnum.CancelledSquadronApplication)
+        {
+        }
+
+        public override string GetInfo()
+        {
+            return Name;
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.SquadronApplicationApproved)]
+    public class JournalSquadronApplicationApproved : JournalSquadronBase
+    {
+        public JournalSquadronApplicationApproved(JObject evt) : base(evt, JournalTypeEnum.SquadronApplicationApproved)
+        {
+        }
+
+        public override string GetInfo()
+        {
+            return Name;
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.SquadronApplicationRejected)]
+    public class JournalSquadronApplicationRejected : JournalSquadronBase
+    {
+        public JournalSquadronApplicationRejected(JObject evt) : base(evt, JournalTypeEnum.SquadronApplicationRejected)
+        {
+        }
+
+        public override string GetInfo()
+        {
+            return Name;
         }
     }
 

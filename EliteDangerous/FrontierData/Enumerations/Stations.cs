@@ -70,6 +70,8 @@ namespace EliteDangerousCore
             ConstructionServices,   // trailblazers feb 25 in game names, see mapping below to fdnames
             RefineryContact,
             SystemColonisation,
+
+            SquadronBank, // vanguards august 25
         }
 
         public static StationServices StationServicesToEnum(string fdname)
@@ -186,6 +188,13 @@ namespace EliteDangerousCore
             PlanetaryConstructionDepot,
             DockablePlanetStation,
             GameplayPOI,
+            Dodec,
+        }
+
+        public static bool IsPlanetaryPort(StarportTypes t)
+        {
+            return t == StarportTypes.OnFootSettlement || t == StarportTypes.OnFootSettlement || t == StarportTypes.PlanetaryConstructionDepot || t == StarportTypes.DockablePlanetStation
+                || t == StarportTypes.CraterOutpost || t == StarportTypes.CraterPort;
         }
 
         // maps the StationType field to an enum.

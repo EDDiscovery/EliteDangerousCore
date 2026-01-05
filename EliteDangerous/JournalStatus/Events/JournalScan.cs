@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using static BaseUtils.TypeHelpers;
 
@@ -24,22 +25,19 @@ namespace EliteDangerousCore.JournalEvents
 {
     // JSON export thru ZMQ/DLLs/Web
 
-    [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} {BodyDesignation} s{IsStar} p{IsPlanet}")]
+    [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} s{IsStar} p{IsPlanet}")]
     [JournalEntryType(JournalTypeEnum.Scan)]
-    public partial class JournalScan : JournalEntry, IStarScan, IBodyNameIDOnly
+    public partial class JournalScan : JournalEntry, IStarScan, IBodyFeature
     {
+        // we can have scans of Planets, Stars, AsteroidClusters and Planetary rings as of Nov 25
         [PropertyNameAttribute("Is it a star")]
         public bool IsStar { get { return StarType != null; } }
-        [PropertyNameAttribute("Is it a belt or cluster")]
-        public bool IsBeltCluster { get { return StarType == null && PlanetClass == null; } }
+        [PropertyNameAttribute("Is it a belt cluster body")]
+        public bool IsBeltClusterBody { get { return StarType == null && PlanetClass == null && BodyName.Contains("Belt Cluster "); } }
+        [PropertyNameAttribute("Is it a planetary ring")]
+        public bool IsPlanetaryRing { get { return StarType == null && PlanetClass == null && BodyName.EndWithIIC(" Ring"); } }
         [PropertyNameAttribute("Is it a planet")]
         public bool IsPlanet { get { return PlanetClass != null; } }
-
-        [PropertyNameAttribute("EDD logical name for well known bodies, such as Sol 3 (Earth)")]
-        public string BodyDesignation { get; set; }
-
-        [PropertyNameAttribute("EDD logical name or journal name")]
-        public string BodyDesignationOrName { get { return BodyDesignation ?? BodyName; } }
 
         ////////////////////////////////////////////////////////////////////// ALL
 
@@ -47,6 +45,11 @@ namespace EliteDangerousCore.JournalEvents
         public string ScanType { get; private set; }                        // 3.0 scan type  Basic, Detailed, NavBeacon, NavBeaconDetail, (3.3) AutoScan, or empty for older ones
         [PropertyNameAttribute("Frontier body name")]
         public string BodyName { get; private set; }                        // direct (meaning no translation)
+
+        [PropertyNameAttribute("Basic type, Planet, Star, Ring")]
+        public BodyDefinitions.BodyType BodyType => IsPlanet ? BodyDefinitions.BodyType.Planet : IsStar ? BodyDefinitions.BodyType.Star : 
+                                                    IsBeltClusterBody ? BodyDefinitions.BodyType.AsteroidCluster : BodyDefinitions.BodyType.PlanetaryRing;
+
         [PropertyNameAttribute("Internal Frontier ID, is empty for older scans")]
         public int? BodyID { get; private set; }                            // direct
         [PropertyNameAttribute("Name of star")]
@@ -96,14 +99,19 @@ namespace EliteDangerousCore.JournalEvents
         public double? RingsMinWidth { get { if (Rings != null) return Rings.Select(x => x.Width).Min(); else return 0; } }
 
         [PropertyNameAttribute("Parent body information. First is nearest body")]
-        public List<BodyParent> Parents { get; private set; }
-        [PropertyNameAttribute("Orbiting a barycentre")]
-        public bool IsOrbitingBarycentre { get { return Parents?.FirstOrDefault()?.Type == "Null"; } }
-        [PropertyNameAttribute("Orbiting a planet")]
-        public bool IsOrbitingPlanet { get { return Parents?.FirstOrDefault()?.Type == "Planet"; } }
-        [PropertyNameAttribute("Orbiting a star")]
-        public bool IsOrbitingStar { get { return Parents?.FirstOrDefault()?.Type == "Star"; } }
+        public List<BodyParent> Parents { get; private set; }               // NOTE Augmented by StarScan setting Parents[i].Barycentre
+        public string ParentList() { return Parents != null ? string.Join(",", Parents.Select(x => x.Type + ":" + x.BodyID)) : ""; }     // not get on purpose
 
+        [PropertyNameAttribute("Orbiting a barycentre")]
+        public bool IsOrbitingBarycentre { get { return Parents?.FirstOrDefault()?.Type == BodyParent.ParentBodyType.Null; } }
+        [PropertyNameAttribute("Orbiting a planet")]
+        public bool IsOrbitingPlanet { get { return BodyParent.IsOrbiting(Parents, BodyParent.ParentBodyType.Planet); } }
+        [PropertyNameAttribute("Orbiting a star")]
+        public bool IsOrbitingStar { get { return BodyParent.IsOrbiting(Parents, BodyParent.ParentBodyType.Star); ; } }
+
+        [PropertyNameAttribute("No Parents or All Parents are barycentres")]
+        public bool IsAllParentsBarycentre { get { return Parents == null || Parents.Count(x => x.IsBarycentre) == Parents.Count; } }
+  
         [PropertyNameAttribute("Has the body been previously discovered - older scans do not have this field")]
         public bool? WasDiscovered { get; private set; }                    // direct, 3.4, indicates whether the body has already been discovered
         [PropertyNameAttribute("Has the body not been previously discovered")]
@@ -128,7 +136,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("OBAFGAKM,LTY,AeBe,N Neutron,H Black Hole,Proto (TTS,AeBe), Wolf (W,WN,WNC,WC,WO), Carbon (CS,C,CN,CJ,CHD), White Dwarfs (D,DA,DAB,DAO,DAZ,DAV,DB,DBZ,DBV,DO,DOV,DQ,DC,DCV,DX), others")]
         public EDStar StarTypeID { get; }                           // star type -> identifier
         [PropertyNameAttribute("Long Name (Orange Main Sequence..) localised")]
-        public string StarTypeText { get { return IsStar ? Stars.StarName(StarTypeID) : ""; } }   // Long form star name, from StarTypeID, localised
+        public string StarTypeText { get { return IsStar ? Stars.ToLocalisedLanguage(StarTypeID) : ""; } }   // Long form star name, from StarTypeID, localised
         [PropertyNameAttribute("Is it the main star")]
         public bool IsMainStar { get { return IsStar && (BodyName == StarSystem || BodyName == StarSystem + " A"); } }
         [PropertyNameAttribute("Ratio of Sol")]
@@ -312,20 +320,19 @@ namespace EliteDangerousCore.JournalEvents
         public EDReserve ReserveLevel { get; private set; }
 
         ///////////////////////////////////////////////////////////////////////// EDD additions
-       
+        ///////////////////////////////////////////////////////////////////////// EDD additions
+        ///////////////////////////////////////////////////////////////////////// EDD additions
+
         [PropertyNameAttribute("Body data source")]
         public SystemSource DataSource { get; private set; } = SystemSource.FromJournal;        // FromJournal, FromEDSM, FromSpansh
         [PropertyNameAttribute("Web data source name (Empty if not)")]
         public string DataSourceName { get { return DataSource != SystemSource.FromJournal ? DataSource.ToString().Replace("From", "") : ""; } }
         [PropertyNameAttribute("Is scan web sourced?")]
         public bool IsWebSourced { get { return DataSource != SystemSource.FromJournal; } }
-        [PropertyNameAttribute("EDSM first commander")]
-        public string EDSMDiscoveryCommander { get; private set; }      // may be null if not known
-        [PropertyNameAttribute("EDSM first reported time UTC")]
-        public DateTime EDSMDiscoveryUTC { get; private set; }
+
 
         [PropertyNameAttribute("Signal information")]
-        public List<JournalSAASignalsFound.SAASignal> Signals { get; set; }          // can be null if no signals for this node, else its a list of signals.  set up by StarScan
+        public List<JournalSAASignalsFound.SAASignal> Signals { get; set; }             // NOTE Augmented by StarScan - may be null
         [JsonIgnore]
         [PropertyNameAttribute("Does it contain geo signals")]
         public bool ContainsGeoSignals { get { return Signals?.Count(x => x.IsGeo) > 0 ? true : false; } }
@@ -369,16 +376,18 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Count of uncategorised signals")]
         public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
 
+
         [PropertyNameAttribute("Genuses information")]
-        public List<JournalSAASignalsFound.SAAGenus> Genuses { get; set; }          // can be null if no genusus for this node, else its a list of genusus.  set up by StarScan
+        public List<JournalSAASignalsFound.SAAGenus> Genuses { get; set; }          // NOTE Augmented by StarScan - may be null
         [PropertyNameAttribute("Any Genuses")]
         public bool ContainsGenusus { get { return (Genuses?.Count ?? 0) > 0; } }
         [JsonIgnore]
         [PropertyNameAttribute("Count of all genuses")]
         public int CountGenusus { get { return Genuses?.Count ?? 0; } }
 
+
         [PropertyNameAttribute("Organics information")]
-        public List<JournalScanOrganic> Organics { get; set; }  // can be null if nothing for this node, else a list of organics. Set up by StarScan
+        public List<JournalScanOrganic> Organics { get; set; }  // NOTE Augmented by StarScan - may be null
         [JsonIgnore]
         [PropertyNameAttribute("Any organic scans")]
         public bool ContainsOrganicsScans { get { return (Organics?.Count ?? 0) > 0; } }
@@ -392,49 +401,52 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Are there organics that haven't been analysed")]
         public bool UnanalysedBiosPresent { get { return CountOrganicsScansAnalysed != CountBioSignals; } }
         [PropertyNameAttribute("Surface features information")]
-        public List<IBodyFeature> SurfaceFeatures { get; set; }// can be null if nothing for this node, else a list of body features. Set up by StarScan
+
+
+        public List<IBodyFeature> SurfaceFeatures { get; set; } // NOTE Augmented by StarScan - may be null
         [PropertyNameAttribute("Count of surface featurss")]
         public int CountSurfaceFeatures { get { return SurfaceFeatures?.Count ?? 0; } }
+
+        [PropertyNameAttribute("Codex information")]
+        public List<JournalCodexEntry> CodexEntries {get;set; }          // NOTE Augmented by StarScan - may be null
+        [PropertyNameAttribute("Are there codex entries against this body")]
+        public bool HasCodexEntries => CodexEntries?.Count > 0;   
+
+        public void SetMapped(bool m, bool e)                           // NOTE Augmented by StarScan - on SAA SCAN Complete, data stored in body node, copied to this class
+        {
+            Mapped = m; EfficientMapped = e;
+        }
 
         [PropertyNameAttribute("Have we mapped it")]
         public bool Mapped { get; private set; }                        // WE Mapped it - affects prices
         [PropertyNameAttribute("Have we efficiently mapped it")]
         public bool EfficientMapped { get; private set; }               // WE efficiently mapped it - affects prices
 
-        public void SetMapped(bool m, bool e)
-        {
-            Mapped = m; EfficientMapped = e;
-        }
-
         [PropertyNameAttribute("cr. Estimated value now")]
         public int EstimatedValue { get { return GetEstimatedValues().EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsWebSourced); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
         [PropertyNameAttribute("cr. Best estimated value possible")]
         public int MaximumEstimatedValue { get { return GetEstimatedValues().EstimatedValue(WasDiscovered, WasMapped, true, true,false); } }     // Direct access to its current EstimatedValue, provides backwards compatibility for code and action packs.
 
-        public int HasSameParents(JournalScan other)     // return -1 if not, or index of last match , 0,1,2
+        public void ResetParents(List<BodyParent> other)        // StarScan uses this if another scan comes in, to make sure we don't lose barycentre info
         {
-            if (Parents != null && other.Parents != null)
-            {
-                for (int i = 0; ; i++)
-                {
-                    int p1 = Parents.Count - 1 - i;
-                    int p2 = other.Parents.Count - 1 - i;
-
-                    if (p1 < 0 || p2 < 0)     // if out of parents, return how many of p2 are left
-                        return i;
-
-                    if (Parents[p1].BodyID != other.Parents[p2].BodyID || Parents[p1].Type != other.Parents[p2].Type)
-                        return -1;
-                }
-            }
-            else
-                return -1;
+            Parents = other;
         }
 
-        public string ParentList() { return Parents != null ? string.Join(",", Parents.Select(x => x.Type + ":" + x.BodyID)) : ""; }     // not get on purpose
-
+        
         [PropertyNameAttribute("N/A")]
         public string ShipIDForStatsOnly { get; set; }         // used in stats computation only.  Not in main code.
+
+        
+        // IBodyNameAndID additional interfaces.
+        int? IBodyFeature.BodyID => BodyID;
+        public double? Latitude { get => null; set { } }
+        public double? Longitude { get => null; set { } }
+        public bool HasLatLong => false;
+        public string Name => null;
+        public string Name_Localised => null;
+
+
+        // Create the entry from JSON
 
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
         {
@@ -458,7 +470,14 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         foreach (var kvp in parent)
                         {
-                            Parents.Add(new BodyParent { Type = kvp.Key, BodyID = kvp.Value.Int() });
+                            if (Enum.TryParse<BodyParent.ParentBodyType>(kvp.Key, true, out BodyParent.ParentBodyType res))
+                            {
+                                Parents.Add(new BodyParent { Type = res, BodyID = kvp.Value.Int() });
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.Assert(false, "Bad parent body type");
+                            }
                         }
                     }
                 }
@@ -639,14 +658,6 @@ namespace EliteDangerousCore.JournalEvents
                 DataSource = SystemSource.FromEDSM;
             else if (evt["EDDFromSpanshBody"].Bool(false))
                 DataSource = SystemSource.FromSpansh;
-
-            // EDSM bodies fields
-            JToken discovery = evt["discovery"];
-            if (!discovery.IsNull())
-            {
-                EDSMDiscoveryCommander = discovery["commander"].StrNull();
-                EDSMDiscoveryUTC = discovery["date"].DateTimeUTC();
-            }
         }
 
         // special, for star scan node tree only, create a scan record with the contents of the journal scan bary centre info
@@ -725,25 +736,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetDetailed()
         {
-            return DisplayString(includefront: true);
-        }
-
-        public string ShortInformation()
-        {
-            if (IsStar)
-            {
-
-                return BaseUtils.FieldBuilder.Build("Mass: ;SM;0.00".Tx(), nStellarMass,
-                                                "Age: ;my;0.0".Tx(), nAge,
-                                                "Radius".Tx()+": ", RadiusText,
-                                                "Dist".Tx()+": ", DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
-            }
-            else
-            {
-                return BaseUtils.FieldBuilder.Build("Mass".Tx()+": ", MassEMMM,
-                                                 "Radius".Tx()+": ", RadiusText,
-                                                 "Dist".Tx()+": ", DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
-            }
+            return DisplayText(includefront: true);
         }
 
         // this structure is reflected by JournalFilterSelector to allow a journal class to add extra filter items to the journal filter lists. Its in use!
@@ -757,8 +750,9 @@ namespace EliteDangerousCore.JournalEvents
             };
         }
 
-        public void AddStarScan(StarScan s, ISystem system)     // no action in this class, historylist.cs does the adding itself instead of using this. 
-        {                                                       // Class interface is marked so you know its part of the gang
+        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
+        {
+            s.AddJournalScan(this, system); 
         }
 
         #endregion

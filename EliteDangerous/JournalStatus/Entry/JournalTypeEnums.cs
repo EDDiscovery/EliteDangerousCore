@@ -251,6 +251,7 @@ namespace EliteDangerousCore
         ShipyardSwap = 870,
         ShipyardRedeem = 875,
         ShipyardTransfer = 880,
+        ShipyardBankDeposit = 879,
         ShipTargeted = 881,
         ShipLocker = 4031,
         Shutdown = 882,
@@ -265,6 +266,9 @@ namespace EliteDangerousCore
         SquadronPromotion = 893,
         SquadronStartup = 894,
         SupercruiseDestinationDrop = 895,
+        CancelledSquadronApplication = 896,
+        SquadronApplicationApproved = 897,
+        SquadronApplicationRejected = 898,
         SupercruiseExit = 900,
         SwitchSuitLoadout = 4023,
         SuitLoadout = 4029,
@@ -290,6 +294,7 @@ namespace EliteDangerousCore
 
         EDDItemSet = 2000,          // obsolete
         EDDCommodityPrices = 2010,
+        EDDDestinationSelected = 2020,
 
         // below are not events currently supported or icon rename events
 

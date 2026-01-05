@@ -96,7 +96,11 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Route != null)
             {
-                sb.AppendFormat("{0} jumps".Tx()+": ", Route.Length - 1);
+
+                sb.AppendFormat("{0} jumps".Tx() + ", ", Route.Length - 1);
+
+                var classlist = string.Join(" ", Route.Select(x => x.StarClass).Distinct());
+                sb.Append(classlist + ": ");
 
                 for (int i = 1; i < Route.Length; i++)
                 {
@@ -166,11 +170,12 @@ namespace EliteDangerousCore.JournalEvents
             return false;
         }
 
-        public void AddStarScan(StarScan s, ISystem system)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
         {
-            foreach( var star in Route.EmptyIfNull())
+            foreach (var star in Route.EmptyIfNull())
             {
-                s.AddLocation(new SystemClass(star.StarSystem, star.SystemAddress, star.StarPos.X, star.StarPos.Y, star.StarPos.Z));     // we use our data to fill in 
+                var sys = s.GetOrAddSystem(new SystemClass(star.StarSystem, star.SystemAddress, star.StarPos.X, star.StarPos.Y, star.StarPos.Z));     // we use our data to fill in 
+                sys?.SetStarClass(star.EDStarClass);
             }
         }
 

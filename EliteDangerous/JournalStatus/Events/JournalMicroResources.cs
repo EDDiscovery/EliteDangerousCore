@@ -263,49 +263,38 @@ namespace EliteDangerousCore.JournalEvents
         {
             if ( evt.Contains("MicroResources") )       // new style, present in some records
             {
-                Items = evt["MicroResources"]?.ToObjectQ<MicroResource[]>()?.ToArray();       // items may be null
+                Items = evt["MicroResources"]?.ToObjectQ<List<MicroResource>>()?.ToList();       // items may be null
             }
             else
             {                                       // single entry style
-                Items = new MicroResource[1] { new MicroResource() };
+                Items = new List<MicroResource>() { new MicroResource() };
                 evt.ToObjectProtected(Items[0].GetType(), true, membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                                             initialobject:Items[0]);        // read fields named in this structure matching JSON names
             }
 
             // collect Name, Name_Localised, Category, Count
-            MicroResource.Normalise(Items, null);
+            MicroResource.Normalise(Items.ToArray(), null);
             Price = evt["Price"].Int();
             MarketID = evt["MarketID"].Long();
             if (Items != null)
                 TotalCount = Items.Select(x => x.Count).Sum();          // do it this way, so its consistent across both forms
         }
 
-        public MicroResource[] Items { get; set; } = null;      // may be null
+        public List<MicroResource> Items { get; set; } = null;      // may be null
         public int Price { get; set; }
         public int TotalCount { get; set; }
         public long MarketID { get; set; }
 
         public override string GetInfo()
         {
-            if (Items != null && Items.Length > 0)
+            if (Items != null)
             {
-                if (Items.Length == 1)
-                {
-                    return BaseUtils.FieldBuilder.Build("", Items[0].GetFriendlyName(), "", Items[0].Count, "< buy price ; cr;N0".Tx(), Price);
-                }
-                else
-                {
-                    return BaseUtils.FieldBuilder.Build("Items".Tx()+ ":; ", TotalCount, "< buy price ; cr;N0".Tx(), Price);
-                }
+                StringBuilder sb = new System.Text.StringBuilder();
+                MicroResource.List(sb, Items.ToArray());
+                return sb.ToString();
             }
-            return "";
-        }
-
-        public override string GetDetailed()
-        {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            MicroResource.List(sb, Items);
-            return sb.ToString();
+            else
+                return "";
         }
 
         public void Ledger(Ledger mcl)
@@ -326,7 +315,21 @@ namespace EliteDangerousCore.JournalEvents
                     mc.ChangeMR(MicroResource.ShipLocker, EventTimeUTC, m.Category, m.Name, m.Count );
                 }
             }
+        }
 
+        public void Merge(JournalBuyMicroResources other)
+        {
+            foreach (var m in other.Items)
+            {
+                int index = Items.FindIndex(x => x.Name == m.Name);
+                if (index >= 0)
+                    Items[index].Count += m.Count;
+                else
+                    Items.Add(m);
+            }
+
+            TotalCount += other.TotalCount;
+            Price += other.Price;
         }
     }
 

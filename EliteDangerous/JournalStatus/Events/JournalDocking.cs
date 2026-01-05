@@ -12,13 +12,15 @@
  * governing permissions and limitations under the License.
  */
 
+using EliteDangerousCore.StarScan2;
 using QuickJSON;
 using System;
 
 namespace EliteDangerousCore.JournalEvents
 {
+    [System.Diagnostics.DebuggerDisplay("Docked {StationName} {StationType} {StarSystem} {SystemAddress}")]
     [JournalEntryType(JournalTypeEnum.Docked)]
-    public class JournalDocked : JournalEntry, IStatsJournalEntry, ILocDocked
+    public class JournalDocked : JournalEntry, IStatsJournalEntry, ILocDocked, IBodyFeature, IStarScan
     {
         public JournalDocked(System.DateTime utc) : base(utc, JournalTypeEnum.Docked)
         {
@@ -31,6 +33,9 @@ namespace EliteDangerousCore.JournalEvents
             StationName_Localised = snl.Item2;
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());  // may not be there
             StationType = StationDefinitions.ToEnglish(FDStationType);
+            if (StationDefinitions.IsPlanetaryPort(FDStationType))
+                BodyType = BodyDefinitions.BodyType.Planet;
+
             StationState = StationDefinitions.StarportStateToEnum( evt["StationState"].Str("None") );    // missed, added, nov 22, only on bad starports.  Default None
             StarSystem = evt["StarSystem"].Str();
             SystemAddress = evt["SystemAddress"].LongNull();
@@ -110,6 +115,18 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool IsTrainingEvent { get; private set; }
 
+
+        // IBodyFeature
+        public BodyDefinitions.BodyType BodyType { get; set; } = BodyDefinitions.BodyType.Station;      // Or Planet, if its on a planet
+        public string BodyName { get; set; }        // augmented by AddStarScan
+        public int? BodyID { get; set; }            // augmented by AddStarScan
+        public double? Latitude { get; set; }       // augmented by AddStarScan
+        public double? Longitude { get; set; }      // augmented by AddStarScan
+        public bool HasLatLong => Latitude != null && Longitude != null;
+        public string Name => StationName;
+        public string Name_Localised => StationName_Localised;
+
+
         // these are EconomyDefinitions.Economies
         public bool HasAnyEconomyTypes(string[] fdnames)
         {
@@ -140,7 +157,8 @@ namespace EliteDangerousCore.JournalEvents
                 ";(Wanted)".Tx(), Wanted,
                 ";Active Fine".Tx(), ActiveFine,
                 "Faction".Tx()+": ", Faction,
-                "< in state ".Tx(), FactionDefinitions.ToLocalisedLanguage(FactionState));
+                "< in state ".Tx(), FactionDefinitions.ToLocalisedLanguage(FactionState),
+                "Latitude: ;°;F4".Tx(), Latitude, "Longitude: ;°;F4".Tx(), Longitude);
 
             return sb.ToString();
         }
@@ -172,6 +190,19 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Faction.HasChars())
                 stats.Docking(system,this);
+        }
+
+        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus hes)
+        {
+            if( BodyType == BodyDefinitions.BodyType.Planet)
+            {
+                BodyID = hes.BodyID;
+                BodyName = hes.BodyName;
+                Latitude = hes.Latitude;
+                Longitude = hes.Longitude;  
+            }
+
+            s.AddDocking(this, system);
         }
     }
 

@@ -102,6 +102,7 @@ namespace EliteDangerousCore.Spansh
 
 
         // System can be name, name and systemaddress, or systemaddress only (from jan 25)
+        // sys can have name or address
         static public BodiesResults GetBodiesList(ISystem sys, bool weblookup = true)
         {
             try
@@ -134,20 +135,22 @@ namespace EliteDangerousCore.Spansh
                         {
                             // System.Diagnostics.Debug.WriteLine($"Spansh Web Lookup complete no info {sys.Name} {sys.SystemAddress}");
                             // mark that we tried to lookup but we could not get any valid data
-                            if (sys.Name.HasChars())
+                            if (sys.HasName)
                                 BodyCache[sys.Name] = null;
-                            if (sys.SystemAddress.HasValue)
+                            if (sys.HasAddress)
                                 BodyCache[sys.SystemAddress.Value.ToStringInvariant()] = null;
                         }
                     }
 
                     if (spanshdump != null)
                     {
-                        var jlist = GetBodiesFromDump(spanshdump, sys, out int? bodycount);
+                        var jlist = GetBodiesFromDump(spanshdump);
 
-                        if (jlist != null)         // we have data from file or from web
+                        if (jlist?.Count>0)         // we have data from file or from web
                         {
                             List<JournalScan> bodies = new List<JournalScan>();
+
+                            SystemClass systemgot = new SystemClass(jlist[0]["StarSystem"].Str(), jlist[0]["SystemAddress"].LongNull());
 
                             foreach (JObject jo in jlist)
                             {
@@ -171,12 +174,11 @@ namespace EliteDangerousCore.Spansh
                                 BaseUtils.FileHelpers.TryWriteToFile(cachefile, spanshdump.ToString(true));      // save to file so we don't have to reload
                             }
 
+                            int? bodycount = spanshdump["system"].I("bodyCount").IntNull();
+
                             // place the body in the cache under both its name and its system address. We return system normalised, bodies and bodycount (if known)
-                            var cdata = new BodiesResults(sys, bodies, bodycount);
-                            if (sys.Name.HasChars())
-                                BodyCache[sys.Name] = cdata;
-                            if (sys.SystemAddress.HasValue)
-                                BodyCache[sys.SystemAddress.Value.ToStringInvariant()] = cdata;
+                            var cdata = new BodiesResults(systemgot, bodies, bodycount);
+                            BodyCache[systemgot.Key] = cdata;
 
                             // System.Diagnostics.Debug.WriteLine($"Spansh Web/File Lookup complete {sys.Name} {sys.SystemAddress} {bodies.Count} cache {fromcache}");
                             return cdata;
@@ -202,7 +204,7 @@ namespace EliteDangerousCore.Spansh
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** SPANSH failed to decode star {name}");
+                System.Diagnostics.Trace.WriteLine($"*** SPANSH failed to decode star `{name}`");
                 return null;
             }
         }
@@ -266,30 +268,36 @@ namespace EliteDangerousCore.Spansh
 
             return null;
         }
+
+        public static JArray ReadFile(string file)
+        {
+            JToken tk = JToken.Parse( System.IO.File.ReadAllText(file));
+            return GetBodiesFromDump(tk.Object());
+        }
+
         // return dump of bodies in journal scan format from the spansh dump format
-        private static JArray GetBodiesFromDump(JObject json, ISystem foundsystem, out int? bodycount)
+        private static JArray GetBodiesFromDump(JObject json)
         {
             bool dump = true;       // previously, we supported search. Now lets always use dump, but for now, keep search code below for safety
-
-            bodycount = null;
 
             //System.Diagnostics.Debug.WriteLine($"Spansh bodies found {foundsystem.Name} {foundsystem.SystemAddress}");
 
             JArray resultsarray;
+            string sysname = null;
+            long? sysaddr = null;
 
             if (dump)
             {
-                if (json["system"].Object()?.Contains("bodyCount") ?? false)
-                    bodycount = json["system"]["bodyCount"].IntNull();
-
                 resultsarray = json != null ? json["system"].I("bodies").Array() : null;
+                sysname = json["system"].I("name").StrNull();                       // must have these now
+                sysaddr = json["system"].I("id64").LongNull();
             }
             else
             {
                 resultsarray = json != null ? json["results"].Array() : null;
             }
 
-            if (resultsarray != null)
+            if (resultsarray != null && sysname.HasChars() && sysaddr.HasValue )
             {
                 JArray retresult = new JArray();
 
@@ -306,8 +314,8 @@ namespace EliteDangerousCore.Spansh
                         evt["BodyName"] = so["name"];
 
                         evt["BodyID"] = so[dump ? "bodyId" : "body_id"];
-                        evt["StarSystem"] = foundsystem.Name;
-                        evt["SystemAddress"] = foundsystem.SystemAddress.HasValue ? foundsystem.SystemAddress.Value : json["reference"]["id64"].Long();
+                        evt["StarSystem"] = sysname;
+                        evt["SystemAddress"] = sysaddr;
                         evt["DistanceFromArrivalLS"] = so[dump ? "distanceToArrival" : "distance_to_arrival"];
                         evt["WasDiscovered"] = true;        // obv, since spansh has the data
                         evt["WasMapped"] = false;
@@ -348,8 +356,8 @@ namespace EliteDangerousCore.Spansh
                             {
                                 JObject entry = new JObject
                                 {
-                                    ["InnerRad"] = node["inner_radius"],
-                                    ["OuterRad"] = node["outer_radius"],
+                                    ["InnerRad"] = node["innerRadius"],
+                                    ["OuterRad"] = node["outerRadius"],
                                     ["MassMT"] = node["mass"],
                                     ["Name"] = node["name"],
                                     ["RingClass"] = "eRingClass_" + node["type"].Str().Replace(" ", ""),
@@ -361,8 +369,14 @@ namespace EliteDangerousCore.Spansh
                         if (so["type"].Str() == "Star")
                         {
                             string spanshst = so[dump ? "subType" : "subtype"].Str();
-                            EDStar? startype = SpanshStarNameToEDStar(spanshst);
-                            evt["StarType"] = startype != null ? Stars.ToEnglish(startype.Value) : spanshst;        // so if we recognise it, use the text version of the enum. ToEnum should turn it back
+                            if (spanshst.HasChars())
+                            {
+                                EDStar? startype = SpanshStarNameToEDStar(spanshst);
+                                evt["StarType"] = startype != null ? Stars.ToEnglish(startype.Value) : spanshst;        // so if we recognise it, use the text version of the enum. ToEnum should turn it back
+                            }
+                            else
+                                evt["StarType"] = "Unknown";
+
                             //System.Diagnostics.Debug.WriteLine($"Spansh star type {evt["StarType"].Str()}");
 
                             evt["StellarMass"] = so[dump ? "solarMasses" : "solar_masses"];
@@ -375,8 +389,14 @@ namespace EliteDangerousCore.Spansh
                         else if (so["type"].Str() == "Planet")
                         {
                             string spanshpc = so[dump ? "subType" : "subtype"].Str();
-                            EDPlanet? planet = SpanshPlanetNameToEDPlanet(spanshpc);
-                            evt["PlanetClass"] = planet != null ? Planets.ToEnglish(planet.Value) : spanshpc;      // if recognised, turn back to string, with _ removed.
+
+                            if (spanshpc.HasChars())
+                            {
+                                EDPlanet? planet = SpanshPlanetNameToEDPlanet(spanshpc);
+                                evt["PlanetClass"] = planet != null ? Planets.ToEnglish(planet.Value) : spanshpc;      // if recognised, turn back to string, with _ removed.
+                            }
+                            else
+                                evt["PlanetClass"] = "Unknown";
 
                             //System.Diagnostics.Debug.WriteLine($"Spansh  planet class {spanshpc} -> {evt["PlanetClass"]}");
                         }
@@ -572,7 +592,7 @@ namespace EliteDangerousCore.Spansh
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** SPANSH failed to decode planet {name}");
+                System.Diagnostics.Trace.WriteLine($"*** SPANSH failed to decode planet `{name}`");
                 return null;
             }
         }

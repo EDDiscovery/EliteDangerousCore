@@ -1118,6 +1118,7 @@ D8D4559A372171: "Prison" => "Centro de Detención"
 9DB9478502242D: "Prison Colony" => "Colonia Penitenciaria"
 AB1A1F939BDE0E: "Theocracy" => "Teocracia"
 0646F4AFD90C8F: "Undefined" => "Sin Definir"
+750A7CEF420603: "Megaconstruction" @
 
 SECTION EconomyTypes
 
@@ -1164,6 +1165,7 @@ E2407F2BA86D9F: "Space Construction Depot" => "Depósito de Construcción Espaci
 72D0849A72AB18: "Planetary Construction Depot" => "Depósito de Construcción Planetaria"
 2D68CF109D6809: "Dockable Planet Station" => "Estación Planetaria Atracable"
 D089EF39D4EA65: "Construction POI" @
+39A76A40856116: "Dodec" @
 
 SECTION PowerPlayStates
 
@@ -1209,6 +1211,7 @@ EB702E354D4040: "Fighter Weapon" => "Armamento del Caza"
 1CC4848D27B6F3: "Wear And Tear Type" => "Tipo de Desgaste"
 86B9B261DED066: "Vanity Type" @
 352374D32CCD3B: "Unknown Type" => "Tipo Desconocido"
+036F587DDBE3AB: "Lightweight Alloy (Default)" @
 
 SECTION ModulePartNames
 
@@ -1339,6 +1342,7 @@ E8B772D1BC2A20: "Enhanced Performance Thrusters" => "Propulsores de Rendimiento 
 FFE926B9A1E06C: "Concord Cannon" => "Cañón de Concordia"
 492166ECE113AD: "Colonisation Module" => "Módulo de Colonización"
 0DB27EBBF41345: "Large Cargo Rack" @
+80C6C2BEA1E3BF: "Mining Volley Repeater" @
 
 SECTION ShipSlots
 
@@ -1374,6 +1378,7 @@ BE7DD45637B559: "Medium Hardpoint 2" => "Anclaje Mediano 2"
 4BBD04305C4BF0: "Medium Hardpoint 3" => "Anclaje Mediano 3"
 485F68ABD0CDE8: "Medium Hardpoint 4" => "Anclaje Mediano 4"
 A7AB21F5CF19AE: "Medium Hardpoint 5" => "Anclaje Mediano 5"
+890406A48C1D3F: "Medium Hardpoint 6" @
 77E9039F43F6E2: "Military Slot 1" => "Compartimento Militar 1"
 A22CCB7E4839AD: "Military Slot 2" => "Compartimento Militar 2"
 62898937228B9D: "Military Slot 3" => "Compartimento Militar 3"
@@ -1447,6 +1452,7 @@ B9F7EC2C516319: "Optional Slot 10 Class 4" => "Compartimento Opcional 10 Clase 4
 2E43536EE0228A: "Optional Slot 11 Class 2" => "Compartimento Opcional 11 Clase 2"
 396FF2847C8FAD: "Optional Slot 11 Class 3" => "Compartimento Opcional 11 Clase 3"
 7B3D33D0B5E58B: "Optional Slot 12 Class 1" => "Compartimento Opcional 12 Clase 1"
+99231038FC49DD: "Optional Slot 13 Class 1" @
 EB2C412690A12A: "Optional Slot 13 Class 2" => "Compartimento Opcional 13 Clase 2"
 F448DCEB3AF33F: "Optional Slot 14 Class 1" => "Compartimento Opcional 14 Clase 1"
 EB2E26440F6DEA: "Small Hardpoint 1" => "Anclaje Pequeño 1"
@@ -1471,6 +1477,13 @@ D96AA577649F7B: "Turret Type 2" => "Torreta tipo 2"
 BCC6D8B8761B2B: "Colonisation Suite" => "Equipo de Colonización"
 1D10985EBE451F: "Large Cargo 1" @
 FA9AB13CECC85C: "Large Cargo 2" @
+915A0715B57347: "Medium Mining Hardpoint 1" @
+E104214FD34AC0: "Medium Mining Hardpoint 2" @
+5E6DE9C9A368F8: "Small Mining Hardpoint 1" @
+B682567449A543: "Large Mining Hardpoint 1" @
+F4A2558C583E61: "Limpet Controller 1" @
+0B523B44CCD4E7: "Fighter Bay 1" @
+09D463E32B04B2: "Hologram" @
 
 SECTION StationServices
 
@@ -1491,7 +1504,7 @@ BCF0B075B87A0B: "Flight Controller" => "Controlador de Vuelo"
 CE58D89A4E21CC: "Interstellar Factors Contact" => "Contacto de Interstellar Factors"
 E2CCAE04963449: "Initiatives" @
 DF9FFF10547920: "Livery" => "Diseño"
-87E1A3CD31659F: "Missions Generated" @
+87E1A3CD31659F: "Missions Generated" => "Misiones Generadas"
 4C43E25D84B7F8: "On Dock Mission" @
 47B3D6DC1170FA: "Refuel" => "Repostar"
 3CCF7127AB2FFF: "Restock" => "Reaprovisionar"
@@ -1500,6 +1513,6 @@ AD038C447F5DE3: "Social Space" => "Espacio Social"
 D286137F857962: "Station Menu" => "Menú de la Estación"
 BB15267B3070D3: "Station Operations" => "Operaciones de la Estación"
 221B7518505747: "Tuning" @
-60200FB3E2E83B: "Construction Services" @
+60200FB3E2E83B: "Construction Services" => "Servicios de Construcción"
 AA300EF7059881: "Refinery Contact" => "Contacto de Refinería"
 2E40E3A594EE09: "System Colonisation" => "Colonización del Sistema"

@@ -13,6 +13,7 @@
  */
 
 using EliteDangerousCore.JournalEvents;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
@@ -157,7 +158,9 @@ namespace EliteDangerousCore
 
         static public JournalTypeEnum[] NeverReadFromDBEvents = new JournalTypeEnum[]
         {
-            JournalTypeEnum.Music, JournalTypeEnum.UnderAttack, JournalTypeEnum.FSDTarget, JournalTypeEnum.NavRouteClear, 
+            JournalTypeEnum.Music, 
+            JournalTypeEnum.UnderAttack, 
+            JournalTypeEnum.NavRouteClear, 
         };
 
         // These are discarded from history during reading database
@@ -168,7 +171,10 @@ namespace EliteDangerousCore
         {
             if (!EliteConfigInstance.InstanceOptions.DisableJournalRemoval)
             {
-                if ((je.EventTypeID == JournalTypeEnum.ShipTargeted && ((JournalShipTargeted)je).TargetLocked == false) )      // Shiptargeted knock out lost target ones
+                if (je.EventTypeID == JournalTypeEnum.FSDTarget || je.EventTypeID == JournalTypeEnum.EDDDestinationSelected)        // old ones are not reshown
+                    return true;
+
+                else if ((je.EventTypeID == JournalTypeEnum.ShipTargeted && ((JournalShipTargeted)je).TargetLocked == false) )      // Shiptargeted knock out lost target ones
                 {
                     return true;
                 }
@@ -188,9 +194,10 @@ namespace EliteDangerousCore
             {
                 if (je.EventTypeID == JournalTypeEnum.Music ||
                     je.EventTypeID == JournalTypeEnum.UnderAttack ||
+                    je.EventTypeID == JournalTypeEnum.NavRouteClear ||
                     (je.EventTypeID == JournalTypeEnum.ShipTargeted && ((JournalShipTargeted)je).TargetLocked == false) ||      // Shiptargeted knock out lost target ones
-                    je.EventTypeID == JournalTypeEnum.FSDTarget ||
-                    je.EventTypeID == JournalTypeEnum.NavRouteClear)
+                    je.EventTypeID == JournalTypeEnum.FSDTarget
+                    )
                 {
                     return true;
                 }
@@ -244,6 +251,13 @@ namespace EliteDangerousCore
                         jfsprev.Scooped += jfs.Scooped;
                         jfsprev.Total = jfs.Total;
                         //System.Diagnostics.Debug.WriteLine("Merge FS " + jfsprev.EventTimeUTC);
+                        return true;
+                    }
+                    else if ( je.EventTypeID == JournalTypeEnum.BuyMicroResources)
+                    {
+                        JournalBuyMicroResources jm = je as JournalBuyMicroResources;
+                        JournalBuyMicroResources jmprev = prev as JournalBuyMicroResources;
+                        jmprev.Merge(jm);
                         return true;
                     }
                     else if (je.EventTypeID == JournalTypeEnum.Friends) // merge friends

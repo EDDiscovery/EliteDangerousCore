@@ -554,7 +554,7 @@ namespace EliteDangerousCore
             {
                 if (multicrew)
                 {
-                    System.Diagnostics.Debug.WriteLine($"ShipList Ignore {je.EventTimeUTC} {je.EventTypeStr} due to multicrew");
+                    //System.Diagnostics.Debug.WriteLine($"ShipList Ignore {je.EventTimeUTC} {je.EventTypeStr} due to multicrew");
                 }
                 else
                 {

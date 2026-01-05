@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using BaseUtils;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
@@ -77,7 +78,7 @@ namespace EliteDangerousCore
         public List<JournalFactionKillBond> FactionKillBonds = new List<JournalFactionKillBond>();
         public List<JournalInterdiction> Interdiction = new List<JournalInterdiction>();
         public List<JournalInterdicted> Interdicted = new List<JournalInterdicted>();
-        public Dictionary<DateTime, long> Credits = new Dictionary<DateTime, long>();
+        public DictionaryWithFirstLastKey<DateTime, Tuple<long, long>> CreditsAssets = new DictionaryWithFirstLastKey<DateTime, Tuple<long, long>>();
 
         private Dictionary<string, JournalShipTargeted> targetted = new Dictionary<string, JournalShipTargeted>();
 
@@ -182,7 +183,7 @@ namespace EliteDangerousCore
                     {
                         var j = ev as JournalLoadGame;
 
-                        this.Credits[j.EventTimeUTC] = j.Credits;
+                        this.CreditsAssets[j.EventTimeUTC] = new Tuple<long,long>(j.Credits,0);                 // we get loadgame first, we store credits
                         this.targetted.Clear(); // loadgame clears target cache
 
                         if (j.InShip)       // if in ship
@@ -242,6 +243,11 @@ namespace EliteDangerousCore
                     }
                 case JournalTypeEnum.Statistics:
                     {
+                        var j = ev as JournalStatistics;
+                        if ( CreditsAssets.Count>0)
+                        {
+                            CreditsAssets[CreditsAssets.LastKey] = new Tuple<long, long>(CreditsAssets[CreditsAssets.LastKey].Item1, j.BankAccount.CurrentWealth);
+                        }
                         this.laststats = ev as JournalEvents.JournalStatistics;
                         break;
                     }

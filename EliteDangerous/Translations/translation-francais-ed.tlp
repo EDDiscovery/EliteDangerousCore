@@ -921,9 +921,9 @@ F958260588E1AF: "Steel" => "Acier"
 
 SECTION EngineeringData
 
-05FC94B0147F09: "Engineer" => "Ingénieur "
-A60F2C73604F62: "Quality" => "Qualité "
-A5BADB0C4C0940: "Experimental Effect" => "Effet expérimental "
+05FC94B0147F09: "Engineer" => "Ingénieur"
+A60F2C73604F62: "Quality" => "Qualité"
+A5BADB0C4C0940: "Experimental Effect" => "Effet expérimental"
 C312376DA63393: "Original: ;;0.###" @
 75A08C2632AF12: "< (Worse); (Better)" => "< (Pire); (Meilleur)"
 
@@ -938,7 +938,7 @@ SECTION CommanderForm
 B26565C54E6DA2: "Default Map Color" => "Couleur par défaut de la carte"
 F3646F7AE1228F: "Home System" => "Système de base"
 2737A55B1A4751: "Inara Information (optional)" => "Information Inara (Optionnel)"
-BC5F6A124741B3: "Inara Name" => "Nom sur Inara "
+BC5F6A124741B3: "Inara Name" => "Nom sur Inara"
 8A77089A093CC5: "Inara API Key" => "Clé API Inara"
 137D072F2C9C3C: "Sync to Inara" => "Synchroniser avec Inara"
 C43E80AA3B8661: "EDDN" @
@@ -1118,6 +1118,7 @@ D8D4559A372171: "Prison" => "Centre de détention"
 9DB9478502242D: "Prison Colony" => "Colonie pénitentiaire"
 AB1A1F939BDE0E: "Theocracy" => "Théocratie"
 0646F4AFD90C8F: "Undefined" => "Non défini"
+750A7CEF420603: "Megaconstruction" @
 
 SECTION EconomyTypes
 
@@ -1164,6 +1165,7 @@ E2407F2BA86D9F: "Space Construction Depot" => "Dépôt de construction spatial"
 72D0849A72AB18: "Planetary Construction Depot" => "Dépôt de construction planétaire"
 2D68CF109D6809: "Dockable Planet Station" => "Station planétaire amarrable"
 D089EF39D4EA65: "Construction POI" @
+39A76A40856116: "Dodec" @
 
 SECTION PowerPlayStates
 
@@ -1209,6 +1211,7 @@ EB702E354D4040: "Fighter Weapon" @
 1CC4848D27B6F3: "Wear And Tear Type" @
 86B9B261DED066: "Vanity Type" => "Livrée"
 352374D32CCD3B: "Unknown Type" => "Type inconnu"
+036F587DDBE3AB: "Lightweight Alloy (Default)" @
 
 SECTION ModulePartNames
 
@@ -1338,7 +1341,8 @@ E8B772D1BC2A20: "Enhanced Performance Thrusters" => "Propulseurs à performances
 6F55767D3D0B28: "Pulse Wave Xeno Scanner" => "Détecteur de xénomorphes à onde pulsée"
 FFE926B9A1E06C: "Concord Cannon" => "Canon Concorde"
 492166ECE113AD: "Colonisation Module" => "Instruments de colonisation de système"
-0DB27EBBF41345: "Large Cargo Rack" @
+0DB27EBBF41345: "Large Cargo Rack" => "Compartiment soute large"
+80C6C2BEA1E3BF: "Mining Volley Repeater" @
 
 SECTION ShipSlots
 
@@ -1374,6 +1378,7 @@ BE7DD45637B559: "Medium Hardpoint 2" => "Point d'emport moyen 2"
 4BBD04305C4BF0: "Medium Hardpoint 3" => "Point d'emport moyen 3"
 485F68ABD0CDE8: "Medium Hardpoint 4" => "Point d'emport moyen 4"
 A7AB21F5CF19AE: "Medium Hardpoint 5" => "Point d'emport moyen 5"
+890406A48C1D3F: "Medium Hardpoint 6" @
 77E9039F43F6E2: "Military Slot 1" => "Emplacement militaire 1"
 A22CCB7E4839AD: "Military Slot 2" => "Emplacement militaire 2"
 62898937228B9D: "Military Slot 3" => "Emplacement militaire 3"
@@ -1447,6 +1452,7 @@ B9F7EC2C516319: "Optional Slot 10 Class 4" => "Emplacement optionnel 10 Classe 4
 2E43536EE0228A: "Optional Slot 11 Class 2" => "Emplacement optionnel 11 Classe 2"
 396FF2847C8FAD: "Optional Slot 11 Class 3" => "Emplacement optionnel 11 Classe 3"
 7B3D33D0B5E58B: "Optional Slot 12 Class 1" => "Emplacement optionnel 12 Classe 1"
+99231038FC49DD: "Optional Slot 13 Class 1" @
 EB2C412690A12A: "Optional Slot 13 Class 2" => "Emplacement optionnel 13 Classe 2"
 F448DCEB3AF33F: "Optional Slot 14 Class 1" => "Emplacement optionnel 14 Classe 1"
 EB2E26440F6DEA: "Small Hardpoint 1" => "Point d'emport petit 1"
@@ -1469,8 +1475,15 @@ E4DD5EE5641BD6: "Vessel Voice" => "Voix du vaisseau"
 D96AA577649F7B: "Turret Type 2" => "Tourelle Type 2"
 3AE8579069394D: "Sine Wave Scanner" => "Scanner à onde sinusoïdale"
 BCC6D8B8761B2B: "Colonisation Suite" => "Instruments de colonisation de système"
-1D10985EBE451F: "Large Cargo 1" @
-FA9AB13CECC85C: "Large Cargo 2" @
+1D10985EBE451F: "Large Cargo 1" => "Cargo large 1"
+FA9AB13CECC85C: "Large Cargo 2" => "Cargo large 2"
+915A0715B57347: "Medium Mining Hardpoint 1" @
+E104214FD34AC0: "Medium Mining Hardpoint 2" @
+5E6DE9C9A368F8: "Small Mining Hardpoint 1" @
+B682567449A543: "Large Mining Hardpoint 1" @
+F4A2558C583E61: "Limpet Controller 1" @
+0B523B44CCD4E7: "Fighter Bay 1" @
+09D463E32B04B2: "Hologram" @
 
 SECTION StationServices
 

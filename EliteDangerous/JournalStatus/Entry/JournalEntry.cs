@@ -12,6 +12,8 @@
  * governing permissions and limitations under the License.
  */
 
+#define MEASURE_INDIVIDUAL_PERFORMANCE
+
 using EliteDangerousCore.DB;
 using EliteDangerousCore.JournalEvents;
 using QuickJSON;
@@ -22,6 +24,7 @@ using System.Data.Common;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 
 namespace EliteDangerousCore
@@ -55,6 +58,8 @@ namespace EliteDangerousCore
         public bool StartMarker { get { return (Synced & (int)SyncFlags.StartMarker) != 0; } }
         [QuickJSON.JsonIgnore()]
         public bool StopMarker { get { return (Synced & (int)SyncFlags.StopMarker) != 0; } }
+
+        public static string TranslatedEventName(JournalTypeEnum x) { return TranslatedEventNames[x]; }
 
         public virtual bool IsBeta { get { return TravelLogUnit.Get(TLUId)?.IsBeta ?? DefaultBetaFlag; } }        // TLUs are cached via the dictionary, no point also holding a local copy
         public virtual bool IsHorizons { get { return TravelLogUnit.Get(TLUId)?.IsHorizons ?? DefaultHorizonsFlag; } }  // horizons flag from loadgame
@@ -98,6 +103,7 @@ namespace EliteDangerousCore
         {
             return null;
         }
+
         public virtual string GetDetailed() // may return null if no more data available
         {
             return null;
@@ -105,6 +111,30 @@ namespace EliteDangerousCore
         public virtual string GetDetailed(FillInformationData fid) // may return null if no more data available
         {
             return null;
+        }
+
+        // GetInfo/GetInfo(fid) always return string
+        public string GetInfo(ISystem sys, string wai = "?", string bn = "?", string nsn = "?", long nsa = 0)
+        {
+            string ret = GetInfo();
+            if (ret == null)
+            {
+                FillInformationData fid = new FillInformationData() { System = sys, WhereAmI = wai, BodyName = bn, NextJumpSystemName = nsn, NextJumpSystemAddress = nsa };
+                ret = GetInfo(fid);
+            }
+            return ret ?? "";
+        }
+
+        // GetDetailed/GetDetailed(fid) may return null
+        public string GetDetailed(ISystem sys, string wai = "?", string bn = "?", string nsn = "?", long nsa = 0)
+        {
+            string ret = GetDetailed();
+            if (ret == null)
+            {
+                FillInformationData fid = new FillInformationData() { System = sys, WhereAmI = wai, BodyName = bn, NextJumpSystemName = nsn, NextJumpSystemAddress = nsa };
+                ret = GetDetailed(fid);
+            }
+            return ret;
         }
 
         // the long name of it, such as Approach Body. May be overridden, is translated
@@ -134,7 +164,7 @@ namespace EliteDangerousCore
             Id = id;
         }
 
-        public void SetSystemNote()         // see if a system note can be assigned.
+        public void CheckAndAssignSystemNote()         // see if a system note can be assigned.
         {
             SNC = SystemNoteClass.GetJIDNote(Id);
             if (SNC == null && EventTypeID == JournalTypeEnum.FSDJump)      // if null and FSD Jump
@@ -146,17 +176,24 @@ namespace EliteDangerousCore
             //if (SNC != null) System.Diagnostics.Debug.WriteLine($"Journal System note found for {Id}");
         }
 
-        // update the note. If text is blank, delete it
+        // update the note. If text is null or blank, delete it
         public void UpdateSystemNote(string text, string system, bool sendtoedsm)
         {
-            System.Diagnostics.Trace.Assert(text != null && system != null);
+            System.Diagnostics.Trace.Assert(system != null);
 
             bool fsdentry = EventTypeID == JournalTypeEnum.FSDJump;
 
-            if (SNC == null)            // if no system note, we make one. Its a JID note unless its on a FSD jump, in which case its a system note. Syncs with EDSM in that case
-                SNC = SystemNoteClass.MakeNote(text, DateTime.Now, system, fsdentry ? 0 : Id, GetJson().ToString());        
+            // if no system note, we make one. Its a JID note unless its on a FSD jump, in which case its a system note. Syncs with EDSM in that case
+
+            if (SNC == null)        // if new SNC
+            {
+                if (text.HasChars())  // must have chars to assign it
+                    SNC = SystemNoteClass.MakeNote(text, DateTime.Now, system, fsdentry ? 0 : Id, GetJson().ToString());
+            }
             else
+            {
                 SNC = SNC.UpdateNote(text, DateTime.Now, GetJson().ToString());    // and update info, and update our ref in case it has changed or gone null
+            }
 
             if (SNC != null && sendtoedsm && fsdentry )    // if still have a note and send to esdm, and its on an FSD entry, then its a system note
                 EDSM.EDSMClass.SendComments(SNC.SystemName, SNC.Note);
@@ -257,6 +294,7 @@ namespace EliteDangerousCore
         }
 
         // enum name, translated name, image
+        // optional filter for entries containing these methods
         static public List<Tuple<string, string, Image>> GetNameImageOfEvents(string[] methods = null, bool sort = false)
         {
             List<JournalTypeEnum> jevents = JournalEntry.GetEnumOfEvents(methods);
@@ -273,6 +311,26 @@ namespace EliteDangerousCore
             }
 
             return list;
+        }
+
+        // look at events containing the method FilterItems and return name, translated name, image
+        static public List<Tuple<string, string, Image>> GetNameImageOfEventsFilterItems()
+        {
+            string method = "FilterItems";
+
+            List<Tuple<string, string, Image>> ret = new List<Tuple<string, string, Image>>();
+
+            var list = JournalEntry.GetEnumOfEvents(new string[] { method });        // return list of these
+            foreach (var e in list)
+            {
+                // get FilterItems method handle and invoke, and then add to list
+                Type t = JournalEntry.TypeOfJournalEntry(e);
+                MethodInfo info = t.GetMethod(method, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+                List<Tuple<string, string, Image>> retlist = info.Invoke(null, new object[] { }) as List<Tuple<string, string, Image>>;
+                ret.AddRange(retlist);
+            }
+
+            return ret;
         }
 
         static public Tuple<string, string, Image> GetNameImageOfEvent(JournalTypeEnum ev)
@@ -408,7 +466,7 @@ namespace EliteDangerousCore
 
                 // code to measure performance.. use this by turning off multitasking and either select individual or total time
 
-#if true
+#if MEASURE_INDIVIDUAL_PERFORMANCE
                 // measure each one
 
                 for (int j = 0; j < tabledata.Count; j++)
@@ -440,27 +498,29 @@ namespace EliteDangerousCore
                 ticks[JournalTypeEnum.Unknown] = new Stats() { ticks = ticks2 - ticks1, number = 1, type = JournalTypeEnum.Unknown };
 
 #endif
-                //{
-                //    var values = ticks.Values.ToList();
-                //    values.Sort(delegate (Stats left, Stats right) { return left.number.CompareTo(right.number); });
+//{
+//    var values = ticks.Values.ToList();
+//    values.Sort(delegate (Stats left, Stats right) { return left.number.CompareTo(right.number); });
 
-                //    System.Diagnostics.Debug.WriteLine($"-------------------- by number");
+//    System.Diagnostics.Debug.WriteLine($"-------------------- by number");
 
-                //    foreach (var x in values)
-                //        System.Diagnostics.Debug.WriteLine($"Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency} per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
-                //}
+//    foreach (var x in values)
+//        System.Diagnostics.Debug.WriteLine($"Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency} per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
+//}
 
-                //{
-                //    var values = ticks.Values.ToList();
-                //    values.Sort(delegate (Stats left, Stats right) { return ((double)left.ticks / left.number).CompareTo((double)right.ticks / right.number); });
+//{
+//    var values = ticks.Values.ToList();
+//    values.Sort(delegate (Stats left, Stats right) { return ((double)left.ticks / left.number).CompareTo((double)right.ticks / right.number); });
 
-                //    System.Diagnostics.Debug.WriteLine($"-------------------- by time ");
-                //    foreach (var x in values)
-                //    {
-                //        if (x.number > 50)
-                //            System.Diagnostics.Debug.WriteLine($"Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency} per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
-                //    }
-                //}
+//    System.Diagnostics.Debug.WriteLine($"-------------------- by time ");
+//    foreach (var x in values)
+//    {
+//        if (x.number > 50)
+//            System.Diagnostics.Debug.WriteLine($"Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency} per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
+//    }
+//}
+
+#if REPORT_PERFORMANCE
                 {
                     var values = ticks.Values.ToList();
                     values.Sort(delegate (Stats left, Stats right) { return left.ticks.CompareTo(right.ticks); });
@@ -468,9 +528,10 @@ namespace EliteDangerousCore
                     System.Diagnostics.Debug.WriteLine($"-------------------- by ticks ");
                     foreach (var x in values)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency}s per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
+                        System.Diagnostics.Debug.WriteLine($"Load Event {x.type} num {x.number} ticks {x.ticks} total {(double)x.ticks / System.Diagnostics.Stopwatch.Frequency}s per {(double)x.ticks / x.number / System.Diagnostics.Stopwatch.Frequency * 1000} ms");
                     }
                 }
+#endif
             }
 
             if (cancel.IsCancellationRequested)

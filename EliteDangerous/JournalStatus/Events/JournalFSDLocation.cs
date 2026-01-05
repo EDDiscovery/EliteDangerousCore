@@ -17,6 +17,7 @@ using EliteDangerousCore.DB;
 using System.Linq;
 using System.Text;
 using System.Data.Common;
+using EliteDangerousCore.StarScan2;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -237,7 +238,7 @@ namespace EliteDangerousCore.JournalEvents
 
     //When written: at startup, or when being resurrected at a station
     [JournalEntryType(JournalTypeEnum.Location)]
-    public class JournalLocation : JournalLocOrJump, IBodyNameAndID, IStarScan, ICarrierStats, ILocDocked
+    public class JournalLocation : JournalLocOrJump, IBodyFeature, IStarScan, ILocDocked
     {
         public JournalLocation(JObject evt) : base(evt, JournalTypeEnum.Location)      // all have evidence 16/3/2017
         {
@@ -257,7 +258,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             Body = evt["Body"].Str();
             BodyID = evt["BodyID"].IntNull();
-            BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
+            BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
             DistFromStarLS = evt["DistFromStarLS"].DoubleNull();
 
             Latitude = evt["Latitude"].DoubleNull();
@@ -306,15 +307,12 @@ namespace EliteDangerousCore.JournalEvents
         public string StationName_Localised { get; set; } // will be null if not docked
         public string StationType { get; set; } // will be null if not docked, english name
         public StationDefinitions.StarportTypes FDStationType { get; set; } // will be Unknown if not docked
-        public string Body { get; set; }
-        public int? BodyID { get; set; }
-        public string BodyType { get; set; }
-        public string BodyDesignation { get; set; }
+        public string Body { get; set; }        // only if on planet
+        public int? BodyID { get; set; }        // only if on planet
+        public BodyDefinitions.BodyType BodyType { get; set; }  // only if on planet
         public double? DistFromStarLS { get; set; }
-
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
-
+        public double? Latitude { get; set; }   // only if on planet
+        public double? Longitude { get; set; }  // only if on planet
         public long? MarketID { get; set; }
         public StationDefinitions.Classification MarketClass() { return MarketID != null ? StationDefinitions.Classify(MarketID.Value, FDStationType) : StationDefinitions.Classification.Unknown; }
 
@@ -333,6 +331,13 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Multicrew { get; set; }
         public bool? InSRV { get; set; }
         public bool? OnFoot { get; set; }
+
+        // IBodyFeature
+        public string BodyName => Body;
+        public bool HasLatLong => Latitude != null && Longitude != null;
+        public string Name => StationName ?? Body;                  // if we docked, feature name is the station, else its the body
+        public string Name_Localised => StationName_Localised ?? Body;
+
 
         public override string SummaryName(ISystem sys)     // Location
         {
@@ -398,15 +403,13 @@ namespace EliteDangerousCore.JournalEvents
             return sb.Length>0 ? sb.ToString() : null;
         }
 
-        public void AddStarScan(StarScan s, ISystem system)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
         {
-            s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
+            var sys = new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z);
+            s.GetOrAddSystem( sys);     // we use our data to fill in 
+            s.AddLocation(this, sys);
         }
 
-        public void UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrier)
-        {
-            s.Update(this,onfootfleetcarrier);
-        }
     }
 
 
@@ -423,7 +426,7 @@ namespace EliteDangerousCore.JournalEvents
             BoostUsed = evt["BoostUsed"].Int();         
             Body = evt["Body"].StrNull();
             BodyID = evt["BodyID"].IntNull();
-            BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
+            BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
 
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
@@ -447,15 +450,15 @@ namespace EliteDangerousCore.JournalEvents
         public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
         public string Body { get; set; }
         public int? BodyID { get; set; }
-        public string BodyType { get; set; }
+        public BodyDefinitions.BodyType BodyType { get; set; }
 
         public bool? Taxi { get; set; }
         public bool? Multicrew { get; set; }
 
         public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".Tx(), StarSystem); }
-        public void AddStarScan(StarScan s, ISystem system)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
         {
-            s.AddLocation(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
+            s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
 
         public override string GetInfo()        // fsdjump
@@ -529,7 +532,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.FSDTarget)]
-    public class JournalFSDTarget : JournalEntry
+    public class JournalFSDTarget : JournalEntry, IStarScan
     {
         public JournalFSDTarget(JObject evt) : base(evt, JournalTypeEnum.FSDTarget)
         {
@@ -538,7 +541,7 @@ namespace EliteDangerousCore.JournalEvents
             EDStarClass = Stars.ToEnum(StarClass);
             SystemAddress = evt["SystemAddress"].Long();
             RemainingJumpsInRoute = evt["RemainingJumpsInRoute"].IntNull();
-            FriendlyStarClass = (StarClass.Length > 0) ? Stars.StarName(Stars.ToEnum(StarClass)) : "";
+            FriendlyStarClass = (StarClass.Length > 0) ? Stars.ToLocalisedLanguage(Stars.ToEnum(StarClass)) : "";
         }
 
         public string StarSystem { get; set; }
@@ -547,6 +550,11 @@ namespace EliteDangerousCore.JournalEvents
         public long SystemAddress { get; set; }
         public int? RemainingJumpsInRoute { get; set; }
         public string FriendlyStarClass { get; set; }
+
+        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
+        {
+            s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress));
+        }
 
         public override string GetInfo()
         {
@@ -566,7 +574,7 @@ namespace EliteDangerousCore.JournalEvents
             StarSystem = evt["StarSystem"].Str();
             StarClass = evt["StarClass"].Str();
             EDStarClass = Stars.ToEnum(StarClass);
-            FriendlyStarClass = (StarClass.Length > 0) ? Stars.StarName(Stars.ToEnum(StarClass)) : "";
+            FriendlyStarClass = (StarClass.Length > 0) ? Stars.ToLocalisedLanguage(Stars.ToEnum(StarClass)) : "";
             SystemAddress = evt["SystemAddress"].LongNull();
             InTaxi = evt["Taxi"].BoolNull();
         }
@@ -590,10 +598,14 @@ namespace EliteDangerousCore.JournalEvents
                 return "Supercruise".Tx();
         }
 
-        public void AddStarScan(StarScan s, ISystem system)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
         {
-            if ( IsHyperspace )
-                s.AddLocation(new SystemClass(StarSystem,SystemAddress));      // add so there is placeholder
+            if (IsHyperspace)
+            {
+                var sys = s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress));      // add so there is placeholder
+                sys?.SetStarClass(EDStarClass);
+            }
+
         }
     }
 }

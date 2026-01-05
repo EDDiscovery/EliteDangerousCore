@@ -16,117 +16,26 @@ using QuickJSON;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static BaseUtils.TypeHelpers;
 
 namespace EliteDangerousCore.JournalEvents
 {
     public partial class JournalScan
     {
-        // show material counts at the historic point and current.  Has trailing LF if text present.
-        public void DisplayMaterials(StringBuilder sb, int indent = 0, List<MaterialCommodityMicroResource> historicmatlist = null, List<MaterialCommodityMicroResource> currentmatlist = null)
+        public HabZones GetHabZones()
         {
-            if (HasMaterials)
+            if (IsStar && nRadius.HasValue && nSurfaceTemperature.HasValue)
             {
-                string indents = new string(' ', indent);
-
-                sb.Append("Materials".Tx()+": ");
-                sb.AppendSPC();
-
-                int index = 0;
-                foreach (KeyValuePair<string, double> mat in Materials)
-                {
-                    if (index++ > 0)
-                        sb.Append(indents);
-                    DisplayMaterial(sb,mat.Key, mat.Value, historicmatlist, currentmatlist);
-                }
-            }
-        }
-        // has trailing LF
-        public void DisplayMaterial(StringBuilder sb, string fdname, double percent, List<MaterialCommodityMicroResource> historicmatlist = null,
-                                                                      List<MaterialCommodityMicroResource> currentmatlist = null)  
-        {
-            MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
-
-            if (mc != null && (historicmatlist != null || currentmatlist != null))
-            {
-                MaterialCommodityMicroResource historic = historicmatlist?.Find(x => x.Details == mc);
-                MaterialCommodityMicroResource current = ReferenceEquals(historicmatlist, currentmatlist) ? null : currentmatlist?.Find(x => x.Details == mc);
-                int? limit = mc.MaterialLimitOrNull();
-
-                string matinfo = historic?.Count.ToString() ?? "0";
-                if (limit != null)
-                    matinfo += "/" + limit.Value.ToString();
-
-                if (current != null && (historic == null || historic.Count != current.Count))
-                    matinfo += " Cur " + current.Count.ToString();
-
-                sb.AppendFormat("{0}: ({1}) {2} {3}% {4}", mc.TranslatedName, mc.Shortname, mc.TranslatedType, percent.ToString("N1"), matinfo);
+                HabZones hz = new HabZones(nRadius.Value, nSurfaceTemperature.Value);
+                // values initially calculated by Jackie Silver (https://forums.frontier.co.uk/member.php/37962-Jackie-Silver)
+                return hz;
             }
             else
-                sb.AppendFormat("{0}: {1}%", System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(fdname.ToLowerInvariant()),
-                                                            percent.ToString("N1"));
-            sb.AppendCR();
-        }
-
-        private void DisplayAtmosphere(StringBuilder sb, int indent = 0)     // has trailing LF
-        {
-            string indents = new string(' ', indent);
-
-            sb.Append("Atmospheric Composition".Tx()+": ");
-            sb.AppendSPC();
-            int index = 0;
-            foreach (KeyValuePair<string, double> comp in AtmosphereComposition)
-            {
-                if (index++ > 0)
-                    sb.Append(indents);
-
-                sb.AppendFormat("{0}: {1}%", comp.Key, comp.Value.ToString("N2"));
-                sb.AppendCR();
-            }
-        }
-
-        private void DisplayComposition(StringBuilder sb, int indent = 0)   // has trailing LF
-        {
-            string indents = new string(' ', indent);
-
-            sb.Append("Planetary Composition".Tx()+": ");
-            sb.AppendSPC();
-            int index = 0;
-            foreach (KeyValuePair<string, double> comp in PlanetComposition)
-            {
-                if (comp.Value > 0)
-                {
-                    if (index++ > 0)
-                        sb.Append(indents);
-                    sb.AppendFormat("{0}: {1}%", comp.Key, comp.Value.ToString("N2"));
-                    sb.AppendCR();
-                }
-            }
+                return null;
         }
 
 
         #region Other Queries
-
-        // adds to mats hash (if required) if one found.
-        // returns number of jumponiums in body
-        public int Jumponium(HashSet<string> mats = null)
-        {
-            int count = 0;
-
-            foreach (var m in Materials.EmptyIfNull())
-            {
-                string n = m.Key.ToLowerInvariant();
-                if (MaterialCommodityMicroResourceType.IsJumponiumType(n))
-                {
-                    count++;
-                    if (mats != null && !mats.Contains(n))      // and we have not counted it
-                    {
-                        mats.Add(n);
-                    }
-                }
-            }
-
-            return count;
-        }
 
         public StarPlanetRing FindRing(string name)
         {
@@ -158,57 +67,6 @@ namespace EliteDangerousCore.JournalEvents
             if (!PlanetComposition.ContainsKey(c))
                 return 0.0;
             return PlanetComposition[c];
-        }
-
-        // given a star name and system address, the EDD designation of the body (Sol 3) and the JournalScan
-        // return true if the starname/sysaddress matches the journal scan fields
-        // return true if the designation contains the starname
-        public bool IsStarNameRelated(string starname, long? sysaddr, string designation)
-        {
-            // if we have a star system and system address, and we got passed a system address..
-            if (StarSystem != null && SystemAddress != null && sysaddr != null)     
-            {
-                // star is the same name and sys addr same
-                return starname.Equals(StarSystem, StringComparison.InvariantCultureIgnoreCase) && sysaddr == SystemAddress;    
-            }
-
-            // else lets see if the designator contains the starname
-            if (designation.Length >= starname.Length)      
-            {
-                string s = designation.Substring(0, starname.Length);
-                return starname.Equals(s, StringComparison.InvariantCultureIgnoreCase);
-            }
-            else
-                return false;
-        }
-
-        // given a star name and system address, and the JournalScan
-        // use the journal scan body designation, or the body name of the body
-        // check to see if the scan is the same system as the given starname/sysaddress, if not, return null
-        // return name without the star name prefix
-        public string RemoveStarnameFromDesignation(string starname, long? sysaddr)          
-        {
-            string designation = BodyDesignation ?? BodyName;
-            string desigrest = null;
-
-            if (this.StarSystem != null && this.SystemAddress != null && sysaddr != null)       // if scan has starsystem/systemaddress, and given sysaddress is set
-            {
-                if (starname != this.StarSystem || sysaddr != this.SystemAddress)       // then the star names and system address must match
-                {
-                    return null;        // no relationship between starname and system in JE
-                }
-
-                desigrest = designation;
-            }
-
-            if (designation.Length >= starname.Length)              // cut out the star name from the designation
-            {
-                string s = designation.Substring(0, starname.Length);
-                if (starname.Equals(s, StringComparison.InvariantCultureIgnoreCase))
-                    desigrest = designation.Substring(starname.Length).Trim();
-            }
-
-            return desigrest;
         }
 
         private ScanEstimatedValues EstimatedValues = null;
@@ -296,7 +154,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public void AccumulateJumponium(ref string jumponium, string sysname)
+        public void AccumulateJumponium(ref string jumponium)
         {
             if (IsLandable == true && HasMaterials) // Landable bodies with valuable materials, collect into jumponimum
             {
@@ -328,11 +186,33 @@ namespace EliteDangerousCore.JournalEvents
                     if (premium != 0)
                         jumpLevel.AppendPrePad(premium + "/" + Recipes.FindSynthesis("FSD", "Premium").Count + " Premium".Tx(), ", ");
 
-                    jumponium = jumponium.AppendPrePad(string.Format("{0} has {1} level elements.".Tx(), sysname, jumpLevel), Environment.NewLine);
+                    jumponium = jumponium.AppendPrePad(string.Format("{0} has {1} level elements.".Tx(), BodyName, jumpLevel), Environment.NewLine);
                 }
             }
         }
 
+
+        // adds to mats hash (if required) if one found.
+        // returns number of jumponiums in body
+        public int Jumponium(HashSet<string> mats = null)
+        {
+            int count = 0;
+
+            foreach (var m in Materials.EmptyIfNull())
+            {
+                string n = m.Key.ToLowerInvariant();
+                if (MaterialCommodityMicroResourceType.IsJumponiumType(n))
+                {
+                    count++;
+                    if (mats != null && !mats.Contains(n))      // and we have not counted it
+                    {
+                        mats.Add(n);
+                    }
+                }
+            }
+
+            return count;
+        }
 
         #endregion
 

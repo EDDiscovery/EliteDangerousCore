@@ -30,17 +30,21 @@ namespace EliteDangerousCore
             public double FSDGuardianBoosterRange { get; set; }     // set if you have a guardian booster (ly)
             public double FuelMultiplier { get { return LinearConstant * 0.001; } }
             public double PowerFactor { get { return Math.Pow(MaxFuelPerJump / FuelMultiplier, 1 / PowerConstant); } }
+            public int NeutronMultipler { get; set; }          // default 4 for multiplier, 6 for caspian
+
             public FSDSpec(
                 double pc,
                 double lc,
                 double mOpt,
-                double mfpj)
+                double mfpj,
+                int nmult)
             {
                 this.PowerConstant = pc;
                 this.LinearConstant = lc;
                 this.OptimalMass = mOpt;
                 this.MaxFuelPerJump = mfpj;
                 this.FSDGuardianBoosterRange = 0;
+                this.NeutronMultipler = nmult;
             }
 
             public double spanshboostedFuelMultiplier(double mass)
@@ -75,6 +79,8 @@ namespace EliteDangerousCore
 
             public double JumpRange(int currentCargo, double unladenMassHullModules, double fuel, double boost)
             {
+                if ( fuel == 0)
+                    return 0;
                 double mass = currentCargo + unladenMassHullModules + fuel;
                 double massf = OptimalMass / mass;
                 double fuelmultiplier = (LinearConstant * 0.001);
