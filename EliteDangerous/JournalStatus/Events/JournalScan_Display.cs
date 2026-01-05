@@ -335,7 +335,11 @@ namespace EliteDangerousCore.JournalEvents
                 sb.AppendFormat("Already Mapped".Tx() + "");
                 sb.AppendCR();
             }
-
+            if (WasFootfalled.HasValue && WasFootfalled.Value)
+            {
+                sb.AppendFormat("Already Footfalled".Tx() + "");
+                sb.AppendCR();
+            }
 
             if (ScanType.HasChars())        // early entries did not
             {
@@ -399,7 +403,7 @@ namespace EliteDangerousCore.JournalEvents
 
             var ev = js.GetEstimatedValues();
 
-            if (js.WasMapped == true && js.WasDiscovered == true)
+            if (js.WasMapped == true && js.WasDiscovered == true && js.WasFootfalled != true)
             {
                 information.Append(" (Mapped & Discovered)".Tx());
                 if (showvalues)
@@ -407,7 +411,7 @@ namespace EliteDangerousCore.JournalEvents
                     information.Append(' ').Append(ev.EstimatedValueMappedEfficiently.ToString("N0")).Append(" cr");
                 }
             }
-            else if (js.WasMapped == true && js.WasDiscovered == false)
+            else if (js.WasMapped == true && js.WasDiscovered == false && js.WasFootfalled != true)
             {
                 information.Append(" (Mapped)".Tx());
                 if (showvalues)
@@ -415,12 +419,44 @@ namespace EliteDangerousCore.JournalEvents
                     information.Append(' ').Append(ev.EstimatedValueFirstMappedEfficiently.ToString("N0")).Append(" cr");
                 }
             }
-            else if (js.WasDiscovered == true && js.WasMapped == false)
+            else if (js.WasDiscovered == true && js.WasMapped == false && js.WasFootfalled != true)
             {
                 information.Append(" (Discovered)".Tx());
                 if (showvalues)
                 {
                     information.Append(' ').Append((ev.EstimatedValueFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
+                }
+            }
+            else if (js.WasMapped == true && js.WasDiscovered == true && js.WasFootfalled == true)
+            {
+                information.Append(" (Mapped & Discovered & Footfalled)".Tx());
+                if (showvalues)
+                {
+                    information.Append(' ').Append(ev.EstimatedValueMappedEfficiently.ToString("N0")).Append(" cr");
+                }
+            }
+            else if (js.WasMapped == true && js.WasDiscovered == false && js.WasFootfalled == true)
+            {
+                information.Append(" (Mapped & Footfalled)".Tx());
+                if (showvalues)
+                {
+                    information.Append(' ').Append(ev.EstimatedValueFirstMappedEfficiently.ToString("N0")).Append(" cr");
+                }
+            }
+            else if (js.WasDiscovered == true && js.WasMapped == false && js.WasFootfalled == true)
+            {
+                information.Append(" (Discovered & Footfalled)".Tx());
+                if (showvalues)
+                {
+                    information.Append(' ').Append((ev.EstimatedValueFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
+                }
+            }
+            else if (js.WasDiscovered == false && js.WasMapped == false && js.WasFootfalled == true)
+            {
+                information.Append(" (Footfalled)".Tx());
+                if (showvalues)
+                {
+                    information.Append(' ').Append((ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
                 }
             }
             else if (js.WasDiscovered == false && js.IsStar)

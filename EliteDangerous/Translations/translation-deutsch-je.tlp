@@ -502,6 +502,7 @@ AC983DAC73C35D: "Scan Type: {0}" => "Scanart: {0}"
 187199564DF54F: "Inferred Circumstellar zones" => "Vermutete zirkumstellare Zonen"
 AEF0ABF930C73C: "Ascending Node: {0:0.000}°" => "Aufsteigender Knoten: {0:0.000}°"
 4853FB66BD4B2E: "Mean Anomaly: {0:0.000}°" => "Mittlere Anomalie: {0:0.000}°"
+2F670401770A29: "Already Footfalled" => "Bereits betreten"
 
 SECTION JournalSAAScanComplete
 
@@ -1058,6 +1059,10 @@ EE5122344A579C: " 'Other' signals: {0}." => " 'Andere' Signale: {0}."
 204E719EB4129D: " (Mapped & Discovered)" => " (Kartographiert & erkundet)"
 D91D9838CE0944: " (Mapped)" => " (Kartographiert)"
 B2983B7DF494FA: " (Discovered)" => " (Erkundet)"
+28D71AA19F7722: " (Mapped & Discovered & Footfalled)" => " (Kartographiert & erkundet & betreten)"
+C9E160E5886911: " (Discovered & Footfalled)" => " (Erkundet & betreten)"
+5B311AC7A079E0: " (Mapped & Footfalled)" => " (Kartographiert & betreten)"
+3A8B7F7DE33BAF: " (Footfalled)" => " (Betreten)"
 D343B137399D3A: " Is landable." => " Ist landbar."
 817016EBBA625C: " Is ringed." => " Hat Ringe."
 69016A1EE7145D: " Has " => " hat "
@@ -1088,6 +1093,8 @@ F1A87D41F026EE: "Squadron Bank" @
 SECTION JournalScanOrganics
 
 4DAB054FDB754D: "Potential Value: ; cr;N0" => "Potentieller Wert: ; Cr;N0"
+60B15E90591861: "Was logged" => "Bereits geloggt"
+FB0FEB4A33D00B: "Was not logged" => "Noch nicht geloggt"
 
 SECTION AtmosphereTypes
 
