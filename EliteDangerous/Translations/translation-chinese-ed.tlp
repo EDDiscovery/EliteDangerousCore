@@ -116,7 +116,7 @@ B68E9F3FF3BAE2: "Manufactured Shielding" @
 C149E954057508: "Manufactured Alloys" @
 3FEDA0153EEE13: "NA" @
 
-6097563751A0DD: "Carbon" => "{0}型碳星"
+6097563751A0DD: "Carbon" @
 8564FE3B4B674B: "Iron" @
 D8DAAFDCF1EBBB: "Nickel" @
 D78770B2D0DA77: "Phosphorus" @
@@ -670,7 +670,7 @@ A6C08FB5C6231E: "Shield Projector" @
 54DE3481EEABAF: "Biochemical Agent" @
 FF63D344B7D43F: "Degraded Power Regulator" @
 91069D2DC1BAD4: "Hush" @
-8F7F57B519FC9B: "Push" => "星系{0}是从EDSM那里推送过来的，不能移除"
+8F7F57B519FC9B: "Push" @
 310CDDCEC7D396: "Synthetic Pathogen" @
 8B9064183EF53B: "Building Schematic" @
 1ED1264F96B2BA: "Insight" @
@@ -1011,7 +1011,7 @@ SECTION ScanDisplayUserControl
 AD7F166EE19EC4: "No scan data available" @
 BC71898C9ADABE: "Barycentre of {0}" @
 F50801EB15AB8D: "Surface features" @
-2346A18EA3002F: "Signals" => "探测到;个信号"
+2346A18EA3002F: "Signals" => "探测到 个信号"
 2C5D5B88672D11: "Codex" @
 85373BC01466D9: "Organics" @
 B3C13D36C779CE: "Genuses" @
@@ -1095,7 +1095,7 @@ ECD42F44D582A9: "Trade War" @
 
 SECTION Allegiances
 
-228505F85662D9: "Independent" => "独立：;;0.#"
+228505F85662D9: "Independent" => "独立"
 A21193C4A51E0D: "Alliance" @
 6809E8745EABCE: "Guardian" @
 824377DA32D5A8: "Thargoid" @
@@ -1118,6 +1118,7 @@ D8D4559A372171: "Prison" @
 9DB9478502242D: "Prison Colony" @
 AB1A1F939BDE0E: "Theocracy" @
 0646F4AFD90C8F: "Undefined" @
+750A7CEF420603: "Megaconstruction" @
 
 SECTION EconomyTypes
 
@@ -1164,6 +1165,7 @@ E2407F2BA86D9F: "Space Construction Depot" @
 72D0849A72AB18: "Planetary Construction Depot" @
 2D68CF109D6809: "Dockable Planet Station" @
 D089EF39D4EA65: "Construction POI" @
+39A76A40856116: "Dodec" @
 
 SECTION PowerPlayStates
 
@@ -1209,6 +1211,7 @@ EB702E354D4040: "Fighter Weapon" @
 1CC4848D27B6F3: "Wear And Tear Type" @
 86B9B261DED066: "Vanity Type" @
 352374D32CCD3B: "Unknown Type" @
+036F587DDBE3AB: "Lightweight Alloy (Default)" @
 
 SECTION ModulePartNames
 
@@ -1339,6 +1342,7 @@ E8B772D1BC2A20: "Enhanced Performance Thrusters" @
 FFE926B9A1E06C: "Concord Cannon" @
 492166ECE113AD: "Colonisation Module" @
 0DB27EBBF41345: "Large Cargo Rack" @
+80C6C2BEA1E3BF: "Mining Volley Repeater" @
 
 SECTION ShipSlots
 
@@ -1374,6 +1378,7 @@ BE7DD45637B559: "Medium Hardpoint 2" @
 4BBD04305C4BF0: "Medium Hardpoint 3" @
 485F68ABD0CDE8: "Medium Hardpoint 4" @
 A7AB21F5CF19AE: "Medium Hardpoint 5" @
+890406A48C1D3F: "Medium Hardpoint 6" @
 77E9039F43F6E2: "Military Slot 1" @
 A22CCB7E4839AD: "Military Slot 2" @
 62898937228B9D: "Military Slot 3" @
@@ -1447,6 +1452,7 @@ B9F7EC2C516319: "Optional Slot 10 Class 4" @
 2E43536EE0228A: "Optional Slot 11 Class 2" @
 396FF2847C8FAD: "Optional Slot 11 Class 3" @
 7B3D33D0B5E58B: "Optional Slot 12 Class 1" @
+99231038FC49DD: "Optional Slot 13 Class 1" @
 EB2C412690A12A: "Optional Slot 13 Class 2" @
 F448DCEB3AF33F: "Optional Slot 14 Class 1" @
 EB2E26440F6DEA: "Small Hardpoint 1" @
@@ -1471,13 +1477,20 @@ D96AA577649F7B: "Turret Type 2" @
 BCC6D8B8761B2B: "Colonisation Suite" @
 1D10985EBE451F: "Large Cargo 1" @
 FA9AB13CECC85C: "Large Cargo 2" @
+915A0715B57347: "Medium Mining Hardpoint 1" @
+E104214FD34AC0: "Medium Mining Hardpoint 2" @
+5E6DE9C9A368F8: "Small Mining Hardpoint 1" @
+B682567449A543: "Large Mining Hardpoint 1" @
+F4A2558C583E61: "Limpet Controller 1" @
+0B523B44CCD4E7: "Fighter Bay 1" @
+09D463E32B04B2: "Hologram" @
 
 SECTION StationServices
 
 4D720898E61E8B: "Apex Interstellar" @
 A8CF8DE554773A: "Autodock" @
 882219054258CA: "Bartender" @
-E994445B523BBA: "Black Market" => "访问黑市数：;;N0"
+E994445B523BBA: "Black Market" => "访问黑市数"
 B0DD615CBBDCBF: "Contacts" @
 9C67E23C401E4C: "Crew Lounge" @
 E8B5CBF904F402: "Dock" => "自最近降落后"
