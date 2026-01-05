@@ -433,8 +433,8 @@ SECTION StarPlanetRing
 6BD20BEF04169E: "Mass: {0:N4}{1}" => "质量: {0:N4}{1}"
 C2029264A2B419: "Inner Radius: {0:0.00}ls" => "内半径: {0:0.00}ls"
 9CAFCE749205D4: "Outer Radius: {0:0.00}ls" => "外半径: {0:0.00}ls"
-C80236826F4F32: "Inner Radius: {0}km" => "内半径: {0:0.00}km"
-D95BA68EDFC767: "Outer Radius: {0}km" => "外半径: {0:0.00}km"
+C80236826F4F32: "Inner Radius: {0}km" => "内半径: {0}km"
+D95BA68EDFC767: "Outer Radius: {0}km" => "外半径: {0}km"
 6B2FC602242208: "Icy" => "冰质"
 A1CF264F7F1E4F: "Rocky" => "岩石"
 2FD9C95A438B18: "Metal Rich" => "富金属"
@@ -454,7 +454,7 @@ D2F52355860145: "Scan Nav" => "导航扫描"
 D000D9F51096C0: "Scan of {0}" => "扫描 {0}"
 5168D608A81C18: "Mass: ;SM;0.00" => "质量: ;SM;0.00"
 BF8E38829287B3: "Age: ;my;0.0" => "年龄: ;my;0.0"
-41997D5AA8F9A8: "<;, Landable" => <;, 可登陆""
+41997D5AA8F9A8: "<;, Landable" => "<;,"
 CABD9FE7A7C5A8: "<;, Terraformable" => "<;, 可地球化改造"
 9C417B6452D141: "Gravity: ;G;0.00" => "重力: ;G;0.00"
 34E1E2662E5B20: "No Atmosphere" => "无大气"
@@ -469,7 +469,7 @@ F2242B579D81E1: "No Volcanism" => "无火山活动"
 056665C891A44A: "Distance from Arrival Point {0:N1}ls" => "距离抵达点{0:N1}ls"
 E452781D716535: "Orbital Period: {0} days" => "轨道周期: {0}天"
 9C92D7D1E0B506: "Semi Major Axis: {0:0.00}AU" => "半长轴: {0:0.00}AU"
-1C861A7F7D3C80: "Semi Major Axis: {0}km" => "半长轴: {0:0.00}km"
+1C861A7F7D3C80: "Semi Major Axis: {0}km" => "半长轴: {0}km"
 FD157443DE4822: "Orbital Eccentricity" => "轨道偏心率"
 24D86E4E8473EB: "Orbital Inclination: {0:0.000}°" => "轨道倾角: {0:0.000}°"
 575CB9E18B9880: "Arg Of Periapsis: {0:0.000}°" => "近心点幅角: {0:0.000}°"
@@ -522,7 +522,7 @@ SECTION JournalSellExplorationData
 
 SECTION JournalSendText
 
-14766B11B99F48: "Msg" => "消息:"
+14766B11B99F48: "Msg" => "消息"
 
 SECTION JournalSetUserShipName
 
@@ -599,7 +599,7 @@ B0C41E693F2B16: "Low Intensity Conflict Zones fought: ;;N0" => "参与的低强�
 B8B77AAC06992D: "Medium Intensity Conflict Zones won: ;;N0" => "中强度冲突区战斗胜利: ;;N0"
 408F5291A5A252: "Low Intensity Conflict Zones won: ;;N0" => "低强度冲突区战斗胜利: ;;N0"
 DAC56992EC2707: "Total Conflict Zones won: ;;N0" => "总冲突区战斗胜利: ;;N0"
-21ECC89812614B: "Settlements Defended: ;;N0" => "防御的定居点: ;;N0 "
+21ECC89812614B: "Settlements Defended: ;;N0" => "防御的定居点: ;;N0"
 8A1C0B3F35FBE1: "Settlements Conquered: ;;N0" => "攻击的定居点: ;;N0"
 6B0157E966ED81: "Skimmers Killed on Foot: ;;N0" => "步行击杀的无人机(Skimmers): ;;N0"
 9D2DBD0233311B: "Scavengers Killed on Foot: ;;N0" => "步行击杀的清道夫(Scavenger): ;;N0"
@@ -694,20 +694,20 @@ C0FEA21018F4A5: "Panels cut: ;;N0" => "破坏控制面板: ;;N0"
 
 SECTION CraftingClass
 
-5B57F75F7F38CD: "Engineers Used: ;;N0" => "工程师使用: ;;N0"  
-A1166F760A5D26: "Blueprints: ;;N0" => "蓝图: ;;N0"  
-490CCDD6CCBB53: "At Level 1: ;;N0" => "等级1: ;;N0"  
-0D2F4D0B12F52B: "At Level 2: ;;N0" => "等级2: ;;N0"  
-4A68330552049B: "At Level 3: ;;N0" => "等级3: ;;N0"  
-7B365660FAE0FE: "At Level 4: ;;N0" => "等级4: ;;N0"  
-4821A9B0E55679: "At Level 5: ;;N0" => "等级5: ;;N0"  
-1E6861119A8B28: "Suit Modifications Applied: ;;N0" => "套装改装: ;;N0"  
-4796B7B019C47C: "Weapon Modifications Applied: ;;N0" => "武器改装: ;;N0"  
-49AABB8F6AAA5C: "Suit Upgrades Applied: ;;N0" => "套装升级: ;;N0"  
-DA0584A49C91A9: "Weapon Upgrades Applied: ;;N0" => "武器升级: ;;N0"  
-ADDF7363C9A0F5: "Suits fully Upgraded: ;;N0" => "套装完全升级: ;;N0"  
-33FCF79C1F760D: "Weapons fully Upgraded: ;;N0" => "武器完全升级: ;;N0"  
-1110D135B3AC55: "Suits fully Modified: ;;N0" => "套装完全改装: ;;N0"  
+5B57F75F7F38CD: "Engineers Used: ;;N0" => "工程师使用: ;;N0"
+A1166F760A5D26: "Blueprints: ;;N0" => "蓝图: ;;N0"
+490CCDD6CCBB53: "At Level 1: ;;N0" => "等级1: ;;N0"
+0D2F4D0B12F52B: "At Level 2: ;;N0" => "等级2: ;;N0"
+4A68330552049B: "At Level 3: ;;N0" => "等级3: ;;N0"
+7B365660FAE0FE: "At Level 4: ;;N0" => "等级4: ;;N0"
+4821A9B0E55679: "At Level 5: ;;N0" => "等级5: ;;N0"
+1E6861119A8B28: "Suit Modifications Applied: ;;N0" => "套装改装: ;;N0"
+4796B7B019C47C: "Weapon Modifications Applied: ;;N0" => "武器改装: ;;N0"
+49AABB8F6AAA5C: "Suit Upgrades Applied: ;;N0" => "套装升级: ;;N0"
+DA0584A49C91A9: "Weapon Upgrades Applied: ;;N0" => "武器升级: ;;N0"
+ADDF7363C9A0F5: "Suits fully Upgraded: ;;N0" => "套装完全升级: ;;N0"
+33FCF79C1F760D: "Weapons fully Upgraded: ;;N0" => "武器完全升级: ;;N0"
+1110D135B3AC55: "Suits fully Modified: ;;N0" => "套装完全改装: ;;N0"
 9CE0C127CEC0A7: "Weapons fully Modified: ;;N0" => "武器完全改装: ;;N0"
 
 SECTION CrewClass
@@ -741,44 +741,44 @@ AE91D30D46C5B5: "Assets Spent in Trade: ;;N0" => "交易花费的资产: ;;N0"
 
 SECTION CQCClass
 
-709AA3D79B426B: "Profits from CQC: ; cr;N0" => "竞技场收益：; cr;N0"  
-00349FB8CBDB9C: "K/D Ratio: ;;N2" => "击杀/死亡比：;;N2"  
-E4491AAB65268C: "Kills: ;;N0" => "击杀数：;;N0"  
+709AA3D79B426B: "Profits from CQC: ; cr;N0" => "竞技场收益：; cr;N0"
+00349FB8CBDB9C: "K/D Ratio: ;;N2" => "击杀/死亡比：;;N2"
+E4491AAB65268C: "Kills: ;;N0" => "击杀数：;;N0"
 8A742F1F88A782: "Win/Loss Ratio: ;;N2" => "胜/负比：;;N2"
 
 SECTION FLEETCARRIERClass
 
-DBB9533A55F0D6: "Total Commodities Exported: ;;N0" => "商品总出口量: ;;N0"  
-C1612A9998F6C7: "Total Commodities Imported: ;;N0" => "商品总进口量: ;;N0"  
-168AE7F1055A42: "Credits earned from Commodities: ; cr;N0" => "商品交易收益: ; cr;N0"  
-3160F8DD3FD184: "Credits spent on Commodities: ; cr;N0" => "商品交易支出: ; cr;N0"  
-FF0B74FBC553FA: "Credits earned from Stolen Goods: ; cr;N0" => "赃物交易收益: ; cr;N0"  
-6B43EA808A8EF1: "Credits spent on Stolen Goods: ; cr;N0" => "赃物交易支出: ; cr;N0"  
-FF5D273DEEC12D: "Total Travel Distance: ; ly;N0" => "总航行距离: ; 光年;N0"  
-95FEB7797D71B1: "Number of Carrier Jumps: ;;N0" => "航母跳跃次数: ;;N0"  
-CC97805E2242A9: "Total Ships Sold: ;;N0" => "飞船总销量: ;;N0"  
-6AD953FA65034F: "Credits earned from Shipyard: ; cr;N0" => "飞船销售收益: ; cr;N0"  
-859779ABE3648F: "Total Modules Sold: ;;N0" => "模块总销量: ;;N0"  
-9ACE1EC044770B: "Credits earned from Outfitting: ; cr;N0" => "改装收益: ; cr;N0"  
-F85048E2B2D989: "Total Ships Restocked: ;;N0" => "飞船补给次数: ;;N0"  
-D3710C6839F9B6: "Total Ships Refuelled: ;;N0" => "飞船加油次数: ;;N0"  
-15C65DFD86C4E4: "Credits earned from Refuelling: ; cr;N0" => "加油收益: ; cr;N0"  
-37926927C297ED: "Total Ships Repaired: ;;N0" => "飞船维修次数: ;;N0"  
-5976FDD386D8B3: "Redemption Office Exchanges: ;;N0" => "兑换处交易次数: ;;N0"  
+DBB9533A55F0D6: "Total Commodities Exported: ;;N0" => "商品总出口量: ;;N0"
+C1612A9998F6C7: "Total Commodities Imported: ;;N0" => "商品总进口量: ;;N0"
+168AE7F1055A42: "Credits earned from Commodities: ; cr;N0" => "商品交易收益: ; cr;N0"
+3160F8DD3FD184: "Credits spent on Commodities: ; cr;N0" => "商品交易支出: ; cr;N0"
+FF0B74FBC553FA: "Credits earned from Stolen Goods: ; cr;N0" => "赃物交易收益: ; cr;N0"
+6B43EA808A8EF1: "Credits spent on Stolen Goods: ; cr;N0" => "赃物交易支出: ; cr;N0"
+FF5D273DEEC12D: "Total Travel Distance: ; ly;N0" => "总航行距离: ; 光年;N0"
+95FEB7797D71B1: "Number of Carrier Jumps: ;;N0" => "航母跳跃次数: ;;N0"
+CC97805E2242A9: "Total Ships Sold: ;;N0" => "飞船总销量: ;;N0"
+6AD953FA65034F: "Credits earned from Shipyard: ; cr;N0" => "飞船销售收益: ; cr;N0"
+859779ABE3648F: "Total Modules Sold: ;;N0" => "模块总销量: ;;N0"
+9ACE1EC044770B: "Credits earned from Outfitting: ; cr;N0" => "改装收益: ; cr;N0"
+F85048E2B2D989: "Total Ships Restocked: ;;N0" => "飞船补给次数: ;;N0"
+D3710C6839F9B6: "Total Ships Refuelled: ;;N0" => "飞船加油次数: ;;N0"
+15C65DFD86C4E4: "Credits earned from Refuelling: ; cr;N0" => "加油收益: ; cr;N0"
+37926927C297ED: "Total Ships Repaired: ;;N0" => "飞船维修次数: ;;N0"
+5976FDD386D8B3: "Redemption Office Exchanges: ;;N0" => "兑换处交易次数: ;;N0"
 9C8FDEA36579A3: "Redemption Office Payouts: ; cr;N0" => "兑换处支出: ; cr;N0"
 
 SECTION ExobiologyClass
 
-889C4F3E680F31: "Unique Genus Encountered: ;;N0" => "已发现独特属种：;;N0"  
-62AD18CDFF82CF: "Unique Species Encountered: ;;N0" => "已发现独特物种：;;N0"  
-8FF7FDBB3F88D4: "Unique Variants Encountered: ;;N0" => "已发现独特变种：;;N0"  
-F5FB6D22DE8F7C: "Profit from Organic Data: ; cr;N0" => "有机数据收益：; cr;N0"  
-BB0AD0456BB312: "Organic Data Registered: ;;N0" => "已记录有机数据：;;N0"  
-88FC3DE3AF29FC: "Profit from First Logged: ; cr;N0" => "首次发现收益：; cr;N0"  
-29AA43113CD409: "First Logged: ;;N0" => "首次发现数量：;;N0"  
-C9B976D6F69603: "Systems with Organic Life: ;;N0" => "存在有机生命的星系：;;N0"  
-7E01A2D46F53D7: "Planets with Organic Life: ;;N0" => "存在有机生命的行星：;;N0"  
-E2EF9DFEC41B63: "Unique Genus Data Logged: ;;N0" => "已记录独特属种数据：;;N0"  
+889C4F3E680F31: "Unique Genus Encountered: ;;N0" => "已发现独特属种：;;N0"
+62AD18CDFF82CF: "Unique Species Encountered: ;;N0" => "已发现独特物种：;;N0"
+8FF7FDBB3F88D4: "Unique Variants Encountered: ;;N0" => "已发现独特变种：;;N0"
+F5FB6D22DE8F7C: "Profit from Organic Data: ; cr;N0" => "有机数据收益：; cr;N0"
+BB0AD0456BB312: "Organic Data Registered: ;;N0" => "已记录有机数据：;;N0"
+88FC3DE3AF29FC: "Profit from First Logged: ; cr;N0" => "首次发现收益：; cr;N0"
+29AA43113CD409: "First Logged: ;;N0" => "首次发现数量：;;N0"
+C9B976D6F69603: "Systems with Organic Life: ;;N0" => "存在有机生命的星系：;;N0"
+7E01A2D46F53D7: "Planets with Organic Life: ;;N0" => "存在有机生命的行星：;;N0"
+E2EF9DFEC41B63: "Unique Genus Data Logged: ;;N0" => "已记录独特属种数据：;;N0"
 569A7852B97445: "Unique Species Data Logged: ;;N0" => "已记录独特物种数据：;;N0"
 
 SECTION ThargoidsClass
@@ -1003,6 +1003,7 @@ DE8CC5C4DD7104: "Carrier jumped to {0}" => "航母跳跃到{0}"
 SECTION JournalCarrier
 
 808572574FD987: "Call Sign" => "呼号"
+8359F3D1A48C34: "Carrier Type" @
 B15D8F8451444C: "Jump Range: ; ly;0.0" => "跳跃距离: ; ly;0.0"
 4ABDD513D53A4E: "Carrier Balance: ; cr;N0" => "航母余额: ; cr;N0"
 F913B2BD65130A: "Reserve Balance: ; cr;N0" => "储备余额: ; cr;N0"
@@ -1082,6 +1083,7 @@ CA4B1A71D2F677: "Repair Crews" => "维修人员"
 CF7C02B2B0079B: "Concourse Bar" => "大堂酒吧"
 F157DA72429B0A: "Vista Genomics" => "Vista基因公司"
 AA5680B5B5B241: "Pioneer Supplies" => "先锋物资商店"
+F1A87D41F026EE: "Squadron Bank" @
 
 SECTION JournalScanOrganics
 
@@ -1161,10 +1163,10 @@ E436FB98308A84: "Water Atmosphere" => "水蒸气大气"
 
 // added
 
-F1D71513E026A6: "Thin Ammonia Rich Atmosphere" => "稀薄富氨大气"  
-EC6DDB27FA16BC: "Hot Argon Atmosphere" => "高温氩气大气"  
-5289C59164BE44: "Hot Argon Rich Atmosphere" => "高温富氩大气"  
-7909C52AAE1A7B: "Hot Metallic Vapour Atmosphere" => "高温金属蒸汽大气"  
+F1D71513E026A6: "Thin Ammonia Rich Atmosphere" => "稀薄富氨大气"
+EC6DDB27FA16BC: "Hot Argon Atmosphere" => "高温氩气大气"
+5289C59164BE44: "Hot Argon Rich Atmosphere" => "高温富氩大气"
+7909C52AAE1A7B: "Hot Metallic Vapour Atmosphere" => "高温金属蒸汽大气"
 C1C9D393CAD88B: "Hot Thin Metallic Vapour Atmosphere" => "高温稀薄金属蒸汽大气"
 
 SECTION VolcanismTypes

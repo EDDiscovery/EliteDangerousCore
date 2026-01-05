@@ -938,8 +938,8 @@ SECTION CommanderForm
 B26565C54E6DA2: "Default Map Color" => "默认星图颜色"
 F3646F7AE1228F: "Home System" => "家园星系"
 2737A55B1A4751: "Inara Information (optional)" => "Inara 设置（可选）"
-BC5F6A124741B3: "Inara Name" => "Inara 用户名:"
-8A77089A093CC5: "Inara API Key" => "Inara API Key:"
+BC5F6A124741B3: "Inara Name" => "Inara 用户名"
+8A77089A093CC5: "Inara API Key" => "Inara API Key"
 137D072F2C9C3C: "Sync to Inara" => "同步至 Inara"
 C43E80AA3B8661: "EDDN" => "EDDN 设置"
 9DA63A795A3C3E: "Send Event Information to EDDN" => "向 EDDN 发送事件数据"
@@ -1118,6 +1118,7 @@ D8D4559A372171: "Prison" => "监狱"
 9DB9478502242D: "Prison Colony" => "监狱殖民地"
 AB1A1F939BDE0E: "Theocracy" => "神权政治"
 0646F4AFD90C8F: "Undefined" => "未定义"
+750A7CEF420603: "Megaconstruction" @
 
 SECTION EconomyTypes
 
@@ -1149,7 +1150,7 @@ DA33E1B7E0C4EA: "Construction" => "建造中"
 
 SECTION StarportTypes
 
-E4C6A39225E73: "Asteroid Base" => "小行星基地"
+6E4C6A39225E73: "Asteroid Base" @
 570C8ADC370DE1: "Coriolis" => "八面立方(Coriolis)"
 1815546AA3D985: "Megaship" => "巨型飞船"
 FB3178D94F9E42: "Ocellus" => "单眼(Ocellus)"
@@ -1164,7 +1165,7 @@ E2407F2BA86D9F: "Space Construction Depot" => "太空建造基地"
 72D0849A72AB18: "Planetary Construction Depot" => "行星建造基地"
 2D68CF109D6809: "Dockable Planet Station" => "可对接行星空间站"
 D089EF39D4EA65: "Construction POI" => "建造兴趣点(POI)"
-9A76A40856116: "Dodec" @
+39A76A40856116: "Dodec" @
 
 SECTION PowerPlayStates
 
@@ -1210,6 +1211,7 @@ EB702E354D4040: "Fighter Weapon" => "舰载机武器"
 1CC4848D27B6F3: "Wear And Tear Type" => "磨损类型"
 86B9B261DED066: "Vanity Type" => "虚荣(Vanity)类型"
 352374D32CCD3B: "Unknown Type" => "未知类型"
+036F587DDBE3AB: "Lightweight Alloy (Default)" @
 
 SECTION ModulePartNames
 
@@ -1340,6 +1342,7 @@ E8B772D1BC2A20: "Enhanced Performance Thrusters" => "增强型推进器"
 FFE926B9A1E06C: "Concord Cannon" => "协调加农炮"
 492166ECE113AD: "Colonisation Module" => "殖民地模块"
 0DB27EBBF41345: "Large Cargo Rack" => "大型货物架"
+80C6C2BEA1E3BF: "Mining Volley Repeater" @
 
 SECTION ShipSlots
 
@@ -1375,6 +1378,7 @@ BE7DD45637B559: "Medium Hardpoint 2" => "中型挂载点 2"
 4BBD04305C4BF0: "Medium Hardpoint 3" => "中型挂载点 3"
 485F68ABD0CDE8: "Medium Hardpoint 4" => "中型挂载点 4"
 A7AB21F5CF19AE: "Medium Hardpoint 5" => "中型挂载点 5"
+890406A48C1D3F: "Medium Hardpoint 6" @
 77E9039F43F6E2: "Military Slot 1" => "军用插槽 1"
 A22CCB7E4839AD: "Military Slot 2" => "军用插槽 2"
 62898937228B9D: "Military Slot 3" => "军用插槽 3"
@@ -1448,6 +1452,7 @@ B9F7EC2C516319: "Optional Slot 10 Class 4" => "可选部件插槽 10 Class4"
 2E43536EE0228A: "Optional Slot 11 Class 2" => "可选部件插槽 11 Class2"
 396FF2847C8FAD: "Optional Slot 11 Class 3" => "可选部件插槽 11 Class3"
 7B3D33D0B5E58B: "Optional Slot 12 Class 1" => "可选部件插槽 12 Class1"
+99231038FC49DD: "Optional Slot 13 Class 1" @
 EB2C412690A12A: "Optional Slot 13 Class 2" => "可选部件插槽 13 Class2"
 F448DCEB3AF33F: "Optional Slot 14 Class 1" => "可选部件插槽 14 Class1"
 EB2E26440F6DEA: "Small Hardpoint 1" => "小型挂载点 1"
@@ -1472,6 +1477,13 @@ D96AA577649F7B: "Turret Type 2" => "炮塔类型 2"
 BCC6D8B8761B2B: "Colonisation Suite" => "殖民套件"
 1D10985EBE451F: "Large Cargo 1" => "大型货物 1"
 FA9AB13CECC85C: "Large Cargo 2" => "大型货物 2"
+915A0715B57347: "Medium Mining Hardpoint 1" @
+E104214FD34AC0: "Medium Mining Hardpoint 2" @
+5E6DE9C9A368F8: "Small Mining Hardpoint 1" @
+B682567449A543: "Large Mining Hardpoint 1" @
+F4A2558C583E61: "Limpet Controller 1" @
+0B523B44CCD4E7: "Fighter Bay 1" @
+09D463E32B04B2: "Hologram" @
 
 SECTION StationServices
 
