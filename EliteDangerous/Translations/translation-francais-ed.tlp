@@ -921,9 +921,9 @@ F958260588E1AF: "Steel" => "Acier"
 
 SECTION EngineeringData
 
-05FC94B0147F09: "Engineer" => "Ingénieur "
-A60F2C73604F62: "Quality" => "Qualité "
-A5BADB0C4C0940: "Experimental Effect" => "Effet expérimental "
+05FC94B0147F09: "Engineer" => "Ingénieur"
+A60F2C73604F62: "Quality" => "Qualité"
+A5BADB0C4C0940: "Experimental Effect" => "Effet expérimental"
 C312376DA63393: "Original: ;;0.###" @
 75A08C2632AF12: "< (Worse); (Better)" => "< (Pire); (Meilleur)"
 
@@ -938,7 +938,7 @@ SECTION CommanderForm
 B26565C54E6DA2: "Default Map Color" => "Couleur par défaut de la carte"
 F3646F7AE1228F: "Home System" => "Système de base"
 2737A55B1A4751: "Inara Information (optional)" => "Information Inara (Optionnel)"
-BC5F6A124741B3: "Inara Name" => "Nom sur Inara "
+BC5F6A124741B3: "Inara Name" => "Nom sur Inara"
 8A77089A093CC5: "Inara API Key" => "Clé API Inara"
 137D072F2C9C3C: "Sync to Inara" => "Synchroniser avec Inara"
 C43E80AA3B8661: "EDDN" @
@@ -1341,7 +1341,7 @@ E8B772D1BC2A20: "Enhanced Performance Thrusters" => "Propulseurs à performances
 6F55767D3D0B28: "Pulse Wave Xeno Scanner" => "Détecteur de xénomorphes à onde pulsée"
 FFE926B9A1E06C: "Concord Cannon" => "Canon Concorde"
 492166ECE113AD: "Colonisation Module" => "Instruments de colonisation de système"
-0DB27EBBF41345: "Large Cargo Rack" @
+DB27EBBF41345: "Large Cargo Rack" => "Compartiment soute large"
 80C6C2BEA1E3BF: "Mining Volley Repeater" @
 
 SECTION ShipSlots
@@ -1475,8 +1475,8 @@ E4DD5EE5641BD6: "Vessel Voice" => "Voix du vaisseau"
 D96AA577649F7B: "Turret Type 2" => "Tourelle Type 2"
 3AE8579069394D: "Sine Wave Scanner" => "Scanner à onde sinusoïdale"
 BCC6D8B8761B2B: "Colonisation Suite" => "Instruments de colonisation de système"
-1D10985EBE451F: "Large Cargo 1" @
-FA9AB13CECC85C: "Large Cargo 2" @
+D10985EBE451F: "Large Cargo 1" => "Cargo large 1"
+FA9AB13CECC85C: "Large Cargo 2" => "Cargo large 2"
 915A0715B57347: "Medium Mining Hardpoint 1" @
 E104214FD34AC0: "Medium Mining Hardpoint 2" @
 5E6DE9C9A368F8: "Small Mining Hardpoint 1" @
