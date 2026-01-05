@@ -146,7 +146,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             if (CodexEntries != null)
             {
-                sb.Append("Codexs".Tx());
+                sb.Append("Codex".Tx());
                 sb.Append(": " + Environment.NewLine);
                 JournalCodexEntry.CodexList(sb, CodexEntries, 4, true, Environment.NewLine);
             }
