@@ -61,6 +61,7 @@ namespace EliteDangerousCore
             MediumHardpoint3,
             MediumHardpoint4,
             MediumHardpoint5,
+            MediumHardpoint6,
             Military01,
             Military02,
             Military03,
@@ -139,8 +140,10 @@ namespace EliteDangerousCore
             Slot11_Size2,
             Slot11_Size3,
             Slot12_Size1,
+            Slot13_Size1,
             Slot13_Size2,
             Slot14_Size1,
+            Slot14_Size2,
             SmallHardpoint1,
             SmallHardpoint2,
             SmallHardpoint3,
@@ -217,6 +220,7 @@ namespace EliteDangerousCore
             [Slot.MediumHardpoint3] = "Medium Hardpoint 3",
             [Slot.MediumHardpoint4] = "Medium Hardpoint 4",
             [Slot.MediumHardpoint5] = "Medium Hardpoint 5",
+            [Slot.MediumHardpoint6] = "Medium Hardpoint 6",
             [Slot.Military01] = "Military Slot 1",
             [Slot.Military02] = "Military Slot 2",
             [Slot.Military03] = "Military Slot 3",
@@ -307,8 +311,12 @@ namespace EliteDangerousCore
             [Slot.Slot11_Size3] = "Optional Slot 11 Class 3",
 
             [Slot.Slot12_Size1] = "Optional Slot 12 Class 1",
+
+            [Slot.Slot13_Size1] = "Optional Slot 13 Class 1",
             [Slot.Slot13_Size2] = "Optional Slot 13 Class 2",
+
             [Slot.Slot14_Size1] = "Optional Slot 14 Class 1",
+            [Slot.Slot14_Size2] = "Optional Slot 14 Class 2",
 
             [Slot.SmallHardpoint1] = "Small Hardpoint 1",
             [Slot.SmallHardpoint2] = "Small Hardpoint 2",

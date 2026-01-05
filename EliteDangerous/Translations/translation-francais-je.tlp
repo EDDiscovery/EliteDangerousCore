@@ -1,6 +1,7 @@
 ﻿
 SECTION JournalTypeEnum
 
+C7EC98CED613F9: "EDD Destination Selected" @
 94A37CFA0C8992: "Afmu Repairs" => "Réparation UMTA"
 D2F34790ECB3BA: "Approach Body" => "Approche du corps"
 5FB514306EBAE2: "Approach Settlement" => "Approche d'avant-poste planétaire"
@@ -134,6 +135,7 @@ ECE8DF43B4E578: "Set User Ship Name" => "Définir le nom du vaisseau"
 4E29C0CE3E9D61: "Shipyard Sell" => "Chantier Naval : Vente"
 270AB9D553AFE5: "Shipyard Swap" => "Chantier Naval : Échange"
 7E6D4BF9F2AA3F: "Shipyard Transfer" => "Chantier Naval : Transfert"
+86188917717CAE: "Shipyard Bank Deposit" @
 7908BD051ADB46: "Ship Targeted" => "Vaisseau ciblé"
 7FDDB7D8D1D60B: "Shutdown" => "Arrêt"
 CAAACBDEADF1BF: "SRV Destroyed" => "VRS détruit"
@@ -248,7 +250,9 @@ DDDE2AEC826902: "Nav Route Clear" => "Effacement d'itinéraire de navigation"
 02374D50F6A18D: "Powerplay Merits" => "Points de distinction Powerplay"
 8062068144644D: "Powerplay Rank" => "Rang Powerplay"
 5668ADC227F38B: "Carrier Location" => "Position du porte-vaisseaux"
-
+00D83C2DDC1290: "Cancelled Squadron Application" @
+61CAC65A66E653: "Squadron Application Approved" @
+33646EA5A80A0A: "Squadron Application Rejected" @
 
 SECTION JournalCargo
 

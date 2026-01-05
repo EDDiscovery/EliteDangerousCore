@@ -188,6 +188,13 @@ namespace EliteDangerousCore
             PlanetaryConstructionDepot,
             DockablePlanetStation,
             GameplayPOI,
+            Dodec,
+        }
+
+        public static bool IsPlanetaryPort(StarportTypes t)
+        {
+            return t == StarportTypes.OnFootSettlement || t == StarportTypes.OnFootSettlement || t == StarportTypes.PlanetaryConstructionDepot || t == StarportTypes.DockablePlanetStation
+                || t == StarportTypes.CraterOutpost || t == StarportTypes.CraterPort;
         }
 
         // maps the StationType field to an enum.

@@ -137,14 +137,19 @@ namespace EliteDangerousCore
              { "outpostcriminal", new Actor("Criminal Outpost") },
              { "outpostcommercial", new Actor("Commercial Outpost") },
              { "outpostscientific", new Actor("Scientific Outpost") },
+             { "outpostmilitary", new Actor("Military Outpost") },
              { "outpost_weaponsplatform_depot", new Actor("Weapons Platform in depot") },
              { "megashipdockrehab", new Actor("Mega Ship Prison") },
              { "megashipdocka", new Actor("Mega Ship Dock A") },
              { "asteroidbase", new Actor("Asteroid Base") },
              { "bernalsphere", new Actor("Station") },
              { "coriolis", new Actor("Coriolis Station") },
+
              { "carrierdocka", new Actor("Carrier Dock A") },
              { "carrierdockb", new Actor("Carrier Dock B") },
+             { "carrierdocka_squadron", new Actor("Squadron Carrier Dock A") },
+             { "carrierdockb_squadron", new Actor("Squadron Carrier Dock B") },
+
              { "federation_capitalship", new Actor("Federation Capital Ship") },
 
              { "lizryder", new Actor("Engineer Liz Ryder") },

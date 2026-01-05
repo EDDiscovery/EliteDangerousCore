@@ -14,7 +14,9 @@
  *
  */
 using EliteDangerousCore.DB;
+using EliteDangerousCore.StarScan2;
 using QuickJSON;
+using System;
 using System.Linq;
 
 namespace EliteDangerousCore.JournalEvents
@@ -54,7 +56,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.SupercruiseExit)]
-    public class JournalSupercruiseExit : JournalEntry, IBodyNameAndID
+    public class JournalSupercruiseExit : JournalEntry, IBodyFeature, IStarScan
     {
         public JournalSupercruiseExit(JObject evt) : base(evt, JournalTypeEnum.SupercruiseExit)
         {
@@ -62,21 +64,36 @@ namespace EliteDangerousCore.JournalEvents
             SystemAddress = evt["SystemAddress"].LongNull();
             Body = evt["Body"].Str();
             BodyID = evt["BodyID"].IntNull();
-            BodyType = JournalFieldNaming.NormaliseBodyType(evt["BodyType"].Str());
+            BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
         }
 
-        public string StarSystem { get; set; }
-        public long? SystemAddress { get; set; }
-        public string Body { get; set; }
-        public int? BodyID { get; set; }
-        public string BodyType { get; set; }
-        public string BodyDesignation { get; set; }
-
+        public string StarSystem { get; set; }          // always there
+        public string Body { get; set; }                // always there
+        public long? SystemAddress { get; set; }        // 2018 on, augmented below with AddStarScan
+        public int? BodyID { get; set; }                // 2018 on
+        public BodyDefinitions.BodyType BodyType { get; set; }      // late 2016
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }
         public JournalSupercruiseDestinationDrop DestinationDrop { get; set; }       // update 15 associated destination drop. 
+
+
+        // IBodyNameAndID
+        public string BodyName => Body;
+        int? IBodyFeature.BodyID => BodyID;
+        public double? Latitude { get => null; set { } }
+        public double? Longitude { get => null; set { } }
+        public bool HasLatLong => false;
+        public string Name => Body;                                 // Feature Name is the Body we exited at
+        public string Name_Localised => null;
+
+        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
+        {
+            if (SystemAddress == null)
+                SystemAddress = system.SystemAddress;
+            s.AddLocation(this, system);
+        }
 
         public override string GetInfo()
         {
@@ -91,6 +108,8 @@ namespace EliteDangerousCore.JournalEvents
             info += BaseUtils.FieldBuilder.Build("",Body, "< in ".Tx(), StarSystem, "Type".Tx()+": ", BodyType);
             return info;
         }
+
+
     }
 
     [JournalEntryType(JournalTypeEnum.SupercruiseDestinationDrop)]

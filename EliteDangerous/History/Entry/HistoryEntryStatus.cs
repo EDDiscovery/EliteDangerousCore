@@ -76,9 +76,12 @@ namespace EliteDangerousCore
         public string BodyName { get; private set; }
         public int? BodyID { get; private set; }
         public bool HasBodyID { get { return BodyID.HasValue && BodyID.Value >= 0; } }
-        public string BodyType { get; private set; }
+        public BodyDefinitions.BodyType BodyType { get; private set; }
         public string StationName_Localised { get; private set; }     // will be null when undocked (StationName_Localised)
         public string StationType { get; private set; }     // will be null when undocked, in english
+        public double? Latitude { get; private set; }      // for a station, when we know the lat/long due to approach settlement
+        public double? Longitude { get; private set; }
+        public StationDefinitions.StarportTypes? FDStationType { get; private set; }     // will be null when undocked, in english
         public string StationFaction { get; private set; }  // will be null when undocked
         public long? MarketID { get; private set; } 
         public ulong ShipID { get; private set; } = ulong.MaxValue;
@@ -110,6 +113,8 @@ namespace EliteDangerousCore
                 DockingStationType == StationDefinitions.StarportTypes.Orbis ||
                     DockingStationType == StationDefinitions.StarportTypes.Coriolis || DockingStationType == StationDefinitions.StarportTypes.Bernal ||
                     DockingStationType == StationDefinitions.StarportTypes.Ocellus || DockingStationType == StationDefinitions.StarportTypes.AsteroidBase; } }
+        public bool IsDockingStationTypeCarrier { get { return DockingStationType == StationDefinitions.StarportTypes.FleetCarrier; } }
+
 
         private HistoryEntryStatus()
         {
@@ -122,6 +127,8 @@ namespace EliteDangerousCore
             BodyType = prevstatus.BodyType;
             StationName_Localised = prevstatus.StationName_Localised;
             StationType = prevstatus.StationType;
+            Latitude = prevstatus.Latitude;
+            Longitude = prevstatus.Longitude;   
             MarketID = prevstatus.MarketID;
             TravelState = prevstatus.TravelState;
             ShipID = prevstatus.ShipID;
@@ -181,8 +188,11 @@ namespace EliteDangerousCore
                             BodyName = jloc.Body,
                             Wanted = jloc.Wanted,
                             StationName_Localised = stationisfc ? prev.StationName_Localised : (jloc.StationName_Localised.Alt(jloc.Docked || locinstation ? jloc.Body : null)),
-                            StationType = stationisfc ? prev.StationType : (jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType : null)),
+                            StationType = stationisfc ? prev.StationType : (jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType.ToString() : null)),
+                            FDStationType = jloc.Docked ? jloc.FDStationType : default(StationDefinitions.StarportTypes?),
                             StationFaction = jloc.StationFaction,          // may be null
+                            Latitude = jloc.Latitude,
+                            Longitude = jloc.Longitude,
                             CurrentBoost = 1,
                             FSDJumpNextSystemAddress = null,
                             FSDJumpNextSystemName = null,
@@ -208,9 +218,9 @@ namespace EliteDangerousCore
                         Wanted = jcj.Wanted,
                         StationName_Localised = jcj.StationName_Localised.Alt(null),       // if empty string, set to null
                         StationType = jcj.StationType.Alt(null),
+                        FDStationType = jcj.FDStationType,
                         DockingPad = 0,
                         DockingStationType = StationDefinitions.StarportTypes.Unknown
-
                     };
                     break;
 
@@ -224,12 +234,13 @@ namespace EliteDangerousCore
                                                             TravelStateType.Supercruise,
 
                             BodyName = !prev.BodyApproached ? curStarSystem : prev.BodyName,
-                            BodyType = !prev.BodyApproached ? "Star" : prev.BodyType,
+                            BodyType = !prev.BodyApproached ? BodyDefinitions.BodyType.Star : prev.BodyType,
                             BodyID = !prev.BodyApproached ? -1 : prev.BodyID,
                             BookedTaxi = false,
                             BookedDropship = false,
                             StationName_Localised = null,
                             StationType = null,
+                            FDStationType = null,
                             StationFaction = null, // to clear
                             DockingPad = 0,
                             DockingStationType = StationDefinitions.StarportTypes.Unknown
@@ -267,13 +278,16 @@ namespace EliteDangerousCore
                                                 TravelStateType.Supercruise,
                             MarketID = null,
                             BodyID = -1,
-                            BodyType = "Star",
+                            BodyType = BodyDefinitions.BodyType.Star,
                             BodyName = jfsd.StarSystem,
                             Wanted = jfsd.Wanted,
                             StationName_Localised = null,
                             StationType = null,
+                            FDStationType = null,
                             StationFaction = null, // to ensure
                             BodyApproached = false,
+                            Latitude = null,
+                            Longitude = null,
                             DockingPad = 0,
                             DockingStationType = StationDefinitions.StarportTypes.Unknown,
                             CurrentBoost = 1,
@@ -336,6 +350,7 @@ namespace EliteDangerousCore
                             Wanted = jdocked.Wanted,
                             StationName_Localised = jdocked.StationName_Localised.Alt("Unknown"),
                             StationType = jdocked.StationType.Alt("Station"),
+                            FDStationType = jdocked.FDStationType,
                             StationFaction = jdocked.Faction,
                             CurrentBoost = 1,
                             DockingPad = 0,
@@ -355,6 +370,7 @@ namespace EliteDangerousCore
                             MarketID = null,
                             StationName_Localised = null,
                             StationType = null,
+                            FDStationType = null,
                             StationFaction = null, // to clear
                         };
                         break;
@@ -393,6 +409,7 @@ namespace EliteDangerousCore
                                             TravelStateType.OnFootPlanet,
                         StationName_Localised = disem.HasStationTypeName ? disem.StationName_Localised.Alt("Unknown") : prev.StationName_Localised,       // copying it over due to missing station name/type
                         StationType = disem.HasStationTypeName ? disem.StationType : prev.StationType,
+                        FDStationType = disem.HasStationTypeName ? disem.FDStationType : prev.FDStationType,
                         CurrentBoost = 1,
                     };
                     break;
@@ -500,7 +517,12 @@ namespace EliteDangerousCore
                         BodyApproached = true,
                         BodyType = jappsettlement.BodyType,
                         BodyName = jappsettlement.BodyName,
+                        StationName_Localised = jappsettlement.Name_Localised,
+                        StationType = jappsettlement.StationType,
+                        FDStationType = jappsettlement.FDStationType,
                         BodyID = jappsettlement.BodyID,
+                        Latitude = jappsettlement.Latitude,
+                        Longitude = jappsettlement.Longitude,
                     };
                     break;
                 case JournalTypeEnum.LeaveBody:
@@ -508,9 +530,11 @@ namespace EliteDangerousCore
                     hes = new HistoryEntryStatus(prev)
                     {
                         BodyApproached = false,
-                        BodyType = "Star",
+                        BodyType = BodyDefinitions.BodyType.Star,
                         BodyName = curStarSystem,
                         BodyID = -1,
+                        Latitude = null,
+                        Longitude = null
                     };
                     break;
 
@@ -655,7 +679,14 @@ namespace EliteDangerousCore
 
                 case JournalTypeEnum.DockingCancelled:
                     {
-                        if ( prev.DockingPad >0  )
+                        if (prev.DockingPad > 0)
+                            hes = new HistoryEntryStatus(prev) { DockingPad = 0, DockingStationType = StationDefinitions.StarportTypes.Unknown };
+                    }
+                    break;
+
+                case JournalTypeEnum.DockingTimeout:
+                    {
+                        if (prev.DockingPad > 0)
                             hes = new HistoryEntryStatus(prev) { DockingPad = 0, DockingStationType = StationDefinitions.StarportTypes.Unknown };
                     }
                     break;

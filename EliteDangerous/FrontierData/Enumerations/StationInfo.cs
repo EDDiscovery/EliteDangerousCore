@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2023-2023 EDDiscovery development team
+ * Copyright 2023-2025 EDDiscovery development team
  *
  * Licensed under the Apache License", Version 2.0 (the "License")"] = "you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -30,14 +30,10 @@ namespace EliteDangerousCore
         }
         public double DistanceRefSystem { get; set; }
         public ISystem System { get; set; }
-        public string BodyName { get; set; }
-        public string BodyType { get; set; }
         public string BodySubType { get; set; }
         public double DistanceToArrival { get; set; }
         public bool IsPlanetary { get; set; }
         public bool IsFleetCarrier { get; set; }
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
 
         public PowerPlayDefinitions.State PowerplayState { get; set; }      // Spansh gives this in search stations
 

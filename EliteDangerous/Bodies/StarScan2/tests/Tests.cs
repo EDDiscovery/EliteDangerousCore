@@ -1,0 +1,152 @@
+﻿/*
+ * Copyright 2025 - 2025 EDDiscovery development team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+using BaseUtils;
+using EliteDangerousCore.JournalEvents;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace EliteDangerousCore.StarScan2
+{
+    public static class Tests
+    {
+        static public void TestAlign()
+        {
+            {
+                EliteDangerousCore.StarScan2.SystemNode.AlignParentsName(new System.Collections.Generic.List<BodyParent> {
+                                                                        new BodyParent(BodyParent.ParentBodyType.Planet, 2),
+                                                                        new BodyParent(BodyParent.ParentBodyType.Null, 1),
+                                                                        new BodyParent(BodyParent.ParentBodyType.Star, 0),
+                                                                        },
+                                                                        "10 b", out List<string> pl); //"Prieluia QI-Q c19-31 10 b"
+                System.Diagnostics.Debug.Assert(pl[0].Contains("Unknown Star") && pl[1] == "Unknown Barycentre" && pl[2].Contains("10") && pl[3] == "b");
+            }
+
+            {
+                EliteDangerousCore.StarScan2.SystemNode.AlignParentsName(new System.Collections.Generic.List<BodyParent> {
+                                                                            new BodyParent(BodyParent.ParentBodyType.Star, 3),
+                                                                            new BodyParent(BodyParent.ParentBodyType.Null, 0),
+                                                                            },
+                                                                            "AB 1 b", out List<string> pl);
+                System.Diagnostics.Debug.Assert(pl[0].Contains("AB") && pl[1] == "1" && pl[2] == "b");  // Skaude AA-A h294 AB 1 a
+            }
+
+            {
+                EliteDangerousCore.StarScan2.SystemNode.AlignParentsName(new System.Collections.Generic.List<BodyParent> {
+                                                                            new BodyParent(BodyParent.ParentBodyType.Null, 1),
+                                                                            new BodyParent(BodyParent.ParentBodyType.Star, 0),
+                                                                            new BodyParent(BodyParent.ParentBodyType.Null, 1),
+                                                                            },
+                                                                            "A 1", out List<string> pl);         // HIP 1885 A 1
+                System.Diagnostics.Debug.Assert(pl[0].Contains("Unknown Bary") && pl[1] == "A" && pl[2].Contains("Unknown Bary") && pl[3] == "1");
+            }
+
+            {
+                EliteDangerousCore.StarScan2.SystemNode.AlignParentsName(new System.Collections.Generic.List<BodyParent> {
+                                                                        new BodyParent(BodyParent.ParentBodyType.Null, 1),
+                                                                        },
+                                                                            "A", out List<string> pl);           // HIP 1885 A
+                System.Diagnostics.Debug.Assert(pl[0].Contains("Unknown Bary") && pl[1] == "A");
+            }
+
+            {
+                EliteDangerousCore.StarScan2.SystemNode.AlignParentsName(new System.Collections.Generic.List<BodyParent> {
+                                                                        new BodyParent(BodyParent.ParentBodyType.Ring, 7),
+                                                                        new BodyParent(BodyParent.ParentBodyType.Star, 1),
+                                                                        },
+                                                                        "B Belt Cluster 4", out List<string> pl);    // Scheau Prao ME-M c22-21 B Belt Cluster 4
+
+                System.Diagnostics.Debug.Assert(pl[0].Contains("Unknown Star") && pl[1] == "B Belt Cluster" && pl[2] == "4");
+            }
+
+            {
+                EliteDangerousCore.StarScan2.SystemNode.AlignParentsName(new System.Collections.Generic.List<BodyParent> {
+                                                                        new BodyParent(BodyParent.ParentBodyType.Ring, 7),
+                                                                        new BodyParent(BodyParent.ParentBodyType.Null, 3),
+                                                                        new BodyParent(BodyParent.ParentBodyType.Star, 1),
+                                                                        new BodyParent(BodyParent.ParentBodyType.Null, 0),
+                                                                        },
+                                                                        "B Belt Cluster 4", out List<string> pl);
+                System.Diagnostics.Debug.Assert(pl[0].Contains("Unknown Bary") && pl[1].Contains("Unknown Star") && pl[2] == "Unknown Barycentre" && pl[3] == "B Belt Cluster" && pl[4] == "4");
+            }
+
+            {
+                EliteDangerousCore.StarScan2.SystemNode.AlignParentsName(new System.Collections.Generic.List<BodyParent> {
+                                                                        new BodyParent(BodyParent.ParentBodyType.Null, 2),
+                                                                        new BodyParent(BodyParent.ParentBodyType.Star, 1),
+                                                                        new BodyParent(BodyParent.ParentBodyType.Null, 0)}, "1", out List<string> pl);
+                System.Diagnostics.Debug.Assert(pl[0].Contains("Unknown Bary") && pl[1].Contains("Unknown Star") && pl[2] == "Unknown Barycentre" && pl[3] == "1");
+            }
+        }
+
+        static public void TestScans(int width)
+        {
+            string outputdir = @"c:\code\AA";
+            string path = @"c:\code\eddiscovery\elitedangerouscore\elitedangerous\bodies\starscan2\tests";
+            EliteDangerousCore.StarScan2.StarScan.ProcessAllFromDirectory(path, "*.json", (ss2, mhs) =>
+                    {
+                        EliteDangerousCore.StarScan2.SystemNode sssol = ss2.FindSystemSynchronous(mhs.Last().Item2.System);
+                        sssol.DrawSystemToFile(Path.Combine(outputdir,sssol.System.Name.SafeFileString()) + ".png");
+                    });
+
+        }
+
+        static public void TestScan(string system, string jsonfile, string outpath, bool draweachone, int width, bool showmaterials = true)
+        {
+            if (File.Exists(jsonfile))
+            {
+                EliteDangerousCore.StarScan2.StarScan ss = new EliteDangerousCore.StarScan2.StarScan();
+                
+                DebuggerHelpers.OutputControl += "StarScan";        // turn on debugging
+
+                uint gen = 1817272;
+                uint siggen = 202992;
+                var hist = HistoryEntry.CreateFromFile(jsonfile);
+
+                ss.ProcessFromHistory(hist, (ss2, mhe) =>
+                {
+                    ISystem syst = ss2.GetISystem(system);
+                    if (syst != null)
+                    {
+                        EliteDangerousCore.StarScan2.SystemNode sssol = ss2.FindSystemSynchronous(syst);
+
+                        if (sssol.BodyGeneration != gen | sssol.SignalGeneration != siggen)
+                        {
+                            gen = sssol.BodyGeneration;
+                            siggen = sssol.SignalGeneration;
+                            if (draweachone)
+                            {
+                                string path = Path.Combine(outpath, sssol.System.Name.SafeFileString()) + $"-{mhe.Item1}.png";
+                                sssol.DrawSystemToFile(path, width, showmaterials);
+                            }
+                        }
+                    }
+                });
+
+                if ( !draweachone)
+                {
+                    ISystem syst = ss.GetISystem(system);
+                    EliteDangerousCore.StarScan2.SystemNode sssol = ss.FindSystemSynchronous(syst);
+                    string path = Path.Combine(outpath, sssol.System.Name.SafeFileString()) + ".png";
+                    sssol.DrawSystemToFile(path, width, showmaterials);
+                }
+
+                //ss.DumpTree();
+                ss.AssignPending();
+            }
+        }
+    }
+}

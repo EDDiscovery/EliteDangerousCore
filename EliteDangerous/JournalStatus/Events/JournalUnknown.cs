@@ -81,7 +81,7 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.BackPackMaterials)]
     public class JournalBackPackMaterials : JournalUnimplemented
     {
-        public JournalBackPackMaterials(JObject evt) : base(evt, JournalTypeEnum.BackPack, true)
+        public JournalBackPackMaterials(JObject evt) : base(evt, JournalTypeEnum.BackPackMaterials, true)
         {
         }
     }
@@ -90,7 +90,7 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.EDDItemSet)]
     public class JournalEDDItemSet : JournalUnimplemented
     {
-        public JournalEDDItemSet(JObject evt) : base(evt, JournalTypeEnum.BackPack, true)
+        public JournalEDDItemSet(JObject evt) : base(evt, JournalTypeEnum.EDDItemSet, true)
         {
         }
     }

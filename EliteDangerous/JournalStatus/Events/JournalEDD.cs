@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright 2016-2023 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,10 +10,11 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- *
  */
+
+using EliteDangerousCore.StarScan2;
 using QuickJSON;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -71,97 +72,67 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
-    public class JournalCommodityPricesBase : JournalEntry
+    [JournalEntryType(JournalTypeEnum.EDDDestinationSelected)]
+    public class JournalEDDDestinationSelected : JournalEntry, IStarScan
     {
-        public JournalCommodityPricesBase(JObject evt, JournalTypeEnum en) : base(evt, en)
+        public JournalEDDDestinationSelected(JObject evt) : base(evt, JournalTypeEnum.EDDDestinationSelected)
         {
+            Target_BodyID = evt["BodyID"].Int(-1);
+            Target_SystemAddress = evt["SystemAddress"].Long(-1);
+            TargetName = evt["TargetName"].Str();
+            TargetName_Localised = evt["TargetName_Localised"].StrNull();
         }
 
-        public JournalCommodityPricesBase(System.DateTime utc, JournalTypeEnum type, long? marketid, string station, string station_localised, string starsystem, int cmdrid)
-                                            : base(utc, type)
+        public JournalEDDDestinationSelected(DateTime utc, int cmdrid, long systemaddress, int bodyid, string targetname, string targetname_localised) : base(utc,JournalTypeEnum.EDDDestinationSelected)
         {
-            MarketID = marketid;
-            Station = station;
-            Station_Localised = station_localised;
-            StarSystem = starsystem;
-            Commodities = new List<CCommodities>(); // always made..
+            Target_SystemAddress = systemaddress;
+            Target_BodyID = bodyid;
+            TargetName = targetname;
+            TargetName_Localised = TargetName_Localised;
             SetCommander(cmdrid);
         }
 
-        public string Station { get; protected set; }
-        public string Station_Localised { get; set; }
-        public string StationType { get; protected set; } // may be "Unknown" on older events, and from CAPI
-        public StationDefinitions.StarportTypes FDStationType { get; protected set; }         // FDName, may be null on older events, and from CAPI
-        public string CarrierDockingAccess { get; protected set; }  // will be null when not in carrier or from CAPI
-        public string StarSystem { get; set; }
-        public long? MarketID { get; set; }
-        public List<CCommodities> Commodities { get; protected set; }   // never null
+        public string TargetName { get; set; }          // these are set when UI Destination changes
+        public string TargetName_Localised { get; set; }
+        public long Target_SystemAddress { get; set; }
+        public int  Target_BodyID { get; set; }
 
-        public bool HasCommodity(string fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase)) >= 0; }
-        public bool HasCommodityToBuy(string fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.HasStock) >= 0; }
+        public string SystemName { get; set; }      // seen in, set by starscan
+        public long? SystemAddress { get; set; }     // seen in, set by starscan
 
+        public override string SummaryName(ISystem sys)
+        {
+            return "Destination Selected";
+        }
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Prices on ; items".Tx(), Commodities.Count,
-                                                "< at ".Tx(), Station_Localised ?? Station,
-                                                "< in ".Tx(), StarSystem);
+            return $"{Target_SystemAddress}:{Target_BodyID} {TargetName_Localised??TargetName} in {SystemName}";
         }
 
-        public override string GetDetailed()
+        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
         {
-            if (Commodities.Count > 0)
-            {
-                StringBuilder sb = new StringBuilder();
-
-                var stocked = Commodities.Where(x => x.HasStock).OrderBy(x=>x.locName);
-
-                if (stocked.Count() > 0)
-                {
-                    sb.Append("Items to buy".Tx()+": ");
-                    sb.AppendCR();
-
-                    foreach (CCommodities c in stocked)
-                    {
-                        string name = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.fdname);
-
-                        if (c.HasDemandAndPrice)
-                        {
-                            sb.Append("  ");
-                            sb.Append(string.Format("{0}: {1} sell {2} Diff {3} {4}%  ".Tx(),
-                                name, c.buyPrice, c.sellPrice, c.buyPrice - c.sellPrice,
-                                ((double)(c.buyPrice - c.sellPrice) / (double)c.sellPrice * 100.0).ToString("0.#")));
-                        }
-                        else
-                            sb.Append(string.Format("{0}: {1}  ".Tx(), name, c.buyPrice));
-
-                        sb.AppendCR();
-                    }
-                }
-
-                var sellonly = Commodities.Where(x => !x.HasStock).OrderBy(x => x.locName); ;
-
-                if (sellonly.Count() > 0)
-                {
-                    sb.Append("Sell only Items".Tx()+": ");
-                    sb.AppendCR();
-
-                    foreach (CCommodities c in sellonly)
-                    {
-                        string name = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.fdname);
-                        sb.Append("  ");
-                        sb.Append(string.Format("{0}: {1}  ".Tx(), name, c.sellPrice));
-                        sb.AppendCR();
-                    }
-                }
-
-                return sb.ToString();
-            }
-            else
-                return null;
+            SystemName = system.Name;
+            SystemAddress = system.SystemAddress;
+            s.AddDestinationSelected(this, system);
         }
 
+        public JObject ToJSON()
+        {
+            JObject j = new JObject()
+            {
+                ["timestamp"] = EventTimeUTC.ToStringZuluInvariant(),
+                ["event"] = EventTypeStr,
+                ["BodyID"] = Target_BodyID,
+                ["SystemAddress"] = Target_SystemAddress,
+                ["TargetName"] = TargetName,
+                ["TargetName_Localised"] = TargetName_Localised,
+            };
 
+            return j;
+        }
     }
+
+
 }
 
 

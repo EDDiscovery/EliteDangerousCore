@@ -244,7 +244,7 @@ namespace EliteDangerousCore.DB
                 PlanetaryMarks = new PlanetMarks((string)dr["PlanetMarks"]);
             }
 
-            Tags = (string)dr["Tags"];
+            Tags = ((string)dr["Tags"]) ?? "";
         }
 
         internal bool Add()

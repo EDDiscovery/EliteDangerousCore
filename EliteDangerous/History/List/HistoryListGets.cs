@@ -57,7 +57,8 @@ namespace EliteDangerousCore
             return list.Where(x => entries.Contains(x.EntryType)).Reverse().ToList();
         }
         // history filter, surveyor, search scans. list should be in entry order (oldest first)
-        static public List<HistoryEntry> FilterByEventEntryOrder(List<HistoryEntry> list, HashSet<JournalTypeEnum> entries, ISystem sys = null, HashSet<JournalTypeEnum> afterlastevent = null, DateTime? mindatetime = null) 
+        static public List<HistoryEntry> FilterByEventEntryOrder(List<HistoryEntry> list, HashSet<JournalTypeEnum> entries, Predicate<HistoryEntry> condition = null, 
+                                                                 HashSet<JournalTypeEnum> afterlastevent = null, DateTime? mindatetime = null) 
         {
             if ( afterlastevent != null)        // find last index of journal event and subset the list.
             {
@@ -68,17 +69,17 @@ namespace EliteDangerousCore
 
             if (mindatetime != null)
             {
-                if (sys == null)
+                if (condition == null)
                     return list.Where(x => x.EventTimeUTC >= mindatetime.Value && entries.Contains(x.EntryType) ).ToList();
                 else
-                    return list.Where(x => x.EventTimeUTC >= mindatetime.Value && x.System.Name == sys.Name && entries.Contains(x.EntryType)).ToList();
+                    return list.Where(x => x.EventTimeUTC >= mindatetime.Value && condition(x) && entries.Contains(x.EntryType)).ToList();
             }
             else
             {
-                if (sys == null)
+                if (condition == null)
                     return list.Where(x => entries.Contains(x.EntryType)).ToList();
                 else
-                    return list.Where(x => x.System.Name == sys.Name && entries.Contains(x.EntryType)).ToList();
+                    return list.Where(x => condition(x) && entries.Contains(x.EntryType)).ToList();
 
             }
         }

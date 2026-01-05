@@ -81,8 +81,9 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Empire Trader", "Imperial Clipper");
             candidatename = candidatename.Replace("Krait Light", "Krait Phantom");
             candidatename = candidatename.Replace("Ferdelance", "Fer De Lance");
-            candidatename = candidatename.Replace("Type 9 Military ", "Type 10 Defender ");
-            candidatename = candidatename.Replace("Type 9 Militarystripe", "Type 9 Stripe");
+            if (!candidatename.Contains("Military Stripe"))
+                candidatename = candidatename.Replace("Type 9 Military ", "Type-10 Defender ");
+            candidatename = candidatename.Replace("Militarystripe", "Military Stripe");
             candidatename = candidatename.Replace("Belugaliner", "Beluga Liner");
             candidatename = candidatename.Replace("Ppaisling", "PP Aisling");
             candidatename = candidatename.Replace("MK I Ii", "MK III");
@@ -116,6 +117,15 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Pp Liyongrui", "Pp Li Yongrui");
             candidatename = candidatename.Replace("Pp Pranavantal", "Pp Prana Vantal");
             candidatename = candidatename.Replace("Pp Yurigrom", "Pp Yuri Grom");
+            candidatename = candidatename.Replace(" lakonminer", " Type 11 Prospector", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("ownersclub", " Owners Club", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("brewercorporation", "Brewer Corporation", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 6", "Type-6", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 7", "Type-7", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 8", "Type-8", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 9", "Type-9", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 10", "Type-10", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Type 11", "Type-11", StringComparison.InvariantCultureIgnoreCase);
             return candidatename;
         }
 
@@ -496,7 +506,7 @@ namespace EliteDangerousCore
             [OrderedPropertyNameAttribute(87, "%")] public double? OptimalRotationModifier { get; set; }
             [OrderedPropertyNameAttribute(88, "%")] public double? MaximumRotationModifier { get; set; }
 
-            [OrderedPropertyNameAttribute(90, "")] public double? ThermalLoad { get; set; }                    // 'engheat' 'fsdheat' 'thmload'
+            [OrderedPropertyNameAttribute(90, "/s")] public double? ThermalLoad { get; set; }                   // 'engheat' 'fsdheat' 'thmload'
 
             [OrderedPropertyNameAttribute(100, "t")] public double? MaxFuelPerJump { get; set; }                // 'maxfuel'
             [OrderedPropertyNameAttribute(101, "")] public double? PowerConstant { get; set; }                  // 'fuelpower' Number
@@ -506,6 +516,7 @@ namespace EliteDangerousCore
             [OrderedPropertyNameAttribute(121, "")] public double? SCOAccelerationRate { get; set; }            // 'scoacc' factor
             [OrderedPropertyNameAttribute(122, "")] public double? SCOHeatGenerationRate { get; set; }          // 'scoheat' factor
             [OrderedPropertyNameAttribute(123, "")] public double? SCOControlInterference { get; set; }         // 'scoconint' factor
+            [OrderedPropertyNameAttribute(124, "t/s")] public double? SCOFuelDuringOvercharge { get; set; }     // 'scofuel' use during overdrive
 
             [OrderedPropertyNameAttribute(200, "%")] public double? HullStrengthBonus { get; set; }             // 'hullbst' % bonus over the ship information armour value
             [OrderedPropertyNameAttribute(201, "%")] public double? HullReinforcement { get; set; }             // 'hullrnf' units
@@ -539,6 +550,8 @@ namespace EliteDangerousCore
             [OrderedPropertyNameAttribute(260, "")] public double? BreachDamage { get; set; }                   // 'brcdmg'
             [OrderedPropertyNameAttribute(261, "%/FullI")] public double? BreachMin { get; set; }               // 'minbrc'
             [OrderedPropertyNameAttribute(262, "%/ZeroI")] public double? BreachMax { get; set; }               // 'maxbrc'
+            [OrderedPropertyNameAttribute(263, "%")] public double? BreachModuleDamageAfterBreach { get; set; } // 'brcpct'
+
 
             [OrderedPropertyNameAttribute(280, "deg")] public double? Jitter { get; set; }                      // 'jitter'
 
@@ -604,6 +617,7 @@ namespace EliteDangerousCore
 
             [OrderedPropertyNameAttribute(1000, "cr")] public int? Cost { get; set; }
             [OrderedPropertyNameAttribute(1001, "cr")] public int? AmmoCost { get; set; }
+            [OrderedPropertyNameAttribute(2000, "")] public int FSDNeutronMultiplier => ModuleID == 129038968 ? 6 : 4;  // CASPIAN dodge until we decide, hopefully EDSY, encodes it in a variable
 
             const double WEAPON_CHARGE = 0.0;
 

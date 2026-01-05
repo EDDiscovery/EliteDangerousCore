@@ -34,7 +34,7 @@ namespace EliteDangerousCore.UIEvents
             double health, bool lowh, double gravity, double temp, UITemperature.TempState tempstate, double oxygen, bool lowox,
             string selw, string selwloc, 
             FSDStateType fsd, bool breathableatmosphere,
-            string dname, int did, long dsysaddr,
+            string dname, string dnameloc, int? did, long? dsysaddr,
             DateTime time, bool refresh) : this(time, refresh)
         {
             UIMode = uim;
@@ -63,6 +63,7 @@ namespace EliteDangerousCore.UIEvents
             SelectedWeapon_Localised = selwloc;
             HandItem = SelectedWeapon != null ? ItemData.GetWeaponOrHandItem(SelectedWeapon) : null;
             DestinationName = dname;
+            DestinationName_Localised = dnameloc;
             DestinationBodyID = did;
             DestinationSystemAddress = dsysaddr;
         }
@@ -100,9 +101,10 @@ namespace EliteDangerousCore.UIEvents
         public string SelectedWeapon { get; private set; }      // may be null
         public string SelectedWeapon_Localised { get; private set; }      // may be null
         public ItemData.HandItem HandItem { get; private set; } // Only set for weapons, and may be null even if SelectedWeapon set if unknown
-        public string DestinationName { get; private set; }      // may be empty
-        public int DestinationBodyID { get; private set; }      // may be null
-        public long DestinationSystemAddress { get; private set; }
+        public string DestinationName { get; private set; }      // may be null
+        public string DestinationName_Localised { get; private set; }      // only if name needs localisation
+        public int? DestinationBodyID { get; private set; }      // may be null
+        public long? DestinationSystemAddress { get; private set; } // may be null
 
         public override string ToString()
         {

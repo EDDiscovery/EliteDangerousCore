@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2023 EDDiscovery development team
+ * Copyright 2023-2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -23,6 +23,39 @@ namespace EliteDangerousCore
 {
     public class BodyDefinitions
     {
+        public enum BodyType
+        {
+            // shared between StarScan and Frontier BodyType fields
+            Planet,             // a Planet or moon
+            Star,               // a top level star, or a substar
+            Barycentre,         // a barycentre ('Null' type in parents array)
+            StellarRing,        // a belt cluster, 'A Belt Cluster' name (`Ring` type in the parents array) - has AsteroidCluster underneath it
+            AsteroidCluster,    // a body under the belt cluster
+            PlanetaryRing,      // a planet's ring.  Called "A Ring" or "B Ring", from a journalscan of the ring (Scan will be set), or from the journalscan of a planet with its ring structure broken into children, BeltData is set.
+
+            // Frontier Bodytype only
+            Station,    // at a station
+            SmallBody,  // saw for comets, very few
+
+            // EDD Only
+            Unknown,
+            System,          // top level SystemBodies object in SystemNode
+        };
+
+        static public BodyType GetBodyType(string bt)
+        {
+            if (bt == null || bt.Length == 0)           // not present
+                return BodyType.Unknown;
+
+            Enum.TryParse<BodyType>(bt, true, out BodyType btn);
+            
+            if ( btn == BodyType.Unknown && bt.Equals("Null", StringComparison.InvariantCultureIgnoreCase))
+                btn = BodyType.Barycentre;
+
+            System.Diagnostics.Debug.Assert(btn != BodyType.Unknown);
+            return btn;
+        }
+
         static public bool IsBodyNameRing(string bodyname)
         {
             if (bodyname.HasChars())
@@ -35,6 +68,12 @@ namespace EliteDangerousCore
 
             return false;
         }
+
+        static public BodyType BodyTypeFromBodyNameRingOrPlanet(string bodyname)
+        {
+            return IsBodyNameRing(bodyname) ? BodyType.PlanetaryRing : BodyType.Planet;
+        }
+
         static public string StarTypeImageName(EDStar StarTypeID, double? nStellarMass, double? nSurfaceTemperature)
         {
             string iconName = StarTypeID.ToString(); // fallback
@@ -831,25 +870,97 @@ namespace EliteDangerousCore
             return $"Bodies.Planets.Terrestrial.{iconName}";
         }
 
-        static public System.Drawing.Image GetStarImageNotScanned()
+        static public System.Drawing.Image GetImageAtmosphere()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Atmosphere");
+        }
+        static public System.Drawing.Image GetImageLandable()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Landable");
+        }
+        static public System.Drawing.Image GetImageRingGap()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingGap");
+        }
+        static public System.Drawing.Image GetImageRingOnly()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingOnly");
+        }
+        static public System.Drawing.Image GetImageTerraFormable()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Terraformable");
+        }
+        static public System.Drawing.Image GetImageVolcanism()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Volcanism");
+        }
+        static public System.Drawing.Image GetImageHighValue()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.HighValue");
+        }
+        static public System.Drawing.Image GetImageMapped()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Mapped");
+        }
+        static public System.Drawing.Image GetImageMappedByOthers()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.MappedByOthers");
+        }
+        static public System.Drawing.Image GetImageDiscoveredByOthers()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.DiscoveredByOthers");
+        }
+        static public System.Drawing.Image GetImageCodexEntry()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Journal.CodexEntry");
+        }
+        static public System.Drawing.Image GetImageMoreMaterials()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.MaterialMore");
+        }
+        static public System.Drawing.Image GetImageOrganicsScanned()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Journal.ScanOrganic");
+        }
+        static public System.Drawing.Image GetImageOrganicsIncomplete()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.OrganicIncomplete");
+        }
+        static public System.Drawing.Image GetImageSignals()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Signals");
+        }
+        static public System.Drawing.Image GetImageGeoBioSignals()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.SignalsGeoBio");
+        }
+        static public System.Drawing.Image GetImageBioSignals()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.SignalsBio");
+        }
+        static public System.Drawing.Image GetImageGeoSignals()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.SignalsGeo");
+        }
+        static public System.Drawing.Image GetImageNotScanned()
         {
             return BaseUtils.Icons.IconSet.GetIcon($"Bodies.NotScanned");
         }
-        static public System.Drawing.Image GetPlanetImageNotScanned()
-        {
-            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.NotScanned");
-        }
-        static public System.Drawing.Image GetMoonImageNotScanned()
-        {
-            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.NotScanned");
-        }
-        static public System.Drawing.Image GetBarycentreImage()
+        static public System.Drawing.Image GetImageBarycentre()
         {
             return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Barycentre");
         }
-        static public System.Drawing.Image GetBeltImage()
+        static public System.Drawing.Image GetImageBarycentreLeftBar()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.BarycentreLeftBar");
+        }
+        static public System.Drawing.Image GetImageBeltCluster()
         {
             return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Belt");
+        }
+        static public System.Drawing.Image GetImageBeltBody()
+        {
+            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.SizeLarge");
         }
 
         // return bitmaps of stars, cropped.  You own the bitmaps afterwards as images are cloned
@@ -897,8 +1008,8 @@ namespace EliteDangerousCore
                     {
                         using (var bt = new SolidBrush(Color.FromArgb(255, 0, 255, 255)))
                         {
-                            g.FillRectangle(b, e.Location);
-                            g.DrawString($"{kvp.Key}", font, bt, new Point(e.Location.X, e.Location.Y + 20));
+                            g.FillRectangle(b, e.Bounds);
+                            g.DrawString($"{kvp.Key}", font, bt, new Point(e.Bounds.X, e.Bounds.Y + 20));
                         }
                     }
                 }, new Rectangle(x, y, 140, 40));

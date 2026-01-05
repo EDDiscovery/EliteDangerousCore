@@ -178,7 +178,7 @@ namespace EliteDangerousCore
                 {
                     int i = 0;
                     foreach (EDStar startype in Enum.GetValues(typeof(EDStar)))
-                        crs.chart1labels[i++] = Stars.StarName(startype);
+                        crs.chart1labels[i++] = Stars.ToLocalisedLanguage(startype);
                 }
                 else
                 {

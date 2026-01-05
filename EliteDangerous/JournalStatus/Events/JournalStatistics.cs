@@ -44,20 +44,16 @@ namespace EliteDangerousCore.JournalEvents
 
             //if (evt["TG_ENCOUNTERS"] != null)                 System.Diagnostics.Debug.WriteLine($"Thargoid read {Thargoids.Format("  ")}");
 
-            FLEETCARRIER = evt["FLEETCARRIER"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("FLEETCARRIER")?.ToObject<FLEETCARRIERClass>(true) ?? new FLEETCARRIERClass();
-            JToken dt = evt["FLEETCARRIER"].I("FLEETCARRIER_DISTANCE_TRAVELLED");   // this is a classic frontier eff up
-            if ( dt !=null)
-            {
-                if (dt.IsString)        // used to be 292929 LY
-                {
-                    string s = dt.Str("0 LY");
-                    int i = s.IndexOf(" ");
-                    if (i >= 0)
-                        FLEETCARRIER.DISTANCETRAVELLED = s.Substring(0, i).InvariantParseDouble(0);
-                }
-                else
-                    FLEETCARRIER.DISTANCETRAVELLED = dt.Double(0);
-            }            
+            // frontier, in their stupidity, wrote travelleddistance sometimes in double sometimes in "double LY". Deal with it directly.
+
+            FLEETCARRIER = evt["FLEETCARRIER"]?.RenameObjectFieldsUnderscores().RemoveObjectFieldsKeyPrefix("FLEETCARRIER")
+                        ?.ToObject<FLEETCARRIERClass>(true,
+                            customconverter: (mi, v) => {
+                                var d = (v is string vs) ? vs.Replace(" LY", "", StringComparison.InvariantCultureIgnoreCase).InvariantParseDouble(0) : v;
+                                //System.Diagnostics.Debug.WriteLine($"Fleet custom {v} -> {d}"); 
+                                return d;
+                            }) ?? new FLEETCARRIERClass();
+
         }
 
         public BankAccountClass BankAccount { get; set; }
@@ -559,8 +555,8 @@ public string Format(string frontline = "    ")
             public long TRADESPENDTOTAL { get; set; }
             public long STOLENPROFITTOTAL { get; set; }
             public int STOLENSPENDTOTAL { get; set; }
-            [JsonIgnore]        // ignore it for auto convert due to frontier changing from string to double
-            public double DISTANCETRAVELLED { get; set; }
+            [JsonCustomFormat]        
+            public double DISTANCETRAVELLED { get; set; }       // needs special processing as Frontier sometimes wrote "2 LY"
             public int TOTALJUMPS { get; set; }
             public int SHIPYARDSOLD { get; set; }
             public long SHIPYARDPROFIT { get; set; }

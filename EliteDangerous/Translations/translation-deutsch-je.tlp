@@ -1,6 +1,7 @@
 ﻿
 SECTION JournalTypeEnum
 
+C7EC98CED613F9: "EDD Destination Selected" @
 94A37CFA0C8992: "Afmu Repairs" => "AFW Reparatur"
 D2F34790ECB3BA: "Approach Body" => "Annäherung an Himmelskörper"
 5FB514306EBAE2: "Approach Settlement" => "Annäherung an Siedlung"
@@ -134,6 +135,7 @@ ECE8DF43B4E578: "Set User Ship Name" => "Benutzerschiffsname setzen"
 4E29C0CE3E9D61: "Shipyard Sell" => "Verkauf (Werft)"
 270AB9D553AFE5: "Shipyard Swap" => "Austausch (Werft)"
 7E6D4BF9F2AA3F: "Shipyard Transfer" => "Schiffstransport"
+86188917717CAE: "Shipyard Bank Deposit" @
 7908BD051ADB46: "Ship Targeted" => "Schiff anvisiert"
 7FDDB7D8D1D60B: "Shutdown" => "Herunterfahren"
 CAAACBDEADF1BF: "SRV Destroyed" => "SRV zerstört"
@@ -248,7 +250,9 @@ DDDE2AEC826902: "Nav Route Clear" => "Navroute leeren"
 02374D50F6A18D: "Powerplay Merits" => "Machtspielverdienst"
 8062068144644D: "Powerplay Rank" => "Machtspielrang"
 5668ADC227F38B: "Carrier Location" => "Carrierstandort"
-
+00D83C2DDC1290: "Cancelled Squadron Application" @
+61CAC65A66E653: "Squadron Application Approved" @
+33646EA5A80A0A: "Squadron Application Rejected" @
 
 SECTION JournalCargo
 
