@@ -69,9 +69,26 @@ namespace EliteDangerousCore.JournalEvents
             Multicrew = evt["Multicrew"].BoolNull();
         }
 
+        public JournalSupercruiseExit(DateTime utc, string starSystem, long? systemAddress, string body, BodyDefinitions.BodyType bodyType, int? bodyID,
+                            string name, string nameloc, StationDefinitions.StarportTypes fd,
+                            bool? taxi, bool? multicrew
+            ) : base(utc,JournalTypeEnum.SupercruiseExit,0)
+        {
+            StarSystem = starSystem;
+            Body = body;
+            SystemAddress = systemAddress;
+            BodyID = bodyID;
+            BodyType = bodyType;
+            Taxi = taxi;
+            Multicrew = multicrew;
+            Name = name;
+            Name_Localised = nameloc;
+            FDStationType = fd;
+        }
+
         public string StarSystem { get; set; }          // always there
-        public string Body { get; set; }                // always there
         public long? SystemAddress { get; set; }        // 2018 on, augmented below with AddStarScan
+        public string Body { get; set; }                // always there
         public int? BodyID { get; set; }                // 2018 on
         public BodyDefinitions.BodyType BodyType { get; set; }      // late 2016
         public bool? Taxi { get; set; }             //4.0 alpha 4
@@ -85,8 +102,10 @@ namespace EliteDangerousCore.JournalEvents
         public double? Latitude { get => null; set { } }
         public double? Longitude { get => null; set { } }
         public bool HasLatLong => false;
-        public string Name => Body;                                 // Feature Name is the Body we exited at
-        public string Name_Localised => null;
+        public string Name { get; set; } = null;
+        public string Name_Localised { get; set; } = null;
+        public long? MarketID => null;
+        public StationDefinitions.StarportTypes FDStationType { get; set; } = StationDefinitions.StarportTypes.Unknown;
 
         public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
         {

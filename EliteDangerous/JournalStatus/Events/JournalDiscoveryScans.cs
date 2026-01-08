@@ -275,6 +275,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasLatLong => false;
         public string Name => null;
         public string Name_Localised => null;
+        public long? MarketID => null;
+        public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
+
         public string StarSystem { get; set; }      // filled in by AddStarScan
 
         public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
@@ -376,6 +379,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasLatLong => false;
         public string Name => null;
         public string Name_Localised => null;
+        public long? MarketID => null;
+        public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
+
         public string StarSystem { get; set; }      // filled in by Scan system below
 
         [System.Diagnostics.DebuggerDisplay("{Type} {Count}")]
@@ -645,6 +651,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasLatLong => false;
         public string Name => null;
         public string Name_Localised => null;
+        public long? MarketID => null;
+        public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
+
         public string StarSystem {get;set;}
 
         public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)

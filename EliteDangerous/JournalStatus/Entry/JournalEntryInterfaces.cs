@@ -48,8 +48,8 @@ namespace EliteDangerousCore
         void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus hes);
     }
 
-
-    public interface IBodyFeature  // events containing feature information on a body
+    // events containing feature information on a body
+    public interface IBodyFeature  
     {
         DateTime EventTimeUTC { get; }
         JournalTypeEnum EventTypeID { get; }
@@ -63,8 +63,32 @@ namespace EliteDangerousCore
         double? Latitude { get; set; }
         double? Longitude { get; set; }
         bool HasLatLong { get; }
-        string Name { get; }                // name of installation/feature on body
-        string Name_Localised { get; }
+        string Name { get; }                // name of installation/feature on body, docked name of station
+        string Name_Localised { get; }      // name of installation/feature on body, docked name of station
+        long? MarketID { get; }             // for docked on station
+        StationDefinitions.StarportTypes FDStationType { get; } // valid on docked
+    }
+
+    // allows commonality of information between Location (when docked) and Docked events
+    public interface ILocDocked
+    {
+        bool Docked { get; }
+        string StarSystem { get; }
+        long? SystemAddress { get; }
+        string StationName { get; }
+        string StationName_Localised { get; }
+        StationDefinitions.StarportTypes FDStationType { get; }  // only on later events, else Unknown
+        string StationType { get; } // english, only on later events, else Unknown
+        long? MarketID { get; }
+        StationDefinitions.Classification MarketClass();
+        string StationFaction { get; }
+        FactionDefinitions.State StationFactionState { get; }       //may be null, FDName
+        string StationFactionStateTranslated { get; }
+        GovernmentDefinitions.Government StationGovernment { get; }
+        string StationGovernment_Localised { get; }
+        AllegianceDefinitions.Allegiance StationAllegiance { get; }   // fdname
+        StationDefinitions.StationServices[] StationServices { get; }   // may be null
+        EconomyDefinitions.Economies[] StationEconomyList { get; }        // may be null
     }
 
     public interface IMissions

@@ -25,6 +25,8 @@ namespace EliteDangerousCore
     {
         public enum BodyType
         {
+            Unknown,
+
             // shared between StarScan and Frontier BodyType fields
             Planet,             // a Planet or moon
             Star,               // a top level star, or a substar
@@ -38,7 +40,6 @@ namespace EliteDangerousCore
             SmallBody,  // saw for comets, very few
 
             // EDD Only
-            Unknown,
             System,          // top level SystemBodies object in SystemNode
         };
 
@@ -47,10 +48,11 @@ namespace EliteDangerousCore
             if (bt == null || bt.Length == 0)           // not present
                 return BodyType.Unknown;
 
-            Enum.TryParse<BodyType>(bt, true, out BodyType btn);
-            
-            if ( btn == BodyType.Unknown && bt.Equals("Null", StringComparison.InvariantCultureIgnoreCase))
-                btn = BodyType.Barycentre;
+            if (!Enum.TryParse<BodyType>(bt, true, out BodyType btn))
+            {
+                if (bt.Equals("Null", StringComparison.InvariantCultureIgnoreCase))
+                    btn = BodyType.Barycentre;
+            }
 
             System.Diagnostics.Debug.Assert(btn != BodyType.Unknown);
             return btn;

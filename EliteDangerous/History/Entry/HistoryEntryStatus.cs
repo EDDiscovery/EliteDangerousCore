@@ -73,17 +73,34 @@ namespace EliteDangerousCore
 
         public TravelStateType TravelState { get; private set; } = TravelStateType.Unknown;  // travel state
 
-        public string BodyName { get; private set; }
-        public int? BodyID { get; private set; }
+        public JournalLocOrJump LastJump { get; private set; }
+        public IBodyFeature LastLocation { get; private set; }
+
+
+        public string WhereAmI => LastLocation?.Name_Localised ?? LastLocation?.BodyName ?? LastLocation?.StarSystem;
+        public double? NLatitude => LastLocation?.Latitude;
+        public double? NLongitude => LastLocation?.Longitude;
+        public BodyDefinitions.BodyType NBodyType => LastLocation?.BodyType ?? BodyDefinitions.BodyType.Unknown;
+        public int? NBodyID => LastLocation?.BodyID;
+        public string NStationName_Localised => LastLocation?.Name_Localised;
+        public StationDefinitions.StarportTypes? NFDStationType => LastLocation?.FDStationType;
+        public long? NMarketID => LastLocation?.MarketID;
+
+
         public bool HasBodyID { get { return BodyID.HasValue && BodyID.Value >= 0; } }
-        public BodyDefinitions.BodyType BodyType { get; private set; }
-        public string StationName_Localised { get; private set; }     // will be null when undocked (StationName_Localised)
+
+
+
+        public string BodyName { get; private set; }
+            public int? BodyID { get; private set; }
+            public BodyDefinitions.BodyType BodyType { get; private set; }
+            public string StationName_Localised { get; private set; }     // will be null when undocked (StationName_Localised)
         public string StationType { get; private set; }     // will be null when undocked, in english
-        public double? Latitude { get; private set; }      // for a station, when we know the lat/long due to approach settlement
-        public double? Longitude { get; private set; }
-        public StationDefinitions.StarportTypes? FDStationType { get; private set; }     // will be null when undocked, in english
+            public double? Latitude { get; private set; }      // for a station, when we know the lat/long due to approach settlement
+            public double? Longitude { get; private set; }
+            public StationDefinitions.StarportTypes? FDStationType { get; private set; }     // will be null when undocked, in english
         public string StationFaction { get; private set; }  // will be null when undocked
-        public long? MarketID { get; private set; } 
+            public long? MarketID { get; private set; }
         public ulong ShipID { get; private set; } = ulong.MaxValue;
         public string ShipType { get; private set; } = "Unknown";         // and the ship nice name
         public string ShipTypeFD { get; private set; } = "Unknown";      // FD name
@@ -122,6 +139,10 @@ namespace EliteDangerousCore
 
         public HistoryEntryStatus(HistoryEntryStatus prevstatus)
         {
+            LastJump = prevstatus.LastJump;
+            LastLocation = prevstatus.LastLocation;
+
+
             BodyName = prevstatus.BodyName;
             BodyID = prevstatus.BodyID;
             BodyType = prevstatus.BodyType;
@@ -151,7 +172,7 @@ namespace EliteDangerousCore
             PowerPledgedThisLoadGame = prevstatus.PowerPledgedThisLoadGame;
         }
 
-        public static HistoryEntryStatus Update(HistoryEntryStatus prev, JournalEntry je, string curStarSystem)
+        public static HistoryEntryStatus Update(HistoryEntryStatus prev, JournalEntry je, ISystem sys)
         {
             if (prev == null)
             {
@@ -166,44 +187,84 @@ namespace EliteDangerousCore
                     {
                         JournalLocation jloc = je as JournalLocation;
 
-                        bool locinstation = jloc.StationType.HasChars() || prev.StationType.HasChars();     // second is required due to alpha 4 stationtype being missing
-                        bool stationisfc = prev.StationType.HasChars() && prev.StationType.Equals("Fleet Carrier", System.StringComparison.CurrentCultureIgnoreCase);
+                        // Location comes out on a Fleetcarrier when on foot with docked=false, on foot= true, detect it and reject using this location, keep with old
 
-                        TravelStateType t = (stationisfc && !jloc.Docked) ? TravelStateType.OnFootFleetCarrier : 
-                           
-                            jloc.Docked ? (jloc.Multicrew == true ? TravelStateType.MulticrewDocked : TravelStateType.Docked) :
-                                                (jloc.InSRV == true) ? (jloc.Multicrew == true ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :    
+                        bool weareonafconfoot = prev.FDStationType == StationDefinitions.StarportTypes.FleetCarrier && jloc.Docked == false && jloc.OnFoot == true;
+
+                        if (!weareonafconfoot)
+                        {
+                            bool locinstation = jloc.StationType.HasChars() || prev.StationType.HasChars();     // second is required due to alpha 4 stationtype being missing
+
+                            TravelStateType t =
+                                            jloc.Docked ? (jloc.Multicrew == true ? TravelStateType.MulticrewDocked : TravelStateType.Docked) :
+                                                (jloc.InSRV == true) ? (jloc.Multicrew == true ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :
                                                     jloc.Taxi == true ? TravelStateType.TaxiNormalSpace :          // can't be in dropship, must be in normal space.
                                                         jloc.OnFoot == true ? (locinstation ? TravelStateType.OnFootStarPort : TravelStateType.OnFootPlanet) :
                                                             jloc.Latitude.HasValue ? (jloc.Multicrew == true ? TravelStateType.MulticrewLanded : TravelStateType.Landed) :
                                                                 jloc.Multicrew == true ? TravelStateType.MulticrewNormalSpace :
                                                                     TravelStateType.NormalSpace;
 
-                        hes = new HistoryEntryStatus(prev)     // Bodyapproach copy over we should be in the same state as last..
-                        {
-                            TravelState = t,
-                            MarketID = jloc.MarketID,
-                            BodyID = jloc.BodyID,
-                            BodyType = jloc.BodyType,
-                            BodyName = jloc.Body,
-                            Wanted = jloc.Wanted,
-                            StationName_Localised = stationisfc ? prev.StationName_Localised : (jloc.StationName_Localised.Alt(jloc.Docked || locinstation ? jloc.Body : null)),
-                            StationType = stationisfc ? prev.StationType : (jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType.ToString() : null)),
-                            FDStationType = jloc.Docked ? jloc.FDStationType : default(StationDefinitions.StarportTypes?),
-                            StationFaction = jloc.StationFaction,          // may be null
-                            Latitude = jloc.Latitude,
-                            Longitude = jloc.Longitude,
-                            CurrentBoost = 1,
-                            FSDJumpNextSystemAddress = null,
-                            FSDJumpNextSystemName = null,
-                            DockingPad = 0,
-                            DockingStationType = StationDefinitions.StarportTypes.Unknown
-                        };
+                            hes = new HistoryEntryStatus(prev)     // Bodyapproach copy over we should be in the same state as last..
+                            {
+                                TravelState = t,
+                                LastLocation = jloc,
 
-                        if ( hes.StationName_Localised?.Contains("$") ?? false)
-                        {
+                                MarketID = jloc.MarketID,
+                                BodyID = jloc.BodyID,
+                                BodyType = jloc.BodyType,
+                                BodyName = jloc.Body,
 
+                                Wanted = jloc.Wanted,
+                                //StationName_Localised = stationisfc ? prev.StationName_Localised : (jloc.StationName_Localised.Alt(jloc.Docked || locinstation ? jloc.Body : null)),
+                                //StationType = stationisfc ? prev.StationType : (jloc.StationType.Alt(prev.StationType).Alt(jloc.Docked || locinstation ? jloc.BodyType.ToString() : null)),
+                                StationName_Localised = jloc.StationName_Localised,
+                                StationType = jloc.StationType,
+
+                                FDStationType = jloc.Docked ? jloc.FDStationType : default(StationDefinitions.StarportTypes?),
+
+                                StationFaction = jloc.StationFaction,          // may be null
+                                Latitude = jloc.Latitude,
+                                Longitude = jloc.Longitude,
+                                CurrentBoost = 1,
+                                FSDJumpNextSystemAddress = null,
+                                FSDJumpNextSystemName = null,
+                                DockingPad = 0,
+                                DockingStationType = StationDefinitions.StarportTypes.Unknown
+                            };
                         }
+
+                        break;
+                    }
+
+                case JournalTypeEnum.FSDJump:
+                    {
+                        var jfsd = (je as JournalFSDJump);
+                        hes = new HistoryEntryStatus(prev)
+                        {
+                            // transition to XSupercruise
+                            TravelState = jfsd.Taxi == true ? (prev.TravelState == TravelStateType.DropShipSupercruise || prev.TravelState == TravelStateType.DropShipNormalSpace ? TravelStateType.DropShipSupercruise : TravelStateType.TaxiSupercruise) :
+                                            jfsd.Multicrew == true ? TravelStateType.MulticrewSupercruise :
+                                                TravelStateType.Supercruise,
+                            LastJump = jfsd,
+                            LastLocation = jfsd,
+                            MarketID = null,
+                            BodyID = jfsd.BodyID,
+                            BodyType = jfsd.BodyType,
+                            BodyName = jfsd.Body ?? jfsd.StarSystem,
+                            Wanted = jfsd.Wanted,
+                            StationName_Localised = null,
+                            StationType = null,
+                            FDStationType = null,
+                            StationFaction = null, // to ensure
+                            BodyApproached = false,
+                            Latitude = null,
+                            Longitude = null,
+                            DockingPad = 0,
+                            DockingStationType = StationDefinitions.StarportTypes.Unknown,
+                            CurrentBoost = 1,
+                            FSDJumpNextSystemAddress = null,        // now jumped
+                            FSDJumpNextSystemName = null,
+                        };
                         break;
                     }
 
@@ -211,6 +272,10 @@ namespace EliteDangerousCore
                     var jcj = (je as JournalCarrierJump);
                     hes = new HistoryEntryStatus(prev)     // we are docked or on foot on a carrier - travel state stays the same
                     {
+                        LastJump = jcj,
+                        LastLocation = jcj,
+
+
                         MarketID = jcj.MarketID,
                         BodyID = jcj.BodyID,
                         BodyType = jcj.BodyType,
@@ -229,20 +294,28 @@ namespace EliteDangerousCore
                         var sc = je as JournalSupercruiseEntry;
                         hes = new HistoryEntryStatus(prev)
                         {
-                            TravelState = sc.Taxi == true ? (prev.TravelState == TravelStateType.DropShipNormalSpace ? TravelStateType.DropShipSupercruise : TravelStateType.TaxiSupercruise ):
+                            TravelState = sc.Taxi == true ? (prev.TravelState == TravelStateType.DropShipNormalSpace ? TravelStateType.DropShipSupercruise : TravelStateType.TaxiSupercruise) :
                                                 sc.Multicrew == true ? TravelStateType.MulticrewSupercruise :
                                                             TravelStateType.Supercruise,
+                            LastLocation = new JournalLocation(sc.EventTimeUTC, sys.Name, sys.SystemAddress,
+                                                              sc.StarSystem,
+                                                              BodyDefinitions.BodyType.Star,
+                                                              null),
 
-                            BodyName = !prev.BodyApproached ? curStarSystem : prev.BodyName,
-                            BodyType = !prev.BodyApproached ? BodyDefinitions.BodyType.Star : prev.BodyType,
-                            BodyID = !prev.BodyApproached ? -1 : prev.BodyID,
+                            BodyName = sys.Name,
+                            BodyType = BodyDefinitions.BodyType.Star,
+                            BodyID = null,
+
                             BookedTaxi = false,
                             BookedDropship = false,
                             StationName_Localised = null,
                             StationType = null,
                             FDStationType = null,
                             StationFaction = null, // to clear
+                            Latitude = null,
+                            Longitude = null,
                             DockingPad = 0,
+                            MarketID = null,
                             DockingStationType = StationDefinitions.StarportTypes.Unknown
 
                         };
@@ -257,43 +330,30 @@ namespace EliteDangerousCore
                                                 jsexit.Multicrew == true ? TravelStateType.MulticrewNormalSpace :
                                                         TravelStateType.NormalSpace,
 
-                            BodyName = (prev.BodyApproached) ? prev.BodyName : jsexit.Body,
-                            BodyType = (prev.BodyApproached) ? prev.BodyType : jsexit.BodyType,
-                            BodyID = (prev.BodyApproached) ? prev.BodyID : jsexit.BodyID,
-                            DockingPad = 0,
-                            DockingStationType = StationDefinitions.StarportTypes.Unknown
+                            // from 2016, SE had body and bodytype. Keep last location
+                            LastLocation = new JournalSupercruiseExit(jsexit.EventTimeUTC, sys.Name, sys.SystemAddress,
+                                                              jsexit.Body ?? prev.BodyName,
+                                                              jsexit.BodyType != BodyDefinitions.BodyType.Unknown ? jsexit.BodyType : prev.BodyType,
+                                                              jsexit.BodyID ?? prev.BodyID,
+                                                              prev.LastLocation.Name,
+                                                              prev.LastLocation.Name_Localised,
+                                                              prev.LastLocation.FDStationType,
+                                                              jsexit.Taxi, jsexit.Multicrew),
 
-                        };
-                        break;
-                    }
+                            BodyName = jsexit.Body ?? prev.BodyName,
+                            BodyType = jsexit.BodyType != BodyDefinitions.BodyType.Unknown ? jsexit.BodyType : prev.BodyType,
+                            BodyID = jsexit.BodyID ?? prev.BodyID,
 
-                case JournalTypeEnum.FSDJump:
-                    {
-                        var jfsd = (je as JournalFSDJump);
-                        hes = new HistoryEntryStatus(prev)
-                        {
-                            // transition to XSupercruise
-                            TravelState = jfsd.Taxi == true ? (prev.TravelState == TravelStateType.DropShipSupercruise || prev.TravelState == TravelStateType.DropShipNormalSpace ? TravelStateType.DropShipSupercruise : TravelStateType.TaxiSupercruise) :
-                                            jfsd.Multicrew == true ? TravelStateType.MulticrewSupercruise :
-                                                TravelStateType.Supercruise,
-                            MarketID = null,
-                            BodyID = -1,
-                            BodyType = BodyDefinitions.BodyType.Star,
-                            BodyName = jfsd.StarSystem,
-                            Wanted = jfsd.Wanted,
-                            StationName_Localised = null,
-                            StationType = null,
-                            FDStationType = null,
-                            StationFaction = null, // to ensure
-                            BodyApproached = false,
-                            Latitude = null,
-                            Longitude = null,
                             DockingPad = 0,
                             DockingStationType = StationDefinitions.StarportTypes.Unknown,
-                            CurrentBoost = 1,
-                            FSDJumpNextSystemAddress = null,        // now jumped
-                            FSDJumpNextSystemName = null,
+
+                            Latitude = null,
+                            Longitude = null,
+                            MarketID = null,
                         };
+
+                        System.Diagnostics.Debug.Assert(hes.BodyName == hes.LastLocation.BodyName);
+
                         break;
                     }
 
@@ -314,16 +374,16 @@ namespace EliteDangerousCore
                 case JournalTypeEnum.LoadGame:
                     JournalLoadGame jlg = je as JournalLoadGame;
 
-                    hes = new HistoryEntryStatus(prev) 
+                    hes = new HistoryEntryStatus(prev)
                     {
                         OnCrewWithCaptain = null,    // can't be in a crew at this point
                         GameMode = jlg.GameMode ?? "Unknown",  // set game mode
                         Group = jlg.Group ?? "",            // and group, may be empty
-                        TravelState = jlg.InSuit ? (prev.TravelState) : 
+                        TravelState = jlg.InSuit ? (prev.TravelState) :
                                          jlg.InTaxi ? TravelStateType.TaxiNormalSpace :
-                                             jlg.InSRV ? TravelStateType.SRV : 
+                                             jlg.InSRV ? TravelStateType.SRV :
                                                     prev.TravelState != TravelStateType.Unknown ? prev.TravelState :
-                                                        TravelStateType.Docked,     
+                                                        TravelStateType.Docked,
                         ShipType = jlg.InShip ? jlg.Ship : prev.ShipType,
                         ShipID = jlg.InShip ? jlg.ShipId : prev.ShipID,
                         ShipTypeFD = jlg.InShip ? jlg.ShipFD : prev.ShipTypeFD,
@@ -336,7 +396,7 @@ namespace EliteDangerousCore
                     };
                     break;
 
-                
+
                 case JournalTypeEnum.Docked:        // Docked not seen when in Taxi.
                     {
                         JournalDocked jdocked = (JournalDocked)je;
@@ -346,12 +406,20 @@ namespace EliteDangerousCore
                             TravelState = jdocked.Taxi == true ? TravelStateType.TaxiDocked :
                                             jdocked.Multicrew == true ? TravelStateType.MulticrewDocked :
                                                 TravelStateType.Docked,
+                            LastLocation = jdocked,
+
+
                             MarketID = jdocked.MarketID,
                             Wanted = jdocked.Wanted,
+                            Latitude = jdocked.Latitude,
+                            Longitude = jdocked.Longitude,
+
                             StationName_Localised = jdocked.StationName_Localised.Alt("Unknown"),
                             StationType = jdocked.StationType.Alt("Station"),
                             FDStationType = jdocked.FDStationType,
                             StationFaction = jdocked.Faction,
+                            BodyType = jdocked.BodyType,
+                            BodyID = jdocked.BodyID,
                             CurrentBoost = 1,
                             DockingPad = 0,
                             DockingStationType = StationDefinitions.StarportTypes.Unknown
@@ -367,24 +435,31 @@ namespace EliteDangerousCore
                             TravelState = ju.Taxi == true ? (prev.TravelState == TravelStateType.DropShipDocked ? TravelStateType.DropShipNormalSpace : TravelStateType.TaxiNormalSpace) :
                                             ju.Multicrew == true ? TravelStateType.MulticrewNormalSpace :
                                                 TravelStateType.NormalSpace,
+                            LastLocation = new JournalLocation(ju.EventTimeUTC, sys.Name, sys.SystemAddress,
+                                                                prev.LastLocation.BodyName,
+                                                                prev.LastLocation.BodyType, prev.LastLocation.BodyID,
+                                                                prev.LastLocation.Name, prev.LastLocation.Name_Localised, prev.LastLocation.FDStationType
+                                                               ),
                             MarketID = null,
-                            StationName_Localised = null,
-                            StationType = null,
-                            FDStationType = null,
+                            //                                StationName_Localised = null,     // don't clear to match above
+                            //                              StationType = null,
+                            //                            FDStationType = null,
                             StationFaction = null, // to clear
+
+                            Latitude = null,
+                            Longitude = null,
                         };
                         break;
                     }
                 case JournalTypeEnum.Embark:        // foot-> SRV/Ship in multicrew or not.
                     {
                         var em = (JournalEmbark)je;
-
                         hes = new HistoryEntryStatus(prev)
                         {
                             TravelState = em.SRV ? (em.Multicrew ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :
                                                 em.Taxi ? (prev.BookedDropship ? TravelStateType.DropShipDocked : TravelStateType.TaxiDocked) :
-                                                    em.Multicrew ? (prev.TravelState == TravelStateType.OnFootPlanet ? TravelStateType.MulticrewLanded : TravelStateType.MulticrewDocked ):
-                                                        prev.TravelState == TravelStateType.OnFootPlanet ? TravelStateType.Landed:
+                                                    em.Multicrew ? (prev.TravelState == TravelStateType.OnFootPlanet ? TravelStateType.MulticrewLanded : TravelStateType.MulticrewDocked) :
+                                                        prev.TravelState == TravelStateType.OnFootPlanet ? TravelStateType.Landed :
                                                             TravelStateType.Docked,
                             BookedTaxi = false,
                             BookedDropship = false,
@@ -402,9 +477,9 @@ namespace EliteDangerousCore
 
                     hes = new HistoryEntryStatus(prev)
                     {
-                        TravelState = fc ? TravelStateType.OnFootFleetCarrier : 
+                        TravelState = fc ? TravelStateType.OnFootFleetCarrier :
                                     disem.SRV ? TravelStateType.OnFootPlanet :
-                                        disem.OnStation == true ?  TravelStateType.OnFootStarPort :
+                                        disem.OnStation == true ? TravelStateType.OnFootStarPort :
                                             disem.OnPlanet == true && instation ? TravelStateType.OnFootPlanetaryPort :
                                             TravelStateType.OnFootPlanet,
                         StationName_Localised = disem.HasStationTypeName ? disem.StationName_Localised.Alt("Unknown") : prev.StationName_Localised,       // copying it over due to missing station name/type
@@ -435,17 +510,28 @@ namespace EliteDangerousCore
                         TravelState = prev.TravelState == TravelStateType.MulticrewSRV ? TravelStateType.MulticrewLanded : TravelStateType.Landed,
                     };
                     break;
-                
+
                 case JournalTypeEnum.Touchdown:
                     var td = (JournalTouchdown)je;
                     if (td.PlayerControlled == true)        // can get this when not player controlled
                     {
                         hes = new HistoryEntryStatus(prev)
                         {
+                            LastLocation = new JournalLocation(td.EventTimeUTC, sys.Name, sys.SystemAddress,
+                                                              td.Body ?? prev.BodyName,
+                                                              BodyDefinitions.BodyType.Planet,
+                                                              td.BodyID.HasValue ? td.BodyID.Value : prev.BodyID,
+                                                              null,null,StationDefinitions.StarportTypes.Unknown,
+                                                              td.Latitude, td.Longitude),
                             TravelState = prev.TravelState == TravelStateType.MulticrewNormalSpace ? TravelStateType.MulticrewLanded : TravelStateType.Landed,
                             BodyName = td.Body ?? prev.BodyName,
-                            BodyID = td.BodyID.HasValue ? td.BodyID.Value :prev.BodyID,
+                            BodyID = td.BodyID.HasValue ? td.BodyID.Value : prev.BodyID,
+                            StationName_Localised = null,
+                            StationType = null,
                             CurrentBoost = 1,
+                            Latitude = td.Latitude,
+                            Longitude = td.Longitude,
+                            MarketID = null,
                         };
                     }
                     else
@@ -488,32 +574,37 @@ namespace EliteDangerousCore
 
 
                 case JournalTypeEnum.LaunchFighter:
-                {
-                    var j = je as JournalLaunchFighter;
-                    if (j.PlayerControlled)
                     {
-                        hes = new HistoryEntryStatus(prev)
+                        var j = je as JournalLaunchFighter;
+                        if (j.PlayerControlled)
                         {
-                            TravelState = prev.TravelState == TravelStateType.MulticrewNormalSpace ? TravelStateType.MulticrewFighter : TravelStateType.Fighter,
-                        };
+                            hes = new HistoryEntryStatus(prev)
+                            {
+                                TravelState = prev.TravelState == TravelStateType.MulticrewNormalSpace ? TravelStateType.MulticrewFighter : TravelStateType.Fighter,
+                            };
+                        }
+                        break;
                     }
-                    break;
-                }
 
                 case JournalTypeEnum.ApproachBody:
                     JournalApproachBody jappbody = (JournalApproachBody)je;
+
+                    bool ablastisbetter = prev.LastLocation is JournalApproachSettlement || prev.LastLocation is JournalSupercruiseExit;
+
                     hes = new HistoryEntryStatus(prev)
                     {
+                        LastLocation = ablastisbetter? prev.LastLocation : jappbody,
                         BodyApproached = true,
                         BodyType = jappbody.BodyType,
                         BodyName = jappbody.Body,
-                        BodyID = jappbody.BodyID,
+                        BodyID = ablastisbetter ? prev.BodyID : jappbody.BodyID,
                     };
                     break;
                 case JournalTypeEnum.ApproachSettlement:
                     JournalApproachSettlement jappsettlement = (JournalApproachSettlement)je;
                     hes = new HistoryEntryStatus(prev)
                     {
+                        LastLocation = jappsettlement,
                         BodyApproached = true,
                         BodyType = jappsettlement.BodyType,
                         BodyName = jappsettlement.BodyName,
@@ -523,18 +614,27 @@ namespace EliteDangerousCore
                         BodyID = jappsettlement.BodyID,
                         Latitude = jappsettlement.Latitude,
                         Longitude = jappsettlement.Longitude,
+                        MarketID = jappsettlement.MarketID,
                     };
                     break;
                 case JournalTypeEnum.LeaveBody:
                     JournalLeaveBody jlbody = (JournalLeaveBody)je;
                     hes = new HistoryEntryStatus(prev)
                     {
+                        LastLocation = new JournalLocation(jlbody.EventTimeUTC, sys.Name, sys.SystemAddress,
+                                                              null,
+                                                              BodyDefinitions.BodyType.Star,
+                                                              null),
                         BodyApproached = false,
                         BodyType = BodyDefinitions.BodyType.Star,
-                        BodyName = curStarSystem,
-                        BodyID = -1,
+                        BodyName = sys.Name,
+                        StationName_Localised = null,
+                        StationType = null,
+                        FDStationType = null,
+                        BodyID = null,
                         Latitude = null,
-                        Longitude = null
+                        Longitude = null,
+                        MarketID = null,
                     };
                     break;
 
@@ -693,6 +793,29 @@ namespace EliteDangerousCore
 
             }
 
+            // if (hes.BodyName != prev.BodyName)                System.Diagnostics.Debug.WriteLine($"{je.EventTimeUTC} {je.EventTypeStr} changed body name from {prev.BodyName} -> {hes.BodyName}");
+
+            string whereami = hes.StationName_Localised ?? hes.BodyName ?? (sys.Name!="Unknown" ? sys.Name : null);
+
+            if (hes.LastLocation != prev.LastLocation)
+            {
+                System.Diagnostics.Debug.WriteLine($"{je.EventTimeUTC} {je.EventTypeStr} : LL {hes.LastLocation?.GetType().Name} => `{hes.LastLocation?.StarSystem}`:`{hes.LastLocation?.BodyName}`:`{hes.LastLocation?.Name}`  vs old bn `{hes.BodyName}` `{whereami}`");
+            }
+
+            if (hes.StationName_Localised != "Unknown")
+            {
+                //System.Diagnostics.Debug.Assert((hes.LastLocation == null && hes.BodyName == null ) || hes.LastLocation.BodyName == hes.BodyName);
+                System.Diagnostics.Debug.Assert(hes.WhereAmI == whereami, $"{hes.WhereAmI} vs {whereami}");
+
+                System.Diagnostics.Debug.Assert(hes.NLatitude == hes.Latitude);
+                System.Diagnostics.Debug.Assert(hes.NLongitude == hes.Longitude);
+                System.Diagnostics.Debug.Assert(hes.NBodyType == hes.BodyType, $"{hes.NBodyType} vs {hes.BodyType}");
+                System.Diagnostics.Debug.Assert(hes.NBodyID == hes.BodyID, $"{hes.NBodyID} vs {hes.BodyID}");
+                System.Diagnostics.Debug.Assert(hes.NMarketID == hes.MarketID, $"{hes.NMarketID} vs {hes.MarketID}");
+                System.Diagnostics.Debug.Assert(hes.NStationName_Localised == hes.StationName_Localised || hes.StationName_Localised == null, $"{hes.NStationName_Localised} vs {hes.StationName_Localised}");
+                //System.Diagnostics.Debug.Assert(hes.NFDStationType == hes.FDStationType || hes.FDStationType == null || 
+               //     (hes.NFDStationType == StationDefinitions.StarportTypes.Ocellus && hes.FDStationType == StationDefinitions.StarportTypes.Bernal), $"{hes.NFDStationType} vs {hes.FDStationType}");
+            }
             return hes;
         }
     }

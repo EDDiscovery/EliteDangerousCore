@@ -163,7 +163,7 @@ namespace EliteDangerousCore
             {
                 journalEntry = je,
                 System = isys,
-                entryStatus = HistoryEntryStatus.Update(prev?.entryStatus, je, isys.Name),
+                entryStatus = HistoryEntryStatus.Update(prev?.entryStatus, je, isys),
             };
 
             return he;

@@ -28,6 +28,10 @@ namespace EliteDangerousCore.JournalEvents
         public long? SystemAddress { get; set; }
         public SystemSource LocOrJumpSource { get; set; } = SystemSource.FromJournal;     // this is the default..
 
+        public string Body { get; set; }            // March 2019 introduced the destination body you jumped to
+        public BodyDefinitions.BodyType BodyType { get; set; }      // as of JAN 26 : Barycentre, Star, StellarRing types
+        public int? BodyID { get; set; }
+
         public string Faction { get; set; }         // System Faction - keep name for backwards compat.
         public FactionDefinitions.State FactionState { get; set; }              //System Faction FDName
         public AllegianceDefinitions.Allegiance Allegiance { get; set; }        // System Allegiance FDName
@@ -54,12 +58,17 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasCoordinate { get { return !float.IsNaN(StarPos.X); } }
         public bool IsTrainingEvent { get; private set; } // True if detected to be in training
 
+        protected JournalLocOrJump(DateTime utc, JournalTypeEnum jtype) : base(utc, jtype, 0)
+        {
+        }
+
         protected JournalLocOrJump(DateTime utc, ISystem sys, JournalTypeEnum jtype, bool edsmsynced ) : base(utc, jtype,  edsmsynced ? (int)SyncFlags.EDSM : 0)
         {
             StarSystem = sys.Name;
             SystemAddress = sys.SystemAddress;
             StarPos = new EMK.LightGeometry.Vector3((float)sys.X, (float)sys.Y, (float)sys.Z);
         }
+
 
         protected JournalLocOrJump(JObject evt, JournalTypeEnum jtype) : base(evt, jtype)
         {
@@ -83,6 +92,10 @@ namespace EliteDangerousCore.JournalEvents
             StarPos = pos;
 
             SystemAddress = evt["SystemAddress"].LongNull();
+
+            Body = evt["Body"].StrNull();
+            BodyID = evt["BodyID"].IntNull();
+            BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
 
             JToken jk = evt["SystemFaction"];
             if (jk != null && jk.IsObject)                  // new 3.03
@@ -210,27 +223,7 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
-    // allows commonality of information between Location (when docked) and Docked events
-    public interface ILocDocked
-    {
-        bool Docked { get; }
-        string StarSystem { get; }
-        long? SystemAddress { get; }
-        string StationName { get;  }      
-        string StationName_Localised { get; }          
-        StationDefinitions.StarportTypes FDStationType { get;  }  // only on later events, else Unknown
-        string StationType { get; } // english, only on later events, else Unknown
-        long? MarketID { get;  }
-        StationDefinitions.Classification MarketClass();
-        string StationFaction { get;}
-        FactionDefinitions.State StationFactionState { get; }       //may be null, FDName
-        string StationFactionStateTranslated { get;  }
-        GovernmentDefinitions.Government StationGovernment { get;  }
-        string StationGovernment_Localised { get; }
-        AllegianceDefinitions.Allegiance StationAllegiance { get;  }   // fdname
-        StationDefinitions.StationServices[] StationServices { get; }   // may be null
-        EconomyDefinitions.Economies[] StationEconomyList { get;}        // may be null
-    }
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// Events
@@ -256,9 +249,7 @@ namespace EliteDangerousCore.JournalEvents
                 FDStationType = StationDefinitions.StarportTypeToEnum(st);    // may not be there
                 StationType = StationDefinitions.ToEnglish(FDStationType);
             }
-            Body = evt["Body"].Str();
-            BodyID = evt["BodyID"].IntNull();
-            BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
+
             DistFromStarLS = evt["DistFromStarLS"].DoubleNull();
 
             Latitude = evt["Latitude"].DoubleNull();
@@ -302,14 +293,23 @@ namespace EliteDangerousCore.JournalEvents
             OnFoot = evt["OnFoot"].BoolNull();
         }
 
+        public JournalLocation(DateTime utc, string sysname, long? sysaddr, 
+                                string bodyname, BodyDefinitions.BodyType bt, int? bodyid, 
+                                string stationname = null, string stationnameloc = null, StationDefinitions.StarportTypes fdstationtype = StationDefinitions.StarportTypes.Unknown,
+                                double? lat = null, double? lon = null) : base(utc,JournalTypeEnum.Location)
+        {
+            StarSystem = sysname; SystemAddress = sysaddr;
+            Body = bodyname;  BodyType = bt; BodyID = bodyid;
+            StationName = stationname; StationName_Localised = stationnameloc; FDStationType = fdstationtype; StationType = StationDefinitions.ToEnglish(fdstationtype);
+            Latitude = lat;
+            Longitude = lon;
+        }
+
         public bool Docked { get; set; }
         public string StationName { get; set; } // will be null if not docked, 
         public string StationName_Localised { get; set; } // will be null if not docked
         public string StationType { get; set; } // will be null if not docked, english name
         public StationDefinitions.StarportTypes FDStationType { get; set; } // will be Unknown if not docked
-        public string Body { get; set; }        // only if on planet
-        public int? BodyID { get; set; }        // only if on planet
-        public BodyDefinitions.BodyType BodyType { get; set; }  // only if on planet
         public double? DistFromStarLS { get; set; }
         public double? Latitude { get; set; }   // only if on planet
         public double? Longitude { get; set; }  // only if on planet
@@ -335,8 +335,10 @@ namespace EliteDangerousCore.JournalEvents
         // IBodyFeature
         public string BodyName => Body;
         public bool HasLatLong => Latitude != null && Longitude != null;
-        public string Name => StationName ?? Body;                  // if we docked, feature name is the station, else its the body
-        public string Name_Localised => StationName_Localised ?? Body;
+        
+        // if we docked, feature name is the station, also if bodytype is station (2022-05-13T12:25:14) its also a station so is a feature name
+        public string Name => StationName ?? (BodyType == BodyDefinitions.BodyType.Station ? Body : null);
+        public string Name_Localised => StationName_Localised ?? (BodyType == BodyDefinitions.BodyType.Station ? Body : null);
 
 
         public override string SummaryName(ISystem sys)     // Location
@@ -414,7 +416,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.FSDJump)]
-    public class JournalFSDJump : JournalLocOrJump, IShipInformation, IJournalJumpColor, IStarScan
+    public class JournalFSDJump : JournalLocOrJump, IShipInformation, IJournalJumpColor, IStarScan, IBodyFeature
     {
         public JournalFSDJump(JObject evt) : base(evt, JournalTypeEnum.FSDJump)
         {
@@ -424,10 +426,7 @@ namespace EliteDangerousCore.JournalEvents
             FuelUsed = evt["FuelUsed"].Double();
             FuelLevel = evt["FuelLevel"].Double();
             BoostUsed = evt["BoostUsed"].Int();         
-            Body = evt["Body"].StrNull();
-            BodyID = evt["BodyID"].IntNull();
             BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
-
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
 
@@ -448,12 +447,19 @@ namespace EliteDangerousCore.JournalEvents
         public int BoostUsed { get; set; }          // 1 = basic (25% x1.25), 2 = standard (50% x1.5), 3 = premium (100% x2 ), 4 = neutron (x4)
         public int MapColor { get; set; }
         public System.Drawing.Color MapColorARGB { get { return System.Drawing.Color.FromArgb(MapColor); } }
-        public string Body { get; set; }
-        public int? BodyID { get; set; }
-        public BodyDefinitions.BodyType BodyType { get; set; }
 
         public bool? Taxi { get; set; }
         public bool? Multicrew { get; set; }
+
+        // IBodyFeature
+        public string BodyName => Body;
+        public double? Latitude { get { return null; } set { } }
+        public double? Longitude { get { return null; } set { } }
+        public bool HasLatLong => false;
+        public string Name => null;
+        public string Name_Localised => null;
+        public long? MarketID => null;
+        public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
 
         public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".Tx(), StarSystem); }
         public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)

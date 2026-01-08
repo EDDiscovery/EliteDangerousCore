@@ -1095,9 +1095,6 @@ namespace EliteDangerousCore.JournalEvents
 
             StationServices = StationDefinitions.ReadServicesFromJson(evt["StationServices"]);
 
-            Body = evt["Body"].Str();
-            BodyID = evt["BodyID"].Int();
-            BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
             DistFromStarLS = evt["DistFromStarLS"].DoubleNull();
 
             JToken jm = evt["EDDMapColor"];
@@ -1112,9 +1109,6 @@ namespace EliteDangerousCore.JournalEvents
         public string StationName_Localised { get; set; }       
         public string StationType { get; set; } // friendly station type
         public StationDefinitions.StarportTypes FDStationType { get; set; } // fdname
-        public string Body { get; set; }
-        public int BodyID { get; set; }
-        public BodyDefinitions.BodyType BodyType { get; set; }
         public double? DistFromStarLS { get; set; }
 
         public long? MarketID { get; set; }

@@ -42,7 +42,8 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasLatLong => false;
         public string Name => null;
         public string Name_Localised => null;
-
+        public long? MarketID => null;
+        public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
 
         public override string SummaryName(ISystem sys)
         {
@@ -92,6 +93,9 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasLatLong => false;
         public string Name => null;
         public string Name_Localised => null;
+        public long? MarketID => null;
+
+        public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
 
         public override string SummaryName(ISystem sys)
         {

@@ -56,6 +56,8 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasLatLong => true;
         public string Name => null;
         public string Name_Localised => null;
+        public long? MarketID => null;
+        public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
 
         public override string GetInfo() 
         {
@@ -103,6 +105,8 @@ namespace EliteDangerousCore.JournalEvents
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
         public string Name => null;
         public string Name_Localised => null;
+        public long? MarketID => null;
+        public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
 
         public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
         {
