@@ -43,9 +43,16 @@ namespace EliteDangerousCore
         void ShipInformation(ShipList shp, string whereami, ISystem system);
     }
 
+    public interface IShipNaming
+    {
+        string ShipFD { get;}
+        string ShipType { get;  }       // english friendly name
+        ulong ShipId { get;  }
+    }
+
     public interface IStarScan
     {
-        void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus hes);
+        void AddStarScan(StarScan2.StarScan s, ISystem system);
     }
 
     // events containing feature information on a body
@@ -67,6 +74,7 @@ namespace EliteDangerousCore
         string Name_Localised { get; }      // name of installation/feature on body, docked name of station
         long? MarketID { get; }             // for docked on station
         StationDefinitions.StarportTypes FDStationType { get; } // valid on docked
+        string StationFaction { get; }             // for FSDJump and Docked.
     }
 
     // allows commonality of information between Location (when docked) and Docked events
@@ -89,6 +97,13 @@ namespace EliteDangerousCore
         AllegianceDefinitions.Allegiance StationAllegiance { get; }   // fdname
         StationDefinitions.StationServices[] StationServices { get; }   // may be null
         EconomyDefinitions.Economies[] StationEconomyList { get; }        // may be null
+    }
+
+    public interface ITaxiDropship
+    {
+        string DestinationSystem { get;  }
+        string DestinationLocation { get; }
+        string DestinationLocation_Localised { get; }       // no evidence
     }
 
     public interface IMissions

@@ -97,7 +97,7 @@ namespace EliteDangerousCore
 
             if (he.journalEntry is IStarScan ss)
             {
-                (he.journalEntry as IStarScan).AddStarScan(StarScan2, he.System, he.Status);
+                (he.journalEntry as IStarScan).AddStarScan(StarScan2, he.System);
             }
 
             if ((LastSystem == null || he.System.Name != LastSystem) && he.System.Name != "Unknown")   // if system is not last, we moved somehow (FSD, location, carrier jump), add
@@ -127,6 +127,11 @@ namespace EliteDangerousCore
                     // System.Diagnostics.Debug.WriteLine($"Star Jump gives star {stj.StarSystem} as class {stj.EDStarClass}");
                 }
             }
+
+            //if (he.Status.LastLocation != hlastprocessed?.Status.LastLocation)
+            //{
+            //    System.Diagnostics.Debug.WriteLine($"{je.EventTimeUTC} {je.EventTypeStr} : LL {he.Status.LastLocation?.GetType().Name} => `{he.Status.LastLocation?.StarSystem}`:`{he.Status.LastLocation?.BodyName}`:`{he.Status.LastLocation?.Name}` -> {he.Status.WhereAmI}");
+            //}
 
             hlastprocessed = he;
 

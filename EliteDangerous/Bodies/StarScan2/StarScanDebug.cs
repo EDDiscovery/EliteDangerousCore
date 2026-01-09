@@ -102,7 +102,7 @@ namespace EliteDangerousCore.StarScan2
                         System.Diagnostics.Debug.WriteLine($"\r\n{mhe.Item1} {he.EventTimeUTC} {he.EntryType}: in `{he.System.Name}`:{he.System.SystemAddress}");
                     }
 
-                    (he.journalEntry as IStarScan).AddStarScan(this, he.System, he.Status);
+                    (he.journalEntry as IStarScan).AddStarScan(this, he.System);
                     perstep?.Invoke(this,mhe);
                     DumpTree();
                 }

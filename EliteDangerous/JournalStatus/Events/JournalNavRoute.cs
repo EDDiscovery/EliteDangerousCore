@@ -18,6 +18,8 @@ using System.Linq;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.NavRoute)]
+
+
     public class JournalNavRoute : JournalEntry, IAdditionalFiles, IStarScan
     {
         public JournalNavRoute(JObject evt) : base(evt, JournalTypeEnum.NavRoute)
@@ -170,7 +172,7 @@ namespace EliteDangerousCore.JournalEvents
             return false;
         }
 
-        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             foreach (var star in Route.EmptyIfNull())
             {

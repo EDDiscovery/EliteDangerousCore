@@ -20,12 +20,12 @@ namespace EliteDangerousCore.JournalEvents
 {
     [System.Diagnostics.DebuggerDisplay("{ShipId} {Ship} {ShipModules.Count}")]
     [JournalEntryType(JournalTypeEnum.Loadout)]
-    public class JournalLoadout : JournalEntry, IShipInformation
+    public class JournalLoadout : JournalEntry, IShipInformation, IShipNaming
     {
         public JournalLoadout(JObject evt) : base(evt, JournalTypeEnum.Loadout)
         {
             ShipFD = JournalFieldNaming.NormaliseFDShipName(evt["Ship"].Str());
-            Ship = JournalFieldNaming.GetBetterShipName(ShipFD);
+            ShipType = JournalFieldNaming.GetBetterShipName(ShipFD);
             ShipId = evt["ShipID"].ULong();
             ShipName = evt["ShipName"].Str();
             ShipIdent = evt["ShipIdent"].Str();
@@ -88,7 +88,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public string Ship { get; set; }        // type, pretty name fer-de-lance
+        public string ShipType { get; set; }        // type, pretty name fer-de-lance
         public string ShipFD { get; set; }        // type,  fdname
         public ulong ShipId { get; set; }
         public string ShipName { get; set; } // : user-defined ship name
@@ -104,17 +104,18 @@ namespace EliteDangerousCore.JournalEvents
         public int? CargoCapacity { get; set; }   // 3.4
         public double? MaxJumpRange { get; set; }   // 3.4
 
+
         public List<ShipModule> ShipModules;
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
-            shp.Loadout(ShipId, Ship, ShipFD, ShipName, ShipIdent, ShipModules, HullValue ?? 0, ModulesValue ?? 0, Rebuy ?? 0,
+            shp.Loadout(ShipId, ShipType, ShipFD, ShipName, ShipIdent, ShipModules, HullValue ?? 0, ModulesValue ?? 0, Rebuy ?? 0,
                                 UnladenMass ?? 0, ReserveFuelCapacity ?? 0, HullHealth ?? 0, Hot);
         }
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Ship".Tx()+": ", Ship, "Name".Tx()+": ", ShipName, "Ident".Tx()+": ", ShipIdent, ";(Hot)".Tx(), Hot,
+            return BaseUtils.FieldBuilder.Build("Ship".Tx()+": ", ShipType, "Name".Tx()+": ", ShipName, "Ident".Tx()+": ", ShipIdent, ";(Hot)".Tx(), Hot,
                 "Modules".Tx()+": ", ShipModules.Count, "Hull Health: ;%;N1".Tx(), HullHealth, "Hull: ; cr;N0".Tx(), HullValue, "Modules: ; cr;N0".Tx(), ModulesValue, "Rebuy: ; cr;N0".Tx(), Rebuy);
         }
 

@@ -28,7 +28,7 @@ namespace EliteDangerousCore.JournalEvents
             BodyID = evt["BodyID"].Int();
         }
 
-        public string StarSystem { get; set; }          // very early ones missed this
+        public string StarSystem { get; set; }          // very early ones missed this, augmented by AddStarScan
         public long? SystemAddress { get; set; }        // always been there
         public string Body { get; set; }                // always been there
         public int BodyID { get; set; }                // always been there
@@ -45,6 +45,9 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID => null;
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
 
+        public string StationFaction => null;
+
+
         public override string SummaryName(ISystem sys)
         {
             string sn = base.SummaryName(sys);
@@ -58,9 +61,9 @@ namespace EliteDangerousCore.JournalEvents
             return "In ".Tx()+ StarSystem;
         }
 
-        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan s, ISystem system)
         {
-            if ( StarSystem == null)
+            if (StarSystem == null)
                 StarSystem = system.Name;
             if (SystemAddress == null)
                 SystemAddress = system.SystemAddress;
@@ -94,6 +97,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name => null;
         public string Name_Localised => null;
         public long? MarketID => null;
+        public string StationFaction => null;
 
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
 
@@ -109,7 +113,7 @@ namespace EliteDangerousCore.JournalEvents
             return "In ".Tx()+ StarSystem;
         }
 
-        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan s, ISystem system)
         {
             s.AddLocation(this, system);
         }
@@ -157,8 +161,9 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID { get; set; }         // appears 2018
         public double? Latitude { get; set; }       // 3.3
         public double? Longitude { get; set; }
-        public bool HasLatLong { get { return Latitude.HasValue && Longitude.HasValue; } }  
-        public long? SystemAddress { get; set; }    // from event, may be null, 2019, filled in by AddStarScan below
+        public bool HasLatLong { get { return Latitude.HasValue && Longitude.HasValue; } }
+        public string StarSystem { get; set; }      // augmented by AddStarScan below
+        public long? SystemAddress { get; set; }    // from event, may be null, 2019, augmented by AddStarScan below
         public int? BodyID { get; set; }            // from event, may be null as 2016 ones did not have it in. 2019 it came in
         public string BodyName { get; set; }        // from event, may be null
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
@@ -174,7 +179,7 @@ namespace EliteDangerousCore.JournalEvents
         public AllegianceDefinitions.Allegiance StationAllegiance { get; set; } //fdname, may be null
 
         // IBodyFeature 
-        public string StarSystem { get; set; }      // filled in by AddStarScan below
+        public string StationFaction => Faction;       
 
         public override string GetInfo()
         {
@@ -211,7 +216,7 @@ namespace EliteDangerousCore.JournalEvents
                 return null;
         }
 
-        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan s, ISystem system)
         {
             StarSystem = system.Name;
             if (SystemAddress == null)

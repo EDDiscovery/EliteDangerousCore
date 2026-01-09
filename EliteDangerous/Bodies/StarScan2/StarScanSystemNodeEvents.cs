@@ -752,14 +752,20 @@ namespace EliteDangerousCore.StarScan2
         public BodyNode AddDockingToBody(JournalDocked sc)
         {
             BodyNode bd = null;
-            if (sc.BodyID.HasValue)         // this makes it a settlement
+            if (sc.BodyID.HasValue && StationDefinitions.IsPlanetaryPort(sc.FDStationType))         // this makes it a settlement on a known body
             {
+              //  global::System.Diagnostics.Debug.WriteLine($"StarScan Docking on `{sc.BodyName}` station `{sc.StationName}` on body ID {sc.BodyID}");
+
                 bd = FindBody(sc.BodyID.Value);
                 if (bd == null)
                     return null;            // don't have it now, so return try again
             }
             else
+            {
+              //  global::System.Diagnostics.Debug.WriteLine($"StarScan Docking Orbital station `{sc.StationName}`");
+
                 bd = systemBodies;          // else we don't know where it is, so assign to main list
+            }
 
             //$"Add docking {sc.StationName} to body {bd.Name()}".DO();
             bd.AddDocking(sc);

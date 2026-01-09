@@ -106,8 +106,9 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised { get; set; } = null;
         public long? MarketID => null;
         public StationDefinitions.StarportTypes FDStationType { get; set; } = StationDefinitions.StarportTypes.Unknown;
+        public string StationFaction => null;
 
-        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan s, ISystem system)
         {
             if (SystemAddress == null)
                 SystemAddress = system.SystemAddress;

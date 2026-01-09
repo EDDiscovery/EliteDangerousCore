@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright 2016-2025 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -13,28 +13,29 @@
  * 
  *
  */
+
 using QuickJSON;
-using System;
-using System.Linq;
-using System.Text;
 
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.BookDropship)]
-    public class JournalBookDropship : JournalEntry
+    public class JournalBookDropship : JournalEntry, ITaxiDropship
     {
         public JournalBookDropship(JObject evt) : base(evt, JournalTypeEnum.BookDropship)
         {
             DestinationSystem = evt["DestinationSystem"].StrNull();
-            DestinationLocation = evt["DestinationLocation"].StrNull();
+            var snl = JournalFieldNaming.GetStationNames(evt, "DestinationLocation");
+            DestinationLocation = snl.Item1;
+            DestinationLocation_Localised = snl.Item2;
         }
 
         public string DestinationSystem { get; set; }
         public string DestinationLocation { get; set; }
+        public string DestinationLocation_Localised { get; set; }       // no evidence
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", DestinationSystem, "<: ", DestinationLocation );
+            return BaseUtils.FieldBuilder.Build("", DestinationSystem, "<: ", DestinationLocation_Localised );
         }
     }
 
@@ -74,7 +75,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.BookTaxi)]
-    public class JournalBookTaxi : JournalEntry, ILedgerJournalEntry
+    public class JournalBookTaxi : JournalEntry, ILedgerJournalEntry, ITaxiDropship
     {
         public JournalBookTaxi(JObject evt) : base(evt, JournalTypeEnum.BookTaxi)
         {

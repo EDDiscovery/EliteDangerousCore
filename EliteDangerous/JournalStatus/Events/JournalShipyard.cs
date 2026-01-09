@@ -124,12 +124,12 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.ShipyardBuy)]
-    public class JournalShipyardBuy : JournalEntry, ILedgerJournalEntry, IShipInformation
+    public class JournalShipyardBuy : JournalEntry, ILedgerJournalEntry, IShipInformation, IShipNaming
     {
         public JournalShipyardBuy(JObject evt) : base(evt, JournalTypeEnum.ShipyardBuy)
         {
-            ShipTypeFD = JournalFieldNaming.NormaliseFDShipName(evt["ShipType"].Str());
-            ShipType = JournalFieldNaming.GetBetterShipName(ShipTypeFD);
+            ShipFD = JournalFieldNaming.NormaliseFDShipName(evt["ShipType"].Str());
+            ShipType = JournalFieldNaming.GetBetterShipName(ShipFD);
             ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             ShipPrice = evt["ShipPrice"].Long();
 
@@ -160,10 +160,11 @@ namespace EliteDangerousCore.JournalEvents
             MarketID = evt["MarketID"].LongNull();
         }
 
-        public string ShipTypeFD { get; set; }
+        public string ShipFD { get; set; }
         public string ShipType { get; set; }            // english
         public string ShipType_Localised { get; set; }  // only present on later events
         public long ShipPrice { get; set; }
+        public ulong ShipId => ulong.MaxValue;          // not in event, stupid
 
         public string StoreOldShipFD { get; set; }      // may be null
         public string StoreOldShip { get; set; }        // may be null
@@ -210,7 +211,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.ShipyardNew)]
-    public class JournalShipyardNew : JournalEntry, IShipInformation
+    public class JournalShipyardNew : JournalEntry, IShipInformation, IShipNaming
     {
         public JournalShipyardNew(JObject evt) : base(evt, JournalTypeEnum.ShipyardNew)
         {
@@ -302,7 +303,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.ShipyardSwap)]
-    public class JournalShipyardSwap : JournalEntry, IShipInformation
+    public class JournalShipyardSwap : JournalEntry, IShipInformation, IShipNaming
     {
         public JournalShipyardSwap(JObject evt) : base(evt, JournalTypeEnum.ShipyardSwap)
         {

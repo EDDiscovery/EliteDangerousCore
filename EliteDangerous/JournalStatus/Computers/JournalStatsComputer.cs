@@ -188,7 +188,7 @@ namespace EliteDangerousCore
 
                         if (j.InShip)       // if in ship
                         {
-                            this.currentshipid = j.Ship + ":" + j.ShipId.ToStringInvariant();
+                            this.currentshipid = j.ShipType + ":" + j.ShipId.ToStringInvariant();
                             // System.Diagnostics.Debug.WriteLine("Stats Loadgame ship details {0} {1} {2} {3}", j.EventTimeUTC, j.ShipFD, j.ShipName, j.ShipIdent);
 
                             if (!this.Ships.TryGetValue(this.currentshipid, out var cls))
@@ -204,7 +204,7 @@ namespace EliteDangerousCore
                 case JournalTypeEnum.Loadout:
                     {
                         var j = ev as JournalLoadout;
-                        this.currentshipid = j.Ship + ":" + j.ShipId.ToStringInvariant();
+                        this.currentshipid = j.ShipType + ":" + j.ShipId.ToStringInvariant();
                         //System.Diagnostics.Debug.WriteLine("Stats loadout ship details {0} {1} {2} {3} now {4}", j.EventTimeUTC, j.ShipFD, j.ShipName, j.ShipIdent, this.currentshipid);
                         if (!this.Ships.TryGetValue(this.currentshipid, out var cls))
                             cls = new JournalStats.ShipInfo();

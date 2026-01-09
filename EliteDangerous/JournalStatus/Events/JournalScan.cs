@@ -449,7 +449,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised => null;
         public long? MarketID => null;
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
-
+        public string StationFaction => null;
 
         // Create the entry from JSON
 
@@ -756,7 +756,7 @@ namespace EliteDangerousCore.JournalEvents
             };
         }
 
-        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             s.AddJournalScan(this, system); 
         }

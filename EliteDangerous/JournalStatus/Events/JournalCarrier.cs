@@ -1126,6 +1126,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasLatLong => false;
         public string Name => StationName;
         public string Name_Localised => StationName_Localised;
+        public string StationFaction => null;
 
         public override string SummaryName(ISystem sys)
         {
@@ -1134,7 +1135,7 @@ namespace EliteDangerousCore.JournalEvents
             else
                 return string.Format("Carrier jumped to {0}".Tx(), Body);
         }
-        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }

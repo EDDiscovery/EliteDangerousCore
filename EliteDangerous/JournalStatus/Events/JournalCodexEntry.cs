@@ -113,7 +113,7 @@ namespace EliteDangerousCore.JournalEvents
                    Longitude == other.Longitude;
         }
 
-        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             s.AddCodexEntryToSystem(this,system);
         }

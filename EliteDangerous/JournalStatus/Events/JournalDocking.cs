@@ -90,8 +90,7 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID { get; set; }
         public StationDefinitions.Classification MarketClass() { return MarketID != null ? StationDefinitions.Classify(MarketID.Value, FDStationType) : StationDefinitions.Classification.Unknown; }
         public bool CockpitBreach { get; set; }
-        public string Faction { get; set; }
-        public string StationFaction { get => Faction; }            // alias
+        public string Faction { get; set; }                         // station faction
         public FactionDefinitions.State FactionState { get; set; }       // FDName
         public FactionDefinitions.State StationFactionState { get => FactionState; }    // alias for commonality with Location
         public string StationFactionStateTranslated { get; set; }       // alias for commonality with Location
@@ -115,16 +114,20 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool IsTrainingEvent { get; private set; }
 
+        // ILocDocked, IBodyFeature
+
+        public string StationFaction { get => Faction; }            // alias for Faction here
 
         // IBodyFeature
-        public BodyDefinitions.BodyType BodyType { get; set; } = BodyDefinitions.BodyType.Station;      // Or Planet, if its on a planet
-        public string BodyName { get; set; }        // augmented by AddStarScan
-        public int? BodyID { get; set; }            // augmented by AddStarScan
-        public double? Latitude { get; set; }       // augmented by AddStarScan
-        public double? Longitude { get; set; }      // augmented by AddStarScan
+        public string BodyName { get; set; }        // augmented by Historyentrystatus
+        public BodyDefinitions.BodyType BodyType { get; set; } = BodyDefinitions.BodyType.Unknown; 
+        public int? BodyID { get; set; }            // 
+        public double? Latitude { get; set; }       // 
+        public double? Longitude { get; set; }      // 
         public bool HasLatLong => Latitude != null && Longitude != null;
         public string Name => StationName;
         public string Name_Localised => StationName_Localised;
+        public string AssociatedFaction => Faction;
 
 
         // these are EconomyDefinitions.Economies
@@ -192,16 +195,8 @@ namespace EliteDangerousCore.JournalEvents
                 stats.Docking(system,this);
         }
 
-        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus hes)
+        public void AddStarScan(StarScan s, ISystem system)
         {
-            if( BodyType == BodyDefinitions.BodyType.Planet)
-            {
-                BodyID = hes.BodyID;
-                BodyName = hes.BodyName;
-                Latitude = hes.Latitude;
-                Longitude = hes.Longitude;  
-            }
-
             s.AddDocking(this, system);
         }
     }

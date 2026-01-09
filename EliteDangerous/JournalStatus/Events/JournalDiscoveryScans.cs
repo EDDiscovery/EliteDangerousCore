@@ -58,7 +58,7 @@ namespace EliteDangerousCore.JournalEvents
         public int NonBodyCount { get; set; }
         public string SystemName { get; set; }      // not always present, may be null
         public long? SystemAddress { get; set; }
-        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             s.SetFSSDiscoveryScan(BodyCount, NonBodyCount, system);
         }
@@ -127,7 +127,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Count of other signals")]
         public int CountOtherSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Other).Count() ?? 0; } }
 
-        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             s.AddFSSSignalsDiscovered(this);
         }
@@ -265,7 +265,8 @@ namespace EliteDangerousCore.JournalEvents
         public int BodyID { get; set; }             // always there
         public int ProbesUsed { get; set; }         // always there
         public int EfficiencyTarget { get; set; }   // always there
-        public long? SystemAddress { get; set; }    // 3.5, filled in by AddStarScan for previous ones
+        public long? SystemAddress { get; set; }    // 3.5, augmented by AddStarScan for previous ones
+        public string StarSystem { get; set; }      // augmented by AddStarScan
 
         // IBodyNameAndID
         public BodyDefinitions.BodyType BodyType { get; set; }
@@ -277,10 +278,9 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised => null;
         public long? MarketID => null;
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
+        public string StationFaction => null;
 
-        public string StarSystem { get; set; }      // filled in by AddStarScan
-
-        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             StarSystem = system.Name;
             if (SystemAddress == null)
@@ -381,6 +381,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised => null;
         public long? MarketID => null;
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
+        public string StationFaction => null;
 
         public string StarSystem { get; set; }      // filled in by Scan system below
 
@@ -525,7 +526,7 @@ namespace EliteDangerousCore.JournalEvents
             return showit && contains > 0 ? (object)contains : "";
         }
 
-        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             StarSystem = system.Name;
             if (SystemAddress == null)
@@ -589,6 +590,8 @@ namespace EliteDangerousCore.JournalEvents
 
         // JSON export ZMQ, DLL, Web via JournalScan
 
+        [PropertyNameAttribute("Frontier system name")]
+        public string StarSystem { get; set; }          // not in JSON, augmented by AddStarScan
         [PropertyNameAttribute("Frontier system address")]
         public long? SystemAddress { get; set; }        // always set
         [PropertyNameAttribute("Body name")]
@@ -653,11 +656,12 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised => null;
         public long? MarketID => null;
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
+        public string StationFaction => null;
 
-        public string StarSystem {get;set;}
 
-        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
+            StarSystem = system.Name;
             s.AddFSSBodySignalsToBody(this, system);
         }
 
@@ -742,7 +746,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Estimated or potential value cr")]
         public int Value { get { return EstimatedValue.HasValue ? EstimatedValue.Value : PotentialEstimatedValue.HasValue ? PotentialEstimatedValue.Value : 0; } }
 
-        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             //System.Diagnostics.Debug.WriteLine($"Add ScanOrganic {ScanType} {Genus_Localised} {Species_Localised}");
             s.AddScanOrganic(this, system);

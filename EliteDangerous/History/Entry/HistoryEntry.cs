@@ -70,7 +70,7 @@ namespace EliteDangerousCore
         public int TravelledJumps { get { return travelStatus.TravelledJumps(journalEntry.EventTimeUTC); } }
         public int TravelledMissingJumps { get { return travelStatus.TravelledMissingjump; } }
         public HistoryEntryStatus Status { get { return entryStatus; } }
-        public string WhereAmI { get { return entryStatus.StationName_Localised ?? entryStatus.BodyName ?? "Unknown"; } }
+        public string WhereAmI => entryStatus.WhereAmI;
 
         public int Visits { get; private set; }                                     // set by Historylist, visits up to this point in time
 
@@ -272,7 +272,7 @@ namespace EliteDangerousCore
             if (ret == null)
             {
                 JournalEntry.FillInformationData fid = new JournalEntry.FillInformationData()
-                { System = this.System, WhereAmI = this.WhereAmI, BodyName = this.Status.BodyName, NextJumpSystemName = this.Status.FSDJumpNextSystemName, NextJumpSystemAddress = this.Status.FSDJumpNextSystemAddress };
+                { System = this.System, WhereAmI = this.WhereAmI, BodyName = this.Status.WhereAmI, NextJumpSystemName = this.Status.FSDJumpNextSystemName, NextJumpSystemAddress = this.Status.FSDJumpNextSystemAddress };
 
                 ret = journalEntry.GetInfo(fid);
             }
@@ -286,7 +286,7 @@ namespace EliteDangerousCore
             if (ret == null)
             {
                 JournalEntry.FillInformationData fid = new JournalEntry.FillInformationData()
-                { System = this.System, WhereAmI = this.WhereAmI, BodyName = this.Status.BodyName, NextJumpSystemName = this.Status.FSDJumpNextSystemName, NextJumpSystemAddress = this.Status.FSDJumpNextSystemAddress };
+                { System = this.System, WhereAmI = this.WhereAmI, BodyName = this.Status.WhereAmI, NextJumpSystemName = this.Status.FSDJumpNextSystemName, NextJumpSystemAddress = this.Status.FSDJumpNextSystemAddress };
 
                 ret = journalEntry.GetDetailed(fid);
             }

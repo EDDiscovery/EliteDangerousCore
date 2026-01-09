@@ -79,7 +79,7 @@ namespace EliteDangerousCore.JournalEvents
 
     [JournalEntryType(JournalTypeEnum.LoadGame)]
     [System.Diagnostics.DebuggerDisplay("LoadGame {LoadGameCommander} {ShipId} {Ship} {GameMode}")]
-    public class JournalLoadGame : JournalEntry, ILedgerJournalEntry, IShipInformation
+    public class JournalLoadGame : JournalEntry, ILedgerJournalEntry, IShipInformation, IShipNaming
     {
         const string UnknownShip = "Unknown";
 
@@ -92,31 +92,31 @@ namespace EliteDangerousCore.JournalEvents
 
             if (ShipFD.Length == 0)      // Vega logs show no ship on certain logs.. handle it to prevent warnings.
             {
-                Ship = Ship_Localised = ShipFD = UnknownShip;
+                ShipType = Ship_Localised = ShipFD = UnknownShip;
             }
             else
             {
                 if (ItemData.IsShipSRVOrFighter(ShipFD))
                 {
                     ShipFD = JournalFieldNaming.NormaliseFDShipName(ShipFD);
-                    Ship = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
+                    ShipType = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
                 }
                 else if ( ItemData.IsSuit(ShipFD))      
                 {
-                    Ship = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
+                    ShipType = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
                 }
                 else if ( ItemData.IsTaxi(ShipFD))
                 {
-                    Ship = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD.Replace("_taxi",""));
+                    ShipType = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD.Replace("_taxi",""));
                 }
                 else
                 {
                     System.Diagnostics.Trace.WriteLine($"*** Loadout in unknown ship type {ShipFD}");
-                    Ship = ShipFD.SplitCapsWordFull();  // emergency back up
+                    ShipType = ShipFD.SplitCapsWordFull();  // emergency back up
                 }
             }
 
-            Ship_Localised = Ship_Localised.Alt(Ship);
+            Ship_Localised = Ship_Localised.Alt(ShipType);
 
             ShipId = evt["ShipID"].ULong();
             StartLanded = evt["StartLanded"].Bool();
@@ -142,7 +142,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string LoadGameCommander { get; set; }
-        public string Ship { get; set; }        // friendly name, fer-de-lance, from our db.  Older Load games did not have Localised
+        public string ShipType { get; set; }        // friendly name, fer-de-lance, from our db.  Older Load games did not have Localised
         public string Ship_Localised { get; set; }   // localised
         public string ShipFD { get; set; }        // type, fd name
         public ulong ShipId { get; set; }
@@ -176,7 +176,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship".Tx()+": ", Ship, "Name".Tx()+": ", ShipName, "Ident".Tx()+": ", ShipIdent, "Credits: ;;N0".Tx(), Credits);
+            return BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship".Tx()+": ", ShipType, "Name".Tx()+": ", ShipName, "Ident".Tx()+": ", ShipIdent, "Credits: ;;N0".Tx(), Credits);
         }
         public override string GetDetailed()
         {
@@ -195,9 +195,9 @@ namespace EliteDangerousCore.JournalEvents
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             // only call if in these types from 4.0 we can be on foot or in a taxi
-            if (Ship != UnknownShip && InShipSRVOrFighter)
+            if (ShipType != UnknownShip && InShipSRVOrFighter)
             {
-                shp.LoadGame(ShipId, Ship, ShipFD, ShipName, ShipIdent, FuelLevel, FuelCapacity);
+                shp.LoadGame(ShipId, ShipType, ShipFD, ShipName, ShipIdent, FuelLevel, FuelCapacity);
             }
         }
 

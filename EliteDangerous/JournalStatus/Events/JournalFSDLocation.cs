@@ -340,7 +340,6 @@ namespace EliteDangerousCore.JournalEvents
         public string Name => StationName ?? (BodyType == BodyDefinitions.BodyType.Station ? Body : null);
         public string Name_Localised => StationName_Localised ?? (BodyType == BodyDefinitions.BodyType.Station ? Body : null);
 
-
         public override string SummaryName(ISystem sys)     // Location
         {
             if (Docked)
@@ -405,7 +404,7 @@ namespace EliteDangerousCore.JournalEvents
             return sb.Length>0 ? sb.ToString() : null;
         }
 
-        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             var sys = new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z);
             s.GetOrAddSystem( sys);     // we use our data to fill in 
@@ -460,9 +459,10 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised => null;
         public long? MarketID => null;
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
+        public string StationFaction => null;
 
         public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".Tx(), StarSystem); }
-        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
         }
@@ -557,7 +557,7 @@ namespace EliteDangerousCore.JournalEvents
         public int? RemainingJumpsInRoute { get; set; }
         public string FriendlyStarClass { get; set; }
 
-        public void AddStarScan(StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan s, ISystem system)
         {
             s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress));
         }
@@ -604,7 +604,7 @@ namespace EliteDangerousCore.JournalEvents
                 return "Supercruise".Tx();
         }
 
-        public void AddStarScan(StarScan2.StarScan s, ISystem system, HistoryEntryStatus _)
+        public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             if (IsHyperspace)
             {
