@@ -32,11 +32,12 @@ namespace EliteDangerousCore.JournalEvents
         public string Name { get; set; }
         public int SquadronID { get; set; }
 
-        protected RankDefinitions.SquadronRank GetRank(JToken evt, bool newrank, string idfield)
+        protected object GetRank(JToken evt, bool newrank, string idfield)
         {
-            //bool oldrank = EDCommander.IsLegacyCommander(CommanderId) || EventTimeUTC < EliteReleaseDates.Vanguards;
-            int value = evt[idfield].Int() + (newrank ? (int)RankDefinitions.SquadronRank.Rank0 : 0);
-            return (RankDefinitions.SquadronRank)value;
+            if (newrank)
+                return (RankDefinitions.SquadronRankVanguards)evt[idfield].Int();
+            else
+                return (RankDefinitions.SquadronRankV1)evt[idfield].Int();
         }
     }
 
@@ -134,8 +135,8 @@ namespace EliteDangerousCore.JournalEvents
             NewRank = GetRank(evt, newformat, "NewRank");
 
             // Vanguards + have these fields, older ones don't, but fill in
-            OldRankName = evt["OldRankName"].Str(RankDefinitions.FriendlyName(OldRank));
-            NewRankName = evt["NewRankName"].Str(RankDefinitions.FriendlyName(NewRank));
+            OldRankName = evt["OldRankName"].Str(RankDefinitions.FriendlySquadronRankName(OldRank));
+            NewRankName = evt["NewRankName"].Str(RankDefinitions.FriendlySquadronRankName(NewRank));
 
             OldRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["OldRankName_Localised"].Str(), OldRankName);
             NewRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["NewRankName_Localised"].Str(), NewRankName);
@@ -147,8 +148,8 @@ namespace EliteDangerousCore.JournalEvents
                         "New: ".T(EDCTx.JournalEntry_New), NewRankName_Localised);
         }
 
-        public RankDefinitions.SquadronRank OldRank { get; set; }
-        public RankDefinitions.SquadronRank NewRank { get; set; }
+        public object OldRank { get; set; }
+        public object NewRank { get; set; }
         public string OldRankName { get; set; }                 // always filled,even for older squadrons
         public string NewRankName { get; set; }
         public string OldRankName_Localised { get; set; }
@@ -186,11 +187,11 @@ namespace EliteDangerousCore.JournalEvents
         public JournalSquadronStartup(JObject evt) : base(evt, JournalTypeEnum.SquadronStartup)
         {
             CurrentRank = GetRank(evt, evt.Contains("CurrentRankName"), "CurrentRank");
-            CurrentRankName = evt["CurrentRankName"].Str(RankDefinitions.FriendlyName(CurrentRank));
+            CurrentRankName = evt["CurrentRankName"].Str(RankDefinitions.FriendlySquadronRankName(CurrentRank));
             CurrentRankName_Localised = JournalFieldNaming.CheckLocalisation(evt["CurrentRankName_Localised"].Str(), CurrentRankName);
         }
 
-        public RankDefinitions.SquadronRank CurrentRank { get; set; }
+        public object CurrentRank { get; set; }
         public string CurrentRankName { get; set; }     // always filled in
         public string CurrentRankName_Localised { get; set; }     // always filled in
 

@@ -29,6 +29,7 @@ namespace EliteDangerousCore
         public static DateTime OdysseyType8 = new DateTime(2024, 8, 7, 12, 0, 0, DateTimeKind.Utc);
         public static DateTime Ascendency = new DateTime(2024, 10, 22, 12, 0, 0, DateTimeKind.Utc);         // power play 2.0
         public static DateTime Trailblazers = new DateTime(2025, 2, 26, 12, 0, 0, DateTimeKind.Utc);        // colonisation
+        public static DateTime Vanguards = new DateTime(2025, 8, 19, 12, 0, 0, DateTimeKind.Utc);            // vanguards, squadrons
         public static DateTime GameEndTime = new DateTime(2999, 12, 14, 23, 59, 59, DateTimeKind.Utc);      // not according to the forums, its already dead!
     }
     public static class EliteFixesDates
