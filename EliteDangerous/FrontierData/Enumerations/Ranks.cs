@@ -199,7 +199,7 @@ namespace EliteDangerousCore
         }
 
 
-        public enum SquadronRankV1       
+        public enum SquadronRank       // these, as of 1/11/2018, are provisional
         {
             Unknown = -1,
             Leader = 0,
@@ -207,36 +207,31 @@ namespace EliteDangerousCore
             Officer = 2,
             Agent = 3,
             Rookie = 4,
-        }
 
-        public enum SquadronRankVanguards
-        {
-            Unknown = -1,
-            SquadronLeader = 0,
-            CommandStaff = 1,
-            OperationsOfficer = 2,
-            SpecialistOfficer = 3,
-            SeniorOfficer = 4,
-            Officer = 5,
-            TraineeeOfficer = 6,
-            SpecialistAgent = 7,
-            SeniorAgent = 8,
-            Agent = 9,
-            TraineeAgent = 10,
-            SeniorIntern = 11,
-            Inter = 12,
-            PossibleNameChange = 13,
-            NewJoiner = 14,
-        }
+            Rank0 = 10,                     // New vanguard ranks
+            Rank1 = 11,
+            Rank2 = 12,
+            Rank3 = 13,
+            Rank4 = 14,
+            Rank5 = 15,
+            Rank6 = 16,
+            Rank7 = 17,
+            Rank8 = 18,
+            Rank9 = 10,
+            Rank10 = 20,
+            Rank11 = 21,
+            Rank12 = 22,
+            Rank13 = 23,
+            Rank14 = 24,
 
-        public static string FriendlySquadronRankName(object cr)
+        }
+        public static string FriendlyName(SquadronRank cr)
         {
-            if (cr is SquadronRankVanguards srv)
-                return srv.ToString().SplitCapsWordFull();
-            else if (cr is SquadronRankV1 v1)
-                return v1.ToString().Replace("_", " ");
-            else
-                return "Unknown";
+            return cr.ToString().Replace("_", " ");
+        }
+        public static string FriendlyName(SquadronRank? cr, string unknown = "?")
+        {
+            return cr != null ? cr.ToString().Replace("_", " ") : unknown;
         }
 
         public enum ExoBiologistRank
