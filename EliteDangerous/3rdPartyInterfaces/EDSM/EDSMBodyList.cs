@@ -172,7 +172,7 @@ namespace EliteDangerousCore.EDSM
 
                         var cdata = new BodiesResults(sys, bodies);
                         if (sys.Name.HasChars())
-                            BodyCache[sys.Name] = cdata;
+                            BodyCache[sys.Name.ToLowerInvariant()] = cdata;
                         if (sys.SystemAddress.HasValue)
                             BodyCache[sys.SystemAddress.Value.ToStringInvariant()] = cdata;
 
@@ -183,7 +183,7 @@ namespace EliteDangerousCore.EDSM
                     {
                         //System.Diagnostics.Debug.WriteLine($"EDSM Web Lookup complete no info {sys.Name}");
                         if (sys.Name.HasChars())
-                            BodyCache[sys.Name] = null;
+                            BodyCache[sys.Name.ToLowerInvariant()] = null;
                         if (sys.SystemAddress.HasValue)
                             BodyCache[sys.SystemAddress.Value.ToStringInvariant()] = null;
                     }

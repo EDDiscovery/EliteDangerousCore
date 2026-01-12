@@ -52,7 +52,7 @@ namespace EliteDangerousCore
         public object Tag { get; set; }
 
         [QuickJSON.JsonIgnore()]
-        public string Key { get { return SystemAddress != null ? SystemAddress.ToStringInvariant() : Name; } }
+        public string Key { get { return SystemAddress != null ? SystemAddress.ToStringInvariant() : Name.ToLowerInvariant(); } }
 
         public SystemClassBase()
         {

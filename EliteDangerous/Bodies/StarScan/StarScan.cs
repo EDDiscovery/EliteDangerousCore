@@ -156,7 +156,7 @@ namespace EliteDangerousCore
                         foreach (JournalScan js in lookupres.Bodies)
                         {
                             js.BodyDesignation = BodyDesignations.GetBodyDesignation(js, lookupres.System.Name);
-                            System.Diagnostics.Debug.WriteLine($"FindSystemASync spansh add {lookupres.System.Name} {lookupres.System.SystemAddress} {js.BodyName}");
+                            //System.Diagnostics.Debug.WriteLine($"FindSystemASync spansh add {lookupres.System.Name} {lookupres.System.SystemAddress} {js.BodyName}");
                             ProcessJournalScan(js, lookupres.System, true);
                         }
 

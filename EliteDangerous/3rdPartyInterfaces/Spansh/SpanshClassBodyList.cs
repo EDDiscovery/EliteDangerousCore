@@ -111,12 +111,14 @@ namespace EliteDangerousCore.Spansh
                     // System.Threading.Thread.Sleep(2000); //debug - delay to show its happening 
                     // System.Diagnostics.Debug.WriteLine("EDSM Cache check " + sys.EDSMID + " " + sys.SystemAddress + " " + sys.Name);
 
-                    if (BodyCache.TryGetValue(sys.Key, out BodiesResults we))
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Spansh Body Cache hit on {sys.Name} {sys.SystemAddress} {we != null}");
-                        // will return null, looked up not found, or bodies results found
-                        return we;
-                    }
+                    //if (BodyCache.TryGetValue(sys.Key, out BodiesResults we))
+                    //{
+                    //    System.Diagnostics.Debug.WriteLine($"Spansh Body Cache hit on {sys.Name} {sys.SystemAddress} {sys.Key} {we != null}");
+                    //    // will return null, looked up not found, or bodies results found
+                    //    return we;
+                    //}
+
+                   // System.Diagnostics.Debug.WriteLine($"Spansh NO Cache hit on {sys.Name} {sys.SystemAddress} {sys.Key}");
 
                     JObject spanshdump = GetSpanshDumpFromCache(sys);
                     bool lookedup = false;
@@ -135,7 +137,7 @@ namespace EliteDangerousCore.Spansh
                             // System.Diagnostics.Debug.WriteLine($"Spansh Web Lookup complete no info {sys.Name} {sys.SystemAddress}");
                             // mark that we tried to lookup but we could not get any valid data
                             if (sys.Name.HasChars())
-                                BodyCache[sys.Name] = null;
+                                BodyCache[sys.Name.ToLowerInvariant()] = null;
                             if (sys.SystemAddress.HasValue)
                                 BodyCache[sys.SystemAddress.Value.ToStringInvariant()] = null;
                         }
@@ -174,11 +176,11 @@ namespace EliteDangerousCore.Spansh
                             // place the body in the cache under both its name and its system address. We return system normalised, bodies and bodycount (if known)
                             var cdata = new BodiesResults(sys, bodies, bodycount);
                             if (sys.Name.HasChars())
-                                BodyCache[sys.Name] = cdata;
+                                BodyCache[sys.Name.ToLowerInvariant()] = cdata;
                             if (sys.SystemAddress.HasValue)
                                 BodyCache[sys.SystemAddress.Value.ToStringInvariant()] = cdata;
 
-                            // System.Diagnostics.Debug.WriteLine($"Spansh Web/File Lookup complete {sys.Name} {sys.SystemAddress} {bodies.Count} cache {fromcache}");
+                           // System.Diagnostics.Debug.WriteLine($"Spansh Web/File Lookup complete {sys.Name} {sys.SystemAddress} {bodies.Count} ");
                             return cdata;
                         }
                         else
