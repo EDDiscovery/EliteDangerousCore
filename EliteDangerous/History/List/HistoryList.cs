@@ -128,10 +128,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            //if (he.Status.LastLocation != hlastprocessed?.Status.LastLocation)
-            //{
-            //    System.Diagnostics.Debug.WriteLine($"{je.EventTimeUTC} {je.EventTypeStr} : LL {he.Status.LastLocation?.GetType().Name} => `{he.Status.LastLocation?.StarSystem}`:`{he.Status.LastLocation?.BodyName}`:`{he.Status.LastLocation?.Name}` -> {he.Status.WhereAmI}");
-            //}
+          //  if (he.Status.CurrentLocation != hlastprocessed?.Status.CurrentLocation) System.Diagnostics.Debug.WriteLine($"{je.EventTimeUTC} {je.EventTypeStr} : LL {he.Status.CurrentLocation?.GetType().Name} => `{he.Status.CurrentLocation?.StarSystem}`:`{he.Status.CurrentLocation?.BodyName}`:`{he.Status.CurrentLocation?.Name}` -> {he.Status.WhereAmI}");
 
             hlastprocessed = he;
 

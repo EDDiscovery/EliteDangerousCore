@@ -55,10 +55,10 @@ namespace EliteDangerousCore
         public object Tag { get; set; }
 
         [QuickJSON.JsonIgnore()]
-        public string Key { get { return SystemAddress.HasValue ? SystemAddress.ToStringInvariant() : Name; } }
+        public string Key { get { return SystemAddress.HasValue ? SystemAddress.ToStringInvariant() : Name.ToLowerInvariant(); } }
 
         [QuickJSON.JsonIgnore()]
-        public string NameAddress { get { return Name + ":" + (SystemAddress.HasValue ? SystemAddress.ToStringInvariant() : ""); } }
+        public string NameAddress { get { return Name.ToLowerInvariant() + ":" + (SystemAddress.HasValue ? SystemAddress.ToStringInvariant() : ""); } }
 
         public SystemClassBase()
         {

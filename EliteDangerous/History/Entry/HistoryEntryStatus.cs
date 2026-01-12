@@ -17,7 +17,7 @@ using System.Windows.Forms;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("HES {TravelState} {BodyName} {StationName} ")]
+    [System.Diagnostics.DebuggerDisplay("HES {TravelState} `{CurrentLocation?.StarSystem}` : `{CurrentLocation?.BodyName}` : `{CurrentLocation?.Name}` ")]
     public class HistoryEntryStatus
     {
         public enum TravelStateType {
@@ -243,7 +243,7 @@ namespace EliteDangerousCore
                         JournalDocked jdocked = (JournalDocked)je;
                         //System.Diagnostics.Debug.WriteLine("{0} Docked {1} {2} {3}", jdocked.EventTimeUTC, jdocked.StationName, jdocked.StationType, jdocked.Faction);
 
-                        if ( prev.HasBodyID)        // Augment the docked with any body info we have got
+                        if ( prev.HasBodyID && prev.BodyName != null)        // Augment the docked with any body info we have got
                         {
                             jdocked.BodyID = prev.BodyID;
                             jdocked.BodyName = prev.BodyName;
@@ -286,30 +286,6 @@ namespace EliteDangerousCore
                         };
                         break;
                     }
-                case JournalTypeEnum.SupercruiseExit:
-                    {
-                        JournalSupercruiseExit jsexit = (JournalSupercruiseExit)je;
-                        hes = new HistoryEntryStatus(prev)
-                        {
-                            TravelState = jsexit.Taxi == true ? (prev.TravelState == TravelStateType.DropShipSupercruise ? TravelStateType.DropShipNormalSpace : TravelStateType.TaxiNormalSpace) :
-                                                jsexit.Multicrew == true ? TravelStateType.MulticrewNormalSpace :
-                                                        TravelStateType.NormalSpace,
-
-                            // from 2016, SE had body and bodytype. Keep last location
-                            CurrentLocation = new JournalSupercruiseExit(jsexit.EventTimeUTC, sys.Name, sys.SystemAddress,
-                                                              jsexit.Body ?? prev.CurrentLocation?.BodyName,
-                                                              jsexit.BodyType != BodyDefinitions.BodyType.Unknown ? jsexit.BodyType : (prev.CurrentLocation?.BodyType ?? BodyDefinitions.BodyType.Unknown),
-                                                              jsexit.BodyID ?? prev.BodyID,
-                                                              prev.CurrentLocation?.Name,
-                                                              prev.CurrentLocation?.Name_Localised,
-                                                              prev.CurrentLocation?.FDStationType ?? StationDefinitions.StarportTypes.Unknown,
-                                                              jsexit.Taxi, jsexit.Multicrew),
-
-                            LastDockingGranted = null,
-                        };
-
-                        break;
-                    }
 
                 case JournalTypeEnum.StartJump:
                     {
@@ -326,8 +302,6 @@ namespace EliteDangerousCore
 
                 case JournalTypeEnum.LoadGame:
                     JournalLoadGame jlg = je as JournalLoadGame;
-
-                    System.Diagnostics.Debug.WriteLine($"Load game {jlg.GameMode}");
 
                     hes = new HistoryEntryStatus(prev)
                     {
@@ -491,24 +465,61 @@ namespace EliteDangerousCore
                     }
 
                 case JournalTypeEnum.ApproachBody:
-                    JournalApproachBody jappbody = (JournalApproachBody)je;
-
-                    bool ablastisbetter = prev.CurrentLocation is JournalApproachSettlement || prev.CurrentLocation is JournalSupercruiseExit;
-
-                    hes = new HistoryEntryStatus(prev)
                     {
-                        CurrentLocation = ablastisbetter? prev.CurrentLocation : jappbody,
-                        LastApproachBody = jappbody,
-                    };
-                    break;
+                        JournalApproachBody jappbody = (JournalApproachBody)je;
+                        // approach body is worse than Approach settlement as this has more info
+                        bool apsbetter = prev.CurrentLocation is JournalApproachSettlement jas && jas.BodyName == jappbody.BodyName;
+
+                        // approach body is worse than supercruise exit as this has bodytype
+                        bool scebetter = prev.CurrentLocation is JournalSupercruiseExit jse && jse.BodyName == jappbody.BodyName;
+
+                        //System.Diagnostics.Debug.WriteLine($"ApproachBody approachsettlement {apsbetter} scebetter {scebetter}");
+
+                        hes = new HistoryEntryStatus(prev)
+                        {
+                            CurrentLocation = apsbetter || scebetter ? prev.CurrentLocation : jappbody,
+                            LastApproachBody = jappbody,
+                        };
+                        break;
+                    }
+                
                 case JournalTypeEnum.ApproachSettlement:
                     JournalApproachSettlement jappsettlement = (JournalApproachSettlement)je;
                     hes = new HistoryEntryStatus(prev)
                     {
                         CurrentLocation = jappsettlement,
-                        //BodyApproached = true,
                     };
                     break;
+
+                case JournalTypeEnum.SupercruiseExit:
+                    {
+                        JournalSupercruiseExit jsexit = (JournalSupercruiseExit)je;
+
+                        // we are presuming the approach is better that scexit since scexit does not have name of station
+                        bool apsbetter = prev.CurrentLocation is JournalApproachSettlement jas && jas.BodyName == jsexit.BodyName;
+
+                        hes = new HistoryEntryStatus(prev)
+                        {
+                            TravelState = jsexit.Taxi == true ? (prev.TravelState == TravelStateType.DropShipSupercruise ? TravelStateType.DropShipNormalSpace : TravelStateType.TaxiNormalSpace) :
+                                                jsexit.Multicrew == true ? TravelStateType.MulticrewNormalSpace :
+                                                        TravelStateType.NormalSpace,
+
+                            // from 2016, SE had body and bodytype. Keep last location
+                            CurrentLocation = apsbetter ? prev.CurrentLocation :
+                                                        new JournalSupercruiseExit(jsexit.EventTimeUTC, sys.Name, sys.SystemAddress,
+                                                              jsexit.Body ?? prev.CurrentLocation?.BodyName,
+                                                              jsexit.BodyType != BodyDefinitions.BodyType.Unknown ? jsexit.BodyType : (prev.CurrentLocation?.BodyType ?? BodyDefinitions.BodyType.Unknown),
+                                                              jsexit.BodyID ?? prev.BodyID,
+                                                              prev.CurrentLocation?.Name,
+                                                              prev.CurrentLocation?.Name_Localised,
+                                                              prev.CurrentLocation?.FDStationType ?? StationDefinitions.StarportTypes.Unknown,
+                                                              jsexit.Taxi, jsexit.Multicrew),
+
+                            LastDockingGranted = null,
+                        };
+
+                        break;
+                    }
                 case JournalTypeEnum.LeaveBody:
                     JournalLeaveBody jlbody = (JournalLeaveBody)je;
                     hes = new HistoryEntryStatus(prev)

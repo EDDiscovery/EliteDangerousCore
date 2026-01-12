@@ -33,8 +33,6 @@ namespace EliteDangerousCore.JournalEvents
             StationName_Localised = snl.Item2;
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());  // may not be there
             StationType = StationDefinitions.ToEnglish(FDStationType);
-            if (StationDefinitions.IsPlanetaryPort(FDStationType))
-                BodyType = BodyDefinitions.BodyType.Planet;
 
             StationState = StationDefinitions.StarportStateToEnum( evt["StationState"].Str("None") );    // missed, added, nov 22, only on bad starports.  Default None
             StarSystem = evt["StarSystem"].Str();
@@ -119,11 +117,11 @@ namespace EliteDangerousCore.JournalEvents
         public string StationFaction { get => Faction; }            // alias for Faction here
 
         // IBodyFeature
-        public string BodyName { get; set; }        // augmented by Historyentrystatus
-        public BodyDefinitions.BodyType BodyType { get; set; } = BodyDefinitions.BodyType.Unknown; 
-        public int? BodyID { get; set; }            // 
-        public double? Latitude { get; set; }       // 
-        public double? Longitude { get; set; }      // 
+        public string BodyName { get; set; }        // augmented by Historyentrystatus .Docked switch
+        public int? BodyID { get; set; }            // augmented
+        public BodyDefinitions.BodyType BodyType { get; set; } = BodyDefinitions.BodyType.Unknown;  // augmented
+        public double? Latitude { get; set; }       // augmented
+        public double? Longitude { get; set; }      // augmented
         public bool HasLatLong => Latitude != null && Longitude != null;
         public string Name => StationName;
         public string Name_Localised => StationName_Localised;

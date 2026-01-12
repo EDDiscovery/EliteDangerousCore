@@ -136,7 +136,7 @@ namespace EliteDangerousCore.Spansh
                             // System.Diagnostics.Debug.WriteLine($"Spansh Web Lookup complete no info {sys.Name} {sys.SystemAddress}");
                             // mark that we tried to lookup but we could not get any valid data
                             if (sys.HasName)
-                                BodyCache[sys.Name] = null;
+                                BodyCache[sys.Name.ToLowerInvariant()] = null;
                             if (sys.HasAddress)
                                 BodyCache[sys.SystemAddress.Value.ToStringInvariant()] = null;
                         }
@@ -178,7 +178,8 @@ namespace EliteDangerousCore.Spansh
 
                             // place the body in the cache under both its name and its system address. We return system normalised, bodies and bodycount (if known)
                             var cdata = new BodiesResults(systemgot, bodies, bodycount);
-                            BodyCache[systemgot.Key] = cdata;
+                            BodyCache[systemgot.Name.ToLowerInvariant()] = cdata;
+                            BodyCache[systemgot.SystemAddress.Value.ToStringInvariant()] = cdata;
 
                             // System.Diagnostics.Debug.WriteLine($"Spansh Web/File Lookup complete {sys.Name} {sys.SystemAddress} {bodies.Count} cache {fromcache}");
                             return cdata;
