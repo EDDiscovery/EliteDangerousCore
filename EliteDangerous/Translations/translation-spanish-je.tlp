@@ -1,7 +1,7 @@
 ﻿
 SECTION JournalTypeEnum
 
-C7EC98CED613F9: "EDD Destination Selected" @
+C7EC98CED613F9: "EDD Destination Selected" => "Destino EDD Seleccionado"
 94A37CFA0C8992: "Afmu Repairs" => "Reparaciones UAM"
 D2F34790ECB3BA: "Approach Body" => "Aproximación al cuerpo"
 5FB514306EBAE2: "Approach Settlement" => "Aproximación al Asentamiento"
@@ -135,7 +135,7 @@ ECE8DF43B4E578: "Set User Ship Name" => "Establecer nombre de la nave del usuari
 4E29C0CE3E9D61: "Shipyard Sell" => "Venta en astillero"
 270AB9D553AFE5: "Shipyard Swap" => "Intercambio en astillero"
 7E6D4BF9F2AA3F: "Shipyard Transfer" => "Transferencia al astillero"
-86188917717CAE: "Shipyard Bank Deposit" @
+86188917717CAE: "Shipyard Bank Deposit" => "Depósito bancario del astillero"
 7908BD051ADB46: "Ship Targeted" => "Nave Apuntada"
 7FDDB7D8D1D60B: "Shutdown" => "Apagar"
 CAAACBDEADF1BF: "SRV Destroyed" => "SRV destruido"
@@ -250,9 +250,9 @@ DDDE2AEC826902: "Nav Route Clear" => "Limpiar Ruta de Navegación"
 02374D50F6A18D: "Powerplay Merits" => "Méritos de Powerplay"
 8062068144644D: "Powerplay Rank" => "Rango de Powerplay"
 5668ADC227F38B: "Carrier Location" => "Ubicación del portanaves"
-00D83C2DDC1290: "Cancelled Squadron Application" @
-61CAC65A66E653: "Squadron Application Approved" @
-33646EA5A80A0A: "Squadron Application Rejected" @
+00D83C2DDC1290: "Cancelled Squadron Application" => "Solicitud de Flota cancelada"
+61CAC65A66E653: "Squadron Application Approved" => "Solicitud de Flota aprobada"
+33646EA5A80A0A: "Squadron Application Rejected" => "Solicitud de Flota rechazada"
 
 SECTION JournalCargo
 
@@ -502,7 +502,7 @@ AC983DAC73C35D: "Scan Type: {0}" => "Tipo de escaneo: {0}"
 187199564DF54F: "Inferred Circumstellar zones" => "Zonas circunestelares inferidas"
 AEF0ABF930C73C: "Ascending Node: {0:0.000}°" => "Nodo Ascendente: {0:0.000}°"
 4853FB66BD4B2E: "Mean Anomaly: {0:0.000}°" => "Anomalía Media: {0:0.000}°"
-2F670401770A29: "Already Footfalled" @
+2F670401770A29: "Already Footfalled" => "Ya pisado"
 
 SECTION JournalSAAScanComplete
 
@@ -1059,10 +1059,10 @@ EE5122344A579C: " 'Other' signals: {0}." => " Otras señales: {0}."
 204E719EB4129D: " (Mapped & Discovered)" => " (Mapeado y descubierto)"
 D91D9838CE0944: " (Mapped)" => " (Mapeado)"
 B2983B7DF494FA: " (Discovered)" => " (Descubierto)"
-28D71AA19F7722: " (Mapped & Discovered & Footfalled)" @
-C9E160E5886911: " (Discovered & Footfalled)" @
-5B311AC7A079E0: " (Mapped & Footfalled)" @
-3A8B7F7DE33BAF: " (Footfalled)" @
+28D71AA19F7722: " (Mapped & Discovered & Footfalled)" => " (Mapeado, descubierto y pisado)"
+C9E160E5886911: " (Discovered & Footfalled)" => " (Descubierto y pisado)"
+5B311AC7A079E0: " (Mapped & Footfalled)" => " (Mapeado y pisado)"
+3A8B7F7DE33BAF: " (Footfalled)" => " (Pisado)"
 D343B137399D3A: " Is landable." => " es aterrizable"
 817016EBBA625C: " Is ringed." => " Tiene anillo."
 69016A1EE7145D: " Has " => " Tiene "
@@ -1093,8 +1093,8 @@ F1A87D41F026EE: "Squadron Bank" => "Banco de la Flota"
 SECTION JournalScanOrganics
 
 4DAB054FDB754D: "Potential Value: ; cr;N0" => "Valor Potencial: ; cr;N0"
-60B15E90591861: "Was logged" @
-FB0FEB4A33D00B: "Was not logged" @
+60B15E90591861: "Was logged" => "Fue registrado"
+FB0FEB4A33D00B: "Was not logged" => "No fue registrado"
 
 SECTION AtmosphereTypes
 
