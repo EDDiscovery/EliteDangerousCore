@@ -193,7 +193,7 @@ namespace EliteDangerousCore.DB
         }
     }
 
-    [System.Diagnostics.DebuggerDisplay("{Name} {x} {y} {z} {Note} {PlantaryMarks?.Planets?.Count()}")]
+    [System.Diagnostics.DebuggerDisplay("{StarName} {X} {Y} {Z} {Note} {PlantaryMarks?.Planets?.Count()}")]
     public class BookmarkClass
     {
         public long ID { get; set; }
