@@ -22,6 +22,8 @@ namespace EliteDangerousCore.Spansh
 {
     public partial class SpanshClass : BaseUtils.HttpCom
     {
+        const string fileprefix = "spanshv4";
+
         #region Public IF
 
         public static async System.Threading.Tasks.Task<JObject> GetSpanshDumpAsync(ISystem sys, bool weblookup = true, bool fromfilecache = true)
@@ -38,8 +40,8 @@ namespace EliteDangerousCore.Spansh
         {
             JObject spanshdump = null;
 
-            if (fromfilecache)
-                spanshdump = GetSpanshDumpFromCache(sys);
+            if (fromfilecache && EliteConfigInstance.InstanceOptions.ScanCacheEnabled)
+                spanshdump = GetDumpFromCache(sys, fileprefix);
 
             if (spanshdump == null && weblookup)
             {
@@ -48,9 +50,7 @@ namespace EliteDangerousCore.Spansh
 
                 if (spanshdump != null && EliteConfigInstance.InstanceOptions.ScanCacheEnabled)        // if write file back..
                 {
-                    // give the finalised name to the cache file. If we have name only, we should be saving it under systemaddress
-                    string cachefile = CacheFile(foundsystem);
-                    BaseUtils.FileHelpers.TryWriteToFile(cachefile, spanshdump.ToString(true));      // save to file so we don't have to reload
+                    WriteToFileCache(spanshdump, foundsystem, fileprefix);
                 }
             }
 
@@ -111,16 +111,16 @@ namespace EliteDangerousCore.Spansh
                     // System.Threading.Thread.Sleep(2000); //debug - delay to show its happening 
                     // System.Diagnostics.Debug.WriteLine("EDSM Cache check " + sys.EDSMID + " " + sys.SystemAddress + " " + sys.Name);
 
-                    //if (BodyCache.TryGetValue(sys.Key, out BodiesResults we))
-                    //{
-                    //    System.Diagnostics.Debug.WriteLine($"Spansh Body Cache hit on {sys.Name} {sys.SystemAddress} {sys.Key} {we != null}");
-                    //    // will return null, looked up not found, or bodies results found
-                    //    return we;
-                    //}
+                    if (BodyCache.TryGetValue(sys.Key, out BodiesResults we))
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Spansh Body Cache hit on {sys.Name} {sys.SystemAddress} {sys.Key} {we != null}");
+                        // will return null, looked up not found, or bodies results found
+                        return we;
+                    }
 
-                   // System.Diagnostics.Debug.WriteLine($"Spansh NO Cache hit on {sys.Name} {sys.SystemAddress} {sys.Key}");
+                    // System.Diagnostics.Debug.WriteLine($"Spansh NO Cache hit on {sys.Name} {sys.SystemAddress} {sys.Key}");
 
-                    JObject spanshdump = GetSpanshDumpFromCache(sys);
+                    JObject spanshdump = EliteConfigInstance.InstanceOptions.ScanCacheEnabled ? GetDumpFromCache(sys, fileprefix) : null;
                     bool lookedup = false;
 
                     if (spanshdump == null && weblookup)
@@ -168,9 +168,7 @@ namespace EliteDangerousCore.Spansh
 
                             if (lookedup == true && EliteConfigInstance.InstanceOptions.ScanCacheEnabled)        // if write file back..
                             {
-                                // give the finalised name to the cache file. If we have name only, we should be saving it under systemaddress
-                                string cachefile = CacheFile(sys);
-                                BaseUtils.FileHelpers.TryWriteToFile(cachefile, spanshdump.ToString(true));      // save to file so we don't have to reload
+                                WriteToFileCache(spanshdump, sys, fileprefix);
                             }
 
                             // place the body in the cache under both its name and its system address. We return system normalised, bodies and bodycount (if known)
@@ -236,23 +234,18 @@ namespace EliteDangerousCore.Spansh
             return spanshdump;
         }
 
-        private static string CacheFile(ISystem searchsystem)
-        {
-            string cachefile = EliteConfigInstance.InstanceOptions.ScanCacheEnabled ?
-                    System.IO.Path.Combine(EliteConfigInstance.InstanceOptions.ScanCachePath, $"spansh_{searchsystem.Key.SafeFileString()}_v3.json") :
-                    null;
-            return cachefile;
-        }
-
         // get spansh data from the cache
-
-        private static JObject GetSpanshDumpFromCache(ISystem searchsystem)
+        public static JObject GetDumpFromCache(ISystem searchsystem, string prefix)
         {
-            // calc name of cache file (14 jan 25 changed to v2)
+            // all files are enumerated to provide ability to search them for name and address
+            var cachefiles = System.IO.Directory.EnumerateFiles(EliteConfigInstance.InstanceOptions.ScanCachePath, prefix + "__*.json").ToList();
 
-            string cachefile = CacheFile(searchsystem);
+            // find by name and address, using the pattern of naming to pick out the right parts
+            int iname = cachefiles.FindIndex(x=>x.Contains($"{prefix}__{searchsystem.Name.ToLowerInvariant().SafeFileString()}__"));     // by name, making sure we use the safe file string chars
+            int iaddr = searchsystem.SystemAddress.HasValue ? cachefiles.FindIndex(x => x.Contains($"__{searchsystem.SystemAddress.Value.ToStringInvariant()}.json")) : -1;
 
-            if (cachefile != null && System.IO.File.Exists(cachefile))      // if we have that file
+            string cachefile = iaddr >= 0 ? cachefiles[iaddr] : iname >= 0 ? cachefiles[iname] : null;       // prefer address, else use name
+            if ( cachefile != null )
             {
                 string cachedata = BaseUtils.FileHelpers.TryReadAllTextFromFile(cachefile); // try and read it
                 if (cachedata != null)
@@ -267,6 +260,14 @@ namespace EliteDangerousCore.Spansh
             }
 
             return null;
+        }
+
+        public static void WriteToFileCache(JObject spanshdump , ISystem foundsystem, string prefix) 
+        {
+            // give the finalised name to the cache file. 
+            string name = $"{prefix}__{foundsystem.Name.ToLowerInvariant()}__{(foundsystem.SystemAddress??0).ToStringInvariant()}.json";
+            string cachefile = System.IO.Path.Combine(EliteConfigInstance.InstanceOptions.ScanCachePath, name.SafeFileString());
+            BaseUtils.FileHelpers.TryWriteToFile(cachefile, spanshdump.ToString(true));      // save to file so we don't have to reload
         }
 
         public static JArray ReadFile(string file, ISystem foundsystem)
