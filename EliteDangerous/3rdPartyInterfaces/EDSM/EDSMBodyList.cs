@@ -19,8 +19,11 @@ using System.Collections.Generic;
 
 namespace EliteDangerousCore.EDSM
 {
+
     public partial class EDSMClass
     {
+        const string fileprefix = "edsmv4";
+        
         public class BodiesResults
         {
             public ISystem System { get; set; }
@@ -85,31 +88,8 @@ namespace EliteDangerousCore.EDSM
                         return we;
                     }
 
-                    JObject jobj = null;
                     bool fromcache = false;
-
-                    // calc name of cache file
-
-                    string cachefile = EliteConfigInstance.InstanceOptions.ScanCacheEnabled ?
-                            System.IO.Path.Combine(EliteConfigInstance.InstanceOptions.ScanCachePath, $"edsm_{sys.Key.SafeFileString()}.json") :
-                            null;
-
-                    if (cachefile != null && System.IO.File.Exists(cachefile))      // if we have that file
-                    {
-                        string cachedata = BaseUtils.FileHelpers.TryReadAllTextFromFile(cachefile); // try and read it
-                        if (cachedata != null)
-                        {
-                            //System.Diagnostics.Debug.WriteLine($"EDSM Cache File read on {sys.Name} {sys.SystemAddress} from {cachefile}");
-                            jobj = JObject.Parse(cachedata, JToken.ParseOptions.CheckEOL);  // if so, try a conversion
-                            if (jobj?.Count > 0 && jobj.Contains("name") && jobj.Contains("bodies"))        // if we have a body list and name
-                            {
-                                fromcache = true;
-                                sys = new SystemClass(jobj["name"].Str(), jobj["id64"].LongNull(), SystemSource.FromEDSM);
-                            }
-                            else
-                                jobj = null;   
-                        }
-                    }
+                    JObject jobj = EliteConfigInstance.InstanceOptions.ScanCacheEnabled ? Spansh.SpanshClass.GetDumpFromCache(sys, fileprefix) : null;
 
                     if (jobj == null)
                     {
@@ -139,6 +119,10 @@ namespace EliteDangerousCore.EDSM
                         else
                             jobj = null;           // ensure null at this point
                     }
+                    else
+                    {
+                        fromcache = true;   
+                    }
 
                     if (jobj != null && jobj["bodies"] != null)
                     {
@@ -148,7 +132,7 @@ namespace EliteDangerousCore.EDSM
                         {
                             try
                             {
-                                JObject jbody = EDSMClass.ConvertFromEDSMBodies(edsmbody,sys.SystemAddress);
+                                JObject jbody = EDSMClass.ConvertFromEDSMBodies(edsmbody, sys.SystemAddress);
 
                                 JournalScan js = new JournalScan(jbody);
 
@@ -162,12 +146,9 @@ namespace EliteDangerousCore.EDSM
                             }
                         }
 
-                        if (cachefile != null && fromcache == false)      // note its cached in EDSM format.. Spansh caches it in journal format
+                        if (EliteConfigInstance.InstanceOptions.ScanCacheEnabled && fromcache == false)
                         {
-                            // give the finalised name to the cache file. If we have name only, we should be saving it under systemaddress
-                            cachefile = System.IO.Path.Combine(EliteConfigInstance.InstanceOptions.ScanCachePath, $"edsm_{sys.Key.SafeFileString()}.json");
-
-                            BaseUtils.FileHelpers.TryWriteToFile(cachefile, jobj.ToString(true));      // save to file so we don't have to reload
+                            Spansh.SpanshClass.WriteToFileCache(jobj, sys, fileprefix);
                         }
 
                         var cdata = new BodiesResults(sys, bodies);
