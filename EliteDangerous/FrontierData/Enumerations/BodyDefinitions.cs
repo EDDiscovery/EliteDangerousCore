@@ -58,22 +58,24 @@ namespace EliteDangerousCore
             return btn;
         }
 
-        static public bool IsBodyNameRing(string bodyname)
-        {
-            if (bodyname.HasChars())
-            {
-                var elements = bodyname.ToLowerInvariant().Split(' ').ToList();        // split into spaced parts
-                // ends in ring and previous is a single character alpha letter (see starscanjournalscans.cs line 213 ish)
-                if (elements.Count > 0 && elements[elements.Count - 1].Equals("ring") && elements[elements.Count - 2].Length == 1 && char.IsLetter(elements[elements.Count - 2][0]))
-                    return true;
-            }
+//A Ring@Asellus Primus
+//Anahit Ring@LP 98-132
+//Archerbas r1 @Carthage
+//Asteroid Belt @Sol
+//B Ring @Asellus Primus
+//Galle Ring @Sol
+//Hathor r1 @Dahan
+//Jupiter Halo Ring@Sol
+//Mestra r1 @Prism
+//The Belt @Artemis
+//Vulcan Ring @LHS 3006
+//ZetaCC Ring @Sol
 
-            return false;
-        }
-
+        // used by SAASignalsFound and SAAScanComplete, and these are scanning either Rings or Planets, determine by ending - there are strange naming out there
         static public BodyType BodyTypeFromBodyNameRingOrPlanet(string bodyname)
         {
-            return IsBodyNameRing(bodyname) ? BodyType.PlanetaryRing : BodyType.Planet;
+            bool isring = bodyname.EndsWithIIC(" Ring") || bodyname.EndsWithIIC(" r1");        // all rings appear to end with Ring, plus there are some wierd r1's out there
+            return isring ? BodyType.PlanetaryRing : BodyType.Planet;
         }
 
         static public string StarTypeImageName(EDStar StarTypeID, double? nStellarMass, double? nSurfaceTemperature)

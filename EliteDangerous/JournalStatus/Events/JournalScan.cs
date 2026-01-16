@@ -33,9 +33,9 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Is it a star")]
         public bool IsStar { get { return StarType != null; } }
         [PropertyNameAttribute("Is it a belt cluster body")]
-        public bool IsBeltClusterBody { get { return StarType == null && PlanetClass == null && BodyName.Contains("Belt Cluster "); } }
+        public bool IsBeltClusterBody { get { return StarType == null && PlanetClass == null && BodyName.ContainsIIC("Belt Cluster "); } }
         [PropertyNameAttribute("Is it a planetary ring")]
-        public bool IsPlanetaryRing { get { return StarType == null && PlanetClass == null && BodyName.EndWithIIC(" Ring"); } }
+        public bool IsPlanetaryRing { get { return StarType == null && PlanetClass == null && BodyName.EndsWithIIC(" Ring"); } }
         [PropertyNameAttribute("Is it a planet")]
         public bool IsPlanet { get { return PlanetClass != null; } }
 

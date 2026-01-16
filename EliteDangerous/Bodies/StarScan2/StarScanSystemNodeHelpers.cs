@@ -73,6 +73,7 @@ namespace EliteDangerousCore.StarScan2
         // planets declare planetary rings (which we add but actually do not display in system display)
         // Added as children of the body
         // the belt data is recorded in each body
+        // belt data due to stupidity does not contain body id
         private void ProcessBeltsOrRings(BodyNode body, JournalScan sc, string bodyname, string systemname)
         {
             if (sc.HasRingsOrBelts)
@@ -96,27 +97,29 @@ namespace EliteDangerousCore.StarScan2
                         name = "A Belt Cluster";
                     else if (name.EndsWith("B Belt", StringComparison.InvariantCultureIgnoreCase))
                         name = "B Belt Cluster";
-                    else if (name.EndsWith("Galle Ring", StringComparison.InvariantCultureIgnoreCase) ||                // specials, just to remove debug assert
+                    else if (name.EndsWith("Galle Ring", StringComparison.InvariantCultureIgnoreCase) ||                // specials, just to remove warning message
                             name.EndsWith("Jupiter Halo Ring", StringComparison.InvariantCultureIgnoreCase) ||
                             name.EndsWith("Asteroid Belt", StringComparison.InvariantCultureIgnoreCase) ||
                             name.EndsWith("The Belt", StringComparison.InvariantCultureIgnoreCase) ||
                             name.EndsWith("Anahit Ring", StringComparison.InvariantCultureIgnoreCase) ||
-                            name.EndsWith("Vulcan Ring", StringComparison.InvariantCultureIgnoreCase)
+                            name.EndsWith("Vulcan Ring", StringComparison.InvariantCultureIgnoreCase) ||
+                            name.EndsWith("Castellan Belt", StringComparison.InvariantCultureIgnoreCase)
                             )
-                    { }
+                    { 
+                    }
                     else
                     {
                         string s = $"StarScan {body.Name()} Unconventional ring name {name}";
                         global::System.Diagnostics.Trace.WriteLine(s);
                     }
 
-                    $"  Add Belt/Ring object {name} to `{body.OwnName}`:{body.BodyID}".DO(debugid);
+                    var belt = body.ChildBodies.Find(x => x.OwnName.EqualsIIC(name));           // so, it will be named for a standard naming scheme
 
-                    var belt = body.ChildBodies.Find(x => x.OwnName == name);
-                    if (belt == null)
+                    if (belt == null)                                                   // can't find it by name
                     {
-                        belt = new BodyNode(name, body.BodyType == BodyDefinitions.BodyType.Planet ? BodyDefinitions.BodyType.PlanetaryRing : BodyDefinitions.BodyType.StellarRing , BodyNode.BodyIDMarkerForAutoBodyBeltCluster, body, this,ring.Name);
+                        belt = new BodyNode(name, body.BodyType == BodyDefinitions.BodyType.Planet ? BodyDefinitions.BodyType.PlanetaryRing : BodyDefinitions.BodyType.StellarRing, BodyNode.BodyIDMarkerForAutoBodyBeltCluster, body, this, ring.Name);
                         body.ChildBodies.Add(belt);
+                        $"  Add {belt.BodyType} object {name} to `{body.OwnName}`:{body.BodyID}".DO(debugid);
                     }
 
                     belt.SetScan(ring);

@@ -128,6 +128,14 @@ namespace EliteDangerousCore.StarScan2
                     body.ResetBodyName(ownname);                        // make sure we are calling it by this part - this is the real name always
                     $"  Rename {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                 }
+
+                // this can occur with a scan of planetary rings, where the ring was added by the parent body with a Auto ID
+                if (body.BodyID != sc.BodyID)
+                {
+                    (body.BodyID < 0).Assert("StarScan Body in non standard naming is not null");
+                    body.ResetBodyID(sc.BodyID.Value);
+                    bodybyid[body.BodyID] = body;
+                }
             }
 
             BodyGeneration++;
@@ -167,18 +175,44 @@ namespace EliteDangerousCore.StarScan2
 
                 BodyNode subbody = FindBody(nt.BodyID);
 
-                // Note: A star adds a belt clusters with ID<0 as its not given.  When a belt cluster body is defined however, it will be handled by the standard naming code (<star> A Belt Cluster 3)
-                // since the format is in std naming and the belt cluster ID will be corrected.  We should not be here going thru a ring definition sequence and encoutering a child with an autoid
-
-                // a stellar ring (belt cluster) should not have any bodies below with bodyidmarkers set..
-                if (nt.IsStellarRing && cur.ChildBodies.Find(x => x.BodyID == BodyNode.BodyIDMarkerForAutoBodyBeltCluster) != null)
+                if (subbody == null && nt.IsStellarRing ) 
                 {
-                    false.Assert($"StarScan belt cluster ID error for {sc.BodyName} in {systemname}");
+                    // Note: A star adds a belt clusters with Name but without ID so marked AutoBodyBeltCluster as its not given in the event
+                    // When we get a non standard name with parents, which is a belt cluster, example : "Castellan Belt Cluster 4","BodyID":6, it will be added in here
+                    // dependent on the order, we either have an:
+                    //    1) Star scan first, we get : BodyID = AudoBodyBeltCluster, with the name of the cluster
+                    // or 2) Belt Cluster X scan first, we are here, nothing below star, non standard naming, no explicit name
+         
+                    // first we check case 1, to see if the belt is already there, if it is, we fix the bodyid
+
+                    subbody = cur.ChildBodies.Find(x => sc.BodyName.ContainsIIC(x.OwnName));        // if the star has previously added a belt named after this..
+
+                    if (subbody != null && subbody.BodyID == BodyNode.BodyIDMarkerForAutoBodyBeltCluster)   // if we found it, and its auto named
+                    {
+                        $"  Starscan Non Standard Naming, Belt Cluster, Found a matching previous entry created by a star with autobeltcluster id, {subbody.OwnName} vs {sc.BodyName}".DO(debugid);
+                        subbody.ResetBodyID(nt.BodyID);
+                        bodybyid[nt.BodyID] = subbody;
+                    }
                 }
 
-                if (subbody == null)
-                {
-                    subbody = new BodyNode(nt.IsBarycentre ? BodyNode.DefaultNameOfBC : BodyNode.DefaultNameOfUnknownBody, nt, nt.BodyID, cur, this);
+                if ( subbody == null)       // did not find by bodyid, or by similar names, so it must be new to us.
+                { 
+                    string nameofcomponent = null;
+
+                    // here, we did not find the belt, so we give it the best name we can
+
+                    if (nt.IsStellarRing)   
+                    {
+                        // Lave has a Catallan Belt Cluster X
+                        int bci = sc.BodyName.IndexOfIIC("Belt Cluster");
+                        if (bci > 0)
+                        {
+                            nameofcomponent = sc.BodyName.Substring(0, bci).Trim() + " Belt";
+                            $"  Starscan Non Standard Naming, Belt Cluster, Estimated name of ring is `{nameofcomponent}`".DO(debugid);
+                        }
+                    }
+
+                    subbody = new BodyNode(nameofcomponent!=null ? nameofcomponent: nt.IsBarycentre ? BodyNode.DefaultNameOfBC : BodyNode.DefaultNameOfUnknownBody, nt, nt.BodyID, cur, this);
                     cur.ChildBodies.Add(subbody);
                     bodybyid[nt.BodyID] = subbody;
                     Sort(cur);
@@ -224,6 +258,14 @@ namespace EliteDangerousCore.StarScan2
                 {
                     body.ResetBodyName(sc.BodyName);        // force the name we know on it
                     $"  Rename {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                }
+
+                // this can occur with a scan of planetary rings, where the ring was added by the parent body with a Auto ID
+                if (body.BodyID != sc.BodyID)
+                {
+                    (body.BodyID < 0).Assert("StarScan Body in non standard naming is not null");
+                    body.ResetBodyID(sc.BodyID.Value);
+                    bodybyid[body.BodyID] = body;
                 }
             }
 

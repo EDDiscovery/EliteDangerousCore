@@ -411,10 +411,8 @@ namespace EliteDangerousCore.StarScan2
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
 
-                if (!BodyDefinitions.IsBodyNameRing(sc.BodyName))              // we can't add Rings, since we don't know the parent body ID and we don't have a cracker if its a std name
-                {
+                if (sc.BodyType == BodyDefinitions.BodyType.Planet)
                     AddLocation(sc, sys);            // we can add a body
-                }
 
                 lock (sn)
                 {
@@ -432,10 +430,8 @@ namespace EliteDangerousCore.StarScan2
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
 
-                if (!BodyDefinitions.IsBodyNameRing(sc.BodyName))      // we can't add Rings, since we don't know the parent body ID and we don't have a cracker if its a std name
-                {
+                if ( sc.BodyType == BodyDefinitions.BodyType.Planet )
                     AddLocation(sc, sys);            // we can add a body
-                }
 
                 lock (sn)
                 {
