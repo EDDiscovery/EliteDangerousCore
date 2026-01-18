@@ -74,9 +74,11 @@ namespace EliteDangerousCore
 
         public TravelStateType TravelState { get; private set; } = TravelStateType.Unknown;  // travel state
 
-        public JournalLocOrJump LastJump { get; private set; }      // last jump into the system
+        // last jump into the system, FSDJump or Carrier, or a Location which is in space.  Holds star system faction info
+        public JournalLocOrJump SystemInfo { get; private set; }
 
-        public IBodyFeature CurrentLocation { get; private set; }   // the current location
+        // the current location
+        public IBodyFeature CurrentLocation { get; private set; }   
         public string WhereAmI => CurrentLocation?.Name_Localised ?? CurrentLocation?.BodyName ?? CurrentLocation?.StarSystem ?? "Unknown";
         public double? Latitude => CurrentLocation?.Latitude;
         public double? Longitude => CurrentLocation?.Longitude;
@@ -89,7 +91,8 @@ namespace EliteDangerousCore
         public long? MarketID => CurrentLocation?.MarketID;
         public string StationFaction => CurrentLocation?.StationFaction;
 
-        public IShipNaming CurrentShip { get; private set; }        // always a ship, never a SRV or fighter
+        // always a ship, never a SRV or fighter
+        public IShipNaming CurrentShip { get; private set; }        
         public ulong ShipID => CurrentShip?.ShipId ?? ulong.MaxValue;
         public string ShipType => CurrentShip?.ShipType ?? "Unknown";
         public string ShipTypeFD => CurrentShip?.ShipFD ?? "Unknown";
@@ -100,13 +103,14 @@ namespace EliteDangerousCore
         public bool IsOnCrewWithCaptain { get { return OnCrewWithCaptain != null; } }
         public bool IsInMultiPlayer { get { return IsOnCrewWithCaptain || IsInMultiCrew; } }       // we can be OnCrewWithCaptain with multicrew markers true, or just in physical multicrew 
 
+        // Records the last load game with game info present
         public JournalLoadGame LastLoadGame { get; private set; }
         public string GameMode => LastLoadGame?.GameMode ?? "Unknown";
         public string Group => LastLoadGame?.Group ?? "";
         public string GameModeGroup { get { return GameMode + (Group.HasChars() ? (":" + Group) : ""); } }
         public string GameModeGroupMulticrew { get { return GameMode + (Group.HasChars() ? (":" + Group) : "") + (OnCrewWithCaptain.HasChars() ? " @ Cmdr " + OnCrewWithCaptain : ""); } }
 
-
+        // Records the last docking granted message, non null between this and docked/timeout/etc
         public JournalDockingGranted LastDockingGranted { get; private set; }
         public int DockingPad => LastDockingGranted?.LandingPad ?? 0;
         public StationDefinitions.StarportTypes DockingStationType => LastDockingGranted?.FDStationType ?? StationDefinitions.StarportTypes.Unknown;    // set at Docking granted, cleared at docked, fsd etc
@@ -122,16 +126,18 @@ namespace EliteDangerousCore
         }
         public bool IsDockingStationTypeCarrier { get { return DockingStationType == StationDefinitions.StarportTypes.FleetCarrier; } }
 
-
+        // non null when in jump sequence
         public JournalStartJump JumpSequence { get; private set; }
         public string FSDJumpNextSystemName => JumpSequence?.StarSystem;
         public long? FSDJumpNextSystemAddress => JumpSequence?.SystemAddress;
         public bool FSDJumpSequence => JumpSequence != null;    // true from startjump until location/fsdjump
 
+        // non null when in taxi or dropship, up to embark
         public ITaxiDropship LastTaxiDropship { get; private set; }
         public bool BookedDropship => LastTaxiDropship is JournalBookDropship;
         public bool BookedTaxi => LastTaxiDropship is JournalBookTaxi;
 
+        // Non null when approached a body
         public JournalApproachBody LastApproachBody { get; private set;}        // true from approach to leave or jump
         public bool BodyApproached => LastApproachBody != null;    
 
@@ -145,7 +151,7 @@ namespace EliteDangerousCore
         public HistoryEntryStatus(HistoryEntryStatus prevstatus)
         {
             TravelState = prevstatus.TravelState;
-            LastJump = prevstatus.LastJump;
+            SystemInfo = prevstatus.SystemInfo;
             CurrentLocation = prevstatus.CurrentLocation;
             CurrentShip = prevstatus.CurrentShip;
             LastLoadGame = prevstatus.LastLoadGame;
@@ -180,7 +186,7 @@ namespace EliteDangerousCore
 
                         if (!weareonafconfoot)
                         {
-                            bool locinstation = jloc.FDStationType != StationDefinitions.StarportTypes.Unknown;     // second is required due to alpha 4 stationtype being missing
+                            bool locinstation = jloc.FDStationType != StationDefinitions.StarportTypes.Unknown;     
 
                             TravelStateType t =
                                             jloc.Docked ? (jloc.Multicrew == true ? TravelStateType.MulticrewDocked : TravelStateType.Docked) :
@@ -194,9 +200,8 @@ namespace EliteDangerousCore
                             hes = new HistoryEntryStatus(prev)     // Bodyapproach copy over we should be in the same state as last..
                             {
                                 TravelState = t,
+                                SystemInfo = !locinstation ? jloc : prev.SystemInfo,        // update this is we are not in station, therefore we will have system info (TBC)
                                 CurrentLocation = jloc,
-
-
                                 Wanted = jloc.Wanted,
                                 CurrentBoost = 1,
                                 JumpSequence = null,
@@ -216,7 +221,7 @@ namespace EliteDangerousCore
                             TravelState = jfsd.Taxi == true ? (prev.TravelState == TravelStateType.DropShipSupercruise || prev.TravelState == TravelStateType.DropShipNormalSpace ? TravelStateType.DropShipSupercruise : TravelStateType.TaxiSupercruise) :
                                             jfsd.Multicrew == true ? TravelStateType.MulticrewSupercruise :
                                                 TravelStateType.Supercruise,
-                            LastJump = jfsd,
+                            SystemInfo = jfsd,
                             CurrentLocation = jfsd,
                             Wanted = jfsd.Wanted,
                             LastApproachBody = null,
@@ -231,7 +236,7 @@ namespace EliteDangerousCore
                     var jcj = (je as JournalCarrierJump);
                     hes = new HistoryEntryStatus(prev)     // we are docked or on foot on a carrier - travel state stays the same
                     {
-                        LastJump = jcj,
+                        SystemInfo = jcj,
                         CurrentLocation = jcj,
                         Wanted = jcj.Wanted,
                         LastDockingGranted = null,

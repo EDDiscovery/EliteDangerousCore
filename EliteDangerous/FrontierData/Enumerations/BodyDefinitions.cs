@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    public class BodyDefinitions
+    public static class BodyDefinitions
     {
         public enum BodyType
         {
@@ -41,6 +41,7 @@ namespace EliteDangerousCore
 
             // EDD Only
             System,          // top level SystemBodies object in SystemNode
+            PlanetaryOrStellarRing, // in SAAScanComplete and SAASignalsFound we can't tell the difference between scanning a stellar or planetary ring. Only in there, not in StarScan
         };
 
         static public BodyType GetBodyType(string bt)
@@ -58,25 +59,40 @@ namespace EliteDangerousCore
             return btn;
         }
 
-//A Ring@Asellus Primus
-//Anahit Ring@LP 98-132
-//Archerbas r1 @Carthage
-//Asteroid Belt @Sol
-//B Ring @Asellus Primus
-//Galle Ring @Sol
-//Hathor r1 @Dahan
-//Jupiter Halo Ring@Sol
-//Mestra r1 @Prism
-//The Belt @Artemis
-//Vulcan Ring @LHS 3006
-//ZetaCC Ring @Sol
+        //A Ring@Asellus Primus
+        //Anahit Ring@LP 98-132
+        //Archerbas r1 @Carthage
+        //Asteroid Belt @Sol
+        //B Ring @Asellus Primus
+        //Galle Ring @Sol
+        //Hathor r1 @Dahan
+        //Jupiter Halo Ring@Sol
+        //Mestra r1 @Prism
+        //The Belt @Artemis
+        //Vulcan Ring @LHS 3006
+        //ZetaCC Ring @Sol
 
-        // used by SAASignalsFound and SAAScanComplete, and these are scanning either Rings or Planets, determine by ending - there are strange naming out there
-        static public BodyType BodyTypeFromBodyNameRingOrPlanet(string bodyname)
+        // used by Scan, SAASignalsFound and SAAScanComplete, and these are scanning either planet/stellar Rings or Planets, determine by ending - there are strange naming out there
+        static public bool IsBodyNameARing(string bodyname)
         {
             bool isring = bodyname.EndsWithIIC(" Ring") || bodyname.EndsWithIIC(" r1");        // all rings appear to end with Ring, plus there are some wierd r1's out there
-            return isring ? BodyType.PlanetaryRing : BodyType.Planet;
+            return isring;
         }
+        // used by Scan 
+        static public bool IsBodyNameABeltCluster(string bodyname)
+        {
+            bool isbc = bodyname.ContainsIIC("Belt Cluster ");        // all rings appear to end with Ring, plus there are some wierd r1's out there
+            return isbc;
+        }
+
+        // matches a and b, or a being a PlanetaryOrStellarRing and b either 
+        static public bool EqualsBT(this BodyType a, BodyType b)
+        {
+            return (a == b) || (a == BodyType.PlanetaryOrStellarRing && (b == BodyType.StellarRing || b == BodyType.PlanetaryRing));
+        }
+
+        static public bool IsBodyARing(this BodyType body) => body == BodyType.PlanetaryOrStellarRing || body == BodyType.StellarRing || body == BodyType.PlanetaryRing;
+
 
         static public string StarTypeImageName(EDStar StarTypeID, double? nStellarMass, double? nSurfaceTemperature)
         {

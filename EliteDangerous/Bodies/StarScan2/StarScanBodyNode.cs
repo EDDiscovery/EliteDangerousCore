@@ -48,6 +48,8 @@ namespace EliteDangerousCore.StarScan2
 
         public int BodyID { get; private set; }
 
+        public bool PlacedWithoutParents { get; set; } = false;
+
         // we share the bodytype with frontier, even though their names are a bit wierd
         // the root node is called System and is held in StarScanSystemNode
         public BodyDefinitions.BodyType BodyType { get; private set; }
@@ -804,7 +806,7 @@ namespace EliteDangerousCore.StarScan2
             string cnl = cn >= 0 ? cn.ToString() : "";
             string sma = SMA != null ? ((SMA / 1000.0).ToStringInvariant("N0") +"km") : "";
 
-            System.Diagnostics.Trace.WriteLine($"{front} : {cnl.PadRight(2)} : {names} : {BodyType.ToString().PadRight(15)} sma {sma}");
+            System.Diagnostics.Trace.WriteLine($"{front} : {cnl.PadRight(2)} : {names} : {BodyType.ToString().PadRight(15)} {(PlacedWithoutParents?"PWP":"")} sma {sma}");
             foreach (var x in CodexEntries.EmptyIfNull())
                 System.Diagnostics.Trace.WriteLine($"{pad}CX:{x.GetInfo()}");
             foreach (var x in Signals.EmptyIfNull())

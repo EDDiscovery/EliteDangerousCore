@@ -224,6 +224,7 @@ namespace EliteDangerousCore.StarScan2
                         if (sn.OldScansPresent)                 // we don't mix old scans with new scans. Old scans without parents trees are problematic
                         {
                             sn.OldScansPresent = false;
+                            $"Clear Scans of {sn.System.SystemAddress} {sn.System.Name}".DO();
                             sn.Clear();
                         }
 
@@ -411,8 +412,8 @@ namespace EliteDangerousCore.StarScan2
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
 
-                if (sc.BodyType == BodyDefinitions.BodyType.Planet)
-                    AddLocation(sc, sys);            // we can add a body
+                if (sc.BodyType == BodyDefinitions.BodyType.Planet)             // body types are either planet or PlanetaryOrStellarRing
+                    AddLocation(sc, sys);            // only planets can we can add a body
 
                 lock (sn)
                 {
@@ -430,8 +431,8 @@ namespace EliteDangerousCore.StarScan2
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
 
-                if ( sc.BodyType == BodyDefinitions.BodyType.Planet )
-                    AddLocation(sc, sys);            // we can add a body
+                if (sc.BodyType == BodyDefinitions.BodyType.Planet)             // body types are either planet or PlanetaryOrStellarRing
+                    AddLocation(sc, sys);            // only planets can we can add a body
 
                 lock (sn)
                 {

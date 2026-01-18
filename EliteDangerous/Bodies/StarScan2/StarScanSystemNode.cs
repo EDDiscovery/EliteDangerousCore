@@ -46,6 +46,7 @@ namespace EliteDangerousCore.StarScan2
 
         public SystemNode(ISystem sys)
         {
+            $"StarScan Make new System Node {sys.Name}:{sys.SystemAddress}".DO(debugid);
             System = sys;
             Clear();
         }
@@ -56,7 +57,6 @@ namespace EliteDangerousCore.StarScan2
             bodybyid = new Dictionary<int, BodyNode>();
             FSSTotalBodies = FSSTotalNonBodies = null;
             BodyGeneration = 0;
-            $"Clear Scans of {System.SystemAddress} {System.Name}".DO(debugid);
         }
 
         // Find body, various ways
@@ -75,9 +75,16 @@ namespace EliteDangerousCore.StarScan2
         {
             return Bodies(x => x.CanonicalName.EqualsIIC(fdname), true).FirstOrDefault();
         }
-        public BodyNode FindCanonicalBodyNameType(string fdname, BodyDefinitions.BodyType bt)        // better matching  - there are systems like Leesti where the star and planet are called the same
+
+        // bt can be PlantaryOrStellarRing and it will match both
+        public BodyNode FindCanonicalBodyNameType(string fdname, BodyDefinitions.BodyType bt)        
         {
-            return Bodies(x => x.CanonicalName.EqualsIIC(fdname)  && x.BodyType == bt, true).FirstOrDefault();
+            return Bodies(x => x.CanonicalName.EqualsIIC(fdname) && x.BodyType.EqualsBT(bt), true).FirstOrDefault();
+        }
+        // bt can be PlantaryOrStellarRing and it will match both, only matches if it was made without parents
+        public BodyNode FindCanonicalMisplacedBodyNameType(string fdname, BodyDefinitions.BodyType bt)       
+        {
+            return Bodies(x => x.CanonicalName.EqualsIIC(fdname) && x.BodyType.EqualsBT(bt) && x.PlacedWithoutParents==true, true).FirstOrDefault();
         }
         public BodyNode FindCanonicalBodyNameWithWithoutSystem(string fdname)       // matches HIP 1885 A 5 b, A 5 b, HIP 1885 A 2 A Ring, A 2 A Ring etc
         {

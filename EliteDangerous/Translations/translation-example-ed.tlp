@@ -1062,6 +1062,7 @@ E3A998C0E178AC: "Wanted passenger" @
 771CD10722A7D2: "Discharging a weapon" @
 0F204F94B09CCD: "Destroying an APEX Shuttle" @
 04E4EDA53C745B: "Tampering with a station" @
+157F19260E9D31: "Assaulting a Person" @
 
 SECTION FactionStates
 
@@ -1100,7 +1101,8 @@ A21193C4A51E0D: "Alliance" @
 6809E8745EABCE: "Guardian" @
 824377DA32D5A8: "Thargoid" @
 7EE28AFA2ED21A: "Pilots Federation" @
-61539847DBF080: "Player Pilots Federation" @
+55492602030481: "Player Pilots" @
+
 
 SECTION GovernmentTypes
 

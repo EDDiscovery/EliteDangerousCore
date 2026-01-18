@@ -134,7 +134,7 @@ namespace EliteDangerousCore.StarScan2
         private void ReassignParent(BodyNode body, BodyNode newparent, int newbodyid)
         {
             (body != newparent).Assert("Reassign error");
-            $"  Reassign {System.Name} body `{body.Name()}`:{body.BodyID} to `{newparent.Name()}` with new {newbodyid}".DO(debugid);
+            $"  Reassign {System.Name} body `{body.Name()}`:{body.BodyID} to `{newparent.Name()}` with new bodyid {newbodyid}".DO(debugid);
 
             CheckTree();
 
@@ -162,6 +162,8 @@ namespace EliteDangerousCore.StarScan2
             newparent.ChildBodies.Add(body);    // point at body
             if ( newbodyid>=0)
                 bodybyid[body.BodyID] = body;   // ensure in bodybyid
+
+            body.PlacedWithoutParents = false;
         }
 
         // Extract, sort barycentre subnames into a list, remake the name of the BC 
@@ -246,7 +248,6 @@ namespace EliteDangerousCore.StarScan2
         {
             global::System.Diagnostics.Trace.WriteLine($"System `{System.Name}` {System.SystemAddress}: bodies {Bodies().Count()} ids {bodybyid.Count}");
             systemBodies.DumpTree("S", 0);
-            CheckTree();
         }
 
         [System.Diagnostics.Conditional("DEBUG")]
@@ -254,23 +255,31 @@ namespace EliteDangerousCore.StarScan2
         public void CheckTree()
         { 
             int totalbodieswithids = 0;
+            HashSet<string> cnames = new HashSet<string>();
             foreach( var x in Bodies())
             {
-                (x.SystemNode == this).Assert($"StarScan System Node not assigned to this {x.Name()}");
+                (x.SystemNode == this).Assert($"StarScan System Node not assigned to this {x.Name()}", () => DumpTree());
                 if ( x.BodyID>=0 )
                 {
                     totalbodieswithids++;
 
                     if (bodybyid.TryGetValue(x.BodyID, out BodyNode v))
                     {
-                        (v == x).Assert($"StarScan bodybyid not pointing to same place as ID for {x.Name()}");
+                        (v == x).Assert($"StarScan bodybyid not pointing to same place as ID for {x.Name()}", () => DumpTree());
                     }
                     else
-                        false.Assert($"StarScan Missing bodyid in bodybyid {x.Name()}");
+                        false.Assert($"StarScan Missing bodyid in bodybyid {x.Name()}", () => DumpTree());
+                }
+                if ( x.CanonicalName!=null )
+                {
+                    bool good = !cnames.Contains(x.CanonicalName);
+                    if (!good)
+                        global::System.Diagnostics.Trace.WriteLine($"**** `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} is repeated in {System.Name} for {EDCommander.Current.Name}");
+                    cnames.Add(x.CanonicalName);
                 }
             }
 
-            (totalbodieswithids == bodybyid.Count).Assert($"StarScan {System.Name} Not the same number of bodyids as nodes {totalbodieswithids} with Ids in bodybyid {bodybyid.Count}");
+            (totalbodieswithids == bodybyid.Count).Assert($"StarScan {System.Name} Not the same number of bodyids as nodes {totalbodieswithids} with Ids in bodybyid {bodybyid.Count}", () => DumpTree());
 
             CheckParents(systemBodies);
         }

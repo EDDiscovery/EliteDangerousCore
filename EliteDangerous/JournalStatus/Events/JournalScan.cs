@@ -25,19 +25,21 @@ namespace EliteDangerousCore.JournalEvents
 {
     // JSON export thru ZMQ/DLLs/Web
 
-    [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} s{IsStar} p{IsPlanet}")]
+    [System.Diagnostics.DebuggerDisplay("Event {EventTypeStr} {EventTimeUTC} {BodyName} {BodyType}")]
     [JournalEntryType(JournalTypeEnum.Scan)]
     public partial class JournalScan : JournalEntry, IStarScan, IBodyFeature
     {
-        // we can have scans of Planets, Stars, AsteroidClusters and Planetary rings as of Nov 25
+        // we can have scans of Planets, Stars, AsteroidClusters,Planetary rings, Stellar rings as of Nov 25
         [PropertyNameAttribute("Is it a star")]
-        public bool IsStar { get { return StarType != null; } }
+        public bool IsStar => BodyType == BodyDefinitions.BodyType.Star;
         [PropertyNameAttribute("Is it a belt cluster body")]
-        public bool IsBeltClusterBody { get { return StarType == null && PlanetClass == null && BodyName.ContainsIIC("Belt Cluster "); } }
+        public bool IsBeltClusterBody => BodyType == BodyDefinitions.BodyType.AsteroidCluster;
         [PropertyNameAttribute("Is it a planetary ring")]
-        public bool IsPlanetaryRing { get { return StarType == null && PlanetClass == null && BodyName.EndsWithIIC(" Ring"); } }
+        public bool IsPlanetaryRing => BodyType == BodyDefinitions.BodyType.PlanetaryRing;
+        [PropertyNameAttribute("Is it a stellar ring")]
+        public bool IsStellarRing => BodyType == BodyDefinitions.BodyType.StellarRing;
         [PropertyNameAttribute("Is it a planet")]
-        public bool IsPlanet { get { return PlanetClass != null; } }
+        public bool IsPlanet => BodyType == BodyDefinitions.BodyType.Planet;
 
         ////////////////////////////////////////////////////////////////////// ALL
 
@@ -47,8 +49,7 @@ namespace EliteDangerousCore.JournalEvents
         public string BodyName { get; private set; }                        // direct (meaning no translation)
 
         [PropertyNameAttribute("Basic type, Planet, Star, Ring")]
-        public BodyDefinitions.BodyType BodyType => IsPlanet ? BodyDefinitions.BodyType.Planet : IsStar ? BodyDefinitions.BodyType.Star : 
-                                                    IsBeltClusterBody ? BodyDefinitions.BodyType.AsteroidCluster : BodyDefinitions.BodyType.PlanetaryRing;
+        public BodyDefinitions.BodyType BodyType { get; private set; }
 
         [PropertyNameAttribute("Internal Frontier ID, is empty for older scans")]
         public int? BodyID { get; private set; }                            // direct
@@ -458,6 +459,7 @@ namespace EliteDangerousCore.JournalEvents
             ScanType = evt["ScanType"].Str();                               // ALL
             BodyName = evt["BodyName"].Str();                               // ALL
             BodyID = evt["BodyID"].IntNull();                               // ALL
+
             StarSystem = evt["StarSystem"].StrNull();                       // ALL    
             SystemAddress = evt["SystemAddress"].LongNull();                // ALL    
             DistanceFromArrivalLS = evt["DistanceFromArrivalLS"].Double();  // ALL 
@@ -499,8 +501,9 @@ namespace EliteDangerousCore.JournalEvents
 
             StarType = evt["StarType"].StrNull();                           // stars have this field
 
-            if (IsStar)     // based on StarType
+            if (StarType != null)     // based on StarType
             {
+                BodyType = BodyDefinitions.BodyType.Star;
                 StarTypeID = Stars.ToEnum(StarType);
 
                 nStellarMass = evt["StellarMass"].DoubleNull();
@@ -508,10 +511,20 @@ namespace EliteDangerousCore.JournalEvents
                 Luminosity = evt["Luminosity"].StrNull();
                 StarSubclass = evt["Subclass"].IntNull();
                 nAge = evt["Age_MY"].DoubleNull();
-
             }
             else
+            {
                 PlanetClass = evt["PlanetClass"].StrNull();                 // try and read planet class, this might be null as well, in which case its a belt cluster
+                
+                if (PlanetClass != null)                                    // now we can set BodyType correctly
+                    BodyType = BodyDefinitions.BodyType.Planet;
+                else if ((Parents?.Count >= 1 && Parents[0].IsStellarRing) || BodyDefinitions.IsBodyNameABeltCluster(BodyName))       // parent is a stellar ring, its a asteroid cluster
+                    BodyType = BodyDefinitions.BodyType.AsteroidCluster;
+                else if (Parents?.Count < 1 || Parents[0].IsPlanet)
+                    BodyType = BodyDefinitions.BodyType.PlanetaryRing;
+                else
+                    BodyType = BodyDefinitions.BodyType.StellarRing;
+            }
 
             // All orbiting bodies
 

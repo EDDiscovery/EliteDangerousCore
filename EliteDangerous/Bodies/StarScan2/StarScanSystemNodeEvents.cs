@@ -33,7 +33,7 @@ namespace EliteDangerousCore.StarScan2
 
             AlignParentsName(sc.Parents, subname, out List<string> partnames);
 
-            $"Scan {sc.EventTimeUTC} `{sc.BodyName}`:{sc.BodyID} Name Normalised: {string.Join(", ", partnames)}".DO(debugid);
+            $"Scan s/p {sc.EventTimeUTC} `{sc.BodyName}`:{sc.BodyID}:{sc.BodyType} Normalised: `{string.Join(", ", partnames)}` PLIST: {sc.ParentList()}".DO(debugid);
 
             int pno = sc.Parents.Count - 1;     // parents go backwards
             int partno = 0;                     // parts go forward
@@ -63,15 +63,16 @@ namespace EliteDangerousCore.StarScan2
                     cur.ChildBodies.Add(subbody);
                     bodybyid[nt.BodyID] = subbody;
                     Sort(cur);      // added, needs sorting
-                    $"  Add {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    $"  Add s/p {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                 }
                 else
                 {
                     if (subbody.Parent != cur)                  // if there but not in correct place, move to correct place
                     {
+                        (subbody.PlacedWithoutParents == true).Assert($" Moving s/p subbody {subbody.OwnName} but it was not placed without parents");
                         ReassignParent(subbody, cur, nt.BodyID);
                         Sort(cur);      // added, needs sorting
-                        $"  Move {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                        $"  Move s/p {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                     }
 
                     // If we have a difference in name, the new name is not an unknown name, and the subbody is not a BC name
@@ -79,7 +80,7 @@ namespace EliteDangerousCore.StarScan2
                     {
                         subbody.ResetBodyName(subbodyname);
                         Sort(cur);      // changed name, sort
-                        $"  Rename {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                        $"  Rename s/p {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                     }
 
                     if ( subbody.BodyID!=nt.BodyID)                         // for a belt, added by the star, the bodyID would be set to -N, so here we correct it back. 
@@ -87,8 +88,10 @@ namespace EliteDangerousCore.StarScan2
                         (subbody.BodyID < 0).Assert();                      // double check we are not being double troubled by picking up something else which has an dupl name (such as Unknown Barycentre)
                         subbody.ResetBodyID(nt.BodyID);
                         bodybyid[nt.BodyID] = subbody;                      // changing ID does not change sort
-                        $"  Rebodyid {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                        $"  Rebodyid s/p {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                     }
+
+                    subbody.PlacedWithoutParents = false;          // now confirmed in location
                 }
 
                 CheckTree();
@@ -106,36 +109,56 @@ namespace EliteDangerousCore.StarScan2
             BodyNode body = FindBody(sc.BodyID.Value);        // find ID anywhere
 
             if (body == null)
-                body = FindCanonicalBodyNameType(sc.BodyName,sc.BodyType);  // see if its anywhere else due to a misplace using the scan name, checking all scan names and ownnames in case its an autoplaced object
+            {
+                if (sc.BodyType.IsBodyARing())
+                {
+                    // for rings, they must be under the current body, so only search there, they were added by the parent Rings structure
+                    body = cur.ChildBodies.Find(x => x.CanonicalName.EqualsIIC(sc.BodyName) && x.BodyType.IsBodyARing());
+                    $"  Add s/p Lookup Ring in {cur.OwnName} for {sc.BodyName} Matched `{body?.CanonicalName}`".DO(debugid);
+                }
+                else
+                {
+                    // see if its anywhere else due to a misplace using the scan name, checking all nodes but only ones marked with PlacedWithoutParents
+                    body = FindCanonicalMisplacedBodyNameType(sc.BodyName, sc.BodyType);
+                    $"  Add s/p Lookup Misplaced body {sc.BodyName}:{sc.BodyType} Matched `{body?.CanonicalName}`".DO(debugid);
+
+                    // double check we would not have found it by name without PlacedwithoutParent flag - shows up a bug, as the only way it can be misplaced if added without parents
+                    // there are a few systems with repeated names which trigger this, hence just a trace (Amitrite for instance)
+                    if (body == null && FindCanonicalBodyNameType(sc.BodyName, sc.BodyType) != null) global::System.Diagnostics.Trace.WriteLine($"**** StarScan s/p {sc.BodyName} {sc.BodyType} Found but not with PlacedWithoutParent");
+                }
+            }
 
             if ( body == null )
             {
                 body = new BodyNode(ownname, sc, sc.BodyID.Value, cur, this);
                 cur.ChildBodies.Add(body);
                 bodybyid[sc.BodyID.Value] = body;
-                $"  Add {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                $"  Add s/p {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
             }
             else
             {
                 if (body.Parent != cur)                 // if there but not in correct place, move to correct place
                 {
+                    (body.PlacedWithoutParents == true).Assert($" Moving s/p {body.OwnName} but it was not placed without parents");
                     ReassignParent(body, cur, sc.BodyID.Value);
-                    $"  Move {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    $"  Move s/p {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                 }
 
                 if (ownname != body.OwnName)
                 {
                     body.ResetBodyName(ownname);                        // make sure we are calling it by this part - this is the real name always
-                    $"  Rename {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    $"  Rename s/p {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                 }
 
                 // this can occur with a scan of planetary rings, where the ring was added by the parent body with a Auto ID
                 if (body.BodyID != sc.BodyID)
                 {
-                    (body.BodyID < 0).Assert("StarScan Body in non standard naming is not null");
+                    (body.BodyID < 0).Assert("BodyID s/p in non standard naming is not null");
                     body.ResetBodyID(sc.BodyID.Value);
                     bodybyid[body.BodyID] = body;
                 }
+
+                body.PlacedWithoutParents = false;          // now confirmed in location
             }
 
             BodyGeneration++;
@@ -164,7 +187,7 @@ namespace EliteDangerousCore.StarScan2
         {
             global::System.Diagnostics.Debug.Assert(sc.BodyID == 0 || sc.Parents != null);
 
-            $"Scan {sc.EventTimeUTC} `{sc.BodyName}`:{sc.BodyID} Non Standard with Parents {sc.ParentList()} ".DO(debugid);
+            $"Scan ns/p {sc.EventTimeUTC} `{sc.BodyName}`:{sc.BodyID} Parents {sc.ParentList()}".DO(debugid);
 
             BodyNode cur = systemBodies;
             int pno = (sc.Parents?.Count ?? 0) - 1;
@@ -189,13 +212,13 @@ namespace EliteDangerousCore.StarScan2
 
                     if (subbody != null && subbody.BodyID == BodyNode.BodyIDMarkerForAutoBodyBeltCluster)   // if we found it, and its auto named
                     {
-                        $"  Starscan Non Standard Naming, Belt Cluster, Found a matching previous entry created by a star with autobeltcluster id, {subbody.OwnName} vs {sc.BodyName}".DO(debugid);
+                        $"  Beltcluster ns/p found a matching previous entry created by a star with autobeltcluster id, {subbody.OwnName} vs {sc.BodyName}".DO(debugid);
                         subbody.ResetBodyID(nt.BodyID);
                         bodybyid[nt.BodyID] = subbody;
                     }
                 }
 
-                if ( subbody == null)       // did not find by bodyid, or by similar names, so it must be new to us.
+                if (subbody == null)       // did not find by bodyid, or by similar names, so it must be new to us.
                 { 
                     string nameofcomponent = null;
 
@@ -208,7 +231,7 @@ namespace EliteDangerousCore.StarScan2
                         if (bci > 0)
                         {
                             nameofcomponent = sc.BodyName.Substring(0, bci).Trim() + " Belt";
-                            $"  Starscan Non Standard Naming, Belt Cluster, Estimated name of ring is `{nameofcomponent}`".DO(debugid);
+                            $"  Naming ns/p of Belt Cluster, Estimated name of ring is `{nameofcomponent}`".DO(debugid);
                         }
                     }
 
@@ -216,16 +239,19 @@ namespace EliteDangerousCore.StarScan2
                     cur.ChildBodies.Add(subbody);
                     bodybyid[nt.BodyID] = subbody;
                     Sort(cur);
-                    $"  Add {subbody.BodyType} `{subbody.OwnName}`:{subbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    $"  Add ns/p {subbody.BodyType} `{subbody.OwnName}`:{subbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                 }
                 else
                 {
                     if (subbody.Parent != cur)
                     {
+                        (subbody.PlacedWithoutParents == true).Assert($" Moving ns/p subbody {subbody.OwnName} but it was not placed without parents");
                         ReassignParent(subbody, cur, nt.BodyID);
                         Sort(cur);
-                        $"  Move {subbody.BodyType} `{subbody.OwnName}`:{subbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                        $"  Move ns/p {subbody.BodyType} `{subbody.OwnName}`:{subbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                     }
+
+                    subbody.PlacedWithoutParents = false;       // now confirmed in location
                 }
 
                 CheckTree();
@@ -235,38 +261,57 @@ namespace EliteDangerousCore.StarScan2
             }
 
             BodyNode body = FindBody(sc.BodyID.Value);        // find ID anywhere
-            
-            if (body == null)                                       // no, check if its misplaced anywhere by the scan name
-                body = FindCanonicalBodyNameType(sc.BodyName,sc.BodyType);
+
+            if (body == null)     // no, check if its misplaced anywhere by the scan name
+            {
+                if (sc.BodyType.IsBodyARing())      // same code as above..
+                {
+                    // for rings, they must be under the current body, so only search there, they were added by the parent Rings structure
+                    body = cur.ChildBodies.Find(x => x.CanonicalName.EqualsIIC(sc.BodyName) && x.BodyType.IsBodyARing());
+                    $"  Add ns/p Lookup Ring in {cur.OwnName} for {sc.BodyName} Matched `{body?.CanonicalName}`".DO(debugid);
+                }
+                else
+                {
+                    // see if its anywhere else due to a misplace using the scan name, checking all nodes but only ones marked with PlacedWithoutParents
+                    body = FindCanonicalMisplacedBodyNameType(sc.BodyName, sc.BodyType);
+                    $"  Add ns/p Lookup Misplaced body {sc.BodyName}:{sc.BodyType} Matched `{body?.CanonicalName}`".DO(debugid);
+
+                    // double check we would not have found it by name without PlacedwithoutParent flag - shows up a bug, as the only way it can be misplaced if added without parents
+                    if (body == null && FindCanonicalBodyNameType(sc.BodyName, sc.BodyType) != null) global::System.Diagnostics.Trace.WriteLine($"**** StarScan ns/p {sc.BodyName} {sc.BodyType} Found but not with PlacedWithoutParent");
+                }
+            }
 
             if (body == null)
             {
                 body = new BodyNode(sc.BodyName, sc, sc.BodyID.Value, cur, this);
                 cur.ChildBodies.Add(body);
                 bodybyid[sc.BodyID.Value] = body;
-                $"  Add {body.BodyType} `{body.OwnName}`:{body.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                $"  Add ns/p {body.BodyType} `{body.OwnName}`:{body.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
             }
             else
             {
                 if (body.Parent != cur)                 // if there but not in correct place, move to correct place
                 {
+                    (body.PlacedWithoutParents == true).Assert($" Moving ns/p parents {body.OwnName} but it was not placed without parents");
                     ReassignParent(body, cur, sc.BodyID.Value);
-                    $"  Move {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    $"  Move ns/p {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                 }
 
                 if (body.OwnName != sc.BodyName)
                 {
                     body.ResetBodyName(sc.BodyName);        // force the name we know on it
-                    $"  Rename {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    $"  Rename ns/p {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                 }
 
                 // this can occur with a scan of planetary rings, where the ring was added by the parent body with a Auto ID
-                if (body.BodyID != sc.BodyID)
+                if (body.BodyID != sc.BodyID )
                 {
-                    (body.BodyID < 0).Assert("StarScan Body in non standard naming is not null");
+                    (body.BodyID < 0).Assert("BodyId ns/p in non standard naming is not null");
                     body.ResetBodyID(sc.BodyID.Value);
                     bodybyid[body.BodyID] = body;
                 }
+
+                body.PlacedWithoutParents = false;          // now confirmed in location
             }
 
             BodyGeneration++;
@@ -292,13 +337,14 @@ namespace EliteDangerousCore.StarScan2
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Get or make a standard named body node Scheau Prao ME-M c22-21 A 1 a etc without a parent list
         // given a own name like "A 1 a" or "1 a" or "1" make nodes down the tree if they don't exist, return final node.
+        // Used for legacy Scans before Parents/BodyID
         public BodyNode GetOrMakeStandardBodyNodeFromScanWithoutParents(JournalScan sc, string subname, string systemname)
         {
             // extract all named parts
 
             var partnames = BodyNode.ExtractPartsFromStandardName(subname);
 
-            $"Scan {sc.EventTimeUTC} `{sc.BodyName}`:{sc.BodyID} No Parents Name Normalised: {string.Join(", ", partnames)}".DO(debugid);
+            $"Scan s/np {sc.EventTimeUTC} `{sc.BodyName}`:{sc.BodyID} Normalised: {string.Join(", ", partnames)}".DO(debugid);
 
             BodyNode cur = systemBodies;
 
@@ -326,7 +372,7 @@ namespace EliteDangerousCore.StarScan2
                     {
                         starbody = new BodyNode(BodyNode.DefaultNameOfUnknownStar, BodyDefinitions.BodyType.Star, BodyNode.BodyIDMarkerForAutoBody, cur, this);
                         cur.ChildBodies.Add(starbody);
-                        $"  Add {starbody.BodyType} `{starbody.OwnName}`:{starbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                        $"  Add s/np {starbody.BodyType} `{starbody.OwnName}`:{starbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                     }
                     
                     cur = starbody;
@@ -336,7 +382,9 @@ namespace EliteDangerousCore.StarScan2
 
                 bool last = partno == partnames.Count - 1;
 
-                BodyNode subbody = last ? FindCanonicalBodyNameType(sc.BodyName,sc.BodyType) : null;     // see if its anywhere else due to a misplace for the last entry only
+                // see if its anywhere else due to a misplace for the last entry only
+
+                BodyNode subbody = last ? FindCanonicalBodyNameType(sc.BodyName,sc.BodyType) : null;     
 
                 // see if the ownname is under our node
                 if ( subbody == null)   
@@ -361,14 +409,14 @@ namespace EliteDangerousCore.StarScan2
                     if (!last)      // sort, if not last. If last it will be sorted below
                         Sort(cur);
 
-                    $"  Add {subbody.BodyType} `{subbody.OwnName}`:{subbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    $"  Add s/np {subbody.BodyType} `{subbody.OwnName}`:{subbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                 }
                 else
                 {
                     if ( subbody.Parent != cur)
                     {
                         ReassignParent(subbody, cur, BodyNode.BodyIDMarkerForAutoBody);
-                        $"  Move {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                        $"  Move s/np misplaced {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                     }
 
                     // we always have real names for each part
@@ -377,7 +425,7 @@ namespace EliteDangerousCore.StarScan2
                     {
                         subbody.ResetBodyName(ownname);     // just in case we made an incorrect one before
                         Sort(cur);
-                        $"  Rename {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                        $"  Rename s/np {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                     }
                 }
 
@@ -438,8 +486,10 @@ namespace EliteDangerousCore.StarScan2
                     {
                         // attach body to parent
                         body = new BodyNode(ownname, BodyDefinitions.BodyType.Planet, bid ?? -1, parentbody, this,fdname);
+                        $"  Add s/np planet `{fdname}`:{bid} in {systemname}".DO(debugid);
                         parentbody.ChildBodies.Add(body);
                         BodyGeneration++;
+                        body.PlacedWithoutParents = true;
 
                         if (bid >= 0)
                             bodybyid[bid.Value] = body;
@@ -476,15 +526,19 @@ namespace EliteDangerousCore.StarScan2
                 {
                     starbody = new BodyNode(BodyNode.DefaultNameOfUnknownStar, BodyDefinitions.BodyType.Star, BodyNode.BodyIDMarkerForAutoBody, systemBodies, this);       // assign under the main node
                     systemBodies.ChildBodies.Add(starbody);
-                    $"  Add Unknown Star for {fdname}:{bid} in {systemname}".DO(debugid);
+                    $"  Add dp star `{fdname}`:{bid} in {systemname}".DO(debugid);
+                    starbody.PlacedWithoutParents = true;
                 }
 
                 body = new BodyNode(fdname, BodyDefinitions.BodyType.Planet, bid ?? -1, starbody, this, fdname);
+                $"  Add dp `{fdname}`:{bid} in {systemname}".DO(debugid);
                 BodyGeneration++;
 
                 starbody.ChildBodies.Add(body);
                 if (bid >= 0)
                     bodybyid[bid.Value] = body;
+
+                body.PlacedWithoutParents = true;
 
                 Sort(starbody);
 
@@ -515,9 +569,10 @@ namespace EliteDangerousCore.StarScan2
             if (starbody == null)
             {
                 starbody = new BodyNode(cutname, BodyDefinitions.BodyType.Star, bid ?? BodyNode.BodyIDMarkerForAutoBody, systemBodies, this, fdname);       // we don't know its placement, so we just place it under the systemnode, and we mark it as unknown (even if we know its BID because we want to mark it as autoplaced)
-                $"  Add Star `{fdname}`:-2 in {systemname}".DO(debugid);
+                $"  Add d star `{fdname}`:-2 in {systemname}".DO(debugid);
                 BodyGeneration++;
                 systemBodies.ChildBodies.Add(starbody);
+                starbody.PlacedWithoutParents = true;
             }
             else
             {
@@ -596,7 +651,8 @@ namespace EliteDangerousCore.StarScan2
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // From a Location, We have a body id, lets try and see if we can assign it to a bodyid less body!
+        // From a AddLocation, and due to Supercruise Exit or Location events
+        // We have a body id, lets try and see if we can assign it to a bodyid less body
         public BodyNode AddBodyIDToBody(IBodyFeature sc)
         {
             if (sc.BodyID.HasValue)
@@ -605,11 +661,11 @@ namespace EliteDangerousCore.StarScan2
 
                 if (body == null)       // if not found, we may be able to do add the body id to it 
                 {
-                    body = FindCanonicalBodyNameType(sc.BodyName,sc.BodyType);  // see if we can find it
+                    body = FindCanonicalBodyNameType(sc.BodyName,sc.BodyType);  // see if we can find it, matching by type
 
                     if (body != null && body.BodyID<0)      // found it, and not set, set it
                     {
-                        (body.BodyID < 0).Assert("StarScan Body is not null");
+                        (body.BodyID < 0).Assert("StarScan Add BodyID to Body BodyID is not null");
                         $"  Assign body ID {sc.BodyID} {sc.BodyName} in {System.Name}".DO(debugid);
                         body.ResetBodyID(sc.BodyID.Value);
                         bodybyid[sc.BodyID.Value] = body;
@@ -638,16 +694,18 @@ namespace EliteDangerousCore.StarScan2
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // SAASignalsFound are on planets or planetary rings
+        // SAASignalsFound are on planets, stellar or planetary rings
         // will return null if we can't find it
-        // Note that we could have had a ring added by a body with the ring scan info, which does not have bodyid in the field, so body id is reset if found using name
+        // If we don't find by ID, we try and find by name (we could have had a ring added by a body with the ring scan info without BodyID)
+        // SAASignalsFound calls bodytype Planet or PlanetaryOrStellarRing, we find one with matching Planet, StellarRing or PlanetaryRing
         public BodyNode AddSAASignalsFound(JournalSAASignalsFound sc)
         {
             BodyNode body = FindBody(sc.BodyID);
 
             if (body == null)
             {
-                body = FindCanonicalBodyNameType(sc.BodyName, sc.BodyType);
+                body = FindCanonicalBodyNameType(sc.BodyName, sc.BodyType);  // across all bodies try and find a compatible body type
+
                 if (body != null)
                 {
                     (body.BodyID < 0).Assert("Reset SAA Signals Found without ID but ID is set");
@@ -670,17 +728,19 @@ namespace EliteDangerousCore.StarScan2
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // ScanComplete are on planets or planetary rings
+        // SAAScanComplete are on planets, stellar or planetary rings
         // will return null if we can't find it
-        // Note that we could have had a ring added by a body with the ring scan info, which does not have bodyid in the field, so body id is reset if found using name
+        // If we don't find by ID, we try and find by name (we could have had a ring added by a body with the ring scan info without BodyID)
+        // SAASignalsFound calls bodytype Planet or PlanetaryOrStellarRing, we find one with matching Planet, StellarRing or PlanetaryRing
         public BodyNode AddSAAScanComplete(JournalSAAScanComplete sc)
         {
+            $"AddSAAScanComplete {sc.EventTimeUTC} `{sc.BodyName}`:{sc.BodyID}".DO(debugid);
+
             BodyNode body = FindBody(sc.BodyID);
 
             if (body == null)
             {
-                //body = FindCanonicalBodyNameType(sc.BodyName, sc.BodyType);
-                body = FindCanonicalBodyNameType(sc.BodyName,sc.BodyType);
+                body = FindCanonicalBodyNameType(sc.BodyName, sc.BodyType);  // across all bodies try and find a compatible body type
 
                 if (body != null)
                 {
@@ -692,6 +752,7 @@ namespace EliteDangerousCore.StarScan2
 
             if (body != null)
             {
+                $"  Assign SAAScanComplete to {body.OwnName}:{body.BodyID}".DO(debugid);
                 body.SetMapped(sc.ProbesUsed <= sc.EfficiencyTarget);       // record in body the mapped state
 
                 if (body.Scan != null)      // if the scan is there, we can set the value.  If another scan comes in the scan comes in the mapped flags will be copied from body. See SetScan
@@ -736,7 +797,7 @@ namespace EliteDangerousCore.StarScan2
         // Set FSSDiscoveryScan counters
         public void SetFSSDiscoveryScan(int? bodycount, int? nonbodycount)
         {
-            $"Add FSS Discovery Scan Count {bodycount} {nonbodycount} to System in `{System.Name}`:{System.SystemAddress}".DO(debugid);
+            //$"Add FSS Discovery Scan Count {bodycount} {nonbodycount} to System in `{System.Name}`:{System.SystemAddress}".DO(debugid);
             FSSTotalBodies = bodycount;
             FSSTotalNonBodies = nonbodycount;
             BodyGeneration++;
@@ -754,7 +815,7 @@ namespace EliteDangerousCore.StarScan2
         // Set FSS Signals discovered into system bodies
         public void AddFSSSignalsDiscovered(List<FSSSignal> signals)
         {
-            $"Add FSS Signals {signals.Count} to SystemBodies in `{System.Name}`:{System.SystemAddress}".DO(debugid);
+            //$"Add FSS Signals {signals.Count} to SystemBodies in `{System.Name}`:{System.SystemAddress}".DO(debugid);
             systemBodies.AddFSSSignals(signals);
             SignalGeneration++;
         }
