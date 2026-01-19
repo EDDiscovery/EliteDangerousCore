@@ -515,7 +515,7 @@ namespace EliteDangerousCore.StarScan2
         {
             OwnName = name;
         }
-        public void ResetClass(BodyDefinitions.BodyType ty)
+        public void ResetBodyType(BodyDefinitions.BodyType ty)
         {
             BodyType = ty;
         }

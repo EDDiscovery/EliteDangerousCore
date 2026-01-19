@@ -136,7 +136,8 @@ namespace EliteDangerousCore.StarScan2
 
                 // thru the child bodies, include only who match the filters and is displayable due to web selection
 
-                List<NodePtr> bodiestodisplay = starnode.ChildBodies.Where(b => (bodytypefilters == null || b.BodyNode.IsBodyTypeInFilter(bodytypefilters, true) == true) &&
+                List<NodePtr> bodiestodisplay = starnode.ChildBodies.Where(b => b.BodyNode.BodyType != BodyDefinitions.BodyType.PlanetaryRing && 
+                                                                                (bodytypefilters == null || b.BodyNode.IsBodyTypeInFilter(bodytypefilters, true) == true) &&
                                                                                 (b.BodyNode.DoesNodeHaveNonWebScansBelow() || ShowWebBodies)
                                                                           ).ToList();
 

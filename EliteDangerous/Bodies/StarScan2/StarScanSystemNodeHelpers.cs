@@ -70,11 +70,11 @@ namespace EliteDangerousCore.StarScan2
         }
 
         // stars declare belt clusters (called Belt)
-        // planets declare planetary rings (which we add but actually do not display in system display)
+        // planets or sub stars declare planetary rings (which we add but actually do not display in system display)
         // Added as children of the body
         // the belt data is recorded in each body
         // belt data due to stupidity does not contain body id
-        private void ProcessBeltsOrRings(BodyNode body, JournalScan sc, string bodyname, string systemname)
+        private void ProcessBeltsOrRings(BodyNode parentbody, JournalScan sc, string bodyname, string systemname)
         {
             if (sc.HasRingsOrBelts)
             {
@@ -109,23 +109,29 @@ namespace EliteDangerousCore.StarScan2
                     }
                     else
                     {
-                        string s = $"StarScan {body.Name()} Unconventional ring name {name}";
+                        string s = $"StarScan {parentbody.Name()} Unconventional ring name {name} in {parentbody.SystemNode.System.Name}";
                         global::System.Diagnostics.Trace.WriteLine(s);
                     }
 
-                    var belt = body.ChildBodies.Find(x => x.OwnName.EqualsIIC(name));           // so, it will be named for a standard naming scheme
+                    var belt = parentbody.ChildBodies.Find(x => x.OwnName.EqualsIIC(name));           // so, it will be named for a standard naming scheme
 
                     if (belt == null)                                                   // can't find it by name
                     {
-                        belt = new BodyNode(name, body.BodyType == BodyDefinitions.BodyType.Planet ? BodyDefinitions.BodyType.PlanetaryRing : BodyDefinitions.BodyType.StellarRing, BodyNode.BodyIDMarkerForAutoBodyBeltCluster, body, this, ring.Name);
-                        body.ChildBodies.Add(belt);
-                        $"  Add {belt.BodyType} object {name} to `{body.OwnName}`:{body.BodyID}".DO(debugid);
+                        // top level stars have stellar rings
+                        // sub stars and planets have planetary rings
+                        // detect by parent body type is planet, or naming, we may be wrong for stars/rings if the naming is strange, that will be corrected in NodeEvents
+                        belt = new BodyNode(name,
+                                parentbody.BodyType == BodyDefinitions.BodyType.Planet || BodyDefinitions.IsBodyNameARing(name) ? BodyDefinitions.BodyType.PlanetaryRing : BodyDefinitions.BodyType.StellarRing,
+                                BodyNode.BodyIDMarkerForAutoBodyBeltCluster, parentbody, this, ring.Name);
+                        
+                        parentbody.ChildBodies.Add(belt);
+                        $"Starscan Add {belt.BodyType} object {name} to `{parentbody.OwnName}`:{parentbody.BodyID}".DO(debugid);
                     }
 
                     belt.SetScan(ring);
                 }
 
-                Sort(body);
+                Sort(parentbody);
             }
         }
 
@@ -196,7 +202,7 @@ namespace EliteDangerousCore.StarScan2
                 if (x.IsBarycentre && bodybyid.TryGetValue(x.BodyID, out BodyNode bn) && bn.BarycentreScan != null)
                 {
                     x.Barycentre = bn.BarycentreScan;
-                    $"   .. Scan parent is a barycentre {x.BodyID} and we can assign a bary scan to it".DO(debugid);
+                    $"   .. Starscan Scan parent is a barycentre {x.BodyID} and we can assign a bary scan to it".DO(debugid);
                 }
             }
         }
@@ -209,7 +215,7 @@ namespace EliteDangerousCore.StarScan2
 
             if (scannodelist.Count == 0)
             {
-                $"   .. No scans found with this barycentre in bodies list in {System.Name}".DO(debugid);
+                $"   .. Starscan No scans found with this barycentre in bodies list in {System.Name}".DO(debugid);
             }
 
             foreach (var scannode in scannodelist)
@@ -218,7 +224,7 @@ namespace EliteDangerousCore.StarScan2
                 {
                     if (scannode.Scan.Parents[i].BodyID == sc.BodyID)
                     {
-                        $"   .. Assign barycentre to scan node {scannode.Scan.BodyName}".DO(debugid);
+                        $"   .. Starscan Assign barycentre to scan node {scannode.Scan.BodyName}".DO(debugid);
                         scannode.Scan.Parents[i].Barycentre = sc;
                     }
                 }
@@ -274,9 +280,16 @@ namespace EliteDangerousCore.StarScan2
                 {
                     bool good = !cnames.Contains(x.CanonicalName);
                     if (!good)
-                        global::System.Diagnostics.Trace.WriteLine($"**** `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} is repeated in {System.Name} for {EDCommander.Current.Name}");
+                        global::System.Diagnostics.Trace.WriteLine($"Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} is repeated in {System.Name} for {EDCommander.Current.Name}");
                     cnames.Add(x.CanonicalName);
                 }
+                
+                // these are classification errors
+                if (x.BodyType == BodyDefinitions.BodyType.AsteroidCluster && x.Parent.BodyType != BodyDefinitions.BodyType.StellarRing)
+                    global::System.Diagnostics.Trace.WriteLine($"**** Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} asteroid not under stellar ring {System.Name} for {EDCommander.Current.Name}");
+                
+                if (x.BodyType == BodyDefinitions.BodyType.PlanetaryRing && !(x.Parent.BodyType == BodyDefinitions.BodyType.Planet || x.Parent.BodyType == BodyDefinitions.BodyType.Star))
+                    global::System.Diagnostics.Trace.WriteLine($"**** Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} planetary ring not under star/planet ring {System.Name} for {EDCommander.Current.Name}");
             }
 
             (totalbodieswithids == bodybyid.Count).Assert($"StarScan {System.Name} Not the same number of bodyids as nodes {totalbodieswithids} with Ids in bodybyid {bodybyid.Count}", () => DumpTree());

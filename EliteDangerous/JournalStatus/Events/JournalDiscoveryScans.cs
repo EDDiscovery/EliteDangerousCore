@@ -250,14 +250,14 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.SAAScanComplete)]
     public class JournalSAAScanComplete : JournalEntry, IStarScan, IBodyFeature
     {
-        // for planetary rings, st or planets
+        // from a ring or planet
         public JournalSAAScanComplete(JObject evt) : base(evt, JournalTypeEnum.SAAScanComplete) // event came in about 12/12/18
         {
             BodyName = evt["BodyName"].Str();
 
             // you can scan stellar rings, plantary rings (can't tell the difference) and planets
 
-            BodyType = BodyDefinitions.IsBodyNameARing(BodyName) ? BodyDefinitions.BodyType.PlanetaryOrStellarRing : BodyDefinitions.BodyType.Planet;
+            BodyType = BodyDefinitions.IsBodyNameARing(BodyName) ? BodyDefinitions.BodyType.PlanetaryRing : BodyDefinitions.BodyType.Planet;
             BodyID = evt["BodyID"].Int();
             ProbesUsed = evt["ProbesUsed"].Int();
             EfficiencyTarget = evt["EfficiencyTarget"].Int();
@@ -316,7 +316,7 @@ namespace EliteDangerousCore.JournalEvents
 
             // you can scan stellar rings, plantary rings (can't tell the difference) and planets
 
-            BodyType = BodyDefinitions.IsBodyNameARing(BodyName) ? BodyDefinitions.BodyType.PlanetaryOrStellarRing : BodyDefinitions.BodyType.Planet;
+            BodyType = BodyDefinitions.IsBodyNameARing(BodyName) ? BodyDefinitions.BodyType.PlanetaryRing : BodyDefinitions.BodyType.Planet;
 
             SystemAddress = evt["SystemAddress"].Long();
             BodyID = evt["BodyID"].Int();

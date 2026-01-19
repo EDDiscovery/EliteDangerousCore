@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using BaseUtils;
 using QuickJSON;
 using System;
 using System.Collections.Generic;
@@ -29,15 +30,13 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.Scan)]
     public partial class JournalScan : JournalEntry, IStarScan, IBodyFeature
     {
-        // we can have scans of Planets, Stars, AsteroidClusters,Planetary rings, Stellar rings as of Nov 25
+        // we can have scans of Planets, Stars, AsteroidClusters, Planetary rings (rings around Planets or Stars) as of Nov 25
         [PropertyNameAttribute("Is it a star")]
         public bool IsStar => BodyType == BodyDefinitions.BodyType.Star;
-        [PropertyNameAttribute("Is it a belt cluster body")]
+        [PropertyNameAttribute("Is it a belt cluster body around a major star")]
         public bool IsBeltClusterBody => BodyType == BodyDefinitions.BodyType.AsteroidCluster;
-        [PropertyNameAttribute("Is it a planetary ring")]
+        [PropertyNameAttribute("Is it a planetary ring around a planet or a sub star")]
         public bool IsPlanetaryRing => BodyType == BodyDefinitions.BodyType.PlanetaryRing;
-        [PropertyNameAttribute("Is it a stellar ring")]
-        public bool IsStellarRing => BodyType == BodyDefinitions.BodyType.StellarRing;
         [PropertyNameAttribute("Is it a planet")]
         public bool IsPlanet => BodyType == BodyDefinitions.BodyType.Planet;
 
@@ -515,15 +514,20 @@ namespace EliteDangerousCore.JournalEvents
             else
             {
                 PlanetClass = evt["PlanetClass"].StrNull();                 // try and read planet class, this might be null as well, in which case its a belt cluster
-                
+
                 if (PlanetClass != null)                                    // now we can set BodyType correctly
                     BodyType = BodyDefinitions.BodyType.Planet;
-                else if ((Parents?.Count >= 1 && Parents[0].IsStellarRing) || BodyDefinitions.IsBodyNameABeltCluster(BodyName))       // parent is a stellar ring, its a asteroid cluster
+                else if (Parents?.Count >= 1)
+                {
+                    if (Parents[0].IsStellarRing)
+                        BodyType = BodyDefinitions.BodyType.AsteroidCluster;
+                    else
+                        BodyType = BodyDefinitions.BodyType.PlanetaryRing;
+                }
+                else if (BodyDefinitions.IsBodyNameABeltCluster(BodyName))
                     BodyType = BodyDefinitions.BodyType.AsteroidCluster;
-                else if (Parents?.Count < 1 || Parents[0].IsPlanet)
-                    BodyType = BodyDefinitions.BodyType.PlanetaryRing;
                 else
-                    BodyType = BodyDefinitions.BodyType.StellarRing;
+                    BodyType = BodyDefinitions.BodyType.PlanetaryRing;      // default for older scans without parents
             }
 
             // All orbiting bodies

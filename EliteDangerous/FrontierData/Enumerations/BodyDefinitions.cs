@@ -32,8 +32,9 @@ namespace EliteDangerousCore
             Star,               // a top level star, or a substar
             Barycentre,         // a barycentre ('Null' type in parents array)
             StellarRing,        // a belt cluster, 'A Belt Cluster' name (`Ring` type in the parents array) - has AsteroidCluster underneath it
+                                // note during star scan, this will be used for 'PlanetaryRings' under substars, until we get a ring scan to confirm that the star is a substar
             AsteroidCluster,    // a body under the belt cluster
-            PlanetaryRing,      // a planet's ring.  Called "A Ring" or "B Ring", from a journalscan of the ring (Scan will be set), or from the journalscan of a planet with its ring structure broken into children, BeltData is set.
+            PlanetaryRing,      // a planet or a star ring.  Called "A Ring" or "B Ring", from a journalscan of the ring (Scan will be set), or from the journalscan of a planet with its ring structure broken into children, BeltData is set.
 
             // Frontier Bodytype only
             Station,    // at a station
@@ -41,7 +42,6 @@ namespace EliteDangerousCore
 
             // EDD Only
             System,          // top level SystemBodies object in SystemNode
-            PlanetaryOrStellarRing, // in SAAScanComplete and SAASignalsFound we can't tell the difference between scanning a stellar or planetary ring. Only in there, not in StarScan
         };
 
         static public BodyType GetBodyType(string bt)
@@ -85,13 +85,8 @@ namespace EliteDangerousCore
             return isbc;
         }
 
-        // matches a and b, or a being a PlanetaryOrStellarRing and b either 
-        static public bool EqualsBT(this BodyType a, BodyType b)
-        {
-            return (a == b) || (a == BodyType.PlanetaryOrStellarRing && (b == BodyType.StellarRing || b == BodyType.PlanetaryRing));
-        }
-
-        static public bool IsBodyARing(this BodyType body) => body == BodyType.PlanetaryOrStellarRing || body == BodyType.StellarRing || body == BodyType.PlanetaryRing;
+        static public bool IsBodyARing(this BodyType body) => body == BodyType.PlanetaryRing;
+        static public bool IsBodyAPlanetaryOrStellarRing(this BodyType body) => body == BodyType.PlanetaryRing || body == BodyType.StellarRing;
 
 
         static public string StarTypeImageName(EDStar StarTypeID, double? nStellarMass, double? nSurfaceTemperature)

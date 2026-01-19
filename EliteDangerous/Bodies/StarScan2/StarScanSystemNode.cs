@@ -79,12 +79,12 @@ namespace EliteDangerousCore.StarScan2
         // bt can be PlantaryOrStellarRing and it will match both
         public BodyNode FindCanonicalBodyNameType(string fdname, BodyDefinitions.BodyType bt)        
         {
-            return Bodies(x => x.CanonicalName.EqualsIIC(fdname) && x.BodyType.EqualsBT(bt), true).FirstOrDefault();
+            return Bodies(x => x.CanonicalName.EqualsIIC(fdname) && x.BodyType == bt, true).FirstOrDefault();
         }
         // bt can be PlantaryOrStellarRing and it will match both, only matches if it was made without parents
         public BodyNode FindCanonicalMisplacedBodyNameType(string fdname, BodyDefinitions.BodyType bt)       
         {
-            return Bodies(x => x.CanonicalName.EqualsIIC(fdname) && x.BodyType.EqualsBT(bt) && x.PlacedWithoutParents==true, true).FirstOrDefault();
+            return Bodies(x => x.CanonicalName.EqualsIIC(fdname) && x.BodyType == bt && x.PlacedWithoutParents==true, true).FirstOrDefault();
         }
         public BodyNode FindCanonicalBodyNameWithWithoutSystem(string fdname)       // matches HIP 1885 A 5 b, A 5 b, HIP 1885 A 2 A Ring, A 2 A Ring etc
         {

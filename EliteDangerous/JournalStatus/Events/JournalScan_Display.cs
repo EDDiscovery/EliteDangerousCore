@@ -610,7 +610,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (!IsStar)
                 {
-                    return $"Bodies.Unknown";
+                    return $"Bodies.Stars.Unknown";
                 }
 
                 return BodyDefinitions.StarTypeImageName(StarTypeID, nStellarMass, nSurfaceTemperature);
@@ -624,7 +624,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (!IsPlanet)
                 {
-                    return $"Bodies.Unknown";
+                    return $"Bodies.Planets.Unknown";
                 }
 
                 return BodyDefinitions.PlanetClassImageName(PlanetTypeID, nSurfaceTemperature, AtmosphereComposition, AtmosphereProperty, AtmosphereID,
