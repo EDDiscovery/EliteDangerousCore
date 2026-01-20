@@ -41,6 +41,11 @@ namespace EliteDangerousCore.DB
         {
             public string Name { get; set; }
             public List<Location> Locations { get; set; }            // may be null from reader..
+
+            public List<Location> FindLocationText(string text)      // list of planets, may be empty, with text in Name or Comment
+            {
+                return Locations?.Where(x=>x.Name.ContainsIIC(text) || x.Comment.ContainsIIC(text)).ToList() ?? new List<Location>();
+            }
         }
 
         public List<Planet> Planets { get; set; }                    // may be null if no planets
@@ -98,6 +103,22 @@ namespace EliteDangerousCore.DB
         public Planet GetPlanet(string planet)  // null if planet does not exist.. else array
         {
             return Planets?.Find(x => x.Name.Equals(planet, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public List<Planet> PlanetsWithLocationText(string text)    // list of planets with a location having this text as part of it, may be empty
+        {
+            List<Planet> planets = new List<Planet>();  
+
+            if ( Planets!=null)
+            {
+                foreach(var p in Planets)
+                {
+                    var list = p.FindLocationText(text);
+                    if (list.Count > 0)
+                        planets.Add(p);
+                }
+            }
+            return planets;
         }
 
         public Location GetLocation(Planet p, string placename)  // null if planet or place does not exist..
@@ -357,6 +378,11 @@ namespace EliteDangerousCore.DB
         public bool HasLocation(string planet, string placename)
         {
             return PlanetaryMarks != null && PlanetaryMarks.HasLocation(planet, placename);
+        }
+
+        public bool ContainsLocationText(string text)
+        {
+            return PlanetaryMarks?.PlanetsWithLocationText(text).Count > 0;
         }
 
         public bool DeleteLocation(string planet, string placename)
