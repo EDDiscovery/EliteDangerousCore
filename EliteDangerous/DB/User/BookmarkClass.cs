@@ -41,6 +41,11 @@ namespace EliteDangerousCore.DB
         {
             public string Name { get; set; }
             public List<Location> Locations { get; set; }            // may be null from reader..
+
+            public List<Location> FindLocationText(string text)      // list of planets, may be empty, with text in Name or Comment
+            {
+                return Locations?.Where(x => x.Name.ContainsIIC(text) || x.Comment.ContainsIIC(text)).ToList() ?? new List<Location>();
+            }
         }
 
         public List<Planet> Planets { get; set; }                    // may be null if no planets
@@ -74,7 +79,7 @@ namespace EliteDangerousCore.DB
             {
                 JArray ja = new JArray();
                 foreach (Planet p in Planets)
-                    ja.Add(JObject.FromObject(p));     
+                    ja.Add(JObject.FromObject(p));
 
                 JObject overall = new JObject();
                 overall["Marks"] = ja;
@@ -84,13 +89,13 @@ namespace EliteDangerousCore.DB
                 return null;
         }
 
-        public IEnumerator<Tuple<Planet,Location>> GetEnumerator()
+        public IEnumerator<Tuple<Planet, Location>> GetEnumerator()
         {
             foreach (Planet pl in Planets)
             {
                 foreach (Location loc in pl.Locations)
                 {
-                    yield return new Tuple<Planet,Location>(pl,loc);
+                    yield return new Tuple<Planet, Location>(pl, loc);
                 }
             }
         }
@@ -98,6 +103,22 @@ namespace EliteDangerousCore.DB
         public Planet GetPlanet(string planet)  // null if planet does not exist.. else array
         {
             return Planets?.Find(x => x.Name.Equals(planet, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public List<Planet> PlanetsWithLocationText(string text)    // list of planets with a location having this text as part of it, may be empty
+        {
+            List<Planet> planets = new List<Planet>();
+
+            if (Planets != null)
+            {
+                foreach (var p in Planets)
+                {
+                    var list = p.FindLocationText(text);
+                    if (list.Count > 0)
+                        planets.Add(p);
+                }
+            }
+            return planets;
         }
 
         public Location GetLocation(Planet p, string placename)  // null if planet or place does not exist..
@@ -144,7 +165,7 @@ namespace EliteDangerousCore.DB
 
         public void AddOrUpdatePlanetBookmark(string planet, string comment, string tags)
         {
-            AddOrUpdateLocation(planet, "", comment, 0,0, tags );
+            AddOrUpdateLocation(planet, "", comment, 0, 0, tags);
         }
 
         public bool DeleteLocation(string planet, string placename)
@@ -339,7 +360,7 @@ namespace EliteDangerousCore.DB
         {
             if (PlanetaryMarks == null)
                 PlanetaryMarks = new PlanetMarks();
-            PlanetaryMarks.AddOrUpdatePlanetBookmark(planet, comment,tags);
+            PlanetaryMarks.AddOrUpdatePlanetBookmark(planet, comment, tags);
             Update();
         }
 
@@ -357,6 +378,11 @@ namespace EliteDangerousCore.DB
         public bool HasLocation(string planet, string placename)
         {
             return PlanetaryMarks != null && PlanetaryMarks.HasLocation(planet, placename);
+        }
+
+        public bool ContainsLocationText(string text)
+        {
+            return PlanetaryMarks?.PlanetsWithLocationText(text).Count > 0;
         }
 
         public bool DeleteLocation(string planet, string placename)
@@ -442,7 +468,7 @@ namespace EliteDangerousCore.DB
         }
 
         // return any mark
-        public BookmarkClass FindBookmarkOnRegion(string name)   
+        public BookmarkClass FindBookmarkOnRegion(string name)
         {
             BookmarkClass bc = globalbookmarks.Find(x => x.Heading != null && x.Heading.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             return bc;
@@ -453,14 +479,14 @@ namespace EliteDangerousCore.DB
             // star name may be null if its a region mark
             return globalbookmarks.Find(x => x.StarName != null && x.StarName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
         }
-        public BookmarkClass FindBookmark(string name , bool region)
+        public BookmarkClass FindBookmark(string name, bool region)
         {
             // star name may be null if its a region mark
             return (region) ? FindBookmarkOnRegion(name) : FindBookmarkOnSystem(name);
         }
 
         // bk = null, new bookmark, else update.  isstar = true, region = false.
-        public BookmarkClass AddOrUpdateBookmark(BookmarkClass bk, bool isstar, string name, double x, double y, double z, DateTime timeutc, 
+        public BookmarkClass AddOrUpdateBookmark(BookmarkClass bk, bool isstar, string name, double x, double y, double z, DateTime timeutc,
                                                  string notes = null,       // if null, don't update notes
                                                  string tags = null,        // if null, don't update tags
                                                  PlanetMarks planetMarks = null)
@@ -484,7 +510,7 @@ namespace EliteDangerousCore.DB
             bk.X = x;
             bk.Y = y;
             bk.Z = z;
-            bk.TimeUTC = timeutc;            bk.PlanetaryMarks = planetMarks ?? bk.PlanetaryMarks;
+            bk.TimeUTC = timeutc; bk.PlanetaryMarks = planetMarks ?? bk.PlanetaryMarks;
             bk.Note = notes ?? bk.Note; // only override if its set.
             bk.Tags = tags ?? bk.Tags;// only override if its set.
 
@@ -498,10 +524,10 @@ namespace EliteDangerousCore.DB
 
             System.Diagnostics.Debug.WriteLine($"Write bookmark {bk.Name} Notes {notes} Tags {tags}");
 
-            OnBookmarkChange?.Invoke(bk,false);
+            OnBookmarkChange?.Invoke(bk, false);
 
             return bk;
-		}	
+        }
 
         public void Delete(BookmarkClass bk)
         {
