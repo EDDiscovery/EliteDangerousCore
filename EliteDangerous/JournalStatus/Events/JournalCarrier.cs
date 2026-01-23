@@ -1119,8 +1119,6 @@ namespace EliteDangerousCore.JournalEvents
         public EconomyDefinitions.Economies[] StationEconomyList { get; set; }        // may be null
 
         // IBodyNameAndID
-        public string BodyName => Body;
-        int? IBodyFeature.BodyID => BodyID;
         public double? Latitude { get => null; set { } }
         public double? Longitude { get => null; set { } }
         public bool HasLatLong => false;

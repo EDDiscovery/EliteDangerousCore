@@ -75,10 +75,10 @@ namespace EliteDangerousCore
         public TravelStateType TravelState { get; private set; } = TravelStateType.Unknown;  // travel state
 
         // last jump into the system, FSDJump or Carrier, or a Location which is in space.  Holds star system faction info
-        public JournalLocOrJump SystemInfo { get; private set; }
+        public JournalLocOrJump SystemInfo { get; private set; }                // MAY BE NULL
 
         // the current location
-        public IBodyFeature CurrentLocation { get; private set; }   
+        public IBodyFeature CurrentLocation { get; private set; }               // MAY BE NULL
         public string WhereAmI => CurrentLocation?.Name_Localised ?? CurrentLocation?.BodyName ?? CurrentLocation?.StarSystem ?? "Unknown";
         public double? Latitude => CurrentLocation?.Latitude;
         public double? Longitude => CurrentLocation?.Longitude;
@@ -92,7 +92,7 @@ namespace EliteDangerousCore
         public string StationFaction => CurrentLocation?.StationFaction;
 
         // always a ship, never a SRV or fighter
-        public IShipNaming CurrentShip { get; private set; }        
+        public IShipNaming CurrentShip { get; private set; }            // MAY BE NULL
         public ulong ShipID => CurrentShip?.ShipId ?? ulong.MaxValue;
         public string ShipType => CurrentShip?.ShipType ?? "Unknown";
         public string ShipTypeFD => CurrentShip?.ShipFD ?? "Unknown";
@@ -104,14 +104,14 @@ namespace EliteDangerousCore
         public bool IsInMultiPlayer { get { return IsOnCrewWithCaptain || IsInMultiCrew; } }       // we can be OnCrewWithCaptain with multicrew markers true, or just in physical multicrew 
 
         // Records the last load game with game info present
-        public JournalLoadGame LastLoadGame { get; private set; }
+        public JournalLoadGame LastLoadGame { get; private set; }       // MAY BE NULL
         public string GameMode => LastLoadGame?.GameMode ?? "Unknown";
         public string Group => LastLoadGame?.Group ?? "";
         public string GameModeGroup { get { return GameMode + (Group.HasChars() ? (":" + Group) : ""); } }
         public string GameModeGroupMulticrew { get { return GameMode + (Group.HasChars() ? (":" + Group) : "") + (OnCrewWithCaptain.HasChars() ? " @ Cmdr " + OnCrewWithCaptain : ""); } }
 
         // Records the last docking granted message, non null between this and docked/timeout/etc
-        public JournalDockingGranted LastDockingGranted { get; private set; }
+        public JournalDockingGranted LastDockingGranted { get; private set; }  // MAY BE NULL
         public int DockingPad => LastDockingGranted?.LandingPad ?? 0;
         public StationDefinitions.StarportTypes DockingStationType => LastDockingGranted?.FDStationType ?? StationDefinitions.StarportTypes.Unknown;    // set at Docking granted, cleared at docked, fsd etc
         public bool IsDockingStationTypeCoriolisEtc
@@ -127,18 +127,18 @@ namespace EliteDangerousCore
         public bool IsDockingStationTypeCarrier { get { return DockingStationType == StationDefinitions.StarportTypes.FleetCarrier; } }
 
         // non null when in jump sequence
-        public JournalStartJump JumpSequence { get; private set; }
+        public JournalStartJump JumpSequence { get; private set; }  // MAY BE NULL
         public string FSDJumpNextSystemName => JumpSequence?.StarSystem;
         public long? FSDJumpNextSystemAddress => JumpSequence?.SystemAddress;
         public bool FSDJumpSequence => JumpSequence != null;    // true from startjump until location/fsdjump
 
         // non null when in taxi or dropship, up to embark
-        public ITaxiDropship LastTaxiDropship { get; private set; }
+        public ITaxiDropship LastTaxiDropship { get; private set; } // MAY BE NULL
         public bool BookedDropship => LastTaxiDropship is JournalBookDropship;
         public bool BookedTaxi => LastTaxiDropship is JournalBookTaxi;
 
         // Non null when approached a body
-        public JournalApproachBody LastApproachBody { get; private set;}        // true from approach to leave or jump
+        public JournalApproachBody LastApproachBody { get; private set; }   // MAY BE NULL     
         public bool BodyApproached => LastApproachBody != null;    
 
         public double CurrentBoost { get; private set; } = 1;             // current boost multiplier due to jet cones and synthesis

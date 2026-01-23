@@ -29,6 +29,7 @@ namespace EliteDangerousCore.JournalEvents
         public SystemSource LocOrJumpSource { get; set; } = SystemSource.FromJournal;     // this is the default..
 
         public string Body { get; set; }            // March 2019 introduced the destination body you jumped to
+        public string BodyName => Body;
         public BodyDefinitions.BodyType BodyType { get; set; }      // as of JAN 26 : Barycentre, Star, StellarRing types
         public int? BodyID { get; set; }
 
@@ -333,9 +334,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? OnFoot { get; set; }
 
         // IBodyFeature
-        public string BodyName => Body;
         public bool HasLatLong => Latitude != null && Longitude != null;
-        
         // if we docked, feature name is the station, also if bodytype is station (2022-05-13T12:25:14) its also a station so is a feature name
         public string Name => StationName ?? (BodyType == BodyDefinitions.BodyType.Station ? Body : null);
         public string Name_Localised => StationName_Localised ?? (BodyType == BodyDefinitions.BodyType.Station ? Body : null);
@@ -451,7 +450,6 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Multicrew { get; set; }
 
         // IBodyFeature
-        public string BodyName => Body;
         public double? Latitude { get { return null; } set { } }
         public double? Longitude { get { return null; } set { } }
         public bool HasLatLong => false;

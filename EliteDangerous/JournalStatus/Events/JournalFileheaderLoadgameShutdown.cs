@@ -78,7 +78,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.LoadGame)]
-    [System.Diagnostics.DebuggerDisplay("LoadGame {LoadGameCommander} {ShipId} {Ship} {GameMode}")]
+    [System.Diagnostics.DebuggerDisplay("LoadGame {LoadGameCommander} {ShipId} {ShipType} {GameMode} {GameVersion} {Build}")]
     public class JournalLoadGame : JournalEntry, ILedgerJournalEntry, IShipInformation, IShipNaming
     {
         const string UnknownShip = "Unknown";
