@@ -6482,6 +6482,7 @@ namespace EliteDangerousCore
                 {"paintjob_lakonminer_03_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-11 Prospector 3 5") },
                 {"paintjob_lakonminer_03_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-11 Prospector 3 6") },
                 {"paintjob_lakonminer_03_07", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-11 Prospector 3 7") },
+                {"paintjob_lakonminer_03_09", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-11 Prospector 3 9") },
                 {"paintjob_lakonminer_03_10", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-11 Prospector 3 10") },
                 {"paintjob_lakonminer_03_11", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-11 Prospector 3 11") },
                 {"paintjob_lakonminer_03_12", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-11 Prospector 3 12") },

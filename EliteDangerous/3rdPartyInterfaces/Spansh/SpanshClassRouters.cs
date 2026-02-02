@@ -471,12 +471,16 @@ namespace EliteDangerousCore.Spansh
 
             var response = RequestPost(query, api, contenttype: "application/x-www-form-urlencoded; charset=UTF-8");
 
-            var data = response.Body;
-            var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
+            var data = response.Body;       // always get a response, may not get a body (#3805) if Spansh is dead
 
-            if (response.Error)
+            JToken json = data != null ? JObject.Parse(data, JToken.ParseOptions.CheckEOL) : null;
+
+            if (response.Error || json == null )
             {
-                return $"!{json?["error"].Str()}";
+                if (json != null)
+                    return $"!{json?["error"].Str()}";
+                else
+                    return "!Bad response no Body data";
             }
             else
             {
