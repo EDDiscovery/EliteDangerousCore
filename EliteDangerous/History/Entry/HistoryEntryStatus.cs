@@ -741,7 +741,7 @@ namespace EliteDangerousCore
                 #endregion
             }
 
-#if true
+#if false
             if (debugrange)
             {
                 if (hes.LastFSDJump != LastFSDJump && hes.LastFSDJump != null)
@@ -758,7 +758,7 @@ namespace EliteDangerousCore
                 }
             }
 #else
-            ignored = !ignored; handled = !handled;
+            ignored = !ignored; handled = !handled; debugrange = !debugrange;
 #endif
             return hes;
         }
