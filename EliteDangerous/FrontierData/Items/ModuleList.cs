@@ -1486,7 +1486,6 @@ namespace EliteDangerousCore
 
                 { "int_engine_size3_class5_fast", new ShipModule(128682013,ShipModule.ModuleTypes.EnhancedPerformanceThrusters,"Enhanced Performance Thrusters Class 3 Rating A"){ Cost = 5103950, Class = 3, Rating = "A", Mass = 5, Integrity = 55, PowerDraw = 5, BootTime = 0, MinMass = 70, OptMass = 90, MaxMass = 200, EngineMinMultiplier = 90, EngineOptMultiplier = 115, EngineMaxMultiplier = 137, ThermalLoad = 1.3, MinimumSpeedModifier = 90, OptimalSpeedModifier = 125, MaximumSpeedModifier = 160, MinimumAccelerationModifier = 90, OptimalAccelerationModifier = 110, MaximumAccelerationModifier = 120, MinimumRotationModifier = 90, OptimalRotationModifier = 110, MaximumRotationModifier = 130 } },
                 { "int_engine_size2_class5_fast", new ShipModule(128682014,ShipModule.ModuleTypes.EnhancedPerformanceThrusters,"Enhanced Performance Thrusters Class 2 Rating A"){ Cost = 1610080, Class = 2, Rating = "A", Mass = 2.5, Integrity = 40, PowerDraw = 4, BootTime = 0, MinMass = 50, OptMass = 60, MaxMass = 120, EngineMinMultiplier = 90, EngineOptMultiplier = 115, EngineMaxMultiplier = 137, ThermalLoad = 2, MinimumSpeedModifier = 90, OptimalSpeedModifier = 125, MaximumSpeedModifier = 160, MinimumAccelerationModifier = 90, OptimalAccelerationModifier = 110, MaximumAccelerationModifier = 120, MinimumRotationModifier = 90, OptimalRotationModifier = 110, MaximumRotationModifier = 130 } },
-                
                 { "int_engine_size7_class5_gravityoptimised_mkii", new ShipModule(12903922,ShipModule.ModuleTypes.Thrusters,"Thrusters Class 7 Rating A Gravity Optimised"){ Cost = 68368390, Class = 7, Rating = "A", Mass = 80, Integrity = 144, PowerDraw = 9.12, BootTime = 0, MinMass = 1080, OptMass = 2160, MaxMass = 3240, EngineMinMultiplier = 96, EngineOptMultiplier = 100, EngineMaxMultiplier = 116, ThermalLoad = 1.3 } },
 
                 // XENO Scanners
@@ -1546,8 +1545,7 @@ namespace EliteDangerousCore
                 { "mandalay_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.CockpitType,"Mandalay Cockpit" ) },
                 { "corsair_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Corsair Cockpit") },
                 { "panthermkii_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Panther Clipper Mk II Cockpit") },
-                { "explorer_nx_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Caspian Explorer Cockpit") }, 
-
+                { "explorer_nx_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Caspian Explorer Cockpit") },
                 { "int_codexscanner", new ShipModule(999999947,ShipModule.ModuleTypes.Codex,"Codex Scanner" ) },
                 { "hpt_shipdatalinkscanner", new ShipModule(999999940,ShipModule.ModuleTypes.DataLinkScanner,"Hpt Shipdatalinkscanner" ) },
 
@@ -1975,7 +1973,7 @@ namespace EliteDangerousCore
                 {"bobble_notea", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Notea") },
                 {"bobble_oldskool_anaconda", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Oldskool Anaconda") },
                 {"bobble_oldskool_aspmkii", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Oldskool Asp Mk II") },
-                {"bobble_oldskool_cobramkiii", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Oldskool Cobram Mk III") },
+                {"bobble_oldskool_cobramkiii", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Oldskool Cobra Mk III") },
                 {"bobble_oldskool_ferdelance", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Oldskool Fer De Lance") },
                 {"bobble_oldskool_krait", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Oldskool Krait") },
                 {"bobble_oldskool_python", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Bobble Oldskool Python") },
@@ -7576,10 +7574,10 @@ namespace EliteDangerousCore
                 {"paintjob_type9_metallic_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Metallic Chrome") },
                 {"paintjob_type9_metallic2_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Metallic 2 Chrome") },
                 {"paintjob_type9_metallic2_gold", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Metallic 2 Gold") },
-                {"paintjob_type9_militaire_dark_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Dark Green") },
+                {"paintjob_type9_militaire_dark_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Defender Dark Green") },
                 {"paintjob_type9_militaire_desert_sand", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Militaire Desert Sand") },
                 {"paintjob_type9_militaire_earth_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Militaire Earth Yellow") },
-                {"paintjob_type9_militaire_forest_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Forest Green") },
+                {"paintjob_type9_militaire_forest_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Militaire Forest Green") },
                 {"paintjob_type9_militaire_sand", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-9 Militaire Sand") },
                 {"paintjob_type9_military_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Black Friday 1") },
                 {"paintjob_type9_military_blackfriday_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Black Friday 2") },
