@@ -634,10 +634,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public System.Drawing.Image GetImage()
         {
-            return IsStar ? BaseUtils.Icons.IconSet.GetIcon(StarTypeImageName) :
-                   IsPlanet ? BaseUtils.Icons.IconSet.GetIcon(PlanetClassImageName) :
-                   IsBeltClusterBody ? BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.SizeLarge") :
-                   BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingOnly");
+            return IsStar ? BaseUtils.Icons.IconSet.GetImage(StarTypeImageName) :
+                   IsPlanet ? BaseUtils.Icons.IconSet.GetImage(PlanetClassImageName) :
+                   IsBeltClusterBody ? BaseUtils.Icons.IconSet.GetImage("Controls.Scan.SizeLarge") :
+                   BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.RingOnly");
         }
     }
 }

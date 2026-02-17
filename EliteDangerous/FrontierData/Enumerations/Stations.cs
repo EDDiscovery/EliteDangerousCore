@@ -174,21 +174,23 @@ namespace EliteDangerousCore
             Unknown,
             AsteroidBase,
             Coriolis,
-            FleetCarrier,
+                FleetCarrier,
             Megaship,
             Ocellus,
-            Bernal,
+            Bernal,         // used interchangeable with Ocellus between Docked and Location
             Orbis,
             Outpost,
             OnFootSettlement,
             SurfaceStation,
-            CraterOutpost,
+                CraterOutpost,
             CraterPort,
             SpaceConstructionDepot,
-            PlanetaryConstructionDepot,
-            DockablePlanetStation,
-            GameplayPOI,
+                PlanetaryConstructionDepot,
+                DockablePlanetStation,
+                GameplayPOI,
             Dodec,
+
+            Station,        // Location has it as this, when on foot on station, or when outside an orbiting station
         }
 
         public static bool IsPlanetaryPort(StarportTypes t)
@@ -232,6 +234,13 @@ namespace EliteDangerousCore
         {
             var list = (StarportTypes[])Enum.GetValues(typeof(StarportTypes));
             return list.Where(x => x != StarportTypes.Unknown && (!removeduplicates || x != StarportTypes.Bernal)).ToArray();
+        }
+
+        static public string StationImageName(StarportTypes starporttype)
+        {
+            if (starporttype == StarportTypes.Bernal)
+                starporttype = StarportTypes.Ocellus;
+            return $"Stations.{starporttype.ToString()}";
         }
 
         #endregion

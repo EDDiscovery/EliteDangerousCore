@@ -471,13 +471,15 @@ namespace EliteDangerousCore.Spansh
             //query = "radius=500&range=50&from=Phoi+Aurb+HG-X+d1-499&to=Outotz+ZI-M+c22-0&max_results=100&max_distance=50000&min_value=1&avoid_thargoids=1&loop=1&body_types=Earth-like+world";
 
             var response = RequestPost(query, api, contenttype: "application/x-www-form-urlencoded; charset=UTF-8");
-
             var data = response.Body;
-            var json = JObject.Parse(data, JToken.ParseOptions.CheckEOL);
+            JToken json = data != null ? JObject.Parse(data, JToken.ParseOptions.CheckEOL) : null;      // may be empty body #3805
 
-            if (response.Error)
+            if (response.Error || json == null)
             {
-                return $"!{json?["error"].Str()}";
+                if (json != null)
+                    return $"!{json?["error"].Str()}";
+                else
+                    return "!Bad response no Body data";
             }
             else
             {

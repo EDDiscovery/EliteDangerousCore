@@ -73,6 +73,7 @@ namespace EliteDangerousCore.StarScan2
         public StarPlanetRing BeltData { get; private set; } = null;                    // type AsteroidCluster or PlanetaryRing
 
         public double? SMA { get { return Scan != null ? Scan.nSemiMajorAxis : BarycentreScan != null ? BarycentreScan.SemiMajorAxis : BeltData != null ? BeltData.InnerRad : default(double?); } }
+        public double? DistLS { get { return Scan != null ? Scan.DistanceFromArrivalLS : default(double?); } }
 
         public List<JournalSAASignalsFound.SAASignal> Signals { get; private set; } = null;
         public List<JournalSAASignalsFound.SAAGenus> Genuses { get; private set; } = null;
@@ -734,6 +735,11 @@ namespace EliteDangerousCore.StarScan2
             double? smal = left.SMA;         // grab SMA from anything we have
             double? smar = right.SMA;
 
+            //if (ignoresma)
+            //{
+            //    System.Diagnostics.Debug.WriteLine($"Compare {lt} {left.CanonicalName} with {rt} {right.CanonicalName}");
+            //}
+
             if (smal.HasValue && smar.HasValue && !ignoresma)
             {
                 //$"Body Compare SMA {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
@@ -749,6 +755,7 @@ namespace EliteDangerousCore.StarScan2
             {
                 int? lv = lt.InvariantParseIntNull();
                 int? rv = rt.InvariantParseIntNull();
+
                 if (lv.HasValue && rv.HasValue)
                 {
                     //$"Body Compare Number {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
@@ -756,7 +763,14 @@ namespace EliteDangerousCore.StarScan2
                 }
                 else
                 {
-                    //$"Body Compare Other {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
+                    //double? ldl = left.DistLS;
+                    //double? rdl = right.DistLS;
+
+                    //if (ldl.HasValue && rdl.HasValue)
+                    //{
+                    //    return ldl.Value.CompareTo(rdl.Value);
+                    //}
+                    //else 
                     if (lt.Contains("Belt Cluster"))        // clusters first
                     {
                         if (rt.Contains("Belt Cluster"))

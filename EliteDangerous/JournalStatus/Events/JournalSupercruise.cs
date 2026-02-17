@@ -31,7 +31,6 @@ namespace EliteDangerousCore.JournalEvents
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
             Wanted = evt["Wanted"].BoolNull();
-
         }
 
         public string StarSystem { get; set; }
@@ -67,6 +66,11 @@ namespace EliteDangerousCore.JournalEvents
             BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
+            if (BodyType == BodyDefinitions.BodyType.Station)       // Station, then Name gets set since Name is the feature name
+            {
+                Name = Name_Localised = Body;
+                FDStationType = StationDefinitions.StarportTypes.Station;
+            }
         }
 
         public JournalSupercruiseExit(DateTime utc, string starSystem, long? systemAddress, string body, BodyDefinitions.BodyType bodyType, int? bodyID,
@@ -102,7 +106,7 @@ namespace EliteDangerousCore.JournalEvents
         public double? Latitude { get => null; set { } }
         public double? Longitude { get => null; set { } }
         public bool HasLatLong => false;
-        public string Name { get; set; } = null;
+        public string Name { get; set; } = null;            // feature name
         public string Name_Localised { get; set; } = null;
         public long? MarketID => null;
         public StationDefinitions.StarportTypes FDStationType { get; set; } = StationDefinitions.StarportTypes.Unknown;

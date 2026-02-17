@@ -246,7 +246,7 @@ namespace EliteDangerousCore.StarScan2
             System.Diagnostics.Debug.Assert(Font != null);
 
             string imagename = BodyDefinitions.StarTypeImageName(starclass, 1.0, 5000);
-            var starimage = BaseUtils.Icons.IconSet.GetIcon(imagename).CloneLocked();
+            var starimage = BaseUtils.Icons.IconSet.GetImage(imagename).CloneLocked();
 
             var nodelabels = new string[] { Stars.ToLocalisedLanguage(starclass) };
             var il = CreateImageAndLabel(starimage, size, nodelabels, tooltip, null);

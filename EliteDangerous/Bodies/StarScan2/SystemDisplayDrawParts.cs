@@ -73,7 +73,7 @@ namespace EliteDangerousCore.StarScan2
                 colormap.NewColor = fillc;
 
                 // we clone the image, and colour replace it under GDI lock
-                Bitmap mat = BaseUtils.BitMapHelpers.CloneReplaceColourLocked((Bitmap)BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Material"), 
+                Bitmap mat = BaseUtils.BitMapHelpers.CloneReplaceColourLocked((Bitmap)BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.Material"), 
                                                     new System.Drawing.Imaging.ColorMap[] { colormap });
 
                 BaseUtils.BitMapHelpers.DrawTextCentreIntoBitmap(ref mat, abv, Font, fillc.GetBrightness() > 0.4f ? Color.Black : Color.White);
@@ -151,15 +151,15 @@ namespace EliteDangerousCore.StarScan2
 
             Image[] images = new Image[]
             {
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Stations"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Carriers"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Installations"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.NSP"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RES"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.CZ"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.USS"),
-                BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Signals"),
-                BaseUtils.Icons.IconSet.GetIcon("Journal.CodexEntry"),
+                BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.Stations"),
+                BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.Carriers"),
+                BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.Installations"),
+                BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.NSP"),
+                BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.RES"),
+                BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.CZ"),
+                BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.USS"),
+                BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.Signals"),
+                BaseUtils.Icons.IconSet.GetImage("Journal.CodexEntry"),
             };
 
             int vpos = height / 2 - iconsize * icons / 2;
@@ -257,7 +257,7 @@ namespace EliteDangerousCore.StarScan2
 
                         using (var frmt = new StringFormat() { Alignment = StringAlignment.Center })
                         {
-                            labie.TextCentreAutoSize(new Point(0, vpos), new Size(0, 1000), label.Substring(labcut), f, TextForeColor, TextBackColor, frmt: frmt);
+                            labie.TextAutoSize(new Point(0, vpos), new Size(0, 1000), label.Substring(labcut), f, TextForeColor, TextBackColor, frmt: frmt, xiscentre: true);
                         //    System.Diagnostics.Debug.WriteLine($"ImageAndLabel `{label}` at {vpos} label size {labie.Size}");
                         }
 

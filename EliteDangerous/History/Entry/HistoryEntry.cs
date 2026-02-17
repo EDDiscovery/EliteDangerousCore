@@ -159,11 +159,13 @@ namespace EliteDangerousCore
                 isys = newsys;
             }
 
+            HistoryEntryStatus hes = prev?.entryStatus ?? new HistoryEntryStatus();
+
             HistoryEntry he = new HistoryEntry
             {
                 journalEntry = je,
                 System = isys,
-                entryStatus = HistoryEntryStatus.Update(prev?.entryStatus, je, isys),
+                entryStatus = hes.Update(je, isys),
             };
 
             return he;

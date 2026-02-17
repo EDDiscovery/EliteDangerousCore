@@ -37,7 +37,7 @@ namespace EliteDangerousCore
             PlanetaryRing,      // a planet or a star ring.  Called "A Ring" or "B Ring", from a journalscan of the ring (Scan will be set), or from the journalscan of a planet with its ring structure broken into children, BeltData is set.
 
             // Frontier Bodytype only
-            Station,    // at a station
+            Station,    // at a station (seen in Location "timestamp":"2022-05-13T12:25:14Z")
             SmallBody,  // saw for comets, very few
 
             // EDD Only
@@ -81,12 +81,12 @@ namespace EliteDangerousCore
         // used by Scan 
         static public bool IsBodyNameABeltCluster(string bodyname)
         {
-            bool isbc = bodyname.ContainsIIC("Belt Cluster ");        // all rings appear to end with Ring, plus there are some wierd r1's out there
+            bool isbc = bodyname.ContainsIIC("Belt Cluster ");        
             return isbc;
         }
 
-        static public bool IsBodyARing(this BodyType body) => body == BodyType.PlanetaryRing;
-        static public bool IsBodyAPlanetaryOrStellarRing(this BodyType body) => body == BodyType.PlanetaryRing || body == BodyType.StellarRing;
+        static public bool IsRing(this BodyType body) => body == BodyType.PlanetaryRing;
+        static public bool IsPlanetaryOrStellarRing(this BodyType body) => body == BodyType.PlanetaryRing || body == BodyType.StellarRing;
 
 
         static public string StarTypeImageName(EDStar StarTypeID, double? nStellarMass, double? nSurfaceTemperature)
@@ -887,95 +887,95 @@ namespace EliteDangerousCore
 
         static public System.Drawing.Image GetImageAtmosphere()
         {
-            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Atmosphere");
+            return BaseUtils.Icons.IconSet.GetImage($"Controls.Scan.Bodies.Atmosphere");
         }
         static public System.Drawing.Image GetImageLandable()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Landable");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.Landable");
         }
         static public System.Drawing.Image GetImageRingGap()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingGap");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.RingGap");
         }
         static public System.Drawing.Image GetImageRingOnly()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.RingOnly");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.RingOnly");
         }
         static public System.Drawing.Image GetImageTerraFormable()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Terraformable");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.Terraformable");
         }
         static public System.Drawing.Image GetImageVolcanism()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Volcanism");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.Volcanism");
         }
         static public System.Drawing.Image GetImageHighValue()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.HighValue");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.HighValue");
         }
         static public System.Drawing.Image GetImageMapped()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Mapped");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.Mapped");
         }
         static public System.Drawing.Image GetImageMappedByOthers()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.MappedByOthers");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.MappedByOthers");
         }
         static public System.Drawing.Image GetImageDiscoveredByOthers()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.DiscoveredByOthers");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.DiscoveredByOthers");
         }
         static public System.Drawing.Image GetImageCodexEntry()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Journal.CodexEntry");
+            return BaseUtils.Icons.IconSet.GetImage("Journal.CodexEntry");
         }
         static public System.Drawing.Image GetImageMoreMaterials()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.MaterialMore");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.MaterialMore");
         }
         static public System.Drawing.Image GetImageOrganicsScanned()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Journal.ScanOrganic");
+            return BaseUtils.Icons.IconSet.GetImage("Journal.ScanOrganic");
         }
         static public System.Drawing.Image GetImageOrganicsIncomplete()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.OrganicIncomplete");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.OrganicIncomplete");
         }
         static public System.Drawing.Image GetImageSignals()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.Signals");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.Signals");
         }
         static public System.Drawing.Image GetImageGeoBioSignals()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.SignalsGeoBio");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.SignalsGeoBio");
         }
         static public System.Drawing.Image GetImageBioSignals()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.SignalsBio");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.SignalsBio");
         }
         static public System.Drawing.Image GetImageGeoSignals()
         {
-            return BaseUtils.Icons.IconSet.GetIcon("Controls.Scan.Bodies.SignalsGeo");
+            return BaseUtils.Icons.IconSet.GetImage("Controls.Scan.Bodies.SignalsGeo");
         }
         static public System.Drawing.Image GetImageNotScanned()
         {
-            return BaseUtils.Icons.IconSet.GetIcon($"Bodies.NotScanned");
+            return BaseUtils.Icons.IconSet.GetImage($"Bodies.NotScanned");
         }
         static public System.Drawing.Image GetImageBarycentre()
         {
-            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Barycentre");
+            return BaseUtils.Icons.IconSet.GetImage($"Controls.Scan.Bodies.Barycentre");
         }
         static public System.Drawing.Image GetImageBarycentreLeftBar()
         {
-            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.BarycentreLeftBar");
+            return BaseUtils.Icons.IconSet.GetImage($"Controls.Scan.Bodies.BarycentreLeftBar");
         }
         static public System.Drawing.Image GetImageBeltCluster()
         {
-            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.Bodies.Belt");
+            return BaseUtils.Icons.IconSet.GetImage($"Controls.Scan.Bodies.Belt");
         }
         static public System.Drawing.Image GetImageBeltBody()
         {
-            return BaseUtils.Icons.IconSet.GetIcon($"Controls.Scan.SizeLarge");
+            return BaseUtils.Icons.IconSet.GetImage($"Controls.Scan.SizeLarge");
         }
 
         // return bitmaps of stars, cropped.  You own the bitmaps afterwards as images are cloned
@@ -986,7 +986,7 @@ namespace EliteDangerousCore
             foreach (EDStar star in Enum.GetValues(typeof(EDStar)))
             {
                 string name = StarTypeImageName(star, 1, 5000);
-                bitmaps[bm] = ((Bitmap)BaseUtils.Icons.IconSet.GetIcon(name)).CropImage(croparea);
+                bitmaps[bm] = ((Bitmap)BaseUtils.Icons.IconSet.GetImage(name)).CropImage(croparea);
                 bm++;
             }
 
@@ -1000,7 +1000,7 @@ namespace EliteDangerousCore
             foreach (EDStar star in Enum.GetValues(typeof(EDStar)))
             {
                 string name = StarTypeImageName(star, 1, 5000);
-                Bitmap b = (Bitmap)BaseUtils.Icons.IconSet.GetIcon(name);
+                Bitmap b = (Bitmap)BaseUtils.Icons.IconSet.GetImage(name);
                 Color c = b.AverageColour(new RectangleF(20, 20, 60, 60));
                 //System.Diagnostics.Debug.WriteLine($"Star {star} name {name} Colour {c}");
                 map[star] = Color.FromArgb(255, c);

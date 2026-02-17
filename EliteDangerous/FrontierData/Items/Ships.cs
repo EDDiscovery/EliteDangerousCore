@@ -141,7 +141,7 @@ namespace EliteDangerousCore
 
         static public System.Drawing.Image GetShipImage(string fdname)
         {
-            return BaseUtils.Icons.IconSet.Instance.Get("Ships." + fdname.ToLower());
+            return BaseUtils.Icons.IconSet.GetImage("Ships." + fdname.ToLower());
         }
 
         #region ships
@@ -212,7 +212,7 @@ namespace EliteDangerousCore
             if (IconSet.Instance!=null)
             {
                 foreach (var kvp in spaceships)     // check spaceships array for image and missing manu
-                    System.Diagnostics.Debug.Assert(BaseUtils.Icons.IconSet.Instance.Contains("Ships." + kvp.Key.ToLower()), $"Missing ship image {kvp.Key}");
+                    System.Diagnostics.Debug.Assert(BaseUtils.Icons.IconSet.Contains("Ships." + kvp.Key.ToLower()), $"Missing ship image {kvp.Key}");
             }
             
         }

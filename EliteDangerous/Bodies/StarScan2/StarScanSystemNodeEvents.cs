@@ -110,11 +110,11 @@ namespace EliteDangerousCore.StarScan2
 
             if (body == null)
             {
-                if (sc.BodyType.IsBodyARing())      // scans of a plantary ring or sub star ring.
+                if (sc.BodyType.IsRing())      // scans of a plantary ring or sub star ring.
                 {
                     // for rings, they must be under the current body, so only search there, they were added by the parent Rings structure (which may have called them Stellar rings because that the best it can do)
 
-                    body = cur.ChildBodies.Find(x => x.CanonicalName.EqualsIIC(sc.BodyName) && x.BodyType.IsBodyAPlanetaryOrStellarRing());
+                    body = cur.ChildBodies.Find(x => x.CanonicalName.EqualsIIC(sc.BodyName) && x.BodyType.IsPlanetaryOrStellarRing());
                     $"  StarScan Add s/p Lookup Ring in {cur.OwnName} for {sc.BodyName} Matched `{body?.CanonicalName}`".DO(debugid);
 
                     // during making rings in we guess in ProcessBeltsOrRings the type
@@ -273,10 +273,10 @@ namespace EliteDangerousCore.StarScan2
 
             if (body == null)     // no, check if its misplaced anywhere by the scan name
             {
-                if (sc.BodyType.IsBodyARing())      // same code as above..
+                if (sc.BodyType.IsRing())      // same code as above..
                 {
                     // for rings, they must be under the current body, so only search there, they were added by the parent Rings structure
-                    body = cur.ChildBodies.Find(x => x.CanonicalName.EqualsIIC(sc.BodyName) && x.BodyType.IsBodyAPlanetaryOrStellarRing());
+                    body = cur.ChildBodies.Find(x => x.CanonicalName.EqualsIIC(sc.BodyName) && x.BodyType.IsPlanetaryOrStellarRing());
                     $"  StarScan Add ns/p Lookup Ring in {cur.OwnName} for {sc.BodyName} Matched `{body?.CanonicalName}`".DO(debugid);
 
                     // see above

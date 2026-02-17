@@ -144,6 +144,11 @@ namespace EliteDangerousCore
         [QuickJSON.JsonIgnore()]
         public virtual string EventFilterName { get { return EventTypeID.ToString(); } } // text name used in filter
 
+        public virtual string[] JSONSearchSignatures() // give unique enough parts to find event in journal. Using the whole JSON string would be fraught with space issues. Overriden in various events
+        {
+            return new string[] { $"{{ \"timestamp\":\"{EventTimeUTC.ToStringZulu()}\", \"event\":\"{EventTypeStr}\"" };
+        }
+
         #endregion
 
         #region Special Setters - db not updated by them

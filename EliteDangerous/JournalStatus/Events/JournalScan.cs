@@ -451,6 +451,11 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
         public string StationFaction => null;
 
+        public override string[] JSONSearchSignatures() // give unique enough parts to find event in journal. Scans tend to cluster in time so need more seperation
+        {
+            return new string[] { $"{{ \"timestamp\":\"{EventTimeUTC.ToStringZulu()}\", \"event\":\"{EventTypeStr}\"" , $"\"BodyName\":\"{BodyName}\""};
+        }
+
         // Create the entry from JSON
 
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)

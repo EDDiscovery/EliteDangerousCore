@@ -136,6 +136,8 @@
     <Compile Include="FrontierData\Enumerations\FrontierFolder.cs" />
     <Compile Include="JournalStatus\Events\JournalColonisation.cs" />
     <Compile Include="JournalStatus\Entry\JournalTest.cs" />
+    <Compile Include="JournalStatus\Events\JournalFSDJumpCarrierJump.cs" />
+    <Compile Include="JournalStatus\Events\JournalLocOrJump.cs" />
     <Compile Include="JournalStatus\Stats\EngineerCrafting.cs" />
     <Compile Include="DB\User\CommanderForm.cs">
       <SubType>Form</SubType>
@@ -250,7 +252,7 @@
     <Compile Include="JournalStatus\Events\JournalInterdicted.cs" />
     <Compile Include="JournalStatus\Events\JournalJetCone.cs" />
     <Compile Include="JournalStatus\Events\JournalLiftoffTouchdown.cs" />
-    <Compile Include="JournalStatus\Events\JournalFSDLocation.cs" />
+    <Compile Include="JournalStatus\Events\JournalLocation.cs" />
     <Compile Include="JournalStatus\Events\JournalMarket.cs" />
     <Compile Include="JournalStatus\Events\JournalMissions.cs" />
     <Compile Include="JournalStatus\Events\JournalShipyard.cs" />

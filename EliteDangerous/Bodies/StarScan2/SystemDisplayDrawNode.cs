@@ -151,7 +151,7 @@ namespace EliteDangerousCore.StarScan2
                     // star fill in
                     if (sc.IsStar)                                      
                     {
-                        nodeimage = BaseUtils.Icons.IconSet.GetIcon(sc.StarTypeImageName);
+                        nodeimage = BaseUtils.Icons.IconSet.GetImage(sc.StarTypeImageName);
 
                         if (ShowStarClasses)
                             imageoverlaytext = sc.StarClassificationAbv;
@@ -182,7 +182,7 @@ namespace EliteDangerousCore.StarScan2
                     {
                         // Make node information for planets
 
-                        nodeimage = BaseUtils.Icons.IconSet.GetIcon(sc.PlanetClassImageName);
+                        nodeimage = BaseUtils.Icons.IconSet.GetImage(sc.PlanetClassImageName);
                         isdiscovered = sc.IsPreviouslyDiscovered;
                         terraformable = sc.Terraformable;
                         volcanism = sc.HasMeaningfulVolcanism;

@@ -62,6 +62,8 @@ namespace EliteDangerousCore
         JournalTypeEnum EventTypeID { get; }
         string EventTypeStr { get; }
         string SummaryName(ISystem sys);
+        string GetInfo();
+        string GetDetailed();
         string BodyName { get; }
         int? BodyID { get; }
         BodyDefinitions.BodyType BodyType { get; }

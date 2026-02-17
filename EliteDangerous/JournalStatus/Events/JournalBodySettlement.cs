@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016-2025 EDDiscovery development team
+ * Copyright 2016-2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -28,12 +28,14 @@ namespace EliteDangerousCore.JournalEvents
             BodyID = evt["BodyID"].Int();
         }
 
-        public string StarSystem { get; set; }          // very early ones missed this, augmented by AddStarScan
-        public long? SystemAddress { get; set; }        // always been there
-        public string Body { get; set; }                // always been there
         public int BodyID { get; set; }                // always been there
 
+        public string Body { get; set; }                // always been there
+
         // IBodyNameAndID
+
+        public string StarSystem { get; set; }          // very early ones missed this, augmented by AddStarScan
+        public long? SystemAddress { get; set; }        // always been there
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
         public string BodyName => Body;
         int? IBodyFeature.BodyID => BodyID;
@@ -44,9 +46,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised => null;
         public long? MarketID => null;
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
-
         public string StationFaction => null;
-
 
         public override string SummaryName(ISystem sys)
         {
@@ -54,7 +54,6 @@ namespace EliteDangerousCore.JournalEvents
             sn += " " + Body.ReplaceIfStartsWith(StarSystem);
             return sn;
         }
-
 
         public override string GetInfo()
         {
@@ -82,12 +81,12 @@ namespace EliteDangerousCore.JournalEvents
             BodyID = evt["BodyID"].Int();
         }
 
-        public string StarSystem { get; set; }      // always been there
-        public long? SystemAddress { get; set; }// always been there
         public string Body { get; set; }                // always been there
         public int BodyID { get; set; }        // always been there
 
         // IBodyNameAndID
+        public string StarSystem { get; set; }      // always been there
+        public long? SystemAddress { get; set; }// always been there
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
         public string BodyName => Body;
         int? IBodyFeature.BodyID => BodyID;
@@ -98,8 +97,8 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised => null;
         public long? MarketID => null;
         public string StationFaction => null;
-
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
+
 
         public override string SummaryName(ISystem sys)
         {

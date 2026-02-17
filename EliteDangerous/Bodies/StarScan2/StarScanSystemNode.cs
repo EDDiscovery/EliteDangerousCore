@@ -179,6 +179,20 @@ namespace EliteDangerousCore.StarScan2
             return s;
         }
 
+        // returns first star listed under bodies simplified
+        public BodyNode GetBodesSimplifiedTopStar()
+        {
+            var bs = BodiesSimplified(true)?.Bodies(x => x.IsStar);
+            return bs.FirstOrDefault()?.BodyNode;
+        }
+
+        // requires scans to find it
+        public BodyNode GetStarWithZeroDistls()
+        {
+            var bs = Bodies(x => x.IsStar && x.Scan != null && x.Scan.DistanceFromArrivalLS == 0);
+            return bs.FirstOrDefault();
+        }
+
         public int StarPlanetsScanned(bool includewebbodies)        // includewebbodies gives same total as above, false means only include ones which we have scanned
         {
             return systemBodies.StarPlanetsScanned(includewebbodies);
