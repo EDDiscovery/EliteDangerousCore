@@ -134,10 +134,10 @@
     <Compile Include="History\List\HistoryListFill.cs" />
     <Compile Include="History\Queries\Queries.cs" />
     <Compile Include="FrontierData\Items\ItemData.cs" />
-    <Compile Include="FrontierData\Items\ItemEngineers.cs" />
-    <Compile Include="FrontierData\Items\ItemShips.cs" />
+    <Compile Include="FrontierData\Items\Engineers.cs" />
+    <Compile Include="FrontierData\Items\Ships.cs" />
     <Compile Include="FrontierData\Items\Actors.cs" />
-    <Compile Include="FrontierData\Items\ItemSuits.cs" />
+    <Compile Include="FrontierData\Items\Suits.cs" />
     <Compile Include="FrontierData\Items\ItemWeapons.cs" />
     <Compile Include="JournalStatus\Events\JournalEmbarkDisembark.cs" />
     <Compile Include="JournalStatus\Events\JournalCarrier.cs" />
