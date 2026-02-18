@@ -81,6 +81,7 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Empire Trader", "Imperial Clipper");
             candidatename = candidatename.Replace("Krait Light", "Krait Phantom");
             candidatename = candidatename.Replace("Ferdelance", "Fer De Lance");
+            candidatename = candidatename.Replace("Smallcombat 1 Nx", "Kestrel MK II");
             if (!candidatename.Contains("Military Stripe"))
                 candidatename = candidatename.Replace("Type 9 Military ", "Type-10 Defender ");
             candidatename = candidatename.Replace("Militarystripe", "Military Stripe");

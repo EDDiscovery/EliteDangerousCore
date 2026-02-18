@@ -305,6 +305,12 @@ namespace EliteDangerousCore
                 { "lakonminer_armour_mirrored", new ShipModule(-1,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Type-11 Prospector Mirrored Surface Composite"){ Mass=63, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
                 { "lakonminer_armour_reactive", new ShipModule(-1,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Type-11 Prospector Reactive Surface Composite"){ Mass=63, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
+                { "smallcombat01_nx_armour_grade1", new ShipModule(-1,ShipModule.ModuleTypes.LightweightAlloy,"Kestrel MK II Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
+                { "smallcombat01_nx_armour_grade2", new ShipModule(-1,ShipModule.ModuleTypes.ReinforcedAlloy,"Kestrel MK II Reinforced Alloy"){ Mass=32, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
+                { "smallcombat01_nx_armour_grade3", new ShipModule(-1,ShipModule.ModuleTypes.MilitaryGradeComposite,"Kestrel MK II Military Grade Composite"){ Mass=63, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
+                { "smallcombat01_nx_armour_mirrored", new ShipModule(-1,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Kestrel MK II Mirrored Surface Composite"){ Mass=63, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
+                { "smallcombat01_nx_armour_reactive", new ShipModule(-1,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Kestrel MK II Reactive Surface Composite"){ Mass=63, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
+
                 // mkii ablative explorer armour
                 { "explorer_nx_armour_grade1", new ShipModule(129036571,ShipModule.ModuleTypes.LightweightAlloy,"Caspian Explorer MKII Ablative Lightweight Alloy"){ Mass=15, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
                 { "explorer_nx_armour_grade2", new ShipModule(129036572,ShipModule.ModuleTypes.ReinforcedAlloy,"Caspian Explorer MKII Ablative Reinforced Alloy"){ Mass=30, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
@@ -1125,6 +1131,8 @@ namespace EliteDangerousCore
                 { "hpt_plasmashockcannon_gimbal_small", new ShipModule(128891604,ShipModule.ModuleTypes.ShockCannon,"Shock Cannon Gimbal Small"){ Cost = 137500, Mount = "G", Class = 1, Rating = "E", Mass = 2, Integrity = 40, PowerDraw = 0.47, BootTime = 0, DPS = 69.1, Damage = 6.91, DistributorDraw = 0.39, ThermalLoad = 1.45, ArmourPiercing = 25, Range = 3000, Speed = 1200, RateOfFire = 10, BurstInterval = 0.1, Clip = 16, Ammo = 240, ReloadTime = 6, BreachDamage = 4.837, BreachModuleDamageAfterBreach = 70, BreachMin = 40, BreachMax = 80, KineticProportionDamage = 100, Falloff = 2500, AmmoCost = 9, Jitter = 0 } },
                 { "hpt_plasmashockcannon_fixed_small", new ShipModule(128891605,ShipModule.ModuleTypes.ShockCannon,"Shock Cannon Fixed Small"){ Cost = 65940, Mount = "F", Class = 1, Rating = "D", Mass = 2, Integrity = 40, PowerDraw = 0.41, BootTime = 0, DPS = 86.4, Damage = 8.64, DistributorDraw = 0.27, ThermalLoad = 1.14, ArmourPiercing = 25, Range = 3000, Speed = 1200, RateOfFire = 10, BurstInterval = 0.1, Clip = 16, Ammo = 240, ReloadTime = 6, BreachDamage = 6.048, BreachModuleDamageAfterBreach = 70, BreachMin = 40, BreachMax = 60, KineticProportionDamage = 100, Falloff = 2500, AmmoCost = 9, Jitter = 0 } },
 
+                { "hpt_mkiiplasmashockautocannon_fixed_large", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Shock Cannon MK II Fixed Large") },
+                
                 // power distributor
 
                 { "int_powerdistributor_size1_class1_free", new ShipModule(128666639,ShipModule.ModuleTypes.PowerDistributor,"Power Distributor Class 1 Rating E"){ Cost = 520, Class = 1, Rating = "E", Mass = 1.3, Integrity = 36, PowerDraw = 0.32, BootTime = 5, WeaponsCapacity = 10, WeaponsRechargeRate = 1.2, EngineCapacity = 8, EngineRechargeRate = 0.4, SystemsCapacity = 8, SystemsRechargeRate = 0.4 } },
@@ -1488,6 +1496,8 @@ namespace EliteDangerousCore
                 { "int_engine_size2_class5_fast", new ShipModule(128682014,ShipModule.ModuleTypes.EnhancedPerformanceThrusters,"Enhanced Performance Thrusters Class 2 Rating A"){ Cost = 1610080, Class = 2, Rating = "A", Mass = 2.5, Integrity = 40, PowerDraw = 4, BootTime = 0, MinMass = 50, OptMass = 60, MaxMass = 120, EngineMinMultiplier = 90, EngineOptMultiplier = 115, EngineMaxMultiplier = 137, ThermalLoad = 2, MinimumSpeedModifier = 90, OptimalSpeedModifier = 125, MaximumSpeedModifier = 160, MinimumAccelerationModifier = 90, OptimalAccelerationModifier = 110, MaximumAccelerationModifier = 120, MinimumRotationModifier = 90, OptimalRotationModifier = 110, MaximumRotationModifier = 130 } },
                 { "int_engine_size7_class5_gravityoptimised_mkii", new ShipModule(12903922,ShipModule.ModuleTypes.Thrusters,"Thrusters Class 7 Rating A Gravity Optimised"){ Cost = 68368390, Class = 7, Rating = "A", Mass = 80, Integrity = 144, PowerDraw = 9.12, BootTime = 0, MinMass = 1080, OptMass = 2160, MaxMass = 3240, EngineMinMultiplier = 96, EngineOptMultiplier = 100, EngineMaxMultiplier = 116, ThermalLoad = 1.3 } },
 
+                { "int_mkiiagileboost_engine_size5_class5", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Mk II Agile Boost Engine Class 5 Rating A") },
+
                 // XENO Scanners
 
                 { "hpt_xenoscanner_basic_tiny", new ShipModule(128793115,ShipModule.ModuleTypes.XenoScanner,"Xeno Scanner"){ Cost = 365700, Class = 0, Rating = "E", Mass = 1.3, Integrity = 56, PowerDraw = 0.2, BootTime = 2, Range = 500, Angle = 23, Time = 10 } },
@@ -1528,6 +1538,7 @@ namespace EliteDangerousCore
                 { "krait_light_cockpit", new ShipModule(999999948,ShipModule.ModuleTypes.CockpitType,"Krait Phantom Cockpit" ) },
                 { "krait_mkii_cockpit", new ShipModule(999999946,ShipModule.ModuleTypes.CockpitType,"Krait Mk II Cockpit" ) },
                 { "lakonminer_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.CockpitType,"Type-11 Prospector Cockpit" ) },
+                { "smallcombat01_nx_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.CockpitType,"Kestrel Mk II Cockpit" ) },
                 { "mamba_cockpit", new ShipModule(999999949,ShipModule.ModuleTypes.CockpitType,"Mamba Cockpit" ) },
                 { "orca_cockpit", new ShipModule(999999922,ShipModule.ModuleTypes.CockpitType,"Orca Cockpit" ) },
                 { "python_cockpit", new ShipModule(999999924,ShipModule.ModuleTypes.CockpitType,"Python Cockpit" ) },
@@ -7299,6 +7310,13 @@ namespace EliteDangerousCore
                 {"paintjob_sidewinder_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Sidewinder Vibrant Purple") },
                 {"paintjob_sidewinder_vibrant_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Sidewinder Vibrant Red") },
                 {"paintjob_sidewinder_vibrant_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Sidewinder Vibrant Yellow") },
+                {"paintjob_smallcombat01_nx_03_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel MK II 3 1") },
+                {"paintjob_smallcombat01_nx_03_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel MK II 3 2") },
+                {"paintjob_smallcombat01_nx_03_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel MK II 3 3") },
+                {"paintjob_smallcombat01_nx_03_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel MK II 3 4") },
+                {"paintjob_smallcombat01_nx_03_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel MK II 3 5") },
+                {"paintjob_smallcombat01_nx_03_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel MK II 3 6") },
+                {"paintjob_smallcombat01_nx_03_08", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel MK II 3 8") },
                 {"paintjob_testbuggy_chase_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job SRV Chase 1") },
                 {"paintjob_testbuggy_chase_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job SRV Chase 2") },
                 {"paintjob_testbuggy_chase_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job SRV Chase 3") },
@@ -8534,6 +8552,24 @@ namespace EliteDangerousCore
                 {"sidewinder_shipkit1_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Sidewinder Shipkit 1 Wings 2") },
                 {"sidewinder_shipkit1_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Sidewinder Shipkit 1 Wings 3") },
                 {"sidewinder_shipkit1_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Sidewinder Shipkit 1 Wings 4") },
+                {"smallcombat01_nx_holograma_01", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Kestrel MK II Holograma 1") },
+                {"smallcombat01_nx_holograma_02", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Kestrel MK II Holograma 2") },
+                {"smallcombat01_nx_holograma_03", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Kestrel MK II Holograma 3") },
+                {"smallcombat01_nx_holograma_04", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Kestrel MK II Holograma 4") },
+                {"smallcombat01_nx_holograma_05", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Kestrel MK II Holograma 5") },
+                {"smallcombat01_nx_holograma_06", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Kestrel MK II Holograma 6") },
+                {"smallcombat01_nx_shipkitb_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel MK II Ship Kit B Bumper 1") },
+                {"smallcombat01_nx_shipkitb_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel MK II Ship Kit B Bumper 2") },
+                {"smallcombat01_nx_shipkitb_bumper3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel MK II Ship Kit B Bumper 3") },
+                {"smallcombat01_nx_shipkitb_bumper4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel MK II Ship Kit B Bumper 4") },
+                {"smallcombat01_nx_shipkitb_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel MK II Ship Kit B Spoiler 1") },
+                {"smallcombat01_nx_shipkitb_spoiler2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel MK II Ship Kit B Spoiler 2") },
+                {"smallcombat01_nx_shipkitb_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel MK II Ship Kit B Spoiler 3") },
+                {"smallcombat01_nx_shipkitb_spoiler4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel MK II Ship Kit B Spoiler 4") },
+                {"smallcombat01_nx_shipkitb_wings1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel MK II Ship Kit B Wings 1") },
+                {"smallcombat01_nx_shipkitb_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel MK II Ship Kit B Wings 2") },
+                {"smallcombat01_nx_shipkitb_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel MK II Ship Kit B Wings 3") },
+                {"smallcombat01_nx_shipkitb_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel MK II Ship Kit B Wings 4") },
                 {"string_lights_coloured", new ShipModule(999999941,ShipModule.ModuleTypes.VanityType,"String Lights Coloured") },
                 {"string_lights_dotd", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"String Lights Dotd") },
                 {"string_lights_guardianorb", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"String Lights Guardianorb") },

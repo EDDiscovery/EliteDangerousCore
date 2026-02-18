@@ -196,6 +196,7 @@ namespace EliteDangerousCore
                 ["Mandalay"] = "Zorgon Peterson",
                 ["Corsair"] = "Gutamaya",
                 ["LakonMiner"] = "Lakon",
+                ["smallcombat01_nx"] = "Core Dynamics",
             };
 
             foreach (var kvp in Manu)
@@ -1378,6 +1379,31 @@ namespace EliteDangerousCore
             RevAcc = 10.11,//????
             LatAcc = 10.03//????
         };
+
+        private static ShipProperties kestrelmkii = new ShipProperties()
+        {
+            FDID = "SmallCombat01_nx",
+            HullMass = 190F,   // game
+            Name = "Kestrel MK II",
+            Speed = 278,    // game
+            Boost = 370,    // game
+            HullCost = 33333333,   // ????
+            Class = 2,
+            Shields = 338,  // game
+            Armour = 135,      // game
+            MinThrust = 30.769, //????
+            BoostCost = 19, //????
+            FuelReserve = 0.77, //????
+            HeatCap = 289, //????
+            HeatDispMin = 3.1, //????
+            HeatDispMax = 48.35, //????
+            FuelCost = 50, //????
+            Hardness = 65,//????
+            Crew = 4,       //????
+            FwdAcc = 20.03, //????
+            RevAcc = 10.11,//????
+            LatAcc = 10.03//????
+        };
         // MUST be after ship definitions else they are not constructed
 
         private static Dictionary<string, ShipProperties> spaceships = new Dictionary<string, ShipProperties>
@@ -1412,6 +1438,7 @@ namespace EliteDangerousCore
             { "independant_trader",independant_trader},
             { "krait_mkii",krait_mkii},
             { "krait_light",krait_light},
+            { "smallcombat01_nx",kestrelmkii},
             { "lakonminer",lakonminer },
             { "mamba",mamba},
             { "mandalay",mandalay},
