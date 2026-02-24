@@ -306,10 +306,10 @@ namespace EliteDangerousCore
                 { "lakonminer_armour_reactive", new ShipModule(-1,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Type-11 Prospector Reactive Surface Composite"){ Mass=63, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
                 { "smallcombat01_nx_armour_grade1", new ShipModule(-1,ShipModule.ModuleTypes.LightweightAlloy,"Kestrel MK II Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
-                { "smallcombat01_nx_armour_grade2", new ShipModule(-1,ShipModule.ModuleTypes.ReinforcedAlloy,"Kestrel MK II Reinforced Alloy"){ Mass=32, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
-                { "smallcombat01_nx_armour_grade3", new ShipModule(-1,ShipModule.ModuleTypes.MilitaryGradeComposite,"Kestrel MK II Military Grade Composite"){ Mass=63, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
-                { "smallcombat01_nx_armour_mirrored", new ShipModule(-1,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Kestrel MK II Mirrored Surface Composite"){ Mass=63, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
-                { "smallcombat01_nx_armour_reactive", new ShipModule(-1,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Kestrel MK II Reactive Surface Composite"){ Mass=63, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
+                { "smallcombat01_nx_armour_grade2", new ShipModule(-1,ShipModule.ModuleTypes.ReinforcedAlloy,"Kestrel MK II Reinforced Alloy"){ Mass=17, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
+                { "smallcombat01_nx_armour_grade3", new ShipModule(-1,ShipModule.ModuleTypes.MilitaryGradeComposite,"Kestrel MK II Military Grade Composite"){ Mass=35, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
+                { "smallcombat01_nx_armour_mirrored", new ShipModule(-1,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Kestrel MK II Mirrored Surface Composite"){ Mass=35, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
+                { "smallcombat01_nx_armour_reactive", new ShipModule(-1,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Kestrel MK II Reactive Surface Composite"){ Mass=35, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
                 // mkii ablative explorer armour
                 { "explorer_nx_armour_grade1", new ShipModule(129036571,ShipModule.ModuleTypes.LightweightAlloy,"Caspian Explorer MKII Ablative Lightweight Alloy"){ Mass=15, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
@@ -436,26 +436,25 @@ namespace EliteDangerousCore
 
                 // Cargo racks
 
-                { "int_cargorack_size1_class1", new ShipModule(128064338,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 1 Rating E"){ Cost = 1000, Class = 1, Rating = "E", Size = 2 } },
-                { "int_cargorack_size2_class1", new ShipModule(128064339,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 2 Rating E"){ Cost = 3250, Class = 2, Rating = "E", Size = 4 } },
-                { "int_cargorack_size3_class1", new ShipModule(128064340,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 3 Rating E"){ Cost = 10560, Class = 3, Rating = "E", Size = 8 } },
-                { "int_cargorack_size4_class1", new ShipModule(128064341,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 4 Rating E"){ Cost = 34330, Class = 4, Rating = "E", Size = 16 } },
-                { "int_cargorack_size5_class1", new ShipModule(128064342,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 5 Rating E"){ Cost = 111570, Class = 5, Rating = "E", Size = 32 } },
-                { "int_cargorack_size6_class1", new ShipModule(128064343,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 6 Rating E"){ Cost = 362590, Class = 6, Rating = "E", Size = 64 } },
-                { "int_cargorack_size7_class1", new ShipModule(128064344,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 7 Rating E"){ Cost = 1178420, Class = 7, Rating = "E", Size = 128 } },
-                { "int_cargorack_size8_class1", new ShipModule(128064345,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 8 Rating E"){ Cost = 3829870, Class = 8, Rating = "E", Size = 256 } },
+                { "int_cargorack_size1_class1", new ShipModule(128064338,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 1 (Cap: 2)"){ Cost = 1000, Class = 1, Rating = "E", Size = 2 } },
+                { "int_cargorack_size2_class1", new ShipModule(128064339,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 2 (Cap: 4)"){ Cost = 3250, Class = 2, Rating = "E", Size = 4 } },
+                { "int_cargorack_size3_class1", new ShipModule(128064340,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 3 (Cap: 8)"){ Cost = 10560, Class = 3, Rating = "E", Size = 8 } },
+                { "int_cargorack_size4_class1", new ShipModule(128064341,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 4 (Cap: 16)"){ Cost = 34330, Class = 4, Rating = "E", Size = 16 } },
+                { "int_cargorack_size5_class1", new ShipModule(128064342,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 5 (Cap: 32)"){ Cost = 111570, Class = 5, Rating = "E", Size = 32 } },
+                { "int_cargorack_size6_class1", new ShipModule(128064343,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 6 (Cap: 64)"){ Cost = 362590, Class = 6, Rating = "E", Size = 64 } },
+                { "int_cargorack_size7_class1", new ShipModule(128064344,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 7 (Cap: 128)"){ Cost = 1178420, Class = 7, Rating = "E", Size = 128 } },
+                { "int_cargorack_size8_class1", new ShipModule(128064345,ShipModule.ModuleTypes.CargoRack,"Cargo Rack Class 8 (Cap: 256)"){ Cost = 3829870, Class = 8, Rating = "E", Size = 256 } },
 
-                { "int_largecargorack_size8_class1", new ShipModule(129034964,ShipModule.ModuleTypes.CargoRack,"Large Cargo Rack Class 8 Rating E"){ Cost = 4929320, Class = 8, Rating = "D", Size = 384 } },
-                { "int_largecargorack_size7_class1", new ShipModule(129034963,ShipModule.ModuleTypes.CargoRack,"Large Cargo Rack Class 7 Rating E"){ Cost = 1958680, Class = 7, Rating = "D", Size = 192 } },
+                { "int_largecargorack_size7_class1", new ShipModule(129034963,ShipModule.ModuleTypes.CargoRack,"Mk II Cargo Rack Class 7 (Cap: 192)"){ Cost = 1958680, Class = 7, Rating = "D", Size = 192 } },
+                { "int_largecargorack_size8_class1", new ShipModule(129034964,ShipModule.ModuleTypes.CargoRack,"Mk II Cargo Rack Class 8 (Cap: 384)"){ Cost = 4929320, Class = 8, Rating = "D", Size = 384 } },
 
-                { "int_cargorack_size2_class1_free", new ShipModule(128666643, ShipModule.ModuleTypes.CargoRack, "Cargo Rack Class 2 Rating E") { Size = 4 } },
+                { "int_cargorack_size2_class1_free", new ShipModule(128666643, ShipModule.ModuleTypes.CargoRack, "Cargo Rack Class 2 (Cap: 4)") { Size = 4 } },
 
-                { "int_corrosionproofcargorack_size1_class1", new ShipModule(128681641,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 1 Rating E"){ Cost = 6250, Class = 1, Rating = "E", Size = 1 } },
-                { "int_corrosionproofcargorack_size1_class2", new ShipModule(128681992,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 1 Rating F"){ Cost = 12560, Class = 1, Rating = "F", Size = 2 } },
-
-                { "int_corrosionproofcargorack_size4_class1", new ShipModule(128833944,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 4 Rating E"){ Cost = 94330, Class = 4, Rating = "E", Size = 16 } },
-                { "int_corrosionproofcargorack_size5_class1", new ShipModule(128957069,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 5 Rating E"){ Class = 5, Rating = "E", Size = 32 } },
-                { "int_corrosionproofcargorack_size6_class1", new ShipModule(999999906, ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Corrosion Resistant Cargo Rack Class 6 Rating E") { Size = 64 } },
+                { "int_corrosionproofcargorack_size1_class1", new ShipModule(128681641,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Anti Corrosion Cargo Rack Class 1 (Cap: 1)"){ Cost = 6250, Class = 1, Rating = "E", Size = 1 } },
+                { "int_corrosionproofcargorack_size1_class2", new ShipModule(128681992,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Anti Corrosion Cargo Rack Class 1 (Cap: 2)"){ Cost = 12560, Class = 1, Rating = "F", Size = 2 } },
+                { "int_corrosionproofcargorack_size4_class1", new ShipModule(128833944,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Anti Corrosion Cargo Rack Class 4 (Cap: 16)"){ Cost = 94330, Class = 4, Rating = "E", Size = 16 } },
+                { "int_corrosionproofcargorack_size5_class1", new ShipModule(128957069,ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Anti Corrosion Cargo Rack Class 5 (Cap: 32)"){ Cost = 0, Class = 5, Rating = "E", Size = 32 } },
+                { "int_corrosionproofcargorack_size6_class1", new ShipModule(999999906, ShipModule.ModuleTypes.CorrosionResistantCargoRack,"Anti Corrosion Cargo Rack Class 6 (Cap: 64)") { Size = 64 } },
 
                 // Manifest Scanner
 
@@ -574,15 +573,15 @@ namespace EliteDangerousCore
 
                 // fuel tank
 
-                { "int_fueltank_size1_class3_free", new ShipModule(128667018, ShipModule.ModuleTypes.FuelTank, "Fuel Tank Class 1 Rating C") { Size= 2 } },
-                { "int_fueltank_size1_class3", new ShipModule(128064346,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 1 Rating C"){ Cost = 1000, Class = 1, Rating = "C", Size = 2 } },
-                { "int_fueltank_size2_class3", new ShipModule(128064347,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 2 Rating C"){ Cost = 3750, Class = 2, Rating = "C", Size = 4 } },
-                { "int_fueltank_size3_class3", new ShipModule(128064348,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 3 Rating C"){ Cost = 7060, Class = 3, Rating = "C", Size = 8 } },
-                { "int_fueltank_size4_class3", new ShipModule(128064349,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 4 Rating C"){ Cost = 24730, Class = 4, Rating = "C", Size = 16 } },
-                { "int_fueltank_size5_class3", new ShipModule(128064350,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 5 Rating C"){ Cost = 97750, Class = 5, Rating = "C", Size = 32 } },
-                { "int_fueltank_size6_class3", new ShipModule(128064351,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 6 Rating C"){ Cost = 341580, Class = 6, Rating = "C", Size = 64 } },
-                { "int_fueltank_size7_class3", new ShipModule(128064352,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 7 Rating C"){ Cost = 1780910, Class = 7, Rating = "C", Size = 128 } },
-                { "int_fueltank_size8_class3", new ShipModule(128064353,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 8 Rating C"){ Cost = 5428430, Class = 8, Rating = "C", Size = 256 } },
+                { "int_fueltank_size1_class3_free", new ShipModule(128667018, ShipModule.ModuleTypes.FuelTank, "Fuel Tank Class 1 (Cap: 2)") { Size= 2 } },
+                { "int_fueltank_size1_class3", new ShipModule(128064346,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 1 (Cap: 2)"){ Cost = 1000, Class = 1, Rating = "C", Size = 2 } },
+                { "int_fueltank_size2_class3", new ShipModule(128064347,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 2 (Cap: 4)"){ Cost = 3750, Class = 2, Rating = "C", Size = 4 } },
+                { "int_fueltank_size3_class3", new ShipModule(128064348,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 3 (Cap: 8)"){ Cost = 7060, Class = 3, Rating = "C", Size = 8 } },
+                { "int_fueltank_size4_class3", new ShipModule(128064349,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 4 (Cap: 16)"){ Cost = 24730, Class = 4, Rating = "C", Size = 16 } },
+                { "int_fueltank_size5_class3", new ShipModule(128064350,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 5 (Cap: 32)"){ Cost = 97750, Class = 5, Rating = "C", Size = 32 } },
+                { "int_fueltank_size6_class3", new ShipModule(128064351,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 6 (Cap: 64)"){ Cost = 341580, Class = 6, Rating = "C", Size = 64 } },
+                { "int_fueltank_size7_class3", new ShipModule(128064352,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 7 (Cap: 128)"){ Cost = 1780910, Class = 7, Rating = "C", Size = 128 } },
+                { "int_fueltank_size8_class3", new ShipModule(128064353,ShipModule.ModuleTypes.FuelTank,"Fuel Tank Class 8 (Cap: 256)"){ Cost = 5428430, Class = 8, Rating = "C", Size = 256 } },
 
                 // Guardian
 
@@ -762,7 +761,7 @@ namespace EliteDangerousCore
                 { "int_hyperdrive_overcharge_size8_class4", new ShipModule(129036579,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive (SCO) Class 8 Rating B"){ Cost = 20515650, Class = 8, Rating = "B", Mass = 160, Integrity = 169, PowerDraw = 0.88, BootTime = 10, OptMass = 4200, ThermalLoad = 50, MaxFuelPerJump = 20.4, LinearConstant = 12, PowerConstant = 2.9, SCOSpeedIncrease = 31, SCOAccelerationRate = 0.04, SCOHeatGenerationRate = 130, SCOControlInterference = 0.64, SCOFuelDuringOvercharge = 3.08 } },
                 { "int_hyperdrive_overcharge_size8_class5", new ShipModule(129036580,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive (SCO) Class 8 Rating A"){ Cost = 61546940, Class = 8, Rating = "A", Mass = 160, Integrity = 188, PowerDraw = 1.05, BootTime = 10, OptMass = 4670, ThermalLoad = 50, MaxFuelPerJump = 20.7, LinearConstant = 13, PowerConstant = 2.9, SCOSpeedIncrease = 42, SCOAccelerationRate = 0.04, SCOHeatGenerationRate = 123.5, SCOControlInterference = 0.624, SCOFuelDuringOvercharge = 4.11 } },
 
-                { "int_hyperdrive_overcharge_size8_class5_overchargebooster_mkii", new ShipModule(129038968,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive (SCO) Class 8 Rating A"){ Cost = 82042060, Class = 8, Rating = "A", Mass = 160, Integrity = 188, PowerDraw = 1.05, BootTime = 10, OptMass = 4670, ThermalLoad = 50, MaxFuelPerJump = 6.8, LinearConstant = 11.000, PowerConstant = 2.5025, SCOSpeedIncrease = 42, SCOAccelerationRate = 0.04, SCOHeatGenerationRate = 123.5, SCOControlInterference = 0.624, SCOFuelDuringOvercharge = 4.11 } },
+                { "int_hyperdrive_overcharge_size8_class5_overchargebooster_mkii", new ShipModule(129038968,ShipModule.ModuleTypes.FrameShiftDrive,"Frame Shift Drive (SCO) Class 8 Rating A"){ Cost = 82042060, Class = 8, Rating = "A", Mass = 160, Integrity = 188, PowerDraw = 1.05, BootTime = 10, OptMass = 4670, ThermalLoad = 50, MaxFuelPerJump = 6.8, LinearConstant = 11, PowerConstant = 2.503, SCOSpeedIncrease = 42, SCOAccelerationRate = 0.04, SCOHeatGenerationRate = 123.5, SCOControlInterference = 0.624, SCOFuelDuringOvercharge = 4.11 } },
 
                 // non real modules which sometimes appears in logs
 
@@ -991,7 +990,7 @@ namespace EliteDangerousCore
 
                 // Mining V2 prospector t11 (not full data)
 
-                { "hpt_miningtoolv2_fixed_large", new ShipModule(-1,ShipModule.ModuleTypes.MiningLaser,"Mining Volley Repeater"){ Cost = 149910, Mount = "F", Class = 3, Rating = "C", Mass = 8, Integrity = 61, PowerDraw = 1.5, BootTime = 0, DPS = 6, Damage = 0.3, DistributorDraw = 0.3, ThermalLoad = 0.4, ArmourPiercing = 18, Range = 500, Speed = 167, RateOfFire = 20, BurstInterval = 0.05, Clip = 1, Ammo = 1, ReloadTime = 4, BreachDamage = 0.03, BreachModuleDamageAfterBreach = 10, BreachMin = 10, BreachMax = 20, ThermalProportionDamage = 100, Falloff = 500 } },
+                { "hpt_miningtoolv2_fixed_large", new ShipModule(129036137,ShipModule.ModuleTypes.MiningLaser,"Mining Volley Repeater"){ Cost = 149910, Mount = "F", Class = 3, Rating = "C", Mass = 8, Integrity = 61, PowerDraw = 1.5, BootTime = 0, DPS = 6, Damage = 0.3, DistributorDraw = 0.3, ThermalLoad = 0.4, ArmourPiercing = 18, Range = 500, Speed = 167, RateOfFire = 20, BurstInterval = 0.05, Clip = 1, Ammo = 1, ReloadTime = 4, BreachDamage = 0.03, BreachModuleDamageAfterBreach = 10, BreachMin = 10, BreachMax = 20, ThermalProportionDamage = 100, Falloff = 500 } },
 
                 // Missiles
 
@@ -1027,7 +1026,7 @@ namespace EliteDangerousCore
                 { "hpt_dumbfiremissilerack_fixed_small_advanced", new ShipModule(128935982,ShipModule.ModuleTypes.AdvancedMissileRack,"Advanced Missile Rack Fixed Small"){ Cost = 32180, Mount = "F", MissileType = "D", Class = 1, Rating = "B", Mass = 2, Integrity = 40, PowerDraw = 0.4, BootTime = 0, DPS = 25, Damage = 50, DistributorDraw = 0.24, ThermalLoad = 3.6, ArmourPiercing = 60, Speed = 750, RateOfFire = 0.5, BurstInterval = 2, Clip = 8, Ammo = 64, ReloadTime = 5, BreachDamage = 20, BreachModuleDamageAfterBreach = 40, BreachMin = 100, BreachMax = 100, ExplosiveProportionDamage = 100, AmmoCost = 500, Jitter = 0 } },
                 { "hpt_dumbfiremissilerack_fixed_medium_advanced", new ShipModule(128935983,ShipModule.ModuleTypes.AdvancedMissileRack,"Advanced Missile Rack Fixed Medium"){ Cost = 240400, Mount = "F", MissileType = "D", Class = 2, Rating = "B", Mass = 4, Integrity = 51, PowerDraw = 1.2, BootTime = 0, DPS = 25, Damage = 50, DistributorDraw = 0.24, ThermalLoad = 3.6, ArmourPiercing = 60, Speed = 750, RateOfFire = 0.5, BurstInterval = 2, Clip = 12, Ammo = 64, ReloadTime = 5, BreachDamage = 20, BreachModuleDamageAfterBreach = 40, BreachMin = 100, BreachMax = 100, ExplosiveProportionDamage = 100, AmmoCost = 500, Jitter = 0 } },
 
-                { "hpt_human_extraction_fixed_medium", new ShipModule(129028577,ShipModule.ModuleTypes.MissileRack,"Human Extraction Missile Medium"){ Cost = 843170, Mount = "F", Class = 2, Rating = "B", Mass = 4, Integrity = 50, PowerDraw = 1, BootTime = 0, DPS = 2.5, Damage = 5, DistributorDraw = 0.21, ThermalLoad = 2.9, ArmourPiercing = 25, Speed = 550, RateOfFire = 0.5, BurstInterval = 2, Clip = 1, Ammo = 96, ReloadTime = 2, BreachDamage = 0.5, BreachModuleDamageAfterBreach = 10, BreachMin = 10, BreachMax = 20, ExplosiveProportionDamage = 100 } },
+                { "hpt_human_extraction_fixed_medium", new ShipModule(129028577,ShipModule.ModuleTypes.MissileRack,"Sub surface Extraction Missile"){ Cost = 843170, Mount = "F", Class = 2, Rating = "B", Mass = 4, Integrity = 50, PowerDraw = 1, BootTime = 0, DPS = 2.5, Damage = 5, DistributorDraw = 0.21, ThermalLoad = 2.9, ArmourPiercing = 25, Speed = 550, RateOfFire = 0.5, BurstInterval = 2, Clip = 1, Ammo = 96, ReloadTime = 2, BreachDamage = 0.5, BreachModuleDamageAfterBreach = 10, BreachMin = 10, BreachMax = 20, ExplosiveProportionDamage = 100 } },
 
                 { "hpt_causticmissile_fixed_medium", new ShipModule(128833995,ShipModule.ModuleTypes.EnzymeMissileRack,"Enzyme Missile Rack Medium"){ Cost = 480500, Mount = "F", MissileType = "D", Class = 2, Rating = "B", Mass = 4, Integrity = 51, PowerDraw = 1.2, BootTime = 0, DPS = 2.5, Damage = 5, DistributorDraw = 0.08, ThermalLoad = 1.5, ArmourPiercing = 60, Speed = 750, RateOfFire = 0.5, BurstInterval = 2, Clip = 8, Ammo = 64, ReloadTime = 5, BreachDamage = 0, BreachModuleDamageAfterBreach = 0, BreachMin = 80, BreachMax = 100, ExplosiveProportionDamage = 80, CausticPorportionDamage = 20, AmmoCost = 235, Jitter = 0 } },
 
@@ -1131,7 +1130,7 @@ namespace EliteDangerousCore
                 { "hpt_plasmashockcannon_gimbal_small", new ShipModule(128891604,ShipModule.ModuleTypes.ShockCannon,"Shock Cannon Gimbal Small"){ Cost = 137500, Mount = "G", Class = 1, Rating = "E", Mass = 2, Integrity = 40, PowerDraw = 0.47, BootTime = 0, DPS = 69.1, Damage = 6.91, DistributorDraw = 0.39, ThermalLoad = 1.45, ArmourPiercing = 25, Range = 3000, Speed = 1200, RateOfFire = 10, BurstInterval = 0.1, Clip = 16, Ammo = 240, ReloadTime = 6, BreachDamage = 4.837, BreachModuleDamageAfterBreach = 70, BreachMin = 40, BreachMax = 80, KineticProportionDamage = 100, Falloff = 2500, AmmoCost = 9, Jitter = 0 } },
                 { "hpt_plasmashockcannon_fixed_small", new ShipModule(128891605,ShipModule.ModuleTypes.ShockCannon,"Shock Cannon Fixed Small"){ Cost = 65940, Mount = "F", Class = 1, Rating = "D", Mass = 2, Integrity = 40, PowerDraw = 0.41, BootTime = 0, DPS = 86.4, Damage = 8.64, DistributorDraw = 0.27, ThermalLoad = 1.14, ArmourPiercing = 25, Range = 3000, Speed = 1200, RateOfFire = 10, BurstInterval = 0.1, Clip = 16, Ammo = 240, ReloadTime = 6, BreachDamage = 6.048, BreachModuleDamageAfterBreach = 70, BreachMin = 40, BreachMax = 60, KineticProportionDamage = 100, Falloff = 2500, AmmoCost = 9, Jitter = 0 } },
 
-                { "hpt_mkiiplasmashockautocannon_fixed_large", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Shock Cannon MK II Fixed Large") },
+                { "hpt_mkiiplasmashockautocannon_fixed_large", new ShipModule(129040538,ShipModule.ModuleTypes.UnknownType,"Shock Cannon MK II Fixed Large"){ Cost = 4612670, Mount = "F", Class = 3, Rating = "B", Mass = 8, Integrity = 64, PowerDraw = 1.51, BootTime = 0, DPS = 109.3, Damage = 13.9, DistributorDraw = 0.92, ThermalLoad = 1.7, ArmourPiercing = 60, Range = 3000, Speed = 1200, RateOfFire = 7.8, BurstInterval = 0.128, BurstRateOfFire = 28, BurstSize = 4, Clip = 18, Ammo = 0, ReloadTime = 5, BreachDamage = 9.8, BreachModuleDamageAfterBreach = 70, BreachMin = 40, BreachMax = 60, AbsoluteProportionDamage = 59.952, KineticProportionDamage = 20.024, ThermalProportionDamage = 20.024, Falloff = 2500 } },
                 
                 // power distributor
 
@@ -1494,9 +1493,9 @@ namespace EliteDangerousCore
 
                 { "int_engine_size3_class5_fast", new ShipModule(128682013,ShipModule.ModuleTypes.EnhancedPerformanceThrusters,"Enhanced Performance Thrusters Class 3 Rating A"){ Cost = 5103950, Class = 3, Rating = "A", Mass = 5, Integrity = 55, PowerDraw = 5, BootTime = 0, MinMass = 70, OptMass = 90, MaxMass = 200, EngineMinMultiplier = 90, EngineOptMultiplier = 115, EngineMaxMultiplier = 137, ThermalLoad = 1.3, MinimumSpeedModifier = 90, OptimalSpeedModifier = 125, MaximumSpeedModifier = 160, MinimumAccelerationModifier = 90, OptimalAccelerationModifier = 110, MaximumAccelerationModifier = 120, MinimumRotationModifier = 90, OptimalRotationModifier = 110, MaximumRotationModifier = 130 } },
                 { "int_engine_size2_class5_fast", new ShipModule(128682014,ShipModule.ModuleTypes.EnhancedPerformanceThrusters,"Enhanced Performance Thrusters Class 2 Rating A"){ Cost = 1610080, Class = 2, Rating = "A", Mass = 2.5, Integrity = 40, PowerDraw = 4, BootTime = 0, MinMass = 50, OptMass = 60, MaxMass = 120, EngineMinMultiplier = 90, EngineOptMultiplier = 115, EngineMaxMultiplier = 137, ThermalLoad = 2, MinimumSpeedModifier = 90, OptimalSpeedModifier = 125, MaximumSpeedModifier = 160, MinimumAccelerationModifier = 90, OptimalAccelerationModifier = 110, MaximumAccelerationModifier = 120, MinimumRotationModifier = 90, OptimalRotationModifier = 110, MaximumRotationModifier = 130 } },
-                { "int_engine_size7_class5_gravityoptimised_mkii", new ShipModule(12903922,ShipModule.ModuleTypes.Thrusters,"Thrusters Class 7 Rating A Gravity Optimised"){ Cost = 68368390, Class = 7, Rating = "A", Mass = 80, Integrity = 144, PowerDraw = 9.12, BootTime = 0, MinMass = 1080, OptMass = 2160, MaxMass = 3240, EngineMinMultiplier = 96, EngineOptMultiplier = 100, EngineMaxMultiplier = 116, ThermalLoad = 1.3 } },
+                { "int_engine_size7_class5_gravityoptimised_mkii", new ShipModule(129039228,ShipModule.ModuleTypes.Thrusters,"Thrusters Class 7 Rating A Gravity Optimised"){ Cost = 68368390, Class = 7, Rating = "A", Mass = 80, Integrity = 144, PowerDraw = 9.12, BootTime = 0, MinMass = 1080, OptMass = 2160, MaxMass = 3240, EngineMinMultiplier = 96, EngineOptMultiplier = 100, EngineMaxMultiplier = 116, ThermalLoad = 1.3 } },
 
-                { "int_mkiiagileboost_engine_size5_class5", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Mk II Agile Boost Engine Class 5 Rating A") },
+                { "int_mkiiagileboost_engine_size5_class5", new ShipModule(129041074,ShipModule.ModuleTypes.UnknownType,"Mk II Agile Boost Engine Class 5 Rating A"){ Cost = 6803570, Class = 5, Rating = "A", Mass = 20, Integrity = 106, PowerDraw = 6.29, BootTime = 0, MinMass = 420, OptMass = 420, MaxMass = 1260, EngineMinMultiplier = 96, EngineOptMultiplier = 100, EngineMaxMultiplier = 116, ThermalLoad = 1.3 } },
 
                 // XENO Scanners
 
