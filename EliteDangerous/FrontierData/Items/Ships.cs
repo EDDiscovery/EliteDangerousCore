@@ -26,7 +26,6 @@ namespace EliteDangerousCore
         public class ShipProperties
         {
             public string FDID { get; set; }
-//            public string EDCDID { get; set; }
             public string Manufacturer { get; set; }
             public double HullMass { get; set; }
             public string Name { get; set; }
@@ -1360,49 +1359,49 @@ namespace EliteDangerousCore
             FDID = "Explorer_nx",
             HullMass = 950F,   // game
             Name = "Caspian Explorer",
-            Speed = 223,    // game
-            Boost = 308,    // game
-            HullCost = 33333333,   // ????
+            Speed = 210,
+            Boost = 290,
+            HullCost = 189326510,
             Class = 3,
-            Shields = 201,  // game
-            Armour = 621,      // game
-            MinThrust = 30.769, //????
-            BoostCost = 19, //????
-            FuelReserve = 0.77, //????
-            HeatCap = 289, //????
-            HeatDispMin = 3.1, //????
-            HeatDispMax = 48.35, //????
-            FuelCost = 50, //????
-            Hardness = 65,//????
-            Crew = 4,       //????
-            FwdAcc = 20.03, //????
-            RevAcc = 10.11,//????
-            LatAcc = 10.03//????
+            Shields = 500,
+            Armour = 345,
+            MinThrust = 76,
+            BoostCost = 25,
+            FuelReserve = 1.14,
+            HeatCap = 0,
+            HeatDispMin = 0,
+            HeatDispMax = 0,
+            FuelCost = 50,
+            Hardness = 60,
+            Crew = 4,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0
         };
 
         private static ShipProperties kestrelmkii = new ShipProperties()
         {
             FDID = "SmallCombat01_nx",
-            HullMass = 190F,   // game
-            Name = "Kestrel MK II",
-            Speed = 278,    // game
-            Boost = 370,    // game
-            HullCost = 33333333,   // ????
-            Class = 2,
-            Shields = 338,  // game
-            Armour = 135,      // game
-            MinThrust = 30.769, //????
-            BoostCost = 19, //????
-            FuelReserve = 0.77, //????
-            HeatCap = 289, //????
-            HeatDispMin = 3.1, //????
-            HeatDispMax = 48.35, //????
-            FuelCost = 50, //????
-            Hardness = 65,//????
-            Crew = 4,       //????
-            FwdAcc = 20.03, //????
-            RevAcc = 10.11,//????
-            LatAcc = 10.03//????
+            HullMass = 190F,
+            Name = "Kestrel Mk II",
+            Speed = 270,
+            Boost = 360,
+            HullCost = 13776380,
+            Class = 1,
+            Shields = 260,
+            Armour = 75,
+            MinThrust = 89,
+            BoostCost = 14,
+            FuelReserve = 0.61,
+            HeatCap = 277,
+            HeatDispMin = 0,
+            HeatDispMax = 0,
+            FuelCost = 50,
+            Hardness = 55,
+            Crew = 1,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0
         };
         // MUST be after ship definitions else they are not constructed
 
