@@ -15,8 +15,8 @@ F96FC172EEE044: "Herbig Ae/Be class star" => "Objet Herbig-Haro"
 0B02505D1BF26B: "T Tauri star" => "Étoile T Tauri"
 3DFECCB7DD6E22: "Wolf-Rayet {0} class star" => "Étoile Wolf-Rayet {0}"
 08669A9269C246: "Carbon {0} class star" => "Étoile carbonée {0}"
-7BF6F814D38980: "Intermediate low Zirconium Monoxide MS class star" @
-170A80DC1E0554: "Cool Giant Zirconium Monoxide rich S class star" @
+7BF6F814D38980: "Intermediate low Zirconium Monoxide MS class star" => "Étoile intermédiaire de classe MS à faible teneur en monoxyde de zirconium"
+170A80DC1E0554: "Cool Giant Zirconium Monoxide rich S class star" => "Étoile géante de classe S froide riche en monoxyde de zirconium"
 8CDEC5119408C0: "White Dwarf {0} class star" => "Naine Blanche {0}"
 88F658977AF588: "Neutron Star" => "Étoile à neutrons"
 B5E13D6534B85B: "Black Hole" => "Trou noir"
@@ -889,32 +889,32 @@ FC48D911046A60: "Bone Fragments" => "Fragments d'os"
 3A28DC61040550: "Organ Sample" => "Échantillon d'organe"
 6B164FC0B3CA5A: "Tactical Core Chip" => "Puce tactique principale"
 
-D2B435BD2F3E46: "Industrial Component" @
-C1CE31586A391E: "Industrial Machinery" @
-2DCB764B313D21: "Inventory Record" @
-EA1CDBB770CC86: "Military Schematic" @
-1792DD8962F49D: "Electronics Package" @
-CACAE8D037A65E: "Computer Parts" @
-D951A767ACC061: "Experimental Prototype" @
-25946A7A1E6FF5: "Agricultural Sample" @
-330C82CE91032A: "Extraction Sample" @
-F8CEFA975F677C: "Personal Protective Equipment" @
-11BAFA088A95B6: "Medical sample" @
-83D10B63DD86F5: "Data Storage Device" @
-ED2D074319EE5D: "Security Logs" @
-E2EB8DA18DEDC2: "Energy Regulator" @
-F14F348E8705FC: "Research Notes" @
-B78364EC31B550: "Power Injection Malware" @
-FF45E2F509D37D: "Power Tracker Malware" @
+D2B435BD2F3E46: "Industrial Component" => "Composant industriel"
+C1CE31586A391E: "Industrial Machinery" => "Machines industrielles"
+2DCB764B313D21: "Inventory Record" => "Registre d'inventaire"
+EA1CDBB770CC86: "Military Schematic" => "Plan militaire"
+1792DD8962F49D: "Electronics Package" => "Ensemble électronique"
+CACAE8D037A65E: "Computer Parts" => "Pièces d'ordinateur"
+D951A767ACC061: "Experimental Prototype" => "Prototype expérimental"
+25946A7A1E6FF5: "Agricultural Sample" => "Échantillon agricole"
+330C82CE91032A: "Extraction Sample" => "Échantillon d'extraction"
+F8CEFA975F677C: "Personal Protective Equipment" => "Équipement de protection individuelle"
+11BAFA088A95B6: "Medical sample" => "Échantillon médical"
+83D10B63DD86F5: "Data Storage Device" => "Dispositif de stockage de données"
+ED2D074319EE5D: "Security Logs" => "Journaux de sécurité"
+E2EB8DA18DEDC2: "Energy Regulator" => "Régulateur d'énergie"
+F14F348E8705FC: "Research Notes" => "Notes de recherche"
+B78364EC31B550: "Power Injection Malware" => "Logiciel malveillant d'injection de puissance"
+FF45E2F509D37D: "Power Tracker Malware" => "Logiciel malveillant de suivi de puissance"
 4A3FD7417F083B: "Power Research Data" => "Données de recherche de puissance"
 A70BEDE79B1B91: "Power Association Data" => "Données d'association de puissance"
 3E41776DD38D94: "Power Industrial Data" => "Données industrielles de puissance"
-610F70C31BFBFE: "Power Political Data" @
-45F97EC4AE8647: "Power Classified Data" @
-C0406718170188: "Power Megaship Data" @
+610F70C31BFBFE: "Power Political Data" => "Données politiques de puissance"
+45F97EC4AE8647: "Power Classified Data" => "Données classifiées de puissance"
+C0406718170188: "Power Megaship Data" => "Données de méga-vaisseau de puissance"
 09174EAAB9A86E: "Spire Refinery Compound" @
 C9E4E38F3EFB08: "Contaminated Spire Compound" @
-FDCDA739585356: "Thargoid Capital Ship Data" @
+FDCDA739585356: "Thargoid Capital Ship Data" => "Données sur le vaisseau capital Thargoid"
 9F0A7BE43C6581: "Search and Rescue Voucher" => "Coupon de recherche et sauvetage"
 F958260588E1AF: "Steel" => "Acier"
 4A1B391ED87F19: "Haematite" => "Hématite"
@@ -1165,7 +1165,7 @@ E2407F2BA86D9F: "Space Construction Depot" => "Dépôt de construction spatial"
 72D0849A72AB18: "Planetary Construction Depot" => "Dépôt de construction planétaire"
 2D68CF109D6809: "Dockable Planet Station" => "Station planétaire amarrable"
 D089EF39D4EA65: "Construction POI" @
-39A76A40856116: "Dodec" @
+39A76A40856116: "Dodec" => "Spatioport Dodec"
 
 SECTION PowerPlayStates
 
@@ -1205,13 +1205,13 @@ D34DD311322502: "Planetary Approach Suite" => "Inst. approche planétaire"
 AD2618B16E649A: "Discovery Scanner" => "Détecteur découvertes"
 A20FD9AA9142BF: "Cockpit Type" => "Type de cockpit"
 E56766478D5E9E: "Data Link Scanner" => "Détecteur de liaison de données"
-A6C269B1A02EF9: "Prison Cells" @
+A6C269B1A02EF9: "Prison Cells" => "Cellule de prison"
 4075F1A901AC84: "Cargo Bay Door Type" => "Type d'écoutille de soute"
-EB702E354D4040: "Fighter Weapon" @
+EB702E354D4040: "Fighter Weapon" => "Arme de chasseur"
 1CC4848D27B6F3: "Wear And Tear Type" @
 86B9B261DED066: "Vanity Type" => "Livrée"
 352374D32CCD3B: "Unknown Type" => "Type inconnu"
-036F587DDBE3AB: "Lightweight Alloy (Default)" @
+036F587DDBE3AB: "Lightweight Alloy (Default)" => "Alliage léger (Par défaut)"
 
 SECTION ModulePartNames
 
@@ -1342,7 +1342,7 @@ E8B772D1BC2A20: "Enhanced Performance Thrusters" => "Propulseurs à performances
 FFE926B9A1E06C: "Concord Cannon" => "Canon Concorde"
 492166ECE113AD: "Colonisation Module" => "Instruments de colonisation de système"
 0DB27EBBF41345: "Large Cargo Rack" => "Compartiment soute large"
-80C6C2BEA1E3BF: "Mining Volley Repeater" @
+80C6C2BEA1E3BF: "Mining Volley Repeater" => "Lanceur de salves de minage"
 
 SECTION ShipSlots
 
@@ -1378,7 +1378,7 @@ BE7DD45637B559: "Medium Hardpoint 2" => "Point d'emport moyen 2"
 4BBD04305C4BF0: "Medium Hardpoint 3" => "Point d'emport moyen 3"
 485F68ABD0CDE8: "Medium Hardpoint 4" => "Point d'emport moyen 4"
 A7AB21F5CF19AE: "Medium Hardpoint 5" => "Point d'emport moyen 5"
-890406A48C1D3F: "Medium Hardpoint 6" @
+890406A48C1D3F: "Medium Hardpoint 6" => "Point d'emport moyen 6"
 77E9039F43F6E2: "Military Slot 1" => "Emplacement militaire 1"
 A22CCB7E4839AD: "Military Slot 2" => "Emplacement militaire 2"
 62898937228B9D: "Military Slot 3" => "Emplacement militaire 3"
@@ -1452,7 +1452,7 @@ B9F7EC2C516319: "Optional Slot 10 Class 4" => "Emplacement optionnel 10 Classe 4
 2E43536EE0228A: "Optional Slot 11 Class 2" => "Emplacement optionnel 11 Classe 2"
 396FF2847C8FAD: "Optional Slot 11 Class 3" => "Emplacement optionnel 11 Classe 3"
 7B3D33D0B5E58B: "Optional Slot 12 Class 1" => "Emplacement optionnel 12 Classe 1"
-99231038FC49DD: "Optional Slot 13 Class 1" @
+99231038FC49DD: "Optional Slot 13 Class 1" => "Emplacement optionnel 13 Classe 1"
 EB2C412690A12A: "Optional Slot 13 Class 2" => "Emplacement optionnel 13 Classe 2"
 F448DCEB3AF33F: "Optional Slot 14 Class 1" => "Emplacement optionnel 14 Classe 1"
 EB2E26440F6DEA: "Small Hardpoint 1" => "Point d'emport petit 1"
@@ -1477,13 +1477,13 @@ D96AA577649F7B: "Turret Type 2" => "Tourelle Type 2"
 BCC6D8B8761B2B: "Colonisation Suite" => "Instruments de colonisation de système"
 1D10985EBE451F: "Large Cargo 1" => "Cargo large 1"
 FA9AB13CECC85C: "Large Cargo 2" => "Cargo large 2"
-915A0715B57347: "Medium Mining Hardpoint 1" @
-E104214FD34AC0: "Medium Mining Hardpoint 2" @
-5E6DE9C9A368F8: "Small Mining Hardpoint 1" @
-B682567449A543: "Large Mining Hardpoint 1" @
-F4A2558C583E61: "Limpet Controller 1" @
-0B523B44CCD4E7: "Fighter Bay 1" @
-09D463E32B04B2: "Hologram" @
+915A0715B57347: "Medium Mining Hardpoint 1" => "Point d'emport de minage moyen 1"
+E104214FD34AC0: "Medium Mining Hardpoint 2" => "Point d'emport de minage moyen 2"
+5E6DE9C9A368F8: "Small Mining Hardpoint 1" => "Point d'emport de minage petit 1"
+B682567449A543: "Large Mining Hardpoint 1" => "Point d'emport de minage large 1"
+F4A2558C583E61: "Limpet Controller 1" => "Contrôleur de drones 1"
+0B523B44CCD4E7: "Fighter Bay 1" => "Hangar pour chasseur 1"
+09D463E32B04B2: "Hologram" => "Hologramme"
 
 SECTION StationServices
 
@@ -1510,7 +1510,7 @@ DF9FFF10547920: "Livery" => "Livrée"
 3CCF7127AB2FFF: "Restock" => "Ravitaillement"
 55DE88709232EC: "Shop" => "Vendeur"
 AD038C447F5DE3: "Social Space" => "Hall principal"
-D286137F857962: "Station Menu" => "Services\""
+D286137F857962: "Station Menu" => "Services"
 BB15267B3070D3: "Station Operations" => "Opérations de station"
 221B7518505747: "Tuning" => "Réglages"
 60200FB3E2E83B: "Construction Services" => "Dépôt de construction"
