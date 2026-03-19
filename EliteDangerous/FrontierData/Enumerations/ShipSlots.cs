@@ -22,64 +22,69 @@ namespace EliteDangerousCore
         public enum Slot
         {
             Unknown = 0,
-            Armour,
-            Bobble01,
-            Bobble02,
-            Bobble03,
-            Bobble04,
-            Bobble05,
-            Bobble06,
-            Bobble07,
-            Bobble08,
-            Bobble09,
-            Bobble10,
-            CargoHatch,
-            CodexScanner,
-            DataLinkScanner,
-            DiscoveryScanner,
-            Decal1,
-            Decal2,
-            Decal3,
-            EngineColour,
-            Federation_Fighter_Shield,
-            FrameShiftDrive,
-            FuelTank,
-            GDN_Hybrid_Fighter_V1_Shield,
-            GDN_Hybrid_Fighter_V2_Shield,
-            GDN_Hybrid_Fighter_V3_Shield,
+
+            // In Order normally presented by Frontier
+
             HugeHardpoint1,
             HugeHardpoint2,
-            Independent_Fighter_Shield,
             LargeHardpoint1,
             LargeHardpoint2,
             LargeHardpoint3,
             LargeHardpoint4,
-            LifeSupport,
-            MainEngines,
+            LargeMiningHardpoint1, // type 11 prospector sep 25
+
             MediumHardpoint1,
             MediumHardpoint2,
             MediumHardpoint3,
             MediumHardpoint4,
             MediumHardpoint5,
             MediumHardpoint6,
+            MediumMiningHardpoint1, // type 11 prospector sep 25
+            MediumMiningHardpoint2, // type 11 prospector sep 25
+
+            SmallMiningHardpoint1, // type 11 prospector sep 25
+            SmallHardpoint1,
+            SmallHardpoint2,
+            SmallHardpoint3,
+            SmallHardpoint4,
+            SmallHardpoint5,        //type8
+            SmallHardpoint6,        //type8
+
+            // core internal
+            Armour,
+            PowerPlant,
+            MainEngines,
+            FrameShiftDrive,
+            LifeSupport,
+            PowerDistributor,
+            Radar,
+            FuelTank,
+            Cargo01,        // Panther clipper, july 25
+            Cargo02,        // Panther clipper, july 25
+            FighterBay01, // type 11 prospector sep 25
+            PlanetaryApproachSuite,
+            ColonisationSuite,  // trailblazers feb 25
+            LimpetController01, // type 11 prospector sep 25
+            CargoHatch,
+
+            // utility mounts
+            TinyHardpoint1,
+            TinyHardpoint2,
+            TinyHardpoint3,
+            TinyHardpoint4,
+            TinyHardpoint5,
+            TinyHardpoint6,
+            TinyHardpoint7,
+            TinyHardpoint8,
+
+            // military
+
             Military01,
             Military02,
             Military03,
-            PaintJob,
-            PlanetaryApproachSuite,
-            PowerDistributor,
-            PowerPlant,
-            Radar,
-            ShieldGenerator,        // fighter
-            ShipCockpit,
-            ShipID0,
-            ShipID1,
-            ShipKitBumper,
-            ShipKitSpoiler,
-            ShipKitTail,
-            ShipKitWings,
-            ShipName0,
-            ShipName1,
+
+            // optional internal
+
             Slot00_Size8,
             Slot01_Size2,
             Slot01_Size3,
@@ -144,37 +149,55 @@ namespace EliteDangerousCore
             Slot13_Size2,
             Slot14_Size1,
             Slot14_Size2,
-            SmallHardpoint1,
-            SmallHardpoint2,
-            SmallHardpoint3,
-            SmallHardpoint4,
-            SmallHardpoint5,        //type8
-            SmallHardpoint6,        //type8
+
+            // Scanners
+            CodexScanner,
+            DataLinkScanner,
+            DiscoveryScanner,
+
+            // Vanity
+            Bobble01,
+            Bobble02,
+            Bobble03,
+            Bobble04,
+            Bobble05,
+            Bobble06,
+            Bobble07,
+            Bobble08,
+            Bobble09,
+            Bobble10,
+            Decal1,
+            Decal2,
+            Decal3,
+            EngineColour,
+            Hologram, // type 11 prospector sep 25
+            PaintJob,
+            ShipCockpit,
+            ShipID0,
+            ShipID1,
+            ShipKitBumper,
+            ShipKitSpoiler,
+            ShipKitTail,
+            ShipKitWings,
+            ShipName0,
+            ShipName1,
             StringLights,
-            TinyHardpoint1,
-            TinyHardpoint2,
-            TinyHardpoint3,
-            TinyHardpoint4,
-            TinyHardpoint5,
-            TinyHardpoint6,
-            TinyHardpoint7,
-            TinyHardpoint8,
             VesselVoice,
             WeaponColour,
+
+            // srv
             Turret,
             Turret2,        // reported by users
             SineWaveScanner,
             BuggyCargoHatch,
-            ColonisationSuite,  // trailblazers feb 25
-            Cargo01,        // Panther clipper, july 25
-            Cargo02,        // Panther clipper, july 25
-            MediumMiningHardpoint1, // type 11 prospector sep 25
-            MediumMiningHardpoint2, // type 11 prospector sep 25
-            SmallMiningHardpoint1, // type 11 prospector sep 25
-            LargeMiningHardpoint1, // type 11 prospector sep 25
-            LimpetController01, // type 11 prospector sep 25
-            FighterBay01, // type 11 prospector sep 25
-            Hologram, // type 11 prospector sep 25
+
+            // fighters
+            ShieldGenerator,     
+            Federation_Fighter_Shield,
+            GDN_Hybrid_Fighter_V1_Shield,
+            GDN_Hybrid_Fighter_V2_Shield,
+            GDN_Hybrid_Fighter_V3_Shield,
+            Independent_Fighter_Shield,
         }
 
 

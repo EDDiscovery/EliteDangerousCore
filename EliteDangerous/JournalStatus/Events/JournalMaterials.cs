@@ -295,7 +295,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
-            if (stationfaction.HasChars())
+            if (stationfaction.HasChars() && Paid != null && Received != null)
             {
                 stats.UpdateMaterial(system, Paid.Material, -Paid.Quantity, stationfaction);
                 stats.UpdateMaterial(system, Received.Material, Received.Quantity, stationfaction);

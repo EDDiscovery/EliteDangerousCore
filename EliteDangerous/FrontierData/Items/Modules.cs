@@ -110,6 +110,8 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Panthermkii", "Panther Clipper Mk II");
             candidatename = candidatename.Replace("Pparissa", "PP Arissa");
             candidatename = candidatename.Replace("Ppyuri", "PP Yuri");
+            candidatename = candidatename.Replace("Ppjerome", "PP Jerome");
+            candidatename = candidatename.Replace("Pppranav", "PP Pranav");
             candidatename = candidatename.Replace("Pp Aislingduval", "PP Aisling Duval");
             candidatename = candidatename.Replace("Pp Arissalavignyduval", "Pp Arissa Lavigny Duval");
             candidatename = candidatename.Replace("Pp Edmundmahon", "Pp Edmund Mahon");
@@ -135,6 +137,8 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Type 9", "Type-9", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace("Type 10", "Type-10", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace("Type 11", "Type-11", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Smallcombat 1 Nx", "Kestrel Mk II", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace(" MK II", " Mk II", StringComparison.InvariantCultureIgnoreCase);
             return candidatename;
         }
 
