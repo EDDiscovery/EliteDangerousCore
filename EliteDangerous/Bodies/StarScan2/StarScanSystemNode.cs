@@ -25,7 +25,7 @@ namespace EliteDangerousCore.StarScan2
     public partial class SystemNode
     {
         #region Public
-        public ISystem System { get; private set; }     // may not have XYZ, will always have name and systemaddress
+        public ISystem System { get; private set; }     // may not have XYZ, will always have name
         public bool HasCentreBarycentre { get { return systemBodies.ChildBodies.Count == 1 && systemBodies.ChildBodies[0].BodyType == BodyDefinitions.BodyType.Barycentre; } }
         public EDStar StarClass { get; private set; }   // set by navroute and by startjump
         public int? FSSTotalBodies { get; private set; }         // if we have FSSDiscoveryScan, this will be set
@@ -48,14 +48,18 @@ namespace EliteDangerousCore.StarScan2
         {
             $"StarScan Make new System Node {sys.Name}:{sys.SystemAddress}".DO(debugid);
             System = sys;
-            Clear();
+            ClearBodies();
         }
 
-        public void Clear()
+        // clear body info, keep Signals, Codex, OrbitingStations
+        public void ClearBodies()
         {
             systemBodies = new BodyNode("System", BodyDefinitions.BodyType.System, -1, null, null);
             bodybyid = new Dictionary<int, BodyNode>();
             FSSTotalBodies = FSSTotalNonBodies = null;
+            BodyGeneration = 0;
+            OldScansPresent = false;
+            BarycentreScans = 0;
             BodyGeneration = 0;
         }
 

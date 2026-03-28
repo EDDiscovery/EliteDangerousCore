@@ -527,16 +527,27 @@ namespace EliteDangerousCore.StarScan2
 
         public void SetScan(JournalScan sc)
         {
-            if (Scan != null)           // if previously scanned, we may have set some information into Parents list, which we need to keep
+            if (Scan != null)           // if previously scanned
             {
-                if ( Scan.Parents!=null)        // if previous had parents
+                // we may have set some information into Parents list, which we need to keep
+
+                if (Scan.Parents != null)        // if previous had parents
                 {
                     BodyParent.AreParentsSame(Scan.Parents, sc.Parents).Assert("StarScan Set Scan noted parents list changed on new scan- whats up Frontier!");
                     sc.ResetParents(Scan.Parents);      // copy parents across to new scan, so we don't loose the barycentre info - bug found during testing 
                 }
+
+                // decide if to accept the scan... 
+                if (Scan.ScanType == JournalScan.ScanTypeEnum.Basic ||      // if previous is basic we take it
+                    (!sc.IsWebSourced && sc.ScanType != JournalScan.ScanTypeEnum.Basic))    // if new one is not web sourced and is not basic, we take it. Basic does not overwrite web scans
+                {
+                    Scan = sc;
+                }
             }
-            
-            Scan = sc;                                  // copy across
+            else
+            {
+                Scan = sc;                              // no scan, set 
+            }
 
             Scan.Signals = Signals;                     // we point Signals, Organics, Genuses, CodexEntries in Scan to us
             Scan.Genuses = Genuses;                     // If they are null at this point the New will set them to the scan - bug found

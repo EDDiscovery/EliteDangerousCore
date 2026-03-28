@@ -341,7 +341,7 @@ namespace EliteDangerousCore.JournalEvents
                 sb.AppendCR();
             }
 
-            if (ScanType.HasChars())        // early entries did not
+            if (ScanType != ScanTypeEnum.Unknown)        // early entries did not
             {
                 sb.AppendFormat("Scan Type: {0}".Tx(), ScanType);
                 sb.AppendCR();

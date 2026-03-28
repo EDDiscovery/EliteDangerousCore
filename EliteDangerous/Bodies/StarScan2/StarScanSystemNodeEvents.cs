@@ -179,7 +179,7 @@ namespace EliteDangerousCore.StarScan2
 
             body.SetScan(sc);
 
-            AssignBaryCentreScanToScans(sc);                            // any barycentres see if it has a baryscan and assign to sc
+            AssignBaryCentreScanToScansParentList(sc);                            // any barycentres see if it has a baryscan and assign to sc
 
             Sort(cur);          // resort parent
 
@@ -339,7 +339,7 @@ namespace EliteDangerousCore.StarScan2
 
             body.SetScan(sc); // update or add scan BEFORE sorting - we may have added it before without a scan
 
-            AssignBaryCentreScanToScans(sc);                            // any barycentres see if it has a baryscan and assign to sc
+            AssignBaryCentreScanToScansParentList(sc);                            // any barycentres see if it has a baryscan and assign to sc
 
             Sort(cur);          // then sort with into
 

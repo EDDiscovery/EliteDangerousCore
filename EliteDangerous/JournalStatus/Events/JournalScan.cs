@@ -43,7 +43,8 @@ namespace EliteDangerousCore.JournalEvents
         ////////////////////////////////////////////////////////////////////// ALL
 
         [PropertyNameAttribute("Scan type, Basic, Detailed, NavBeacon, NavBeaconDetail, AutoScan, may be empty for very old scans")]
-        public string ScanType { get; private set; }                        // 3.0 scan type  Basic, Detailed, NavBeacon, NavBeaconDetail, (3.3) AutoScan, or empty for older ones
+        public enum ScanTypeEnum { Unknown, Basic, Detailed, NavBeacon, NavBeaconDetail, AutoScan }
+        public ScanTypeEnum ScanType { get; private set; }                        // 3.0 scan type  Basic, Detailed, NavBeacon, NavBeaconDetail, (3.3) AutoScan, or empty for older ones
         [PropertyNameAttribute("Frontier body name")]
         public string BodyName { get; private set; }                        // direct (meaning no translation)
 
@@ -460,7 +461,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
         {
-            ScanType = evt["ScanType"].Str();                               // ALL
+            // older than 3.0 does not have ScanType, will be Unknown ..
+            if (Enum.TryParse<ScanTypeEnum>(evt["ScanType"].Str("xxx"), true, out ScanTypeEnum sct))
+                ScanType = sct;
+
             BodyName = evt["BodyName"].Str();                               // ALL
             BodyID = evt["BodyID"].IntNull();                               // ALL
 
@@ -706,13 +710,13 @@ namespace EliteDangerousCore.JournalEvents
         public override string SummaryName(ISystem sys)
         {
             string text = "Scan of {0}".Tx();
-            if (ScanType == "AutoScan")
+            if (ScanType == ScanTypeEnum.AutoScan)
                 text = "Autoscan of {0}".Tx();
-            else if (ScanType == "Detailed")
+            else if (ScanType == ScanTypeEnum.Detailed)
                 text = "Detailed scan of {0}".Tx();
-            else if (ScanType == "Basic")
+            else if (ScanType == ScanTypeEnum.Basic)
                 text = "Basic scan of {0}".Tx();
-            else if (ScanType.Contains("Nav"))
+            else if (ScanType == ScanTypeEnum.NavBeacon || ScanType == ScanTypeEnum.NavBeaconDetail)
                 text = "Nav scan of {0}".Tx();
 
             return string.Format(text, BodyName.ReplaceIfStartsWith(sys.Name));
@@ -723,11 +727,11 @@ namespace EliteDangerousCore.JournalEvents
         {
             get
             {
-                if (ScanType == "AutoScan")
+                if (ScanType == ScanTypeEnum.AutoScan)
                     return "Scan Auto";
-                else if (ScanType == "Basic")
+                else if (ScanType == ScanTypeEnum.Basic)
                     return "Scan Basic";
-                else if (ScanType.Contains("Nav"))
+                else if (ScanType == ScanTypeEnum.NavBeacon || ScanType == ScanTypeEnum.NavBeaconDetail)
                     return "Scan Nav";
                 else
                     return base.EventFilterName;

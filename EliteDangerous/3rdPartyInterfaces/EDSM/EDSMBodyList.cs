@@ -65,6 +65,13 @@ namespace EliteDangerousCore.EDSM
                 return BodyCache.TryGetValue(sys.Key, out BodiesResults d) && d == null;
             }
         }
+        public static void DisableBodyLookup(ISystem sys)
+        {
+            lock (BodyCache)
+            {
+                BodyCache[sys.Key] = null;
+            }
+        }
 
         // returns null if EDSM says not there, else if returns list of bodies and a flag indicating if from cache. 
         // all this is done in a lock inside a task - the only way to sequence the code and prevent multiple lookups in an await structure

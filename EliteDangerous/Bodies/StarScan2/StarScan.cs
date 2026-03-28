@@ -37,6 +37,10 @@ namespace EliteDangerousCore.StarScan2
                 bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
                 bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
 
+                // SpanshThenEDSM
+                //      spansh lookup -> if we got something, disable edsm lookup from now (and obv spansh is disabled now), else try edsm (which will stop any more edsm)
+                //      second time, spansh and edsm is disabled
+
                 if (usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys))
                 {
                     var lookupres = Spansh.SpanshClass.GetBodiesList(sys, usespansh);          // see if spansh has it cached or optionally look it up
@@ -51,8 +55,8 @@ namespace EliteDangerousCore.StarScan2
                         if (lookupres.BodyCount.HasValue)
                             SetFSSDiscoveryScan(lookupres.BodyCount, null, lookupres.System);
 
-                        if (weblookup == WebExternalDataLookup.SpanshThenEDSM)      // we got something, for this option, we are fine, don't use edsm
-                            useedsm = false;
+                        if (weblookup == WebExternalDataLookup.SpanshThenEDSM)      // we got something, for this option, we are fine, don't use edsm and stop it checking again this session
+                            EDSM.EDSMClass.DisableBodyLookup(sys);
                     }
                 }
 
@@ -104,8 +108,8 @@ namespace EliteDangerousCore.StarScan2
                         if (lookupres.BodyCount.HasValue)
                             SetFSSDiscoveryScan(lookupres.BodyCount, null, lookupres.System);
 
-                        if (weblookup == WebExternalDataLookup.SpanshThenEDSM)      // we got something, for this option, we are fine, don't use edsm
-                            useedsm = false;
+                        if (weblookup == WebExternalDataLookup.SpanshThenEDSM)      // we got something, for this option, we are fine, don't use edsm and stop it checking again this session
+                            EDSM.EDSMClass.DisableBodyLookup(sys);
                     }
                 }
 

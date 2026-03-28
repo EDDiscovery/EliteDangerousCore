@@ -195,14 +195,14 @@ namespace EliteDangerousCore.StarScan2
 
         // check the scan parents, and if they are a barycentre, see if we have the node and if so set up its barycentre ptr.
         // We may not have it yet due to sequencing (baryscan onto pending, scan in but node not assigned, pending calls AssignBaryCentreScanToScans(JournalScanBaryCentre sc) which then fills it in)
-        private void AssignBaryCentreScanToScans(JournalScan sc)
+        private void AssignBaryCentreScanToScansParentList(JournalScan sc)
         {
-            foreach(var x in sc.Parents.EmptyIfNull())
+            foreach(BodyParent bp in sc.Parents.EmptyIfNull())
             {
-                if (x.IsBarycentre && bodybyid.TryGetValue(x.BodyID, out BodyNode bn) && bn.BarycentreScan != null)
+                if (bp.IsBarycentre && bodybyid.TryGetValue(bp.BodyID, out BodyNode bn) && bn.BarycentreScan != null)
                 {
-                    x.Barycentre = bn.BarycentreScan;
-                    $"   .. Starscan Scan parent is a barycentre {x.BodyID} and we can assign a bary scan to it".DO(debugid);
+                    bp.Barycentre = bn.BarycentreScan;
+                    $"   .. Starscan Scan parent is a barycentre {bp.BodyID} and we can assign a bary scan to it".DO(debugid);
                 }
             }
         }

@@ -223,9 +223,8 @@ namespace EliteDangerousCore.StarScan2
                     {
                         if (sn.OldScansPresent)                 // we don't mix old scans with new scans. Old scans without parents trees are problematic
                         {
-                            sn.OldScansPresent = false;
                             $"Clear Scans of {sn.System.SystemAddress} {sn.System.Name}".DO();
-                            sn.Clear();
+                            sn.ClearBodies();
                         }
 
                         if (stdname)
