@@ -81,7 +81,7 @@ namespace EliteDangerousCore
             return FindSystem(new SystemClass(address), lookup);
         }
 
-        // look up thru cache and db, and optionally edsm
+        // look up thru cache and db, and optionally edsm/spansh
         // thread safe
         // find may or may not have name, if not, uses x/y/z
         public static ISystem FindSystem(ISystem find, WebExternalDataLookup lookup = WebExternalDataLookup.None)

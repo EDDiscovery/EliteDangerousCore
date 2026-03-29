@@ -529,18 +529,24 @@ namespace EliteDangerousCore.StarScan2
         {
             if (Scan != null)           // if previously scanned
             {
-                // we may have set some information into Parents list, which we need to keep
-
-                if (Scan.Parents != null)        // if previous had parents
-                {
-                    BodyParent.AreParentsSame(Scan.Parents, sc.Parents).Assert("StarScan Set Scan noted parents list changed on new scan- whats up Frontier!");
-                    sc.ResetParents(Scan.Parents);      // copy parents across to new scan, so we don't loose the barycentre info - bug found during testing 
-                }
-
                 // decide if to accept the scan... 
+
                 if (Scan.ScanType == JournalScan.ScanTypeEnum.Basic ||      // if previous is basic we take it
                     (!sc.IsWebSourced && sc.ScanType != JournalScan.ScanTypeEnum.Basic))    // if new one is not web sourced and is not basic, we take it. Basic does not overwrite web scans
                 {
+                    // we may have set some information in previous Parents list, which may be different to sc parents (or sc parents are not there) we need to keep and copy to SC..
+
+                    if (Scan.Parents != null)        // if previous had parents and we have parents
+                    {
+                        if ( sc.Parents != null)
+                        {
+                            BodyParent.AreParentsSame(Scan.Parents, sc.Parents).Assert("StarScan Set Scan noted parents list changed on new scan - whats up Frontier!");
+                        }
+
+                        System.Diagnostics.Debug.WriteLine($"SetScan overwrite previous scan with previous parents {sc.BodyName}");
+                        sc.ResetParents(Scan.Parents);      // copy parents across to new scan, so we don't loose the barycentre info - bug found during testing 
+                    }
+
                     Scan = sc;
                 }
             }

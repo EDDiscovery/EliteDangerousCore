@@ -98,7 +98,7 @@ namespace EliteDangerousCore.StarScan2
             string path = @"c:\code\eddiscovery\elitedangerouscore\elitedangerous\bodies\starscan2\tests";
             EliteDangerousCore.StarScan2.StarScan.ProcessAllFromDirectory(path, "*.json", (ss2, mhs) =>
                     {
-                        EliteDangerousCore.StarScan2.SystemNode sssol = ss2.FindSystemSynchronous(mhs.Last().Item2.System);
+                        EliteDangerousCore.StarScan2.SystemNode sssol = ss2.FindSystemSynchronous(mhs.Last().Item2.System,false);
                         sssol.DrawSystemToFile(Path.Combine(outputdir,sssol.System.Name.SafeFileString()) + ".png");
                     });
 
@@ -121,7 +121,7 @@ namespace EliteDangerousCore.StarScan2
                     ISystem syst = ss2.GetISystem(system);
                     if (syst != null)
                     {
-                        EliteDangerousCore.StarScan2.SystemNode sssol = ss2.FindSystemSynchronous(syst);
+                        EliteDangerousCore.StarScan2.SystemNode sssol = ss2.FindSystemSynchronous(syst,false);
 
                         if (sssol.BodyGeneration != gen | sssol.SignalGeneration != siggen)
                         {
@@ -139,7 +139,7 @@ namespace EliteDangerousCore.StarScan2
                 if ( !draweachone)
                 {
                     ISystem syst = ss.GetISystem(system);
-                    EliteDangerousCore.StarScan2.SystemNode sssol = ss.FindSystemSynchronous(syst);
+                    EliteDangerousCore.StarScan2.SystemNode sssol = ss.FindSystemSynchronous(syst,false);
                     string path = Path.Combine(outpath, sssol.System.Name.SafeFileString()) + ".png";
                     sssol.DrawSystemToFile(path, width, showmaterials);
                 }

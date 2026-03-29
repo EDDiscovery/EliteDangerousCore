@@ -27,13 +27,15 @@ namespace EliteDangerousCore.StarScan2
         // Find system, optinally do weblookup
         // null if not found
         // Sys can be an address, a name, or a name and address. address takes precedence
-        public SystemNode FindSystemSynchronous(ISystem sys, WebExternalDataLookup weblookup = WebExternalDataLookup.None)    
+        public SystemNode FindSystemSynchronous(ISystem sys, bool checkweb)    
         {
             //System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
             System.Diagnostics.Debug.Assert(sys != null);
 
             if (sys.HasAddress || sys.HasName)      // we have good enough data (should have)
             {
+                var weblookup = checkweb ? EliteConfigInstance.InstanceConfig.WebLookup : WebExternalDataLookup.None;
+
                 bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
                 bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
 
@@ -81,13 +83,15 @@ namespace EliteDangerousCore.StarScan2
         // Async Find system, optinally do weblookup
         // you must be returning void to use this..
         // Sys can be an address, a name, or a name and address. address takes precedence
-        public async System.Threading.Tasks.Task<SystemNode> FindSystemAsync(ISystem sys, WebExternalDataLookup weblookup = WebExternalDataLookup.None)    // Find the system. Optionally do a EDSM web lookup
+        public async System.Threading.Tasks.Task<SystemNode> FindSystemAsync(ISystem sys, bool checkweb)    // Find the system. Optionally do a EDSM web lookup
         {
             System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
             System.Diagnostics.Debug.Assert(sys != null);
 
             if (sys.HasAddress || sys.HasName)      // we have good enough data (should have)
             {
+                var weblookup = checkweb ? EliteConfigInstance.InstanceConfig.WebLookup : WebExternalDataLookup.None;
+
                 bool usespansh = weblookup == WebExternalDataLookup.Spansh || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
                 bool useedsm = weblookup == WebExternalDataLookup.EDSM || weblookup == WebExternalDataLookup.SpanshThenEDSM || weblookup == WebExternalDataLookup.All;
 
