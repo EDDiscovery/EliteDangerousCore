@@ -237,7 +237,7 @@ namespace EDDDLLInterfaces
             // System = "" systemaddress=N valid
             // System = "name" systemaddress=N valid with systemaddress preferred as the lookup source
             // System = "" systemaddress = 0 get current system information
-            // web lookup = 3 SpanshThenEDSM 2 = Spansh 1 = EDSM 0 = None
+            // web lookup = 3 SpanshThenEDSM 2 = Spansh 1 = EDSM 0 = None (from 20.0 the lookup type is done globally, so its 0 = none, other = lookup incl web)
             // otheroptions is unused as of now.
             // result is async and passed back on EDDDataResult
             [FieldOffset(120)] public EDDRequestScanDataExt RequestScanDataExt;
