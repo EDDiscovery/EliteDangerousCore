@@ -29,7 +29,7 @@ namespace EliteDangerousCore
 
     public partial class ItemData
     {
-        static public bool TryGetShipModule(string fdid, out ShipModule m, bool synthesiseit)
+        static public bool TryGetShipModule(string fdid, out ShipModule m, bool synthesiseit, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
         {
             m = null;
             string lowername = fdid.ToLowerInvariant();
@@ -55,7 +55,7 @@ namespace EliteDangerousCore
 
                     var newmodule = new ShipModule(-1, IsVanity(lowername) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType, candidatename);
                     string futilemessage = " - this is item unknown to EDD, but IT WILL not affect operation of the program. It would be nice to report it to us so we can add it to known module lists";
-                    System.Diagnostics.Trace.WriteLine($"*** Unknown Module {{ \"{lowername}\", new ShipModule(-1,{(IsVanity(lowername) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename}\") }}," + futilemessage);
+                    System.Diagnostics.Trace.WriteLine($"*** Unknown Module in slot {ShipSlots.ToEnglish(slot)} : {{\"{lowername}\", new ShipModule(-1,{(IsVanity(lowername) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename}\") }}," + futilemessage);
 
                     synthesisedmodules[lowername] = m = newmodule;                   // lets cache them for completeness..
                 }
@@ -139,6 +139,17 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Type 11", "Type-11", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace("Smallcombat 1 Nx", "Kestrel Mk II", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace(" MK II", " Mk II", StringComparison.InvariantCultureIgnoreCase);
+
+            candidatename = candidatename.Replace(" Class 1", " Rating E", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace(" Class 2", " Rating D", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace(" Class 3", " Rating C", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace(" Class 4", " Rating B", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace(" Class 5", " Rating A", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace(" Size ", " Class ", StringComparison.InvariantCultureIgnoreCase);
+
+            candidatename = candidatename.Replace("Mediumtransport 1 ", "Lynx Highliner ", StringComparison.InvariantCultureIgnoreCase);
+
+
             return candidatename;
         }
 

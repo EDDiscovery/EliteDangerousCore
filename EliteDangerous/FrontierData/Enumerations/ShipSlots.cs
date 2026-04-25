@@ -83,6 +83,12 @@ namespace EliteDangerousCore
             Military02,
             Military03,
 
+            // Passengers
+
+            Passenger01,
+            Passenger02,
+            Passenger03,
+
             // optional internal
 
             Slot00_Size8,
@@ -340,6 +346,10 @@ namespace EliteDangerousCore
 
             [Slot.Slot14_Size1] = "Optional Slot 14 Class 1",
             [Slot.Slot14_Size2] = "Optional Slot 14 Class 2",
+
+            [Slot.Passenger01] = "Passenger Slot 1",
+            [Slot.Passenger02] = "Passenger Slot 2",
+            [Slot.Passenger03] = "Passenger Slot 3",
 
             [Slot.SmallHardpoint1] = "Small Hardpoint 1",
             [Slot.SmallHardpoint2] = "Small Hardpoint 2",

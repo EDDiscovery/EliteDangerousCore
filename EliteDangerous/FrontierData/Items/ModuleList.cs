@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2025 EDDiscovery development team
+ * Copyright 2016-2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -320,6 +320,13 @@ namespace EliteDangerousCore
 
                 // cheaper version
                 { "explorer_nx_armour_grade1_default", new ShipModule(129036581,ShipModule.ModuleTypes.LightweightAlloy,"Caspian Explorer Lightweight Alloy (Default)"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
+
+
+                { "mediumtransport01_armour_grade1", new ShipModule(-1,ShipModule.ModuleTypes.LightweightAlloy,"Lynx Highliner Lightweight Alloy"){ Mass=0, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=80 } },
+                { "mediumtransport01_armour_grade2", new ShipModule(-1,ShipModule.ModuleTypes.ReinforcedAlloy,"Lynx Highliner Reinforced Alloy"){ Mass=17, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=152 } },
+                { "mediumtransport01_armour_grade3", new ShipModule(-1,ShipModule.ModuleTypes.MilitaryGradeComposite,"Lynx Highliner Military Grade Composite"){ Mass=35, ExplosiveResistance=-40, KineticResistance=-20, ThermalResistance=0, AXResistance=90, HullStrengthBonus=250 } },
+                { "mediumtransport01_armour_mirrored", new ShipModule(-1,ShipModule.ModuleTypes.MirroredSurfaceComposite,"Lynx Highliner Mirrored Surface Composite"){ Mass=35, ExplosiveResistance=-50, KineticResistance=-75, ThermalResistance=50, AXResistance=90, HullStrengthBonus=250 } },
+                { "mediumtransport01_armour_reactive", new ShipModule(-1,ShipModule.ModuleTypes.ReactiveSurfaceComposite,"Lynx Highliner Reactive Surface Composite"){ Mass=35, ExplosiveResistance=20, KineticResistance=25, ThermalResistance=-40, AXResistance=90, HullStrengthBonus=250 } },
 
                 // Auto field maint
 
@@ -1096,6 +1103,17 @@ namespace EliteDangerousCore
                 { "int_passengercabin_size5_class2", new ShipModule(128734694,ShipModule.ModuleTypes.BusinessClassPassengerCabin,"Business Class Passenger Cabin Class 5 Rating D"){ Cost = 92370, Class = 5, Rating = "D", Mass = 20, Passengers = 10, CabinClass = "B" } },
                 { "int_passengercabin_size5_class3", new ShipModule(128734695,ShipModule.ModuleTypes.FirstClassPassengerCabin,"First Class Passenger Cabin Class 5 Rating C"){ Cost = 340540, Class = 5, Rating = "C", Mass = 20, Passengers = 6, CabinClass = "F" } },
 
+                { "int_mkii_passengercabin_size2_class1", new ShipModule(-1,ShipModule.ModuleTypes.EconomyClassPassengerCabin,"Mk II Economy Passenger Cabin Class 2 Rating D") }, // D not E
+                { "int_mkii_passengercabin_size3_class1", new ShipModule(-1,ShipModule.ModuleTypes.EconomyClassPassengerCabin,"Mk II Economy Passenger Cabin Class 3 Rating D") }, // D not E
+                { "int_mkii_passengercabin_size4_class1", new ShipModule(-1,ShipModule.ModuleTypes.EconomyClassPassengerCabin,"Mk II Economy Passengercabin Class 4 Rating D") }, // D not E
+                { "int_mkii_passengercabin_size5_class1", new ShipModule(-1,ShipModule.ModuleTypes.EconomyClassPassengerCabin,"Mk II Economy Passengercabin Class 5 Rating D") }, // D not E
+                { "int_mkii_passengercabin_size6_class1", new ShipModule(-1,ShipModule.ModuleTypes.EconomyClassPassengerCabin, "Mk II Economy Passenger Cabin Class 6 Rating D") }, // D not E
+
+                { "int_mkii_passengercabin_size3_class2", new ShipModule(-1,ShipModule.ModuleTypes.BusinessClassPassengerCabin,"Mk II Buisness Passenger Cabin Class 3 Rating C") }, // C not D
+                { "int_mkii_passengercabin_size4_class2", new ShipModule(-1,ShipModule.ModuleTypes.BusinessClassPassengerCabin,"Mk II Buisness Passenger Cabin Class 4 Rating C") }, // C not D
+                { "int_mkii_passengercabin_size5_class2", new ShipModule(-1,ShipModule.ModuleTypes.BusinessClassPassengerCabin,"Mk II Buisness Passenger Cabin Class 5 Rating C") }, // C not D
+                { "int_mkii_passengercabin_size6_class2", new ShipModule(-1,ShipModule.ModuleTypes.BusinessClassPassengerCabin, "Mk II Buisness Passenger Cabin Class 6 Rating C") }, // C not D
+
                 // Planetary approach
 
                 { "int_planetapproachsuite_advanced", new ShipModule(128975719, ShipModule.ModuleTypes.AdvancedPlanetaryApproachSuite, "Advanced Planet Approach Suite") },
@@ -1556,6 +1574,8 @@ namespace EliteDangerousCore
                 { "corsair_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Corsair Cockpit") },
                 { "panthermkii_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Panther Clipper Mk II Cockpit") },
                 { "explorer_nx_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Caspian Explorer Cockpit") },
+                { "mediumtransport01_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Lynx Highliner Cockpit") },
+
                 { "int_codexscanner", new ShipModule(999999947,ShipModule.ModuleTypes.Codex,"Codex Scanner" ) },
                 { "hpt_shipdatalinkscanner", new ShipModule(999999940,ShipModule.ModuleTypes.DataLinkScanner,"Hpt Shipdatalinkscanner" ) },
 
@@ -1667,6 +1687,7 @@ namespace EliteDangerousCore
 
             vanitymodules = new Dictionary<string, ShipModule>
             {
+                {"“mandalay_ppnakato_tail1”", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"“ Mandalay") },
                 {"“paintjob_cobramkv_ruby_01”", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"“ Paint") },
                 {"“paintjob_sidewinder_faction1_01”", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"“ Paint") },
                 {"adder_shipkit1_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Adder Shipkit 1 Bumper 1") },
@@ -2789,6 +2810,10 @@ namespace EliteDangerousCore
                 {"explorer_nx_holograma_04", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Caspian Explorer Holograma 4") },
                 {"explorer_nx_holograma_05", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Caspian Explorer Holograma 5") },
                 {"explorer_nx_holograma_06", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Caspian Explorer Holograma 6") },
+                {"explorer_nx_ppaisling_tail1", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Caspian Explorer PP Aisling Tail 1") },
+                {"explorer_nx_ppaisling_tail2", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Caspian Explorer PP Aisling Tail 2") },
+                {"explorer_nx_ppaisling_tail3", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Caspian Explorer PP Aisling Tail 3") },
+                {"explorer_nx_ppaisling_tail4", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Caspian Explorer PP Aisling Tail 4") },
                 {"explorer_nx_pparissa_tail1", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Caspian Explorer PP Arissa Tail 1") },
                 {"explorer_nx_pparissa_tail2", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Caspian Explorer PP Arissa Tail 2") },
                 {"explorer_nx_pparissa_tail3", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Caspian Explorer PP Arissa Tail 3") },
@@ -2934,8 +2959,8 @@ namespace EliteDangerousCore
                 {"independant_trader_shipkit1_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Keelback Shipkit 1 Wings 2") },
                 {"independant_trader_shipkit1_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Keelback Shipkit 1 Wings 3") },
                 {"independant_trader_shipkit1_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Keelback Shipkit 1 Wings 4") },
-                {"int_lifesupport_fighter_class1", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Int Lifesupport Fighter Class 1") },
-                {"int_powerdistributor_gdnfighter_class1", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Int Powerdistributor Gdnfighter Class 1") },
+                {"int_lifesupport_fighter_class1", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Int Lifesupport Fighter Rating E") },
+                {"int_powerdistributor_gdnfighter_class1", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Int Powerdistributor Gdnfighter Rating E") },
                 {"krait_light_ppaisling_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Phantom PP Aisling Spoiler 1") },
                 {"krait_light_ppaisling_spoiler2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Phantom PP Aisling Spoiler 2") },
                 {"krait_light_ppaisling_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Phantom PP Aisling Spoiler 3") },
@@ -2992,6 +3017,10 @@ namespace EliteDangerousCore
                 {"krait_mkii_industrial1_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Mk II Industrial 1 Wings 2") },
                 {"krait_mkii_industrial1_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Mk II Industrial 1 Wings 3") },
                 {"krait_mkii_industrial1_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Mk II Industrial 1 Wings 4") },
+                {"krait_mkii_plating_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Mk II Plating Spoiler 1") },
+                {"krait_mkii_plating_spoiler2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Mk II Plating Spoiler 2") },
+                {"krait_mkii_plating_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Mk II Plating Spoiler 3") },
+                {"krait_mkii_plating_spoiler4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Mk II Plating Spoiler 4") },
                 {"krait_mkii_ppaisling_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Mk II PP Aisling Spoiler 1") },
                 {"krait_mkii_ppaisling_spoiler2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Mk II PP Aisling Spoiler 2") },
                 {"krait_mkii_ppaisling_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Krait Mk II PP Aisling Spoiler 3") },
@@ -3171,6 +3200,10 @@ namespace EliteDangerousCore
                 {"mamba_shipkit1_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Shipkit 1 Wings 2") },
                 {"mamba_shipkit1_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Shipkit 1 Wings 3") },
                 {"mamba_shipkit1_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Shipkit 1 Wings 4") },
+                {"mamba_shipkit2raider_tail1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Shipkit 2 Raider Tail 1") },
+                {"mamba_shipkit2raider_tail2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Shipkit 2 Raider Tail 2") },
+                {"mamba_shipkit2raider_tail3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Shipkit 2 Raider Tail 3") },
+                {"mamba_shipkit2raider_tail4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Shipkit 2 Raider Tail 4") },
                 {"mamba_steampunk_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Steampunk Bumper 1") },
                 {"mamba_steampunk_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Steampunk Bumper 2") },
                 {"mamba_steampunk_bumper3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mamba Steampunk Bumper 3") },
@@ -3247,6 +3280,24 @@ namespace EliteDangerousCore
                 {"mandalay_shipkitc_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mandalay Ship Kit C Wings 2") },
                 {"mandalay_shipkitc_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mandalay Ship Kit C Wings 3") },
                 {"mandalay_shipkitc_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Mandalay Ship Kit C Wings 4") },
+                {"mediumtransport01_holograma_01", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Lynx Highliner Hologram A 1") },
+                {"mediumtransport01_holograma_02", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Lynx Highliner Hologram A 2") },
+                {"mediumtransport01_holograma_03", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Lynx Highliner Hologram A 3") },
+                {"mediumtransport01_holograma_04", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Lynx Highliner Hologram A 4") },
+                {"mediumtransport01_holograma_05", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Lynx Highliner Hologram A 5") },
+                {"mediumtransport01_holograma_06", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Lynx Highliner Hologram A 6") },
+                {"mediumtransport01_shipkitb_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Lynx Highliner Ship Kit B Bumper 1") },
+                {"mediumtransport01_shipkitb_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Lynx Highliner Ship Kit B Bumper 2") },
+                {"mediumtransport01_shipkitb_bumper3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Lynx Highliner Ship Kit B Bumper 3") },
+                {"mediumtransport01_shipkitb_bumper4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Lynx Highliner Ship Kit B Bumper 4") },
+                {"mediumtransport01_shipkitb_spoiler1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Lynx Highliner Ship Kit B Spoiler 1") },
+                {"mediumtransport01_shipkitb_spoiler2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Lynx Highliner Ship Kit B Spoiler 2") },
+                {"mediumtransport01_shipkitb_spoiler3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Lynx Highliner Ship Kit B Spoiler 3") },
+                {"mediumtransport01_shipkitb_spoiler4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Lynx Highliner Ship Kit B Spoiler 4") },
+                {"mediumtransport01_shipkitb_wings1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Lynx Highliner Ship Kit B Wings 1") },
+                {"mediumtransport01_shipkitb_wings2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Lynx Highliner Ship Kit B Wings 2") },
+                {"mediumtransport01_shipkitb_wings3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Lynx Highliner Ship Kit B Wings 3") },
+                {"mediumtransport01_shipkitb_wings4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Lynx Highliner Ship Kit B Wings 4") },
                 {"nameplate_ace01_black", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Nameplate Ace 1 Black") },
                 {"nameplate_ace01_grey", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Nameplate Ace 1 Grey") },
                 {"nameplate_ace01_white", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Nameplate Ace 1 White") },
@@ -3840,6 +3891,12 @@ namespace EliteDangerousCore
                 {"paintjob_asp_egypt_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Egypt 5") },
                 {"paintjob_asp_egypt_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Egypt 6") },
                 {"paintjob_asp_eliteexpo_eliteexpo", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Elite Expo Elite Expo") },
+                {"paintjob_asp_extraction1_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Extraction 1 1") },
+                {"paintjob_asp_extraction1_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Extraction 1 2") },
+                {"paintjob_asp_extraction1_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Extraction 1 3") },
+                {"paintjob_asp_extraction1_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Extraction 1 4") },
+                {"paintjob_asp_extraction1_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Extraction 1 5") },
+                {"paintjob_asp_extraction1_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Extraction 1 6") },
                 {"paintjob_asp_faction1_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Faction 1 1") },
                 {"paintjob_asp_faction1_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Faction 1 2") },
                 {"paintjob_asp_faction1_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Asp Faction 1 3") },
@@ -5889,6 +5946,7 @@ namespace EliteDangerousCore
                 {"paintjob_federation_gunship_lrpo_azure", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Lrpo Azure") },
                 {"paintjob_federation_gunship_metallic_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Metallic Chrome") },
                 {"paintjob_federation_gunship_metallic2_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Metallic 2 Chrome") },
+                {"paintjob_federation_gunship_metallic2_gold", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Metallic 2 Gold") },
                 {"paintjob_federation_gunship_militaire_dark_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Militaire Dark Green") },
                 {"paintjob_federation_gunship_militaire_earth_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Militaire Earth Red") },
                 {"paintjob_federation_gunship_militaire_earth_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Federation Gunship Militaire Earth Yellow") },
@@ -6418,6 +6476,13 @@ namespace EliteDangerousCore
                 {"paintjob_krait_mkii_militaire_forest_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Militaire Forest Green") },
                 {"paintjob_krait_mkii_militaire_sand", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Militaire Sand") },
                 {"paintjob_krait_mkii_pcgamer_pcgamer", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Pcgamer Pcgamer") },
+                {"paintjob_krait_mkii_plating_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Plating 1") },
+                {"paintjob_krait_mkii_plating_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Plating 2") },
+                {"paintjob_krait_mkii_plating_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Plating 3") },
+                {"paintjob_krait_mkii_plating_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Plating 4") },
+                {"paintjob_krait_mkii_plating_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Plating 5") },
+                {"paintjob_krait_mkii_plating_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Plating 6") },
+                {"paintjob_krait_mkii_plating_08", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Plating 8") },
                 {"paintjob_krait_mkii_powerplay2independent_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Powerplay 2 Independent 1") },
                 {"paintjob_krait_mkii_powerplay2independent_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Powerplay 2 Independent 2") },
                 {"paintjob_krait_mkii_powerplay2independent_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Krait Mk II Powerplay 2 Independent 3") },
@@ -6802,6 +6867,12 @@ namespace EliteDangerousCore
                 {"paintjob_mandalay_ruby_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay Ruby 4") },
                 {"paintjob_mandalay_ruby_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay Ruby 5") },
                 {"paintjob_mandalay_ruby_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Mandalay Ruby 6") },
+                {"paintjob_mediumtransport01_03_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Lynx Highliner 3 1") },
+                {"paintjob_mediumtransport01_03_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Lynx Highliner 3 2") },
+                {"paintjob_mediumtransport01_03_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Lynx Highliner 3 3") },
+                {"paintjob_mediumtransport01_03_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Lynx Highliner 3 4") },
+                {"paintjob_mediumtransport01_03_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Lynx Highliner 3 5") },
+                {"paintjob_mediumtransport01_03_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Lynx Highliner 3 6") },
                 {"paintjob_orca_blackfriday_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Black Friday 1") },
                 {"paintjob_orca_blackfriday_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Black Friday 2") },
                 {"paintjob_orca_blackfriday_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Black Friday 3") },
@@ -6821,6 +6892,7 @@ namespace EliteDangerousCore
                 {"paintjob_orca_calligraphy_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Calligraphy 5") },
                 {"paintjob_orca_calligraphy_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Calligraphy 6") },
                 {"paintjob_orca_corporate1_corporate1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Corporate 1 Corporate 1") },
+                {"paintjob_orca_corporate1_corporate4", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Corporate 1 Corporate 4") },
                 {"paintjob_orca_corporate1_corporate5", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Corporate 1 Corporate 5") },
                 {"paintjob_orca_corporate1_corporate6", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Corporate 1 Corporate 6") },
                 {"paintjob_orca_corporate2_corporate2a", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Orca Corporate 2 Corporate 2 A") },
@@ -7137,6 +7209,8 @@ namespace EliteDangerousCore
                 {"paintjob_python_nx_blackfriday2_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Mk II Black Friday 2 5") },
                 {"paintjob_python_nx_blackfriday2_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Mk II Black Friday 2 6") },
                 {"paintjob_python_nx_metallic_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Mk II Metallic Chrome") },
+                {"paintjob_python_nx_metallic_gold", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Mk II Metallic Gold") },
+                {"paintjob_python_nx_metallic2_chrome", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Mk II Metallic 2 Chrome") },
                 {"paintjob_python_nx_metallic2_gold", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Mk II Metallic 2 Gold") },
                 {"paintjob_python_nx_military_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Mk II Military 1") },
                 {"paintjob_python_nx_military_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Python Mk II Military 2") },
@@ -7383,6 +7457,19 @@ namespace EliteDangerousCore
                 {"paintjob_sidewinder_vibrant_purple", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Sidewinder Vibrant Purple") },
                 {"paintjob_sidewinder_vibrant_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Sidewinder Vibrant Red") },
                 {"paintjob_sidewinder_vibrant_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Sidewinder Vibrant Yellow") },
+                {"paintjob_smallcombat01_nx_01_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 1 1") },
+                {"paintjob_smallcombat01_nx_01_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 1 2") },
+                {"paintjob_smallcombat01_nx_01_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 1 3") },
+                {"paintjob_smallcombat01_nx_01_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 1 4") },
+                {"paintjob_smallcombat01_nx_01_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 1 5") },
+                {"paintjob_smallcombat01_nx_01_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 1 6") },
+                {"paintjob_smallcombat01_nx_02_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 2 1") },
+                {"paintjob_smallcombat01_nx_02_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 2 2") },
+                {"paintjob_smallcombat01_nx_02_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 2 3") },
+                {"paintjob_smallcombat01_nx_02_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 2 4") },
+                {"paintjob_smallcombat01_nx_02_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 2 5") },
+                {"paintjob_smallcombat01_nx_02_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 2 6") },
+                {"paintjob_smallcombat01_nx_02_08", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 2 8") },
                 {"paintjob_smallcombat01_nx_03_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 3 1") },
                 {"paintjob_smallcombat01_nx_03_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 3 2") },
                 {"paintjob_smallcombat01_nx_03_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Kestrel Mk II 3 3") },
@@ -8015,6 +8102,7 @@ namespace EliteDangerousCore
                 {"paintjob_typex_military_militaire_earth_red", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Chieftain Military Militaire Earth Red") },
                 {"paintjob_typex_military_militaire_earth_yellow", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Chieftain Military Militaire Earth Yellow") },
                 {"paintjob_typex_military_militaire_forest_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Chieftain Military Militaire Forest Green") },
+                {"paintjob_typex_military_militaire_sand", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Chieftain Military Militaire Sand") },
                 {"paintjob_typex_military_tactical_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type X Military Tactical Blue") },
                 {"paintjob_typex_military_tactical_brown", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Chieftain Military Tactical Brown") },
                 {"paintjob_typex_military_tactical_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Alliance Chieftain Military Tactical Green") },
@@ -8117,6 +8205,12 @@ namespace EliteDangerousCore
                 {"paintjob_viper_flag_austria_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Flag Austria 4") },
                 {"paintjob_viper_flag_austria_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Flag Austria 5") },
                 {"paintjob_viper_flag_austria_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Flag Austria 6") },
+                {"paintjob_viper_flag_canada_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Flag Canada 1") },
+                {"paintjob_viper_flag_canada_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Flag Canada 2") },
+                {"paintjob_viper_flag_canada_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Flag Canada 3") },
+                {"paintjob_viper_flag_canada_04", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Flag Canada 4") },
+                {"paintjob_viper_flag_canada_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Flag Canada 5") },
+                {"paintjob_viper_flag_canada_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Flag Canada 6") },
                 {"paintjob_viper_flag_denmark_01", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Flag Denmark 1") },
                 {"paintjob_viper_flag_denmark_02", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Flag Denmark 2") },
                 {"paintjob_viper_flag_denmark_03", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Viper Flag Denmark 3") },
@@ -8643,6 +8737,10 @@ namespace EliteDangerousCore
                 {"smallcombat01_nx_holograma_04", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Kestrel Mk II Holograma 4") },
                 {"smallcombat01_nx_holograma_05", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Kestrel Mk II Holograma 5") },
                 {"smallcombat01_nx_holograma_06", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Kestrel Mk II Holograma 6") },
+                {"smallcombat01_nx_pparissa_tail1", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Kestrel Mk II PP Arissa Tail 1") },
+                {"smallcombat01_nx_pparissa_tail2", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Kestrel Mk II PP Arissa Tail 2") },
+                {"smallcombat01_nx_pparissa_tail3", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Kestrel Mk II PP Arissa Tail 3") },
+                {"smallcombat01_nx_pparissa_tail4", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Kestrel Mk II PP Arissa Tail 4") },
                 {"smallcombat01_nx_shipkita_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel Mk II Ship Kit A Bumper 1") },
                 {"smallcombat01_nx_shipkita_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel Mk II Ship Kit A Bumper 2") },
                 {"smallcombat01_nx_shipkita_bumper3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Kestrel Mk II Ship Kit A Bumper 3") },

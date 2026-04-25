@@ -48,6 +48,8 @@ namespace EliteDangerousCore.JournalEvents
                 ReserveFuelCapacity = fuelcap["Reserve"].DoubleNull();
             }
 
+            //System.Diagnostics.Debug.WriteLine($"Loadout {ShipFD} {ShipType}");       // useful debug
+
             ShipModules = new List<ShipModule>();
 
             JArray jmodules = (JArray)evt["Modules"];
@@ -70,10 +72,13 @@ namespace EliteDangerousCore.JournalEvents
 
                     ShipSlots.Slot slotfdname = ShipSlots.ToEnum(jo["Slot"].Str());
                     string itemfdname = JournalFieldNaming.NormaliseFDItemName(jo["Item"].Str());
+                    string engname = JournalFieldNaming.GetBetterEnglishModuleName(itemfdname, slotfdname);
+
+                    //System.Diagnostics.Debug.WriteLine($"  Modules {slotfdname} {itemfdname} = {engname} {JournalFieldNaming.GetForeignModuleName(itemfdname,null,slotfdname)}");
 
                     ShipModule module = new ShipModule(ShipSlots.ToEnglish(slotfdname),
                                                         slotfdname,
-                                                        JournalFieldNaming.GetBetterEnglishModuleName(itemfdname),
+                                                        engname,
                                                         itemfdname,
                                                         jo["On"].BoolNull(),
                                                         jo["Priority"].IntNull(),

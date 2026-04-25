@@ -70,12 +70,12 @@ namespace EliteDangerousCore
             return inname.Replace("Mission ", "", StringComparison.InvariantCultureIgnoreCase);
         }
 
-        static public string GetBetterEnglishModuleName(string fdid)           
+        static public string GetBetterEnglishModuleName(string fdid, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)           
         {
             // screen out empty string, some of the fields are purposely blank from the journal because they are not set for a particular transaction
             // do create as this is used by Loadout, ModuleBuy
 
-            if (fdid.Length > 0 && ItemData.TryGetShipModule(fdid, out ItemData.ShipModule item, true))
+            if (fdid.Length > 0 && ItemData.TryGetShipModule(fdid, out ItemData.ShipModule item, true, slot))
             {
                 return item.EnglishModName;
             }
@@ -83,9 +83,9 @@ namespace EliteDangerousCore
                 return fdid;
         }
 
-        static public string GetForeignModuleName(string fdid, string localised)
+        static public string GetForeignModuleName(string fdid, string localised, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
         {
-            if (fdid.Length > 0 && ItemData.TryGetShipModule(fdid, out ItemData.ShipModule item, true))
+            if (fdid.Length > 0 && ItemData.TryGetShipModule(fdid, out ItemData.ShipModule item, true , slot))
             {
                 return item.TranslatedModName;
             }

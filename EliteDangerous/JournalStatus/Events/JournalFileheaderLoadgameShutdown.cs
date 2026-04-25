@@ -69,6 +69,9 @@ namespace EliteDangerousCore.JournalEvents
                 if (GameVersion.Equals("4.3.1.0") && (Build.Contains("r324270/r0")))
                     return true;
 
+                if (GameVersion.Equals("4.3.3.0") && (Build.Contains("r327080/r0")))
+                    return true;
+
                 return false;
             }
         }

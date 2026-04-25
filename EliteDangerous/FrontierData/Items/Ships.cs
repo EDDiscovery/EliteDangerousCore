@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016-2025 EDDiscovery development team
+ * Copyright 2016-2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -12,12 +12,10 @@
  * governing permissions and limitations under the License.
  */
 
-
 using BaseUtils.Icons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace EliteDangerousCore
 {
@@ -196,6 +194,7 @@ namespace EliteDangerousCore
                 ["Corsair"] = "Gutamaya",
                 ["LakonMiner"] = "Lakon",
                 ["smallcombat01_nx"] = "Core Dynamics",
+                ["mediumtransport01"] = "Zorgon Peterson",
             };
 
             foreach (var kvp in Manu)
@@ -1403,6 +1402,33 @@ namespace EliteDangerousCore
             RevAcc = 0,
             LatAcc = 0
         };
+
+        private static ShipProperties lynxhighliner = new ShipProperties()
+        {
+            FDID = "Mediumtransport01",
+            HullMass = 260F,
+            Name = "Lynx Highliner",
+            Speed = 203,
+            Boost = 360,
+            HullCost = 1500000, // all tbc
+            Class = 2,
+            Shields = 228, // game base module
+            Armour = 630,
+            
+            MinThrust = 89,     // tbc
+            BoostCost = 14,
+            FuelReserve = 0.61,
+            HeatCap = 277,
+            HeatDispMin = 0,
+            HeatDispMax = 0,
+            FuelCost = 50,
+            Hardness = 55,
+            Crew = 1,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0
+        };
+        
         // MUST be after ship definitions else they are not constructed
 
         private static Dictionary<string, ShipProperties> spaceships = new Dictionary<string, ShipProperties>
@@ -1441,6 +1467,7 @@ namespace EliteDangerousCore
             { "lakonminer",lakonminer },
             { "mamba",mamba},
             { "mandalay",mandalay},
+            { "mediumtransport01", lynxhighliner },
             { "orca",orca},
             { "panthermkii", panthermkii },
             { "python",python},
