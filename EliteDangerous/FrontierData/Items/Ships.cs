@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016-2025 EDDiscovery development team
+ * Copyright 2016-2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -12,12 +12,10 @@
  * governing permissions and limitations under the License.
  */
 
-
 using BaseUtils.Icons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace EliteDangerousCore
 {
@@ -26,7 +24,6 @@ namespace EliteDangerousCore
         public class ShipProperties
         {
             public string FDID { get; set; }
-//            public string EDCDID { get; set; }
             public string Manufacturer { get; set; }
             public double HullMass { get; set; }
             public string Name { get; set; }
@@ -84,7 +81,7 @@ namespace EliteDangerousCore
 
 
         // get properties of a ship, case insensitive, may be null
-        static public ShipProperties GetShipProperties(string fdshipname)        
+        static public ShipProperties GetShipProperties(string fdshipname)
         {
             fdshipname = fdshipname.ToLowerInvariant();
             if (spaceships.ContainsKey(fdshipname))
@@ -197,6 +194,7 @@ namespace EliteDangerousCore
                 ["Corsair"] = "Gutamaya",
                 ["LakonMiner"] = "Lakon",
                 ["smallcombat01_nx"] = "Core Dynamics",
+                ["mediumtransport01"] = "Zorgon Peterson",
             };
 
             foreach (var kvp in Manu)
@@ -210,16 +208,16 @@ namespace EliteDangerousCore
                     System.Diagnostics.Debug.WriteLine($"Item Data Missing manu for {kvp.Value.Name}");
             }
 
-            if (IconSet.Instance!=null)
+            if (IconSet.Instance != null)
             {
                 foreach (var kvp in spaceships)     // check spaceships array for image and missing manu
                     System.Diagnostics.Debug.Assert(BaseUtils.Icons.IconSet.Instance.Contains("Ships." + kvp.Key.ToLower()), $"Missing ship image {kvp.Key}");
             }
-            
+
         }
 
 
-    
+
         private static ShipProperties sidewinder = new ShipProperties()
         {
             FDID = "SideWinder",
@@ -1058,23 +1056,23 @@ namespace EliteDangerousCore
             Name = "Type-8 Transporter",
             Speed = 200,        // game
             Boost = 340,        // game
-            // unknown        
-                    HullCost = 34820576,
-                    Class = 2,
-                    Shields = 228,
-                    Armour = 440,
-                    MinThrust = 30.769,
-                    BoostCost = 10,
-                    FuelReserve = 0.52,
-                    HeatCap = 226,
-                    HeatDispMin = 3.1,
-                    HeatDispMax = 48.35,
-                    FuelCost = 50,
-                    Hardness = 58,
-                    Crew = 1,
-                    FwdAcc = 20.03,
-                    RevAcc = 10.11,
-                    LatAcc = 10.03
+                                // unknown        
+            HullCost = 34820576,
+            Class = 2,
+            Shields = 228,
+            Armour = 440,
+            MinThrust = 30.769,
+            BoostCost = 10,
+            FuelReserve = 0.52,
+            HeatCap = 226,
+            HeatDispMin = 3.1,
+            HeatDispMax = 48.35,
+            FuelCost = 50,
+            Hardness = 58,
+            Crew = 1,
+            FwdAcc = 20.03,
+            RevAcc = 10.11,
+            LatAcc = 10.03
         };
 
         private static ShipProperties type9 = new ShipProperties()
@@ -1285,7 +1283,7 @@ namespace EliteDangerousCore
             FDID = "Corsair",
             HullMass = 265F,
             Name = "Corsair",
-            Speed = 280,            // EDSY 27/11/25
+            Speed = 280,    // EDSY 27/11/25
             Boost = 355,
             HullCost = 76884160,
             Class = 2,
@@ -1296,14 +1294,13 @@ namespace EliteDangerousCore
             FuelReserve = 0.41,
             HeatCap = 230,
             HeatDispMin = 1.62,
-            HeatDispMax = 52,
+            HeatDispMax = 52.05,
             FuelCost = 50,
             Hardness = 65,
             Crew = 2,
             FwdAcc = 0,
             RevAcc = 0,
             LatAcc = 0
-
         };
 
         private static ShipProperties lakonminer = new ShipProperties()
@@ -1313,7 +1310,7 @@ namespace EliteDangerousCore
             Name = "Type-11 Prospector",
             Speed = 270,        // EDSY 27/11/25
             Boost = 365,
-            HullCost = 66346710,        
+            HullCost = 66346710,
             Class = 2,
             Shields = 275,
             Armour = 350,
@@ -1405,6 +1402,33 @@ namespace EliteDangerousCore
             RevAcc = 0,
             LatAcc = 0
         };
+
+        private static ShipProperties lynxhighliner = new ShipProperties()
+        {
+            FDID = "Mediumtransport01",
+            HullMass = 260F,
+            Name = "Lynx Highliner",
+            Speed = 203,
+            Boost = 360,
+            HullCost = 1500000, // all tbc
+            Class = 2,
+            Shields = 228, // game base module
+            Armour = 630,
+
+            MinThrust = 89,     // tbc
+            BoostCost = 14,
+            FuelReserve = 0.61,
+            HeatCap = 277,
+            HeatDispMin = 0,
+            HeatDispMax = 0,
+            FuelCost = 50,
+            Hardness = 55,
+            Crew = 1,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0
+        };
+
         // MUST be after ship definitions else they are not constructed
 
         private static Dictionary<string, ShipProperties> spaceships = new Dictionary<string, ShipProperties>
@@ -1443,6 +1467,7 @@ namespace EliteDangerousCore
             { "lakonminer",lakonminer },
             { "mamba",mamba},
             { "mandalay",mandalay},
+            { "mediumtransport01", lynxhighliner },
             { "orca",orca},
             { "panthermkii", panthermkii },
             { "python",python},

@@ -1417,6 +1417,10 @@ SECTION ModulePartNames
 
 SECTION ShipSlots
 
+.Passenger03: "Passenger Slot 3" @
+.Passenger02: "Passenger Slot 2" @
+.Passenger01: "Passenger Slot 1" @
+
 .Unknown: "Unknown" @
 .Armour: "Armour" @
 .Bobble01: "Bobble Position 1" @
