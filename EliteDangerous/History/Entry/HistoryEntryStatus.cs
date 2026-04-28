@@ -193,7 +193,7 @@ namespace EliteDangerousCore
                         //if (je.EventTimeUTC == new System.DateTime(2022, 5, 13, 12, 25, 14))  { }
 
                         // Location when we are onfoot or outside station just gives 'Station'. if we know the type CORRECT
-                        if ( jloc.FDStationType == StationDefinitions.StarportTypes.Station && CurrentLocation.FDStationType != StationDefinitions.StarportTypes.Unknown)
+                        if ( CurrentLocation != null && jloc.FDStationType == StationDefinitions.StarportTypes.Station && CurrentLocation.FDStationType != StationDefinitions.StarportTypes.Unknown)
                         {
                             jloc.FDStationType = CurrentLocation.FDStationType;
                             jloc.StationType = StationDefinitions.ToEnglish(jloc.FDStationType);

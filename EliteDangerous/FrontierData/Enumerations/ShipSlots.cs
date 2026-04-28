@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Management.Instrumentation;
 
 namespace EliteDangerousCore
 {
@@ -162,7 +163,7 @@ namespace EliteDangerousCore
             DiscoveryScanner,
 
             // Vanity
-            Bobble01,
+            Bobble01,    
             Bobble02,
             Bobble03,
             Bobble04,
@@ -191,6 +192,9 @@ namespace EliteDangerousCore
             VesselVoice,
             WeaponColour,
 
+            _VanityStart = Bobble01,
+            _VanityEnd = WeaponColour,
+
             // srv
             Turret,
             Turret2,        // reported by users
@@ -204,6 +208,14 @@ namespace EliteDangerousCore
             GDN_Hybrid_Fighter_V2_Shield,
             GDN_Hybrid_Fighter_V3_Shield,
             Independent_Fighter_Shield,
+        }
+        public static bool IsVanity(ShipSlots.Slot slot) => slot >= Slot._VanityStart && slot <= Slot._VanityEnd;
+
+        public class SlotAndSize
+        {
+            public ShipSlots.Slot Slot { get; set; }
+            public int Size { get; set; }      // hardpoints 0 (tiny or N/A) 1 (small), 2 (med), 3 (large), 4 (huge) else size/class of slot
+            public SlotAndSize(ShipSlots.Slot slot, int size) { Slot = slot; Size = size; }
         }
 
 
@@ -405,6 +417,7 @@ namespace EliteDangerousCore
                 return Slot.Unknown;
             }
         }
+
         public static string ToEnglish(Slot al)
         {
             return english[al];

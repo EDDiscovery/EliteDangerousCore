@@ -1,4 +1,4 @@
-﻿/*
+/*Prope
  * Copyright 2016-2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -47,6 +47,20 @@ namespace EliteDangerousCore
             public double RevAcc { get; set; }
             public double LatAcc { get; set; }
             public string ClassString { get { return Class == 1 ? "Small" : Class == 2 ? "Medium" : "Large"; } }
+
+            public ShipSlots.SlotAndSize[] Hardpoints { get; set; }
+            public ShipSlots.SlotAndSize[] Utility { get; set; }
+            public ShipSlots.SlotAndSize[] Component { get; set; }
+            public ShipSlots.SlotAndSize[] Military { get; set; }
+            public ShipSlots.SlotAndSize[] Internal { get; set; }
+            public ShipSlots.SlotAndSize[] Other { get; set; }
+
+            public bool HasSlot(ShipSlots.Slot s)
+            {
+                return ShipSlots.IsVanity(s) || Array.Find(Hardpoints, x => x.Slot == s) != null || Array.Find(Utility, x => x.Slot == s) != null
+                            || Array.Find(Component, x => x.Slot == s) != null || Array.Find(Military, x => x.Slot == s) != null ||
+                            Array.Find(Internal, x => x.Slot == s) != null || Array.Find(Other, x => x.Slot == s) != null;
+            }
         }
         static public bool IsTaxi(string shipfdname)       // If a taxi
         {
@@ -213,11 +227,9 @@ namespace EliteDangerousCore
                 foreach (var kvp in spaceships)     // check spaceships array for image and missing manu
                     System.Diagnostics.Debug.Assert(BaseUtils.Icons.IconSet.Contains("Ships." + kvp.Key.ToLower()), $"Missing ship image {kvp.Key}");
             }
-            
         }
 
-
-    
+        // EDSY START
         private static ShipProperties sidewinder = new ShipProperties()
         {
             FDID = "SideWinder",
@@ -240,138 +252,18 @@ namespace EliteDangerousCore
             Crew = 1,
             FwdAcc = 44.39,
             RevAcc = 29.96,
-            LatAcc = 29.96
-        };
-
-        private static ShipProperties eagle = new ShipProperties()
-        {
-            FDID = "Eagle",
-            HullMass = 50F,
-            Name = "Eagle",
-            Speed = 240,
-            Boost = 350,
-            HullCost = 7490,
-            Class = 1,
-            Shields = 60,
-            Armour = 40,
-            MinThrust = 75,
-            BoostCost = 8,
-            FuelReserve = 0.34,
-            HeatCap = 165,
-            HeatDispMin = 1.38,
-            HeatDispMax = 21.48,
-            FuelCost = 50,
-            Hardness = 28,
-            Crew = 1,
-            FwdAcc = 43.97,
-            RevAcc = 29.97,
-            LatAcc = 29.86
-        };
-
-        private static ShipProperties hauler = new ShipProperties()
-        {
-            FDID = "Hauler",
-            HullMass = 14F,
-            Name = "Hauler",
-            Speed = 200,
-            Boost = 300,
-            HullCost = 8160,
-            Class = 1,
-            Shields = 50,
-            Armour = 100,
-            MinThrust = 35,
-            BoostCost = 7,
-            FuelReserve = 0.25,
-            HeatCap = 123,
-            HeatDispMin = 1.06,
-            HeatDispMax = 16.2,
-            FuelCost = 50,
-            Hardness = 20,
-            Crew = 1,
-            FwdAcc = 39.87,
-            RevAcc = 29.95,
-            LatAcc = 29.95
-        };
-
-        private static ShipProperties adder = new ShipProperties()
-        {
-            FDID = "Adder",
-            HullMass = 35F,
-            Name = "Adder",
-            Speed = 220,
-            Boost = 320,
-            HullCost = 18710,
-            Class = 1,
-            Shields = 60,
-            Armour = 90,
-            MinThrust = 45.454,
-            BoostCost = 8,
-            FuelReserve = 0.36,
-            HeatCap = 170,
-            HeatDispMin = 1.45,
-            HeatDispMax = 22.6,
-            FuelCost = 50,
-            Hardness = 35,
-            Crew = 2,
-            FwdAcc = 39.41,
-            RevAcc = 27.73,
-            LatAcc = 27.86
-        };
-
-        private static ShipProperties empire_eagle = new ShipProperties()
-        {
-            FDID = "Empire_Eagle",
-            HullMass = 50F,
-            Name = "Imperial Eagle",
-            Speed = 300,
-            Boost = 400,
-            HullCost = 50890,
-            Class = 1,
-            Shields = 80,
-            Armour = 60,
-            MinThrust = 70,
-            BoostCost = 8,
-            FuelReserve = 0.37,
-            HeatCap = 163,
-            HeatDispMin = 1.5,
-            HeatDispMax = 21.2,
-            FuelCost = 50,
-            Hardness = 28,
-            Crew = 1,
-            FwdAcc = 34.54,
-            RevAcc = 27.84,
-            LatAcc = 27.84
-        };
-
-        private static ShipProperties viper = new ShipProperties()
-        {
-            FDID = "Viper",
-            HullMass = 50F,
-            Name = "Viper Mk III",
-            Speed = 320,
-            Boost = 400,
-            HullCost = 74610,
-            Class = 1,
-            Shields = 105,
-            Armour = 70,
-            MinThrust = 62.5,
-            BoostCost = 10,
-            FuelReserve = 0.41,
-            HeatCap = 195,
-            HeatDispMin = 1.69,
-            HeatDispMax = 26.2,
-            FuelCost = 50,
-            Hardness = 35,
-            Crew = 1,
-            FwdAcc = 53.98,
-            RevAcc = 29.7,
-            LatAcc = 24.95
+            LatAcc = 29.96,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 1)},
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
         };
 
         private static ShipProperties cobramkiii = new ShipProperties()
         {
             FDID = "CobraMkIII",
-            Manufacturer = "<code>",
             HullMass = 180F,
             Name = "Cobra Mk III",
             Speed = 280,
@@ -391,412 +283,13 @@ namespace EliteDangerousCore
             Crew = 2,
             FwdAcc = 35.03,
             RevAcc = 25.16,
-            LatAcc = 20.02
-        };
-
-        private static ShipProperties viper_mkiv = new ShipProperties()
-        {
-            FDID = "Viper_MkIV",
-            Manufacturer = "<code>",
-            HullMass = 190F,
-            Name = "Viper Mk IV",
-            Speed = 270,
-            Boost = 340,
-            HullCost = 290680,
-            Class = 1,
-            Shields = 150,
-            Armour = 150,
-            MinThrust = 64.815,
-            BoostCost = 10,
-            FuelReserve = 0.46,
-            HeatCap = 209,
-            HeatDispMin = 1.82,
-            HeatDispMax = 28.98,
-            FuelCost = 50,
-            Hardness = 35,
-            Crew = 1,
-            FwdAcc = 53.84,
-            RevAcc = 30.14,
-            LatAcc = 24.97
-        };
-
-        private static ShipProperties diamondback = new ShipProperties()
-        {
-            FDID = "DiamondBack",
-            Manufacturer = "<code>",
-            HullMass = 170F,
-            Name = "Diamondback Scout",
-            Speed = 280,
-            Boost = 380,
-            HullCost = 441800,
-            Class = 1,
-            Shields = 120,
-            Armour = 120,
-            MinThrust = 60.714,
-            BoostCost = 10,
-            FuelReserve = 0.49,
-            HeatCap = 346,
-            HeatDispMin = 2.42,
-            HeatDispMax = 48.05,
-            FuelCost = 50,
-            Hardness = 40,
-            Crew = 1,
-            FwdAcc = 39.57,
-            RevAcc = 29.82,
-            LatAcc = 25.19
-        };
-
-        private static ShipProperties cobramkiv = new ShipProperties()
-        {
-            FDID = "CobraMkIV",
-            Manufacturer = "<code>",
-            HullMass = 210F,
-            Name = "Cobra Mk IV",
-            Speed = 200,
-            Boost = 300,
-            HullCost = 584200,
-            Class = 1,
-            Shields = 120,
-            Armour = 120,
-            MinThrust = 50,
-            BoostCost = 10,
-            FuelReserve = 0.51,
-            HeatCap = 228,
-            HeatDispMin = 1.99,
-            HeatDispMax = 31.68,
-            FuelCost = 50,
-            Hardness = 35,
-            Crew = 2,
-            FwdAcc = 27.84,
-            RevAcc = 19.91,
-            LatAcc = 15.03
-        };
-
-        // tbd values
-        private static ShipProperties cobramkv = new ShipProperties()
-        {
-            FDID = "CobraMkV",
-            Manufacturer = "<code>",
-            HullMass = 210F,
-            Name = "Cobra Mk V",
-            Speed = 200,
-            Boost = 300,
-            HullCost = 584200,
-            Class = 1,
-            Shields = 120,
-            Armour = 120,
-            MinThrust = 50,
-            BoostCost = 10,
-            FuelReserve = 0.49,     // loadout
-            HeatCap = 228,
-            HeatDispMin = 1.99,
-            HeatDispMax = 31.68,
-            FuelCost = 50,
-            Hardness = 35,
-            Crew = 2,
-            FwdAcc = 27.84,
-            RevAcc = 19.91,
-            LatAcc = 15.03
-        };
-
-        private static ShipProperties type6 = new ShipProperties()
-        {
-            FDID = "Type6",
-            HullMass = 155F,
-            Name = "Type-6 Transporter",
-            Speed = 220,
-            Boost = 350,
-            HullCost = 858010,
-            Class = 2,
-            Shields = 90,
-            Armour = 180,
-            MinThrust = 40.909,
-            BoostCost = 10,
-            FuelReserve = 0.39,
-            HeatCap = 179,
-            HeatDispMin = 1.7,
-            HeatDispMax = 24.55,
-            FuelCost = 50,
-            Hardness = 35,
-            Crew = 1,
-            FwdAcc = 20.1,
-            RevAcc = 14.96,
-            LatAcc = 15.07
-        };
-
-        private static ShipProperties dolphin = new ShipProperties()
-        {
-            FDID = "Dolphin",
-            HullMass = 140F,
-            Name = "Dolphin",
-            Speed = 250,
-            Boost = 350,
-            HullCost = 1095780,
-            Class = 1,
-            Shields = 110,
-            Armour = 110,
-            MinThrust = 48,
-            BoostCost = 10,
-            FuelReserve = 0.5,
-            HeatCap = 245,
-            HeatDispMin = 1.91,
-            HeatDispMax = 56,
-            FuelCost = 50,
-            Hardness = 35,
-            Crew = 1,
-            FwdAcc = 39.63,
-            RevAcc = 30.01,
-            LatAcc = 14.97
-        };
-
-        private static ShipProperties diamondbackxl = new ShipProperties()
-        {
-            FDID = "DiamondBackXL",
-            HullMass = 260F,
-            Name = "Diamondback Explorer",
-            Speed = 260,
-            Boost = 340,
-            HullCost = 1616160,
-            Class = 1,
-            Shields = 150,
-            Armour = 150,
-            MinThrust = 61.538,
-            BoostCost = 13,
-            FuelReserve = 0.52,
-            HeatCap = 351,
-            HeatDispMin = 2.46,
-            HeatDispMax = 50.55,
-            FuelCost = 50,
-            Hardness = 42,
-            Crew = 1,
-            FwdAcc = 34.63,
-            RevAcc = 25.06,
-            LatAcc = 19.89
-        };
-
-        private static ShipProperties empire_courier = new ShipProperties()
-        {
-            FDID = "Empire_Courier",
-            HullMass = 35F,
-            Name = "Imperial Courier",
-            Speed = 280,
-            Boost = 380,
-            HullCost = 2462010,
-            Class = 1,
-            Shields = 200,
-            Armour = 80,
-            MinThrust = 78.571,
-            BoostCost = 10,
-            FuelReserve = 0.41,
-            HeatCap = 230,
-            HeatDispMin = 1.62,
-            HeatDispMax = 25.05,
-            FuelCost = 50,
-            Hardness = 30,
-            Crew = 1,
-            FwdAcc = 57.53,
-            RevAcc = 30.02,
-            LatAcc = 24.88
-        };
-
-        private static ShipProperties independant_trader = new ShipProperties()
-        {
-            FDID = "Independant_Trader",
-            HullMass = 180F,
-            Name = "Keelback",
-            Speed = 200,
-            Boost = 300,
-            HullCost = 2937840,
-            Class = 2,
-            Shields = 135,
-            Armour = 270,
-            MinThrust = 45,
-            BoostCost = 10,
-            FuelReserve = 0.39,
-            HeatCap = 215,
-            HeatDispMin = 1.87,
-            HeatDispMax = 29.78,
-            FuelCost = 50,
-            Hardness = 45,
-            Crew = 2,
-            FwdAcc = 20.22,
-            RevAcc = 15.07,
-            LatAcc = 15.03
-        };
-
-        private static ShipProperties asp_scout = new ShipProperties()
-        {
-            FDID = "Asp_Scout",
-            HullMass = 150F,
-            Name = "Asp Scout",
-            Speed = 220,
-            Boost = 300,
-            HullCost = 3811220,
-            Class = 2,
-            Shields = 120,
-            Armour = 180,
-            MinThrust = 50,
-            BoostCost = 13,
-            FuelReserve = 0.47,
-            HeatCap = 210,
-            HeatDispMin = 1.8,
-            HeatDispMax = 29.65,
-            FuelCost = 50,
-            Hardness = 52,
-            Crew = 2,
-            FwdAcc = 35.02,
-            RevAcc = 20.1,
-            LatAcc = 20.03
-        };
-
-        private static ShipProperties vulture = new ShipProperties()
-        {
-            FDID = "Vulture",
-            HullMass = 230F,
-            Name = "Vulture",
-            Speed = 210,
-            Boost = 340,
-            HullCost = 4670100,
-            Class = 1,
-            Shields = 240,
-            Armour = 160,
-            MinThrust = 90.476,
-            BoostCost = 16,
-            FuelReserve = 0.57,
-            HeatCap = 237,
-            HeatDispMin = 1.87,
-            HeatDispMax = 35.63,
-            FuelCost = 50,
-            Hardness = 55,
-            Crew = 2,
-            FwdAcc = 39.55,
-            RevAcc = 29.88,
-            LatAcc = 19.98
-        };
-
-        private static ShipProperties asp = new ShipProperties()
-        {
-            FDID = "Asp",
-            HullMass = 280F,
-            Name = "Asp Explorer",
-            Speed = 250,
-            Boost = 340,
-            HullCost = 6137180,
-            Class = 2,
-            Shields = 140,
-            Armour = 210,
-            MinThrust = 48,
-            BoostCost = 13,
-            FuelReserve = 0.63,
-            HeatCap = 272,
-            HeatDispMin = 2.34,
-            HeatDispMax = 39.9,
-            FuelCost = 50,
-            Hardness = 52,
-            Crew = 2,
-            FwdAcc = 23.64,
-            RevAcc = 15.04,
-            LatAcc = 14.97
-        };
-
-        private static ShipProperties federation_dropship = new ShipProperties()
-        {
-            FDID = "Federation_Dropship",
-            HullMass = 580F,
-            Name = "Federal Dropship",
-            Speed = 180,
-            Boost = 300,
-            HullCost = 13501480,
-            Class = 2,
-            Shields = 200,
-            Armour = 300,
-            MinThrust = 55.556,
-            BoostCost = 19,
-            FuelReserve = 0.83,
-            HeatCap = 331,
-            HeatDispMin = 2.6,
-            HeatDispMax = 46.5,
-            FuelCost = 50,
-            Hardness = 60,
-            Crew = 2,
-            FwdAcc = 29.99,
-            RevAcc = 20.34,
-            LatAcc = 10.19
-        };
-
-        private static ShipProperties type7 = new ShipProperties()
-        {
-            FDID = "Type7",
-            HullMass = 350F,
-            Name = "Type-7 Transporter",
-            Speed = 180,
-            Boost = 300,
-            HullCost = 16774470,
-            Class = 3,
-            Shields = 156,
-            Armour = 340,
-            MinThrust = 33.333,
-            BoostCost = 10,
-            FuelReserve = 0.52,
-            HeatCap = 226,
-            HeatDispMin = 2.17,
-            HeatDispMax = 32.45,
-            FuelCost = 50,
-            Hardness = 54,
-            Crew = 1,
-            FwdAcc = 20.11,
-            RevAcc = 15.02,
-            LatAcc = 15.13
-        };
-
-        private static ShipProperties typex = new ShipProperties()
-        {
-            FDID = "TypeX",
-            HullMass = 400F,
-            Name = "Alliance Chieftain",
-            Speed = 230,
-            Boost = 330,
-            HullCost = 18603850,
-            Class = 2,
-            Shields = 200,
-            Armour = 280,
-            MinThrust = 65.217,
-            BoostCost = 19,
-            FuelReserve = 0.77,
-            HeatCap = 289,
-            HeatDispMin = 2.6,
-            HeatDispMax = 46.5,
-            FuelCost = 50,
-            Hardness = 65,
-            Crew = 2,
-            FwdAcc = 37.84,
-            RevAcc = 25.84,
-            LatAcc = 20.01
-        };
-
-        private static ShipProperties federation_dropship_mkii = new ShipProperties()
-        {
-            FDID = "Federation_Dropship_MkII",
-            HullMass = 480F,
-            Name = "Federal Assault Ship",
-            Speed = 210,
-            Boost = 350,
-            HullCost = 19102490,
-            Class = 2,
-            Shields = 200,
-            Armour = 300,
-            MinThrust = 71.429,
-            BoostCost = 19,
-            FuelReserve = 0.72,
-            HeatCap = 286,
-            HeatDispMin = 2.53,
-            HeatDispMax = 45.23,
-            FuelCost = 50,
-            Hardness = 60,
-            Crew = 2,
-            FwdAcc = 39.81,
-            RevAcc = 20.04,
-            LatAcc = 15.07
+            LatAcc = 20.02,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
         };
 
         private static ShipProperties empire_trader = new ShipProperties()
@@ -821,207 +314,44 @@ namespace EliteDangerousCore
             Crew = 2,
             FwdAcc = 24.74,
             RevAcc = 20.05,
-            LatAcc = 10.1
+            LatAcc = 10.1,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
         };
 
-        private static ShipProperties typex_2 = new ShipProperties()
+        private static ShipProperties federation_dropship = new ShipProperties()
         {
-            FDID = "TypeX_2",
-            HullMass = 500F,
-            Name = "Alliance Crusader",
+            FDID = "Federation_Dropship",
+            HullMass = 580F,
+            Name = "Federal Dropship",
             Speed = 180,
             Boost = 300,
-            HullCost = 22087940,
+            HullCost = 13501480,
             Class = 2,
             Shields = 200,
             Armour = 300,
-            MinThrust = 61.11,
+            MinThrust = 55.556,
             BoostCost = 19,
-            FuelReserve = 0.77,
-            HeatCap = 316,
-            HeatDispMin = 2.53,
-            HeatDispMax = 45.23,
-            FuelCost = 50,
-            Hardness = 65,
-            Crew = 3,
-            FwdAcc = 29.78,
-            RevAcc = 24.78,
-            LatAcc = 18.96
-        };
-
-        private static ShipProperties typex_3 = new ShipProperties()
-        {
-            FDID = "TypeX_3",
-            HullMass = 450F,
-            Name = "Alliance Challenger",
-            Speed = 200,
-            Boost = 310,
-            HullCost = 29561170,
-            Class = 2,
-            Shields = 220,
-            Armour = 300,
-            MinThrust = 65,
-            BoostCost = 19,
-            FuelReserve = 0.77,
-            HeatCap = 316,
-            HeatDispMin = 2.87,
-            HeatDispMax = 51.4,
-            FuelCost = 50,
-            Hardness = 65,
-            Crew = 2,
-            FwdAcc = 31.65,
-            RevAcc = 25.94,
-            LatAcc = 20.09
-        };
-
-        private static ShipProperties federation_gunship = new ShipProperties()
-        {
-            FDID = "Federation_Gunship",
-            HullMass = 580F,
-            Name = "Federal Gunship",
-            Speed = 170,
-            Boost = 280,
-            HullCost = 34806280,
-            Class = 2,
-            Shields = 250,
-            Armour = 350,
-            MinThrust = 58.824,
-            BoostCost = 23,
-            FuelReserve = 0.82,
-            HeatCap = 325,
-            HeatDispMin = 2.87,
-            HeatDispMax = 51.4,
+            FuelReserve = 0.83,
+            HeatCap = 331,
+            HeatDispMin = 2.6,
+            HeatDispMax = 46.5,
             FuelCost = 50,
             Hardness = 60,
             Crew = 2,
-            FwdAcc = 24.61,
-            RevAcc = 17.83,
-            LatAcc = 10.08
-        };
-
-        private static ShipProperties krait_light = new ShipProperties()
-        {
-            FDID = "Krait_Light",
-            HullMass = 270F,
-            Name = "Krait Phantom",
-            Speed = 250,
-            Boost = 350,
-            HullCost = 35732880,
-            Class = 2,
-            Shields = 200,
-            Armour = 180,
-            MinThrust = 64,
-            BoostCost = 13,
-            FuelReserve = 0.63,
-            HeatCap = 300,
-            HeatDispMin = 2.68,
-            HeatDispMax = 52.05,
-            FuelCost = 50,
-            Hardness = 60,
-            Crew = 2,
-            FwdAcc = -999,
-            RevAcc = -999,
-            LatAcc = -999
-        };
-
-        private static ShipProperties krait_mkii = new ShipProperties()
-        {
-            FDID = "Krait_MkII",
-            HullMass = 320F,
-            Name = "Krait Mk II",
-            Speed = 240,
-            Boost = 330,
-            HullCost = 44152080,
-            Class = 2,
-            Shields = 220,
-            Armour = 220,
-            MinThrust = 62.5,
-            BoostCost = 13,
-            FuelReserve = 0.63,
-            HeatCap = 300,
-            HeatDispMin = 2.68,
-            HeatDispMax = 52.05,
-            FuelCost = 50,
-            Hardness = 55,
-            Crew = 3,
-            FwdAcc = 28.01,
-            RevAcc = 18.04,
-            LatAcc = 15.12
-        };
-
-        private static ShipProperties orca = new ShipProperties()
-        {
-            FDID = "Orca",
-            HullMass = 290F,
-            Name = "Orca",
-            Speed = 300,
-            Boost = 380,
-            HullCost = 47792090,
-            Class = 3,
-            Shields = 220,
-            Armour = 220,
-            MinThrust = 66.667,
-            BoostCost = 16,
-            FuelReserve = 0.79,
-            HeatCap = 262,
-            HeatDispMin = 2.3,
-            HeatDispMax = 42.68,
-            FuelCost = 50,
-            Hardness = 55,
-            Crew = 2,
-            FwdAcc = 29.66,
-            RevAcc = 25.08,
-            LatAcc = 19.95
-        };
-
-        private static ShipProperties ferdelance = new ShipProperties()
-        {
-            FDID = "FerDeLance",
-            HullMass = 250F,
-            Name = "Fer-de-Lance",
-            Speed = 260,
-            Boost = 350,
-            HullCost = 51126980,
-            Class = 2,
-            Shields = 300,
-            Armour = 225,
-            MinThrust = 84.615,
-            BoostCost = 19,
-            FuelReserve = 0.67,
-            HeatCap = 224,
-            HeatDispMin = 2.05,
-            HeatDispMax = 41.63,
-            FuelCost = 50,
-            Hardness = 70,
-            Crew = 2,
-            FwdAcc = 29.31,
-            RevAcc = 24.34,
-            LatAcc = 20.04
-        };
-
-        private static ShipProperties mamba = new ShipProperties()
-        {
-            FDID = "Mamba",
-            HullMass = 250F,
-            Name = "Mamba",
-            Speed = 310,
-            Boost = 380,
-            HullCost = 55434290,
-            Class = 2,
-            Shields = 270,
-            Armour = 230,
-            MinThrust = 77.42,
-            BoostCost = 16,
-            FuelReserve = 0.5,
-            HeatCap = 165,
-            HeatDispMin = 2.05,
-            HeatDispMax = 41.63,
-            FuelCost = 50,
-            Hardness = 70,
-            Crew = 2,
-            FwdAcc = -999,
-            RevAcc = -999,
-            LatAcc = -999
+            FwdAcc = 29.99,
+            RevAcc = 20.34,
+            LatAcc = 10.19,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint4, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 4)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
         };
 
         private static ShipProperties python = new ShipProperties()
@@ -1046,108 +376,13 @@ namespace EliteDangerousCore
             Crew = 2,
             FwdAcc = 29.59,
             RevAcc = 18.02,
-            LatAcc = 15.92
-        };
-
-        private static ShipProperties type8 = new ShipProperties()
-        {
-            FDID = "Type8",
-            HullMass = 400F,
-            Name = "Type-8 Transporter",
-            Speed = 200,        // game
-            Boost = 340,        // game
-            // unknown        
-                    HullCost = 34820576,
-                    Class = 2,
-                    Shields = 228,
-                    Armour = 440,
-                    MinThrust = 30.769,
-                    BoostCost = 10,
-                    FuelReserve = 0.52,
-                    HeatCap = 226,
-                    HeatDispMin = 3.1,
-                    HeatDispMax = 48.35,
-                    FuelCost = 50,
-                    Hardness = 58,
-                    Crew = 1,
-                    FwdAcc = 20.03,
-                    RevAcc = 10.11,
-                    LatAcc = 10.03
-        };
-
-        private static ShipProperties type9 = new ShipProperties()
-        {
-            FDID = "Type9",
-            HullMass = 850F,
-            Name = "Type-9 Heavy",
-            Speed = 130,
-            Boost = 200,
-            HullCost = 72108220,
-            Class = 3,
-            Shields = 240,
-            Armour = 480,
-            MinThrust = 30.769,
-            BoostCost = 19,
-            FuelReserve = 0.77,
-            HeatCap = 289,
-            HeatDispMin = 3.1,
-            HeatDispMax = 48.35,
-            FuelCost = 50,
-            Hardness = 65,
-            Crew = 3,
-            FwdAcc = 20.03,
-            RevAcc = 10.11,
-            LatAcc = 10.03
-        };
-
-        private static ShipProperties belugaliner = new ShipProperties()
-        {
-            FDID = "BelugaLiner",
-            HullMass = 950F,
-            Name = "Beluga Liner",
-            Speed = 200,
-            Boost = 280,
-            HullCost = 79686090,
-            Class = 3,
-            Shields = 280,
-            Armour = 280,
-            MinThrust = 55,
-            BoostCost = 19,
-            FuelReserve = 0.81,
-            HeatCap = 283,
-            HeatDispMin = 2.6,
-            HeatDispMax = 50.85,
-            FuelCost = 50,
-            Hardness = 60,
-            Crew = 3,
-            FwdAcc = 20.01,
-            RevAcc = 17.12,
-            LatAcc = 15.03
-        };
-
-        private static ShipProperties type9_military = new ShipProperties()
-        {
-            FDID = "Type9_Military",
-            HullMass = 1200F,
-            Name = "Type-10 Defender",
-            Speed = 180,
-            Boost = 220,
-            HullCost = 121486140,
-            Class = 3,
-            Shields = 320,
-            Armour = 580,
-            MinThrust = 83.333,
-            BoostCost = 19,
-            FuelReserve = 0.77,
-            HeatCap = 335,
-            HeatDispMin = 3.16,
-            HeatDispMax = 67.15,
-            FuelCost = 50,
-            Hardness = 75,
-            Crew = 3,
-            FwdAcc = 17.96,
-            RevAcc = 10.04,
-            LatAcc = 10.09
+            LatAcc = 15.92,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
         };
 
         private static ShipProperties anaconda = new ShipProperties()
@@ -1172,7 +407,1191 @@ namespace EliteDangerousCore
             Crew = 3,
             FwdAcc = 19.85,
             RevAcc = 10.03,
-            LatAcc = 10.05
+            LatAcc = 10.05,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.HugeHardpoint1, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint5, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint6, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint7, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint8, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot13_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot14_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 5)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties empire_courier = new ShipProperties()
+        {
+            FDID = "Empire_Courier",
+            HullMass = 35F,
+            Name = "Imperial Courier",
+            Speed = 280,
+            Boost = 380,
+            HullCost = 2462010,
+            Class = 1,
+            Shields = 200,
+            Armour = 80,
+            MinThrust = 78.571,
+            BoostCost = 10,
+            FuelReserve = 0.41,
+            HeatCap = 230,
+            HeatDispMin = 1.62,
+            HeatDispMax = 25.05,
+            FuelCost = 50,
+            Hardness = 30,
+            Crew = 1,
+            FwdAcc = 57.53,
+            RevAcc = 30.02,
+            LatAcc = 24.88,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 3)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties cobramkiv = new ShipProperties()
+        {
+            FDID = "CobraMkIV",
+            HullMass = 210F,
+            Name = "Cobra Mk IV",
+            Speed = 200,
+            Boost = 300,
+            HullCost = 584200,
+            Class = 1,
+            Shields = 120,
+            Armour = 120,
+            MinThrust = 50,
+            BoostCost = 10,
+            FuelReserve = 0.51,
+            HeatCap = 228,
+            HeatDispMin = 1.99,
+            HeatDispMax = 31.68,
+            FuelCost = 50,
+            Hardness = 35,
+            Crew = 2,
+            FwdAcc = 27.84,
+            RevAcc = 19.91,
+            LatAcc = 15.03,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint3, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties typex = new ShipProperties()
+        {
+            FDID = "TypeX",
+            HullMass = 400F,
+            Name = "Alliance Chieftain",
+            Speed = 230,
+            Boost = 330,
+            HullCost = 18603850,
+            Class = 2,
+            Shields = 200,
+            Armour = 280,
+            MinThrust = 65.217,
+            BoostCost = 19,
+            FuelReserve = 0.77,
+            HeatCap = 289,
+            HeatDispMin = 2.6,
+            HeatDispMax = 46.5,
+            FuelCost = 50,
+            Hardness = 65,
+            Crew = 2,
+            FwdAcc = 37.84,
+            RevAcc = 25.84,
+            LatAcc = 20.01,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint3, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military03, 4)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties typex_2 = new ShipProperties()
+        {
+            FDID = "TypeX_2",
+            HullMass = 500F,
+            Name = "Alliance Crusader",
+            Speed = 180,
+            Boost = 300,
+            HullCost = 22092000,
+            Class = 2,
+            Shields = 200,
+            Armour = 300,
+            MinThrust = 61.11,
+            BoostCost = 19,
+            FuelReserve = 0.77,
+            HeatCap = 316,
+            HeatDispMin = 2.53,
+            HeatDispMax = 45.23,
+            FuelCost = 50,
+            Hardness = 65,
+            Crew = 3,
+            FwdAcc = 29.78,
+            RevAcc = 24.78,
+            LatAcc = 18.96,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint3, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military03, 4)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties krait_light = new ShipProperties()
+        {
+            FDID = "Krait_Light",
+            HullMass = 270F,
+            Name = "Krait Phantom",
+            Speed = 250,
+            Boost = 350,
+            HullCost = 35810120,
+            Class = 2,
+            Shields = 200,
+            Armour = 180,
+            MinThrust = 64,
+            BoostCost = 13,
+            FuelReserve = 0.63,
+            HeatCap = 300,
+            HeatDispMin = 2.68,
+            HeatDispMax = 52.05,
+            FuelCost = 50,
+            Hardness = 55,
+            Crew = 2,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties mamba = new ShipProperties()
+        {
+            FDID = "Mamba",
+            HullMass = 250F,
+            Name = "Mamba",
+            Speed = 310,
+            Boost = 380,
+            HullCost = 55434290,
+            Class = 2,
+            Shields = 270,
+            Armour = 230,
+            MinThrust = 77.42,
+            BoostCost = 16,
+            FuelReserve = 0.5,
+            HeatCap = 165,
+            HeatDispMin = 2.05,
+            HeatDispMax = 41.63,
+            FuelCost = 50,
+            Hardness = 70,
+            Crew = 2,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.HugeHardpoint1, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint5, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint6, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 3)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties typex_3 = new ShipProperties()
+        {
+            FDID = "TypeX_3",
+            HullMass = 450F,
+            Name = "Alliance Challenger",
+            Speed = 200,
+            Boost = 310,
+            HullCost = 29561170,
+            Class = 2,
+            Shields = 220,
+            Armour = 300,
+            MinThrust = 65,
+            BoostCost = 19,
+            FuelReserve = 0.77,
+            HeatCap = 316,
+            HeatDispMin = 2.87,
+            HeatDispMax = 51.4,
+            FuelCost = 50,
+            Hardness = 65,
+            Crew = 2,
+            FwdAcc = 31.65,
+            RevAcc = 25.94,
+            LatAcc = 20.09,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint3, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military03, 4)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties krait_mkii = new ShipProperties()
+        {
+            FDID = "Krait_MkII",
+            HullMass = 320F,
+            Name = "Krait Mk II",
+            Speed = 240,
+            Boost = 330,
+            HullCost = 44152080,
+            Class = 2,
+            Shields = 220,
+            Armour = 220,
+            MinThrust = 62.3,
+            BoostCost = 13,
+            FuelReserve = 0.63,
+            HeatCap = 300,
+            HeatDispMin = 2.68,
+            HeatDispMax = 52.05,
+            FuelCost = 50,
+            Hardness = 55,
+            Crew = 3,
+            FwdAcc = 28.01,
+            RevAcc = 18.04,
+            LatAcc = 15.12,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties python_nx = new ShipProperties()
+        {
+            FDID = "Python_NX",
+            HullMass = 450F,
+            Name = "Python Mk II",
+            Speed = 256,
+            Boost = 345,
+            HullCost = 66161981,
+            Class = 2,
+            Shields = 335,
+            Armour = 280,
+            MinThrust = 85.75,
+            BoostCost = 20,
+            FuelReserve = 0.83,
+            HeatCap = 260,
+            HeatDispMin = 0,
+            HeatDispMax = 52,
+            FuelCost = 50,
+            Hardness = 70,
+            Crew = 2,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint4, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint5, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint6, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties cobramkv = new ShipProperties()
+        {
+            FDID = "CobraMkV",
+            HullMass = 150F,
+            Name = "Cobra Mk V",
+            Speed = 290,
+            Boost = 410,
+            HullCost = 1473191,
+            Class = 1,
+            Shields = 160,
+            Armour = 180,
+            MinThrust = 79,
+            BoostCost = 10,
+            FuelReserve = 0.49,
+            HeatCap = 245,
+            HeatDispMin = 0,
+            HeatDispMax = 40.5,
+            FuelCost = 50,
+            Hardness = 40,
+            Crew = 3,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties corsair = new ShipProperties()
+        {
+            FDID = "Corsair",
+            HullMass = 265F,
+            Name = "Corsair",
+            Speed = 280,
+            Boost = 355,
+            HullCost = 76884160,
+            Class = 2,
+            Shields = 235,
+            Armour = 270,
+            MinThrust = 65,
+            BoostCost = 19,
+            FuelReserve = 0.41,
+            HeatCap = 230,
+            HeatDispMin = 1.62,
+            HeatDispMax = 52,
+            FuelCost = 50,
+            Hardness = 65,
+            Crew = 2,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties eagle = new ShipProperties()
+        {
+            FDID = "Eagle",
+            HullMass = 50F,
+            Name = "Eagle",
+            Speed = 240,
+            Boost = 350,
+            HullCost = 7490,
+            Class = 1,
+            Shields = 60,
+            Armour = 40,
+            MinThrust = 75,
+            BoostCost = 8,
+            FuelReserve = 0.34,
+            HeatCap = 165,
+            HeatDispMin = 1.38,
+            HeatDispMax = 21.48,
+            FuelCost = 50,
+            Hardness = 28,
+            Crew = 1,
+            FwdAcc = 43.97,
+            RevAcc = 29.97,
+            LatAcc = 29.86,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint3, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 2)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 2)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties viper = new ShipProperties()
+        {
+            FDID = "Viper",
+            HullMass = 50F,
+            Name = "Viper Mk III",
+            Speed = 320,
+            Boost = 400,
+            HullCost = 74610,
+            Class = 1,
+            Shields = 105,
+            Armour = 70,
+            MinThrust = 62.5,
+            BoostCost = 10,
+            FuelReserve = 0.41,
+            HeatCap = 195,
+            HeatDispMin = 1.69,
+            HeatDispMax = 26.2,
+            FuelCost = 50,
+            Hardness = 35,
+            Crew = 1,
+            FwdAcc = 53.98,
+            RevAcc = 29.7,
+            LatAcc = 24.95,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 2)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 3)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties vulture = new ShipProperties()
+        {
+            FDID = "Vulture",
+            HullMass = 230F,
+            Name = "Vulture",
+            Speed = 210,
+            Boost = 340,
+            HullCost = 4670100,
+            Class = 1,
+            Shields = 240,
+            Armour = 160,
+            MinThrust = 90.476,
+            BoostCost = 16,
+            FuelReserve = 0.57,
+            HeatCap = 237,
+            HeatDispMin = 1.87,
+            HeatDispMax = 35.63,
+            FuelCost = 50,
+            Hardness = 55,
+            Crew = 2,
+            FwdAcc = 39.55,
+            RevAcc = 29.88,
+            LatAcc = 19.98,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 3)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 5)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties ferdelance = new ShipProperties()
+        {
+            FDID = "FerDeLance",
+            HullMass = 250F,
+            Name = "Fer-de-Lance",
+            Speed = 260,
+            Boost = 350,
+            HullCost = 51126980,
+            Class = 2,
+            Shields = 300,
+            Armour = 225,
+            MinThrust = 84.615,
+            BoostCost = 19,
+            FuelReserve = 0.67,
+            HeatCap = 224,
+            HeatDispMin = 2.05,
+            HeatDispMax = 41.63,
+            FuelCost = 50,
+            Hardness = 70,
+            Crew = 2,
+            FwdAcc = 29.31,
+            RevAcc = 24.34,
+            LatAcc = 20.04,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.HugeHardpoint1, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint4, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint5, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint6, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 3)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties empire_eagle = new ShipProperties()
+        {
+            FDID = "Empire_Eagle",
+            HullMass = 50F,
+            Name = "Imperial Eagle",
+            Speed = 300,
+            Boost = 400,
+            HullCost = 50890,
+            Class = 1,
+            Shields = 80,
+            Armour = 60,
+            MinThrust = 70,
+            BoostCost = 8,
+            FuelReserve = 0.37,
+            HeatCap = 163,
+            HeatDispMin = 1.5,
+            HeatDispMax = 21.2,
+            FuelCost = 50,
+            Hardness = 28,
+            Crew = 1,
+            FwdAcc = 34.54,
+            RevAcc = 27.84,
+            LatAcc = 27.84,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 2)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 2)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties federation_dropship_mkii = new ShipProperties()
+        {
+            FDID = "Federation_Dropship_MkII",
+            HullMass = 480F,
+            Name = "Federal Assault Ship",
+            Speed = 210,
+            Boost = 350,
+            HullCost = 19102490,
+            Class = 2,
+            Shields = 200,
+            Armour = 300,
+            MinThrust = 71.429,
+            BoostCost = 19,
+            FuelReserve = 0.72,
+            HeatCap = 286,
+            HeatDispMin = 2.53,
+            HeatDispMax = 45.23,
+            FuelCost = 50,
+            Hardness = 60,
+            Crew = 2,
+            FwdAcc = 39.81,
+            RevAcc = 20.04,
+            LatAcc = 15.07,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 4)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties federation_gunship = new ShipProperties()
+        {
+            FDID = "Federation_Gunship",
+            HullMass = 580F,
+            Name = "Federal Gunship",
+            Speed = 170,
+            Boost = 280,
+            HullCost = 34806280,
+            Class = 2,
+            Shields = 250,
+            Armour = 350,
+            MinThrust = 58.824,
+            BoostCost = 23,
+            FuelReserve = 0.82,
+            HeatCap = 325,
+            HeatDispMin = 2.87,
+            HeatDispMax = 51.4,
+            FuelCost = 50,
+            Hardness = 60,
+            Crew = 2,
+            FwdAcc = 24.61,
+            RevAcc = 17.83,
+            LatAcc = 10.08,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint4, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military03, 4)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties viper_mkiv = new ShipProperties()
+        {
+            FDID = "Viper_MkIV",
+            HullMass = 190F,
+            Name = "Viper Mk IV",
+            Speed = 270,
+            Boost = 340,
+            HullCost = 290680,
+            Class = 1,
+            Shields = 150,
+            Armour = 150,
+            MinThrust = 64.815,
+            BoostCost = 10,
+            FuelReserve = 0.46,
+            HeatCap = 209,
+            HeatDispMin = 1.82,
+            HeatDispMax = 28.98,
+            FuelCost = 50,
+            Hardness = 35,
+            Crew = 1,
+            FwdAcc = 53.84,
+            RevAcc = 30.14,
+            LatAcc = 24.97,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 3)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties smallcombat01_nx = new ShipProperties()
+        {
+            FDID = "SmallCombat01_NX",
+            HullMass = 190F,
+            Name = "Kestrel Mk II",
+            Speed = 270,
+            Boost = 360,
+            HullCost = 13776380,
+            Class = 1,
+            Shields = 225,
+            Armour = 70,
+            MinThrust = 89,
+            BoostCost = 14,
+            FuelReserve = 0.61,
+            HeatCap = 276,
+            HeatDispMin = 0,
+            HeatDispMax = 39.85,
+            FuelCost = 50,
+            Hardness = 55,
+            Crew = 1,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 4)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties hauler = new ShipProperties()
+        {
+            FDID = "Hauler",
+            HullMass = 14F,
+            Name = "Hauler",
+            Speed = 200,
+            Boost = 300,
+            HullCost = 8160,
+            Class = 1,
+            Shields = 50,
+            Armour = 100,
+            MinThrust = 35,
+            BoostCost = 7,
+            FuelReserve = 0.25,
+            HeatCap = 123,
+            HeatDispMin = 1.06,
+            HeatDispMax = 16.2,
+            FuelCost = 50,
+            Hardness = 20,
+            Crew = 1,
+            FwdAcc = 39.87,
+            RevAcc = 29.95,
+            LatAcc = 29.95,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 2)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties type6 = new ShipProperties()
+        {
+            FDID = "Type6",
+            HullMass = 155F,
+            Name = "Type-6 Transporter",
+            Speed = 220,
+            Boost = 350,
+            HullCost = 858010,
+            Class = 2,
+            Shields = 90,
+            Armour = 180,
+            MinThrust = 40.909,
+            BoostCost = 10,
+            FuelReserve = 0.39,
+            HeatCap = 179,
+            HeatDispMin = 1.7,
+            HeatDispMax = 24.55,
+            FuelCost = 50,
+            Hardness = 35,
+            Crew = 1,
+            FwdAcc = 20.1,
+            RevAcc = 14.96,
+            LatAcc = 15.07,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties type7 = new ShipProperties()
+        {
+            FDID = "Type7",
+            HullMass = 350F,
+            Name = "Type-7 Transporter",
+            Speed = 180,
+            Boost = 300,
+            HullCost = 16774470,
+            Class = 3,
+            Shields = 156,
+            Armour = 340,
+            MinThrust = 33.333,
+            BoostCost = 10,
+            FuelReserve = 0.52,
+            HeatCap = 226,
+            HeatDispMin = 2.17,
+            HeatDispMax = 32.45,
+            FuelCost = 50,
+            Hardness = 54,
+            Crew = 1,
+            FwdAcc = 20.11,
+            RevAcc = 15.02,
+            LatAcc = 15.13,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint3, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint4, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size5, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size4, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size4, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties type9 = new ShipProperties()
+        {
+            FDID = "Type9",
+            HullMass = 850F,
+            Name = "Type-9 Heavy",
+            Speed = 130,
+            Boost = 200,
+            HullCost = 72108220,
+            Class = 3,
+            Shields = 240,
+            Armour = 480,
+            MinThrust = 30.769,
+            BoostCost = 19,
+            FuelReserve = 0.77,
+            HeatCap = 289,
+            HeatDispMin = 3.1,
+            HeatDispMax = 48.35,
+            FuelCost = 50,
+            Hardness = 65,
+            Crew = 3,
+            FwdAcc = 20.03,
+            RevAcc = 10.11,
+            LatAcc = 10.03,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 6)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot00_Size8, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size8, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot11_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot12_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties independant_trader = new ShipProperties()
+        {
+            FDID = "Independant_Trader",
+            HullMass = 180F,
+            Name = "Keelback",
+            Speed = 200,
+            Boost = 300,
+            HullCost = 2937840,
+            Class = 2,
+            Shields = 135,
+            Armour = 270,
+            MinThrust = 45,
+            BoostCost = 10,
+            FuelReserve = 0.39,
+            HeatCap = 215,
+            HeatDispMin = 1.87,
+            HeatDispMax = 29.78,
+            FuelCost = 50,
+            Hardness = 45,
+            Crew = 2,
+            FwdAcc = 20.22,
+            RevAcc = 15.07,
+            LatAcc = 15.03,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties type9_military = new ShipProperties()
+        {
+            FDID = "Type9_Military",
+            HullMass = 1200F,
+            Name = "Type-10 Defender",
+            Speed = 180,
+            Boost = 220,
+            HullCost = 121486140,
+            Class = 3,
+            Shields = 320,
+            Armour = 580,
+            MinThrust = 83.333,
+            BoostCost = 19,
+            FuelReserve = 0.77,
+            HeatCap = 335,
+            HeatDispMin = 3.16,
+            HeatDispMax = 67.15,
+            FuelCost = 50,
+            Hardness = 75,
+            Crew = 3,
+            FwdAcc = 17.96,
+            RevAcc = 10.04,
+            LatAcc = 10.09,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint4, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint5, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint6, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint7, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint8, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 6)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size8, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot11_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot12_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 5)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties type8 = new ShipProperties()
+        {
+            FDID = "Type8",
+            HullMass = 400F,
+            Name = "Type-8 Transporter",
+            Speed = 200,
+            Boost = 340,
+            HullCost = 36238840,
+            Class = 2,
+            Shields = 228,
+            Armour = 440,
+            MinThrust = 45,
+            BoostCost = 10,
+            FuelReserve = 0.52,
+            HeatCap = 236,
+            HeatDispMin = 0,
+            HeatDispMax = 36.5,
+            FuelCost = 50,
+            Hardness = 58,
+            Crew = 1,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint4, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint5, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint6, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties lakonminer = new ShipProperties()
+        {
+            FDID = "LakonMiner",
+            HullMass = 320F,
+            Name = "Type-11 Prospector",
+            Speed = 270,
+            Boost = 365,
+            HullCost = 66346710,
+            Class = 2,
+            Shields = 275,
+            Armour = 350,
+            MinThrust = 70.5,
+            BoostCost = 25,
+            FuelReserve = 0.6,
+            HeatCap = 300,
+            HeatDispMin = 0,
+            HeatDispMax = 52.15,
+            FuelCost = 50,
+            Hardness = 58,
+            Crew = 3,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeMiningHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumMiningHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumMiningHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallMiningHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint3, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint4, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LimpetController01, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FighterBay01, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties adder = new ShipProperties()
+        {
+            FDID = "Adder",
+            HullMass = 35F,
+            Name = "Adder",
+            Speed = 220,
+            Boost = 320,
+            HullCost = 18710,
+            Class = 1,
+            Shields = 60,
+            Armour = 90,
+            MinThrust = 45.454,
+            BoostCost = 8,
+            FuelReserve = 0.36,
+            HeatCap = 170,
+            HeatDispMin = 1.45,
+            HeatDispMax = 22.6,
+            FuelCost = 50,
+            Hardness = 35,
+            Crew = 2,
+            FwdAcc = 39.41,
+            RevAcc = 27.73,
+            LatAcc = 27.86,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 3)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties asp = new ShipProperties()
+        {
+            FDID = "Asp",
+            HullMass = 280F,
+            Name = "Asp Explorer",
+            Speed = 250,
+            Boost = 340,
+            HullCost = 6137180,
+            Class = 2,
+            Shields = 140,
+            Armour = 210,
+            MinThrust = 48,
+            BoostCost = 13,
+            FuelReserve = 0.63,
+            HeatCap = 272,
+            HeatDispMin = 2.34,
+            HeatDispMax = 39.9,
+            FuelCost = 50,
+            Hardness = 52,
+            Crew = 2,
+            FwdAcc = 23.64,
+            RevAcc = 15.04,
+            LatAcc = 14.97,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint3, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint4, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties diamondback = new ShipProperties()
+        {
+            FDID = "DiamondBack",
+            HullMass = 170F,
+            Name = "Diamondback Scout",
+            Speed = 280,
+            Boost = 380,
+            HullCost = 441800,
+            Class = 1,
+            Shields = 120,
+            Armour = 120,
+            MinThrust = 60.714,
+            BoostCost = 10,
+            FuelReserve = 0.49,
+            HeatCap = 346,
+            HeatDispMin = 2.42,
+            HeatDispMax = 48.05,
+            FuelCost = 50,
+            Hardness = 40,
+            Crew = 1,
+            FwdAcc = 39.57,
+            RevAcc = 29.82,
+            LatAcc = 25.19,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties diamondbackxl = new ShipProperties()
+        {
+            FDID = "DiamondBackXL",
+            HullMass = 260F,
+            Name = "Diamondback Explorer",
+            Speed = 260,
+            Boost = 340,
+            HullCost = 1616160,
+            Class = 1,
+            Shields = 150,
+            Armour = 150,
+            MinThrust = 61.538,
+            BoostCost = 13,
+            FuelReserve = 0.52,
+            HeatCap = 351,
+            HeatDispMin = 2.46,
+            HeatDispMax = 50.55,
+            FuelCost = 50,
+            Hardness = 42,
+            Crew = 1,
+            FwdAcc = 34.63,
+            RevAcc = 25.06,
+            LatAcc = 19.89,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties asp_scout = new ShipProperties()
+        {
+            FDID = "Asp_Scout",
+            HullMass = 150F,
+            Name = "Asp Scout",
+            Speed = 220,
+            Boost = 300,
+            HullCost = 3811220,
+            Class = 2,
+            Shields = 120,
+            Armour = 180,
+            MinThrust = 50,
+            BoostCost = 13,
+            FuelReserve = 0.47,
+            HeatCap = 210,
+            HeatDispMin = 1.8,
+            HeatDispMax = 29.65,
+            FuelCost = 50,
+            Hardness = 52,
+            Crew = 2,
+            FwdAcc = 35.02,
+            RevAcc = 20.1,
+            LatAcc = 20.03,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size4, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties mandalay = new ShipProperties()
+        {
+            FDID = "Mandalay",
+            HullMass = 230F,
+            Name = "Mandalay",
+            Speed = 280,
+            Boost = 350,
+            HullCost = 16527690,
+            Class = 2,
+            Shields = 220,
+            Armour = 230,
+            MinThrust = 71.5,
+            BoostCost = 14,
+            FuelReserve = 0.5,
+            HeatCap = 245,
+            HeatDispMin = 0,
+            HeatDispMax = 51,
+            FuelCost = 50,
+            Hardness = 55,
+            Crew = 2,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint4, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties explorer_nx = new ShipProperties()
+        {
+            FDID = "Explorer_NX",
+            HullMass = 950F,
+            Name = "Caspian Explorer",
+            Speed = 210,
+            Boost = 290,
+            HullCost = 189326510,
+            Class = 3,
+            Shields = 500,
+            Armour = 345,
+            MinThrust = 76,
+            BoostCost = 25,
+            FuelReserve = 1.14,
+            HeatCap = 341,
+            HeatDispMin = 0,
+            HeatDispMax = 72.1,
+            FuelCost = 50,
+            Hardness = 60,
+            Crew = 4,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint6, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint5, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint4, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint5, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint6, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 7)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot11_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot12_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot13_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot14_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties orca = new ShipProperties()
+        {
+            FDID = "Orca",
+            HullMass = 290F,
+            Name = "Orca",
+            Speed = 300,
+            Boost = 380,
+            HullCost = 47792090,
+            Class = 3,
+            Shields = 220,
+            Armour = 220,
+            MinThrust = 66.667,
+            BoostCost = 16,
+            FuelReserve = 0.79,
+            HeatCap = 262,
+            HeatDispMin = 2.3,
+            HeatDispMax = 42.68,
+            FuelCost = 50,
+            Hardness = 55,
+            Crew = 2,
+            FwdAcc = 29.66,
+            RevAcc = 25.08,
+            LatAcc = 19.95,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties belugaliner = new ShipProperties()
+        {
+            FDID = "BelugaLiner",
+            HullMass = 950F,
+            Name = "Beluga Liner",
+            Speed = 200,
+            Boost = 280,
+            HullCost = 79686090,
+            Class = 3,
+            Shields = 280,
+            Armour = 280,
+            MinThrust = 55,
+            BoostCost = 19,
+            FuelReserve = 0.81,
+            HeatCap = 283,
+            HeatDispMin = 2.6,
+            HeatDispMax = 50.85,
+            FuelCost = 50,
+            Hardness = 60,
+            Crew = 3,
+            FwdAcc = 20.01,
+            RevAcc = 17.12,
+            LatAcc = 15.03,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint4, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint5, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint5, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint6, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 7)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot11_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot12_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+        };
+
+        private static ShipProperties dolphin = new ShipProperties()
+        {
+            FDID = "Dolphin",
+            HullMass = 140F,
+            Name = "Dolphin",
+            Speed = 250,
+            Boost = 350,
+            HullCost = 1095780,
+            Class = 1,
+            Shields = 110,
+            Armour = 110,
+            MinThrust = 48,
+            BoostCost = 10,
+            FuelReserve = 0.5,
+            HeatCap = 245,
+            HeatDispMin = 1.91,
+            HeatDispMax = 56,
+            FuelCost = 50,
+            Hardness = 35,
+            Crew = 1,
+            FwdAcc = 39.63,
+            RevAcc = 30.01,
+            LatAcc = 14.97,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
         };
 
         private static ShipProperties federation_corvette = new ShipProperties()
@@ -1197,7 +1616,13 @@ namespace EliteDangerousCore
             Crew = 3,
             FwdAcc = 19.87,
             RevAcc = 10.08,
-            LatAcc = 9.98
+            LatAcc = 9.98,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.HugeHardpoint1, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.HugeHardpoint2, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint5, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint6, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint7, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint8, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot11_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 5)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
         };
 
         private static ShipProperties cutter = new ShipProperties()
@@ -1222,118 +1647,21 @@ namespace EliteDangerousCore
             Crew = 3,
             FwdAcc = 29.37,
             RevAcc = 10.04,
-            LatAcc = 6.06
-        };
-
-        private static ShipProperties python_nx = new ShipProperties()
-        {
-            FDID = "Python_NX",
-            HullMass = 450F,
-            Name = "Python Mk II",
-            Speed = 256,
-            Boost = 345,
-            HullCost = 66161981,
-            Class = 2,
-            Shields = 335,
-            Armour = 280,
-
-            // from edsy, not correct yet
-            MinThrust = 85.85,
-            BoostCost = 20,
-            FuelReserve = 0.83,
-            HeatCap = 260,
-            HeatDispMin = 2.68,
-            HeatDispMax = 52.05,
-            FuelCost = 50,
-            Hardness = 70,
-            Crew = 2,
-            FwdAcc = -999,
-            RevAcc = -999,
-            LatAcc = -999
-        };
-
-        private static ShipProperties mandalay = new ShipProperties()       // synced with EDSY 5/12/24
-        {
-            FDID = "Mandalay",
-            HullMass = 230F, //inara
-            Name = "Mandalay",
-            Speed = 280, //inara
-            Boost = 350, //inara
-            HullCost = 16527690, //inara
-            Class = 2,  // inara, medium
-            Shields = 220,  //inara
-            Armour = 230, //inara
-
-            MinThrust = 71.5,
-            BoostCost = 14,
-            FuelReserve = 0.5,
-            HeatCap = 250,
-            HeatDispMin = 0,
-            HeatDispMax = 51,
-            FuelCost = 50,
-            Hardness = 55,
-            Crew = 2,
-            FwdAcc = 0,
-            RevAcc = 0,
-            LatAcc = 0
-        };
-
-        private static ShipProperties corsair = new ShipProperties()
-        {
-            FDID = "Corsair",
-            HullMass = 265F,
-            Name = "Corsair",
-            Speed = 280,    // EDSY 27/11/25
-            Boost = 355,
-            HullCost = 76884160,        
-            Class = 2,
-            Shields = 235,
-            Armour = 270,
-            MinThrust = 65,
-            BoostCost = 19,
-            FuelReserve = 0.41,
-            HeatCap = 230,
-            HeatDispMin = 1.62,
-            HeatDispMax = 52.05,
-            FuelCost = 50,
-            Hardness = 65,
-            Crew = 2,
-            FwdAcc = 0,
-            RevAcc = 0,
-            LatAcc = 0
-        };
-
-        private static ShipProperties lakonminer = new ShipProperties()
-        {
-            FDID = "LakonMiner",
-            HullMass = 514F, // from loadout
-            Name = "Type-11 Prospector",
-            Speed = 270,        // EDSY 27/11/25
-            Boost = 365,
-            HullCost = 66346710,
-            Class = 2,
-            Shields = 275,
-            Armour = 350,
-            MinThrust = 70.5,
-            BoostCost = 25,
-            FuelReserve = 0.6,
-            HeatCap = 0,
-            HeatDispMin = 0,
-            HeatDispMax = 0,
-            FuelCost = 50,
-            Hardness = 58,
-            Crew = 3,
-            FwdAcc = 0,
-            RevAcc = 0,
-            LatAcc = 0
+            LatAcc = 6.06,
+            Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.HugeHardpoint1, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint4, 2)}, 
+            Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint5, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint6, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint7, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint8, 0)}, 
+            Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 6)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size8, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size8, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
+            Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 5)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
         };
 
         private static ShipProperties panthermkii = new ShipProperties()
         {
-            FDID = "Panthermkii",
-            HullMass = 1200F,   // game
+            FDID = "PantherMkII",
+            HullMass = 1200F,
             Name = "Panther Clipper Mk II",
-            Speed = 180, // EDSY 27/11/25
+            Speed = 180,
             Boost = 250,
             HullCost = 286906165,
             Class = 3,
@@ -1350,58 +1678,16 @@ namespace EliteDangerousCore
             Crew = 4,
             FwdAcc = 0,
             RevAcc = 0,
-            LatAcc = 0
+            LatAcc = 0,
+            Hardpoints = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint4, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint3, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint4, 1) },
+            Utility = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint5, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint6, 0) },
+            Component = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 7) },
+            Internal = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.Cargo01, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size8, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Cargo02, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1) },
+            Military = new ShipSlots.SlotAndSize[] { },
+            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit, 0) },
         };
 
-        private static ShipProperties casianexplorer = new ShipProperties()
-        {
-            FDID = "Explorer_nx",
-            HullMass = 950F,   // game
-            Name = "Caspian Explorer",
-            Speed = 210,
-            Boost = 290,
-            HullCost = 189326510,
-            Class = 3,
-            Shields = 500,
-            Armour = 345,
-            MinThrust = 76,
-            BoostCost = 25,
-            FuelReserve = 1.14,
-            HeatCap = 0,
-            HeatDispMin = 0,
-            HeatDispMax = 0,
-            FuelCost = 50,
-            Hardness = 60,
-            Crew = 4,
-            FwdAcc = 0,
-            RevAcc = 0,
-            LatAcc = 0
-        };
-
-        private static ShipProperties kestrelmkii = new ShipProperties()
-        {
-            FDID = "SmallCombat01_nx",
-            HullMass = 190F,
-            Name = "Kestrel Mk II",
-            Speed = 270,
-            Boost = 360,
-            HullCost = 13776380,
-            Class = 1,
-            Shields = 260,
-            Armour = 75,
-            MinThrust = 89,
-            BoostCost = 14,
-            FuelReserve = 0.61,
-            HeatCap = 277,
-            HeatDispMin = 0,
-            HeatDispMax = 0,
-            FuelCost = 50,
-            Hardness = 55,
-            Crew = 1,
-            FwdAcc = 0,
-            RevAcc = 0,
-            LatAcc = 0
-        };
+        // EDSY END
 
         private static ShipProperties lynxhighliner = new ShipProperties()
         {
@@ -1426,7 +1712,45 @@ namespace EliteDangerousCore
             Crew = 1,
             FwdAcc = 0,
             RevAcc = 0,
-            LatAcc = 0
+            LatAcc = 0,
+
+            Hardpoints = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), 
+                                        new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), 
+                                        new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2),
+                                        new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2),
+                                        new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint4, 2),
+                                        },
+
+            Utility = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), 
+                            new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), 
+                            new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), 
+                            new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)},
+
+            Component = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), 
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5), 
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), 
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), 
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 6), 
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 5), 
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), 
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5) },
+            
+            Internal = new ShipSlots.SlotAndSize[] {
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Passenger01, 6),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Passenger02, 6),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Passenger03, 5),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1),
+                },
+            Military = new ShipSlots.SlotAndSize[] { },
+
+            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit, 0) },
+
         };
         
         // MUST be after ship definitions else they are not constructed
@@ -1450,7 +1774,7 @@ namespace EliteDangerousCore
             { "diamondback",diamondback},
             { "dolphin",dolphin},
             { "eagle",eagle},
-            { "explorer_nx",casianexplorer},
+            { "explorer_nx",explorer_nx},
             { "federation_dropship_mkii", federation_dropship_mkii},
             { "federation_corvette",federation_corvette},
             { "federation_dropship",federation_dropship},
@@ -1463,7 +1787,7 @@ namespace EliteDangerousCore
             { "independant_trader",independant_trader},
             { "krait_mkii",krait_mkii},
             { "krait_light",krait_light},
-            { "smallcombat01_nx",kestrelmkii},
+            { "smallcombat01_nx",smallcombat01_nx},
             { "lakonminer",lakonminer },
             { "mamba",mamba},
             { "mandalay",mandalay},
@@ -1498,6 +1822,18 @@ namespace EliteDangerousCore
             Boost = 540,
             HullCost = 0,
             Class = 1,
+
+            Hardpoints = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1) },
+            Utility = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0) },
+
+            Component = new ShipSlots.SlotAndSize[] {
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Independent_Fighter_Shield, 1),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.ShieldGenerator, 1),
+                 },
+            Internal = new ShipSlots.SlotAndSize[] { },
+            Military = new ShipSlots.SlotAndSize[] { },
+            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit, 0) },
         };
 
         private static ShipProperties federation_fighter = new ShipProperties()
@@ -1510,6 +1846,19 @@ namespace EliteDangerousCore
             Boost = 536,
             HullCost = 0,
             Class = 1,
+
+
+            Hardpoints = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1) },
+            Utility = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0) },
+
+            Component = new ShipSlots.SlotAndSize[] {
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Federation_Fighter_Shield, 1),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.ShieldGenerator, 1),
+                 },
+            Internal = new ShipSlots.SlotAndSize[] { },
+            Military = new ShipSlots.SlotAndSize[] { },
+            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit, 0) },
         };
 
 
@@ -1523,6 +1872,18 @@ namespace EliteDangerousCore
             Boost = 0,
             HullCost = 0,
             Class = 1,
+
+            Hardpoints = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1) },
+            Utility = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0) },
+
+            Component = new ShipSlots.SlotAndSize[] {
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Independent_Fighter_Shield, 1),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.ShieldGenerator, 1),
+                 },
+            Internal = new ShipSlots.SlotAndSize[] { },
+            Military = new ShipSlots.SlotAndSize[] { },
+            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit, 0) },
         };
 
         private static ShipProperties GDN_Hybrid_v1_fighter = new ShipProperties()
@@ -1535,6 +1896,19 @@ namespace EliteDangerousCore
             Boost = 0,
             HullCost = 0,
             Class = 1,
+
+
+            Hardpoints = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1) },
+            Utility = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0) },
+
+            Component = new ShipSlots.SlotAndSize[] {
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.GDN_Hybrid_Fighter_V1_Shield, 1),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.ShieldGenerator, 1),   // Can have both
+                 },
+            Internal = new ShipSlots.SlotAndSize[] { },
+            Military = new ShipSlots.SlotAndSize[] { },
+            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit, 0) },
         };
         private static ShipProperties GDN_Hybrid_v2_fighter = new ShipProperties()
         {
@@ -1546,6 +1920,18 @@ namespace EliteDangerousCore
             Boost = 0,
             HullCost = 0,
             Class = 1,
+
+            Hardpoints = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1) },
+            Utility = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0) },
+
+            Component = new ShipSlots.SlotAndSize[] {
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.GDN_Hybrid_Fighter_V2_Shield, 1),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.ShieldGenerator, 1),
+                 },
+            Internal = new ShipSlots.SlotAndSize[] { },
+            Military = new ShipSlots.SlotAndSize[] { },
+            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit, 0) },
         };
         private static ShipProperties GDN_Hybrid_v3_fighter = new ShipProperties()
         {
@@ -1557,6 +1943,17 @@ namespace EliteDangerousCore
             Boost = 0,
             HullCost = 0,
             Class = 1,
+
+            Hardpoints = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.SmallHardpoint2, 1) },
+            Utility = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0) },
+            Component = new ShipSlots.SlotAndSize[] {
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.GDN_Hybrid_Fighter_V3_Shield, 1),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.ShieldGenerator, 1),
+                 },
+            Internal = new ShipSlots.SlotAndSize[] { },
+            Military = new ShipSlots.SlotAndSize[] { },
+            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit, 0) },
         };
 
         private static ShipProperties srv = new ShipProperties()
@@ -1569,6 +1966,13 @@ namespace EliteDangerousCore
             Boost = 38,
             HullCost = 0,
             Class = 1,
+
+            Hardpoints = new ShipSlots.SlotAndSize[] { },
+            Utility = new ShipSlots.SlotAndSize[] { },
+            Component = new ShipSlots.SlotAndSize[] { },
+            Internal = new ShipSlots.SlotAndSize[] { },
+            Military = new ShipSlots.SlotAndSize[] { },
+            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.BuggyCargoHatch, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.SineWaveScanner, 0) , new ShipSlots.SlotAndSize(ShipSlots.Slot.Turret, 0) },
         };
 
         private static ShipProperties combatsrv = new ShipProperties()
@@ -1581,6 +1985,12 @@ namespace EliteDangerousCore
             Boost = 32,
             HullCost = 0,
             Class = 1,
+            Hardpoints = new ShipSlots.SlotAndSize[] { },
+            Utility = new ShipSlots.SlotAndSize[] { },
+            Component = new ShipSlots.SlotAndSize[] { },
+            Internal = new ShipSlots.SlotAndSize[] { },
+            Military = new ShipSlots.SlotAndSize[] { },
+            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.BuggyCargoHatch, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.SineWaveScanner, 0) , new ShipSlots.SlotAndSize(ShipSlots.Slot.Turret2, 0) },
         };
 
         private static Dictionary<string, ShipProperties> srvandfighters = new Dictionary<string, ShipProperties>
@@ -1601,3 +2011,4 @@ namespace EliteDangerousCore
     }
 }
 
+// END OF FILE

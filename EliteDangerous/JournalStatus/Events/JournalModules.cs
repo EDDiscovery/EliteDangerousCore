@@ -48,7 +48,9 @@ namespace EliteDangerousCore.JournalEvents
                 ReserveFuelCapacity = fuelcap["Reserve"].DoubleNull();
             }
 
-            //System.Diagnostics.Debug.WriteLine($"Loadout {ShipFD} {ShipType}");       // useful debug
+            bool debugout = false;
+
+            if (debugout) System.Diagnostics.Debug.WriteLine($"Loadout {ShipFD} {ShipType}");       // useful debug
 
             ShipModules = new List<ShipModule>();
 
@@ -74,7 +76,7 @@ namespace EliteDangerousCore.JournalEvents
                     string itemfdname = JournalFieldNaming.NormaliseFDItemName(jo["Item"].Str());
                     string engname = JournalFieldNaming.GetBetterEnglishModuleName(itemfdname, slotfdname);
 
-                    //System.Diagnostics.Debug.WriteLine($"  Modules {slotfdname} {itemfdname} = {engname} {JournalFieldNaming.GetForeignModuleName(itemfdname,null,slotfdname)}");
+                    if ( debugout ) System.Diagnostics.Debug.WriteLine($"  Modules {slotfdname} {itemfdname} = {engname} {JournalFieldNaming.GetForeignModuleName(itemfdname,null,slotfdname)}");
 
                     ShipModule module = new ShipModule(ShipSlots.ToEnglish(slotfdname),
                                                         slotfdname,
@@ -114,6 +116,17 @@ namespace EliteDangerousCore.JournalEvents
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
+            var shipproperties = ItemData.GetShipProperties(ShipFD);
+
+            if (shipproperties!=null && !IsBeta)        // we know about the ship, and its not beta.  beta ships sometimes (TypeX) get changed in release
+            {                                           // do it here since we know about BETA here, not before 
+                foreach( var m in ShipModules )
+                {
+                    if (!shipproperties.HasSlot(m.SlotFD))
+                        System.Diagnostics.Debug.WriteLine($"*** Ship data missing slot {m.SlotFD} for {ShipFD} : error in EDD ship data");
+                }
+            }
+
             shp.Loadout(ShipId, ShipType, ShipFD, ShipName, ShipIdent, ShipModules, HullValue ?? 0, ModulesValue ?? 0, Rebuy ?? 0,
                                 UnladenMass ?? 0, ReserveFuelCapacity ?? 0, HullHealth ?? 0, Hot);
         }
