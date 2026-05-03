@@ -117,6 +117,8 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Pp Liyongrui", "Pp Li Yongrui");
             candidatename = candidatename.Replace("Pp Pranavantal", "Pp Prana Vantal");
             candidatename = candidatename.Replace("Pp Yurigrom", "Pp Yuri Grom");
+            candidatename = candidatename.Replace("Ppnakato", "Pp Nakato");
+            candidatename = candidatename.Replace("Ppdenton", "Pp Denton");
             candidatename = candidatename.Replace("Explorer Nx", "Caspian Explorer");
             candidatename = candidatename.Replace("Independant Trader", "Keelback");
             candidatename = candidatename.Replace("Cobramkv", "Cobra Mk V");
@@ -136,6 +138,13 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Type 11", "Type-11", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace("Smallcombat 1 Nx", "Kestrel Mk II", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace(" MK II", " Mk II", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace(" Class 1", " Rating E", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace(" Class 2", " Rating D", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace(" Class 3", " Rating C", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace(" Class 4", " Rating B", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace(" Class 5", " Rating A", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace(" Size ", " Class ", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Mediumtransport 1 ", "Lynx Highliner ", StringComparison.InvariantCultureIgnoreCase);
             return candidatename;
         }
 

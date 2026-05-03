@@ -247,6 +247,7 @@ namespace EliteDangerousCore
             Abandoned,
             UnderAttack,
             Construction,
+            DamagedHuman,
         }
 
         // maps the StationType field to an enum

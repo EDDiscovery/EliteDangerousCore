@@ -1205,6 +1205,7 @@ SECTION StarportStates
 .Abandoned: "Abandoned" @
 .UnderAttack: "Under Attack" @
 .Construction: "Construction" @
+.DamagedHuman: "Damaged Human" @
 
 SECTION StarportTypes
 
