@@ -1062,6 +1062,7 @@ E3A998C0E178AC: "Wanted passenger" => "Gesuchter Passagier"
 771CD10722A7D2: "Discharging a weapon" => "Abfeuern einer Waffe"
 0F204F94B09CCD: "Destroying an APEX Shuttle" => "Zerstörung eines APEX-Shuttles"
 04E4EDA53C745B: "Tampering with a station" => "Sabotage einer Station"
+157F19260E9D31: "Assaulting a Person" @
 
 SECTION FactionStates
 
@@ -1100,7 +1101,8 @@ A21193C4A51E0D: "Alliance" => "Allianz"
 6809E8745EABCE: "Guardian" => "Guardian"
 824377DA32D5A8: "Thargoid" => "Thargoid"
 7EE28AFA2ED21A: "Pilots Federation" => "Pilotenföderation"
-61539847DBF080: "Player Pilots Federation" => "Spieler-Pilotenföderation"
+55492602030481: "Player Pilots" @
+
 
 SECTION GovernmentTypes
 
@@ -1147,6 +1149,7 @@ SECTION StarportStates
 643321EE0FC5B8: "Under Repairs" => "In Reparatur"
 F34FB6E3669DFD: "Abandoned" => "Verlassen"
 DA33E1B7E0C4EA: "Construction" => "Konstruktion"
+18FC67B9AB74B9: "Damaged Human" @
 
 SECTION StarportTypes
 
@@ -1237,8 +1240,10 @@ E4B1AB2D0505E8: "Cytoscrambler Burst Laser" => "Zytostreuer-Salvenlaser"
 8A417F5C472FE6: "Cannon" => "Kanone"
 306BFD525FA9C5: "Fragment Cannon" => "Splitterkanone"
 8DFC90E4A072C6: "Pacifier Fragment Cannon" => "Friedensstifter-Splitterkanone"
-93C5390A421D81: "Cargo Rack" => "Frachtgestell"
 D3BBF2FAE69CDA: "Corrosion Resistant Cargo Rack" => "Korrosionsbeständiges Frachtgestell"
+4C621ED5B80D7D: "Anti Corrosion Cargo Rack" @
+93C5390A421D81: "Cargo Rack" => "Frachtgestell"
+AC08D99EB032B0: "Agile Boost Engine" @
 9917741FA0BE27: "Manifest Scanner" => "Verzeichnisscanner"
 09CE66844887F5: "Chaff Launcher" => "Düpelwerfer"
 C72CB5EAFA5795: "Electronic Countermeasure" => "Elektronische Gegenmaßnmahmen"
@@ -1298,7 +1303,7 @@ C008DCFA55478D: "Rocket Propelled FSD Disrupter" => "Containment-Rakete"
 8E84C39592581B: "Pack Hound Missile Rack" => "Schwarmwerfer-Raketenrampe"
 CD7FA37A5942F0: "Advanced Torp Pylon" => "Optimierter Torpedopylon"
 D47989B5AEA7E2: "Advanced Missile Rack" => "Optimierte Raketenrampe"
-4079B7B39F7668: "Human Extraction Missile" => "Menschenextraktionsrakete"
+41CF6E004D66DD: "Sub surface Extraction Missile" @
 B3A021E4800549: "Enzyme Missile Rack" => "Enzymraketenrampe"
 94E9918390EAA7: "Module Reinforcement Package" => "Modulverstärkung"
 8454F69AA40E0B: "AX Multi Cannon" => "AX-Mehrfachgeschütz"
@@ -1315,6 +1320,7 @@ CA39470A7A6DED: "Advanced Planet Approach Suite" => "Fortgeschrittene Planetenan
 36AA174EFAA515: "Plasma Accelerator" => "Plasmabeschleuniger"
 F79B4B8AD884B9: "Advanced Plasma Accelerator" => "Optimierter Plasmabeschleuniger"
 1D202C4D8DA513: "Shock Cannon" => "Schockkanone"
+0CDA078656B69A: "Shock Cannon MK II" @
 7A5078EF876AD6: "Power Distributor" => "Energieverteiler"
 717B5FB556BE67: "Power Plant" => "Kraftwerk"
 B274BC2A7429E0: "Pulse Laser" => "Impulslaser"
@@ -1382,6 +1388,9 @@ A7AB21F5CF19AE: "Medium Hardpoint 5" => "Mittlere Aufhängung 5"
 77E9039F43F6E2: "Military Slot 1" => "Militärschacht 1"
 A22CCB7E4839AD: "Military Slot 2" => "Militärschacht 2"
 62898937228B9D: "Military Slot 3" => "Militärschacht 3"
+12B03109BE7102: "Passenger Slot 1" @
+4CA5B20A43C19C: "Passenger Slot 3" @
+1A1276E80D136D: "Passenger Slot 2" @
 659756B43DB6FA: "Paint Job" => "Lackierung"
 1247331999BD41: "Ship Cockpit" => "Schiffscockpit"
 B94A658100919D: "Ship ID Right" => "Schiff-ID Rechts"

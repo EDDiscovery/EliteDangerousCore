@@ -806,8 +806,9 @@ namespace EliteDangerousCore.Spansh
             [Government.PrisonColony] = "Prison Colony",    // not listed in spansh
             [Government.Carrier] = "Private Ownership",
             [Government.Theocracy] = "Theocracy",
+            [Government.Megaconstruction] = "Megaconstruction",
 
-//            [Government.Imperial] = "Imperial",       // not in spansh
+            //            [Government.Imperial] = "Imperial",       // not in spansh
 
             [Government.Unknown] = "Unknown",      // addition to allow Unknown to be mapped
         };
@@ -877,6 +878,7 @@ namespace EliteDangerousCore.Spansh
             [StarportTypes.SpaceConstructionDepot] = "Space Construction Depot",
             [StarportTypes.PlanetaryConstructionDepot] = "Planetary Construction Depot",
             [StarportTypes.DockablePlanetStation] = "Dockable Planet Station",
+            [StarportTypes.Dodec] = "Dodec Starport",
         };
         
         public static StarportTypes StarportTypeNameToEnum(string englishname)

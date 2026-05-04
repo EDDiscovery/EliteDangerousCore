@@ -1149,6 +1149,7 @@ SECTION StarportStates
 643321EE0FC5B8: "Under Repairs" @
 F34FB6E3669DFD: "Abandoned" @
 DA33E1B7E0C4EA: "Construction" @
+18FC67B9AB74B9: "Damaged Human" @
 
 SECTION StarportTypes
 
@@ -1241,9 +1242,8 @@ E4B1AB2D0505E8: "Cytoscrambler Burst Laser" @
 8DFC90E4A072C6: "Pacifier Fragment Cannon" @
 D3BBF2FAE69CDA: "Corrosion Resistant Cargo Rack" @
 4C621ED5B80D7D: "Anti Corrosion Cargo Rack" @
-656C62158ED510: "Mk II Agile Boost Engine" @
 93C5390A421D81: "Cargo Rack" @
-544C6802962524: "Mk II Cargo Rack" @
+AC08D99EB032B0: "Agile Boost Engine" @
 9917741FA0BE27: "Manifest Scanner" @
 09CE66844887F5: "Chaff Launcher" @
 C72CB5EAFA5795: "Electronic Countermeasure" @

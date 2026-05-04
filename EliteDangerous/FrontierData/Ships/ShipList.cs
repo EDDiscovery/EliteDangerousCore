@@ -55,6 +55,12 @@ namespace EliteDangerousCore
             int index = lst.FindIndex(x => x.ShipFullInfo().IndexOf(sn, StringComparison.InvariantCultureIgnoreCase) != -1);
             return (index >= 0) ? lst[index] : null;
         }
+        public Ship GetShip(ulong id)
+        {
+            List<Ship> lst = Ships.Values.ToList();
+            int index = lst.FindIndex(x => x.ID == id);
+            return (index >= 0) ? lst[index] : null;
+        }
 
         private ulong newsoldid = ulong.MaxValue / 2;
 

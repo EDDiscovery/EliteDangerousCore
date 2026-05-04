@@ -26,7 +26,7 @@ namespace EliteDangerousCore
 
             // In Order normally presented by Frontier
 
-            HugeHardpoint1,
+            HugeHardpoint1,     // MUST be first in list
             HugeHardpoint2,
             LargeHardpoint1,
             LargeHardpoint2,
@@ -49,10 +49,10 @@ namespace EliteDangerousCore
             SmallHardpoint3,
             SmallHardpoint4,
             SmallHardpoint5,        //type8
-            SmallHardpoint6,        //type8
+            SmallHardpoint6,        //MUST BE LAST IN LIST type8
 
             // core internal
-            Armour,
+            Armour,     // MUST BE FIRST
             PowerPlant,
             MainEngines,
             FrameShiftDrive,
@@ -60,23 +60,23 @@ namespace EliteDangerousCore
             PowerDistributor,
             Radar,
             FuelTank,
-            Cargo01,        // Panther clipper, july 25
-            Cargo02,        // Panther clipper, july 25
-            FighterBay01, // type 11 prospector sep 25
-            PlanetaryApproachSuite,
-            ColonisationSuite,  // trailblazers feb 25
-            LimpetController01, // type 11 prospector sep 25
-            CargoHatch,
+            CargoHatch, 
+            PlanetaryApproachSuite, // (loadout)
+            ColonisationSuite,  // trailblazers feb 25 (moduleinfo only)
+            LimpetController01, // type 11 prospector sep 25 (loadout)
+            CodexScanner,       // Present in ModulesInfo only
+            DataLinkScanner,    // Present in ModulesInfo only
+            DiscoveryScanner,   // Present in ModulesInfo only  // MUST BE LAST
 
             // utility mounts
-            TinyHardpoint1,
+            TinyHardpoint1, // MUST BE FIRST
             TinyHardpoint2,
             TinyHardpoint3,
             TinyHardpoint4,
             TinyHardpoint5,
             TinyHardpoint6,
-            TinyHardpoint7,
-            TinyHardpoint8,
+            TinyHardpoint7, 
+            TinyHardpoint8, // MUST BE LAST
 
             // military
 
@@ -92,7 +92,9 @@ namespace EliteDangerousCore
 
             // optional internal
 
-            Slot00_Size8,
+            Cargo01,     // MUST BE FIRST   // Panther clipper, july 25
+            Cargo02,        // Panther clipper, july 25
+            Slot00_Size8,       
             Slot01_Size2,
             Slot01_Size3,
             Slot01_Size4,
@@ -155,15 +157,11 @@ namespace EliteDangerousCore
             Slot13_Size1,
             Slot13_Size2,
             Slot14_Size1,
-            Slot14_Size2,
-
-            // Scanners
-            CodexScanner,
-            DataLinkScanner,
-            DiscoveryScanner,
+            Slot14_Size2,       
+            FighterBay01,       // type 11 prospector sep 25 // MUST BE LAST (IF MORE ADJUST IsOptionalInternal)
 
             // Vanity
-            Bobble01,    
+            Bobble01,    // MUST BE FIRST
             Bobble02,
             Bobble03,
             Bobble04,
@@ -190,32 +188,47 @@ namespace EliteDangerousCore
             ShipName1,
             StringLights,
             VesselVoice,
-            WeaponColour,
-
-            _VanityStart = Bobble01,
-            _VanityEnd = WeaponColour,
-
+            WeaponColour,       // MUST BE LAST
+         
             // srv
-            Turret,
+            Turret, // MUST BE FIRST
             Turret2,        // reported by users
             SineWaveScanner,
-            BuggyCargoHatch,
+            BuggyCargoHatch, // MUST BE LAST
 
-            // fighters
-            ShieldGenerator,     
+            // fighters 
+            ShieldGenerator,     // MUST BE FIRST
             Federation_Fighter_Shield,
             GDN_Hybrid_Fighter_V1_Shield,
             GDN_Hybrid_Fighter_V2_Shield,
             GDN_Hybrid_Fighter_V3_Shield,
-            Independent_Fighter_Shield,
+            Independent_Fighter_Shield, // MUST BE LAST
+
         }
-        public static bool IsVanity(ShipSlots.Slot slot) => slot >= Slot._VanityStart && slot <= Slot._VanityEnd;
+
+        public static bool IsHardpoint(ShipSlots.Slot slot) => slot >= Slot.HugeHardpoint1 && slot <= Slot.SmallHardpoint6;
+        public static bool IsCoreInternal(ShipSlots.Slot slot) => slot >= Slot.Armour && slot <=Slot.DiscoveryScanner;
+        public static bool IsUtility(ShipSlots.Slot slot) => slot >= Slot.TinyHardpoint1 && slot <= Slot.TinyHardpoint8;
+        public static bool IsMilitary(ShipSlots.Slot slot) => slot >= Slot.Military01 && slot <= Slot.Military03;
+        public static bool IsPassenger(ShipSlots.Slot slot) => slot >= Slot.Passenger01 && slot <= Slot.Passenger03;
+        public static bool IsOptionalInternal(ShipSlots.Slot slot) => slot >= Slot.Cargo01 && slot <= Slot.FighterBay01;
+        public static bool IsVanity(ShipSlots.Slot slot) => slot >= Slot.Bobble01 && slot <= Slot.WeaponColour;
+        public static bool IsSRV(ShipSlots.Slot slot) => slot >= Slot.Turret && slot <= Slot.BuggyCargoHatch;
+        public static bool IsFighter(ShipSlots.Slot slot) => slot >= Slot.ShieldGenerator && slot <= Slot.Independent_Fighter_Shield;
+        public static bool HasPriority(ShipSlots.Slot slot) => !IsVanity(slot) && slot != Slot.Armour && !IsFighter(slot) && !IsSRV(slot);
 
         public class SlotAndSize
         {
             public ShipSlots.Slot Slot { get; set; }
+            public bool IsHardpoint => IsHardpoint(Slot);
+            public bool IsUtility => IsUtility(Slot);
+            public bool IsMilitary => IsMilitary(Slot);
+            public bool IsPassenger => IsPassenger(Slot);
+            public bool HasPriority => HasPriority(Slot);
             public int Size { get; set; }      // hardpoints 0 (tiny or N/A) 1 (small), 2 (med), 3 (large), 4 (huge) else size/class of slot
             public SlotAndSize(ShipSlots.Slot slot, int size) { Slot = slot; Size = size; }
+
+            public override string ToString() => $"{Slot}: {Size}";
         }
 
 
