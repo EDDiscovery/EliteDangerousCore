@@ -1205,6 +1205,7 @@ SECTION StarportStates
 .Abandoned: "Abandoned" => "Abandonadas"
 .UnderAttack: "Under Attack" => "Bajo Ataque"
 .Construction: "Construction" => "En Construcción"
+.DamagedHuman: "Damaged Human" @
 
 SECTION StarportTypes
 
@@ -1305,9 +1306,16 @@ SECTION ModulePartNames
 .Fragment_Cannon: "Fragment Cannon" => "Cañón de Fragmentación"
 .Pacifier_Fragment_Cannon: "Pacifier Fragment Cannon" = ModuleTypeNames.Pacifier_Frag_Cannon
 .Cargo_Rack: "Cargo Rack" => "Bodega de Carga"
+.Mk_II_Cargo_Rack: "Mk II Cargo Rack" @
 .Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" => "Bodega de Carga Anticorrosión"
 .Manifest_Scanner: "Manifest Scanner" => "Escáner de Manifiesto"
+.Sub_surface_Extraction_Missile: "Sub surface Extraction Missile" @
+.Anti_Corrosion_Cargo_Rack: "Anti Corrosion Cargo Rack" @
 .Chaff_Launcher: "Chaff Launcher" => "Lanzador de Señuelos"
+.Mk_II_Economy: "Mk II Economy" @
+.Mk_II_Business: "Mk II Business" @
+.Shock_Cannon_MK_II: "Shock Cannon MK II" @
+.Mk_II_Agile_Boost_Engine: "Mk II Agile Boost Engine" @
 .Electronic_Countermeasure: "Electronic Countermeasure" => "Contramedida Electrónica"
 .Heat_Sink_Launcher: "Heat Sink Launcher" => "Lanzador de Eyector Térmico"
 .Caustic_Sink_Launcher: "Caustic Sink Launcher" => "Eyector Cáustico"
@@ -1416,6 +1424,10 @@ SECTION ModulePartNames
 .Lightweight_Alloy_(Default): "Lightweight Alloy (Default)" @
 
 SECTION ShipSlots
+
+.Passenger03: "Passenger Slot 3" @
+.Passenger02: "Passenger Slot 2" @
+.Passenger01: "Passenger Slot 1" @
 
 .Unknown: "Unknown" = Unknown
 .Armour: "Armour" => "Blindaje"
