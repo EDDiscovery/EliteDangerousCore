@@ -660,7 +660,7 @@ namespace EliteDangerousCore
 
             [OrderedPropertyNameAttribute(1000, "cr")] public int? Cost { get; set; }
             [OrderedPropertyNameAttribute(1001, "cr")] public int? AmmoCost { get; set; }
-            [OrderedPropertyNameAttribute(2000, "")] public int FSDNeutronMultiplier => ModuleID == 129038968 ? 6 : 4;  // CASPIAN dodge until we decide, hopefully EDSY, encodes it in a variable
+            [OrderedPropertyNameAttribute(2000, "")] public int? FSDNeutronMultiplier { get; set; }     // Added by EDDTools manually for fsd drives
 
             const double WEAPON_CHARGE = 0.0;
 

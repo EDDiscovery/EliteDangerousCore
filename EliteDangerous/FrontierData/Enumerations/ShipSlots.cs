@@ -215,7 +215,9 @@ namespace EliteDangerousCore
         public static bool IsVanity(ShipSlots.Slot slot) => slot >= Slot.Bobble01 && slot <= Slot.WeaponColour;
         public static bool IsSRV(ShipSlots.Slot slot) => slot >= Slot.Turret && slot <= Slot.BuggyCargoHatch;
         public static bool IsFighter(ShipSlots.Slot slot) => slot >= Slot.ShieldGenerator && slot <= Slot.Independent_Fighter_Shield;
-        public static bool HasPriority(ShipSlots.Slot slot) => !IsVanity(slot) && slot != Slot.Armour && !IsFighter(slot) && !IsSRV(slot);
+        public static bool HasPriority(ShipSlots.Slot slot) => !IsVanity(slot) && slot != Slot.Armour && 
+                                                                slot != Slot.PowerPlant && slot != Slot.PlanetaryApproachSuite && slot != Slot.FuelTank &&
+                                                                !IsFighter(slot) && !IsSRV(slot);
 
         public class SlotAndSize
         {
