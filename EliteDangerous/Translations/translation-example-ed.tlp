@@ -1306,9 +1306,16 @@ SECTION ModulePartNames
 .Fragment_Cannon: "Fragment Cannon" @
 .Pacifier_Fragment_Cannon: "Pacifier Fragment Cannon" @
 .Cargo_Rack: "Cargo Rack" @
+.Mk_II_Cargo_Rack: "Mk II Cargo Rack" @
 .Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" @
 .Manifest_Scanner: "Manifest Scanner" @
+.Sub_surface_Extraction_Missile: "Sub surface Extraction Missile" @
+.Anti_Corrosion_Cargo_Rack: "Anti Corrosion Cargo Rack" @
 .Chaff_Launcher: "Chaff Launcher" @
+.Mk_II_Economy: "Mk II Economy" @
+.Mk_II_Business: "Mk II Business" @
+.Shock_Cannon_MK_II: "Shock Cannon MK II" @
+.Mk_II_Agile_Boost_Engine: "Mk II Agile Boost Engine" @
 .Electronic_Countermeasure: "Electronic Countermeasure" @
 .Heat_Sink_Launcher: "Heat Sink Launcher" @
 .Caustic_Sink_Launcher: "Caustic Sink Launcher" @
