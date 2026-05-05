@@ -16,6 +16,7 @@ using ExtendedControls;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -95,12 +96,23 @@ namespace EliteDangerousCore
             if (startpoint.X + BoxSize.Width > widthavailable)
                 startpoint = new Point(initialx, imageList.Max.Y + BoxSpacing.Height*2);
 
+            var o = DrawState(ship.Other.Where(x=>x.Slot == ShipSlots.Slot.CargoHatch).ToArray(), startpoint, instanceship, tagitems);
+            imageList.AddRange(o);
+            startpoint.Y = o.Max.Y + BoxSpacing.Height * 1;
+
             var m = DrawState(ship.Military, startpoint, instanceship, tagitems);
+            //m = new ExtendedControls.ImageElement.List { };
+            imageList.AddRange(m);
+
             if (m.Count > 0)
             {
                 startpoint.Y = m.Max.Y + BoxSpacing.Height * 2 + BoxSize.Height;
-                imageList.AddRange(m);
             }
+            else if ( o.Count> 0)
+            {
+                startpoint.Y += BoxSpacing.Height * 1 + BoxSize.Height;
+            }
+            
             var u = DrawState(ship.Utility, startpoint, instanceship, tagitems);
             imageList.AddRange(u);
 
@@ -174,6 +186,8 @@ namespace EliteDangerousCore
                                     txt += $"{engmod.Class} ";
                                 if (engmod.Rating != null)
                                     txt += $"{engmod.Rating} ";
+
+                                System.Diagnostics.Debug.Assert(engmod.TranslatedShortModName.Length > 0);
                                 txt += $"{engmod.TranslatedShortModName}";
 
                                 Image hpt = engmod.Mount == "F" ? BaseUtils.Icons.IconSet.GetImage($"Controls.Fixed48") :
@@ -220,7 +234,7 @@ namespace EliteDangerousCore
                                     txt += $"{engmod.PowerDraw:0.0}MW ";
                                 if (DisplayHealth && module.Health.HasValue)
                                     txt += $"{module.Health}% ";
-                                if (DisplayPriority && module.Priority.HasValue && slsz.HasPriority)
+                                if (DisplayPriority && module.Priority.HasValue && engmod.PowerDraw.HasValue && slsz.CanHavePriority)
                                     txt += $"P{module.Priority + 1} ";
 
                                 g.DrawString(txt, Font, textbrushdisabled, toptextarea, fright);

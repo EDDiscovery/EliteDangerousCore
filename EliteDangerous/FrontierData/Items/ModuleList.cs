@@ -1586,8 +1586,8 @@ namespace EliteDangerousCore
 
                 { "hpt_cannon_turret_huge", new ShipModule(-1,ShipModule.ModuleTypes.Cannon,"Cannon Turret Huge" ) },       // withdrawn we think
 
-                { "modularcargobaydoorfdl", new ShipModule(999999907,ShipModule.ModuleTypes.CargoBayDoorType,"FDL Cargo Bay Door" ) },
-                { "modularcargobaydoor", new ShipModule(999999908,ShipModule.ModuleTypes.CargoBayDoorType,"Modular Cargo Bay Door" ) },
+                { "modularcargobaydoorfdl", new ShipModule(999999907,ShipModule.ModuleTypes.CargoBayDoorType,"Cargo Hatch" ){ Class = 1, Rating = "H", PowerDraw = 0.6 } },
+                { "modularcargobaydoor", new ShipModule(999999908,ShipModule.ModuleTypes.CargoBayDoorType,"Cargo Hatch" ) { Class = 1, Rating = "H", PowerDraw = 0.6 }},
 
                 { "hpt_cargoscanner_basic_tiny", new ShipModule(-1,ShipModule.ModuleTypes.CargoScanner,"Manifest Scanner Basic" ) },
 

@@ -51,22 +51,21 @@ namespace EliteDangerousCore
             SmallHardpoint5,        //type8
             SmallHardpoint6,        //MUST BE LAST IN LIST type8
 
-            // core internal
-            Armour,     // MUST BE FIRST
-            PowerPlant,
-            MainEngines,
+            Armour,                 // START OF CORE INTERNAL MUST BE FIRST.
+            PowerPlant,             
+            MainEngines,            
             FrameShiftDrive,
             LifeSupport,
             PowerDistributor,
             Radar,
             FuelTank,
-            CargoHatch, 
-            PlanetaryApproachSuite, // (loadout)
-            ColonisationSuite,  // trailblazers feb 25 (moduleinfo only)
-            LimpetController01, // type 11 prospector sep 25 (loadout)
-            CodexScanner,       // Present in ModulesInfo only
-            DataLinkScanner,    // Present in ModulesInfo only
-            DiscoveryScanner,   // Present in ModulesInfo only  // MUST BE LAST
+            CargoHatch,             
+            PlanetaryApproachSuite, // no priority
+            LimpetController01,     // type 11 prospector sep 25 
+            ColonisationSuite,      // trailblazers feb 25 (moduleinfo only)
+            CodexScanner,           // Present in ModulesInfo only
+            DataLinkScanner,        // Present in ModulesInfo only
+            DiscoveryScanner,       // END OF CORE INTERNAL Present in ModulesInfo only  
 
             // utility mounts
             TinyHardpoint1, // MUST BE FIRST
@@ -207,7 +206,7 @@ namespace EliteDangerousCore
         }
 
         public static bool IsHardpoint(ShipSlots.Slot slot) => slot >= Slot.HugeHardpoint1 && slot <= Slot.SmallHardpoint6;
-        public static bool IsCoreInternal(ShipSlots.Slot slot) => slot >= Slot.Armour && slot <=Slot.DiscoveryScanner;
+        public static bool IsCoreInternal(ShipSlots.Slot slot) => slot >= Slot.Armour && slot <= Slot.DiscoveryScanner;
         public static bool IsUtility(ShipSlots.Slot slot) => slot >= Slot.TinyHardpoint1 && slot <= Slot.TinyHardpoint8;
         public static bool IsMilitary(ShipSlots.Slot slot) => slot >= Slot.Military01 && slot <= Slot.Military03;
         public static bool IsPassenger(ShipSlots.Slot slot) => slot >= Slot.Passenger01 && slot <= Slot.Passenger03;
@@ -215,10 +214,12 @@ namespace EliteDangerousCore
         public static bool IsVanity(ShipSlots.Slot slot) => slot >= Slot.Bobble01 && slot <= Slot.WeaponColour;
         public static bool IsSRV(ShipSlots.Slot slot) => slot >= Slot.Turret && slot <= Slot.BuggyCargoHatch;
         public static bool IsFighter(ShipSlots.Slot slot) => slot >= Slot.ShieldGenerator && slot <= Slot.Independent_Fighter_Shield;
-        public static bool HasPriority(ShipSlots.Slot slot) => !IsVanity(slot) && slot != Slot.Armour && 
-                                                                slot != Slot.PowerPlant && slot != Slot.PlanetaryApproachSuite && slot != Slot.FuelTank &&
-                                                                !IsFighter(slot) && !IsSRV(slot);
 
+        // only modules with power draw have priority, so this is further qualified
+        public static bool CanHavePriority(ShipSlots.Slot slot) => IsHardpoint(slot) || IsCoreInternal(slot) || 
+                                                                  IsOptionalInternal(slot) || IsUtility(slot) || IsMilitary(slot);
+
+        [System.Diagnostics.DebuggerDisplay("{Slot} {Size}")]
         public class SlotAndSize
         {
             public ShipSlots.Slot Slot { get; set; }
@@ -226,7 +227,7 @@ namespace EliteDangerousCore
             public bool IsUtility => IsUtility(Slot);
             public bool IsMilitary => IsMilitary(Slot);
             public bool IsPassenger => IsPassenger(Slot);
-            public bool HasPriority => HasPriority(Slot);
+            public bool CanHavePriority => CanHavePriority(Slot);
             public int Size { get; set; }      // hardpoints 0 (tiny or N/A) 1 (small), 2 (med), 3 (large), 4 (huge) else size/class of slot
             public SlotAndSize(ShipSlots.Slot slot, int size) { Slot = slot; Size = size; }
 

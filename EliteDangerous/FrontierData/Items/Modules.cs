@@ -248,95 +248,102 @@ namespace EliteDangerousCore
                                     "shipkit", "weaponcustomisation", "voicepack" , "lights", "spoiler" , "wings", "bumper"};
             return Array.Find(vlist, x => ifd.Contains(x)) != null;
         }
+
         // called at start up to set up translation of module names
-        static private void TranslateModules()
+        static private void TranslateModule(ShipModule sm)
         {
-            foreach (var kvp in shipmodules)
+            if (sm.ModType == ShipModule.ModuleTypes.LightweightAlloy || sm.ModType == ShipModule.ModuleTypes.ReinforcedAlloy ||
+                sm.ModType == ShipModule.ModuleTypes.MilitaryGradeComposite || sm.ModType == ShipModule.ModuleTypes.MirroredSurfaceComposite ||
+                sm.ModType == ShipModule.ModuleTypes.ReactiveSurfaceComposite)
             {
-                ShipModule sm = kvp.Value;
+                string[] armourdelim = new string[] { "Lightweight", "Reinforced", "Military", "Mirrored", "Reactive" };
+                int index = sm.EnglishModName.IndexOf(armourdelim, out int anum, StringComparison.InvariantCulture);
+                string translated = sm.EnglishModName.Substring(index).Tx();
+                sm.TranslatedModName = sm.EnglishModName.Substring(0, index) + translated;
+                sm.TranslatedShortModName = translated;
+            }
+            else
+            {
+                int cindex = sm.EnglishModName.LastIndexOf(" Class ", StringComparison.InvariantCulture);
+                int rindex = sm.EnglishModName.LastIndexOf(" Rating ", StringComparison.InvariantCulture);
 
-                // this logic breaks down the 
-
-                if (kvp.Key.Contains("_armour_", StringComparison.InvariantCulture))
+                if (cindex != -1 && rindex != -1)
                 {
-                    string[] armourdelim = new string[] { "Lightweight", "Reinforced", "Military", "Mirrored", "Reactive" };
-                    int index = sm.EnglishModName.IndexOf(armourdelim, out int anum, StringComparison.InvariantCulture);
-                    string translated = sm.EnglishModName.Substring(index).Tx();
-                    sm.TranslatedModName = sm.EnglishModName.Substring(0, index) + translated;
+                    int mkiiindex = sm.EnglishModName.IndexOf("Mk II ", StringComparison.InvariantCulture);     // only at start
+
+                    string translated = mkiiindex == 0 ? sm.EnglishModName.Substring(mkiiindex + 6, cindex - 6).Tx() : sm.EnglishModName.Substring(0, cindex).Tx();
+                    string cls = sm.EnglishModName.Substring(cindex + 1, 5).Tx();
+                    string rat = sm.EnglishModName.Substring(rindex + 1, 6).Tx();
+                    if (mkiiindex == 0)
+                        translated = "Mk II " + translated;
+                    sm.TranslatedModName = translated + " " + cls + " " + sm.EnglishModName.Substring(cindex + 7, 1) + " " + rat + " " + sm.EnglishModName.Substring(rindex + 8, 1);
+                    sm.TranslatedShortModName = translated;
+                    //  System.Diagnostics.Debug.WriteLine($"Module {sm.EnglishModName} : {sm.ModType} => `{sm.TranslatedModName}` : `{sm.TranslatedModTypeString()}` : `{sm.TranslatedShortModName}`");
+                }
+                else if (cindex != -1)
+                {
+                    int mkiiindex = sm.EnglishModName.IndexOf("Mk II ", StringComparison.InvariantCulture);     // only at start
+                    string translated = mkiiindex == 0 ? sm.EnglishModName.Substring(mkiiindex + 6, cindex - 6).Tx() : sm.EnglishModName.Substring(0, cindex).Tx();
+                    string cls = sm.EnglishModName.Substring(cindex + 1, 5).Tx();
+                    if (mkiiindex == 0)
+                        translated = "Mk II " + translated;
+                    sm.TranslatedModName = translated + " " + cls + " " + sm.EnglishModName.Substring(cindex + 7, 1);
+                    sm.TranslatedShortModName = translated;
+                    // System.Diagnostics.Debug.WriteLine($"Module {sm.EnglishModName} : {sm.ModType} => `{sm.TranslatedModName}` : `{sm.TranslatedModTypeString()}` : `{sm.TranslatedShortModName}`");
+                }
+                else if (rindex != -1)
+                {
+                    string translated = sm.EnglishModName.Substring(0, rindex).Tx();
+                    string rat = sm.EnglishModName.Substring(rindex + 1, 6).Tx();
+                    sm.TranslatedModName = translated + " " + rat + " " + sm.EnglishModName.Substring(rindex + 8, 1);
                     sm.TranslatedShortModName = translated;
                 }
                 else
                 {
-                    int cindex = sm.EnglishModName.LastIndexOf(" Class ", StringComparison.InvariantCulture);
-                    int rindex = sm.EnglishModName.LastIndexOf(" Rating ", StringComparison.InvariantCulture);
+                    string[] sizes = new string[] { " Small", " Medium", " Large", " Huge", " Tiny", " Standard", " Intermediate", " Advanced" };
+                    int sindex = sm.EnglishModName.IndexOf(sizes, out int snum, StringComparison.InvariantCulture);
 
-                    if (cindex != -1 && rindex != -1)
+                    if (sindex >= 0)
                     {
-                        int mkiiindex = sm.EnglishModName.IndexOf("Mk II ", StringComparison.InvariantCulture);     // only at start
+                        string[] types = new string[] { " Gimbal ", " Fixed ", " Turret " };
+                        int gindex = sm.EnglishModName.IndexOf(types, out int gnum, StringComparison.InvariantCulture);
 
-                        string translated = mkiiindex == 0 ? sm.EnglishModName.Substring(mkiiindex + 6, cindex - 6).Tx() : sm.EnglishModName.Substring(0, cindex).Tx();
-                        string cls = sm.EnglishModName.Substring(cindex + 1, 5).Tx();
-                        string rat = sm.EnglishModName.Substring(rindex + 1, 6).Tx();
-                        if (mkiiindex == 0)
-                            translated = "Mk II " + translated;
-                        sm.TranslatedModName = translated + " " + cls + " " + sm.EnglishModName.Substring(cindex + 7, 1) + " " + rat + " " + sm.EnglishModName.Substring(rindex + 8, 1);
-                        sm.TranslatedShortModName = translated;
-                     //  System.Diagnostics.Debug.WriteLine($"Module {sm.EnglishModName} : {sm.ModType} => `{sm.TranslatedModName}` : `{sm.TranslatedModTypeString()}` : `{sm.TranslatedShortModName}`");
-                    }
-                    else if (cindex != -1)
-                    {
-                        int mkiiindex = sm.EnglishModName.IndexOf("Mk II ", StringComparison.InvariantCulture);     // only at start
-                        string translated = mkiiindex == 0 ? sm.EnglishModName.Substring(mkiiindex + 6, cindex - 6).Tx() : sm.EnglishModName.Substring(0, cindex).Tx();
-                        string cls = sm.EnglishModName.Substring(cindex + 1, 5).Tx();
-                        if (mkiiindex == 0)
-                            translated = "Mk II " + translated;
-                        sm.TranslatedModName = translated + " " + cls + " " + sm.EnglishModName.Substring(cindex + 7, 1);
-                        sm.TranslatedShortModName = translated;
-                       // System.Diagnostics.Debug.WriteLine($"Module {sm.EnglishModName} : {sm.ModType} => `{sm.TranslatedModName}` : `{sm.TranslatedModTypeString()}` : `{sm.TranslatedShortModName}`");
-                    }
-                    else if (rindex != -1)
-                    {
-                        string translated = sm.EnglishModName.Substring(0, rindex).Tx();
-                        string rat = sm.EnglishModName.Substring(rindex + 1, 6).Tx();
-                        sm.TranslatedModName = translated + " " + rat + " " + sm.EnglishModName.Substring(rindex + 8, 1);
-                        sm.TranslatedShortModName = translated;
-                    }
-                    else
-                    {
-                        string[] sizes = new string[] { " Small", " Medium", " Large", " Huge", " Tiny", " Standard", " Intermediate", " Advanced" };
-                        int sindex = sm.EnglishModName.IndexOf(sizes, out int snum, StringComparison.InvariantCulture);
-
-                        if (sindex >= 0)
+                        if (gindex >= 0)
                         {
-                            string[] types = new string[] { " Gimbal ", " Fixed ", " Turret " };
-                            int gindex = sm.EnglishModName.IndexOf(types, out int gnum, StringComparison.InvariantCulture);
+                            string translated = sm.EnglishModName.Substring(0, gindex).Tx();
+                            string typen = sm.EnglishModName.Substring(gindex + 1, types[gnum].Length - 2).Tx();
+                            string sizen = sm.EnglishModName.Substring(sindex + 1, sizes[snum].Length - 1).Tx();
+                            sm.TranslatedModName = translated + " " + typen + " " + sizen;
+                            sm.TranslatedShortModName = translated;
 
-                            if (gindex >= 0)
-                            {
-                                string translated = sm.EnglishModName.Substring(0, gindex).Tx();
-                                string typen = sm.EnglishModName.Substring(gindex + 1, types[gnum].Length - 2).Tx();
-                                string sizen = sm.EnglishModName.Substring(sindex + 1, sizes[snum].Length - 1).Tx();
-                                sm.TranslatedModName = translated + " " + typen + " " + sizen;
-                                sm.TranslatedShortModName = translated;
-
-                            }
-                            else
-                            {
-                                string translated = sm.EnglishModName.Substring(0, sindex).Tx();
-                                string sizen = sm.EnglishModName.Substring(sindex + 1, sizes[snum].Length - 1).Tx();
-                                sm.TranslatedModName = translated + " " + sizen;
-                                sm.TranslatedShortModName = translated;
-                            }
                         }
                         else
                         {
-                            sm.TranslatedShortModName = sm.TranslatedModName = sm.EnglishModName.Tx();
-                            //System.Diagnostics.Debug.WriteLine($"?? {kvp.Key} = {sm.ModName}");
+                            string translated = sm.EnglishModName.Substring(0, sindex).Tx();
+                            string sizen = sm.EnglishModName.Substring(sindex + 1, sizes[snum].Length - 1).Tx();
+                            sm.TranslatedModName = translated + " " + sizen;
+                            sm.TranslatedShortModName = translated;
                         }
                     }
+                    else
+                    {
+                        sm.TranslatedShortModName = sm.TranslatedModName = sm.EnglishModName.Tx();
+                        //System.Diagnostics.Debug.WriteLine($"?? {kvp.Key} = {sm.ModName}");
+                    }
                 }
+            }
 
-                
+            //System.Diagnostics.Debug.WriteLine($"Module {sm.EnglishModName} : {sm.ModType} => `{sm.TranslatedModName}` : `{sm.TranslatedModTypeString()}` : `{sm.TranslatedShortModName}`");
+            //System.Diagnostics.Debug.Assert(sm.TranslatedShortModName.Length > 0);
+        }
+        static private void TranslateModules()
+        {
+            foreach (var kvp in shipmodules)
+                TranslateModule(kvp.Value);
+            foreach (var kvp in othershipmodules)
+            {
+                if ( kvp.Value.ModType == ShipModule.ModuleTypes.CargoBayDoorType)
+                    TranslateModule(kvp.Value);
             }
         }
 
@@ -752,7 +759,7 @@ namespace EliteDangerousCore
             }
             public ShipModule(int id, ModuleTypes modtype, string descr)
             {
-                ModuleID = id; TranslatedModName = EnglishModName = descr; ModType = modtype;
+                ModuleID = id; TranslatedShortModName = TranslatedModName = EnglishModName = descr; ModType = modtype;
             }
 
             public ShipModule(ShipModule other)

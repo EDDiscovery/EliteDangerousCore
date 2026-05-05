@@ -258,7 +258,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 1)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties cobramkiii = new ShipProperties()
@@ -289,7 +289,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties empire_trader = new ShipProperties()
@@ -320,7 +320,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties federation_dropship = new ShipProperties()
@@ -351,7 +351,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 4)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties python = new ShipProperties()
@@ -382,7 +382,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties anaconda = new ShipProperties()
@@ -413,7 +413,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot13_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot14_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 5)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties empire_courier = new ShipProperties()
@@ -444,7 +444,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 3)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties cobramkiv = new ShipProperties()
@@ -475,7 +475,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties typex = new ShipProperties()
@@ -506,7 +506,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military03, 4)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties typex_2 = new ShipProperties()
@@ -537,7 +537,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military03, 4)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties krait_light = new ShipProperties()
@@ -568,7 +568,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties mamba = new ShipProperties()
@@ -599,7 +599,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 3)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties typex_3 = new ShipProperties()
@@ -630,7 +630,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military03, 4)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties krait_mkii = new ShipProperties()
@@ -661,7 +661,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties python_nx = new ShipProperties()
@@ -692,7 +692,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties cobramkv = new ShipProperties()
@@ -723,7 +723,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties corsair = new ShipProperties()
@@ -754,7 +754,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties eagle = new ShipProperties()
@@ -785,7 +785,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 2)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 2)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties viper = new ShipProperties()
@@ -816,7 +816,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 2)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 3)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties vulture = new ShipProperties()
@@ -847,7 +847,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 3)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 5)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties ferdelance = new ShipProperties()
@@ -878,7 +878,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 3)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties empire_eagle = new ShipProperties()
@@ -909,7 +909,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 2)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 2)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties federation_dropship_mkii = new ShipProperties()
@@ -940,7 +940,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 4)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties federation_gunship = new ShipProperties()
@@ -971,7 +971,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military03, 4)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties viper_mkiv = new ShipProperties()
@@ -1002,7 +1002,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 3)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties smallcombat01_nx = new ShipProperties()
@@ -1033,7 +1033,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 4)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties hauler = new ShipProperties()
@@ -1064,7 +1064,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 2)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties type6 = new ShipProperties()
@@ -1095,7 +1095,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties type7 = new ShipProperties()
@@ -1126,7 +1126,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size5, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size4, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size4, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties type9 = new ShipProperties()
@@ -1157,7 +1157,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 6)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot00_Size8, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size8, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot11_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot12_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties independant_trader = new ShipProperties()
@@ -1188,7 +1188,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties type9_military = new ShipProperties()
@@ -1219,7 +1219,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 6)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size8, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot11_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot12_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 5)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties type8 = new ShipProperties()
@@ -1250,7 +1250,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties lakonminer = new ShipProperties()
@@ -1281,7 +1281,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LimpetController01, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FighterBay01, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties adder = new ShipProperties()
@@ -1312,7 +1312,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 3)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties asp = new ShipProperties()
@@ -1343,7 +1343,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties diamondback = new ShipProperties()
@@ -1374,7 +1374,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties diamondbackxl = new ShipProperties()
@@ -1405,7 +1405,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties asp_scout = new ShipProperties()
@@ -1436,7 +1436,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size4, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties mandalay = new ShipProperties()
@@ -1467,7 +1467,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties explorer_nx = new ShipProperties()
@@ -1498,7 +1498,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 7)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot11_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot12_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot13_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot14_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties orca = new ShipProperties()
@@ -1529,7 +1529,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties belugaliner = new ShipProperties()
@@ -1560,7 +1560,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 7)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot11_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot12_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties dolphin = new ShipProperties()
@@ -1591,7 +1591,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 4)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties federation_corvette = new ShipProperties()
@@ -1622,7 +1622,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot11_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 5)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties cutter = new ShipProperties()
@@ -1653,7 +1653,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 6)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size8, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size8, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Military01, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Military02, 5)}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         private static ShipProperties panthermkii = new ShipProperties()
@@ -1684,7 +1684,7 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 7)}, 
             Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Cargo01, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size8, 8), new ShipSlots.SlotAndSize(ShipSlots.Slot.Cargo02, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size7, 7), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size6, 6), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size5, 5), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size4, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot09_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot10_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
-            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,0)}, 
+            Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
         // EDSY END
@@ -1749,7 +1749,7 @@ namespace EliteDangerousCore
                 },
             Military = new ShipSlots.SlotAndSize[] { },
 
-            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit, 0) },
+            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit, 1) },
 
         };
         
