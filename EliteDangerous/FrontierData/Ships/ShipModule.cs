@@ -47,6 +47,7 @@ namespace EliteDangerousCore
             if (Enabled.HasValue)
                 pe += Enabled.Value ? "E" : "D";
 
+           // System.Diagnostics.Debug.WriteLine($"ShipModule Enable {SlotFD} {ItemFD} {Enabled}");
             return pe;
         }
 
@@ -123,6 +124,15 @@ namespace EliteDangerousCore
             Value = value;
             Power = power;
             Engineering = engineering;
+        }
+
+        public void SetPriority(int priority)
+        {
+            Priority = priority;
+        }
+        public void SetEnabled(bool enabled)
+        {
+            Enabled = enabled;
         }
 
         public ShipModule( ShipModule other)

@@ -650,7 +650,7 @@ namespace EliteDangerousCore.JournalEvents
 
     [System.Diagnostics.DebuggerDisplay("{ShipId} {Ship} {ShipModules.Count}")]
     [JournalEntryType(JournalTypeEnum.ModuleInfo)]
-    public class JournalModuleInfo : JournalEntry, IAdditionalFiles
+    public class JournalModuleInfo : JournalEntry, IAdditionalFiles, IShipInformation
     {
         public JournalModuleInfo(JObject evt) : base(evt, JournalTypeEnum.ModuleInfo)
         {
@@ -686,7 +686,6 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
         }
-
         public void ReadAdditionalFiles(string directory)
         {
             JObject jnew = ReadAdditionalFile(System.IO.Path.Combine(directory, "ModulesInfo.json"), EventTypeStr);
@@ -699,6 +698,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public List<ShipModule> ShipModules;
 
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
+        {
+            shp.ModuleInfo(ShipModules);
+        }
+
+
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("Modules".Tx()+": ", ShipModules.Count);
@@ -710,9 +715,9 @@ namespace EliteDangerousCore.JournalEvents
 
             foreach (ShipModule m in ShipModules)
             {
-                double? power = (m.Power.HasValue && m.Power.Value > 0) ? m.Power : null;
+                int? priority = m.Priority.HasValue ? (m.Priority.Value+1) : default(int?);
                 sb.AppendCR();
-                sb.Build("", ShipSlots.ToLocalisedLanguage(m.SlotFD), "<: ", JournalFieldNaming.GetForeignModuleName(m.ItemFD, m.LocalisedItem), "; MW;0.###", power);
+                sb.Build("", ShipSlots.ToLocalisedLanguage(m.SlotFD), "<: ", JournalFieldNaming.GetForeignModuleName(m.ItemFD, m.LocalisedItem), "; MW;0.###", m.Power, "P:", priority);
             }
 
             return sb.ToString();

@@ -379,6 +379,11 @@ namespace EliteDangerousCore
             public double WeaponAmmoDuration { get; set; }
             public double WeaponCurSus { get; set; }
             public double WeaponMaxSus { get; set; }
+
+            public double? PowerPlant { get; set; }      // mw null if no power plant
+            public double PowerDrawCore { get; set; }   // mw
+            public double PowerDrawWeapons { get; set; } // mw
+            public double PowerDrawTotal { get; set; }  // mw
         }
 
         // derived (nicked) from EDSY thank you
@@ -421,6 +426,7 @@ namespace EliteDangerousCore
                 double ammotime_wepcap = double.PositiveInfinity;
                 double ammotime_nocap = double.PositiveInfinity;
                 
+                // EDSY::updateStats
 
                 ItemData.ShipModule powerdistributorengineered = GetShipModulePropertiesEngineered(ShipSlots.Slot.PowerDistributor); // may be null
                 double wepcap = powerdistributorengineered?.WeaponsCapacity ?? 10;      // set a minimum so does not except if PD not there
@@ -477,8 +483,15 @@ namespace EliteDangerousCore
                         if (me.ModType == ItemData.ShipModule.ModuleTypes.GuardianShieldReinforcement) // shieldrnf
                             shieldrnf += me.AdditionalReinforcement.Value;
 
+                        double powerdraw = modkvp.Value.Enabled == true ? (me.PowerDraw ?? 0) : 0;
+
+                        if (me.ModType == ItemData.ShipModule.ModuleTypes.PowerPlant)
+                            res.PowerPlant = me.PowerGen.Value;
+
                         if (me.IsHardpoint)
                         {
+                            res.PowerDrawWeapons += powerdraw;
+
                             var thmload = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermalLoad), 1);      // should always be there
                             var distdraw = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.DistributorDraw), 1);// should always be there
                             var ammoclip = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.Clip), 0);       // if weapon does not have limits, is 0
@@ -494,7 +507,7 @@ namespace EliteDangerousCore
                             var sfpc = me.getEffectiveAttrValue("sfpc");
                             var sdps = me.getEffectiveAttrValue("sdps");
 
-                            System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: {thmload} {distdraw} {ammoclip} {ammomax} eps {eps} seps {seps} spc {spc} sspc {sspc} sfpc {sfpc} sdps {sdps}");
+                           // System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: {thmload} {distdraw} {ammoclip} {ammomax} eps {eps} seps {seps} spc {spc} sspc {sspc} sfpc {sfpc} sdps {sdps}");
 
                             thmload *= sfpc / sspc;
                             thmload_hardpoint_wepfull += getEffectiveWeaponThermalLoad(thmload, distdraw, wepcap, 1.0);
@@ -526,10 +539,19 @@ namespace EliteDangerousCore
                                 ammotime_nocap = Math.Min(ammotime_nocap, ammotime);
                             }
                         }
+                        else
+                        {
+                            res.PowerDrawCore += powerdraw;
+                        }
+
+                        //System.Diagnostics.Debug.WriteLine($"Power Draw {me.EnglishModName} {modkvp.Value.Enabled} {powerdraw} : core {res.PowerDrawCore} dep {res.PowerDrawWeapons} both {res.PowerDrawCore+res.PowerDrawWeapons}");
 
                         //System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: nodistdraw {dps_nodistdraw} {dps_distdraw} {ammotime_wepcap} {ammotime_nocap}");
                     }
                 }
+
+                res.PowerDrawTotal = res.PowerDrawCore + res.PowerDrawWeapons;
+
 
                 var armourmoduleengineered = GetShipModulePropertiesEngineered(ShipSlots.Slot.Armour);
                 if (armourmoduleengineered != null)
@@ -551,7 +573,6 @@ namespace EliteDangerousCore
                     res.ArmourCausticValue = res.ArmourRaw.Value / (1 - res.ArmourCausticPercentage / 100);
 
                 }
-
 
                 var shieldlist = FindShipModules(x => x.GetModuleUnengineered()?.IsShieldGenerator ?? false); // allow get module unengineered to fail, slots with shields 
                 ItemData.ShipModule shieldmoduleengineered = shieldlist.Length == 1 ? GetShipModulePropertiesEngineered(shieldlist[0]) : null;

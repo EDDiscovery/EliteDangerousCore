@@ -131,6 +131,33 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
+        public void ModuleInfo(List<ShipModule> ShipModules)
+        {
+            if (CurrentShip != null && ShipModules != null)
+            {
+                Ship newsm = null;       // if we change anything, we need a new clone..
+                string sid = Key(CurrentShip.ShipFD, CurrentShip.ID);
+
+                foreach (ShipModule shipModule in ShipModules)
+                {
+                    // if priority has changed
+
+                    if (shipModule.Priority != null && CurrentShip.Modules.TryGetValue(shipModule.SlotFD, out ShipModule sm) && sm.Priority != shipModule.Priority)
+                    {
+                        if (newsm == null)              // if not cloned
+                        {
+                            newsm = CurrentShip.ShallowClone();  // we need a clone, pointing to the same modules, but with a new dictionary
+                            Ships[sid] = newsm;              // update our record of last module list for this ship
+                        }
+
+                        sm.SetPriority(shipModule.Priority.Value);
+                        System.Diagnostics.Debug.WriteLine($"Module Info reset ship priority {sm.ItemFD} to {shipModule.Priority.Value}");
+                    }
+                }
+            }
+        }
+
+
         public void LoadGame(ulong id, string ship, string shipfd, string name, string ident, double fuellevel, double fueltotal)        // LoadGame..
         {
             string sid = Key(shipfd, id);

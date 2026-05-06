@@ -543,7 +543,7 @@ namespace EliteDangerousCore.StarScan2
                             BodyParent.AreParentsSame(Scan.Parents, sc.Parents).Assert("StarScan Set Scan noted parents list changed on new scan - whats up Frontier!");
                         }
 
-                        System.Diagnostics.Debug.WriteLine($"SetScan overwrite previous scan with previous parents {sc.BodyName}");
+                        //System.Diagnostics.Debug.WriteLine($"SetScan overwrite previous scan with previous parents {sc.BodyName}");
                         sc.ResetParents(Scan.Parents);      // copy parents across to new scan, so we don't loose the barycentre info - bug found during testing 
                     }
 

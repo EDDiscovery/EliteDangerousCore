@@ -176,6 +176,7 @@ namespace EliteDangerousCore
                             text += "M";
                         g.DrawString(text, Font, textbrush, slottypearea, ftext);
                     }
+
                     using (StringFormat fleft = new StringFormat() { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center })
                     {
                         if (module != null)
@@ -204,7 +205,7 @@ namespace EliteDangerousCore
                                 g.DrawString(txt, Font, textbrush, new Rectangle(xoff, midtextarea.Y, midtextarea.Width - xoff, midtextarea.Height), fleft);
                             }
                             // use Module.engineering.Build() for tooltip
-                            System.Diagnostics.Debug.WriteLine($"Module {engmod.EnglishModName} in {slsz.Slot} : `{engmod.TranslatedShortModName}` vs `{engmod.TranslatedModName}` P{module.Priority} {module.Health}%");
+                            //System.Diagnostics.Debug.WriteLine($"Module {engmod.EnglishModName} in {slsz.Slot} : `{engmod.TranslatedShortModName}` vs `{engmod.TranslatedModName}` P{module.Priority} {module.Health}%");
 
                             if (module.Engineering != null)
                             {
@@ -214,12 +215,6 @@ namespace EliteDangerousCore
                                 xoff += iconsize + 2;
                                 string txt = $"{module.Engineering.Level}: {module.Engineering.FriendlyBlueprintName}";
                                 g.DrawString(txt, Font, textbrush, new Rectangle(xoff, bottextarea.Y, bottextarea.Width - xoff, bottextarea.Height), fleft);
-                            }
-
-                            if (module.Enabled == true)
-                            {
-                                var ei = BaseUtils.Icons.IconSet.GetImage($"Controls.PowerOn48");
-                                g.DrawImage(ei, new Rectangle(rightsplit, toptextarea.Height / 2 - iconsize / 2, iconsize, iconsize), new Rectangle(0, 0, ei.Width, ei.Height), GraphicsUnit.Pixel);
                             }
 
                             using (StringFormat fright = new StringFormat() { Alignment = StringAlignment.Far, LineAlignment = StringAlignment.Center })
@@ -272,10 +267,22 @@ namespace EliteDangerousCore
                 }
 
                 // image tag for clicking on is the slot ID
-                object tag = null;
+                object boxtag = null;
+                object enabletag = null;
                 if (tagitems)
-                    tag = slsz.Slot;
-                il.Add(new ExtendedControls.ImageElement.Element(new Rectangle(startpoint,BoxSize), bmp, tag, tooltip));
+                {
+                    boxtag = slsz.Slot;
+                    enabletag = module;
+                }
+
+                il.Add(new ExtendedControls.ImageElement.Element(new Rectangle(startpoint, BoxSize), bmp, boxtag, tooltip));
+
+                if (module?.Enabled != null )
+                {
+                    var ei = BaseUtils.Icons.IconSet.GetImage(module.Enabled == true ? "Controls.PowerOn48" : "Controls.PowerOff48");
+                    il.Add(new ExtendedControls.ImageElement.Element(new Rectangle(startpoint.X + rightsplit, startpoint.Y + toptextarea.Height / 2 - iconsize / 2, iconsize, iconsize),
+                                ei, enabletag, "Click to power on/off manually", false));
+                }
 
                 startpoint.Y += boxarea.Height + BoxSpacing.Height;
             }
