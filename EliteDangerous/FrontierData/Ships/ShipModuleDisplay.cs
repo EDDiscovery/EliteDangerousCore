@@ -48,17 +48,27 @@ namespace EliteDangerousCore
 
         #region Implementation
 
-        public void DrawRender(ExtPictureBox imagebox, ItemData.ShipProperties ship, Ship instanceship, int widthavailable = 1920, string titletext = null )
+        // output the image to a bitmap
+        public Bitmap CreateBitMap(ItemData.ShipProperties ship, Ship instance, int width = 1920, Point? startpoint = null, string title = null)
         {
-            imagebox.ClearImageList();
-            var list = CreateImages(ship, instanceship, new Point(0, 0), widthavailable, titletext);
-            imagebox.AddRange(list);
-            imagebox.Render();
+            var il = CreateImages(ship, instance, startpoint ?? Point.Empty, width, title);
+            var bmp = il.Paint(Color.Transparent);
+            return bmp;
+        }
+
+        // output the image to a file (or just create it if path=null)
+        public void WriteFile(string path, ItemData.ShipProperties ship, Ship instance, int width = 1920, Point? startpoint = null, string title = null)
+        {
+            using (Bitmap bmp = CreateBitMap(ship, instance, width, startpoint ?? Point.Empty, title))
+            {
+                bmp.Save(path);
+            }
         }
 
         // draw ship
         // shipinstance can be null if you don't have a ship
-        public ExtendedControls.ImageElement.List CreateImages(ItemData.ShipProperties ship, Ship instanceship, Point startpoint, int widthavailable = 1920, string titletext = null, bool tagitems=true)
+        public ExtendedControls.ImageElement.List CreateImages(ItemData.ShipProperties ship, Ship instanceship, Point startpoint, int widthavailable = 1920, 
+                            string titletext = null, bool tagboxes=true , bool tagonoffbuttons = true)
         {
             System.Diagnostics.Debug.Assert(Font != null);
             System.Diagnostics.Debug.Assert(!BoxSize.IsEmpty);
@@ -78,29 +88,29 @@ namespace EliteDangerousCore
 
             int initialx = startpoint.X;
 
-            var h = DrawState(ship.Hardpoints, startpoint ,instanceship, tagitems);
+            var h = DrawState(ship.Hardpoints, startpoint ,instanceship, tagboxes, tagonoffbuttons);
             imageList.AddRange(h);
             startpoint.X += BoxSize.Width + BoxSpacing.Width;
             if (startpoint.X + BoxSize.Width > widthavailable)
                 startpoint = new Point(initialx, imageList.Max.Y + BoxSpacing.Height*2);
 
-            var c = DrawState(ship.Component, startpoint, instanceship, tagitems);
+            var c = DrawState(ship.Component, startpoint, instanceship, tagboxes, tagonoffbuttons);
             imageList.AddRange(c);
             startpoint.X += BoxSize.Width + BoxSpacing.Width;
             if (startpoint.X + BoxSize.Width > widthavailable)
                 startpoint = new Point(initialx, imageList.Max.Y + BoxSpacing.Height*2);
 
-            var i = DrawState(ship.Internal, startpoint, instanceship, tagitems);
+            var i = DrawState(ship.Internal, startpoint, instanceship, tagboxes, tagonoffbuttons);
             imageList.AddRange(i);
             startpoint.X += BoxSize.Width + BoxSpacing.Width;
             if (startpoint.X + BoxSize.Width > widthavailable)
                 startpoint = new Point(initialx, imageList.Max.Y + BoxSpacing.Height*2);
 
-            var o = DrawState(ship.Other.Where(x=>x.Slot == ShipSlots.Slot.CargoHatch).ToArray(), startpoint, instanceship, tagitems);
+            var o = DrawState(ship.Other.Where(x=>x.Slot == ShipSlots.Slot.CargoHatch).ToArray(), startpoint, instanceship, tagboxes, tagonoffbuttons);
             imageList.AddRange(o);
             startpoint.Y = o.Max.Y + BoxSpacing.Height * 1;
 
-            var m = DrawState(ship.Military, startpoint, instanceship, tagitems);
+            var m = DrawState(ship.Military, startpoint, instanceship, tagboxes, tagonoffbuttons);
             //m = new ExtendedControls.ImageElement.List { };
             imageList.AddRange(m);
 
@@ -113,7 +123,7 @@ namespace EliteDangerousCore
                 startpoint.Y += BoxSpacing.Height * 1 + BoxSize.Height;
             }
             
-            var u = DrawState(ship.Utility, startpoint, instanceship, tagitems);
+            var u = DrawState(ship.Utility, startpoint, instanceship, tagboxes, tagonoffbuttons);
             imageList.AddRange(u);
 
             return imageList;
@@ -121,7 +131,7 @@ namespace EliteDangerousCore
 
         // Draw slots in Array
         // shipinstance can be null if you don't have a ship
-        private ExtendedControls.ImageElement.List DrawState(ShipSlots.SlotAndSize[] array, Point startpoint, Ship shipinstance, bool tagitems)
+        private ExtendedControls.ImageElement.List DrawState(ShipSlots.SlotAndSize[] array, Point startpoint, Ship shipinstance, bool tagboxes, bool tagonoffbutton)
         {
             ExtendedControls.ImageElement.List il = new ExtendedControls.ImageElement.List();
 
@@ -268,12 +278,11 @@ namespace EliteDangerousCore
 
                 // image tag for clicking on is the slot ID
                 object boxtag = null;
-                object enabletag = null;
-                if (tagitems)
-                {
+                object onoffbutton = null;
+                if (tagboxes)
                     boxtag = slsz.Slot;
-                    enabletag = module;
-                }
+                if ( tagonoffbutton)
+                    onoffbutton = module;
 
                 il.Add(new ExtendedControls.ImageElement.Element(new Rectangle(startpoint, BoxSize), bmp, boxtag, tooltip));
 
@@ -281,31 +290,13 @@ namespace EliteDangerousCore
                 {
                     var ei = BaseUtils.Icons.IconSet.GetImage(module.Enabled == true ? "Controls.PowerOn48" : "Controls.PowerOff48");
                     il.Add(new ExtendedControls.ImageElement.Element(new Rectangle(startpoint.X + rightsplit, startpoint.Y + toptextarea.Height / 2 - iconsize / 2, iconsize, iconsize),
-                                ei, enabletag, "Click to power on/off manually", false));
+                                ei, onoffbutton, "Click to power on/off manually", false));
                 }
 
                 startpoint.Y += boxarea.Height + BoxSpacing.Height;
             }
 
             return il;
-        }
-
-        // output the image to a file (or just create it if path=null)
-        public static void DrawToFile(string path, ItemData.ShipProperties ship, Ship instance, int width = 1920 , string title = null)
-        {
-            ShipModuleDisplay md = new ShipModuleDisplay();
-            md.Font = new System.Drawing.Font("Arial", 8);
-            md.FontLarge = new System.Drawing.Font("Arial", 12);
-
-            var il = md.CreateImages(ship, instance, new Point(0,0), width, title);
-
-            if ( path != null )
-            {
-                using (var bmp = il.Paint(Color.AliceBlue))
-                {
-                    bmp.Save(path);
-                }
-            }
         }
 
         #endregion
