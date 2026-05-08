@@ -340,7 +340,7 @@ namespace EliteDangerousCore.JournalEvents
                     m.Normalise();
             }
 
-            FactionEffects = evt["FactionEffects"]?.ToObjectQ<FactionEffectsEntry[]>();      // NEEDS TEST
+            FactionEffects = evt["FactionEffects"]?.ToObjectQ<FactionEffectsEntry[]>();   
             foreach( var fee in FactionEffects.EmptyIfNull())
             {
                 foreach (var et in fee.Effects.EmptyIfNull())
@@ -352,7 +352,8 @@ namespace EliteDangerousCore.JournalEvents
                     else
                     {
                         //$#MinorFaction; has improved in the $#System; system.
-                        et.Effect_Localised = et.Effect_Localised.Replace("$#MinorFaction;", fee.Faction).Replace("$#System;", DestinationSystem ?? "Unknown System");
+                        et.Effect_Localised = et.Effect_Localised.Replace("$#MinorFaction;", fee.Faction); 
+                        // TBC.Replace("$#System;", DestinationSystem ?? "Unknown System"); removed can't find a way of replacing this
                     }
                     //System.Diagnostics.Debug.WriteLine($"{et.Effect} : {et.Effect_Localised} : {et.Trend}");
                 }
@@ -536,6 +537,8 @@ namespace EliteDangerousCore.JournalEvents
                     string effects = "";
                     foreach (var x in FactionEffects[i].Effects)
                     {
+                        //do some sort of lookup on $#system.. influence.systemaddress has the system address name
+
                         effects = effects.AppendPrePad(x.Effect_Localised + " (" + x.Trend.SplitCapsWord() + ")", ", ");
                     }
 

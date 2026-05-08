@@ -75,11 +75,17 @@ namespace EliteDangerousCore
 
         public TravelStateType TravelState { get; private set; } = TravelStateType.Unknown;  // travel state
 
-        // last jump into the system, FSDJump or Carrier. Contains system info
+        // last jump into the system, FSDJump or CarrierJump. Contains system info
         public JournalLocOrJump LastFSDJump { get; private set; }                // MAY BE NULL
 
-        // the current location, Journal Location, SupercruiseExit, FSDJump, CarrierJump, Docked, ApproachBody, ApproachSettlement
-        // For all, it does not imply the travel state, as we hold the best location even if you change modes, such as disembark at a planetary port or starport
+        // the current location, journal events:
+        //  Location
+        //  FSDJump, CarrierJump
+        //  ApproachBody
+        //  ApproachSettlement
+        //  SupercruiseExit (generating 
+        //  Docked
+        //  For all, it does not imply the travel state, as we hold the best location even if you change modes, such as disembark at a planetary port or starport
         public IBodyFeature CurrentLocation { get; private set; }               // MAY BE NULL
         public string WhereAmI => CurrentLocation?.Name_Localised ?? CurrentLocation?.BodyName ?? CurrentLocation?.StarSystem ?? "Unknown";
         public double? Latitude => CurrentLocation?.Latitude;
