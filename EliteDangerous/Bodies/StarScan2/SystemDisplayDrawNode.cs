@@ -439,7 +439,7 @@ namespace EliteDangerousCore.StarScan2
                         float ii = nodeimage.CentralImageIntensity();
                         Color text = ii > 0.3f ? Color.Black : Color.FromArgb(255, 200, 200, 200);
 
-                        using (Font f = new Font(Font.Name, size.Width / 5.0f))
+                        using (Font f = FontLoader.GetFont(Font.Name, size.Width / 5.0f))
                         {
                             using (Brush b = new SolidBrush(text))
                             {
