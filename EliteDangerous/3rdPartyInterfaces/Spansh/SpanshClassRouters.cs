@@ -422,16 +422,18 @@ namespace EliteDangerousCore.Spansh
                         if (jumps > 1)
                             notes = notes.AppendPrePad("Jumps:" + jumps.ToString("D"), Environment.NewLine);
 
-                        long total = 0;
+                        long totalmapping = 0;
+                        long totalscan = 0;
+                        long totallandmarks = 0;
 
                         foreach (var ib in sys["bodies"].EmptyIfNull())
                         {
                             string fb = FieldBuilder.Build("", ib["name"].StrNull().ReplaceIfStartsWith(name),
                                                        "", ib["subtype"].StrNull(),
-                                                       "Distance: ;ls;N1", ib["distance_to_arrival"].DoubleNull(),
-                                                       "Map Value: ", ib["estimated_mapping_value"].LongNull(),
-                                                       "Scan Value: ", ib["estimated_scan_value"].LongNull(),
-                                                       "Landmark Value: ", ib["landmark_value"].LongNull());
+                                                       "Distance: ; ls;N1", ib["distance_to_arrival"].DoubleNull(),
+                                                       "Map Value: ; cr;N0", ib["estimated_mapping_value"].LongNull(),
+                                                       "Scan Value: ; cr;N0", ib["estimated_scan_value"].LongNull(),
+                                                       "Landmark Value: ; cr;N0", ib["landmark_value"].LongNull());
 
                             notes = notes.AppendPrePad(fb, Environment.NewLine);
 
@@ -440,15 +442,21 @@ namespace EliteDangerousCore.Spansh
                                 string lms = FieldBuilder.Build("", lm["type"].StrNull(),
                                                            "", lm["subtype"].StrNull(),
                                                            "x ", lm["count"].IntNull(),
-                                                           "Value:", lm["value"].IntNull());
+                                                           "Value: ; cr;N0", lm["value"].IntNull());
 
                                 notes = notes.AppendPrePad(lms, Environment.NewLine);
                             }
 
-                            total += ib["estimated_mapping_value"].Long() + ib["estimated_scan_value"].Long() + ib["landmark_value"].Long();
+                            totalmapping += ib["estimated_mapping_value"].Long();
+                            totalscan += ib["estimated_scan_value"].Long();
+                            totallandmarks += ib["landmark_value"].Long();
                         }
 
-                        notes = notes.AppendPrePad("Total:" + total.ToString("D"), Environment.NewLine);
+                        string totals = FieldBuilder.Build("Total mapping: ; cr;N0", totalmapping,
+                                                           "Total scan: ; cr;N0", totalscan,
+                                                           "Total landmarks: ; cr;N0", totallandmarks,
+                                                           "Possible maximum: ; cr;N0", totalmapping + totallandmarks);
+                        notes = notes.AppendPrePad(totals, Environment.NewLine);
 
                         var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
                         sc.Tag = notes;
@@ -533,19 +541,23 @@ namespace EliteDangerousCore.Spansh
                     double z = sys["z"].Double();
                     int jumps = sys["jumps"].Int();
                     string notes = "Jumps:" + jumps.ToString();
-                    long total = 0;
+                    long totalmapping = 0;
+                    long totalscan = 0;
                     foreach (var ib in sys["bodies"].EmptyIfNull())
                     {
                         string fb = FieldBuilder.Build(";: ", ib["name"].StrNull().ReplaceIfStartsWith(name),
                                                    "<", ib["subtype"].StrNull(),
-                                                   "Distance: ;ls;N1", ib["distance_to_arrival"].DoubleNull(),
-                                                   "Map Value: ", ib["estimated_mapping_value"].LongNull(), "Scan Value: ", ib["estimated_scan_value"].LongNull());
+                                                   "Distance: ; ls;N1", ib["distance_to_arrival"].DoubleNull(),
+                                                   "Map Value: ; cr;N0", ib["estimated_mapping_value"].LongNull(), "Scan Value: ; cr;N0", ib["estimated_scan_value"].LongNull());
 
-                        total += ib["estimated_mapping_value"].Long() + ib["estimated_scan_value"].Long();
+                        totalmapping += ib["estimated_mapping_value"].Long();
+                        totalscan += ib["estimated_scan_value"].Long();
                         notes = notes.AppendPrePad(fb, Environment.NewLine);
                     }
 
-                    notes = notes.AppendPrePad("Total:" + total.ToString("D"), Environment.NewLine);
+                    string totals = FieldBuilder.Build("Total mapping: ; cr;N0", totalmapping,
+                                                       "Total scan: ; cr;N0", totalscan);
+                    notes = notes.AppendPrePad(totals, Environment.NewLine);
 
                     var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
                     sc.Tag = notes;
