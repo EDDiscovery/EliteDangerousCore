@@ -547,8 +547,8 @@ namespace EliteDangerousCore.Spansh
                     {
                         string fb = FieldBuilder.Build(";: ", ib["name"].StrNull().ReplaceIfStartsWith(name),
                                                    "<", ib["subtype"].StrNull(),
-                                                   "Distance: ;ls;N1", ib["distance_to_arrival"].DoubleNull(),
-                                                   "Map Value: ", ib["estimated_mapping_value"].LongNull(), "Scan Value: ", ib["estimated_scan_value"].LongNull());
+                                                   "Distance: ; ls;N1", ib["distance_to_arrival"].DoubleNull(),
+                                                   "Map Value: ; cr;N0", ib["estimated_mapping_value"].LongNull(), "Scan Value: ; cr;N0", ib["estimated_scan_value"].LongNull());
 
                         totalmapping += ib["estimated_mapping_value"].Long();
                         totalscan += ib["estimated_scan_value"].Long();
