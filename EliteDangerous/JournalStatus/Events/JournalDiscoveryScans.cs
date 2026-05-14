@@ -165,7 +165,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else
             {
-                sb.Append( Signals[0].ToString(false));
+                sb.Append( Signals[0].ToString());
             }
             return sb.ToString();
         }
@@ -178,7 +178,7 @@ namespace EliteDangerousCore.JournalEvents
                 
                 var sb = new System.Text.StringBuilder(1024);
                 foreach (var s in Signals)
-                    sb.AppendPrePadCR(s.ToString(false));
+                    sb.AppendPrePadCR(s.ToString());
 
                 return sb.ToString();
             }

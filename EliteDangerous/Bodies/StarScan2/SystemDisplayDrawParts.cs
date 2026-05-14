@@ -114,14 +114,14 @@ namespace EliteDangerousCore.StarScan2
 
             int[] count = new int[]     // in priority order
             {
-                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Station).Count(),
-                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Carrier).Count(),
-                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Installation || x.ClassOfSignal == SignalDefinitions.Classification.Megaship).Count(), //before the megaship calssification they were counted as installations, so put them here to not lose the count - might need something better in the future like their own icon
-                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.NotableStellarPhenomena).Count(),
-                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.ResourceExtraction).Count(),
-                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.ConflictZone).Count(),
-                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.USS).Count(),
-                0, // 7, slot for others
+                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Station && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
+                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Carrier && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
+                signallist.Where(x => (x.ClassOfSignal == SignalDefinitions.Classification.Installation || x.ClassOfSignal == SignalDefinitions.Classification.Megaship) && x.HasNotExpired(ShowExpiredSignalIcons)).Count(), //before the megaship calssification they were counted as installations, so put them here to not lose the count - might need something better in the future like their own icon
+                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.NotableStellarPhenomena && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
+                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.ResourceExtraction && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
+                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.ConflictZone && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
+                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.USS && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
+                0, // 7, slot for others/expired
                 0, // 8, slot for codex
             };
 
@@ -180,14 +180,14 @@ namespace EliteDangerousCore.StarScan2
 
             var notexpired = FSSSignal.NotExpiredSorted(signallist);
             foreach (var sig in notexpired)
-                tip = tip.AppendPrePad(sig.ToString(true), Environment.NewLine);
+                tip = tip.AppendPrePad(sig.ToString(), Environment.NewLine);
 
             var expired = FSSSignal.ExpiredSorted(signallist);
             if (expired.Count > 0)
             {
                 tip = tip.AppendPrePad("Expired".Tx() + ": ", Environment.NewLine + Environment.NewLine);
                 foreach (var sig in expired)
-                    tip = tip.AppendPrePad(sig.ToString(true), Environment.NewLine);
+                    tip = tip.AppendPrePad(sig.ToString(), Environment.NewLine);
             }
 
             if (codex?.Count > 0)

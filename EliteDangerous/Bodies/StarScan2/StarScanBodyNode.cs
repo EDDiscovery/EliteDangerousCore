@@ -707,9 +707,11 @@ namespace EliteDangerousCore.StarScan2
 
             foreach (var s in signals)
             {
-                int present = FSSSignalList.FindIndex(x => x.IsSame(s));
-                if (present < 0)        // don't repeat
-                    FSSSignalList.Add(s);
+                int index = FSSSignalList.FindIndex(x => x.IsSame(s));
+                if (index >= 0)        // its there already..  remove the previous one.
+                    FSSSignalList.RemoveAt(index);
+
+                FSSSignalList.Add(s);       // add it
             }
         }
         public void SetMapped(bool efficently)

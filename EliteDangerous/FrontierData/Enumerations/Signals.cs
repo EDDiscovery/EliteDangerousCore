@@ -24,8 +24,30 @@ namespace EliteDangerousCore
     {
         public enum Classification
         {
-            Station, Installation, NotableStellarPhenomena, ConflictZone, ResourceExtraction,
-            Carrier, USS, Megaship, Other, NavBeacon, Titan, TouristBeacon, Codex
+            Station, Installation, NotableStellarPhenomena, ConflictZone, 
+            ResourceExtraction,  Carrier, USS, Megaship, 
+            Other, NavBeacon, Titan, TouristBeacon, 
+            Codex
+        };
+
+        public static TimeSpan[] ExpiryTimes =
+        {
+            new TimeSpan(365*1,0,0,0,0),  // station
+            new TimeSpan(365*1,0,0,0,0),  // installation
+            new TimeSpan(365*1,0,0,0,0),  // NSP
+            new TimeSpan(14,0,0,0,0),  // Conflict zone
+
+            new TimeSpan(365*1,0,0,0,0),  // RES
+            new TimeSpan(14,0,0,0,0),  // Carrier
+            new TimeSpan(14,0,0,0,0),  // USS (carries its own timeout anyway)
+            new TimeSpan(14,0,0,0,0),  // megaship
+
+            new TimeSpan(14,0,0,0,0),  // Other
+            new TimeSpan(365*1,0,0,0,0),  // navbeacon
+            new TimeSpan(14,0,0,0,0),  // titan
+            new TimeSpan(365*10,0,0,0,0),  // tourist beacon
+
+            new TimeSpan(365*1,0,0,0,0),  // codex
         };
 
         // SignalType could be null/empty, in which case its based on SignalName/IsStation/Localised string
@@ -177,33 +199,35 @@ namespace EliteDangerousCore
 
             ClassOfSignal = SignalDefinitions.GetClassification(SignalName, SignalType, IsStation == true, signalnamelocalised);
 
-            if (ClassOfSignal == SignalDefinitions.Classification.Carrier)
-                TimeRemaining = CarrierExpiryTime;
+            if (TimeRemaining == null)
+                TimeRemaining = SignalDefinitions.ExpiryTimes[(int)ClassOfSignal].TotalSeconds;
 
             RecordedUTC = EventTimeUTC;
 
-            if (TimeRemaining != null)
-            {
-                ExpiryUTC = EventTimeUTC.AddSeconds(TimeRemaining.Value);
-                ExpiryLocal = ExpiryUTC.ToLocalTime();
-            }
+            ExpiryUTC = EventTimeUTC.AddSeconds(TimeRemaining.Value);
+            ExpiryLocal = ExpiryUTC.ToLocalTime();
         }
 
-        public bool IsSame(FSSSignal other)     // is this signal the same as the other one
+        public bool IsSame(FSSSignal other)     // is this signal the same as the other one (assuming same system)
         {
             return SignalName.Equals(other.SignalName) && SpawningFaction.Equals(other.SpawningFaction) && SpawningState.Equals(other.SpawningState) &&
-                   USSType.Equals(other.USSType) && ThreatLevel == other.ThreatLevel &&
-                   (ClassOfSignal == SignalDefinitions.Classification.Carrier || ExpiryUTC == other.ExpiryUTC);       // note carriers have our own expiry on it, so we don't
+                   USSType.Equals(other.USSType) && ThreatLevel == other.ThreatLevel;
         }
 
-        public string ToString(bool showseentime)
+        public bool HasNotExpired(bool overrideit)
+        {
+            return overrideit || ExpiryUTC >= DateTime.UtcNow;
+        }
+
+        public override string ToString()
         {
             DateTime? outoftime = null;
-            if (TimeRemaining != null && ClassOfSignal != SignalDefinitions.Classification.Carrier)       // ignore carrier timeout for printing
-                outoftime = ExpiryLocal;
-
             DateTime? seen = null;
-            if (showseentime && (ClassOfSignal == SignalDefinitions.Classification.Carrier || ClassOfSignal == SignalDefinitions.Classification.Megaship)) //both move in and out of systems, so show last seen
+
+            if (ExpiryUTC<DateTime.UtcNow)      // show dates on expired entries
+                outoftime = ExpiryLocal;
+            //both move in and out of systems, so show last seen, only if not expired
+            else if (ClassOfSignal == SignalDefinitions.Classification.Carrier || ClassOfSignal == SignalDefinitions.Classification.Megaship)
                 seen = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(RecordedUTC);
 
             string signname = ClassOfSignal == SignalDefinitions.Classification.USS ? null : SignalName_Localised;        // signal name for USS is boring, remove
@@ -227,12 +251,6 @@ namespace EliteDangerousCore
                         );
         }
 
-        static public List<FSSSignal> NotExpiredSorted(List<FSSSignal> signals)
-        {
-            var notexpired = signals.Where(x => !x.TimeRemaining.HasValue || x.ExpiryUTC >= DateTime.UtcNow).ToList();
-            notexpired.Sort(delegate (FSSSignal l, FSSSignal r) { return l.ClassOfSignal.CompareTo(r.ClassOfSignal); });
-            return signals;
-        }
         static public void Sort(List<FSSSignal> signals)
         {
             signals.Sort(delegate (FSSSignal left, FSSSignal right) 
@@ -246,11 +264,17 @@ namespace EliteDangerousCore
                 return ret;
             });
         }
+        static public List<FSSSignal> NotExpiredSorted(List<FSSSignal> signals)
+        {
+            var notexpired = signals.Where(x => x.ExpiryUTC >= DateTime.UtcNow).ToList();
+            Sort(notexpired);
+            return notexpired;
+        }
         static public List<FSSSignal> ExpiredSorted(List<FSSSignal> signals)
         {
-            var expired = signals.Where(x => x.TimeRemaining.HasValue && x.ExpiryUTC < DateTime.UtcNow).ToList();
-            expired.Sort(delegate (FSSSignal l, FSSSignal r) { return l.ClassOfSignal.CompareTo(r.ClassOfSignal); });
-            return signals;
+            var expired = signals.Where(x => x.ExpiryUTC < DateTime.UtcNow).ToList();
+            Sort(expired);
+            return expired;
         }
     }
 }

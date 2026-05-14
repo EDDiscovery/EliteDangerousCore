@@ -53,9 +53,7 @@ namespace EliteDangerousCore.StarScan2
         public Size StarSize { get { return starsize; } }
         public Size PlanetSize { get { return planetsize; } }
         public Size MoonSize { get { return moonsize; } }
-
-        // After create, this holds the used display area
-        public Point DisplayAreaUsed { get; private set; }
+        public bool ShowExpiredSignalIcons { get; set; } = true;        // if false don't count expired signals for displaying icons
 
         public SystemDisplay()
         {
@@ -70,7 +68,7 @@ namespace EliteDangerousCore.StarScan2
             imagebox.ClearImageList();
             if (systemnode != null)
             {
-                var list = CreateSystemImages(systemnode, new Point(0,0), widthavailable, historicmats, curmats, titletext, bodytypefilter);
+                ExtendedControls.ImageElement.List list = CreateSystemImages(systemnode, new Point(0,0), widthavailable, historicmats, curmats, titletext, bodytypefilter);
                 imagebox.AddRange(list);
             }
             imagebox.Render();
