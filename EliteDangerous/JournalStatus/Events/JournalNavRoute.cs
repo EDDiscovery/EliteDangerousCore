@@ -100,11 +100,14 @@ namespace EliteDangerousCore.JournalEvents
             {
                 sb.AppendFormat("{0} jumps".Tx() + ", ", Route.Length - 1);
 
-                string classlist = "";
-                foreach( var x in Route )
-                    classlist = classlist.AppendPrePad(x.StarClass.ToString(), "->");
+                for(int i = 0; i < Route.Length; i++)
+                {
+                    if (i > 0)
+                        sb.Append("\u21d2");
+                    sb.Append(Route[i].StarClass);
+                }
 
-                sb.Append(classlist + ": ");
+                sb.Append(": ");
 
                 const int maxname = 10;
 
