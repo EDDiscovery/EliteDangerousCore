@@ -98,11 +98,15 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Route != null)
             {
-
                 sb.AppendFormat("{0} jumps".Tx() + ", ", Route.Length - 1);
 
-                var classlist = string.Join(" ", Route.Select(x => x.StarClass).Distinct());
+                string classlist = "";
+                foreach( var x in Route )
+                    classlist = classlist.AppendPrePad(x.StarClass.ToString(), "->");
+
                 sb.Append(classlist + ": ");
+
+                const int maxname = 10;
 
                 for (int i = 1; i < Route.Length; i++)
                 {
@@ -113,14 +117,14 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         sb.Append(n);
                     }
-                    else if (Route.Length >= 18)       // if route is long printed, 15 = .. , -2/-1 printed
+                    else if (Route.Length >= maxname)       // if route is long printed, 15 = .. , -2/-1 printed
                     {
-                        if (i < 15 || i >= Route.Length - 2)
+                        if (i < maxname/2 || i >= Route.Length - 2)
                         {
                             sb.AppendCS();
                             sb.Append(n);
                         }
-                        else if (i == 15)
+                        else if (i == maxname/2)
                             sb.Append(", .. ");
                     }
                     else
