@@ -57,7 +57,6 @@
     <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassConvertEnums.cs" />
     <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassConvertToJournalScanJson.cs" />
     <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassConvertToStationInfo.cs" />
-    <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassConvertToApproachBody.cs" />
     <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassGetStationsFromDump.cs" />
     <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassGetJournalScanJsonsFromDump.cs" />
     <Compile Include="Bodies\StarScan2\StarScanNodePtr.cs" />
