@@ -54,6 +54,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassConvertEnums.cs" />
+    <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassConvertToJournalScanJson.cs" />
+    <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassConvertToStationInfo.cs" />
+    <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassConvertToApproachBody.cs" />
+    <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassGetStationsFromDump.cs" />
+    <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassGetJournalScanJsonsFromDump.cs" />
     <Compile Include="Bodies\StarScan2\StarScanNodePtr.cs" />
     <Compile Include="Bodies\StarScan2\StarScanSystemNodeEvents.cs" />
     <Compile Include="Bodies\StarScan2\SystemDisplayPlanetTree.cs" />
@@ -183,7 +189,7 @@
     <Compile Include="Screenshots\ScreenShotConverter.cs" />
     <Compile Include="Screenshots\ScreenShotDirectoryWatcher.cs" />
     <Compile Include="Screenshots\ScreenShotImageConverter.cs" />
-    <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassBodyList.cs" />
+    <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassDump.cs" />
     <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassRouters.cs" />
     <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassSystems.cs" />
     <Compile Include="3rdPartyInterfaces\Spansh\SpanshClassStation.cs" />

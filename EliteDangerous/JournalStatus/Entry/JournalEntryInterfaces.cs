@@ -99,6 +99,7 @@ namespace EliteDangerousCore
         AllegianceDefinitions.Allegiance StationAllegiance { get; }   // fdname
         StationDefinitions.StationServices[] StationServices { get; }   // may be null
         EconomyDefinitions.Economies[] StationEconomyList { get; }        // may be null
+        SystemSource DataSource { get; }                        // FromJournal, FromEDSM, FromSpansh
     }
 
     public interface ITaxiDropship

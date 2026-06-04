@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using BaseUtils;
 using QuickJSON;
 using System;
 using System.Collections.Generic;
@@ -139,6 +140,12 @@ namespace EliteDangerousCore
         public static string ToLocalisedLanguage(StationServices sc)
         {
             return ToEnglish(sc).Tx();
+        }
+
+        public static string ToFDName(StationServices sc)
+        {
+            var myKey = stationservicesparselist.FirstOrDefault(x => x.Value == sc);
+            return myKey.IsDefault() ? null : myKey.Key.ToString();
         }
 
         public static StationServices[] ValidServices()

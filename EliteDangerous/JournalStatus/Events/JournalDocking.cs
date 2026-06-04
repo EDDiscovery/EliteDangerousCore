@@ -126,7 +126,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name => StationName;
         public string Name_Localised => StationName_Localised;
         public string AssociatedFaction => Faction;
-
+        public SystemSource DataSource { get; set; } = SystemSource.FromJournal;            // default is from journal
 
         // these are EconomyDefinitions.Economies
         public bool HasAnyEconomyTypes(string[] fdnames)

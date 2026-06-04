@@ -45,7 +45,7 @@ namespace EliteDangerousCore.StarScan2
 
                 if (usespansh && !Spansh.SpanshClass.HasBodyLookupOccurred(sys))
                 {
-                    var lookupres = Spansh.SpanshClass.GetBodiesList(sys, usespansh);          // see if spansh has it cached or optionally look it up
+                    var lookupres = Spansh.SpanshClass.ConvertDumpToJournalRecords(sys, usespansh);          // see if spansh has it cached or optionally look it up
 
                     if (lookupres != null)
                     {
@@ -100,7 +100,7 @@ namespace EliteDangerousCore.StarScan2
                     if (sys.Name.IsEmpty())
                         System.Diagnostics.Debug.WriteLine($"StarScan WARNING - Spansh lookup with empty name of system is liable to errors - cant set body designation properly");
 
-                    var lookupres = await Spansh.SpanshClass.GetBodiesListAsync(sys, usespansh);          // see if spansh has it cached or optionally look it up
+                    var lookupres = await Spansh.SpanshClass.ConvertDumpToJournalRecordsAsync(sys, usespansh);          // see if spansh has it cached or optionally look it up
 
                     if (lookupres != null)
                     {

@@ -96,7 +96,7 @@ namespace EliteDangerousCore.EDSM
                     }
 
                     bool fromcache = false;
-                    JObject jobj = EliteConfigInstance.InstanceOptions.ScanCacheEnabled ? Spansh.SpanshClass.GetDumpFromCache(sys, fileprefix) : null;
+                    JObject jobj = EliteConfigInstance.InstanceOptions.ScanCacheEnabled ? Spansh.SpanshClass.GetDumpFromFileCache(sys, fileprefix) : null;
 
                     if (jobj == null)
                     {

@@ -48,6 +48,7 @@ namespace EliteDangerousCore.StarScan2
 
         public int BodyID { get; private set; }
 
+        // if set, it means we placed it in the tree without a Parents array, so we are not 100% sure of its placement
         public bool PlacedWithoutParents { get; set; } = false;
 
         // we share the bodytype with frontier, even though their names are a bit wierd
@@ -78,7 +79,7 @@ namespace EliteDangerousCore.StarScan2
         public List<JournalSAASignalsFound.SAASignal> Signals { get; private set; } = null;
         public List<JournalSAASignalsFound.SAAGenus> Genuses { get; private set; } = null;
         public List<JournalScanOrganic> Organics { get; internal set; } = null;
-        public List<IBodyFeature> Features { get; internal set; } = null;               // for SystemBodies the orbiting stations, for other bodies touchdown/settlements/docking etc
+        public List<IBodyFeature> Features { get; internal set; } = null;               // In SystemNode::SystemBodies we store orbiting stations, for other bodies we store JournalDocked, Touchdown, ApproachSettlement.  
         public List<JournalCodexEntry> CodexEntries { get; private set; } = null;
         public List<FSSSignal> FSSSignalList { get; private set; } = null;              // only for SystemBodies in StarScan.SystemNode
         

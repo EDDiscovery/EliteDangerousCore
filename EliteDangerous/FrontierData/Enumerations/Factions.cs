@@ -62,7 +62,7 @@ namespace EliteDangerousCore
                 //System.Diagnostics.Trace.WriteLine($"**** No faction state");
                 return null;
             }
-            else if (parseliststate.TryGetValue(englishname.ToLowerInvariant().Trim(),out State value)) // case insensitive
+            else if (parseliststate.TryGetValue(englishname.Replace(" ","").ToLowerInvariant().Trim(),out State value)) // case insensitive
             {
                 return value;
             }
