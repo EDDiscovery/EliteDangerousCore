@@ -123,7 +123,7 @@
     <Compile Include="FrontierData\Enumerations\Allegiance.cs" />
     <Compile Include="FrontierData\Enumerations\PhysicalConstants.cs" />
     <Compile Include="FrontierData\Enumerations\Stars.cs" />
-    <Compile Include="FrontierData\Enumerations\StationInfo.cs" />
+    <Compile Include="JournalStatus\Events\StationInfo.cs" />
     <Compile Include="FrontierData\Enumerations\Stations.cs" />
     <Compile Include="FrontierData\Enumerations\Government.cs" />
     <Compile Include="FrontierData\Enumerations\Economy.cs" />

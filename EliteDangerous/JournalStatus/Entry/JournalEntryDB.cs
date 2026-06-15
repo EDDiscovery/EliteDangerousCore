@@ -135,7 +135,7 @@ namespace EliteDangerousCore
             if (jo != null )
             {
                 jo["StarPos"] = new JArray() { pos.X, pos.Y, pos.Z };
-                jo["StarPosFromEDSM"] = true;       // update star position in DB, by adding on star pos data, and mark entry as not being a journal sourced data
+                jo[JournalLocOrJump.EDSMJournalMarker] = true;       // update star position in DB, by adding on star pos data, and mark entry as not being a journal sourced data
 
                 using (DbCommand cmd2 = cn.CreateCommand("Update JournalEntries set EventData = @EventData where ID = @ID"))
                 {

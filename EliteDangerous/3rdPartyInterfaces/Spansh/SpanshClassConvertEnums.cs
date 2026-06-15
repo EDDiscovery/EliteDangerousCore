@@ -205,7 +205,7 @@ namespace EliteDangerousCore.Spansh
                     return kvp.Key;
             }
 
-            System.Diagnostics.Trace.WriteLine($"*** Reverse lookup name types failed {englishname}");
+            System.Diagnostics.Trace.WriteLine($"*** Spansh Reverse lookup name types failed {englishname}");
             return StarportTypes.Unknown;
         }
 

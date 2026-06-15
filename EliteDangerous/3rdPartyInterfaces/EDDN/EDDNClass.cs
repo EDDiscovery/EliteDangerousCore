@@ -444,7 +444,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from JSON Cloned
         public JObject CreateEDDNMessage(JournalFSDJump journal)
         {
-            if (!journal.HasCoordinate || journal.LocOrJumpSource != SystemSource.FromJournal || journal.SystemAddress == null)
+            if (!journal.HasCoordinate || journal.DataSource != SystemSource.FromJournal || journal.SystemAddress == null)
                 return null;
 
             JObject msg = new JObject();
@@ -469,7 +469,7 @@ namespace EliteDangerousCore.EDDN
             message.Remove("JumpDist");
             message.Remove("FuelUsed");
             message.Remove("FuelLevel");
-            message.Remove("StarPosFromEDSM");
+            message.Remove(JournalLocOrJump.EDSMJournalMarker);
             message.Remove("ActiveFine");
 
             message = message.Filter(AllowedFieldsFSDJump);
@@ -484,7 +484,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from JSON Cloned
         public JObject CreateEDDNMessage(JournalLocation journal)
         {
-            if (!journal.HasCoordinate || journal.LocOrJumpSource != SystemSource.FromJournal|| journal.SystemAddress == null)
+            if (!journal.HasCoordinate || journal.DataSource != SystemSource.FromJournal || journal.SystemAddress == null)
                 return null;
 
             JObject msg = new JObject();
@@ -502,7 +502,7 @@ namespace EliteDangerousCore.EDDN
             RemoveCommonKeys(message);
             RemoveFactionReputation(message);
             RemoveStationEconomyKeys(message);
-            message.Remove("StarPosFromEDSM");
+            message.Remove(JournalLocOrJump.EDSMJournalMarker);
             message.Remove("Latitude");
             message.Remove("Longitude");
             message.Remove("MyReputation");
@@ -520,7 +520,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message for journal from JSON Cloned
         public JObject CreateEDDNMessage(JournalCarrierJump journal)
         {
-            if (!journal.HasCoordinate || journal.LocOrJumpSource != SystemSource.FromJournal|| journal.SystemAddress == null)
+            if (!journal.HasCoordinate || journal.DataSource != SystemSource.FromJournal|| journal.SystemAddress == null)
                 return null;
 
             JObject msg = new JObject();
@@ -538,7 +538,7 @@ namespace EliteDangerousCore.EDDN
             RemoveCommonKeys(message);
             RemoveFactionReputation(message);
             RemoveStationEconomyKeys(message);
-            message.Remove("StarPosFromEDSM");
+            message.Remove(JournalLocOrJump.EDSMJournalMarker);
             message.Remove("Latitude");
             message.Remove("Longitude");
             message.Remove("MyReputation");
@@ -604,7 +604,7 @@ namespace EliteDangerousCore.EDDN
 
             // header matches Athan wishes for capi sourced data
 
-            bool capi = !journal.IsJournalSourced;
+            bool capi = journal.DataSource == SystemSource.Synthesised;
             bool legacy = EDCommander.IsLegacyCommander(journal.CommanderId);
             msg["header"] = Header(capi ? (legacy ? "CAPI-Legacy-shipyard" : "CAPI-Live-shipyard") : journal.GameVersion, capi ? "" : journal.Build);
 
@@ -639,7 +639,7 @@ namespace EliteDangerousCore.EDDN
 
             // header matches Athan wishes for capi sourced data
 
-            bool capi = !journal.IsJournalSourced;
+            bool capi = journal.DataSource == SystemSource.Synthesised;
             bool legacy = EDCommander.IsLegacyCommander(journal.CommanderId);
             msg["header"] = Header(capi ? (legacy ? "CAPI-Legacy-shipyard" : "CAPI-Live-shipyard") : journal.GameVersion, capi ? "" : journal.Build);
 

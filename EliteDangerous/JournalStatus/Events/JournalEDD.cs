@@ -55,7 +55,7 @@ namespace EliteDangerousCore.JournalEvents
             Rescan(commds);
         }
 
-        public JObject ToJSON()
+        public JObject CreateJSON()
         {
             JObject j = new JObject()
             {
@@ -116,7 +116,7 @@ namespace EliteDangerousCore.JournalEvents
             s.AddDestinationSelected(this, system);
         }
 
-        public JObject ToJSON()
+        public JObject CreateJSON()
         {
             JObject j = new JObject()
             {

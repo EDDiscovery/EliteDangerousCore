@@ -42,6 +42,21 @@ namespace EliteDangerousCore.Spansh
             sys.Y = jsystem["coords"].I("y").Double();
             sys.Z = jsystem["coords"].I("z").Double();
 
+            JArray stationarray = jsystem["stations"].Array();
+
+            if (stationarray != null)
+            {
+                foreach (var evt in stationarray)
+                {
+                    var si = ConvertToStationInfo(evt.Object(), sys);
+                    if (si != null)
+                    {
+                        stationinfo.Add(si);
+                    }
+
+                }
+            }
+
             JArray bodyarray = jsystem["bodies"].Array();
 
             if (bodyarray != null)
@@ -49,12 +64,13 @@ namespace EliteDangerousCore.Spansh
                 foreach (var body in bodyarray)
                 {
                     string bodyname = body["name"].StrNull();
+                    int bodyid = body["bodyId"].Int();
                     string bodytype = body["type"].StrNull();
                     string bodysubtype = body["subType"].StrNull();
 
                     foreach (var evt in body["stations"].EmptyIfNull())
                     {
-                        var si = ConvertToStationInfo(evt.Object(), sys, bodyname, bodytype, bodysubtype);
+                        var si = ConvertToStationInfo(evt.Object(), sys, bodyname, bodyid, bodytype, bodysubtype);
                         if (si != null)
                         {
                             stationinfo.Add(si);
@@ -62,20 +78,6 @@ namespace EliteDangerousCore.Spansh
                     }
                 }
 
-                JArray stationarray = jsystem["stations"].Array();
-
-                if (stationarray != null)
-                {
-                    foreach (var evt in stationarray)
-                    {
-                        var si = ConvertToStationInfo(evt.Object(), sys, "", "", "");
-                        if (si != null)
-                        {
-                            stationinfo.Add(si);
-                        }
-
-                    }
-                }
 
             }
 

@@ -164,7 +164,7 @@ namespace EliteDangerousCore
                 JournalEvents.JournalShipyard js = je as JournalEvents.JournalShipyard;
                 if (js.Yard.Ships != null)     // just in case we get a bad shipyard with no ship data or EDD did not see a matching shipyard.json vs the journal entry
                 {
-                    if ( js.IsJournalSourced)                            // if we have a sh
+                    if ( js.DataSource == SystemSource.FromJournal)                            // if its from the journal, use the flag
                         AllowCobraMkIV = js.AllowCobraMkIV;     // set the shipyard flag
 
                     //System.Diagnostics.Debug.WriteLine("Add yard data for " + js.Yard.StarSystem + ":" + js.Yard.StationName);

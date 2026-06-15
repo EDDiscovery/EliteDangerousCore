@@ -42,9 +42,10 @@ namespace EliteDangerousCore.JournalEvents
                 evt["EDDMapColor"] = EDCommander.Current.MapColour;      // new entries get this default map colour if its not already there
         }
 
-        public JournalFSDJump(DateTime utc, ISystem sys, int colour, bool edsmsynced) : base(utc, sys, JournalTypeEnum.FSDJump, edsmsynced)
+        public JournalFSDJump(DateTime utc, ISystem sys, int colour, bool edsmsynced, SystemSource datasource) : base(utc, sys, JournalTypeEnum.FSDJump, edsmsynced)
         {
             MapColor = colour;
+            DataSource = datasource;
         }
 
         public double JumpDist { get; set; }
@@ -119,7 +120,7 @@ namespace EliteDangerousCore.JournalEvents
             });
         }
 
-        public JObject CreateJsonOfFSDJournalEntry()          // minimal version, not the whole schebang
+        public JObject CreateJSON()          // minimal version, not the whole schebang
         {
             JObject jo = new JObject();
             jo["timestamp"] = EventTimeUTC.ToStringZuluInvariant();
@@ -127,7 +128,7 @@ namespace EliteDangerousCore.JournalEvents
             jo["StarSystem"] = StarSystem;
             jo["StarPos"] = new JArray(StarPos.X, StarPos.Y, StarPos.Z);
             jo["EDDMapColor"] = MapColor;
-            jo["StarPosFromEDSM"] = true;       // mark as non journal sourced
+            jo[EDSMJournalMarker] = true;       // mark as non journal sourced - now in june 2026 it sets datasource
             return jo;
         }
     }

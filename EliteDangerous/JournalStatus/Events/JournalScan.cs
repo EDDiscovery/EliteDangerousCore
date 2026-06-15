@@ -327,8 +327,6 @@ namespace EliteDangerousCore.JournalEvents
         ///////////////////////////////////////////////////////////////////////// EDD additions
         ///////////////////////////////////////////////////////////////////////// EDD additions
 
-        [PropertyNameAttribute("Body data source")]
-        public SystemSource DataSource { get; private set; } = SystemSource.FromJournal;        // FromJournal, FromEDSM, FromSpansh
         [PropertyNameAttribute("Web data source name (Empty if not)")]
         public string DataSourceName { get { return DataSource != SystemSource.FromJournal ? DataSource.ToString().Replace("From", "") : ""; } }
         [PropertyNameAttribute("Is scan web sourced?")]
@@ -458,7 +456,6 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         // Create the entry from JSON
-
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
         {
             // older than 3.0 does not have ScanType, will be Unknown ..
@@ -692,19 +689,6 @@ namespace EliteDangerousCore.JournalEvents
                 DataSource = SystemSource.FromSpansh;
         }
 
-        // special, for star scan node tree only, create a scan record with the contents of the journal scan bary centre info
-        public JournalScan(JournalScanBaryCentre js) : base(DateTime.Now, JournalTypeEnum.ScanBaryCentre)
-        {
-            BodyID = js.BodyID;
-            nSemiMajorAxis = js.SemiMajorAxis;
-            nEccentricity = js.Eccentricity;
-            nOrbitalInclination = js.OrbitalInclination;
-            nPeriapsis = js.Periapsis;
-            nOrbitalPeriod = js.OrbitalPeriod;
-            nAscendingNode = js.AscendingNode;
-            nMeanAnomaly = js.MeanAnomaly;
-        }
-
         #region Overrides, interfaces, etc
 
         public override string SummaryName(ISystem sys)
@@ -768,7 +752,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetDetailed()
         {
-            return DisplayText(includefront: true);
+            return DisplayText(showwebbodies:true, includefront: true);
         }
 
         // this structure is reflected by JournalFilterSelector to allow a journal class to add extra filter items to the journal filter lists. Its in use!

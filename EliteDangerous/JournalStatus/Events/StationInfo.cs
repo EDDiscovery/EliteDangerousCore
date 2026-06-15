@@ -25,8 +25,9 @@ namespace EliteDangerousCore
     [System.Diagnostics.DebuggerDisplay("Station {System.Name} {BodyName} {StationName}")]
     public class StationInfo : JournalEvents.JournalDocked
     {
-        public StationInfo(System.DateTime utc) : base(utc)
+        public StationInfo(System.DateTime utc, SystemSource datasource) : base(utc)
         {
+            DataSource = datasource;
         }
         public double DistanceRefSystem { get; set; }
         public ISystem System { get; set; }

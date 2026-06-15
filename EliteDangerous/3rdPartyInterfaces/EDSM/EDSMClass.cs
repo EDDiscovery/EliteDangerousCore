@@ -458,8 +458,7 @@ namespace EliteDangerousCore.EDSM
                         {
                             JObject jo = systems[i].Item2;
                             DateTime etutc = DateTime.ParseExact(jo["date"].Str(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal); // UTC time
-                            JournalFSDJump fsd = new JournalFSDJump(etutc, systems[i].Item1, EDCommander.Current.MapColour, true);
-                            fsd.LocOrJumpSource = SystemSource.FromEDSM;
+                            JournalFSDJump fsd = new JournalFSDJump(etutc, systems[i].Item1, EDCommander.Current.MapColour, true, SystemSource.FromEDSM);
                             fsdjumps.Add(fsd);
                         }
                     }

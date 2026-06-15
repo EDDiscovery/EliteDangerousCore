@@ -125,7 +125,7 @@ namespace EliteDangerousCore.EDSM
 
                         HistoryEntry first = hqe.HistoryEntry;
 
-                        bool firstjournalsourced = first.journalEntry.IsJournalSourced;
+                        SystemSource firstentrysourcetype = first.journalEntry.DataSource;
 
                         Action<string> logger = hqe.Logger;
                         string gameversion = hqe.gameversion;       // use first entry gameversion/build, which for a batch, will all be the same
@@ -146,7 +146,8 @@ namespace EliteDangerousCore.EDSM
                         // Leave event in queue if commander changes, or journal sourced is different
                         // we don't send multiple commanders, or different sourced journal entries, or different builds together
 
-                        while (hl.Count < maxEventsPerMessage && queue.TryPeek(out hqe) && hqe.HistoryEntry.journalEntry.IsJournalSourced == firstjournalsourced &&
+                        while (hl.Count < maxEventsPerMessage && queue.TryPeek(out hqe) && 
+                               hqe.HistoryEntry.journalEntry.DataSource == firstentrysourcetype &&
                                hqe.gameversion == gameversion && hqe.build == build) 
                         {
                             HistoryEntry he = hqe.HistoryEntry;
@@ -262,9 +263,9 @@ namespace EliteDangerousCore.EDSM
                 json.RemoveWildcard("EDD*");        // remove any EDD specials
                 if (je.EventTypeID == JournalTypeEnum.FSDJump && json["FuelUsed"].IsNull())
                     json["_convertedNetlog"] = true;
-                if (json["StarPosFromEDSM"].Bool(false)) // Remove star pos from EDSM JSON send if this is set
+                if (json[JournalLocOrJump.EDSMJournalMarker].Bool(false)) // Remove star pos from EDSM JSON send if this is set
                     json.Remove("StarPos");
-                json.Remove("StarPosFromEDSM");     // remove this from JSON send to EDSM
+                json.Remove(JournalLocOrJump.EDSMJournalMarker);     // remove this from JSON send to EDSM
                 json["_systemName"] = he.System.Name;
                 json["_systemCoordinates"] = new JArray(he.System.X, he.System.Y, he.System.Z);
                 if (he.System.SystemAddress != null)
@@ -281,8 +282,8 @@ namespace EliteDangerousCore.EDSM
 
             // game version on all should be the same as hl[0].
 
-            if (!hl[0].journalEntry.IsJournalSourced)        // override for capi stuff
-            { 
+            if (hl[0].journalEntry.DataSource == SystemSource.Synthesised)        // override for capi stuff
+            {
                 gameversion = "CAPI-journal";
                 build = "";
             }

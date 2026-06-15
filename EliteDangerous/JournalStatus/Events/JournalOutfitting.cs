@@ -57,7 +57,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public JObject ToJSON()
+        public JObject CreateJSON()
         {
             JArray itemlist = new JArray(YardInfo.Items.Select(x => new JObject() { { "id", x.id }, { "Name", x.FDName }, { "BuyPrice", x.BuyPrice } }));
 

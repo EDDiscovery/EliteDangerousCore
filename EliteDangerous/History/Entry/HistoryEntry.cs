@@ -142,7 +142,7 @@ namespace EliteDangerousCore
                 {
                     EDStar starclass = EDStar.Unknown;
                     starclasses?.TryGetValue(jl.StarSystem, out starclass);     // see if its there, and star classes is defined
-                    newsys = new SystemClass(jl.StarSystem, jl.SystemAddress, jl.StarPos.X, jl.StarPos.Y, jl.StarPos.Z, jl.LocOrJumpSource, starclass);
+                    newsys = new SystemClass(jl.StarSystem, jl.SystemAddress, jl.StarPos.X, jl.StarPos.Y, jl.StarPos.Z, jl.DataSource, starclass);
                     SystemCache.AddSystemToCache(newsys);        // this puts it in the cache
 
                     // If it was a new system, pass the coords back to the StartJump

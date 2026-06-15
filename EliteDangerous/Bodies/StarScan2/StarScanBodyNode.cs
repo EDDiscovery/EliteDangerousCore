@@ -27,13 +27,13 @@ namespace EliteDangerousCore.StarScan2
         #region Public Interface
 
         // own name (1,2,A,Mitterand Hollow) for scan names, or computed Barycentre name BC of A,B,C
-        public string OwnName { get; private set; }     
+        public string OwnName { get; private set; }
 
         // set on scans to js.BodyName, and on discrete body adds of names (Miterrand Hollow)
         // will contain the whole name (HIP 1885 A 5 b, HIP 1885 A 2 A Ring, HIP 1885 A A Belt Cluster 1)
         // will not be set on sub part names/barycentres. Be Null
-        public string CanonicalName { get; private set; }  
-                                                           
+        public string CanonicalName { get; private set; }
+
         // always not null
         public string CanonicalNameOrOwnName => CanonicalName ?? OwnName;
 
@@ -44,7 +44,7 @@ namespace EliteDangerousCore.StarScan2
         public string Name() { return CanonicalName?.ReplaceIfStartsWith(SystemNode.System.Name) ?? OwnName; }
 
         // set if a standard name to name depth. -1 if non standard naming, else 0 are top level objects, 1 = planet, etc
-        public int CanonicalNameDepth { get; private set; } = -1;       
+        public int CanonicalNameDepth { get; private set; } = -1;
 
         public int BodyID { get; private set; }
 
@@ -82,7 +82,7 @@ namespace EliteDangerousCore.StarScan2
         public List<IBodyFeature> Features { get; internal set; } = null;               // In SystemNode::SystemBodies we store orbiting stations, for other bodies we store JournalDocked, Touchdown, ApproachSettlement.  
         public List<JournalCodexEntry> CodexEntries { get; private set; } = null;
         public List<FSSSignal> FSSSignalList { get; private set; } = null;              // only for SystemBodies in StarScan.SystemNode
-        
+
         public bool IsMapped { get; private set; }                                      // recorded here since the scan data can be replaced by a better version later.
         public bool WasMappedEfficiently { get; private set; }
 
@@ -199,7 +199,7 @@ namespace EliteDangerousCore.StarScan2
             return bnl;
         }
 
- 
+
         // filternames are either the Star/Planet IDs, or its the BodyType for other ones
         public bool IsBodyTypeInFilter(string[] filternames, bool checkchildren)
         {
@@ -246,9 +246,9 @@ namespace EliteDangerousCore.StarScan2
             return WebCreatedNode == false;
         }
 
-        public int SurfaceFeatureListSettlementsCount()
+        public int SurfaceFeatureListSettlementsCount(bool showwebbodies)
         {
-            return Features?.Count(x => x is JournalApproachSettlement || x is JournalDocked) ?? 0;
+            return Features?.Count(x => (x is JournalApproachSettlement || x is JournalDocked) && (x.DataSource == SystemSource.FromJournal || showwebbodies)) ?? 0;
         }
 
         public long ScanValue(bool includewebvalue)
@@ -505,7 +505,7 @@ namespace EliteDangerousCore.StarScan2
         }
 
         public BodyNode(string ownname, BodyParent nt, int bid, BodyNode parent, SystemNode sys) :
-            this(ownname, nt.IsStar? BodyDefinitions.BodyType.Star : nt.IsBarycentre? BodyDefinitions.BodyType.Barycentre : nt.IsStellarRing? BodyDefinitions.BodyType.StellarRing : BodyDefinitions.BodyType.Planet, bid, parent, sys )
+            this(ownname, nt.IsStar ? BodyDefinitions.BodyType.Star : nt.IsBarycentre ? BodyDefinitions.BodyType.Barycentre : nt.IsStellarRing ? BodyDefinitions.BodyType.StellarRing : BodyDefinitions.BodyType.Planet, bid, parent, sys)
         {
         }
 
@@ -526,6 +526,8 @@ namespace EliteDangerousCore.StarScan2
             Parent = p;
         }
 
+        // Set the Scan information variable to JournalScan.  
+        // if previously scanned we only replace if its from journal or the previous scan was basic
         public void SetScan(JournalScan sc)
         {
             if (Scan != null)           // if previously scanned
@@ -539,7 +541,7 @@ namespace EliteDangerousCore.StarScan2
 
                     if (Scan.Parents != null)        // if previous had parents and we have parents
                     {
-                        if ( sc.Parents != null)
+                        if (sc.Parents != null)
                         {
                             BodyParent.AreParentsSame(Scan.Parents, sc.Parents).Assert("StarScan Set Scan noted parents list changed on new scan - whats up Frontier!");
                         }
@@ -550,6 +552,10 @@ namespace EliteDangerousCore.StarScan2
 
                     Scan = sc;
                 }
+                else
+                {
+                    //System.Diagnostics.Debug.WriteLine($"SetScan Rejected writing {sc.BodyName} DS {sc.DataSource} because of {Scan.BodyName} {Scan.DataSource}");
+                }
             }
             else
             {
@@ -559,15 +565,15 @@ namespace EliteDangerousCore.StarScan2
             Scan.Signals = Signals;                     // we point Signals, Organics, Genuses, CodexEntries in Scan to us
             Scan.Genuses = Genuses;                     // If they are null at this point the New will set them to the scan - bug found
             Scan.Organics = Organics;                   // If these change by this code they will change in sympathy
-            Scan.SurfaceFeatures = Features;    
-            Scan.CodexEntries = CodexEntries;           
-            
+            Scan.SurfaceFeatures = Features;
+            Scan.CodexEntries = CodexEntries;
+
             Scan.SetMapped(IsMapped, WasMappedEfficiently);  // and we set the mapped/was mapped flag to the nodes setting set up by AddSAAScanComplete
-                
-            CanonicalName = Scan.BodyName;              // set the Canonical name given by frontier, and recalc the canonical name depth
-            CalculateCNDepth();
+
+            ResetCanonicalName(Scan.BodyName);          // set the Canonical name given by frontier, and recalc the canonical name depth
         }
 
+        // Set the canoical name and recals the name depth
         public void ResetCanonicalName(string s)
         {
             CanonicalName = s;
@@ -653,6 +659,7 @@ namespace EliteDangerousCore.StarScan2
             Organics.Add(organic);
         }
 
+        // Used by Node Events AddOrbitingStations, AddSurfaceFeatureToBody (Touchdown,ApproachSettlement)
         public bool AddFeatureOnlyIfNew(IBodyFeature sc)
         {
             if (Features == null)
@@ -683,10 +690,24 @@ namespace EliteDangerousCore.StarScan2
 
             int index = Features.FindIndex(x => x.Name == sc.Name);
 
-            if (index >= 0) // got before, replace as we want a newer docking to be in there
-                Features[index] = sc;
+            if (index >= 0) // got before
+            {
+                // we replace if its in there as a supercruise exit, or its from the journal.  If its from the web we don't replace the one (per SetScan policy)
+                if (Features[index] is JournalSupercruiseExit || sc.DataSource == SystemSource.FromJournal )
+                {
+                    //System.Diagnostics.Debug.WriteLine($"StarScan Replacing {Features[index].BodyName}:{Features[index].GetType().Name} with new docking {sc.Name}");
+                    Features[index] = sc;
+                }
+                else
+                {
+                    //System.Diagnostics.Debug.WriteLine($"StarScan Rejected replacing {Features[index].BodyName}:{Features[index].GetType().Name} with new docking {sc.Name}:{sc.DataSource}");
+                }
+            }
             else
+            {
+                //System.Diagnostics.Debug.WriteLine($"StarScan Add new docking {sc.Name}");
                 Features.Add(sc);
+            }
         }
 
         public void AddCodex(JournalCodexEntry sc)
@@ -765,7 +786,7 @@ namespace EliteDangerousCore.StarScan2
                 //$"Body Compare SMA {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
                 return smal.Value.CompareTo(smar.Value);
             }
-            else 
+            else
             if (lt.Length == 1 && rt.Length == 1)      // 1-2-3 or a b c sort direct just comparing value
             {
                 //$"Body Compare 1Char {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
@@ -815,7 +836,7 @@ namespace EliteDangerousCore.StarScan2
             }
         }
 
-        public void DumpTree(string bid, int level)
+        public void PrintTree(System.Text.StringBuilder sp, string bid, int level)
         {
             if (level > 0)      // 0 is system level dump
             {
@@ -825,34 +846,53 @@ namespace EliteDangerousCore.StarScan2
                     bid += $".{BodyID,2}";
             }
 
-            Dump(bid, level);
+            ToString(sp, bid, level);
 
             foreach (var x in ChildBodies)
-                x.DumpTree(bid, level + 1);
+                x.PrintTree(sp, bid, level + 1);
         }
 
-        public void Dump(string bid, int level = 0)
+        public void ToString(System.Text.StringBuilder sp, string bid, int level = 0)
         {
             string front = bid.PadRight(20);
             string names = (new string(' ', level) + (OwnName + " | " + (CanonicalNameNoSystemName() ?? "-"))).PadRight(35);
             string pad = new string(' ', front.Length + 3 + level + 3);
             int cn = GetNameDepth();
             string cnl = cn >= 0 ? cn.ToString() : "";
-            string sma = SMA != null ? ((SMA / 1000.0).ToStringInvariant("N0") +"km") : "";
+            string sma = SMA != null ? ((SMA / 1000.0).ToStringInvariant("N0") + "km") : "";
 
-            System.Diagnostics.Trace.WriteLine($"{front} : {cnl.PadRight(2)} : {names} : {BodyType.ToString().PadRight(15)} {(PlacedWithoutParents?"PWP":"")} sma {sma}");
+            sp.Append($"{front} : {cnl.PadRight(2)} : {names} : {BodyType.ToString().PadRight(15)} {(PlacedWithoutParents ? "PWP" : "")} sma {sma}");
+            sp.AppendCR();
             foreach (var x in CodexEntries.EmptyIfNull())
-                System.Diagnostics.Trace.WriteLine($"{pad}CX:{x.GetInfo()}");
+            {
+                sp.Append($"{pad}CX:{x.GetInfo()}");
+                sp.AppendCR();
+            }
             foreach (var x in Signals.EmptyIfNull())
-                System.Diagnostics.Trace.WriteLine($"{pad}S:{x.Type_Localised ?? x.Type} {x.Count}");
+            {
+                sp.Append($"{pad}S:{x.Type_Localised ?? x.Type} {x.Count}");
+                sp.AppendCR();
+            }
             foreach (var x in Organics.EmptyIfNull())
-                System.Diagnostics.Trace.WriteLine($"{pad}O:{x.GetInfo()}");
+            {
+                sp.Append($"{pad}O:{x.GetInfo()}");
+                sp.AppendCR();
+            }
             foreach (var x in Genuses.EmptyIfNull())
-                System.Diagnostics.Trace.WriteLine($"{pad}G:{x.Genus_Localised ?? x.Genus}");
+            {
+                sp.Append($"{pad}G:{x.Genus_Localised ?? x.Genus}");
+                sp.AppendCR();
+            }
             foreach (var x in FSSSignalList.EmptyIfNull())
-                System.Diagnostics.Trace.WriteLine($"{pad}FSS:{x.SignalName_Localised ?? x.SignalName} {x.USSType}");
+            {
+                sp.Append($"{pad}FSS:{x.SignalName_Localised ?? x.SignalName} {x.USSType}");
+                sp.AppendCR();
+            }
             foreach (var x in Features.EmptyIfNull())
-                System.Diagnostics.Trace.WriteLine($"{pad}F:{x.BodyType} `{x.Name_Localised ?? x.Name}` {x.BodyID}");
+            { 
+                sp.Append($"{pad}F:{x.BodyType} {x.FDStationType} `{x.Name_Localised ?? x.Name}` on `{x.BodyName}`:{x.BodyID}");
+                sp.AppendCR();
+            }
         }
 
         #endregion

@@ -866,7 +866,7 @@ namespace EliteDangerousCore
             {
                 JournalScan js = hescan.journalEntry as JournalScan;
 
-                info = js.DisplayText();
+                info = js.DisplayText(showwebbodies:true);
 
                 if (hescan.BodyNode != null)
                 {
@@ -876,7 +876,7 @@ namespace EliteDangerousCore
                         if (pnode != null)
                         {
                             var parentjs = pnode.Scan;               // parent journal entry, may be null
-                            pinfo = parentjs != null ? parentjs.DisplayText() : hescan.BodyNode.Parent.Name() + " " + hescan.BodyNode.Parent.BodyType;
+                            pinfo = parentjs != null ? parentjs.DisplayText(showwebbodies: true) : hescan.BodyNode.Parent.Name() + " " + hescan.BodyNode.Parent.BodyType;
                         }
                     }
 
@@ -888,7 +888,7 @@ namespace EliteDangerousCore
                         if (ppnode != null)
                         {
                             var parentparentjs = hescan.BodyNode.Parent.Parent.Scan;               // parent journal entry, may be null
-                            ppinfo = parentparentjs != null ? parentparentjs.DisplayText() : hescan.BodyNode.Parent.Parent.Name() + " " + hescan.BodyNode.Parent.Parent.BodyType;
+                            ppinfo = parentparentjs != null ? parentparentjs.DisplayText(showwebbodies: true) : hescan.BodyNode.Parent.Parent.Name() + " " + hescan.BodyNode.Parent.Parent.BodyType;
                         }
                     }
 
@@ -898,7 +898,7 @@ namespace EliteDangerousCore
 
                         if (starnode != null)
                         {
-                            sinfo = starnode.Scan.DisplayText();
+                            sinfo = starnode.Scan.DisplayText(showwebbodies: true);
                         }
                     }
 
@@ -908,7 +908,7 @@ namespace EliteDangerousCore
 
                         if (starnode != null)
                         {
-                            ssinfo = starnode.Scan.DisplayText();
+                            ssinfo = starnode.Scan.DisplayText(showwebbodies: true);
                         }
                     }
                 }

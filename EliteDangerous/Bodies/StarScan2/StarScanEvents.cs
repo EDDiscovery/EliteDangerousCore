@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2025 - 2025 EDDiscovery development team
+ * Copyright 2025 - 2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -126,7 +126,7 @@ namespace EliteDangerousCore.StarScan2
                     //  $"Add Station {sc.EventTypeStr} {sc.EventTimeUTC} : {sc.BodyType} `{sc.BodyName}` {sc.BodyID} ".DO();
                     lock (sn)
                     {
-                        sn.AddStation(sc);
+                        sn.AddOrbitingStation(sc);
                     }
                 }
                 else if (sc.BodyType == BodyDefinitions.BodyType.Planet)      // ApproachBody/Leave Body/SupercruiseExit/Location
@@ -441,7 +441,8 @@ namespace EliteDangerousCore.StarScan2
             }
         }
         
-        // Add Docking, for a settlement we have augmented the information with BodyID/Body
+        // Add JournalDocking or StationInfo (derived)
+        // we have augmented the information with BodyID/Body due to HistoryEntryStatus or Spansh provides it for planet stations
         public void AddDocking(JournalDocked sc, ISystem sys)
         {
             if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress )     // if we have basic info. 
@@ -450,7 +451,7 @@ namespace EliteDangerousCore.StarScan2
                 System.Diagnostics.Debug.Assert(sn != null);
                 lock (sn)
                 {
-                    if (sn.AddDockingToBody(sc) == null) // can't assign, store in pending
+                    if (sn.AddDocking(sc) == null) // can't assign, store in pending
                         AddPending(sys.SystemAddress.Value, sc);
                 }
             }
@@ -525,7 +526,7 @@ namespace EliteDangerousCore.StarScan2
                 }
                 else if (je is JournalDocked dck)
                 {
-                    if (sn.AddDockingToBody(dck) != null) 
+                    if (sn.AddDocking(dck) != null) 
                         todelete.Add(je);
                 }
                 else

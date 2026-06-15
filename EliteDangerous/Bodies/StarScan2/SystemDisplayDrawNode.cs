@@ -83,7 +83,7 @@ namespace EliteDangerousCore.StarScan2
                 {
                     if (snc.Scan != null)
                     {
-                        snc.Scan.DisplayText(tooltip);
+                        snc.Scan.DisplayText(tooltip,ShowWebBodies);
                         tooltip.AppendCR();
                     }
                 }
@@ -104,7 +104,7 @@ namespace EliteDangerousCore.StarScan2
             else if (bn.BodyType == BodyDefinitions.BodyType.AsteroidCluster)
             {
                 var tooltip = new System.Text.StringBuilder(256);
-                bn.Scan?.DisplayText(tooltip);
+                bn.Scan?.DisplayText(tooltip, ShowWebBodies);
 
                 var nodelabels = new string[] { presentationname };
                 if (notext)
@@ -143,7 +143,7 @@ namespace EliteDangerousCore.StarScan2
 
                     // fill in common info
                     valuable = sc.GetEstimatedValues().EstimatedValue(sc.WasDiscovered, sc.WasMapped, true, true, false) >= ValueLimit;
-                    sc.DisplayText(tooltip, historicmats, curmats);
+                    sc.DisplayText(tooltip, ShowWebBodies, historicmats, curmats);
 
                     if (sc.IsWebSourced)
                         nodelabels[0] = "_" + nodelabels[0];
@@ -248,7 +248,7 @@ namespace EliteDangerousCore.StarScan2
                     {
                         tooltip.AppendFormat("Surface features".Tx());
                         tooltip.Append(": " + Environment.NewLine);
-                        JournalScan.DisplaySurfaceFeatures(tooltip, bn.Features, 4, true, Environment.NewLine);
+                        JournalScan.DisplaySurfaceFeatures(tooltip, bn.Features, ShowWebBodies, 4, true, Environment.NewLine);
                         tooltip.AppendCR();
                     }
                     if (bn.Signals != null)
@@ -345,7 +345,7 @@ namespace EliteDangerousCore.StarScan2
                         g.DrawImageLocked(ringcount > 1 ? BodyDefinitions.GetImageRingGap() : BodyDefinitions.GetImageRingOnly(),  new Rectangle(imageleft - size.Width / 2, imagetop, size.Width * 2, size.Height));
                     }
 
-                    int ss = bn.SurfaceFeatureListSettlementsCount();
+                    int ss = bn.SurfaceFeatureListSettlementsCount(ShowWebBodies);
                     if (ss > 0)
                     {
                         using (Brush b = new SolidBrush(Color.FromArgb(255, 255, 255, 255)))

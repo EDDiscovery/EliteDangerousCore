@@ -47,7 +47,6 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID => null;
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
         public string StationFaction => null;
-
         public override string SummaryName(ISystem sys)
         {
             string sn = base.SummaryName(sys);
@@ -98,7 +97,6 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID => null;
         public string StationFaction => null;
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
-
 
         public override string SummaryName(ISystem sys)
         {
@@ -178,7 +176,7 @@ namespace EliteDangerousCore.JournalEvents
         public AllegianceDefinitions.Allegiance StationAllegiance { get; set; } //fdname, may be null
 
         // IBodyFeature 
-        public string StationFaction => Faction;       
+        public string StationFaction => Faction;
 
         public override string GetInfo()
         {

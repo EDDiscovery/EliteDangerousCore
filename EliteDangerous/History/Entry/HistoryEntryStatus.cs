@@ -281,7 +281,7 @@ namespace EliteDangerousCore
                         JournalDocked jdocked = (JournalDocked)je;
                         //System.Diagnostics.Debug.WriteLine("{0} Docked {1} {2} {3}", jdocked.EventTimeUTC, jdocked.StationName, jdocked.StationType, jdocked.Faction);
 
-                        if (HasBodyID && BodyName != null)        // Augment the docked with any body info we have got
+                        if (HasBodyID && BodyName != null)        // Augment the docked with any body info we have got, see journaldocking
                         {
                             jdocked.BodyID = BodyID;
                             jdocked.BodyName = BodyName;

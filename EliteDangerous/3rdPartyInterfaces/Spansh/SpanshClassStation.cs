@@ -378,9 +378,7 @@ namespace EliteDangerousCore.Spansh
                         if (evt != null)
                         {
                             DateTime updatedat = evt["updated_at"].DateTimeUTC();
-                            StationInfo station = new StationInfo(updatedat);
-
-                            station.DataSource = SystemSource.FromSpansh;
+                            StationInfo station = new StationInfo(updatedat, SystemSource.FromSpansh);
 
                             station.Faction = evt["controlling_minor_faction"].StrNull();
 

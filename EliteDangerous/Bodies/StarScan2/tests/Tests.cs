@@ -104,11 +104,12 @@ namespace EliteDangerousCore.StarScan2
 
         }
 
-        static public void TestScan(string system, string jsonfile, string outpath, bool draweachone, int width, bool showmaterials = true)
+        static public void TestScan(EliteDangerousCore.StarScan2.StarScan ss, string system, string jsonfile, string outpath, bool draweachone, int width, bool showmaterials = true)
         {
             if (File.Exists(jsonfile))
             {
-                EliteDangerousCore.StarScan2.StarScan ss = new EliteDangerousCore.StarScan2.StarScan();
+                if ( ss== null)     // if create new one each time..
+                    ss = new EliteDangerousCore.StarScan2.StarScan();
                 
                 DebuggerHelpers.OutputControl += "StarScan";        // turn on debugging
 

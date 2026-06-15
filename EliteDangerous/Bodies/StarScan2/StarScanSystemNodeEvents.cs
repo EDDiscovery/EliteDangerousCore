@@ -785,12 +785,13 @@ namespace EliteDangerousCore.StarScan2
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Location or Supercruise Exit, Station is only given to orbiting stations, and we don't know where they are, so system bodies
-        public BodyNode AddStation( IBodyFeature loc)
+        // they have a bodyid like they are a planet
+        public BodyNode AddOrbitingStation( IBodyFeature loc)
         {
             (loc.BodyType == BodyDefinitions.BodyType.Station).Assert("Error called add station with another type");
 
-            BodyNode bn = FindBody(loc.BodyID.Value);
-            if (bn == null)
+            BodyNode bn = FindBody(loc.BodyID.Value);       // find body.. 
+            if (bn == null)                                 // if not found, we add to system bodies
             {
                 if (systemBodies.AddFeatureOnlyIfNew(loc))
                 {
@@ -867,8 +868,9 @@ namespace EliteDangerousCore.StarScan2
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // If its a settlement, we have augmented the docking event with BodyID/BodyName. Else we don't have body id
-        public BodyNode AddDockingToBody(JournalDocked sc)
+        // If its a settlement, we have augmented the docking event with BodyID/BodyName via the HistoryEntryStatus
+        // Else we don't have body id and it goes to system bodies
+        public BodyNode AddDocking(JournalDocked sc)
         {
             BodyNode bd = null;
             if (sc.BodyID.HasValue && StationDefinitions.IsPlanetaryPort(sc.FDStationType))         // this makes it a settlement on a known body
@@ -886,7 +888,7 @@ namespace EliteDangerousCore.StarScan2
                 bd = systemBodies;          // else we don't know where it is, so assign to main list
             }
 
-            //$"Add docking {sc.StationName} to body {bd.Name()}".DO();
+            //$"Add docking {sc.StationName} {sc.FDStationType} to body {bd.Name()}".DO();
             bd.AddDocking(sc);
             SignalGeneration++;
             return bd;

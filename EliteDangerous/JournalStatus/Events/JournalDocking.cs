@@ -117,16 +117,15 @@ namespace EliteDangerousCore.JournalEvents
         public string StationFaction { get => Faction; }            // alias for Faction here
 
         // IBodyFeature
-        public string BodyName { get; set; }        // augmented by Historyentrystatus .Docked switch
-        public int? BodyID { get; set; }            // augmented
-        public BodyDefinitions.BodyType BodyType { get; set; } = BodyDefinitions.BodyType.Unknown;  // augmented
-        public double? Latitude { get; set; }       // augmented
-        public double? Longitude { get; set; }      // augmented
+        public string BodyName { get; set; }        // augmented by Historyentrystatus .Docked switch, also captured by spansh during import
+        public int? BodyID { get; set; }            // augmented by Historyentrystatus .Docked switch, also captured by spansh during import
+        public BodyDefinitions.BodyType BodyType { get; set; } = BodyDefinitions.BodyType.Unknown;  // augmented  by Historyentrystatus .Docked switch, also captured by spansh during import
+        public double? Latitude { get; set; }       // augmented by Historyentrystatus .Docked switch, also captured by spansh during import
+        public double? Longitude { get; set; }      // augmented by Historyentrystatus .Docked switch, also captured by spansh during import
         public bool HasLatLong => Latitude != null && Longitude != null;
         public string Name => StationName;
         public string Name_Localised => StationName_Localised;
         public string AssociatedFaction => Faction;
-        public SystemSource DataSource { get; set; } = SystemSource.FromJournal;            // default is from journal
 
         // these are EconomyDefinitions.Economies
         public bool HasAnyEconomyTypes(string[] fdnames)

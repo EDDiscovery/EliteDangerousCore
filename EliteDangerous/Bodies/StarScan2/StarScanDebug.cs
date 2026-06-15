@@ -103,21 +103,15 @@ namespace EliteDangerousCore.StarScan2
                     }
 
                     (he.journalEntry as IStarScan).AddStarScan(this, he.System);
-                    perstep?.Invoke(this,mhe);
-                    DumpTree();
+                    perstep?.Invoke(this, mhe);
+                    foreach (var kvp in systemNodesByName)
+                    {
+                        System.Diagnostics.Debug.WriteLine(kvp.Value.PrintTree());
+                    }
                 }
             }
 
             AssignPending();
-        }
-
-  
-        public void DumpTree()
-        {
-            foreach (var kvp in systemNodesByName)
-            {
-                kvp.Value.DumpTree();
-            }
         }
 
 

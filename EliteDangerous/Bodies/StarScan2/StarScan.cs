@@ -20,6 +20,7 @@ using System.Linq;
 
 namespace EliteDangerousCore.StarScan2
 {
+    
     public partial class StarScan
     {
         #region Public IF
@@ -52,6 +53,11 @@ namespace EliteDangerousCore.StarScan2
                         foreach (JournalScan js in lookupres.Bodies)
                         {
                             AddJournalScan(js, new SystemClass(js.StarSystem,js.SystemAddress));
+                        }
+
+                        foreach( StationInfo si in lookupres.Stations)
+                        {
+                            AddDocking(si,si.System);
                         }
 
                         if (lookupres.BodyCount.HasValue)
@@ -107,6 +113,11 @@ namespace EliteDangerousCore.StarScan2
                         foreach (JournalScan js in lookupres.Bodies)
                         {
                             AddJournalScan(js, sys);
+                        }
+
+                        foreach (StationInfo si in lookupres.Stations)
+                        {
+                            AddDocking(si, si.System);
                         }
 
                         if (lookupres.BodyCount.HasValue)

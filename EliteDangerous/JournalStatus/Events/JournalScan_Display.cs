@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using EliteDangerousCore.UIEvents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,16 +23,17 @@ namespace EliteDangerousCore.JournalEvents
 {
     public partial class JournalScan
     {
-        public string DisplayText(List<MaterialCommodityMicroResource> historicmatlist = null,
-                                                        List<MaterialCommodityMicroResource> currentmatlist = null,
-                                                        bool includefront = true)
+        public string DisplayText(bool showwebbodies,
+                                    List<MaterialCommodityMicroResource> historicmatlist = null,
+                                    List<MaterialCommodityMicroResource> currentmatlist = null,
+                                    bool includefront = true)
         {
             var sb = new StringBuilder(1024);
-            DisplayText(sb, historicmatlist, currentmatlist, includefront);
+            DisplayText(sb, showwebbodies, historicmatlist, currentmatlist, includefront);
             return sb.ToString();
         }
 
-        public void DisplayText(StringBuilder sb, List<MaterialCommodityMicroResource> historicmatlist = null,
+        public void DisplayText(StringBuilder sb, bool showwebbodies, List<MaterialCommodityMicroResource> historicmatlist = null,
                                                         List<MaterialCommodityMicroResource> currentmatlist = null,
                                                         bool includefront = true)
         {
@@ -120,7 +122,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 sb.Append("Surface features".Tx());
                 sb.Append(": " + Environment.NewLine);
-                DisplaySurfaceFeatures(sb, SurfaceFeatures, 4, true, Environment.NewLine);
+                DisplaySurfaceFeatures(sb, SurfaceFeatures, showwebbodies, 4, true, Environment.NewLine);
                 sb.AppendCR();
             }
             if (Signals != null)
@@ -585,21 +587,24 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        static public void DisplaySurfaceFeatures(System.Text.StringBuilder sb, List<IBodyFeature> list, int indent, bool indentfirst, string separ = ", ")        // default is environment.newline
+        static public void DisplaySurfaceFeatures(System.Text.StringBuilder sb, List<IBodyFeature> list, bool showwebbodies, int indent, bool indentfirst, string separ = ", ")        // default is environment.newline
         {
             string inds = new string(' ', indent);
 
             int index = 0;
             foreach (var ibf in list)
             {
-                //System.Diagnostics.Debug.WriteLine($"{s.ScanType} {s.Genus_Localised} {s.Species_Localised}");
-                if (indent > 0 && (index > 0 || indentfirst))       // if indent, and its either not first or allowed to indent first
-                    sb.Append(inds);
+                if (ibf.DataSource == SystemSource.FromJournal || showwebbodies)
+                {
+                    //System.Diagnostics.Debug.WriteLine($"{s.ScanType} {s.Genus_Localised} {s.Species_Localised}");
+                    if (indent > 0 && (index > 0 || indentfirst))       // if indent, and its either not first or allowed to indent first
+                        sb.Append(inds);
 
-                sb.Append($"{EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(ibf.EventTimeUTC)} : {ibf.Name_Localised ?? ibf.Name ?? ibf.EventTypeStr} {ibf.Latitude:0.####}, {ibf.Longitude:0.####}");
+                    sb.Append($"{EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(ibf.EventTimeUTC)} : {ibf.Name_Localised ?? ibf.Name ?? ibf.EventTypeStr} {ibf.Latitude:0.####}, {ibf.Longitude:0.####}");
 
-                if (index++ < list.Count - 1)     // if another to go, separ
-                    sb.Append(separ);
+                    if (index++ < list.Count - 1)     // if another to go, separ
+                        sb.Append(separ);
+                }
             }
         }
 

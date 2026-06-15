@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2025 - 2025 EDDiscovery development team - Robby
+ * Copyright 2025 - 2026 EDDiscovery development team - Robby
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -243,7 +243,7 @@ namespace EliteDangerousCore.StarScan2
         #region System Node variables
 
         private Dictionary<int, BodyNode> bodybyid;
-        private BodyNode systemBodies;
+        private BodyNode systemBodies;                  // root node of all bodyies
         private const string debugid = "StarScan";
 
         #endregion
@@ -252,35 +252,53 @@ namespace EliteDangerousCore.StarScan2
 
         public void DumpTree()
         {
-            global::System.Diagnostics.Trace.WriteLine($"System `{System.Name}` {System.SystemAddress}: bodies {Bodies().Count()} ids {bodybyid.Count}");
-            systemBodies.DumpTree("S", 0);
+            global::System.Diagnostics.Debug.WriteLine(PrintTree().ToString());
+        }
+
+        public System.Text.StringBuilder PrintTree()
+        {
+            System.Text.StringBuilder sp = new System.Text.StringBuilder(8192);
+            sp.Append($"System `{System.Name}` {System.SystemAddress}: bodies {Bodies().Count()} ids {bodybyid.Count}");
+            sp.AppendCR();
+            systemBodies.PrintTree(sp,"S", 0);
+            return sp;
         }
 
         [System.Diagnostics.Conditional("DEBUG")]
-        [System.Diagnostics.DebuggerHidden]
+    //    [System.Diagnostics.DebuggerHidden]
         public void CheckTree()
         { 
             int totalbodieswithids = 0;
-            HashSet<string> cnames = new HashSet<string>();
-            foreach( var x in Bodies())
+            HashSet<string> cnames = new HashSet<string>();     // quick name find to see if we have a bad repeat
+            var bodylist = Bodies().ToList();
+
+            foreach( BodyNode x in bodylist)
             {
-                (x.SystemNode == this).Assert($"StarScan System Node not assigned to this {x.Name()}", () => DumpTree());
+                (x.SystemNode == this).Assert($"StarScan System Node not assigned to this {x.Name()}", () => { global::System.Diagnostics.Debug.WriteLine(PrintTree().ToString()); });
                 if ( x.BodyID>=0 )
                 {
                     totalbodieswithids++;
 
                     if (bodybyid.TryGetValue(x.BodyID, out BodyNode v))
                     {
-                        (v == x).Assert($"StarScan bodybyid not pointing to same place as ID for {x.Name()}", () => DumpTree());
+                        (v == x).Assert($"StarScan bodybyid not pointing to same place as ID for {x.Name()}", () => { global::System.Diagnostics.Debug.WriteLine(PrintTree().ToString()); });
                     }
                     else
-                        false.Assert($"StarScan Missing bodyid in bodybyid {x.Name()}", () => DumpTree());
+                        false.Assert($"StarScan Missing bodyid in bodybyid {x.Name()}", () => { global::System.Diagnostics.Debug.WriteLine(PrintTree().ToString()); });
                 }
-                if ( x.CanonicalName!=null )
+                
+                if ( x.CanonicalName!=null ) // check for repeated canonical names
                 {
-                    bool good = !cnames.Contains(x.CanonicalName);
-                    if (!good)
-                        global::System.Diagnostics.Trace.WriteLine($"Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} is repeated in {System.Name} for {EDCommander.Current.Name}");
+                    bool found = cnames.Contains(x.CanonicalName);
+
+                    if (found)      // if already in name list, double check to see if its the same bodytype (might be like Leesti with the same name for the planet and star)
+                    {
+                        List<BodyNode> repeats = bodylist.Where(y => y.CanonicalName == x.CanonicalName && y.BodyType == x.BodyType).ToList();
+                        if (repeats.Count > 1)
+                        {
+                            global::System.Diagnostics.Trace.WriteLine($"Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} is repeated in {System.Name} for {EDCommander.Current.Name}");
+                        }
+                    }
                     cnames.Add(x.CanonicalName);
                 }
                 
@@ -292,7 +310,7 @@ namespace EliteDangerousCore.StarScan2
                     global::System.Diagnostics.Trace.WriteLine($"**** Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} planetary ring not under star/planet ring {System.Name} for {EDCommander.Current.Name}");
             }
 
-            (totalbodieswithids == bodybyid.Count).Assert($"StarScan {System.Name} Not the same number of bodyids as nodes {totalbodieswithids} with Ids in bodybyid {bodybyid.Count}", () => DumpTree());
+            (totalbodieswithids == bodybyid.Count).Assert($"StarScan {System.Name} Not the same number of bodyids as nodes {totalbodieswithids} with Ids in bodybyid {bodybyid.Count}", () => { global::System.Diagnostics.Debug.WriteLine(PrintTree().ToString()); });
 
             CheckParents(systemBodies);
         }
@@ -307,13 +325,14 @@ namespace EliteDangerousCore.StarScan2
         }
 
         // output the image to a file (or just create it if path=null)
-        public bool DrawSystemToFile(string path, int width = 1920,  bool materials = true)
+        public bool DrawSystemToFile(string path, int width = 1920,  bool materials = true, bool showwebbodies = true)
         {
             StarScan2.SystemDisplay sd = new StarScan2.SystemDisplay();
             sd.Font = new System.Drawing.Font("Arial", 10);
             sd.SetSize(64);
             sd.ShowMaterials = materials;
             sd.TextBackColor = Color.Transparent;
+            sd.ShowWebBodies = showwebbodies;
             ExtendedControls.ExtPictureBox imagebox = new ExtendedControls.ExtPictureBox();
             imagebox.FillColor = Color.AliceBlue;
             sd.DrawSystemRender(imagebox, width, this);

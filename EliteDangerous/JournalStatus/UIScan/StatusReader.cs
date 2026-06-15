@@ -284,7 +284,7 @@ namespace EliteDangerousCore
                             if (destinationSawChanged && DestinationSystemAddress.HasValue && DestinationBodyID.HasValue && DestinationName.HasChars())       
                             {
                                 var ne = new JournalEDDDestinationSelected(EventTimeUTC, EDCommander.CurrentCmdrID, DestinationSystemAddress.Value, DestinationBodyID.Value, DestinationName, DestinationNameLoc);
-                                ne.Add(ne.ToJSON());
+                                ne.Add(ne.CreateJSON());
                                 jevents.Add(ne);
                             }
 

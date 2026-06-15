@@ -57,7 +57,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public JObject ToJSON()
+        public JObject CreateJSON()
         {
             JArray itemlist = new JArray(Yard.Ships.Select(x => new JObject() { { "id", x.id }, { "ShipType", x.ShipType }, { "ShipType_Localised", x.ShipType_Localised }, { "ShipPrice", x.ShipPrice } }));
 
@@ -284,7 +284,7 @@ namespace EliteDangerousCore.JournalEvents
             return BaseUtils.FieldBuilder.Build("", ShipType, "Amount: ; cr;N0".Tx(), ShipPrice, "At".Tx() + ": ", System);
         }
 
-        public JObject Json()            // create JSON of this record..
+        public JObject CreateJSON()            // create JSON of this record..
         {
             JObject evt = new JObject();
             evt["timestamp"] = EventTimeUTC;

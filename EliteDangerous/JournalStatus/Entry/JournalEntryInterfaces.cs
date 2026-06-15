@@ -74,9 +74,10 @@ namespace EliteDangerousCore
         bool HasLatLong { get; }
         string Name { get; }                // name of installation/feature on body, docked name of station
         string Name_Localised { get; }      // name of installation/feature on body, docked name of station
-        long? MarketID { get; }             // for docked on station
-        StationDefinitions.StarportTypes FDStationType { get; } // valid on docked
-        string StationFaction { get; }             // for FSDJump and Docked.
+        long? MarketID { get; }             // valid for docked, ApproachSettlement, Location when docked
+        StationDefinitions.StarportTypes FDStationType { get; } // valid for docked
+        string StationFaction { get; }      // for Location, Docked
+        SystemSource DataSource { get; }    // data source of this event
     }
 
     // allows commonality of information between Location (when docked) and Docked events

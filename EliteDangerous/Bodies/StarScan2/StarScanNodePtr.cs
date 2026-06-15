@@ -89,7 +89,7 @@ namespace EliteDangerousCore.StarScan2
             return x;
         }
 
-        public void Dump(string bid, int level = 0)
+        public void Dump(System.Text.StringBuilder sp, string bid, int level = 0)
         {
             if ( level > 0)
             {
@@ -100,10 +100,10 @@ namespace EliteDangerousCore.StarScan2
 
             }
 
-            BodyNode.Dump(bid, level);
+            BodyNode.ToString(sp,bid, level);
 
             foreach (var x in ChildBodies)
-                x.Dump(bid, level + 1);
+                x.Dump(sp,bid, level + 1);
         }
 
         public static void Move(IEnumerable<Tuple<NodePtr,NodePtr>> movelist)

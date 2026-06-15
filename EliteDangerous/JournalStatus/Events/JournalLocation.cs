@@ -134,7 +134,6 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Multicrew { get; set; }
         public bool? InSRV { get; set; }
         public bool? OnFoot { get; set; }
-        public SystemSource DataSource => SystemSource.FromJournal;
 
         public override string SummaryName(ISystem sys)     // Location
         {

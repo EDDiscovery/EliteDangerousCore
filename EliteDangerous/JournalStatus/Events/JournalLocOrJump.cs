@@ -24,8 +24,6 @@ namespace EliteDangerousCore.JournalEvents
         public string StarSystem { get; set; }
         public EMK.LightGeometry.Vector3 StarPos { get; set; }
         public long? SystemAddress { get; set; }
-        public SystemSource LocOrJumpSource { get; set; } = SystemSource.FromJournal;     // this is the default..
-
         public string Body { get; set; }            // March 2019 introduced the destination body you jumped to
         public BodyDefinitions.BodyType BodyType { get; set; }      // as of JAN 26 : Barycentre, Star, StellarRing types
         public int? BodyID { get; set; }
@@ -70,6 +68,7 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportTypes FDStationType { get; set; } = StationDefinitions.StarportTypes.Unknown;
         public string StationFaction { get; set; } = null; // 3.3.2 will be empty/null for previous logs.
 
+        public const string EDSMJournalMarker = "StarPosFromEDSM";
 
         // Implementation
 
@@ -86,8 +85,9 @@ namespace EliteDangerousCore.JournalEvents
 
         protected JournalLocOrJump(JObject evt, JournalTypeEnum jtype) : base(evt, jtype)
         {
+            DataSource = evt[EDSMJournalMarker].Bool(false) ? SystemSource.FromEDSM : SystemSource.FromJournal;
+
             StarSystem = evt["StarSystem"].Str();
-            LocOrJumpSource = evt["StarPosFromEDSM"].Bool(false) ? SystemSource.FromEDSM : SystemSource.FromJournal;
 
             EMK.LightGeometry.Vector3 pos = new EMK.LightGeometry.Vector3();
 
@@ -170,8 +170,9 @@ namespace EliteDangerousCore.JournalEvents
 
             if (evt.Contains("ThargoidWar"))      // if contains factions
                 ThargoidSystemState = ThargoidDefinitions.ThargoidWar.ReadJSON(evt, EventTimeUTC);
-
         }
+
+
         public bool HasPowerPlayInfo { get {
                 return ControllingPower != null ||  PowerplayState != PowerPlayDefinitions.State.Unknown || PowerplayPowers != null ||
                      PowerplayStateControlProgress != null || PowerplayStateReinforcement != null || PowerplayStateUndermining != null || PowerplayConflictProgress != null; } }

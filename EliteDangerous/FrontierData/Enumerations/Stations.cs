@@ -187,14 +187,14 @@ namespace EliteDangerousCore
             Bernal,         // used interchangeable with Ocellus between Docked and Location
             Orbis,
             Outpost,
-            OnFootSettlement,
-            SurfaceStation,
-                CraterOutpost,
-            CraterPort,
+            OnFootSettlement,       // IsPlantaryPort
+            SurfaceStation,         // IsPlantaryPort
+            CraterOutpost,          // IsPlantaryPort
+            CraterPort,             // IsPlantaryPort
             SpaceConstructionDepot,
-                PlanetaryConstructionDepot,
-                DockablePlanetStation,
-                GameplayPOI,
+            PlanetaryConstructionDepot, // IsPlantaryPort
+            DockablePlanetStation,      // IsPlantaryPort
+            GameplayPOI,
             Dodec,
 
             Station,        // Location has it as this, when on foot on station, or when outside an orbiting station
@@ -202,8 +202,8 @@ namespace EliteDangerousCore
 
         public static bool IsPlanetaryPort(StarportTypes t)
         {
-            return t == StarportTypes.OnFootSettlement || t == StarportTypes.OnFootSettlement || t == StarportTypes.PlanetaryConstructionDepot || t == StarportTypes.DockablePlanetStation
-                || t == StarportTypes.CraterOutpost || t == StarportTypes.CraterPort;
+            return t == StarportTypes.OnFootSettlement || t == StarportTypes.SurfaceStation || t == StarportTypes.CraterOutpost ||
+                    t == StarportTypes.CraterPort || t == StarportTypes.PlanetaryConstructionDepot || t == StarportTypes.DockablePlanetStation;
         }
 
         // maps the StationType field to an enum.

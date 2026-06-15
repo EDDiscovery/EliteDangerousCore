@@ -24,14 +24,12 @@ namespace EliteDangerousCore.Spansh
     {
         // read spansh evt for station info, which is JournalDocked plus, at bodyname.
         // May return null if it does not like it
-        private static StationInfo ConvertToStationInfo(JToken evt, ISystem sys, string bodyname, string bodytype, string bodysubtype)
+        private static StationInfo ConvertToStationInfo(JToken evt, ISystem sys, string bodyname = null, int? bodyid = null, string bodytype = null, string bodysubtype = null)
         {
             try
             {
                 DateTime updatedat = evt["updateTime"].DateTimeUTC();
-                StationInfo station = new StationInfo(updatedat);
-
-                station.DataSource = SystemSource.FromSpansh;
+                StationInfo station = new StationInfo(updatedat, SystemSource.FromSpansh);
 
                 station.System = sys;
 
@@ -163,6 +161,7 @@ namespace EliteDangerousCore.Spansh
                 station.DistanceRefSystem = 0;
 
                 station.BodyName = bodyname;
+                station.BodyID = bodyid;
                 station.BodyType = BodyDefinitions.GetBodyType(bodytype);
                 station.BodySubType = bodysubtype;
 

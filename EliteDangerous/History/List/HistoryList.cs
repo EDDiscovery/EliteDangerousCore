@@ -274,7 +274,7 @@ namespace EliteDangerousCore
 
             for( int entry = hist.Count-1; entry>=0; entry--)
             {
-                if (hist[entry].journalEntry.IsJournalSourced )      // if we have a journal record
+                if (hist[entry].journalEntry.DataSource == SystemSource.FromJournal)        // first from journal records the default flags
                 {
                     JournalEntry.DefaultHorizonsFlag = hist[entry].journalEntry.IsHorizons;
                     JournalEntry.DefaultOdysseyFlag = hist[entry].journalEntry.IsOdyssey;

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016-2022 EDDiscovery development team
+ * Copyright 2016-2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -36,7 +36,17 @@ namespace EliteDangerousCore
 
         public long Id { get; private set; }                    // this is the entry ID
         public long TLUId { get; private set; }                 // this ID of the journal tlu (aka TravelLogId)
-        public bool IsJournalSourced { get { return TLUId > 0; } }      // generated entries by EDD will have a TLU of 0 - others, file and CAPI journal downloaded, will not
+
+        // if iDataSource is set, then return that, else its fromjournal if TLUID>0 or synthesised. 
+        // Scan overrides by looking for JSON markers for Spansh (EDDFromSpanshBody) or EDSM sourced data (EDDfromEDSMBodie). Note these never hit the DB but are memory objects created by the StarScan process.
+        // JournalLocJump overrides by looking for a JSON marker (EDSMJournalMarker) to note its from EDSM.
+        //      FSDJump can be created by EDSM log fetcher and creates a entry using CreateJSON and stores it in the DB so it gets a TLU>0
+        // CAPI created entries (shipyard, outfitting, EDDCommodityPrices) will be marked as Sythesised as TLUID = 0. JSON is created for the event using CreateJSON and pushed to the DB with TLUID=0
+        // EDD created entries (EDDDestinationSelected) will be marked as Sythesised as TLUID = 0. . JSON is created for the event using CreateJSON and pushed to the DB with TLUID=0
+        // StationInfo sets it at creation to Spansh since that is the only source. StationInfo never hits the DB
+        public virtual SystemSource DataSource { get { return iDataSource ?? (TLUId > 0 ? SystemSource.FromJournal : SystemSource.Synthesised); } protected set { iDataSource = value; } }
+        private SystemSource? iDataSource = null;
+
         public int CommanderId { get; private set; }            // commander Id of entry
 
         public JournalTypeEnum EventTypeID { get; private set; }
@@ -766,7 +776,7 @@ namespace EliteDangerousCore
 
             foreach (var kvp in obj)
             {
-                if (kvp.Key.StartsWith("EDD") || kvp.Key.Equals("StarPosFromEDSM")) // remove all EDD generated keys from json
+                if (kvp.Key.StartsWith("EDD") || kvp.Key.Equals(JournalLocOrJump.EDSMJournalMarker)) // remove all EDD generated keys from json
                 {
                     if (jcopy == null)      // only pay the expense if it has one of the entries in it
                         jcopy = (JObject)obj.Clone();
