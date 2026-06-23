@@ -201,6 +201,7 @@ namespace EliteDangerousCore
             GDN_Hybrid_Fighter_V1_Shield,
             GDN_Hybrid_Fighter_V2_Shield,
             GDN_Hybrid_Fighter_V3_Shield,
+            BiologicalScanner,
             Independent_Fighter_Shield, // MUST BE LAST
 
         }
@@ -414,6 +415,7 @@ namespace EliteDangerousCore
             [Slot.LimpetController01] = "Limpet Controller 1",
             [Slot.FighterBay01] = "Fighter Bay 1",
             [Slot.Hologram] = "Hologram",
+            [Slot.BiologicalScanner] = "Biological Scanner",
         };
 
         // maps the slot fdname to an enum

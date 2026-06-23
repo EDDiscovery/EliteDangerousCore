@@ -19,7 +19,7 @@ using System.Text;
 namespace EliteDangerousCore.JournalEvents
 {
     // Location, CarrierJump, FSDJump
-    public abstract class JournalLocOrJump : JournalEntry, IStatsJournalEntry, IBodyFeature
+    public abstract class JournalLocOrJump : JournalEntry, IStatsJournalEntry, IBodyLocation
     {
         public string StarSystem { get; set; }
         public EMK.LightGeometry.Vector3 StarPos { get; set; }

@@ -87,16 +87,16 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (nMassEM.HasValue)
                 {
-                    sb.Append("Mass".Tx() + ": ");
-                    sb.AppendSPC();
+                    sb.Append("Mass".Tx());
+                    sb.Append(": ");
                     sb.Append(MassEMMM);
                     sb.AppendCR();
                 }
 
                 if (nRadius.HasValue)
                 {
-                    sb.AppendFormat("Radius".Tx() + ": ");
-                    sb.AppendSPC();
+                    sb.AppendFormat("Radius".Tx());
+                    sb.Append(": ");
                     sb.Append(RadiusText);
                     sb.AppendCR();
                 }
@@ -478,7 +478,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (shortinfo)
             {
-                information.Append(' ').Append(js.DisplayShortInformation());
+                information.Append(' ').Append(js.DisplayShortInformation(null));
             }
             else
                 information.Append(' ').Append(js.DistanceFromArrivalText);
@@ -486,23 +486,33 @@ namespace EliteDangerousCore.JournalEvents
             return information.ToString();
         }
 
-        public string DisplayShortInformation()
+        public string DisplayShortInformation(ISystem showbodyname)
         {
             if (IsStar)
             {
-                return BaseUtils.FieldBuilder.Build("Mass: ;SM;0.00".Tx(), nStellarMass,
+                return BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass: ;SM;0.00".Tx(), nStellarMass,
                                                 "Age: ;my;0.0".Tx(), nAge,
                                                 "Radius".Tx() + ": ", RadiusText,
-                                                "Dist".Tx() + ": ", DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
+                                                "Dist: ;ls;0.0".Tx(), DistanceFromArrivalLS,
+                                                "Name".Tx() + ": ", showbodyname != null ? BodyName.ReplaceIfStartsWith(showbodyname.Name) : null);
+            }
+            else if (IsPlanet)
+            {
+                return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass".Tx() + ": ", MassEMMM,
+                                                "<;, Landable".Tx(), IsLandable,
+                                                "<;, Terraformable".Tx(), TerraformState == "Terraformable", "", HasAtmosphere ? AtmosphereTranslated : null,
+                                                 "Gravity: ;G;0.00".Tx(), nSurfaceGravityG,
+                                                 "Radius".Tx() + ": ", RadiusText,
+                                                 "Dist: ;ls;0.0".Tx(), DistanceFromArrivalLS,
+                                                "Name".Tx() + ": ", showbodyname != null ? BodyName.ReplaceIfStartsWith(showbodyname.Name) : null);
             }
             else
             {
                 return BaseUtils.FieldBuilder.Build("Mass".Tx() + ": ", MassEMMM,
-                                                 "Radius".Tx() + ": ", RadiusText,
-                                                 "Dist".Tx() + ": ", DistanceFromArrivalLS > 0 ? DistanceFromArrivalText : null);
+                                                 "Dist: ;ls;0.0".Tx(), DistanceFromArrivalLS,
+                                                "Name".Tx() + ": ", showbodyname != null ? BodyName.ReplaceIfStartsWith(showbodyname.Name) : null);
             }
         }
-
 
 
         // show material counts at the historic point and current.  Has trailing LF if text present.

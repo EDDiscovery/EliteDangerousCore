@@ -188,6 +188,13 @@ namespace EliteDangerousCore
                 Ships[currentid] = Ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
             VerifyList();
         }
+        public void DockLander()
+        {
+            //System.Diagnostics.Debug.WriteLine("Dock SRV");
+            if (HaveCurrentShip)
+                Ships[currentid] = Ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
+            VerifyList();
+        }
 
         public void DestroyedSRV()
         {

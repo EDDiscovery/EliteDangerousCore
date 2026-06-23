@@ -80,6 +80,13 @@ namespace EliteDangerousCore
         SystemSource DataSource { get; }    // data source of this event
     }
 
+    // events containing feature information on a body and can be a location in historyentrystatus
+    // used to distinguish information for HES
+    public interface IBodyLocation : IBodyFeature
+    {
+
+    }
+
     // allows commonality of information between Location (when docked) and Docked events
     public interface ILocDocked
     {

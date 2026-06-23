@@ -55,7 +55,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.SupercruiseExit)]
-    public class JournalSupercruiseExit : JournalEntry, IBodyFeature, IStarScan
+    public class JournalSupercruiseExit : JournalEntry, IBodyLocation, IStarScan
     {
         public JournalSupercruiseExit(JObject evt) : base(evt, JournalTypeEnum.SupercruiseExit)
         {

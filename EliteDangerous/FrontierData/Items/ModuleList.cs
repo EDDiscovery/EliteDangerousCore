@@ -502,6 +502,14 @@ namespace EliteDangerousCore
                 { "int_fighterbay_size6_class1", new ShipModule(128727931,ShipModule.ModuleTypes.FighterHangar,"Fighter Hangar Class 6 Rating E"){ Cost = 1869350, Class = 6, Rating = "D", Mass = 40, Integrity = 80, PowerDraw = 0.35, BootTime = 5, Capacity = 2, Rebuilds = 8, AmmoCost = 1030 } },
                 { "int_fighterbay_size7_class1", new ShipModule(128727932,ShipModule.ModuleTypes.FighterHangar,"Fighter Hangar Class 7 Rating E"){ Cost = 2369330, Class = 7, Rating = "D", Mass = 60, Integrity = 120, PowerDraw = 0.35, BootTime = 5, Capacity = 2, Rebuilds = 15, AmmoCost = 1030 } },
 
+                { "int_fighterbaymk2_size7_class1", new ShipModule(129045541,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar (Free) Class 7 Rating E") },
+                { "int_fighterbaymk2_size7_class1_free", new ShipModule(129045679,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar (Free) Class 7 Rating E") },
+                { "int_fighterbaymk2_size6_class1", new ShipModule(129045539,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar Class 6 Rating E") },
+                { "int_fighterbaymk2_size6_class1_free", new ShipModule(129045678,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar (Free) Class 6 Rating E") },
+                { "int_fighterbaymk2_size5_class1", new ShipModule(129045540,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar Class 5 Rating E") },
+                { "int_fighterbaymk2_size5_class1_free", new ShipModule(129045677,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar (Free) Class 5 Rating E") }, 
+
+
                 // flak
 
                 { "hpt_flakmortar_fixed_medium", new ShipModule(128785626,ShipModule.ModuleTypes.RemoteReleaseFlakLauncher,"Remote Release Flak Launcher Fixed Medium"){ Cost = 261800, Mount = "F", Class = 2, Rating = "B", Mass = 4, Integrity = 51, PowerDraw = 1.2, BootTime = 0, DPS = 17, Damage = 34, DistributorDraw = 0.24, ThermalLoad = 3.6, ArmourPiercing = 60, Speed = 550, RateOfFire = 0.5, BurstInterval = 2, Clip = 1, Ammo = 32, ReloadTime = 2, BreachDamage = 1.7, BreachModuleDamageAfterBreach = 5, BreachMin = 100, BreachMax = 100, ExplosiveProportionDamage = 100, AmmoCost = 125 } },
@@ -1648,6 +1656,11 @@ namespace EliteDangerousCore
                 { "int_shieldgenerator_fighter_class1", new ShipModule(899990080,ShipModule.ModuleTypes.ShieldGenerator,"Shield Generator Fighter Class 1") },
                 { "ext_emitter_guardian", new ShipModule(899990190,ShipModule.ModuleTypes.Sensors,"Ext Emitter Guardian") },
                 { "ext_emitter_standard", new ShipModule(899990090,ShipModule.ModuleTypes.Sensors,"Ext Emitter Standard") },
+
+                { "vehicle_lander01_pulselaser_fixed_left", new ShipModule(-1,ShipModule.ModuleTypes.PulseLaser,"Nomad Pulse Laser Fixed Left") },
+                { "vehicle_lander01_pulselaser_fixed_right", new ShipModule(-1,ShipModule.ModuleTypes.PulseLaser,"Nomad Pulse Laser Fixed Right") },
+                { "hpt_mkii_biologicalscanner_class1", new ShipModule(-1,ShipModule.ModuleTypes.DiscoveryScanner,"Mk II Biological Scanner Rating E") },
+                { "lander01_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Nomad Cockpit") },
             };
 
             srvmodules = new Dictionary<string, ShipModule>

@@ -724,30 +724,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo(FillInformationData fid)
         {
-            if (IsStar)
-            {
-                return BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass: ;SM;0.00".Tx(), nStellarMass,
-                                                "Age: ;my;0.0".Tx(), nAge,
-                                                "Radius".Tx()+": ", RadiusText,
-                                                "Dist: ;ls;0.0".Tx(), DistanceFromArrivalLS,
-                                                "Name".Tx()+": ", BodyName.ReplaceIfStartsWith(fid.System.Name));
-            }
-            else if (IsPlanet)
-            {
-                return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass".Tx()+": ", MassEMMM,
-                                                "<;, Landable".Tx(), IsLandable,
-                                                "<;, Terraformable".Tx(), TerraformState == "Terraformable", "", HasAtmosphere ? AtmosphereTranslated : null,
-                                                 "Gravity: ;G;0.00".Tx(), nSurfaceGravityG,
-                                                 "Radius".Tx()+": ", RadiusText,
-                                                 "Dist: ;ls;0.0".Tx(), DistanceFromArrivalLS,
-                                                 "Name".Tx()+": ", BodyName.ReplaceIfStartsWith(fid.System.Name));
-            }
-            else 
-            {
-                return BaseUtils.FieldBuilder.Build("Mass".Tx()+": ", MassEMMM,
-                                                 "Dist: ;ls;0.0".Tx(), DistanceFromArrivalLS,
-                                                 "Name".Tx()+": ", BodyName.ReplaceIfStartsWith(fid.System.Name));
-            }
+            return DisplayShortInformation(fid.System);
         }
 
         public override string GetDetailed()

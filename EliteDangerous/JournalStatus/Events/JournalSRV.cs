@@ -24,6 +24,7 @@ namespace EliteDangerousCore.JournalEvents
         public int? ID { get; set; }
         public string SRVType;          // new odyssey 9, dec 21, may be null
         public string SRVType_Localised; // new odyssey 9, dec 21, may be null
+        public bool IsLander => SRVType.ContainsIIC("Lander");
 
         public JournalDockSRV(JObject evt ) : base(evt, JournalTypeEnum.DockSRV)
         {
@@ -34,12 +35,22 @@ namespace EliteDangerousCore.JournalEvents
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
-            shp.DockSRV();
+            if (IsLander)
+                shp.DockLander();
+            else
+                shp.DockSRV();
         }
 
         public override string GetInfo()  
         {
             return BaseUtils.FieldBuilder.Build("", SRVType_Localised);
+        }
+        public override string SummaryName(ISystem sys)
+        {
+            if (IsLander)
+                return "Dock Lander";
+            else
+                return base.EventFilterName;
         }
     }
 

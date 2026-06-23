@@ -18,7 +18,7 @@ using QuickJSON;
 namespace EliteDangerousCore.JournalEvents
 {
     [JournalEntryType(JournalTypeEnum.ApproachBody)]
-    public class JournalApproachBody : JournalEntry, IBodyFeature, IStarScan
+    public class JournalApproachBody : JournalEntry, IBodyLocation, IStarScan
     {
         public JournalApproachBody(JObject evt) : base(evt, JournalTypeEnum.ApproachBody)
         {
@@ -117,7 +117,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.ApproachSettlement)]
-    public class JournalApproachSettlement : JournalEntry, IBodyFeature, IStarScan
+    public class JournalApproachSettlement : JournalEntry,  IBodyLocation, IStarScan
     {
         public JournalApproachSettlement(JObject evt) : base(evt, JournalTypeEnum.ApproachSettlement)
         {

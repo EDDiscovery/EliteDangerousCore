@@ -46,6 +46,7 @@ namespace EliteDangerousCore
 
             SRV,                // in srv
             Fighter,            // in fighter
+            LanderLanded,      // in nomad
 
             OnFootStarPort,
             OnFootPlanetaryPort,
@@ -63,11 +64,12 @@ namespace EliteDangerousCore
                                             TravelState == TravelStateType.MulticrewSupercruise || TravelState == TravelStateType.DropShipSupercruise; } }
         
         public bool IsNormalSpace { get { return TravelState == TravelStateType.NormalSpace || TravelState == TravelStateType.TaxiNormalSpace || TravelState == TravelStateType.MulticrewNormalSpace || TravelState == TravelStateType.DropShipNormalSpace; } }
-        public bool IsLanded { get { return TravelState == TravelStateType.Landed || TravelState == TravelStateType.MulticrewLanded; } }
+        public bool IsLanded { get { return TravelState == TravelStateType.Landed || TravelState == TravelStateType.MulticrewLanded || TravelState == TravelStateType.LanderLanded; } }
         public bool IsSRV { get { return TravelState == TravelStateType.SRV || TravelState == TravelStateType.MulticrewSRV; } }
         public bool IsFighter { get { return TravelState == TravelStateType.Fighter || TravelState == TravelStateType.MulticrewFighter; } }
 
         public bool IsLandedInShipOrSRV { get { return TravelState == TravelStateType.Landed || TravelState == TravelStateType.SRV || 
+                    TravelState == TravelStateType.LanderLanded || 
                     TravelState == TravelStateType.MulticrewLanded || TravelState == TravelStateType.MulticrewSRV; }}
 
         // true for OnCrewWithCaptain entries (they seem  to be marked with Multicrew) and true if entries are in physical multicrew
@@ -83,10 +85,10 @@ namespace EliteDangerousCore
         //  FSDJump, CarrierJump
         //  ApproachBody
         //  ApproachSettlement
-        //  SupercruiseExit (generating 
+        //  SupercruiseExit 
         //  Docked
         //  For all, it does not imply the travel state, as we hold the best location even if you change modes, such as disembark at a planetary port or starport
-        public IBodyFeature CurrentLocation { get; private set; }               // MAY BE NULL
+        public IBodyLocation CurrentLocation { get; private set; }               // MAY BE NULL. Its an IBodyFeature
         public string WhereAmI => CurrentLocation?.Name_Localised ?? CurrentLocation?.BodyName ?? CurrentLocation?.StarSystem ?? "Unknown";
         public double? Latitude => CurrentLocation?.Latitude;
         public double? Longitude => CurrentLocation?.Longitude;
@@ -100,7 +102,7 @@ namespace EliteDangerousCore
         public string StationFaction => CurrentLocation?.StationFaction;
 
         // Non null when approached a body. ApproachBody has the same fields in as IBodyFeature so use this to make more compatible
-        public IBodyFeature LastApproachBody { get; private set; }   // MAY BE NULL. 
+        public IBodyLocation LastApproachBody { get; private set; }   // MAY BE NULL. 
         public bool BodyApproached => LastApproachBody != null;
 
 
@@ -151,6 +153,7 @@ namespace EliteDangerousCore
         public bool BookedTaxi => LastTaxiDropship is JournalBookTaxi;
 
         public double CurrentBoost { get; private set; } = 1;             // current boost multiplier due to jet cones and synthesis
+        public bool LandedInLander { get; private set; } = false;       // set when fighter lands on touchdown
 
         public HistoryEntryStatus()
         {
@@ -171,6 +174,7 @@ namespace EliteDangerousCore
             OnCrewWithCaptain = prevstatus.OnCrewWithCaptain;
             Wanted = prevstatus.Wanted;
             CurrentBoost = prevstatus.CurrentBoost;
+            LandedInLander = prevstatus.LandedInLander;
         }
 
         public HistoryEntryStatus Update(JournalEntry je, ISystem sys)
@@ -210,6 +214,7 @@ namespace EliteDangerousCore
                             bool locinstation = jloc.FDStationType != StationDefinitions.StarportTypes.Unknown;
 
                             TravelStateType t =
+                                            hes.LandedInLander ? TravelStateType.LanderLanded :
                                             jloc.Docked ? (jloc.Multicrew == true ? TravelStateType.MulticrewDocked : TravelStateType.Docked) :
                                                 (jloc.InSRV == true) ? (jloc.Multicrew == true ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :
                                                     jloc.Taxi == true ? TravelStateType.TaxiNormalSpace :          // can't be in dropship, must be in normal space.
@@ -257,6 +262,7 @@ namespace EliteDangerousCore
                             LastDockingGranted = null,
                             CurrentBoost = 1,
                             JumpSequence = null,
+                            LandedInLander = false, // ensures
                         };
 
                         break;
@@ -430,8 +436,10 @@ namespace EliteDangerousCore
                                                               null, null, StationDefinitions.StarportTypes.Unknown,
                                                               CurrentLocation?.Name, CurrentLocation?.Name_Localised,
                                                               td.Latitude, td.Longitude),
-                            TravelState = TravelState == TravelStateType.MulticrewNormalSpace ? TravelStateType.MulticrewLanded : TravelStateType.Landed,
+                            TravelState = hes.TravelState == TravelStateType.Fighter ? TravelStateType.LanderLanded :
+                                            TravelState == TravelStateType.MulticrewNormalSpace ? TravelStateType.MulticrewLanded : TravelStateType.Landed,
                             CurrentBoost = 1,
+                            LandedInLander = hes.TravelState == TravelStateType.Fighter
                         };
                     }
                     else
@@ -445,8 +453,10 @@ namespace EliteDangerousCore
                     {
                         hes = new HistoryEntryStatus(this)      // not going to use Body, since we must already have it.
                         {
-                            TravelState = TravelState == TravelStateType.MulticrewLanded ? TravelStateType.MulticrewNormalSpace : TravelStateType.NormalSpace,
+                            TravelState = hes.LandedInLander ? TravelStateType.Fighter :
+                                TravelState == TravelStateType.MulticrewLanded ? TravelStateType.MulticrewNormalSpace : TravelStateType.NormalSpace,
                             CurrentLocation = hes.LastApproachBody ?? CurrentLocation,   // Last approach body should be set, but if not, back up
+                            LandedInLander = false,
                         };
                     }
                     else
@@ -486,7 +496,8 @@ namespace EliteDangerousCore
                         var em = (JournalEmbark)je;
                         hes = new HistoryEntryStatus(this)
                         {
-                            TravelState = em.SRV ? (em.Multicrew ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :
+                            TravelState = hes.LandedInLander ? TravelStateType.Fighter :
+                                em.SRV ? (em.Multicrew ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :
                                                 em.Taxi ? (BookedDropship ? TravelStateType.DropShipDocked : TravelStateType.TaxiDocked) :
                                                     em.Multicrew ? (TravelState == TravelStateType.OnFootPlanet ? TravelStateType.MulticrewLanded : TravelStateType.MulticrewDocked) :
                                                         TravelState == TravelStateType.OnFootPlanet ? TravelStateType.Landed :
@@ -532,9 +543,12 @@ namespace EliteDangerousCore
 
 
                 case JournalTypeEnum.DockSRV:
+                    var docksrv = (JournalDockSRV)je;
                     hes = new HistoryEntryStatus(this)
                     {
-                        TravelState = TravelState == TravelStateType.MulticrewSRV ? TravelStateType.MulticrewLanded : TravelStateType.Landed,
+                        TravelState = docksrv.IsLander ? (TravelStateType.NormalSpace) :
+                            TravelState == TravelStateType.MulticrewSRV ? TravelStateType.MulticrewLanded : TravelStateType.Landed,
+                        LandedInLander = false,     // just in case as the Nomad is a flying SRV
                     };
                     break;
 

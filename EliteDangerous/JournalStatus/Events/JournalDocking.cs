@@ -20,7 +20,7 @@ namespace EliteDangerousCore.JournalEvents
 {
     [System.Diagnostics.DebuggerDisplay("Docked {StationName} {StationType} {StarSystem} {SystemAddress}")]
     [JournalEntryType(JournalTypeEnum.Docked)]
-    public class JournalDocked : JournalEntry, IStatsJournalEntry, ILocDocked, IBodyFeature, IStarScan
+    public class JournalDocked : JournalEntry, IStatsJournalEntry, ILocDocked, IBodyLocation, IStarScan
     {
         public JournalDocked(System.DateTime utc) : base(utc, JournalTypeEnum.Docked)
         {
