@@ -24,26 +24,28 @@ namespace EliteDangerousCore.JournalEvents
         public JournalRestockVehicle(JObject evt ) : base(evt, JournalTypeEnum.RestockVehicle)
         {
             Type = JournalFieldNaming.GetBetterShipName(evt["Type"].Str());
+            Type_Localised = JournalFieldNaming.CheckLocalisation(evt["Type_Localised"].Str(),Type);
             Loadout = evt["Loadout"].Str();
             Cost = evt["Cost"].Long();
             Count = evt["Count"].Int();
         }
 
         public string Type { get; set; }
+        public string Type_Localised { get; set; }          // new June 26, evidence of it from 2021!
         public string Loadout { get; set; }
         public long Cost { get; set; }
         public int Count { get; set; }
 
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Type + " " + Count.ToString(), -Cost);
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Type_Localised + " " + Count.ToString(), -Cost);
         }
 
         protected override JournalTypeEnum IconEventType { get { return Type.Contains("SRV") ? JournalTypeEnum.RestockVehicle_SRV : JournalTypeEnum.RestockVehicle_Fighter; } }
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("",Type , "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost , "Count: ".T(EDCTx.JournalEntry_Count), Count , "Loadout: ".T(EDCTx.JournalEntry_Loadout), Loadout);
+            return BaseUtils.FieldBuilder.Build("",Type_Localised , "Cost: ; cr;N0".T(EDCTx.JournalEntry_Cost), Cost , "Count: ".T(EDCTx.JournalEntry_Count), Count , "Loadout: ".T(EDCTx.JournalEntry_Loadout), Loadout);
         }
     }
 

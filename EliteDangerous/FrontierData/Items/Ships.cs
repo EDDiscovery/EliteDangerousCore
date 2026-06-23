@@ -55,10 +55,10 @@ namespace EliteDangerousCore
 
         static public bool IsShip(string shipfdname)      // any which are not one of the others is called a ship, to allow for new unknown ships
         {
-            return shipfdname.HasChars() && !IsSRVOrFighter(shipfdname) && !IsSuit(shipfdname) && !IsTaxi(shipfdname) && !IsActor(shipfdname);
+            return shipfdname.HasChars() && !IsSRVOrFighterOrLander(shipfdname) && !IsSuit(shipfdname) && !IsTaxi(shipfdname) && !IsActor(shipfdname);
         }
 
-        static public bool IsShipSRVOrFighter(string shipfdname)
+        static public bool IsShipOrSRVOrFighterOrLander(string shipfdname)
         {
             return shipfdname.HasChars() && !IsSuit(shipfdname) && !IsTaxi(shipfdname);
         }
@@ -73,11 +73,15 @@ namespace EliteDangerousCore
             return shipfdname.Contains("_fighter", StringComparison.InvariantCultureIgnoreCase);
         }
 
-        static public bool IsSRVOrFighter(string shipfdname)
+        static public bool IsLander(string shipfdname)
         {
-            return IsSRV(shipfdname) || IsFighter(shipfdname);
+            return shipfdname.ContainsIIC("lander");
         }
 
+        static public bool IsSRVOrFighterOrLander(string shipfdname)
+        {
+            return IsSRV(shipfdname) || IsFighter(shipfdname) || IsLander(shipfdname);
+        }
 
 
         // get properties of a ship, case insensitive, may be null
@@ -1488,6 +1492,35 @@ namespace EliteDangerousCore
 
         #region Other types of ships
 
+        private static ShipProperties nomad = new ShipProperties()
+        {
+            FDID = "Lander01",
+            HullMass = 38F,
+            Name = "Nomad",
+            Manufacturer = "Falcon Delacy",
+
+            // all TBC           
+            Speed = 100,
+            Boost = 150,
+            HullCost = 1500000, // all tbc
+            Class = 2,
+            Shields = 228, // game base module
+            Armour = 630,
+
+            MinThrust = 89,     // tbc
+            BoostCost = 14,
+            FuelReserve = 0.61,
+            HeatCap = 277,
+            HeatDispMin = 0,
+            HeatDispMax = 0,
+            FuelCost = 50,
+            Hardness = 55,
+            Crew = 1,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0
+        };
+
         private static ShipProperties imperial_fighter = new ShipProperties()
         {
             FDID = "Empire_Fighter",
@@ -1593,6 +1626,7 @@ namespace EliteDangerousCore
             { "gdn_hybrid_fighter_v1",  GDN_Hybrid_v1_fighter},
             { "gdn_hybrid_fighter_v2",  GDN_Hybrid_v2_fighter},
             { "gdn_hybrid_fighter_v3",  GDN_Hybrid_v3_fighter},
+            { "lander01",nomad},
         };
 
         #endregion

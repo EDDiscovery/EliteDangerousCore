@@ -80,7 +80,7 @@ namespace EliteDangerousCore.DLL
                 z = he.System.Z,
                 travelleddistance = he.TravelledDistance,
                 travelledseconds = he.TravelledTimeSec,
-                islanded = he.Status.IsLandedInShipOrSRV,
+                islanded = he.Status.IsLandedInShipOrSRVOrLander,
                 isdocked = he.Status.IsDocked,
                 whereami = he.WhereAmI,
                 shiptype = he.Status.ShipType,     

@@ -25,6 +25,8 @@ namespace EliteDangerousCore.JournalEvents
         public string SRVType;          // new odyssey 9, dec 21, may be null
         public string SRVType_Localised; // new odyssey 9, dec 21, may be null
 
+        public bool IsLander => SRVType.ContainsIIC("Lander");      // beta for nomad june 26 uses this to dock the lander! Maybe they will fix it?
+
         public JournalDockSRV(JObject evt ) : base(evt, JournalTypeEnum.DockSRV)
         {
             ID = evt["ID"].IntNull();
@@ -34,12 +36,23 @@ namespace EliteDangerousCore.JournalEvents
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
-            shp.DockSRV();
+            if (IsLander)
+                shp.DockLander();
+            else
+                shp.DockSRV();
         }
 
         public override string GetInfo()  
         {
             return BaseUtils.FieldBuilder.Build("", SRVType_Localised);
+        }
+
+        public override string SummaryName(ISystem sys)
+        {
+            if (IsLander)
+                return "Dock Lander";
+            else
+                return base.EventFilterName;
         }
     }
 

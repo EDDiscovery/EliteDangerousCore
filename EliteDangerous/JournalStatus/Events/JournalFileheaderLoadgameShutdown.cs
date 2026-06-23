@@ -72,6 +72,9 @@ namespace EliteDangerousCore.JournalEvents
                 if (GameVersion.Equals("4.3.3.0") && (Build.Contains("r327080/r0")))
                     return true;
 
+                if (GameVersion.Equals("4.4.0.0") && (Build.Contains("r329880/r0")))        // beta for nomad June 26
+                    return true;
+
                 return false;
             }
         }
@@ -102,7 +105,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else
             {
-                if (ItemData.IsShipSRVOrFighter(ShipFD))
+                if (ItemData.IsShipOrSRVOrFighterOrLander(ShipFD))
                 {
                     ShipFD = JournalFieldNaming.NormaliseFDShipName(ShipFD);
                     Ship = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
@@ -178,7 +181,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool InTaxi { get { return ItemData.IsTaxi(ShipFD); } }     // 4.0
         public bool InSRV { get { return ItemData.IsSRV(ShipFD); } }
         public bool InFighter { get { return ItemData.IsFighter(ShipFD); } }
-        public bool InShipSRVOrFighter { get { return ItemData.IsShipSRVOrFighter(ShipFD); } }
+        public bool InShipSRVOrFighterOrLander { get { return ItemData.IsShipOrSRVOrFighterOrLander(ShipFD); } }
 
         public override string GetInfo()
         {
@@ -201,7 +204,7 @@ namespace EliteDangerousCore.JournalEvents
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             // only call if in these types from 4.0 we can be on foot or in a taxi
-            if (Ship != UnknownShip && InShipSRVOrFighter)
+            if (Ship != UnknownShip && InShipSRVOrFighterOrLander)
             {
                 shp.LoadGame(ShipId, Ship, ShipFD, ShipName, ShipIdent, FuelLevel, FuelCapacity);
             }

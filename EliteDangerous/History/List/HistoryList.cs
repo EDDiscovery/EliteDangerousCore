@@ -126,7 +126,7 @@ namespace EliteDangerousCore
                                         Action<int,string> reportProgress, System.Threading.CancellationToken cancelRequested,
                                         int commanderid, string cmdname, 
                                         int fullhistoryloaddaylimit, JournalTypeEnum[] loadedbeforelimitids, 
-                                        DateTime? maxdateload
+                                        DateTime? maxdateload, DateTime? mindateload
                                         )
         {
 
@@ -140,14 +140,14 @@ namespace EliteDangerousCore
 
             if (fullhistoryloaddaylimit > 0)            // if we are limiting 
             {
-                tabledata = JournalEntry.GetTableData(cancelRequested, commanderid, enddateutc:maxdateload,
+                tabledata = JournalEntry.GetTableData(cancelRequested, commanderid, startdateutc:mindateload, enddateutc:maxdateload,
                     onlyidstoreport: loadedbeforelimitids, allidsafterutc: DateTime.UtcNow.Subtract(new TimeSpan(fullhistoryloaddaylimit, 0, 0, 0)),
                     idstoreject: idstoreject
                     );
             }
             else
             {
-                tabledata = JournalEntry.GetTableData(cancelRequested, commanderid, enddateutc:maxdateload, idstoreject:idstoreject);
+                tabledata = JournalEntry.GetTableData(cancelRequested, commanderid, startdateutc: mindateload, enddateutc:maxdateload, idstoreject:idstoreject);
             }
  
             JournalEntry[] journalentries = new JournalEntry[0];       // default empty array so rest of code works

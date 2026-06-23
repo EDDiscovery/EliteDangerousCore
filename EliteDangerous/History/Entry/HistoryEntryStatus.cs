@@ -43,7 +43,8 @@ namespace EliteDangerousCore
             MulticrewFighter,       // see below for gettings relying on order
 
             SRV,                // in srv
-            Fighter,            // in fighter
+            Fighter,            // in fighter or Nomad in space
+            LanderLanded,       // in nomad on the surface
 
             OnFootStarPort,      
             OnFootPlanetaryPort, 
@@ -58,9 +59,10 @@ namespace EliteDangerousCore
                                             TravelState == TravelStateType.TaxiDocked || TravelState == TravelStateType.DropShipDocked; } }
 
 
-        public bool IsLandedInShipOrSRV { get
+        public bool IsLandedInShipOrSRVOrLander { get
             {
                 return TravelState == HistoryEntryStatus.TravelStateType.Landed || TravelState == HistoryEntryStatus.TravelStateType.SRV || 
+                    TravelState == TravelStateType.LanderLanded ||
                     TravelState == HistoryEntryStatus.TravelStateType.MulticrewLanded || TravelState == HistoryEntryStatus.TravelStateType.MulticrewSRV;
             }}
 
@@ -102,6 +104,7 @@ namespace EliteDangerousCore
         public string GameModeGroupMulticrew { get { return GameMode + (Group.HasChars() ? (":" + Group) : "") + (OnCrewWithCaptain.HasChars() ? " @ Cmdr " + OnCrewWithCaptain :""); } }
         public string PowerPledged { get; private set; } = null;            // null, set on PowerJoin, cleared on PowerLeave
         public string PowerPledgedThisLoadGame { get; private set; } = null;    // null, clear on loadgame, set on PowerJoin or PowerPlay
+        public bool LandedInLander { get; private set; } = false;       // set when fighter lands on touchdown
 
         private HistoryEntryStatus()
         {
@@ -132,6 +135,7 @@ namespace EliteDangerousCore
             FSDJumpNextSystemAddress = prevstatus.FSDJumpNextSystemAddress;
             PowerPledged = prevstatus.PowerPledged;
             PowerPledgedThisLoadGame = prevstatus.PowerPledgedThisLoadGame;
+            LandedInLander = prevstatus.LandedInLander;
         }
 
         public static HistoryEntryStatus Update(HistoryEntryStatus prev, JournalEntry je, string curStarSystem)
@@ -152,8 +156,8 @@ namespace EliteDangerousCore
                         bool locinstation = jloc.StationType.HasChars() || prev.StationType.HasChars();     // second is required due to alpha 4 stationtype being missing
                         bool stationisfc = prev.StationType.HasChars() && prev.StationType.Equals("Fleet Carrier", System.StringComparison.CurrentCultureIgnoreCase);
 
-                        TravelStateType t = (stationisfc && !jloc.Docked) ? TravelStateType.OnFootFleetCarrier : 
-                           
+                        TravelStateType t = (stationisfc && !jloc.Docked) ? TravelStateType.OnFootFleetCarrier :
+                            prev.LandedInLander ? TravelStateType.LanderLanded :
                             jloc.Docked ? (jloc.Multicrew == true ? TravelStateType.MulticrewDocked : TravelStateType.Docked) :
                                                 (jloc.InSRV == true) ? (jloc.Multicrew == true ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :    
                                                     jloc.Taxi == true ? TravelStateType.TaxiNormalSpace :          // can't be in dropship, must be in normal space.
@@ -256,6 +260,7 @@ namespace EliteDangerousCore
                             CurrentBoost = 1,
                             FSDJumpNextSystemAddress = null,        // now jumped
                             FSDJumpNextSystemName = null,
+                            LandedInLander = false
                         };
                         break;
                     }
@@ -343,7 +348,8 @@ namespace EliteDangerousCore
 
                         hes = new HistoryEntryStatus(prev)
                         {
-                            TravelState = em.SRV ? (em.Multicrew ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :
+                            TravelState = prev.LandedInLander ? TravelStateType.Fighter :
+                                em.SRV ? (em.Multicrew ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :
                                                 em.Taxi ? (prev.BookedDropship ? TravelStateType.DropShipDocked : TravelStateType.TaxiDocked) :
                                                     em.Multicrew ? (prev.TravelState == TravelStateType.OnFootPlanet ? TravelStateType.MulticrewLanded : TravelStateType.MulticrewDocked ):
                                                         prev.TravelState == TravelStateType.OnFootPlanet ? TravelStateType.Landed:
@@ -391,9 +397,12 @@ namespace EliteDangerousCore
 
 
                 case JournalTypeEnum.DockSRV:
+                    var docksrv = (JournalDockSRV)je;
                     hes = new HistoryEntryStatus(prev)
                     {
-                        TravelState = prev.TravelState == TravelStateType.MulticrewSRV ? TravelStateType.MulticrewLanded : TravelStateType.Landed,
+                        TravelState = docksrv.IsLander ? (TravelStateType.NormalSpace) : 
+                                      prev.TravelState == TravelStateType.MulticrewSRV ? TravelStateType.MulticrewLanded : TravelStateType.Landed,
+                        LandedInLander = false,     // just in case as the Nomad is a flying SRV
                     };
                     break;
                 
@@ -403,10 +412,12 @@ namespace EliteDangerousCore
                     {
                         hes = new HistoryEntryStatus(prev)
                         {
-                            TravelState = prev.TravelState == TravelStateType.MulticrewNormalSpace ? TravelStateType.MulticrewLanded : TravelStateType.Landed,
+                            TravelState = prev.TravelState == TravelStateType.Fighter ? TravelStateType.LanderLanded :
+                                        prev.TravelState == TravelStateType.MulticrewNormalSpace ? TravelStateType.MulticrewLanded : TravelStateType.Landed,
                             BodyName = td.Body ?? prev.BodyName,
-                            BodyID = td.BodyID.HasValue ? td.BodyID.Value :prev.BodyID,
+                            BodyID = td.BodyID.HasValue ? td.BodyID.Value : prev.BodyID,
                             CurrentBoost = 1,
+                            LandedInLander = prev.TravelState == TravelStateType.Fighter
                         };
                     }
                     else
@@ -419,7 +430,9 @@ namespace EliteDangerousCore
                     {
                         hes = new HistoryEntryStatus(prev)      // not going to use Body, since we must already have it.
                         {
-                            TravelState = prev.TravelState == TravelStateType.MulticrewLanded ? TravelStateType.MulticrewNormalSpace : TravelStateType.NormalSpace,
+                            TravelState = prev.LandedInLander ? TravelStateType.Fighter :
+                                        prev.TravelState == TravelStateType.MulticrewLanded ? TravelStateType.MulticrewNormalSpace : TravelStateType.NormalSpace,
+                            LandedInLander = false,
                         };
                     }
                     else
@@ -434,7 +447,7 @@ namespace EliteDangerousCore
                         {
                             hes = new HistoryEntryStatus(prev)
                             {
-                                TravelState = TravelStateType.NormalSpace
+                                TravelState = TravelStateType.NormalSpace,
                             };
                         }
                         else if (prev.TravelState == TravelStateType.MulticrewFighter)
