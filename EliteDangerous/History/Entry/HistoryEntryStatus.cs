@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016 - 2025 EDDiscovery development team
+ * Copyright 2016 - 2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -353,7 +353,7 @@ namespace EliteDangerousCore
                     hes = new HistoryEntryStatus(this)
                     {
                         LastApproachBody = null,
-                        CurrentLocation = hes.LastFSDJump,       // leave body, lets go back to the system info which we have since we are star space
+                        CurrentLocation = hes.LastFSDJump ?? hes?.CurrentLocation,       // leave body, lets go back to the system info which we have since we are star space. If no FSD (debugging) use current
                     };
                     break;
 
@@ -382,7 +382,8 @@ namespace EliteDangerousCore
                             TravelState = sc.Taxi == true ? (TravelState == TravelStateType.DropShipNormalSpace ? TravelStateType.DropShipSupercruise : TravelStateType.TaxiSupercruise) :
                                                 sc.Multicrew == true ? TravelStateType.MulticrewSupercruise :
                                                             TravelStateType.Supercruise,
-                            CurrentLocation = hes.LastApproachBody != null ? hes.LastApproachBody : hes.LastFSDJump,        // if we are still approached, thats the best, else its the star
+                            // if we are still approached, thats the best, else its the star, else just keep it
+                            CurrentLocation = hes.LastApproachBody != null ? hes.LastApproachBody : hes.LastFSDJump != null ? hes.LastFSDJump: hes.CurrentLocation,        
                             LastTaxiDropship = null,
                             LastDockingGranted = null,
                         };

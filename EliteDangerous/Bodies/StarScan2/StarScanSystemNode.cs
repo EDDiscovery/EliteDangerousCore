@@ -36,7 +36,7 @@ namespace EliteDangerousCore.StarScan2
         public uint SignalGeneration { get; private set; } = 0;        // changed after each codex/signal/fss/genus/etc change
         public List<FSSSignal> FSSSignals { get { return systemBodies.FSSSignalList; } }     // may be null, held in top level body
         public List<JournalCodexEntry> CodexEntries { get { return systemBodies.CodexEntries; } }     // System Codex entries, may be null, held in top level body. Codex entries can also be against a body
-        public List<IBodyFeature> OrbitingStations { get { return systemBodies.Features; } }     // System orbiting stations, may be null, held in top level body.
+        public List<IBodyFeature> OrbitingStations { get { return systemBodies.Features; } }     // System orbiting stations, may be null, held in top level body, always Docked
 
         // top level, whole tree
         public BodyNode TopLevel() { return systemBodies; }
@@ -246,6 +246,14 @@ namespace EliteDangerousCore.StarScan2
                     return f;
             }
 
+            return null;
+        }
+
+        public IBodyFeature GetOrbitalStation(int bodyid)
+        {
+            IBodyFeature sysfeature = OrbitingStations?.Find(x => x.BodyID == bodyid);
+            if (sysfeature != null)
+                return sysfeature;
             return null;
         }
 

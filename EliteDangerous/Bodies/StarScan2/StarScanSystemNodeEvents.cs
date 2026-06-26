@@ -868,6 +868,7 @@ namespace EliteDangerousCore.StarScan2
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // From JournalDocking, or via Spansh import, thru StarScanEvents::AddDocking
         // If its a settlement, we have augmented the docking event with BodyID/BodyName via the HistoryEntryStatus
         // Else we don't have body id and it goes to system bodies
         public BodyNode AddDocking(JournalDocked sc)

@@ -41,6 +41,7 @@ namespace EliteDangerousCore.Spansh
                 evt["WasDiscovered"] = true;        // obv, since spansh has the data
                 evt["WasMapped"] = false;
 
+
                 if (so["parents"] != null)
                 {
                     if (dump)
@@ -59,6 +60,8 @@ namespace EliteDangerousCore.Spansh
                         }
                     }
                 }
+
+           //     System.Diagnostics.Debug.WriteLine($"Spansh CJS {so["type"].Str()} {evt["BodyName"].Str()} {evt["BodyID"].Int(-999)} {evt["Parents"]}");
 
                 evt["RotationPeriod"] = so[dump ? "rotationalPeriod" : "rotational_period"].Double(BodyPhysicalConstants.oneDay_s, 0);
                 evt["SurfaceTemperature"] = so[dump ? "surfaceTemperature" : "surface_temperature"];

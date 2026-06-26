@@ -679,6 +679,7 @@ namespace EliteDangerousCore.StarScan2
                 return false;
         }
 
+        // used by System Node Events to add a docking to features, either an orbital station in systemBodies or a plantary station in the body node 
         public void AddDocking(JournalDocked sc)
         {
             if (Features == null)

@@ -441,7 +441,7 @@ namespace EliteDangerousCore.StarScan2
             }
         }
         
-        // Add JournalDocking or StationInfo (derived)
+        // Add JournalDocking or StationInfo (derived) from Spansh data
         // we have augmented the information with BodyID/Body due to HistoryEntryStatus or Spansh provides it for planet stations
         public void AddDocking(JournalDocked sc, ISystem sys)
         {

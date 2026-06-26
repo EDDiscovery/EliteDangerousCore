@@ -274,7 +274,7 @@ namespace EliteDangerousCore
                         if (newdestination != DestinationName || newdestinationloc != DestinationNameLoc || newbody != DestinationBodyID || newsys != DestinationSystemAddress) 
                         {
                             DestinationName = newdestination;
-                            DestinationNameLoc = newdestinationloc;
+                            DestinationNameLoc = newdestinationloc.Alt(newdestination);
                             DestinationBodyID = newbody;
                             DestinationSystemAddress = newsys;
                             uievents.Add(new UIEvents.UIDestination(DestinationName, DestinationNameLoc, DestinationBodyID, DestinationSystemAddress, EventTimeUTC, changedmajormode));
