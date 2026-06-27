@@ -90,13 +90,7 @@ namespace EliteDangerousCore
             else
             {
                 if (isstation == true)          // station flag
-                {
-                    int dash = fdsignalname.LastIndexOf('-');
-                    if (fdsignalname.Length >= 5 && dash == fdsignalname.Length - 4 && char.IsLetterOrDigit(fdsignalname[dash + 1]) && char.IsLetterOrDigit(fdsignalname[dash - 1]))
-                        signalclass = Classification.Carrier;
-                    else
-                        signalclass = Classification.Station;
-                }
+                    signalclass = ClassifyStationName(fdsignalname);
                 else if (fdsignalname.StartsWith("$USS", StringComparison.InvariantCultureIgnoreCase) || fdsignalname.StartsWith("$RANDOM", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.USS;
                 else if (fdsignalname.StartsWith("$Warzone", StringComparison.InvariantCultureIgnoreCase))
@@ -114,6 +108,14 @@ namespace EliteDangerousCore
             }
 
             return signalclass;
+        }
+        public static Classification ClassifyStationName(string fdsignalname)
+        {
+            int dash = fdsignalname.LastIndexOf('-');
+            if (fdsignalname.Length >= 5 && dash == fdsignalname.Length - 4 && char.IsLetterOrDigit(fdsignalname[dash + 1]) && char.IsLetterOrDigit(fdsignalname[dash - 1]))
+                return Classification.Carrier;
+            else
+                return Classification.Station;
         }
     }
 

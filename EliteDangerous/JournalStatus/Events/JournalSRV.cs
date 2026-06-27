@@ -24,13 +24,15 @@ namespace EliteDangerousCore.JournalEvents
         public int? ID { get; set; }
         public string SRVType;          // new odyssey 9, dec 21, may be null
         public string SRVType_Localised; // new odyssey 9, dec 21, may be null
+
+        // beta for nomad june 26 uses this to dock the lander!
         public bool IsLander => SRVType.ContainsIIC("Lander");
 
         public JournalDockSRV(JObject evt ) : base(evt, JournalTypeEnum.DockSRV)
         {
             ID = evt["ID"].IntNull();
             SRVType = evt["SRVType"].StrNull();
-            SRVType_Localised = evt["SRVType_Localised"].StrNull();
+            SRVType_Localised = JournalFieldNaming.CheckLocalisation(evt["SRVType_Localised"].StrNull(), SRVType);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -93,21 +95,35 @@ namespace EliteDangerousCore.JournalEvents
         public string SRVType;          // new odyssey 9, dec 21, may be null
         public string SRVType_Localised; // new odyssey 9, dec 21, may be null
 
+        // beta for nomad june 26 uses this if lander is destroyed (EDCD)
+        public bool IsLander => SRVType.ContainsIIC("Lander");
+
         public JournalSRVDestroyed(JObject evt) : base(evt, JournalTypeEnum.SRVDestroyed)
         {
             ID = evt["ID"].IntNull();
             SRVType = evt["SRVType"].StrNull();
-            SRVType_Localised = evt["SRVType_Localised"].StrNull();
+            SRVType_Localised = JournalFieldNaming.CheckLocalisation(evt["SRVType_Localised"].StrNull(), SRVType);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
-            shp.DestroyedSRV();
+            if (IsLander)
+                shp.DestroyedLander();
+            else
+                shp.DestroyedSRV();
         }
 
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("", SRVType_Localised);
+        }
+
+        public override string SummaryName(ISystem sys)
+        {
+            if (IsLander)
+                return "Destroyed Lander";
+            else
+                return base.EventFilterName;
         }
 
     }

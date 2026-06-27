@@ -190,7 +190,7 @@ namespace EliteDangerousCore
         }
         public void DockLander()
         {
-            //System.Diagnostics.Debug.WriteLine("Dock SRV");
+            //System.Diagnostics.Debug.WriteLine("Dock Lander");
             if (HaveCurrentShip)
                 Ships[currentid] = Ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
             VerifyList();
@@ -199,6 +199,13 @@ namespace EliteDangerousCore
         public void DestroyedSRV()
         {
             //System.Diagnostics.Debug.WriteLine("Destroyed SRV");
+            if (HaveCurrentShip)
+                Ships[currentid] = Ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
+            VerifyList();
+        }
+        public void DestroyedLander()
+        {
+            //System.Diagnostics.Debug.WriteLine("Destroyed Lander");
             if (HaveCurrentShip)
                 Ships[currentid] = Ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
             VerifyList();
