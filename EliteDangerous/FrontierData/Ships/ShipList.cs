@@ -219,6 +219,17 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
+        public void RestockVehicle(ulong id, string shipfd, string ship, string Loadout)
+        {
+            string sid = Key(shipfd, id);
+
+            Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
+
+            Ships[sid] = sm.SetShipDetails(ship, shipfd);   // this makes a shallow copy if any data has changed..
+
+            VerifyList();
+        }
+
         public void DockFighter()
         {
             //System.Diagnostics.Debug.WriteLine("Dock Fighter");
@@ -578,6 +589,7 @@ namespace EliteDangerousCore
             }
 
             ulong i = id.Substring(id.IndexOf(":") + 1).InvariantParseULong(0);
+            System.Diagnostics.Debug.WriteLine($"ShipList made new ship {id}.. {i}");
             Ship smn = new Ship(i);
             Ships[id] = smn;
             return smn;
