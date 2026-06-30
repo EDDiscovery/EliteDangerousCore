@@ -41,7 +41,22 @@ namespace EliteDangerousCore.JournalEvents
             MarketID = evt["MarketID"].LongNull();
         }
 
+        // needed because Frontier is not giving us enough info to find the lander, except for ShipID
+        public override void AdjustEntry(ShipList shp)
+        {
+            if (ShipID.HasValue)
+            {
+                var shipfd = shp.GetSRVOrLanderOrFighter(ShipID.Value)?.ShipFD;
+                if (shipfd != null && ItemData.IsLander(shipfd))
+                {
+                    SRV = false;
+                    IsLander = true;
+                }
+            }
+        }
+
         public bool SRV { get; set; }       // 4.0 alpha 1
+        public bool IsLander { get; set; }       // JUNE 26 NOT in journal entry, summised by shipID
         public bool Taxi { get; set; }
         public bool Multicrew { get; set; }
         public bool Ship { get { return !SRV && !Taxi && !Multicrew; } }
@@ -82,6 +97,7 @@ namespace EliteDangerousCore.JournalEvents
 
             return info;
         }
+
     }
 
     [JournalEntryType(JournalTypeEnum.Disembark)]

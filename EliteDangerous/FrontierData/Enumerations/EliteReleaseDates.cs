@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using Microsoft.SqlServer.Server;
 using System;
 
 namespace EliteDangerousCore
@@ -30,7 +31,51 @@ namespace EliteDangerousCore
         public static DateTime Ascendency = new DateTime(2024, 10, 22, 12, 0, 0, DateTimeKind.Utc);         // power play 2.0
         public static DateTime Trailblazers = new DateTime(2025, 2, 26, 12, 0, 0, DateTimeKind.Utc);        // colonisation
         public static DateTime GameEndTime = new DateTime(2999, 12, 14, 23, 59, 59, DateTimeKind.Utc);      // not according to the forums, its already dead!
+
+        public static bool IsBeta(string GameVersion, string Build, DateTime EventTimeUTC )
+        {
+            if (GameVersion.Contains("Beta", StringComparison.InvariantCultureIgnoreCase) ||
+                    GameVersion.Contains("Gamma", StringComparison.InvariantCultureIgnoreCase) ||
+                    GameVersion.Contains("Alpha", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+
+            if (GameVersion.Contains("April Update EDH") && (Build.Contains("r198057/r0") || Build.Contains("r197746/r0")))
+                return true;
+
+            if (GameVersion.Equals("2.2") && (Build.Contains("r121645/r0") || Build.Contains("r129516/r0")))
+                return true;
+
+            if (Build.Contains("r304032/r0") && EventTimeUTC < EliteReleaseDates.OdysseyType8) // august 2024 pre-release for T8
+                return true;
+
+            if (GameVersion.Equals("4.0.0.1903") && (Build.Contains("r308286/r0")))
+                return true;
+
+            if (GameVersion.Equals("4.1.3.0") && (Build.Contains("r316037/r0")))
+                return true;
+
+            if (GameVersion.Equals("4.2.1.0") && (Build.Contains("r319022/r0")))
+                return true;
+
+            if (GameVersion.Equals("4.3.0.0") && (Build.Contains("r321601/r0")))
+                return true;
+
+            if (GameVersion.Equals("4.3.1.0") && (Build.Contains("r324270/r0")))
+                return true;
+
+            if (GameVersion.Equals("4.3.3.0") && (Build.Contains("r327080/r0")))
+                return true;
+
+            if (GameVersion.Equals("4.4.0.0") && (Build.Contains("r329880/r0") || Build.Contains("r330116/r0")))        // beta for nomad June 26
+                return true;
+
+            return false;
+        }
     }
+
+
     public static class EliteFixesDates
     {
         public static DateTime ED_No_Training_Timestamp = new DateTime(2017, 10, 4, 0, 0, 0, DateTimeKind.Utc);

@@ -105,11 +105,10 @@ namespace EliteDangerousCore
 
         public enum SubVehicleType
         {
-            None, SRV, Fighter
+            None, SRV, Fighter, Lander
         }
 
         public SubVehicleType SubVehicle { get; private set; } = SubVehicleType.None;    // if in a sub vehicle or mothership
-
 
         public bool InTransit { get { return TransferArrivalTimeUTC.CompareTo(DateTime.UtcNow)>0; } }
 
@@ -127,6 +126,8 @@ namespace EliteDangerousCore
 
             if (SubVehicle == SubVehicleType.SRV)
                 sb.AppendPrePad(" in SRV");
+            else if (SubVehicle == SubVehicleType.Lander)
+                sb.AppendPrePad(" in Lander");
             else if (SubVehicle == SubVehicleType.Fighter)
                 sb.AppendPrePad(" in Fighter");
             else
@@ -1035,7 +1036,6 @@ namespace EliteDangerousCore
         public Ship Store(string station, string system)
         {
             Ship sm = this.ShallowClone();
-            //if (sm.StoredAtSystem != null) { if (sm.StoredAtSystem.Equals(system)) System.Diagnostics.Debug.WriteLine("..Previous known stored at" + sm.StoredAtSystem + ":" + sm.StoredAtStation); else System.Diagnostics.Debug.WriteLine("************************ DISGREEE..Previous known stored at" + sm.StoredAtSystem + ":" + sm.StoredAtStation); }
             sm.SubVehicle = SubVehicleType.None;
             sm.StoredAtSystem = system;
             sm.StoredAtStation = station ?? sm.StoredAtStation;     // we may get one with just the system, so use the previous station if we have one

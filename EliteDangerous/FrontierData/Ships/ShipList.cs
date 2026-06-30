@@ -56,6 +56,20 @@ namespace EliteDangerousCore
             return (index >= 0) ? lst[index] : null;
         }
 
+        public Ship GetShip(ulong id)
+        {
+            List<Ship> lst = Ships.Values.ToList();
+            int index = lst.FindIndex(x => x.ID == id);
+            return (index >= 0) ? lst[index] : null;
+        }
+
+        public Ship GetSRVOrLanderOrFighter(ulong id)       // ID and must be a SRV/Fighter/Lander, and this is because in debug logs we could have a repeat over time of the same ID
+        {
+            List<Ship> lst = Ships.Values.ToList();
+            int index = lst.FindIndex(x => x.ID == id && ItemData.IsSRVOrFighterOrLander(x.ShipFD));
+            return (index >= 0) ? lst[index] : null;
+        }
+
         private ulong newsoldid = ulong.MaxValue / 2;
 
         public ShipList()
@@ -155,9 +169,10 @@ namespace EliteDangerousCore
                 Ships[currentid] = Ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
             VerifyList();
         }
+
         public void DockLander()
         {
-            //System.Diagnostics.Debug.WriteLine("Dock SRV");
+            //System.Diagnostics.Debug.WriteLine("Dock Lander");
             if (HaveCurrentShip)
                 Ships[currentid] = Ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
             VerifyList();
@@ -171,11 +186,38 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
+        public void DestroyedLander()
+        {
+            //System.Diagnostics.Debug.WriteLine("Destroyed Lander");
+            if (HaveCurrentShip)
+                Ships[currentid] = Ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
+            VerifyList();
+        }
+
         public void LaunchFighter(bool pc)
         {
             //System.Diagnostics.Debug.WriteLine("Launch Fighter");
             if (HaveCurrentShip && pc == true)
                 Ships[currentid] = Ships[currentid].SetSubVehicle(Ship.SubVehicleType.Fighter);
+            VerifyList();
+        }
+
+        public void LaunchLander()
+        {
+            //System.Diagnostics.Debug.WriteLine("Launch Fighter");
+            if (HaveCurrentShip)
+                Ships[currentid] = Ships[currentid].SetSubVehicle(Ship.SubVehicleType.Lander);
+            VerifyList();
+        }
+
+        public void RestockVehicle(ulong id, string shipfd, string ship, string Loadout)
+        {
+            string sid = Key(shipfd, id);
+
+            Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
+
+            Ships[sid] = sm.SetShipDetails(ship, shipfd);   // this makes a shallow copy if any data has changed..
+
             VerifyList();
         }
 
@@ -530,7 +572,9 @@ namespace EliteDangerousCore
             {
                 Ship sm = Ships[id];
                 if (sm.State == Ship.ShipState.Owned)               // if owned, ok
+                {
                     return sm;
+                }
                 else
                 {
                     Ships[Key(sm.ShipFD, newsoldid++)] = sm;              // okay, we place this information on back ID list+  all Ids of this will now refer to new entry
@@ -538,6 +582,7 @@ namespace EliteDangerousCore
             }
 
             ulong i = id.Substring(id.IndexOf(":") + 1).InvariantParseULong(0);
+            System.Diagnostics.Debug.WriteLine($"ShipList made new ship {id}.. {i}");
             Ship smn = new Ship(i);
             Ships[id] = smn;
             return smn;

@@ -61,6 +61,8 @@ namespace EliteDangerousCore
 
         public HistoryEntry MakeHistoryEntry(JournalEntry je)
         {
+            je.AdjustEntry(ShipInformationList);
+
             HistoryEntry he = HistoryEntry.FromJournalEntry(je, hlastprocessed, StarClass);     // we may check edsm for this entry
 
             he.UnfilteredIndex = (hlastprocessed?.UnfilteredIndex?? -1) +1;
