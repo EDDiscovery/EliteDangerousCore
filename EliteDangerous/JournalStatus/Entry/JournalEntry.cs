@@ -104,7 +104,9 @@ namespace EliteDangerousCore
         };
 
         // these may or may not be overriden by class.  
-
+        public virtual void AdjustEntry(ShipList shp)        // if overwritten, at start of MakeHistoryEntry, provide additional help to adjust its variables
+        {
+        }
         public virtual string GetInfo()         // if overridden, always return a string
         {
             return null;

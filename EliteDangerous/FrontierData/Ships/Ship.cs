@@ -105,7 +105,7 @@ namespace EliteDangerousCore
 
         public enum SubVehicleType
         {
-            None, SRV, Fighter
+            None, SRV, Fighter, Lander
         }
 
         public SubVehicleType SubVehicle { get; private set; } = SubVehicleType.None;    // if in a sub vehicle or mothership
@@ -127,6 +127,8 @@ namespace EliteDangerousCore
 
             if (SubVehicle == SubVehicleType.SRV)
                 sb.AppendPrePad(" in SRV");
+            else if (SubVehicle == SubVehicleType.Lander)
+                sb.AppendPrePad(" in Lander");
             else if (SubVehicle == SubVehicleType.Fighter)
                 sb.AppendPrePad(" in Fighter");
             else

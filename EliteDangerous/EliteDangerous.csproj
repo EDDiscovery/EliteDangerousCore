@@ -247,8 +247,6 @@
     <Compile Include="JournalStatus\Events\JournalCrew.cs" />
     <Compile Include="JournalStatus\Events\JournalDatalink.cs" />
     <Compile Include="JournalStatus\Events\JournalDiedResurrect.cs" />
-    <Compile Include="JournalStatus\Events\JournalFighter.cs" />
-    <Compile Include="JournalStatus\Events\JournalSRV.cs" />
     <Compile Include="JournalStatus\Events\JournalDocking.cs" />
     <Compile Include="JournalStatus\Events\JournalEDD.cs" />
     <Compile Include="JournalStatus\Events\JournalEngineer.cs" />
