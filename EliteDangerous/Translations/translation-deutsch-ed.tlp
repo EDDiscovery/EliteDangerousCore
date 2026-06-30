@@ -1422,6 +1422,8 @@ SECTION ModulePartNames
 .Large_Cargo_Rack: "Large Cargo Rack" => "Großes Frachtgestell"
 .Mining_Volley_Repeater: "Mining Volley Repeater" => "Bergbau Salven-Repeater"
 .Lightweight_Alloy_(Default): "Lightweight Alloy (Default)" => "Leichte Legierung (Standard)"
+.MKII_Vessel_Hangar_(Free): "MKII Vessel Hangar (Free)" @
+.MKII_Vessel_Hangar: "MKII Vessel Hangar" @
 
 SECTION ShipSlots
 
