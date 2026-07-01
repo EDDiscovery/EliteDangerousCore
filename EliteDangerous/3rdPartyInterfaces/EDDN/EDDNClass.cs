@@ -619,7 +619,9 @@ namespace EliteDangerousCore.EDDN
                 ["modules"] = new JArray(journal.YardInfo.Items
                                 .Where(m => m.FDName.StartsWith("Hpt_", StringComparison.InvariantCultureIgnoreCase) || m.FDName.StartsWith("Int_", StringComparison.InvariantCultureIgnoreCase)
                                         || m.FDName.Contains("_armour_", StringComparison.InvariantCultureIgnoreCase))      // Use FDName here note
-                                .Select(m => JournalFieldNaming.NormaliseFDItemName(m.FDName)))
+                                .Select(m => JournalFieldNaming.NormaliseFDItemName(m.FDName))
+                                .Distinct()
+                                )
             };
 
             message["odyssey"] = journal.IsOdyssey;     // new may 21
@@ -651,7 +653,7 @@ namespace EliteDangerousCore.EDDN
                 ["systemName"] = journal.Yard.StarSystem,
                 ["stationName"] = journal.Yard.StationName,
                 ["marketId"] = journal.MarketID,
-                ["ships"] = new JArray(journal.Yard.Ships.Select(m => m.ShipType))      // ship type if FDName
+                ["ships"] = new JArray(journal.Yard.Ships.Select(m => m.ShipType).Distinct())      // ship type if FDName
             };
 
             message["odyssey"] = journal.IsOdyssey;     // new may 21

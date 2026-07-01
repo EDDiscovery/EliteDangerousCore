@@ -68,7 +68,7 @@ namespace EliteDangerousCore
             if (GameVersion.Equals("4.3.3.0") && (Build.Contains("r327080/r0")))
                 return true;
 
-            if (GameVersion.Equals("4.4.0.0") && (Build.Contains("r329880/r0") || Build.Contains("r330116/r0")))        // beta for nomad June 26
+            if (GameVersion.Equals("4.4.0.0") && (Build.Contains("r329880/r0") || Build.Contains("STUPID FRONTIER REUSING THIS ID FOR RELEASE r330116/r0")))        // beta for nomad June 26
                 return true;
 
             return false;
