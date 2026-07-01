@@ -18,19 +18,19 @@ namespace EliteDangerousCore
 {
     public static class EliteReleaseDates
     {
-        public static DateTime GammaStart = new DateTime(2014, 11, 22, 4, 0, 0, DateTimeKind.Utc);
-        public static DateTime GameRelease = new DateTime(2014, 12, 14, 12, 0, 0, DateTimeKind.Utc);
-        public static DateTime EDSMRelease = new DateTime(2015, 6, 1, 12, 0, 0, DateTimeKind.Utc);
-        public static DateTime Release_2_2 = new DateTime(2017, 4, 11, 12, 0, 0, DateTimeKind.Utc);
-        public static DateTime Release_3_2 = new DateTime(2018, 8, 28, 10, 0, 0, DateTimeKind.Utc);
-        public static DateTime Release_3_3 = new DateTime(2018, 12, 11, 9, 0, 0, DateTimeKind.Utc);
-        public static DateTime Odyssey5 = new DateTime(2021, 7, 1,12,0,0, DateTimeKind.Utc);
-        public static DateTime Odyssey14 = new DateTime(2022, 11, 29, 12, 0, 0, DateTimeKind.Utc);          //Galaxy split Live/Legacy
-        public static DateTime OdysseyType8 = new DateTime(2024, 8, 7, 12, 0, 0, DateTimeKind.Utc);
-        public static DateTime Ascendency = new DateTime(2024, 10, 22, 12, 0, 0, DateTimeKind.Utc);         // power play 2.0
-        public static DateTime Trailblazers = new DateTime(2025, 2, 26, 12, 0, 0, DateTimeKind.Utc);        // colonisation
-        public static DateTime Vanguards = new DateTime(2025, 8, 19, 12, 0, 0,DateTimeKind.Utc);            //squadron overhaul
-        public static DateTime GameEndTime = new DateTime(2999, 12, 14, 23, 59, 59, DateTimeKind.Utc);      // not according to the forums, its already dead!
+        public static DateTime GammaStart {get; } = new DateTime(2014, 11, 22, 4, 0, 0, DateTimeKind.Utc);
+        public static DateTime GameRelease {get; } =  new DateTime(2014, 12, 14, 12, 0, 0, DateTimeKind.Utc);
+        public static DateTime EDSMRelease {get; } =  new DateTime(2015, 6, 1, 12, 0, 0, DateTimeKind.Utc);
+        public static DateTime Release_2_2 {get; } =  new DateTime(2017, 4, 11, 12, 0, 0, DateTimeKind.Utc);
+        public static DateTime Release_3_2 {get; } =  new DateTime(2018, 8, 28, 10, 0, 0, DateTimeKind.Utc);
+        public static DateTime Release_3_3 {get; } =  new DateTime(2018, 12, 11, 9, 0, 0, DateTimeKind.Utc);
+        public static DateTime Odyssey5 {get; } =  new DateTime(2021, 7, 1,12,0,0, DateTimeKind.Utc);
+        public static DateTime Odyssey14 {get; } =  new DateTime(2022, 11, 29, 12, 0, 0, DateTimeKind.Utc);          //Galaxy split Live/Legacy
+        public static DateTime OdysseyType8 {get; } =  new DateTime(2024, 8, 7, 12, 0, 0, DateTimeKind.Utc);
+        public static DateTime Ascendency {get; } =  new DateTime(2024, 10, 22, 12, 0, 0, DateTimeKind.Utc);         // power play 2.0
+        public static DateTime Trailblazers {get; } =  new DateTime(2025, 2, 26, 12, 0, 0, DateTimeKind.Utc);        // colonisation
+        public static DateTime Vanguards {get; } =  new DateTime(2025, 8, 19, 12, 0, 0,DateTimeKind.Utc);            //squadron overhaul
+        public static DateTime GameEndTime {get; } =  new DateTime(2999, 12, 14, 23, 59, 59, DateTimeKind.Utc);      // not according to the forums, its already dead!
 
         public static bool IsBeta(string GameVersion, string Build, DateTime EventTimeUTC)
         {
@@ -68,7 +68,7 @@ namespace EliteDangerousCore
             if (GameVersion.Equals("4.3.3.0") && (Build.Contains("r327080/r0")))
                 return true;
 
-            if (GameVersion.Equals("4.4.0.0") && (Build.Contains("r329880/r0") || Build.Contains("r330116/r0")))        // beta for nomad June 26
+            if (GameVersion.Equals("4.4.0.0") && (Build.Contains("r329880/r0") || Build.Contains("STUPID FRONTIER REUSING THIS ID FOR RELEASE r330116/r0")))        // beta for nomad June 26
                 return true;
 
             return false;
@@ -77,14 +77,14 @@ namespace EliteDangerousCore
     }
     public static class EliteFixesDates
     {
-        public static DateTime ED_No_Training_Timestamp = new DateTime(2017, 10, 4, 0, 0, 0, DateTimeKind.Utc);
-        public static DateTime ED_No_Faction_Timestamp = new DateTime(2017, 9, 26, 0, 0, 0, DateTimeKind.Utc);
-        public static DateTime TotalEarningsCorrectDate = new DateTime(2018, 5, 1, 0, 0, 0, DateTimeKind.Utc);
+        public static DateTime ED_No_Training_Timestamp {get; } =  new DateTime(2017, 10, 4, 0, 0, 0, DateTimeKind.Utc);
+        public static DateTime ED_No_Faction_Timestamp {get; } =  new DateTime(2017, 9, 26, 0, 0, 0, DateTimeKind.Utc);
+        public static DateTime TotalEarningsCorrectDate {get; } =  new DateTime(2018, 5, 1, 0, 0, 0, DateTimeKind.Utc);
     }
 
     public static class EDDFixesDates
     {
-        public static DateTime EDSMMinimumSystemsDate = new DateTime(2015, 5, 10, 0, 0, 0, DateTimeKind.Utc);
-        public static DateTime BookmarkUTCswitchover = new DateTime(2020, 1, 23, 0, 0, 0, DateTimeKind.Utc);
+        public static DateTime EDSMMinimumSystemsDate {get; } =  new DateTime(2015, 5, 10, 0, 0, 0, DateTimeKind.Utc);
+        public static DateTime BookmarkUTCswitchover {get; } =  new DateTime(2020, 1, 23, 0, 0, 0, DateTimeKind.Utc);
     }
 }
