@@ -31,7 +31,7 @@ namespace EliteDangerousCore
         public enum ShipState { Owned, Sold, Destroyed, Imported};
         public ShipState State { get; set; } = ShipState.Owned; // if owned, sold, destroyed. Default owned
         public string ShipType { get; private set; }        // ship type name, nice, fer-de-lance, etc. can be null
-        public string ShipFD { get; private set; }          // ship type name, fdname
+        public FDName ShipFD { get; private set; }          // ship type name, fdname
         public string ShipUserName { get; private set; }    // ship name, may be empty or null
         public string ShipUserIdent { get; private set; }   // ship ident, may be empty or null
         public long HullValue { get; private set; }         // may be 0, not known
@@ -1118,7 +1118,7 @@ namespace EliteDangerousCore
             JObject jo = new JObject();
 
             jo["event"] = "Loadout";
-            jo["Ship"] = ShipFD;
+            jo["Ship"] = ShipFD.Str();
 
             JArray mlist = new JArray();
             foreach (ShipModule sm in Modules.Values)
@@ -1185,7 +1185,7 @@ namespace EliteDangerousCore
 
             jo["timestamp"] = DateTime.UtcNow.ToStringZuluInvariant();
             jo["event"] = "Loadout";
-            jo["Ship"] = ShipFD;
+            jo["Ship"] = ShipFD.Str();
             jo["ShipID"] = ID;
             if (!string.IsNullOrEmpty(ShipUserName))
                 jo["ShipName"] = ShipUserName;

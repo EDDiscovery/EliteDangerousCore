@@ -29,10 +29,10 @@ namespace EliteDangerousCore
 
     public partial class ItemData
     {
-        static public bool TryGetShipModule(string fdid, out ShipModule m, bool synthesiseit, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
+        static public bool TryGetShipModule(FDName fdid, out ShipModule m, bool synthesiseit, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
         {
             m = null;
-            string lowername = fdid.ToLowerInvariant();
+            string lowername = fdid.ToLower();
 
             // try the static values first, this is thread safe
             bool state = shipmodules.TryGetValue(lowername, out m) || othershipmodules.TryGetValue(lowername, out m) ||
@@ -64,9 +64,9 @@ namespace EliteDangerousCore
             return state;
         }
 
-        internal static string GenerateCandidateModuleName(string fdid)
+        internal static string GenerateCandidateModuleName(string candidatename)
         {
-            string candidatename = fdid.Replace("weaponcustomisation", "WeaponCustomisation").Replace("testbuggy", "SRV").
+            candidatename = candidatename.Replace("weaponcustomisation", "WeaponCustomisation").Replace("testbuggy", "SRV").
                                     Replace("enginecustomisation", "EngineCustomisation");
 
             candidatename = candidatename.SplitCapsWordFull();
@@ -241,9 +241,9 @@ namespace EliteDangerousCore
             return ret.ToArray();
         }
 
-        static public bool IsVanity(string ifd)
+        static public bool IsVanity(FDName ifd)
         {
-            ifd = ifd.ToLowerInvariant();
+            ifd = ifd.ToLower();
             string[] vlist = new[] { "bobble", "decal", "enginecustomisation", "nameplate", "paintjob",
                                     "shipkit", "weaponcustomisation", "voicepack" , "lights", "spoiler" , "wings", "bumper"};
             return Array.Find(vlist, x => ifd.Contains(x)) != null;

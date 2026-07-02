@@ -56,8 +56,8 @@ namespace EliteDangerousCore
                         if (line.Contains("{"))
                         {
                             StringParser sp = new StringParser(line.Substring(line.IndexOf("{") + 1));
-                            string id = sp.NextQuotedWordComma();
-                            if (id != null)
+                            string idn = sp.NextQuotedWordComma();
+                            if (idn != null)
                             {
                                 sp.SkipUntil(new char[] { '(' });
                                 sp.MoveOn(1);
@@ -70,6 +70,7 @@ namespace EliteDangerousCore
 
                                 ShipModule sm = new ShipModule(fid.Value, modtype, GenerateCandidateModuleName(text));
 
+                                FDName id = new FDName(idn);
                                 if (!vanitymodules.ContainsKey(id) && !shipmodules.ContainsKey(id) && !othershipmodules.ContainsKey(id))
                                 {
                                     System.Diagnostics.Debug.WriteLine($"Added new module {fid.Value}, {sm.ModuleID} {sm.ModType} {sm.EnglishModName}");
@@ -98,9 +99,9 @@ namespace EliteDangerousCore
 
                 }
 
-                List<string> keylist = vanitymodules.Keys.ToList();
-                foreach (var kc in keylist)
-                    System.Diagnostics.Debug.Assert(!keylist.Contains(" "));        // just check no spaces are in the IDs due to grep replace
+                List<FDName> keylist = vanitymodules.Keys.ToList();
+                foreach (FDName kc in keylist)
+                    System.Diagnostics.Debug.Assert(!kc.Contains(" "));        // just check no spaces are in the IDs due to grep replace
 
                 foreach (string id in keylist)
                 {
@@ -110,7 +111,7 @@ namespace EliteDangerousCore
                     {
                         for (int i = 1; i <= 6; i++)
                         {
-                            string newid = id.Substring(0, id.Length - 1) + i.ToStringInvariant();
+                            FDName newid = new FDName(id.Substring(0, id.Length - 1) + i.ToStringInvariant());
                             if (!vanitymodules.ContainsKey(newid))
                             {
                                 string text = vanitymodules[id].EnglishModName;
@@ -132,7 +133,8 @@ namespace EliteDangerousCore
                         {
                             for (int i = 1; i <= 4; i++)
                             {
-                                string newid = id.Substring(0, id.Length - 1) + i.ToStringInvariant();
+                                FDName newid = new FDName(id.Substring(0, id.Length - 1) + i.ToStringInvariant());
+
                                 if (!vanitymodules.ContainsKey(newid))
                                 {
                                     string text = vanitymodules[id].EnglishModName;
@@ -164,15 +166,15 @@ namespace EliteDangerousCore
                 {
                     System.Diagnostics.Trace.WriteLine($"*** NEW MODULES!");
 
-                    List<string> vanitynames = vanitymodules.Keys.ToList();
+                    List<FDName> vanitynames = vanitymodules.Keys.ToList();
                     vanitynames.Sort();
 
                     // output to file
                     string outfile = @"c:\code\vanity.lst";
 
                     string tout = "";
-                    foreach (var key in vanitynames)
-                        tout += $"                {{{key.AlwaysQuoteString()}, new ShipModule({vanitymodules[key].ModuleID},ShipModule.ModuleTypes.{vanitymodules[key].ModType},{vanitymodules[key].EnglishModName.AlwaysQuoteString()}) }},\r\n";
+                    foreach (FDName key in vanitynames)
+                        tout += $"                {{{key.WithQuotes()}, new ShipModule({vanitymodules[key].ModuleID},ShipModule.ModuleTypes.{vanitymodules[key].ModType},{vanitymodules[key].EnglishModName.AlwaysQuoteString()}) }},\r\n";
                     BaseUtils.FileHelpers.TryWriteToFile(outfile, tout);
 
                     // auto update cs file - this breaks the debugger note and causes it to notice text updates. Just ignore
@@ -190,7 +192,7 @@ namespace EliteDangerousCore
                                 newfile.Add(itemmodules[i]);
                                 newfile.Add("            {");
                                 foreach (var keya in vanitynames)
-                                    newfile.Add($"                {{{keya.AlwaysQuoteString()}, new ShipModule({vanitymodules[keya].ModuleID},ShipModule.ModuleTypes.{vanitymodules[keya].ModType},{vanitymodules[keya].EnglishModName.AlwaysQuoteString()}) }},");
+                                    newfile.Add($"                {{{keya.WithQuotes()}, new ShipModule({vanitymodules[keya].ModuleID},ShipModule.ModuleTypes.{vanitymodules[keya].ModType},{vanitymodules[keya].EnglishModName.AlwaysQuoteString()}) }},");
 
                                 while (!itemmodules[++i].Contains("};"))        // go to line with };
                                     ;

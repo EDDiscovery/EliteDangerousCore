@@ -76,6 +76,7 @@
     <Compile Include="Bodies\StarScan2\SystemDisplayDrawNode.cs" />
     <Compile Include="Bodies\StarScan2\tests\Tests.cs" />
     <Compile Include="FrontierData\Enumerations\Carrier.cs" />
+    <Compile Include="FrontierData\Enumerations\FDName.cs" />
     <Compile Include="FrontierData\Items\ModuleList.cs" />
     <Compile Include="FrontierData\Ships\ShipModuleDisplay.cs" />
     <Compile Include="JournalStatus\Computers\FactionsStatsComputer.cs" />

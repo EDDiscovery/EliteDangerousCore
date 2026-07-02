@@ -531,6 +531,8 @@ namespace EliteDangerousCore
             ["Jitter"] = new string[] { nameof(ItemData.ShipModule.Jitter) },
             ["WeaponMode"] = new string[] { },
             ["DamageType"] = new string[] { },
+            ["$Thermic;"] = new string[] { },       // new june 26
+            ["$Kinetic;"] = new string[] { },       // new june 26
             ["ShieldGenMinimumMass"] = new string[] { nameof(ItemData.ShipModule.MinMass) },
             ["ShieldGenMaximumMass"] = new string[] { nameof(ItemData.ShipModule.MaxMass) },
             ["ShieldGenMinStrength"] = new string[] { nameof(ItemData.ShipModule.MinStrength) },
