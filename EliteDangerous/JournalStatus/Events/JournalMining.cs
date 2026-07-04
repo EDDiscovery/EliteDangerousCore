@@ -23,13 +23,13 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMiningRefined(JObject evt) : base(evt, JournalTypeEnum.MiningRefined)
         {
-            Type = JournalFieldNaming.FixCommodityName(evt["Type"].Str());          // instances of $.._name, translate to FDNAME
+            Type = evt["Type"].FDNameNormalise();          // instances of $.._name, translate to FDNAME
             Type = JournalFieldNaming.FDNameTranslation(Type);     // pre-mangle to latest names, in case we are reading old journal records
             FriendlyType = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Type);
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);
         }
 
-        public string Type { get; set; }                                        // FIXED fdname always.. vital it stays this way
+        public FDName Type { get; set; }                                        // FIXED fdname always.. vital it stays this way
         public string FriendlyType { get; set; }
         public string Type_Localised { get; set; }
 
@@ -72,7 +72,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public class Material
         {
-            public string Name { get; set; }        //FDNAME
+            public FDName Name { get; set; }        //FDNAME
             public string Name_Localised { get; set; }     
             public string FriendlyName { get; set; }        //friendly
             public double Proportion { get; set; }      // 0-100
@@ -89,7 +89,7 @@ namespace EliteDangerousCore.JournalEvents
             Content = evt["Content"].Enumeration<AsteroidContent>(AsteroidContent.Low, x=>x.Replace("$AsteroidMaterialContent_","").Replace(";",""));
             Content_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Content_Localised"].Str(), Content.ToString());
 
-            MotherlodeMaterial = JournalFieldNaming.FDNameTranslation(evt["MotherlodeMaterial"].Str());
+            MotherlodeMaterial = evt["MotherlodeMaterial"].FDNameNormalise();
             FriendlyMotherlodeMaterial = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(MotherlodeMaterial);
             MotherlodeMaterial_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["MotherlodeMaterial_Localised"].Str(),FriendlyMotherlodeMaterial);
 
@@ -108,7 +108,7 @@ namespace EliteDangerousCore.JournalEvents
         public AsteroidContent Content { get; set; }
         public string Content_Localised { get; set; }
 
-        public string MotherlodeMaterial { get; set; }
+        public FDName MotherlodeMaterial { get; set; }
         public string MotherlodeMaterial_Localised { get; set; }
         public string FriendlyMotherlodeMaterial { get; set; }
 

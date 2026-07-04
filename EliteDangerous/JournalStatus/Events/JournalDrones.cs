@@ -47,13 +47,13 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalBuyDrones(JObject evt) : base(evt, JournalTypeEnum.BuyDrones)
         {
-            Type = evt["Type"].Str();
+            Type = evt["Type"].FDNameNormalise();
             Count = evt["Count"].Int();
             BuyPrice = evt["BuyPrice"].Long();
             TotalCost = evt["TotalCost"].Long();
 
         }
-        public string Type { get; set; }
+        public FDName Type { get; set; }
         public int Count { get; set; }
         public long BuyPrice { get; set; }
         public long TotalCost { get; set; }
@@ -61,18 +61,18 @@ namespace EliteDangerousCore.JournalEvents
         // Istats
         public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = Type, Count = Count } }; } }
 
-        public string FDNameOfItem { get { return Type; } }        // implement IStatsJournalEntryMatCommod
+        public FDName FDNameOfItem { get { return Type; } }        // implement IStatsJournalEntryMatCommod
         public int CountOfItem { get { return Count; } }
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            mc.ChangeCommd( EventTimeUTC, "drones", Count, 0);
+            mc.ChangeCommd( EventTimeUTC, new FDName("drones"), Count, 0);
         }
 
         public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if (stationfaction.HasChars())
-                stats.UpdateCommodity(system, "drones", Count, 0, stationfaction);
+                stats.UpdateCommodity(system, new FDName("drones"), Count, 0, stationfaction);
         }
 
         public void Ledger(Ledger mcl)
@@ -92,12 +92,12 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSellDrones(JObject evt) : base(evt, JournalTypeEnum.SellDrones)
         {
-            Type = evt["Type"].Str();
+            Type = evt["Type"].FDNameNormalise();
             Count = evt["Count"].Int();
             SellPrice = evt["SellPrice"].Long();
             TotalSale = evt["TotalSale"].Long();
         }
-        public string Type { get; set; }
+        public FDName Type { get; set; }
         public int Count { get; set; }
         public long SellPrice { get; set; }
         public long TotalSale { get; set; }
@@ -107,13 +107,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            mc.ChangeCommd( EventTimeUTC, "drones", -Count, 0);
+            mc.ChangeCommd( EventTimeUTC, new FDName("drones"), -Count, 0);
         }
 
         public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if (stationfaction.HasChars())
-                stats.UpdateCommodity(system, "drones", -Count, 0, stationfaction);
+                stats.UpdateCommodity(system, new FDName("drones"), -Count, 0, stationfaction);
         }
 
         public void Ledger(Ledger mcl)
@@ -143,7 +143,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv) 
         {
-            mc.ChangeCommd( EventTimeUTC, "drones", -1, 0);
+            mc.ChangeCommd( EventTimeUTC, new FDName("drones"), -1, 0);
         }
 
         public override string GetInfo()

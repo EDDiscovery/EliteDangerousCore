@@ -22,18 +22,17 @@ namespace EliteDangerousCore
     [System.Diagnostics.DebuggerDisplay("{currentid} ships {Ships.Count}")]
     public class ShipList
     {
-        public string CurrentShipID { get { return currentid; } }           // by shipid key
-        public Dictionary<string, Ship> Ships { get; private set; }         // by shipid key
-
+        public int Count => Ships.Count;
+        public Ship Get(int n) => Ships.Values.ToArray()[n];
         public ShipModulesInStore StoredModules { get; private set; }       // stored modules
 
         public bool HaveCurrentShip { get { return currentid != null; } }
 
         [QuickJSON.JsonIgnore()]
-        public Ship CurrentShip { get { return (HaveCurrentShip) ? Ships[currentid] : null; } }
+        public Ship CurrentShip { get { return HaveCurrentShip ? Ships[currentid] : null; } }
 
         // IDs have been repeated, need more than just that
-        private string Key(string fdname, ulong i) { return fdname.ToLowerInvariant() + ":" + i.ToStringInvariant(); }
+        private string Key(FDName fdname, ulong i) { return fdname.ToLower() + ":" + i.ToStringInvariant(); }
 
         public Ship GetShipByShortName(string sn)
         {
@@ -79,7 +78,7 @@ namespace EliteDangerousCore
             currentid = null;
         }
 
-        public void Loadout(ulong id, string ship, string shipfd, string name, string ident, List<ShipModule> modulelist,
+        public void Loadout(ulong id, string ship, FDName shipfd, string name, string ident, List<ShipModule> modulelist,
                         long HullValue, long ModulesValue, long Rebuy, double unladenmass, double reservefuelcap, double hullhealth, bool? Hot)
         {
             string sid = Key(shipfd, id);
@@ -93,7 +92,7 @@ namespace EliteDangerousCore
 
             Ship newsm = null;       // if we change anything, we need a new clone..
 
-            Dictionary<ShipSlots.Slot, ShipModule> moduleSlots = sm.Modules.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            Dictionary<ShipSlots.Slot, ShipModule> moduleSlots = sm.Modules.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);     // clone
 
             foreach (ShipModule m in modulelist)
             {
@@ -108,7 +107,7 @@ namespace EliteDangerousCore
                     if (newsm == null)              // if not cloned
                     {
                         newsm = sm.ShallowClone();  // we need a clone, pointing to the same modules, but with a new dictionary
-                        Ships[sid] = newsm;              // update our record of last module list for this ship
+                        Ships[sid] = newsm;              // update our record of ship to this
                     }
 
                     newsm.SetModule(m);                   // update entry only.. rest will still point to same entries
@@ -118,7 +117,7 @@ namespace EliteDangerousCore
             }
 
             // Remove modules not in loadout
-            if (moduleSlots.Count != 0)
+            if (moduleSlots.Count != 0)                 // any slots remaining from previous build
             {
                 List<ShipModule> modulesToRemove = moduleSlots.Values.ToList();
 
@@ -130,7 +129,7 @@ namespace EliteDangerousCore
                 foreach (ShipModule m in modulesToRemove)
                 {
                     //System.Diagnostics.Trace.WriteLine($"Warning: Module {m.Item} in slot {m.Slot} is missing from loadout");
-                    newsm = newsm.RemoveModule(m.SlotFD, m.Item);
+                    newsm = newsm.RemoveModule(m.SlotFD, m.ItemFD);
                 }
 
                 Ships[sid] = newsm;
@@ -165,12 +164,10 @@ namespace EliteDangerousCore
         }
 
 
-        public void LoadGame(ulong id, string ship, string shipfd, string name, string ident, double fuellevel, double fueltotal)        // LoadGame..
+        public void LoadGame(ulong id, string ship, FDName shipfd, string name, string ident, double fuellevel, double fueltotal)        // LoadGame..
         {
             string sid = Key(shipfd, id);
-
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
-
             Ships[sid] = sm = sm.SetShipDetails(ship, shipfd, name, ident, fuellevel, fueltotal);   // this makes a shallow copy if any data has changed..
 
             //System.Diagnostics.Debug.WriteLine("Load Game " + sid);
@@ -234,7 +231,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void RestockVehicle(ulong id, string shipfd, string ship, string Loadout)
+        public void RestockVehicle(ulong id, FDName shipfd, string ship, string Loadout)
         {
             string sid = Key(shipfd, id);
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
@@ -315,20 +312,20 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void ShipyardNew(string ship, string shipFD, ulong id)
+        public void ShipyardNew(string ship, FDName shipfd, ulong id)
         {
-            string sid = Key(shipFD, id);
+            string sid = Key(shipfd, id);
             //System.Diagnostics.Debug.WriteLine(sid + " New");
 
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
-            Ships[sid] = sm.SetShipDetails(ship, shipFD); // shallow copy if changed
+            Ships[sid] = sm.SetShipDetails(ship, shipfd); // shallow copy if changed
             currentid = sid;
             VerifyList();
         }
 
-        public void Sell(string ShipFD, ulong id)
+        public void Sell(FDName shipfd, ulong id)
         {
-            string sid = Key(ShipFD, id);
+            string sid = Key(shipfd, id);
             if (Ships.ContainsKey(sid))       // if we don't have it, don't worry
             {
                 //System.Diagnostics.Debug.WriteLine(sid + " Sold ");
@@ -341,7 +338,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void Transfer(string ship, string shipFD, ulong id, string fromsystem, string tosystem, string tostation, DateTime arrivaltime)
+        public void Transfer(string ship, FDName shipFD, ulong id, string fromsystem, string tosystem, string tostation, DateTime arrivaltime)
         {
             string sid = Key(shipFD, id);
             Ship sm = EnsureShip(sid);              // this either gets current ship or makes a new one.
@@ -352,9 +349,9 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void Store(string ShipFD, ulong id, string station, string system)
+        public void Store(FDName shipfd, ulong id, string station, string system)
         {
-            string sid = Key(ShipFD, id);
+            string sid = Key(shipfd, id);
             if (Ships.ContainsKey(sid))       // if we don't have it, don't worry
             {
                 //System.Diagnostics.Debug.WriteLine(sid + " store on buy at " + system);
@@ -430,7 +427,7 @@ namespace EliteDangerousCore
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
 
             sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed
-            Ships[sid] = sm.RemoveModule(e.SlotFD, e.SellItem);
+            Ships[sid] = sm.RemoveModule(e.SlotFD, e.SellItemFD);
 
             if (e.SellItem.Length > 0)
                 itemlocalisation[e.SellItem] = e.SellItemLocalised;
@@ -460,7 +457,7 @@ namespace EliteDangerousCore
             if (e.ReplacementItem.Length > 0)
                 Ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.ReplacementItem, e.ReplacementItemFD, e.ReplacementItemLocalised);
             else
-                Ships[sid] = sm.RemoveModule(e.SlotFD, e.StoredItem);
+                Ships[sid] = sm.RemoveModule(e.SlotFD, e.StoredItemFD);
 
             StoredModules = StoredModules.StoreModule(e, sys);
             VerifyList();
@@ -580,7 +577,7 @@ namespace EliteDangerousCore
             {
                 System.Diagnostics.Debug.Assert(c.Engineering != null);     // double check its being passed a good engineering
 
-                Ships[currentid] = CurrentShip.Craft(c.SlotFD, c.Module, c.Engineering);
+                Ships[currentid] = CurrentShip.Craft(c.SlotFD, c.ModuleFD, c.Engineering);
             }
             VerifyList();
         }
@@ -643,6 +640,7 @@ namespace EliteDangerousCore
         #region vars
         private Dictionary<string, string> itemlocalisation;
         private string currentid;
+        private Dictionary<string, Ship> Ships { get; set; }         // by shipid key
         #endregion
     }
 

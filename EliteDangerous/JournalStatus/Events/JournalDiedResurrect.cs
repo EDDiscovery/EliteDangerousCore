@@ -32,7 +32,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             public string Name;             // always non null 
             public string Name_Localised;   // always non null 
-            public string Ship;             // always non null 
+            public FDName Ship;             // always non null 
             public string Rank;             // may be null
 
             public string FriendlyShip;     // EDD addition, always non null
@@ -55,7 +55,7 @@ namespace EliteDangerousCore.JournalEvents
                     string kship = evt["KillerShip"].StrNull();
                     if (kship != null)
                     {
-                        Killers = new Killer[1] { new Killer { Name = kship, Name_Localised = kship.SplitCapsWordFull(), Ship = kship } };
+                        Killers = new Killer[1] { new Killer { Name = kship, Name_Localised = kship.SplitCapsWordFull(), Ship = new FDName(kship) } };
                     }
                 }
             }
@@ -64,7 +64,7 @@ namespace EliteDangerousCore.JournalEvents
                 // it was an individual
                 Killers = new Killer[1]
                 {
-                    new Killer {  Name = killerName, Name_Localised = evt["KillerName_Localised"].Str(), Ship = evt["KillerShip"].Str(),  Rank = evt["KillerRank"].Str() }
+                    new Killer {  Name = killerName, Name_Localised = evt["KillerName_Localised"].Str(), Ship = evt["KillerShip"].FDNameNormaliseShip(),  Rank = evt["KillerRank"].Str() }
                 };
             }
 
@@ -74,8 +74,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     k.Name = k.Name ?? "";      // ensure set - may not be set for a bad Killers array
                     k.Name_Localised = JournalFieldNaming.CheckLocalisation(k.Name_Localised ?? "", k.Name);
-                    k.Ship = k.Ship ?? "";      // ensure set
-                    k.FriendlyShip = k.Ship.HasChars() ? JournalFieldNaming.GetBetterShipSuitActorName(k.Ship) : "";
+                    k.FriendlyShip = JournalFieldNaming.GetBetterShipSuitActorName(k.Ship);
                     //System.Diagnostics.Debug.WriteLine($" >> Died '{k.Name}' '{k.Name_Localised}' '{k.Ship}' '{k.FriendlyShip}' '{k.Rank}'");
                 }
             }
@@ -110,7 +109,7 @@ namespace EliteDangerousCore.JournalEvents
 
                     if (ItemData.IsSuit(k.Ship))
                     {
-                        string type = k.Ship.ContainsIIC("Citizen") ? k.FriendlyShip.Replace("Suit ", "") : k.FriendlyShip.Replace("Suit", "Trooper");
+                        string type = k.Ship.Contains("citizen") ? k.FriendlyShip.Replace("Suit ", "") : k.FriendlyShip.Replace("Suit", "Trooper");
                         kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", type);
                     }
                     else if (ItemData.IsShip(k.Ship))

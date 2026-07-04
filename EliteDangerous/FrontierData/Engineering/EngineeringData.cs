@@ -35,7 +35,7 @@ namespace EliteDangerousCore
     public class EngineeringData
     {
         public string Engineer { get; set; }
-        public string BlueprintName { get; set; }       // not case corrected - as inara gets it, best to leave its case.
+        public  FDName BlueprintName { get; set; }       
         public string FriendlyBlueprintName { get; set; }
         public ulong EngineerID { get; set; }
         public ulong BlueprintID { get; set; }
@@ -45,7 +45,7 @@ namespace EliteDangerousCore
         public string ExperimentalEffect_Localised { get; set; }    // may be null or maybe empty (due to frontier)
         public EngineeringModifiers[] Modifiers { get; set; }       // may be null
 
-        public bool IsValid { get { return Level >= 1 && BlueprintName.HasChars(); } }
+        public bool IsValid { get { return Level >= 1 && BlueprintName.Valid; } }
 
         // Post engineering changes
         public EngineeringData(JObject evt)
@@ -55,12 +55,12 @@ namespace EliteDangerousCore
 
             if (evt.Contains("Blueprint"))     // old form
             {
-                BlueprintName = evt["Blueprint"].Str();
+                BlueprintName = evt["Blueprint"].FDName();
             }
             else
             {
                 EngineerID = evt["EngineerID"].ULong();     // NEW FORM after engineering changes in about 2018
-                BlueprintName = evt["BlueprintName"].Str();
+                BlueprintName = evt["BlueprintName"].FDName();
                 BlueprintID = evt["BlueprintID"].ULong();
                 Quality = evt["Quality"].Double(0);
 
@@ -95,7 +95,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            FriendlyBlueprintName = BlueprintName.HasChars() ? Recipes.GetBetterNameForEngineeringRecipe(BlueprintName) : "??";       // some journal entries has empty blueprints
+            FriendlyBlueprintName = BlueprintName.Valid ? Recipes.GetBetterNameForEngineeringRecipe(BlueprintName) : "??";       // some journal entries has empty blueprints
         }
 
         public JObject ToJSONLoadout()  // reproduce the loadout format..
@@ -104,7 +104,7 @@ namespace EliteDangerousCore
             jo["Engineer"] = Engineer;
             jo["EngineerID"] = EngineerID;
             jo["BlueprintID"] = BlueprintID;
-            jo["BlueprintName"] = BlueprintName;
+            jo["BlueprintName"] = BlueprintName.Str();
             jo["Level"] = Level;
             jo["Quality"] = Quality;
 
@@ -227,7 +227,7 @@ namespace EliteDangerousCore
             return Modifiers != null ? Array.Find(Modifiers, x => x.Label.Equals(name, StringComparison.InvariantCultureIgnoreCase)) : null;
         }
 
-        public ItemData.ShipModule EngineerModule(ItemData.ShipModule original, out string report, string modulefdname = "", ShipSlots.Slot slotfd = ShipSlots.Slot.Unknown, bool debugit = false)
+        public ItemData.ShipModule EngineerModule(ItemData.ShipModule original, out string report, FDName modulefdname, ShipSlots.Slot slotfd = ShipSlots.Slot.Unknown, bool debugit = false)
         {
             report = "";
 
@@ -300,8 +300,8 @@ namespace EliteDangerousCore
                             string exceptiontext = exceptiontype.Substring(1);
 
                             bool anyfound = Array.Find(Modifiers, x => x.Label.EqualsIIC(exceptiontext)) != null ||
-                                          modulefdname.WildCardMatch(exceptiontext, true) == true ||
-                                          BlueprintName.EqualsIIC(exceptiontext);
+                                          modulefdname.Str().WildCardMatch(exceptiontext, true) == true ||
+                                          BlueprintName.Str().EqualsIIC(exceptiontext);
 
                             if (negativecheck ? anyfound == true : anyfound == false)        // negative check means can't have any, position check means must have something
                             {

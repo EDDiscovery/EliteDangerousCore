@@ -39,7 +39,8 @@ namespace EliteDangerousCore.JournalEvents
             SharedWithOthers = evt["SharedWithOthers"].Bool(false);
             Rewards = evt["Rewards"]?.ToObjectQ<BountyReward[]>();
 
-            TargetLocalised = Target = evt["Target"].StrNull();       // set for skimmer target missions and for on foot bounties
+            TargetLocalised = evt["Target"].StrNull();       // set for skimmer target missions and for on foot bounties
+            Target = evt["Target"].FDNameNormalise();
 
             if (Target != null)         
             {
@@ -91,7 +92,7 @@ namespace EliteDangerousCore.JournalEvents
         public long TotalReward { get; set; }
         public string VictimFaction { get; set; }
         public string VictimFactionLocalised { get; set; }
-        public string Target { get; set; }
+        public FDName Target { get; set; }
         public string TargetLocalised { get; set; }
         public bool SharedWithOthers { get; set; }
         public BountyReward[] Rewards { get; set; }
@@ -100,8 +101,8 @@ namespace EliteDangerousCore.JournalEvents
 
         // very old logs did not have target or victim faction, and therefore must be a ship
         public bool IsThargoid { get { return VictimFaction != null && VictimFaction.Contains("Thargoid", System.StringComparison.InvariantCultureIgnoreCase); } }       // seen both "Thargoid" and later "$faction_Thargoid;"
-        public bool IsSkimmer { get { return Target != null && Target.Contains("Skimmer", System.StringComparison.InvariantCultureIgnoreCase); } }  
-        public bool IsOnFootNPC { get { return Target != null && Target.Contains("suitai_", System.StringComparison.InvariantCultureIgnoreCase); } }       // Its a on foot NPC
+        public bool IsSkimmer { get { return Target != null && Target.Contains("skimmer"); } }  
+        public bool IsOnFootNPC { get { return Target != null && Target.Contains("suitai_"); } }       // Its a on foot NPC
 
         public bool IsShip { get { return !IsThargoid && !IsOnFootNPC && !IsSkimmer; } }
 
@@ -214,7 +215,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string Type { get { return "Capital Ship Bond".Tx(); } }
-        public string Target { get { return ""; } }
+        public FDName Target { get { return FDName.Empty; } }
         public string TargetFaction { get { return VictimFaction; } }
 
         public bool HasFaction(string faction)
@@ -308,7 +309,7 @@ namespace EliteDangerousCore.JournalEvents
         public int? NumberRewards { get; set; }                      // EDD addition, number of rewards
 
         public string Type { get { return "Faction Kill Bond".Tx(); } }
-        public string Target { get { return ""; } }
+        public FDName Target { get { return FDName.Empty; } }
         public string TargetFaction { get { return VictimFaction; } }
 
 
@@ -538,15 +539,15 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalClearImpound(JObject evt) : base(evt, JournalTypeEnum.ClearImpound)
         {
-            ShipType = JournalFieldNaming.NormaliseFDShipName(evt["ShipType"].Str());
-            ShipType_Localised = JournalFieldNaming.CheckLocalisation(evt["ShipType_Localised"].Str(), ShipType);
+            ShipType = evt["ShipType"].FDNameNormaliseShip();
+            ShipType_Localised = JournalFieldNaming.CheckLocalisation(evt["ShipType_Localised"].Str(), ShipType.Str());
             ShipId = evt["ShipID"].ULong();
             MarketID = evt["MarketID"].Long();
             ShipMarketID = evt["ShipMarketID"].Long();
             System = evt["System"].StrNull();
         }
 
-        public string ShipType { get; set; }
+        public FDName ShipType { get; set; }
         public string ShipType_Localised { get; set; }
         public ulong ShipId { get; set; }
         public long ShipMarketID { get; set; }

@@ -315,10 +315,10 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Does it have materials list")]
         public bool HasMaterials { get { return Materials != null && Materials.Any(); } }
         [PropertyNameAttribute("Materials dictionary, in %")]
-        public Dictionary<string, double> Materials { get; private set; }       // fdname and name is the same for materials on planets.  name is lower case
-        public bool HasMaterial(string name) { return Materials != null && Materials.ContainsKey(name.ToLowerInvariant()); }
+        public Dictionary<FDName, double> Materials { get; private set; }       // fdname and name is the same for materials on planets.  name is lower case
+        public bool HasMaterial(FDName name) { return Materials != null && Materials.ContainsKey(name); }
         [PropertyNameAttribute("List of materials, comma separated")]
-        public string MaterialList { get { if (Materials != null) { var na = (from x in Materials select x.Key).ToArray(); return String.Join(",", na); } else return null; } }
+        public string MaterialList { get { if (Materials != null) { var na = (from x in Materials select x.Key.Str()).ToArray(); return String.Join(",", na); } else return null; } }
 
         [PropertyNameAttribute("What is the reserve level of the ring")]
         public EDReserve ReserveLevel { get; private set; }
@@ -659,20 +659,22 @@ namespace EliteDangerousCore.JournalEvents
                 nSurfacePressure = evt["SurfacePressure"].DoubleNull();
                 nLandable = evt["Landable"].BoolNull();
                 nMassEM = evt["MassEM"].DoubleNull();
-
+// tbd
                 JToken mats = evt["Materials"];
                 if (mats != null)
                 {
+                    Materials = new Dictionary<FDName, double>(new FDNameEqualityComparer());
+
                     if (mats.IsObject)
                     {
-                        Materials = mats.ToObjectQ<Dictionary<string, double>>();  // name in fd logs is lower case
+                        mats.ToObjectProtected(Materials.GetType(),false,initialobject:Materials);
                     }
                     else if (mats.IsArray)
                     {
-                        Materials = new Dictionary<string, double>();
                         foreach (JObject jo in mats)                                        // name in fd logs is lower case
                         {
-                            Materials[jo["Name"].Str("Default").ToLowerInvariant()] = jo["Percent"].Double();
+                            FDName item = new FDName(jo["Name"].Str("Default"));
+                            Materials[item] = jo["Percent"].Double();
                         }
                     }
                 }

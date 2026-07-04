@@ -95,12 +95,12 @@ namespace EliteDangerousCore
             public string ModuleList { get; private set; }  // comma separ list of module type names (although we don't use this feature now)
             public string[] Modules { get { return ModuleList.Split(','); } }
             public string[] Engineers { get ; private set; }
-            public string FDName { get; private set; }       // only certain types have a fdname
+            public FDName FDName { get; private set; }       // only certain types have a fdname
 
             public EngineeringRecipe(string name, string fdname, string ingredientlist, string moduletypelist, string lvl, string engnrs)   // normal recipes
                 : base(name, ingredientlist)
             {
-                this.FDName = fdname;
+                this.FDName = new FDName(fdname);
                 Level = lvl;
                 ModuleList = moduletypelist;
                 Engineers = engnrs.Split(',');
@@ -110,7 +110,7 @@ namespace EliteDangerousCore
                 : base(name, ingredientlist)
             {
                 Level = "NA";
-                this.FDName = fdname;
+                this.FDName = new FDName(fdname);
                 ModuleList = moduletypelist;
                 Engineers = type.Split(',');
             }
@@ -119,7 +119,7 @@ namespace EliteDangerousCore
                 : base(n, ingredientlist)
             {
                 Level = "NA";
-                this.FDName = fdname;
+                this.FDName = new FDName(fdname);
                 ModuleList = moduletypelist;
                 Engineers = new string[] { "Special Effect" };
             }
@@ -137,13 +137,13 @@ namespace EliteDangerousCore
             {
                 Level = "NA";
                 ModuleList = moduletypelist;
-                this.FDName = fdname;
+                this.FDName = new FDName(fdname);
                 Engineers = eng.Split(',');
             }
         }
 
         // always returns a string, may be empty
-        public static string UsedInRecipesByFDName(string fdname, string join = ", ")
+        public static string UsedInRecipesByFDName(FDName fdname, string join = ", ")
         {
             string s = Recipes.UsedInEngineeringByFDName(fdname, join);
             s = s.AppendPrePad(Recipes.UsedInSythesisByFDName(fdname, join), join);
@@ -151,7 +151,7 @@ namespace EliteDangerousCore
         }
 
         // always returns a string, may be empty
-        public static string UsedInSythesisByFDName(string fdname, string join = ", ")
+        public static string UsedInSythesisByFDName(FDName fdname, string join = ", ")
         {
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
             if (mc != null && SynthesisRecipesByMaterial.ContainsKey(mc))
@@ -164,7 +164,7 @@ namespace EliteDangerousCore
         }
 
         // always returns a string, may be empty
-        public static string UsedInEngineeringByFDName(string fdname, string join = ", ")
+        public static string UsedInEngineeringByFDName(FDName fdname, string join = ", ")
         {
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
             if (mc != null && EngineeringRecipesByMaterial.ContainsKey(mc))
@@ -176,10 +176,9 @@ namespace EliteDangerousCore
                 return "";
         }
 
-        public static string GetBetterNameForEngineeringRecipe(string fdname)
+        public static string GetBetterNameForEngineeringRecipe(FDName fdname)
         {
-            var lfdname = fdname.ToLowerInvariant();
-            var f = EngineeringRecipes.Find(x => x.FDName == lfdname);
+            var f = EngineeringRecipes.Find(x => x.FDName == fdname);
             if (f == null)
                 return fdname.SplitCapsWordFull();
             else

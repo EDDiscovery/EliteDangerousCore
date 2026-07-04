@@ -45,12 +45,13 @@ namespace EliteDangerousCore.JournalEvents
         {
             TargetLocked = evt["TargetLocked"].Bool();
 
-            ShipFD = evt["Ship"].StrNull();
+            ShipFD = evt["Ship"].FDName();
             if (ItemData.IsShip(ShipFD))
             {
-                ShipFD = JournalFieldNaming.NormaliseFDShipName(ShipFD);
+                ShipFD.NormaliseShip();
                 Ship = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
             }
+
             Ship_Localised = JournalFieldNaming.CheckLocalisation(evt["Ship_Localised"].Str(), Ship);
 
             ScanStage = evt["ScanStage"].IntNull();
@@ -75,7 +76,7 @@ namespace EliteDangerousCore.JournalEvents
         public int? ScanStage { get; set; }             // targetlocked= true, 0/1/2/3
 
         public string Ship { get; set; }                // 0 null
-        public string ShipFD { get; set; }              // 0 null
+        public FDName ShipFD { get; set; }              // 0 null
         public string Ship_Localised { get; set; }      // 0 will be empty
         public string PilotName { get; set; }           // 1 null
         public string PilotName_Localised { get; set; } // 1 will be empty 

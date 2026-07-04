@@ -23,9 +23,9 @@ namespace EliteDangerousCore
         public long id { get; private set; }
 
         [JsonName("name")]                                  // Oct 22: No sign of a JSON.FromObject use.  I think this is old but may as well maintain. Maintain CAPI output names when emitting, even though we use a different naming
-        public string fdname { get; private set; }          // EDDN use : name is lower cased in CAPI but thats all to match Marketing use of it
+        public FDName fdname { get; private set; }          // EDDN use : name is lower cased in CAPI but thats all to match Marketing use of it
         [JsonIgnore]
-        public string fdname_unnormalised { get; private set; }  // unnormalised, with FD decoration, if present
+        public FDName fdname_unnormalised { get; private set; }  // unnormalised, with FD decoration, if present
         public string locName { get; private set; }
 
         [JsonName("categoryname")]
@@ -133,7 +133,7 @@ namespace EliteDangerousCore
             ComparisionLR = ComparisionRL = "";
         }
 
-        public CCommodities(long id, string fdname, string locname, string cat, string loccat, int buyprice, int sellprice, int demandbracket, int stockbracket, int stock, int demand)
+        public CCommodities(long id, FDName fdname, string locname, string cat, string loccat, int buyprice, int sellprice, int demandbracket, int stockbracket, int stock, int demand)
         {
             this.id = id;
             this.fdname_unnormalised = this.fdname = fdname;
@@ -155,7 +155,7 @@ namespace EliteDangerousCore
 
         public bool Equals(CCommodities other)
         {
-            return (id == other.id && string.Compare(fdname, other.fdname) == 0 && string.Compare(locName, other.locName) == 0 &&
+            return (id == other.id && fdname.Equals(other.fdname) && string.Compare(locName, other.locName) == 0 &&
                      string.Compare(category, other.category) == 0 && string.Compare(loccategory, other.loccategory) == 0 &&
                      buyPrice == other.buyPrice && sellPrice == other.sellPrice && meanPrice == other.meanPrice &&
                      demandBracket == other.demandBracket && stockBracket == other.stockBracket && stock == other.stock && demand == other.demand);
@@ -166,11 +166,11 @@ namespace EliteDangerousCore
             try
             {
                 id = jo["id"].Long();
-                fdname_unnormalised = jo["name"].Str();
-                fdname = fdname_unnormalised.ToLowerInvariant();
+                fdname_unnormalised = jo["name"].FDName();
+                fdname = jo["name"].FDNameNormalise();
 
                 locName = jo["locName"].Str();
-                locName = locName.Alt(fdname.SplitCapsWord());      // use locname, if not there, make best loc name possible
+                locName = locName.Alt(fdname.SplitCapsWordFull());      // use locname, if not there, make best loc name possible
 
                 category = jo["categoryname"].Str();
                 loccategory = jo["loccategory"].StrNull();
@@ -221,8 +221,8 @@ namespace EliteDangerousCore
             try
             {
                 id = jo["id"].Long();
-                fdname_unnormalised = jo["Name"].Str();
-                fdname = JournalFieldNaming.FixCommodityName(fdname_unnormalised);
+                fdname_unnormalised = jo["Name"].FDName();
+                fdname = jo["Name"].FDNameNormalise();
                 locName = jo["Name_Localised"].Str();
                 if (locName.IsEmpty())
                     locName = fdname.SplitCapsWordFull();
@@ -267,8 +267,8 @@ namespace EliteDangerousCore
             try
             {
                 id = jo["id"].Long();
-                fdname_unnormalised = jo["Name"].Str();
-                fdname = JournalFieldNaming.FixCommodityName(fdname_unnormalised);
+                fdname_unnormalised = jo["Name"].FDName();
+                fdname = jo["Name"].FDNameNormalise();
                 locName = jo["Name_Localised"].Str();
                 if (locName.IsEmpty())
                     locName = fdname.SplitCapsWordFull();
@@ -311,7 +311,8 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    fdname = fdname_unnormalised = locName = spanshname;
+                    fdname = fdname_unnormalised = new FDName(spanshname);
+                    locName = fdname.Str();
                     loccategory = category = jo["category"].Str();
                 }
 

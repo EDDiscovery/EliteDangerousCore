@@ -24,24 +24,24 @@ namespace EliteDangerousCore
     {
         public DateTime EventTime { get; private set; }
         public ulong ID { get; private set; }                // its Frontier SuitID
-        public string FDName { get; private set; }          // suit type
+        public FDName FDName { get; private set; }          // suit type
         public string Name_Localised { get; private set; }         // localised
         public string FriendlyName { get; private set; }
         public long Price { get; private set; }             // may be 0, not known
         public bool Sold { get; private set; }
-        public string[] SuitMods { get; private set; }     // may be null or empty
+        public FDName[] SuitMods { get; private set; }     // may be null or empty
 
-        public Suit(DateTime time, ulong id, string fdname, string locname, long price,string[] suitmods , bool sold )
+        public Suit(DateTime time, ulong id, FDName fdname, string locname, long price,FDName[] suitmods , bool sold )
         {
             EventTime = time; ID = id; FDName = fdname; Name_Localised = locname; Price = price; Sold = sold; SuitMods = suitmods;
-            if ( fdname.HasChars() )
+            if ( fdname.Valid )
                 FriendlyName = ItemData.GetSuit(fdname, Name_Localised)?.Name ?? Name_Localised;
         }
     }
 
     public class SuitList
     {
-        public Dictionary<ulong, Suit> Suits(uint gen) { return suits.Get(gen, x => x.Sold == false && x.FDName.HasChars()); }    // all valid unsold suits with valid names. fdname=null special entry
+        public Dictionary<ulong, Suit> Suits(uint gen) { return suits.Get(gen, x => x.Sold == false && x.FDName.Valid); }    // all valid unsold suits with valid names. fdname=null special entry
 
         public Suit Suit(ulong suit, uint gen) { return suits.Get(suit, gen); }    // get suit at gen
 
@@ -53,12 +53,12 @@ namespace EliteDangerousCore
         {
         }
 
-        public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price, string[] mods)
+        public void Buy(DateTime time, ulong id, FDName fdname, string namelocalised, long price, FDName[] mods)
         {
             suits[id] = new Suit(time, id, fdname, namelocalised, price, mods, sold: false);
         }
 
-        public bool VerifyPresence(DateTime time, ulong id, string fdname, string namelocalised, long price, string[] mods)
+        public bool VerifyPresence(DateTime time, ulong id, FDName fdname, string namelocalised, long price, FDName[] mods)
         {
             var s = suits.GetLast(id);
 
@@ -102,7 +102,7 @@ namespace EliteDangerousCore
             suits[CURSUITID] = new Suit(time, id, null, null, 0, null, false);
         }
 
-        public void Upgrade(DateTime time, ulong id, string fdname, int newclass, long cost)
+        public void Upgrade(DateTime time, ulong id, FDName fdname, int newclass, long cost)
         {
             //System.Diagnostics.Debug.WriteLine($"Upgrade {id} to {newclass} for {cost}");
 

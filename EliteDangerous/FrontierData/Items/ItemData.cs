@@ -68,7 +68,7 @@ namespace EliteDangerousCore
 
                                 ShipModule.ModuleTypes modtype = (ShipModule.ModuleTypes)Enum.Parse(typeof(ShipModule.ModuleTypes), type.Substring(type.LastIndexOf(".") + 1));
 
-                                ShipModule sm = new ShipModule(fid.Value, modtype, GenerateCandidateModuleName(text));
+                                ShipModule sm = new ShipModule(fid.Value, modtype, GenerateCandidateModuleName(new FDName(text)).Str());
 
                                 FDName id = new FDName(idn);
                                 if (!vanitymodules.ContainsKey(id) && !shipmodules.ContainsKey(id) && !othershipmodules.ContainsKey(id))
@@ -99,11 +99,13 @@ namespace EliteDangerousCore
 
                 }
 
+#if false // TBD
                 List<FDName> keylist = vanitymodules.Keys.ToList();
                 foreach (FDName kc in keylist)
                     System.Diagnostics.Debug.Assert(!kc.Contains(" "));        // just check no spaces are in the IDs due to grep replace
 
-                foreach (string id in keylist)
+                blah
+                foreach (FDName id in keylist)
                 {
                     // ids ending in _00 always seem to come in 6's so make sure all are there
 
@@ -115,7 +117,7 @@ namespace EliteDangerousCore
                             if (!vanitymodules.ContainsKey(newid))
                             {
                                 string text = vanitymodules[id].EnglishModName;
-                                ShipModule sm2 = new ShipModule(vanitymodules[id].ModuleID, vanitymodules[id].ModType, text.Substring(0, text.Length - 1) + i.ToStringInvariant());
+                                ShipModule sm2 = new ShipModule(vanitymodules[id].ModuleID, vanitymodules[newid].ModType, text.Substring(0, text.Length - 1) + i.ToStringInvariant());
                                 System.Diagnostics.Debug.WriteLine($"Added estimated module {newid}");
                                 vanitymodules.Add(newid, sm2);
                                 changedvms = true;
@@ -137,7 +139,7 @@ namespace EliteDangerousCore
 
                                 if (!vanitymodules.ContainsKey(newid))
                                 {
-                                    string text = vanitymodules[id].EnglishModName;
+                                    string text = vanitymodules[newid].EnglishModName;
                                     ShipModule sm2 = new ShipModule(vanitymodules[id].ModuleID, vanitymodules[id].ModType, text.Substring(0, text.Length - 1) + i.ToStringInvariant());
                                     System.Diagnostics.Debug.WriteLine($"Added estimated module {newid}");
                                     vanitymodules.Add(newid, sm2);
@@ -149,7 +151,6 @@ namespace EliteDangerousCore
                         }
                     }
                 }
-
                 foreach( var vm in vanitymodules)
                 {
                     string org = vm.Value.EnglishModName;
@@ -161,6 +162,7 @@ namespace EliteDangerousCore
                         changedvms = true;
                     }
                 }
+#endif
 
                 if (changedvms)
                 {
@@ -213,6 +215,6 @@ namespace EliteDangerousCore
 
 #endif
 
-        }
+            }
     }
 }

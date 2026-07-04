@@ -29,7 +29,7 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(this.GetType(), true,
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: this,
-                customconverter: (ty, ob) => { return JournalFieldNaming.FixCommodityName((string)ob); }
+                customconverter: (ty, ob) => { return FDName.Normalise((string)ob); }
                 );        // read fields named in this structure matching JSON names
         }
         public long MarketID { get; set; }
@@ -41,7 +41,7 @@ namespace EliteDangerousCore.JournalEvents
         public class ResourcesList : IEquatable<ResourcesList>
         {
             [JsonCustomFormat]
-            public string Name { get; set; }        // fdname
+            public FDName Name { get; set; }        // fdname
             public string Name_Localised { get; set; }
             public int RequiredAmount { get; set; }
             public int ProvidedAmount { get; set; }
@@ -98,7 +98,7 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(this.GetType(), true,
                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                initialobject: this,
-                customconverter: (ty, ob) => { return JournalFieldNaming.FixCommodityName((string)ob); }
+                customconverter: (ty, ob) => { return FDName.Normalise((string)ob); }
                );        // read fields named in this structure matching JSON names
         }
         public long MarketID { get; set; }
@@ -106,7 +106,7 @@ namespace EliteDangerousCore.JournalEvents
         public class Contribution
         {
             [JsonCustomFormat]
-            public string Name { get; set; }        // fdname
+            public FDName Name { get; set; }        // fdname
             public string Name_Localised { get; set; }
             public int Amount { get; set; }
         }

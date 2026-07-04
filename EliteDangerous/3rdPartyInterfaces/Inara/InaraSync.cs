@@ -73,7 +73,7 @@ namespace EliteDangerousCore.Inara
             return true;
         }
 
-        public static bool NewEvent(Action<string> logger, HistoryEntry he, Dictionary<string,MaterialCommodityMicroResource> mcmr)
+        public static bool NewEvent(Action<string> logger, HistoryEntry he, Dictionary<FDName,MaterialCommodityMicroResource> mcmr)
         {
             List<JToken> events = NewEntryList(he, he.EventTimeUTC, mcmr);
             if (events.Count > 0)
@@ -129,9 +129,9 @@ namespace EliteDangerousCore.Inara
                 DateTime tb = DateTime.UtcNow.AddSeconds(-120);     // we space out the time to avoid Inaras checking of duplicate sends (Jan 24 discovery)
                 int sendno = 0;
 
-                foreach( var s in history.ShipInformationList.Ships )
+                for( int i = 0; i < history.ShipInformationList.Count; i++)
                 {
-                    Ship si = s.Value;
+                    Ship si = history.ShipInformationList.Get(i);
                     if ( si.State == Ship.ShipState.Owned && ItemData.IsShip(si.ShipFD))
                     {
                         // loadout may be null if nothing in it.
@@ -152,7 +152,7 @@ namespace EliteDangerousCore.Inara
         }
 
 
-        public static List<JToken> NewEntryList(HistoryEntry he, DateTime heutc, Dictionary<string, MaterialCommodityMicroResource> mcmr)         // may create NULL entries if some material items not found
+        public static List<JToken> NewEntryList(HistoryEntry he, DateTime heutc, Dictionary<FDName, MaterialCommodityMicroResource> mcmr)         // may create NULL entries if some material items not found
         {
             List<JToken> eventstosend = new List<JToken>();
 
@@ -208,7 +208,7 @@ namespace EliteDangerousCore.Inara
                     {
                         var je = he.journalEntry as JournalLoadout;
                         var si = he.ShipInformation;
-                        if (si != null && je.ShipFD.HasChars() && ItemData.IsShip(je.ShipFD)) // if it has an FDname (defensive) and is not SRV/Fighter
+                        if (si != null && je.ShipFD.Valid && ItemData.IsShip(je.ShipFD)) // if it has an FDname (defensive) and is not SRV/Fighter
                         {
                             if (je.ShipId == si.ID)
                             {
@@ -444,7 +444,7 @@ namespace EliteDangerousCore.Inara
                 case JournalTypeEnum.CargoDepot: //VERIFIED 16/5/18
                     {
                         var je = he.journalEntry as JournalCargoDepot;
-                        if (je.CargoType.HasChars() && je.Count > 0)
+                        if (je.CargoType.Valid && je.Count > 0)
                         {
                             if (mcmr.TryGetValue(je.CargoType, out MaterialCommodityMicroResource item))
                                 eventstosend.Add(InaraClass.setCommanderInventoryItem(item, heutc));
@@ -472,12 +472,12 @@ namespace EliteDangerousCore.Inara
                 case JournalTypeEnum.EngineerContribution: //VERIFIED 16/5/18
                     {
                         var je = he.journalEntry as JournalEngineerContribution;
-                        if (je.Commodity.HasChars())
+                        if (je.Commodity.Valid)
                         {
                             if (mcmr.TryGetValue(je.Commodity, out MaterialCommodityMicroResource item))
                                 eventstosend.Add(InaraClass.setCommanderInventoryItem(item, heutc));
                         }
-                        if (je.Material.HasChars())
+                        if (je.Material.Valid)
                         {
                             if (mcmr.TryGetValue(je.Material, out MaterialCommodityMicroResource item))
                                 eventstosend.Add(InaraClass.setCommanderInventoryItem(item, heutc));
@@ -577,7 +577,7 @@ namespace EliteDangerousCore.Inara
 
                         if (je.Materials != null)
                         {
-                            foreach (KeyValuePair<string, int> k in je.Materials)
+                            foreach (KeyValuePair<FDName, int> k in je.Materials)
                             {
                                 if (mcmr.TryGetValue(k.Key, out MaterialCommodityMicroResource item))
                                     eventstosend.Add(InaraClass.setCommanderInventoryItem(item, heutc));

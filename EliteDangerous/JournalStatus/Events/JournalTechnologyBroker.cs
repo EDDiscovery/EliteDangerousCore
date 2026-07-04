@@ -32,7 +32,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (ItemsUnlocked != null)
                 foreach (Unlocked u in ItemsUnlocked)
-                    u.Name_Localised = JournalFieldNaming.CheckLocalisation(u.Name_Localised??"",u.Name);
+                    u.Name_Localised = JournalFieldNaming.CheckLocalisation(u.Name_Localised??"",u.Name.Str());
 
             if (CommodityList != null)
                 foreach (Commodities c in CommodityList)
@@ -47,7 +47,7 @@ namespace EliteDangerousCore.JournalEvents
 
             string oldentry = evt["ItemUnlocked"].StrNull();        // 3.02 journal entry
             if (ItemsUnlocked == null && oldentry != null)
-                ItemsUnlocked = new Unlocked[] { new Unlocked() { Name = oldentry, Name_Localised = oldentry } };
+                ItemsUnlocked = new Unlocked[] { new Unlocked() { Name = new FDName(oldentry), Name_Localised = oldentry } };
         }
 
         public string BrokerType { get; set; }
@@ -58,13 +58,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public class Unlocked
         {
-            public string Name;
+            public FDName Name;
             public string Name_Localised;
         }
 
         public class Commodities
         {
-            public string Name;
+            public FDName Name;
             public string Name_Localised;
             public string FriendlyName;
             public int Count;
@@ -72,7 +72,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public class Materials
         {
-            public string Name;
+            public FDName Name;
             public string Name_Localised;
             public string FriendlyName;
             public string Category;

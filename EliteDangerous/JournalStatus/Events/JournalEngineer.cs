@@ -53,12 +53,12 @@ namespace EliteDangerousCore.JournalEvents
             EngineerID = evt["EngineerID"].LongNull();
             Type = evt["Type"].Str();
 
-            Commodity = evt["Commodity"].Str();
+            Commodity = evt["Commodity"].FDName();
             Commodity = JournalFieldNaming.FDNameTranslation(Commodity);     // pre-mangle to latest names, in case we are reading old journal records
             FriendlyCommodity = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Commodity);
             Commodity_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
 
-            Material = evt["Material"].Str();
+            Material = evt["Material"].FDName();
             Material = JournalFieldNaming.FDNameTranslation(Material);     // pre-mangle to latest names, in case we are reading old journal records
             FriendlyMaterial = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Material);
             Material_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Material_Localised"].Str(), FriendlyMaterial);
@@ -72,11 +72,11 @@ namespace EliteDangerousCore.JournalEvents
         public string Type { get; set; }
 
         public string FriendlyCommodity { get; set; }
-        public string Commodity { get; set; }
+        public FDName Commodity { get; set; }
         public string Commodity_Localised { get; set; }     // always set
 
         public string FriendlyMaterial { get; set; }
-        public string Material { get; set; }
+        public FDName Material { get; set; }
         public string Material_Localised { get; set; }      // always set
 
         public int Quantity { get; set; }
@@ -129,7 +129,7 @@ namespace EliteDangerousCore.JournalEvents
             SlotFD = ShipSlots.ToEnum(evt["Slot"].StrNull());       // may not be present, pass in null to indicate okay and set it to unknown
             Slot = ShipSlots.ToEnglish(SlotFD);
 
-            ModuleFD = JournalFieldNaming.NormaliseFDItemName(evt["Module"].Str()); // may not be present
+            ModuleFD = evt["Module"].FDNameNormalise(); // may not be present
             Module = JournalFieldNaming.GetBetterEnglishModuleName(ModuleFD);
 
             Engineering = new EngineeringData(evt);
@@ -154,11 +154,11 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         foreach (var kvp in temp)
                         {
-                            string fdname = JournalFieldNaming.FDNameTranslation(kvp.Key);
-                            string name = MaterialCommodityMicroResourceType.GetByFDName(fdname)?.EnglishName ?? fdname;
+                            FDName fdname = FDName.Normalise(kvp.Key);
+                            string name = MaterialCommodityMicroResourceType.GetByFDName(fdname)?.EnglishName ?? fdname.Str();
                             var i = new Ingrediant()
                             {
-                                NameFD = fdname.ToLowerInvariant(),
+                                NameFD = fdname,
                                 Name_Localised = name,
                                 Name = name,
                                 Count = kvp.Value
@@ -172,14 +172,14 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     foreach (JObject jo in (JArray)ingredients)
                     {
-                        string fdname = jo["Name"].StrNull();
+                        FDName fdname = jo["Name"].FDNameNormalise();
                         if (fdname != null)     // must be present and non null
                         {
-                            string name = MaterialCommodityMicroResourceType.GetByFDName(fdname)?.EnglishName ?? fdname;
+                            string name = MaterialCommodityMicroResourceType.GetByFDName(fdname)?.EnglishName ?? fdname.Str();
 
                             var i = new Ingrediant()
                             {
-                                NameFD = fdname.ToLowerInvariant(),
+                                NameFD = fdname,
                                 Name_Localised = jo["Name_Localised"].Str(name),
                                 Name = name,
                                 Count = jo["Count"].Int()
@@ -196,7 +196,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Slot { get; set; }        // English name, not present in v1 of this version
         public ShipSlots.Slot SlotFD { get; set; }
         public string Module { get; set; }      // English module name, not present in V1 of this version
-        public string ModuleFD { get; set; }
+        public FDName ModuleFD { get; set; }
 
         public EngineeringData Engineering { get; set; }        // may be null if engineering invalid, which some frontier modules have 
 
@@ -208,7 +208,7 @@ namespace EliteDangerousCore.JournalEvents
             public string Name_Localised { get; set; }  // localised, or Name
             public int Count { get; set; }              // count
 
-            public string NameFD { get; set; }          // normalised name
+            public FDName NameFD { get; set; }          // normalised name
         }
 
 

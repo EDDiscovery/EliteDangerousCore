@@ -500,9 +500,8 @@ namespace EliteDangerousCore.JournalEvents
         public int Total { get; set; }
 
         // Istats
-        public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = "tritium", Count = -Amount } }; } }
+        public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = new FDName("tritium"), Count = -Amount } }; } }
 
-        public string FDNameOfItem { get { return "Carrier"; } }        // implement IStatsJournalEntryMatCommod
         public int CountOfItem { get { return Amount; } }
 
         public JournalCarrierDepositFuel(JObject evt) : base(evt, JournalTypeEnum.CarrierDepositFuel)
@@ -521,13 +520,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            mc.ChangeCommd( EventTimeUTC, "tritium", -Amount, 0);
+            mc.ChangeCommd( EventTimeUTC, new FDName("tritium"), -Amount, 0);
         }
 
         public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if (stationfaction.HasChars())
-                stats.UpdateCommodity(system, "tritium", -Amount, 0, stationfaction);
+                stats.UpdateCommodity(system, new FDName("tritium"), -Amount, 0, stationfaction);
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -788,7 +787,7 @@ namespace EliteDangerousCore.JournalEvents
         public class TradeOrder
         {
             public bool BlackMarket { get; set; }
-            public string Commodity { get; set; }
+            public FDName Commodity { get; set; }
             public string Commodity_Localised { get; set; }
             public int Price { get; set; }
             public int? PurchaseOrder { get; set; }     // non null if purchase order
@@ -800,7 +799,7 @@ namespace EliteDangerousCore.JournalEvents
             public TradeOrder(TradeOrder other)
             {
                 BlackMarket = other.BlackMarket;
-                Commodity = other.Commodity;
+                Commodity = other.Commodity.Clone();
                 Commodity_Localised = other.Commodity_Localised;
                 Price = other.Price;
                 PurchaseOrder = other.PurchaseOrder;
@@ -820,8 +819,8 @@ namespace EliteDangerousCore.JournalEvents
             CancelTrade = evt["CancelTrade"].BoolNull();
 
             Order.BlackMarket = evt["BlackMarket"].Bool();
-            Order.Commodity = evt["Commodity"].Str();
-            Order.Commodity_Localised =JournalFieldNaming.CheckLocalisation(evt["Commodity_Localised"].Str(), Order.Commodity);
+            Order.Commodity = evt["Commodity"].FDNameNormalise();
+            Order.Commodity_Localised =JournalFieldNaming.CheckLocalisation(evt["Commodity_Localised"].Str(), Order.Commodity.Str());
             Order.PurchaseOrder = evt["PurchaseOrder"].IntNull();
             Order.SaleOrder = evt["SaleOrder"].IntNull();
             Order.Price = evt["Price"].Int();
@@ -1038,9 +1037,9 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         // pattern also used in journaldocking stationinfo
-        public bool HasItem(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase)) >= 0; }
-        public bool HasItemToBuy(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.HasStock) >= 0; }
-        public bool HasItemToSell(string fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.HasDemandAndPrice) >= 0; }
+        public bool HasItem(FDName fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname)) >= 0; }
+        public bool HasItemToBuy(FDName fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname) && x.HasStock) >= 0; }
+        public bool HasItemToSell(FDName fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname) && x.HasDemandAndPrice) >= 0; }
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierLocation)]

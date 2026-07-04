@@ -30,9 +30,9 @@ namespace EliteDangerousCore
         public long Price { get; private set; }
         public bool Sold { get; private set; }
         public int Class { get; private set; }
-        public string[] WeaponMods { get; private set; }
+        public FDName[] WeaponMods { get; private set; }
 
-        public SuitWeapon(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, string[] weaponmods, bool sold)
+        public SuitWeapon(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, FDName[] weaponmods, bool sold)
         {
             EventTime = time; ID = id;FDName = fdname; Name_Localised = namelocalised; Price = price; Sold = sold; Class = cls; WeaponMods = weaponmods;
             FriendlyName = ItemData.GetWeapon(fdname, Name_Localised)?.Name ?? Name_Localised;
@@ -47,12 +47,12 @@ namespace EliteDangerousCore
         {
         }
 
-        public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, string[] weaponmods)
+        public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, FDName[] weaponmods)
         {
             weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, weaponmods, false);
         }
 
-        public bool VerifyPresence(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, string[] weaponmods)
+        public bool VerifyPresence(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, FDName[] weaponmods)
         {
             var w = weapons.GetLast(id);
 
@@ -92,7 +92,7 @@ namespace EliteDangerousCore
                 System.Diagnostics.Debug.WriteLine("Weapons sold a weapon not seen " + id);
         }
 
-        public void Upgrade(DateTime time, ulong id, int cls, string[] weaponmods)
+        public void Upgrade(DateTime time, ulong id, int cls, FDName[] weaponmods)
         {
             if (weapons.ContainsKey(id))
             {

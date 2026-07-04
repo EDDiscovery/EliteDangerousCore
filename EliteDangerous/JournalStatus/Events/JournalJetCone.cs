@@ -39,7 +39,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalJetConeDamage(JObject evt) : base(evt, JournalTypeEnum.JetConeDamage)
         {
-            ModuleFD = JournalFieldNaming.NormaliseFDItemName(evt["Module"].Str());
+            ModuleFD = evt["Module"].FDNameNormalise();
             Module = JournalFieldNaming.GetBetterEnglishModuleName(ModuleFD);
             ModuleLocalised = JournalFieldNaming.CheckLocalisation(evt["Module_Localised"].Str(), Module);
             if (ModuleLocalised.Length == 0)
@@ -48,7 +48,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string Module { get; set; }      // english name
-        public string ModuleFD { get; set; }
+        public FDName ModuleFD { get; set; }
         public string ModuleLocalised { get; set; }
 
         public override string GetInfo()

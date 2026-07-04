@@ -116,13 +116,13 @@ namespace EliteDangerousCore
         }
 
         // get normalised FDID of ship, or null
-        static public string GetShipFDID(FDName fdshipname)
+        static public FDName GetShipFDID(FDName fdshipname)
         {
             var sp = GetShipProperties(fdshipname);
             return sp?.FDID;
         }
 
-        public static string ReverseShipLookup(string englishname)
+        public static FDName ReverseShipLookup(string englishname)
         {
             englishname = englishname.Replace(" ", "");     // remove spaces to make things like Viper Mk III and MkIII match
             foreach (var kvp in spaceships)

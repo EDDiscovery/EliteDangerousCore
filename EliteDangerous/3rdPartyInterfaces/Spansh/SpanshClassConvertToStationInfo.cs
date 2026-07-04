@@ -145,7 +145,7 @@ namespace EliteDangerousCore.Spansh
                     station.Shipyard = new List<ShipYard.ShipyardItem>();
                     foreach (JObject ship in shipyard)
                     {
-                        var si = new ShipYard.ShipyardItem { id = ship["shipId"].Long(), ShipType = ship["symbol"].Str().ToLowerInvariant(), FriendlyShipType = ship["name"].Str() };
+                        var si = new ShipYard.ShipyardItem { id = ship["shipId"].Long(), ShipType = ship["symbol"].FDNameNormaliseShip(), FriendlyShipType = ship["name"].Str() };
                         si.Normalise();
                         station.Shipyard.Add(si);
                     }

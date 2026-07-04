@@ -43,27 +43,27 @@ namespace EliteDangerousCore
         public DateTime MarketUpdateUTC { get; set; }
         public double MarketAgeInDays { get { return DateTime.UtcNow.Subtract(MarketUpdateUTC).TotalDays; } }
         public string MarketStateString { get { if (HasMarket && Market != null) return $"\u2713 {MarketAgeInDays:N1}"; else if (HasMarket) return "\u2713 ND"; else return ""; } }
-        public CCommodities GetItem(string fdname) { return Market?.Find(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase)); }
-        public string GetItemPriceString(string fdname, bool selltostation)
+        public CCommodities GetItem(FDName fdname) { return Market?.Find(x => x.fdname.Equals(fdname)); }
+        public string GetItemPriceString(FDName fdname, bool selltostation)
         {
-            var entry = Market?.Find(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase));
+            var entry = Market?.Find(x => x.fdname.Equals(fdname));
             if (entry != null)
                 return selltostation ? (entry.sellPrice.ToString("N0")) : (entry.buyPrice.ToString("N0"));
             else
                 return "";
         }
-        public string GetItemStockDemandString(string fdname, bool selltostation)
+        public string GetItemStockDemandString(FDName fdname, bool selltostation)
         {
-            var entry = Market?.Find(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase));
+            var entry = Market?.Find(x => x.fdname.Equals(fdname));
             if (entry != null)
                 return selltostation ? (entry.demand.ToString("N0")) : (entry.stock.ToString("N0"));
             else
                 return "";
         }
 
-        public string GetItemString(string fdname)
+        public string GetItemString(FDName fdname)
         {
-            var entry = Market?.Find(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase));
+            var entry = Market?.Find(x => x.fdname.Equals(fdname));
             if (entry != null)
                 return $"Category: {entry.loccategory}{Environment.NewLine}Sell to Station Price: {entry.sellPrice:N0}{Environment.NewLine}Demand: {entry.demand:N0}" +
                     $"{Environment.NewLine}Buy from Station Price: {entry.buyPrice:N0}{Environment.NewLine}Stock: {entry.stock:N0}";
@@ -72,26 +72,26 @@ namespace EliteDangerousCore
         }
 
         // sync with journalcarrier..
-        public bool HasItem(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase)) >= 0; }
-        public bool HasItemInStock(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase) && x.HasStock) >= 0; }
-        public bool HasItemWithDemandAndPrice(string fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname, StringComparison.InvariantCultureIgnoreCase) && x.HasDemandAndPrice) >= 0; }
+        public bool HasItem(FDName fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname)) >= 0; }
+        public bool HasItemInStock(FDName fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname) && x.HasStock) >= 0; }
+        public bool HasItemWithDemandAndPrice(FDName fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname) && x.HasDemandAndPrice) >= 0; }
 
         // go thru the market array, and see if any of the fdnames given matches that market entry
-        public bool HasAnyItem(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.Equals(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
-        public bool HasAnyItemInStock(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.Equals(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0 && x.HasStock) >= 0; }
-        public bool HasAnyItemWithDemandAndPrice(string[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.Equals(x.fdname, StringComparison.InvariantCultureIgnoreCase) >= 0 && x.HasDemandAndPrice) >= 0; }
+        public bool HasAnyItem(FDName[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname)>=0 ) >= 0; }
+        public bool HasAnyItemInStock(FDName[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname) >= 0 && x.HasStock) >= 0; }
+        public bool HasAnyItemWithDemandAndPrice(FDName[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname) >= 0 && x.HasDemandAndPrice) >= 0; }
 
         public bool HasOutfitting { get; set; }// see market
         public List<Outfitting.OutfittingItem> Outfitting { get; set; }     // may be null
         public DateTime OutfittingUpdateUTC { get; set; }
-        public bool HasAnyModuleTypes(string[] fdnames) { return Outfitting != null && Outfitting.FindIndex(x => fdnames.Equals(x.FDName, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
+        public bool HasAnyModuleTypes(FDName[] fdnames) { return Outfitting != null && Outfitting.FindIndex(x => fdnames.IndexOf(x.FDName) >= 0) >= 0; }
         public double OutfittingAgeInDays { get { return DateTime.UtcNow.Subtract(OutfittingUpdateUTC).TotalDays; } }
         public string OutfittingStateString { get { if (HasOutfitting && Outfitting != null) return $"\u2713 {OutfittingAgeInDays:N1}"; else if (HasOutfitting) return "\u2713 ND"; else return ""; } }
 
         public bool HasShipyard { get; set; }   // see market
         public List<ShipYard.ShipyardItem> Shipyard { get; set; }     // may be null
         public DateTime ShipyardUpdateUTC { get; set; }
-        public bool HasAnyShipTypes(string[] fdnames) { return Shipyard != null && Shipyard.FindIndex(x => fdnames.Equals(x.ShipType, StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0; }
+        public bool HasAnyShipTypes(FDName[] fdnames) { return Shipyard != null && Shipyard.FindIndex(x => fdnames.IndexOf(x.ShipType) >= 0) >= 0; }
         public double ShipyardAgeInDays { get { return DateTime.UtcNow.Subtract(ShipyardUpdateUTC).TotalDays; } }
         public string ShipyardStateString { get { if (HasShipyard && Shipyard != null) return $"\u2713 {ShipyardAgeInDays:N1}"; else if (HasShipyard) return "\u2713 ND"; else return ""; } }
 

@@ -74,7 +74,7 @@ namespace EliteDangerousCore
             return factions.ContainsKey(faction) ?  factions[faction] : null;
         }
 
-        public void UpdateCommodity(ISystem system, string name, int amount, long profit, string faction)
+        public void UpdateCommodity(ISystem system, FDName name, int amount, long profit, string faction)
         {
             var newfi = GetOrMake(faction,system);
             if (newfi != null)
@@ -88,7 +88,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public void UpdateMaterial(ISystem system, string name, int amount, string faction)
+        public void UpdateMaterial(ISystem system, FDName name, int amount, string faction)
         {
             var newfi = GetOrMake(faction,system);
             if (newfi != null)
@@ -100,12 +100,12 @@ namespace EliteDangerousCore
             }
         }
 
-        public void UpdateEngineerMaterial(ISystem system, string name, string namematcom, int amount)
+        public void UpdateEngineerMaterial(ISystem system, string name, FDName namematcom, int amount)
         {
             UpdateMaterial(system,namematcom, amount, name);
         }
 
-        public void UpdateEngineerCommodity(ISystem system, string name, string namematcom, int amount)
+        public void UpdateEngineerCommodity(ISystem system, string name, FDName namematcom, int amount)
         {
             UpdateCommodity(system,namematcom, amount, 0, name);
         }

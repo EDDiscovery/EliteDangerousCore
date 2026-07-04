@@ -20,17 +20,12 @@ namespace EliteDangerousCore
 {
     public static class JournalFieldNaming
     {
-        public static string FixCommodityName(string fdname)      // instances in log on mining and mission entries of commodities in this form, back into fd form
-        {
-            if (fdname.Length >= 8 && fdname.StartsWith("$") && fdname.EndsWith("_name;", System.StringComparison.InvariantCultureIgnoreCase))
-                fdname = fdname.Substring(1, fdname.Length - 7); // 1 for '$' plus 6 for '_name;'
+        // ensure good fdname
 
-            return fdname;
-        }
 
-        static public string FDNameTranslation(string old)
+        static public FDName FDNameTranslation(FDName fdname)
         {
-            return MaterialCommodityMicroResourceType.FDNameTranslation(old);
+            return MaterialCommodityMicroResourceType.FDNameTranslation(fdname);
         }
 
         static public string NormaliseMaterialCategory(string cat)
@@ -70,32 +65,32 @@ namespace EliteDangerousCore
             return inname.Replace("Mission ", "", StringComparison.InvariantCultureIgnoreCase);
         }
 
-        static public string GetBetterEnglishModuleName(string fdid, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)           
+        static public string GetBetterEnglishModuleName(FDName fdid, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)           
         {
             // screen out empty string, some of the fields are purposely blank from the journal because they are not set for a particular transaction
             // do create as this is used by Loadout, ModuleBuy
 
-            if (fdid.Length > 0 && ItemData.TryGetShipModule(fdid, out ItemData.ShipModule item, true, slot))
+            if (fdid?.Valid == true && ItemData.TryGetShipModule(fdid, out ItemData.ShipModule item, true, slot))
             {
                 return item.EnglishModName;
             }
             else
-                return fdid;
+                return fdid.Str();
         }
 
-        static public string GetForeignModuleName(string fdid, string localised, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
+        static public string GetForeignModuleName(FDName fdid, string localised, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
         {
-            if (fdid.Length > 0 && ItemData.TryGetShipModule(fdid, out ItemData.ShipModule item, true , slot))
+            if (fdid.Valid && ItemData.TryGetShipModule(fdid, out ItemData.ShipModule item, true , slot))
             {
                 return item.TranslatedModName;
             }
             else
-                return localised ?? fdid;
+                return localised ?? fdid.Str();
         }
 
-        static public string GetForeignModuleType(string fdid)
+        static public string GetForeignModuleType(FDName fdid)
         {
-            if (fdid.Length > 0 && ItemData.TryGetShipModule(fdid, out ItemData.ShipModule item, true))
+            if (fdid.Valid && ItemData.TryGetShipModule(fdid, out ItemData.ShipModule item, true))
             {
                 return item.TranslatedModTypeString();
             }
@@ -105,12 +100,12 @@ namespace EliteDangerousCore
 
 
         // use when an identifier should be a ship
-        static public string GetBetterShipName(string inname)
+        static public string GetBetterShipName(FDName inname)
         {
-            if (inname.IsEmpty())
+            if (inname?.Valid == false)
                 return "No Ship Name Given";
 
-            var i = ItemData.GetShipName(inname);
+            string i = ItemData.GetShipName(inname);
 
             if (i != null)
             {
@@ -124,12 +119,12 @@ namespace EliteDangerousCore
         }
 
         // use when an identifier could be a ship, an actor or a suit
-        static public string GetBetterShipSuitActorName(string inname)
+        static public string GetBetterShipSuitActorName(FDName inname)
         {
-            if (inname.IsEmpty())
+            if (!inname.Valid)
                 return "No Ship/Actor/Suit Name Given";
 
-            var i = ItemData.GetShipName(inname);
+            string i = ItemData.GetShipName(inname);
 
             if (i != null)
             {
@@ -142,10 +137,7 @@ namespace EliteDangerousCore
             }
             else if (ItemData.IsSuit(inname))
             {
-                var suit = ItemData.GetSuit(inname);
-                if (suit != null)
-                    inname = suit.Name;
-                return inname;
+                return ItemData.GetSuit(inname).Name;
             }
             else
             {
@@ -155,20 +147,7 @@ namespace EliteDangerousCore
         }
 
         // use when you know its a ship
-        static public string NormaliseFDShipName(string inname)       
-        {
-            if (inname.IsEmpty())
-                return "No Ship Name Given";
 
-            var i = ItemData.GetShipFDID(inname);
-            if (i != null)
-                return i;
-            else
-            {
-                System.Diagnostics.Trace.WriteLine("*** Unknown FD ship ID:" + inname);
-                return inname;
-            }
-        }
 
         static public string GetBetterTargetTypeName(string s)      // has to deal with $ and underscored
         {
@@ -178,35 +157,6 @@ namespace EliteDangerousCore
             if (s.EndsWith(";"))            // semi at end
                 s = s.Substring(0,s.Length-1);
             return s.SplitCapsWordFull();
-        }
-
-        static public string NormaliseFDItemName(string s)      // has to deal with $int and $hpt.. This takes the FD name and keeps it, but turns it into the form
-        {                                                       // used by Coriolis/Frontier API
-            //string x = s;
-            if (s.StartsWith("$int_"))
-                s = s.Replace("$int_", "Int_");
-            if (s.StartsWith("int_"))
-                s = s.Replace("int_", "Int_");
-            if (s.StartsWith("$hpt_"))
-                s = s.Replace("$hpt_", "Hpt_");
-            if (s.StartsWith("hpt_"))
-                s = s.Replace("hpt_", "Hpt_");
-            if (s.Contains("_armour_"))
-                s = s.Replace("_armour_", "_Armour_");      // normalise to Armour upper cas.. its a bit over the place with case..
-            if (s.EndsWith("_name;", StringComparison.InvariantCultureIgnoreCase))
-            {
-                //System.Diagnostics.Debug.WriteLine("Correct " + s);
-                s = s.Substring(0, s.Length - 6);
-            }
-            if (s.StartsWith("$"))                          // seen instances of $python_armour..
-                s = s.Substring(1);
-
-            return s;
-        }
-
-        static public string NormaliseFDSlotName(string s)            // FD slot name, anything to do.. leave in as there might be in the future
-        {
-            return s;
         }
 
         static public Tuple<string, string> GetStationNames(JObject evt, string root = "StationName")
@@ -306,7 +256,7 @@ namespace EliteDangerousCore
                 if ( indexof>0 && res.Length > indexof+6)
                 {
                     string mintype = res.Substring(indexof + 6).Replace(";", "").Replace("_name","").Replace("$", "");
-                    var mcd = MaterialCommodityMicroResourceType.GetByFDName(mintype);
+                    var mcd = MaterialCommodityMicroResourceType.GetByFDName(new FDName(mintype));
                     if (mcd != null)    // if we find it, translate it, else leave it alone
                         mintype = mcd.TranslatedName;
 

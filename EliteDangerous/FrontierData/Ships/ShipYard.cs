@@ -25,7 +25,7 @@ namespace EliteDangerousCore
         public class ShipyardItem : IEquatable<ShipyardItem>
         {           
             public long id { get; set; }                    // json from frontier shipyard.json
-            public string ShipType { get; set; }            // json, frontier, FDName, direct from entries
+            public FDName ShipType { get; set; }            // json, frontier, FDName, direct from entries
             public string ShipType_Localised { get; set; }  // json, frontier
             public long ShipPrice { get; set; }             // json, frontier
 
@@ -33,14 +33,14 @@ namespace EliteDangerousCore
 
             public void Normalise()
             {
-                ShipType = JournalFieldNaming.NormaliseFDShipName(ShipType);
+                ShipType.NormaliseShip();
                 FriendlyShipType = JournalFieldNaming.GetBetterShipName(ShipType);
                 ShipType_Localised = JournalFieldNaming.CheckLocalisation(ShipType_Localised,FriendlyShipType);
             }
 
             public bool Equals(ShipyardItem other)
             {
-                return id == other.id && string.Compare(ShipType, other.ShipType) == 0 &&
+                return id == other.id && ShipType.Equals(other.ShipType) &&
                             string.Compare(ShipType_Localised, other.ShipType_Localised) == 0 && ShipPrice == other.ShipPrice;
             }
 
@@ -68,9 +68,11 @@ namespace EliteDangerousCore
             StarSystem = sy;
             DateTimeUTC = utc;
             Ships = it;
-            if ( Ships != null )
+            if (Ships != null)
+            {
                 foreach (ShipYard.ShipyardItem i in Ships)
                     i.Normalise();
+            }
         }
 
         public bool Equals(ShipYard other)

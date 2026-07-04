@@ -32,17 +32,16 @@ namespace EliteDangerousCore
         static public bool TryGetShipModule(FDName fdid, out ShipModule m, bool synthesiseit, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
         {
             m = null;
-            string lowername = fdid.ToLower();
 
             // try the static values first, this is thread safe
-            bool state = shipmodules.TryGetValue(lowername, out m) || othershipmodules.TryGetValue(lowername, out m) ||
-                        srvmodules.TryGetValue(lowername, out m) || fightermodules.TryGetValue(lowername, out m) || vanitymodules.TryGetValue(lowername, out m);
+            bool state = shipmodules.TryGetValue(fdid, out m) || othershipmodules.TryGetValue(fdid, out m) ||
+                        srvmodules.TryGetValue(fdid, out m) || fightermodules.TryGetValue(fdid, out m) || vanitymodules.TryGetValue(fdid, out m);
 
             if (state == false)    // not found, try find the synth modules. Since we can be called in journal creation thread, we need some safety.
             {
                 lock (synthesisedmodules)
                 {
-                    state = synthesisedmodules.TryGetValue(lowername, out m);
+                    state = synthesisedmodules.TryGetValue(fdid, out m);
                 }
             }
 
@@ -51,21 +50,23 @@ namespace EliteDangerousCore
             {
                 lock (synthesisedmodules)  // lock for safety
                 {
-                    string candidatename = GenerateCandidateModuleName(fdid);
+                    FDName candidatename = GenerateCandidateModuleName(fdid);
 
-                    var newmodule = new ShipModule(-1, IsVanity(lowername) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType, candidatename);
+                    var newmodule = new ShipModule(-1, IsVanity(candidatename) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType, candidatename.Str());
                     string futilemessage = " - this is item unknown to EDD, but IT WILL not affect operation of the program. It would be nice to report it to us so we can add it to known module lists";
-                    System.Diagnostics.Trace.WriteLine($"*** Unknown Module in slot {ShipSlots.ToEnglish(slot)} : {{\"{lowername}\", new ShipModule(-1,{(IsVanity(lowername) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename}\") }}," + futilemessage);
+                    System.Diagnostics.Trace.WriteLine($"*** Unknown Module in slot {ShipSlots.ToEnglish(slot)} : {{\"{candidatename.ToLower()}\", new ShipModule(-1,{(IsVanity(candidatename) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename.Str()}\") }}," + futilemessage);
 
-                    synthesisedmodules[lowername] = m = newmodule;                   // lets cache them for completeness..
+                    synthesisedmodules[candidatename] = m = newmodule;                   // lets cache them for completeness..
                 }
             }
 
             return state;
         }
 
-        internal static string GenerateCandidateModuleName(string candidatename)
+        internal static FDName GenerateCandidateModuleName(FDName unknown)
         {
+            string candidatename = unknown.Str();
+
             candidatename = candidatename.Replace("weaponcustomisation", "WeaponCustomisation").Replace("testbuggy", "SRV").
                                     Replace("enginecustomisation", "EngineCustomisation");
 
@@ -152,22 +153,23 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Constructshipfed ", "Construct Ship Federation ", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace("Corporatefleet ", "Corporate Fleet ", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace("Corporate Fleet Fleet", "Corporate Fleet ", StringComparison.InvariantCultureIgnoreCase);
-            return candidatename;
+            return new FDName(candidatename);
         }
 
         // List of ship modules. Synthesised are not included
         // default is buyable modules only
         // you can include other types
         // compressarmour removes all armour entries except the ones for the sidewinder
-        static public Dictionary<string, ShipModule> GetShipModules(bool includebuyable = true, bool includenonbuyable = false, bool includesrv = false,
+        static public Dictionary<FDName, ShipModule> GetShipModules(bool includebuyable = true, bool includenonbuyable = false, bool includesrv = false,
                                                                     bool includefighter = false, bool includevanity = false, bool addunknowntype = false,
                                                                     bool compressarmourtosidewinderonly = false)
         {
-            Dictionary<string, ShipModule> ml = new Dictionary<string, ShipModule>();
+            Dictionary<FDName, ShipModule> ml = new Dictionary<FDName, ShipModule>(new FDNameEqualityComparer());
 
             if (includebuyable)
             {
-                foreach (var x in shipmodules) ml[x.Key] = x.Value;
+                foreach (var x in shipmodules) 
+                    ml[x.Key] = x.Value;
             }
 
             if (compressarmourtosidewinderonly)        // remove all but _grade1 armours in list
@@ -199,7 +201,8 @@ namespace EliteDangerousCore
             }
             if (addunknowntype)
             {
-                ml["Unknown"] = new ShipModule(-1, ShipModule.ModuleTypes.UnknownType, "Unknown Type");
+                FDName unknown = new FDName("Unknown");
+                ml[unknown] = new ShipModule(-1, ShipModule.ModuleTypes.UnknownType, "Unknown Type");
             }
             return ml;
         }
@@ -231,7 +234,7 @@ namespace EliteDangerousCore
                     foreach (var kvp in shipmodules)
                     {
                         if (kvp.Key.EndsWith(grade))
-                            ret.Add(kvp.Key);
+                            ret.Add(kvp.Key.Str());
                     }
                 }
                 else
@@ -243,10 +246,14 @@ namespace EliteDangerousCore
 
         static public bool IsVanity(FDName ifd)
         {
-            ifd = ifd.ToLower();
             string[] vlist = new[] { "bobble", "decal", "enginecustomisation", "nameplate", "paintjob",
                                     "shipkit", "weaponcustomisation", "voicepack" , "lights", "spoiler" , "wings", "bumper"};
             return Array.Find(vlist, x => ifd.Contains(x)) != null;
+        }
+
+        static public bool IsFuelTank(FDName ifd)
+        {
+            return ifd.Contains("int_fueltank");
         }
 
         // called at start up to set up translation of module names

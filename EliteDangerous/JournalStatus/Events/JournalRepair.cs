@@ -28,11 +28,9 @@ namespace EliteDangerousCore.JournalEvents
             {
                 Items = new List<RepairItem>();
 
-                ItemLocalised = Item = ItemFD = "";
-
                 foreach (var jitem in evt["Items"])
                 {
-                    var itemfd = JournalFieldNaming.NormaliseFDItemName(jitem.Str());
+                    var itemfd = jitem.FDNameNormalise();
                     var item = JournalFieldNaming.GetBetterEnglishModuleName(itemfd);
 
                     var repairitem = new RepairItem
@@ -46,10 +44,17 @@ namespace EliteDangerousCore.JournalEvents
  
                     Items.Add(repairitem);
                 }
+                
+                if ( Items.Count>0 )
+                {
+                    ItemFD = Items[0].ItemFD;
+                    Item = Items[0].Item;
+                    ItemLocalised = Items[0].ItemLocalised;
+                }
             }
             else
             {
-                ItemFD = JournalFieldNaming.NormaliseFDItemName(evt["Item"].Str());
+                ItemFD = evt["Item"].FDNameNormalise();
                 Item = JournalFieldNaming.GetBetterEnglishModuleName(ItemFD);
                 ItemLocalised = JournalFieldNaming.CheckLocalisation(evt["Item_Localised"].Str(),Item);
             }
@@ -60,11 +65,11 @@ namespace EliteDangerousCore.JournalEvents
         public class RepairItem
         {
             public string Item { get; set; }        // English name
-            public string ItemFD { get; set; }
+            public FDName ItemFD { get; set; }
             public string ItemLocalised { get; set; }
         }
 
-        public string ItemFD { get; set; }      // older style ones, OR first entry of new ones
+        public FDName ItemFD { get; set; }      // first entry of items, for backwards compat
         public string Item { get; set; }
         public string ItemLocalised { get; set; }
 
@@ -111,7 +116,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalAfmuRepairs(JObject evt) : base(evt, JournalTypeEnum.AfmuRepairs)
         {
-            ModuleFD = JournalFieldNaming.NormaliseFDItemName(evt["Module"].Str());
+            ModuleFD = evt["Module"].FDNameNormalise();
             Module = JournalFieldNaming.GetBetterEnglishModuleName(ModuleFD);
             ModuleLocalised = JournalFieldNaming.CheckLocalisation(evt["Module_Localised"].Str(), Module);
             FullyRepaired = evt["FullyRepaired"].Bool();
@@ -119,7 +124,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string Module { get; set; }  // english
-        public string ModuleFD { get; set; }
+        public FDName ModuleFD { get; set; }
         public string ModuleLocalised { get; set; }
         public bool FullyRepaired { get; set; }
         public float Health { get; set; }

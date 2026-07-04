@@ -45,7 +45,7 @@ namespace EliteDangerousCore
 
     public interface IShipNaming
     {
-        string ShipFD { get;}
+        FDName ShipFD { get;}
         string ShipType { get;  }       // english friendly name
         ulong ShipId { get;  }
     }
@@ -144,7 +144,7 @@ namespace EliteDangerousCore
 
     public class IStatsItemsInfo
     {
-        public string FDName;
+        public FDName FDName;
         public int Count;        // neg sold
         public long Profit;         // any profit
     }
@@ -157,7 +157,7 @@ namespace EliteDangerousCore
     public interface IStatsJournalEntryBountyOrBond : IStatsJournalEntry
     {
         string Type { get; }
-        string Target { get; }
+        FDName Target { get; }
         string TargetFaction { get; }
         bool HasFaction(string faction);
         long FactionReward(string faction);

@@ -23,14 +23,14 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalScientificResearch(JObject evt) : base(evt, JournalTypeEnum.ScientificResearch)
         {
-            Name = JournalFieldNaming.FDNameTranslation(evt["Name"].Str());
-            Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), Name);
+            Name = evt["Name"].FDNameNormalise();
+            Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), Name.Str());
             Count = evt["Count"].Int();
             Category = JournalFieldNaming.NormaliseMaterialCategory(evt["Category"].Str());
             MarketID = evt["MarketID"].LongNull();
         }
 
-        public string Name { get; set; }
+        public FDName Name { get; set; }
         public string Name_Localised { get; set; }
         public int Count { get; set; }
         public string Category { get; set; }

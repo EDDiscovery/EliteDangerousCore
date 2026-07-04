@@ -305,7 +305,7 @@ namespace EliteDangerousCore
 
                     string cur_weapon = jo["SelectedWeapon"].StrNull();                 // null if not there
                     if (cur_weapon != null)                                           // name is decorated, fix
-                        cur_weapon = JournalFieldNaming.NormaliseFDItemName(cur_weapon);
+                        cur_weapon = FDName.Normalise(cur_weapon).Str();
                     string cur_weaponloc = jo["SelectedWeapon_Localised"].Str();        // empty if not there
 
                     if (cur_weapon != SelectedWeapon || changedmajormode)

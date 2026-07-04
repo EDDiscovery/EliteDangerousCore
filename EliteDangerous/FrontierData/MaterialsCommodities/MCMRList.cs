@@ -55,20 +55,20 @@ namespace EliteDangerousCore
 
     public class MaterialCommoditiesMicroResourceList
     {
-        private GenerationalDictionary<string, MaterialCommodityMicroResource> items = new GenerationalDictionary<string, MaterialCommodityMicroResource>();
+        private GenerationalDictionary<FDName, MaterialCommodityMicroResource> items = new GenerationalDictionary<FDName, MaterialCommodityMicroResource>(new FDNameEqualityComparer());
 
         public MaterialCommoditiesMicroResourceList()
         {
         }
 
-        public MaterialCommodityMicroResource Get(uint gen, string fdname)
+        public MaterialCommodityMicroResource Get(uint gen,FDName fdname)
         {
-            return items.Get(fdname.ToLowerInvariant(), gen);
+            return items.Get(fdname, gen);
         }
 
-        public MaterialCommodityMicroResource GetLast(string fdname)
+        public MaterialCommodityMicroResource GetLast(FDName fdname)
         {
-            return items.GetLast(fdname.ToLowerInvariant());
+            return items.GetLast(fdname);
         }
 
         public List<MaterialCommodityMicroResource> GetLast()
@@ -81,7 +81,7 @@ namespace EliteDangerousCore
             return items.GetValues(gen);
         }
 
-        public Dictionary<string, MaterialCommodityMicroResource> GetDict(uint gen)
+        public Dictionary<FDName, MaterialCommodityMicroResource> GetDict(uint gen)
         {
             return items.Get(gen);
         }
@@ -129,11 +129,11 @@ namespace EliteDangerousCore
         public int CargoCount(uint gen) { return Count(Get(gen))[(int)MaterialCommodityMicroResourceType.CatType.Commodity]; }
 
         // change entry by a delta
-        public void ChangeCommd(DateTime utc, string fdname, int delta, long price)
+        public void ChangeCommd(DateTime utc, FDName fdname, int delta, long price)
         {
             ChangeInt(utc, MaterialCommodityMicroResourceType.CatType.Commodity, fdname, delta, price, 0);
         }
-        public void ChangeMat(DateTime utc, string catname, string fdname, int delta)
+        public void ChangeMat(DateTime utc, string catname, FDName fdname, int delta)
         {
             var cat = MaterialCommodityMicroResourceType.CategoryFrom(catname);
             if (cat.HasValue)
@@ -143,7 +143,7 @@ namespace EliteDangerousCore
             else
                 System.Diagnostics.Debug.WriteLine("MCMRLIST Unknown Cat " + catname);
         }
-        public void ChangeMR(int cnum, DateTime utc, string catname, string fdname, int delta )
+        public void ChangeMR(int cnum, DateTime utc, string catname, FDName fdname, int delta )
         {
             var cat = MaterialCommodityMicroResourceType.CategoryFrom(catname);
             if (cat.HasValue)
@@ -155,14 +155,14 @@ namespace EliteDangerousCore
         }
 
        //always changes entry 0
-        public void Craft(DateTime utc, string fdname, int deltaoff)       
+        public void Craft(DateTime utc, FDName fdname, int deltaoff)       
         {
-            MaterialCommodityMicroResource mc = items.GetLast(fdname.ToLowerInvariant());      // find last entry, may return null if none stored
+            MaterialCommodityMicroResource mc = items.GetLast(fdname);      // find last entry, may return null if none stored
             if ( mc != null )
             {
                 mc = new MaterialCommodityMicroResource(mc);      // new clone of
                 mc.Counts[0] = Math.Max(mc.Counts[0] - deltaoff, 0);
-                items[mc.Details.FDName.ToLowerInvariant()] = mc;
+                items[mc.Details.FDName] = mc;
                 //System.Diagnostics.Debug.WriteLine("MCMRLIST {0} Craft {1} {2}", utc.ToString(), mc.Details.FDName, num);
             }
         }
@@ -172,11 +172,11 @@ namespace EliteDangerousCore
             foreach (var cat in cats)       // meow
             {
                 var list = items.GetLastValues((x) => x.Details.Category == cat && x.Counts[cnum] > 0);     // find all of this cat with a count >0
-                foreach (var e in list)
+                foreach (MaterialCommodityMicroResource e in list)
                 {
                     var mc = new MaterialCommodityMicroResource(e);     // clone it
                     mc.Counts[cnum] = 0;
-                    items[e.Details.FDName.ToLowerInvariant()] = mc;        // and add to end of list
+                    items[e.Details.FDName] = mc;        // and add to end of list
                 }
             }
         }
@@ -185,7 +185,7 @@ namespace EliteDangerousCore
         // All others in the same cat not mentioned in values go to zero
         // make sure values has name lower case.
 
-        public int Update(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, List<Tuple<string,int>> values, int cnum = 0)
+        public int Update(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, List<Tuple<FDName,int>> values, int cnum = 0)
         {
             var curlist = items.GetLastValues((x) => x.Details.Category == cat && x.Counts[cnum]>0);     // find all of this cat with a count >0
 
@@ -207,13 +207,13 @@ namespace EliteDangerousCore
                 }
             }
 
-            foreach( var c in curlist)                                          //go thru the non zero list of cat
+            foreach( MaterialCommodityMicroResource c in curlist)                                          //go thru the non zero list of cat
             {
-                if ( values.Find(x=>x.Item1.Equals(c.Details.FDName,StringComparison.InvariantCultureIgnoreCase)) == null )       // if not in updated list
+                if ( values.Find(x=>x.Item1.Equals(c.Details.FDName)) == null )       // if not in updated list
                 {
                     var mc = new MaterialCommodityMicroResource(c);     // clone it
                     mc.Counts[cnum] = 0;            // zero cnum
-                    items[c.Details.FDName.ToLowerInvariant()] = mc;
+                    items[c.Details.FDName] = mc;
                     //System.Diagnostics.Debug.WriteLine("MCMRLIST {0} Found {1}:{2} not in update list, zeroing", utc.ToString(), mc.Details.Category, mc.Details.FDName);
                     changed++;
                 }
@@ -225,7 +225,7 @@ namespace EliteDangerousCore
         }
 
         // change entry - helper to set up arrays for change below
-        private void ChangeInt(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int num, long price, int cnum)
+        private void ChangeInt(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, FDName fdname, int num, long price, int cnum)
         {
             var vsets = new bool[MaterialCommodityMicroResource.NoCounts];      // all set to false, change
             vsets[cnum] = false;                                                // set cnum to change only
@@ -239,10 +239,8 @@ namespace EliteDangerousCore
         // to change a value, set count/set = 0 for that entry
         // to leave a value, set count=0,set=0 for that entry
         // set means set to value, else add to value
-        private bool ChangeInt(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, string fdname, int[] counts, bool[] set, long price)
+        private bool ChangeInt(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, FDName fdname, int[] counts, bool[] set, long price)
         {
-            fdname = fdname.ToLowerInvariant();
-
             MaterialCommodityMicroResource mc = items.GetLast(fdname);      // find last entry, may return null if none stored
 
             if (mc == null)     // not stored, make new

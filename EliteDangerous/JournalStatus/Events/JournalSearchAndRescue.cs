@@ -23,7 +23,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSearchAndRescue(JObject evt) : base(evt, JournalTypeEnum.SearchAndRescue)
         {
-            FDName = evt["Name"].Str();
+            FDName = evt["Name"].FDNameNormalise();
             FDName = JournalFieldNaming.FDNameTranslation(FDName); // some premangling
             FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(FDName);
             Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Name_Localised"].Str(), FriendlyName);         // always ensure we have one
@@ -32,7 +32,7 @@ namespace EliteDangerousCore.JournalEvents
             MarketID = evt["MarketID"].LongNull();
         }
 
-        public string FDName { get; set; }            // Hyperspace, Supercruise
+        public FDName FDName { get; set; }            // Hyperspace, Supercruise
         public string Name_Localised { get; set; }            // Hyperspace, Supercruise
         public string FriendlyName { get; set; }            // Hyperspace, Supercruise
         public int Count { get; set; }

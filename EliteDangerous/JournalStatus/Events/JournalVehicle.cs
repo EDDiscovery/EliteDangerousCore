@@ -114,7 +114,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalRestockVehicle(JObject evt) : base(evt, JournalTypeEnum.RestockVehicle)
         {
-            TypeFD = evt["Type"].Str();
+            TypeFD = evt["Type"].FDNameNormalise();
             Type = JournalFieldNaming.GetBetterShipName(TypeFD);
             Type_Localised = JournalFieldNaming.CheckLocalisation(evt["Type_Localised"].Str(), Type);
             Loadout = evt["Loadout"].Str();
@@ -123,7 +123,7 @@ namespace EliteDangerousCore.JournalEvents
             ID = evt["ID"].ULongNull();
         }
 
-        public string TypeFD { get; set; }
+        public FDName TypeFD { get; set; }
         public string Type { get; set; }                    // better name
         public string Type_Localised { get; set; }          // new June 26, evidence of it from 2021!
         public string Loadout { get; set; }
@@ -187,14 +187,14 @@ namespace EliteDangerousCore.JournalEvents
             Loadout = evt["Loadout"].Str();
             PlayerControlled = evt["PlayerControlled"].Bool(true);
             ID = evt["ID"].IntNull();
-            SRVType = evt["SRVType"].StrNull();
+            SRVType = evt["SRVType"].FDName();      // should not need ship norm
             SRVType_Localised = evt["SRVType_Localised"].StrNull();
         }
         public string Loadout { get; set; }
         public bool PlayerControlled { get; set; }
         public int? ID { get; set; }
 
-        public string SRVType;          // new odyssey 9, dec 21, may be null
+        public FDName SRVType;          // new odyssey 9, dec 21, may be null
         public string SRVType_Localised; // new odyssey 9, dec 21, may be null
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -214,15 +214,15 @@ namespace EliteDangerousCore.JournalEvents
     public class JournalDockSRV : JournalEntry, IShipInformation
     {
         public int? ID { get; set; }
-        public string SRVType;          // new odyssey 9, dec 21, may be null
+        public FDName SRVType;          // new odyssey 9, dec 21, may be null
         public string SRVType_Localised; // new odyssey 9, dec 21, may be null
         public bool IsLander => ItemData.IsLander(SRVType);
 
         public JournalDockSRV(JObject evt) : base(evt, JournalTypeEnum.DockSRV)
         {
             ID = evt["ID"].IntNull();
-            SRVType = evt["SRVType"].StrNull();
-            SRVType_Localised = JournalFieldNaming.CheckLocalisation(evt["SRVType_Localised"].StrNull(), SRVType);
+            SRVType = evt["SRVType"].FDName();
+            SRVType_Localised = JournalFieldNaming.CheckLocalisation(evt["SRVType_Localised"].StrNull(), SRVType.Str());
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -250,15 +250,15 @@ namespace EliteDangerousCore.JournalEvents
     {
         public int? ID { get; set; }
 
-        public string SRVType;          // new odyssey 9, dec 21, may be null
+        public FDName SRVType;          // new odyssey 9, dec 21, may be null
         public string SRVType_Localised; // new odyssey 9, dec 21, may be null
         public bool IsLander => ItemData.IsLander(SRVType);
 
         public JournalSRVDestroyed(JObject evt) : base(evt, JournalTypeEnum.SRVDestroyed)
         {
             ID = evt["ID"].IntNull();
-            SRVType = evt["SRVType"].StrNull();
-            SRVType_Localised = JournalFieldNaming.CheckLocalisation(evt["SRVType_Localised"].StrNull(), SRVType);
+            SRVType = evt["SRVType"].FDName();
+            SRVType_Localised = JournalFieldNaming.CheckLocalisation(evt["SRVType_Localised"].StrNull(), SRVType.Str());
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)

@@ -52,18 +52,18 @@ namespace EliteDangerousCore.JournalEvents
         {
             LoadGameCommander = JournalFieldNaming.SubsituteCommanderName( evt["Commander"].Str() );
             
-            ShipFD = evt["Ship"].Str();
+            ShipFD = evt["Ship"].FDName();
             Ship_Localised = evt["Ship_Localised"].StrNull();       // may not be present
 
-            if (ShipFD.Length == 0)      // Vega logs show no ship on certain logs.. handle it to prevent warnings.
+            if (!ShipFD.Valid)      // Vega logs show no ship on certain logs.. handle it to prevent warnings.
             {
-                ShipType = Ship_Localised = ShipFD = UnknownShip;
+                ShipType = Ship_Localised = UnknownShip;
             }
             else
             {
                 if (ItemData.IsShipOrSRVOrFighterOrLander(ShipFD))
                 {
-                    ShipFD = JournalFieldNaming.NormaliseFDShipName(ShipFD);
+                    ShipFD.NormaliseShip();
                     ShipType = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
                 }
                 else if ( ItemData.IsSuit(ShipFD))      
@@ -72,7 +72,7 @@ namespace EliteDangerousCore.JournalEvents
                 }
                 else if ( ItemData.IsTaxi(ShipFD))
                 {
-                    ShipType = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD.Replace("_taxi",""));
+                    ShipType = JournalFieldNaming.GetBetterShipSuitActorName(new FDName(ShipFD.Str().Replace("_taxi","")));
                 }
                 else
                 {
@@ -109,7 +109,7 @@ namespace EliteDangerousCore.JournalEvents
         public string LoadGameCommander { get; set; }
         public string ShipType { get; set; }        // friendly name, fer-de-lance, from our db.  Older Load games did not have Localised
         public string Ship_Localised { get; set; }   // localised
-        public string ShipFD { get; set; }        // type, fd name
+        public FDName ShipFD { get; set; }        // type, fd name
         public ulong ShipId { get; set; }
         public bool StartLanded { get; set; }
         public bool StartDead { get; set; }

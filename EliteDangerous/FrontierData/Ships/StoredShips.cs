@@ -19,7 +19,7 @@ namespace EliteDangerousCore
     public class StoredShip : IEquatable<StoredShip>
     {
         public ulong ShipID { get; set; }      // both
-        public string ShipType { get; set; } // both
+        public string ShipType { get; set; }   // both, JSON->shipfd, normalised to text
         public string ShipType_Localised { get; set; } // both
         public string Name { get; set; }     // Both
         public long Value { get; set; }      // both
@@ -32,13 +32,13 @@ namespace EliteDangerousCore
         public bool InTransit { get; set; }      //remote, and that means StarSystem is not there.
 
         public string StationName { get; set; }  // local only, null otherwise, not compared due to it being computed
-        public string ShipTypeFD { get; set; } // both, computed
+        public FDName ShipTypeFD { get; set; } // both, computed
         public System.TimeSpan TransferTimeSpan { get; set; }        // computed
         public string TransferTimeString { get; set; } // computed
 
         public void Normalise()
         {
-            ShipTypeFD = JournalFieldNaming.NormaliseFDShipName(ShipType);
+            ShipTypeFD = FDName.NormaliseShip(ShipType);
             ShipType = JournalFieldNaming.GetBetterShipName(ShipTypeFD);
             ShipType_Localised = ShipType_Localised.Alt(ShipType);
             TransferTimeSpan = new System.TimeSpan((int)(TransferTime / 60 / 60), (int)((TransferTime / 60) % 60), (int)(TransferTime % 60));

@@ -66,7 +66,7 @@ namespace EliteDangerousCore.JournalEvents
             // some From's contain an ID without a localisation field, try and fix it
             if (loc == null && Channel.EqualsIIC("npc") && From.Contains("$"))
             {
-                ItemData.Actor ac = ItemData.GetActorNPC(From);
+                ItemData.Actor ac = ItemData.GetActorNPC(new FDName(From));
                 if (ac != null)
                     FromLocalised = ac.Name;
                // System.Diagnostics.Debug.WriteLine($"RT {EventTimeUTC} {Channel} `{From}` `{loc}`=> `{FromLocalised}` {evt.ToString()}");

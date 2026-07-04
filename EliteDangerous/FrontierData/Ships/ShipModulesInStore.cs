@@ -25,8 +25,8 @@ namespace EliteDangerousCore
         public class StoredModule: IEquatable<StoredModule> // storage used by journal event..
         {
             public int StorageSlot{ get; set; }
-            public string NameFD{ get; set; }
-            public string Name{ get; set; }         // English name, keyed on this
+            public FDName NameFD{ get; set; }
+            public string Name { get; set; }         // English name, keyed on this
             public string Name_Localised{ get; set; }
             public string StarSystem{ get; set; }       // not while in transit
             public long MarketID{ get; set; }       // not while in transit
@@ -53,7 +53,7 @@ namespace EliteDangerousCore
 
             public void Normalise()
             {
-                NameFD = JournalFieldNaming.NormaliseFDItemName(Name);          // Name comes in with strange characters, normalise out
+                NameFD = FDName.Normalise(Name);                             // Name comes in with strange characters, normalise out
                 Name = JournalFieldNaming.GetBetterEnglishModuleName(NameFD);      // and look up a better name
                 Name_Localised = Name_Localised.Alt(Name);
                 TransferTimeSpan = new System.TimeSpan((int)(TransferTime / 60 / 60), (int)((TransferTime / 60) % 60), (int)(TransferTime % 60));
@@ -61,7 +61,7 @@ namespace EliteDangerousCore
                 //System.Diagnostics.Debug.WriteLine($"SD Normalise '{NameFD}' '{Name}' '{Name_Localised}'");
             }
 
-            public StoredModule(string fdname, string englishname, string item_localised, string system, string eng, int? level , double? quality, bool? hot)
+            public StoredModule(FDName fdname, string englishname, string item_localised, string system, string eng, int? level , double? quality, bool? hot)
             {
                 NameFD = fdname;
                 Name = englishname;
@@ -104,7 +104,7 @@ namespace EliteDangerousCore
         }
 
         // ModuleBuy, ModuleBuyAndStore , ModuleRetrieve
-        public ShipModulesInStore StoreModule(string fdname, string englishname, string namelocalised, ISystem sys)
+        public ShipModulesInStore StoreModule(FDName fdname, string englishname, string namelocalised, ISystem sys)
         {
             ShipModulesInStore mis = this.ShallowClone();
             mis.StoredModules.Add(new StoredModule(fdname, englishname, namelocalised ,sys.Name, "", null, null, null));

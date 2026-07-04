@@ -111,7 +111,7 @@ namespace EliteDangerousCore
         public IShipNaming CurrentShip { get; private set; }            // MAY BE NULL
         public ulong ShipID => CurrentShip?.ShipId ?? ulong.MaxValue;
         public string ShipType => CurrentShip?.ShipType ?? "Unknown";
-        public string ShipTypeFD => CurrentShip?.ShipFD ?? "Unknown";
+        public string ShipTypeFD => CurrentShip?.ShipFD.Str() ?? "Unknown";
 
         public bool Wanted { get; private set; } = false;       // Set and kept on jumping into a new system
 

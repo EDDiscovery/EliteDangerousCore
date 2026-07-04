@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyName { get; set; }
         public long Price { get; set; }
         public int Class { get; set; }
-        public string[] WeaponMods { get; set; }    // may be null/empty
+        public FDName[] WeaponMods { get; set; }    // may be null/empty
 
         public override string GetInfo()
         {
@@ -136,7 +136,7 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyName { get; set; }
         public long Cost { get; set; }
         public int Class { get; set; }
-        public string[] WeaponMods { get; set; }
+        public FDName[] WeaponMods { get; set; }
 
         public override string GetInfo()
         {

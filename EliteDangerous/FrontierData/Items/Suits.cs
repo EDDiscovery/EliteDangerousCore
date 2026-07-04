@@ -95,7 +95,7 @@ namespace EliteDangerousCore
 
         public class Suit 
         {
-            public string Type;
+            public string Type;         // Name
             public int Class;
             public string Name;         // Name and class
             public int PrimaryWeapons;
@@ -105,9 +105,10 @@ namespace EliteDangerousCore
             public string U3;
             public SuitStats Stats;     // may be null! if for ai suits
 
-            public Suit(string type, int cls, int primary, int secondary, string u1, string u2, string u3, SuitStats values)
+            public Suit(string englishname, int cls, int primary, int secondary, string u1, string u2, string u3, SuitStats values)
             {
-                Type = type; Class = cls; Name = type + (Class > 0 ? " Class " + Class.ToStringInvariant() : "");
+                Type = englishname; Class = cls; 
+                Name = englishname + (Class > 0 ? " Class " + Class.ToStringInvariant() : "");
                 PrimaryWeapons = primary;
                 SecondaryWeapons = secondary;
                 U1 = u1;

@@ -526,7 +526,7 @@ namespace EliteDangerousCore.JournalEvents
                 sb.AppendSPC();
 
                 int index = 0;
-                foreach (KeyValuePair<string, double> mat in Materials)
+                foreach (KeyValuePair<FDName, double> mat in Materials)
                 {
                     if (index++ > 0)
                         sb.Append(indents);
@@ -535,7 +535,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
         // has trailing LF
-        public void DisplayMaterial(StringBuilder sb, string fdname, double percent, List<MaterialCommodityMicroResource> historicmatlist = null,
+        public void DisplayMaterial(StringBuilder sb, FDName fdname, double percent, List<MaterialCommodityMicroResource> historicmatlist = null,
                                                                       List<MaterialCommodityMicroResource> currentmatlist = null)
         {
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
@@ -556,8 +556,7 @@ namespace EliteDangerousCore.JournalEvents
                 sb.AppendFormat("{0}: ({1}) {2} {3}% {4}", mc.TranslatedName, mc.Shortname, mc.TranslatedType, percent.ToString("N1"), matinfo);
             }
             else
-                sb.AppendFormat("{0}: {1}%", System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(fdname.ToLowerInvariant()),
-                                                            percent.ToString("N1"));
+                sb.AppendFormat("{0}: {1}%", fdname.SplitCapsWordFull(), percent.ToString("N1"));
             sb.AppendCR();
         }
 

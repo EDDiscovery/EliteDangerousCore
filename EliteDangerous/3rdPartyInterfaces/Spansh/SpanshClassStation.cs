@@ -491,10 +491,10 @@ namespace EliteDangerousCore.Spansh
                                 foreach (JObject ship in shipyard)
                                 {
                                     string shipname = ship["name"].Str();
-                                    string fdname = ItemData.ReverseShipLookup(shipname);
+                                    FDName fdname = ItemData.ReverseShipLookup(shipname);
                                     if (fdname != null)
                                     {
-                                        var si = new ShipYard.ShipyardItem { ShipType = fdname, ShipPrice = ship["price"].Long() };
+                                        var si = new ShipYard.ShipyardItem { ShipType =fdname, ShipPrice = ship["price"].Long() };
                                         si.Normalise();
                                         station.Shipyard.Add(si);
                                     }

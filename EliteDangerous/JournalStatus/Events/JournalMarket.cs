@@ -48,8 +48,8 @@ namespace EliteDangerousCore.JournalEvents
         public long? MarketID { get; set; }
         public List<CCommodities> Commodities { get; protected set; }   // never null
 
-        public bool HasCommodity(string fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase)) >= 0; }
-        public bool HasCommodityToBuy(string fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase) && x.HasStock) >= 0; }
+        public bool HasCommodity(FDName fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname)) >= 0; }
+        public bool HasCommodityToBuy(FDName fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname) && x.HasStock) >= 0; }
 
         public override string GetInfo()
         {
@@ -189,7 +189,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalMarketBuy(JObject evt) : base(evt, JournalTypeEnum.MarketBuy)
         {
             MarketID = evt["MarketID"].LongNull();
-            Type = evt["Type"].Str();        // must be FD name
+            Type = evt["Type"].FDNameNormalise();        // must be FD name
             Type = JournalFieldNaming.FDNameTranslation(Type);     // pre-mangle to latest names, in case we are reading old journal records
             FriendlyType = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Type);           // our translation..
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
@@ -198,7 +198,7 @@ namespace EliteDangerousCore.JournalEvents
             TotalCost = evt["TotalCost"].Long();
         }
 
-        public string Type { get; set; }                // FDNAME
+        public FDName Type { get; set; }                // FDNAME
         public string Type_Localised { get; set; }      // Always set
         public string FriendlyType { get; set; }        // translated name
         public int Count { get; set; }
@@ -238,7 +238,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalMarketSell(JObject evt) : base(evt, JournalTypeEnum.MarketSell)
         {
             MarketID = evt["MarketID"].LongNull();
-            Type = evt["Type"].Str();                           // FDNAME
+            Type = evt["Type"].FDNameNormalise();                           // FDNAME
             Type = JournalFieldNaming.FDNameTranslation(Type);     // pre-mangle to latest names, in case we are reading old journal records
             FriendlyType = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Type); // goes thru the translator..
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
@@ -251,7 +251,7 @@ namespace EliteDangerousCore.JournalEvents
             BlackMarket = evt["BlackMarket"].Bool();
         }
 
-        public string Type { get; set; }
+        public FDName Type { get; set; }
         public string FriendlyType { get; set; }
         public string Type_Localised { get; set; }      // always set
 

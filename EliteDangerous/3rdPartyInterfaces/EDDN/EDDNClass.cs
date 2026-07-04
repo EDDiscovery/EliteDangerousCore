@@ -617,10 +617,8 @@ namespace EliteDangerousCore.EDDN
                 ["stationName"] = journal.YardInfo.StationName,
                 ["marketId"] = journal.MarketID,
                 ["modules"] = new JArray(journal.YardInfo.Items
-                                .Where(m => m.FDName.StartsWith("Hpt_", StringComparison.InvariantCultureIgnoreCase) ||
-                                            m.FDName.StartsWith("Int_", StringComparison.InvariantCultureIgnoreCase) ||
-                                            m.FDName.Contains("_armour_", StringComparison.InvariantCultureIgnoreCase))      // Use FDName here note
-                                .Select(m => JournalFieldNaming.NormaliseFDItemName(m.FDName))
+                                .Where(m => m.FDName.IsWeaponArmour())      // Use FDName here note
+                                .Select(m => FDName.Normalise(m.FDName.Str()))
                                 .Distinct()
                                 )
                                 
@@ -991,7 +989,7 @@ namespace EliteDangerousCore.EDDN
 
                 JObject jo = new JObject();
 
-                jo["name"] = commodity.fdname;
+                jo["name"] = commodity.fdname.Str();
                 jo["meanPrice"] = commodity.meanPrice;
                 jo["buyPrice"] = commodity.buyPrice;
                 jo["stock"] = commodity.stock;
@@ -1110,7 +1108,7 @@ namespace EliteDangerousCore.EDDN
             {
                 JObject sj = new JObject();
                 sj["id"] = commodity.id;
-                sj["Name"] = commodity.fdname_unnormalised;
+                sj["Name"] = commodity.fdname_unnormalised.Str();
                 sj["Price"] = commodity.buyPrice;
                 sj["Stock"] = commodity.stock;
                 sj["Demand"] = commodity.demand;

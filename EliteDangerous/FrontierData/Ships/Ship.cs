@@ -771,7 +771,7 @@ namespace EliteDangerousCore
             Ship sm = new Ship(this.ID);
             sm.State = this.State;
             sm.ShipType = this.ShipType;
-            sm.ShipFD = this.ShipFD;
+            sm.ShipFD = new FDName(this.ShipFD.Str());
             sm.ShipUserName = this.ShipUserName;
             sm.ShipUserIdent = this.ShipUserIdent;
             sm.FuelLevel = this.FuelLevel;
@@ -828,14 +828,14 @@ namespace EliteDangerousCore
             }
         }
 
-        public Ship SetShipDetails(string ship, string shipfd, string name = null, string ident = null, 
+        public Ship SetShipDetails(string ship, FDName shipfd, string name = null, string ident = null, 
                                     double fuellevel = 0, double fueltotal = 0,
                                     long hullvalue = 0, long modulesvalue = 0, long rebuy = 0,
                                     double unladenmass = 0, double reservefuelcapacity = 0 , double hullhealth = 0, bool? hot = null)
         {
             System.Diagnostics.Debug.Assert(shipfd != null && ship != null);
 
-            bool s1 = ShipFD != shipfd;
+            bool s1 = ShipFD.Equals(shipfd) == false;
             bool s2 = ship != ShipType;
             bool s3 = name != null && name != ShipUserName;
             bool s4 = ident != null && ident != ShipUserIdent;
@@ -944,27 +944,23 @@ namespace EliteDangerousCore
             return this;
         }
 
-        public Ship AddModule(string slot, ShipSlots.Slot slotfd, string item, string itemfd, string itemlocalised)
+        public Ship AddModule(string slot, ShipSlots.Slot slotfd, string itemname, FDName itemfd, string itemlocalised)
         {
-            if (!Modules.ContainsKey(slotfd) || Modules[slotfd].Item.Equals(item) == false)       // if does not have it, or item is not the same..
+            if (!Modules.ContainsKey(slotfd) || Modules[slotfd].Item.Equals(itemname) == false)       // if does not have it, or item is not the same..
             {
                 Ship sm = this.ShallowClone();
-                sm.Modules[slotfd] = new ShipModule(slot, slotfd, item, itemfd, itemlocalised);
+                sm.Modules[slotfd] = new ShipModule(slot, slotfd, itemname, itemfd, itemlocalised);
                 //System.Diagnostics.Debug.WriteLine("Slot add " + slot);
 
-                if (item.Contains("Fuel Tank") && item.IndexOf("Class ") != -1)
-                {
-                    sm.FuelCapacity = sm.CalculateFuelCapacity();
-                    if (sm.FuelLevel > sm.FuelCapacity)
-                        sm.FuelLevel = sm.FuelCapacity;
-                }
+                if (ItemData.IsFuelTank(itemfd))
+                    RecalcFuelCap(sm);
 
                 return sm;
             }
             return this;
         }
 
-        public Ship RemoveModule(ShipSlots.Slot slot, string item)
+        public Ship RemoveModule(ShipSlots.Slot slot, FDName itemfd)
         {
             if (Modules.ContainsKey(slot))       // if has it..
             {
@@ -972,12 +968,8 @@ namespace EliteDangerousCore
                 sm.Modules.Remove(slot);
                 //System.Diagnostics.Debug.WriteLine("Slot remove " + slot);
 
-                if (item.Contains("Fuel Tank") && item.IndexOf("Class ") != -1)
-                {
-                    sm.FuelCapacity = sm.CalculateFuelCapacity();
-                    if (sm.FuelLevel > sm.FuelCapacity)
-                        sm.FuelLevel = sm.FuelCapacity;
-                }
+                if (ItemData.IsFuelTank(itemfd))
+                    RecalcFuelCap(sm);
 
                 return sm;
             }
@@ -997,20 +989,16 @@ namespace EliteDangerousCore
                     //System.Diagnostics.Debug.WriteLine("Slot mass remove " + it.Slot + " Exists " + sm.Modules.ContainsKey(it.Slot));
                     sm.Modules.Remove(it.SlotFD);
 
-                    if (it.Name.Contains("Fuel Tank") && it.Name.IndexOf("Class ") != -1)
-                    {
-                        sm.FuelCapacity = sm.CalculateFuelCapacity();
-                        if (sm.FuelLevel > sm.FuelCapacity)
-                            sm.FuelLevel = sm.FuelCapacity;
-                    }
+                    if (ItemData.IsFuelTank(it.NameFD))
+                        RecalcFuelCap(sm);
                 }
             }
 
             return sm ?? this;
         }
 
-        public Ship SwapModule(string fromslot, ShipSlots.Slot fromslotfd, string fromitem, string fromitemfd, string fromiteml,
-                                          string toslot, ShipSlots.Slot toslotfd, string toitem, string toitemfd, string toiteml)
+        public Ship SwapModule(string fromslot, ShipSlots.Slot fromslotfd, string fromitem, FDName fromitemfd, string fromiteml,
+                                          string toslot, ShipSlots.Slot toslotfd, string toitem, FDName toitemfd, string toiteml)
         {
             Ship sm = this.ShallowClone();
             if (Modules.ContainsKey(fromslotfd))
@@ -1024,20 +1012,18 @@ namespace EliteDangerousCore
 
                 sm.Modules[toslotfd] = new ShipModule(toslot, toslotfd, fromitem, fromitemfd, fromiteml);
 
-                if (fromitem != toitem && ((fromitem.Contains("Fuel Tank") && fromitem.IndexOf("Class ") != -1) ||
-                                           (fromitem.Contains("Fuel Tank") && fromitem.IndexOf("Class ") != -1)))
+                if (!fromitemfd.Equals(toitemfd) && (ItemData.IsFuelTank(fromitemfd) || ItemData.IsFuelTank(toitemfd)))
                 {
-                    sm.FuelCapacity = sm.CalculateFuelCapacity();
-                    if (sm.FuelLevel > sm.FuelCapacity)
-                        sm.FuelLevel = sm.FuelCapacity;
+                    RecalcFuelCap(sm);
                 }
+                   
             }
             return sm;
         }
 
-        public Ship Craft(ShipSlots.Slot slotfd, string item, EngineeringData eng)
+        public Ship Craft(ShipSlots.Slot slotfd, FDName item, EngineeringData eng)
         {
-            if (Modules.ContainsKey(slotfd) && Modules[slotfd].Item.Equals(item))       // craft, module must be there, otherwise just ignore
+            if (Modules.ContainsKey(slotfd) && Modules[slotfd].ItemFD.Equals(item))       // craft, module must be there, otherwise just ignore
             {
                 Ship sm = this.ShallowClone();
                 sm.Modules[slotfd] = new ShipModule(sm.Modules[slotfd]);        // clone
@@ -1127,7 +1113,7 @@ namespace EliteDangerousCore
 
                 if (ItemData.TryGetShipModule(sm.ItemFD, out ItemData.ShipModule si, false) && si.ModuleID != 0)   // don't synth it
                 {
-                    module["Item"] = sm.ItemFD;
+                    module["Item"] = sm.ItemFD.Str();
                     module["Slot"] = sm.SlotFD.ToString();
                     module["On"] = sm.Enabled.HasValue ? sm.Enabled : true;
                     module["Priority"] = sm.Priority.HasValue ? sm.Priority : 0;
@@ -1153,7 +1139,7 @@ namespace EliteDangerousCore
             JObject engineering = new JObject();
 
             engineering["BlueprintID"] = module.Engineering.BlueprintID;
-            engineering["BlueprintName"] = module.Engineering.BlueprintName;
+            engineering["BlueprintName"] = module.Engineering.BlueprintName.Str();
             engineering["Level"] = module.Engineering.Level;
             engineering["Quality"] = module.Engineering.Quality;
 
@@ -1217,7 +1203,7 @@ namespace EliteDangerousCore
                 JObject module = new JObject();
 
                 module["Slot"] = sm.SlotFD.ToString().ToLowerInvariant();
-                module["Item"] = sm.ItemFD.ToLowerInvariant();
+                module["Item"] = sm.ItemFD.ToLower();
                 module["On"] = sm.Enabled.HasValue ? sm.Enabled : true;
                 module["Priority"] = sm.Priority.HasValue ? sm.Priority : 0;
 
@@ -1271,10 +1257,10 @@ namespace EliteDangerousCore
             if (jloadout != null)
             {
                 ShipList sl = new ShipList();
-                jloadout.ShipInformation(sl, "Nowhere", new SystemClass("Sol"));
-                if (sl.Ships.Count > 0)
+                jloadout.ShipInformation(sl, "Nowhere", new SystemClass("Sol"));        // create in ShipList.
+                if (sl.Count > 0)
                 {
-                    Ship importedship = sl.Ships.First().Value;
+                    Ship importedship = sl.Get(0);
                     importedship.State = Ship.ShipState.Imported;
                     importedship.FuelLevel = importedship.FuelCapacity; // presume half tank
                     return importedship;
@@ -1287,6 +1273,12 @@ namespace EliteDangerousCore
         #endregion
 
         #region Helpers
+        private void RecalcFuelCap(Ship sm)
+        {
+            sm.FuelCapacity = sm.CalculateFuelCapacity();
+            if (sm.FuelLevel > sm.FuelCapacity)
+                sm.FuelLevel = sm.FuelCapacity;
+        }
 
         // called when modules changes
         private int CalculateFuelCapacity()

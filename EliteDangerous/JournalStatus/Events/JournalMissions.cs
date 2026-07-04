@@ -112,7 +112,7 @@ namespace EliteDangerousCore.JournalEvents
             Faction = evt["Faction"].Str();
             FDName = evt["Name"].Str();
             Name = JournalFieldNaming.GetBetterMissionName(FDName);
-            LocalisedName = JournalFieldNaming.CheckLocalisation(evt["LocalisedName"].Str(),Name); 
+            LocalisedName = JournalFieldNaming.CheckLocalisation(evt["LocalisedName"].Str(), Name);
 
             TargetType = evt["TargetType"].Str();
             TargetTypeFriendly = JournalFieldNaming.GetBetterTargetTypeName(TargetType);    // remove $, underscore it
@@ -136,9 +136,12 @@ namespace EliteDangerousCore.JournalEvents
 
             MissionId = evt["MissionID"].ULong();
 
-            Commodity = JournalFieldNaming.FixCommodityName(evt["Commodity"].Str());        // instances of $_name, fix to fdname
-            FriendlyCommodity = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Commodity);
-            CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
+            Commodity = evt["Commodity"].FDNameNormaliseNull();        // instances of $_name, fix to fdname
+            if (Commodity != null)
+            { 
+                FriendlyCommodity = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Commodity);
+                CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
+            }
 
             Count = evt["Count"].IntNull();
             Expiry = evt["Expiry"].DateTimeUTC();
@@ -181,7 +184,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Influence { get; private set; }
         public string Reputation { get; private set; }
 
-        public string Commodity { get; private set; }               //fdname, this is for delivery missions, stuff being transported
+        public FDName Commodity { get; private set; }               //fdname, this is for delivery missions, stuff being transported. Null otherwise
         public string CommodityLocalised { get; private set; }
         public string FriendlyCommodity { get; private set; }       //db name
         public int? Count { get; private set; }
@@ -285,10 +288,12 @@ namespace EliteDangerousCore.JournalEvents
             Name = JournalFieldNaming.GetBetterMissionName(FDName);
             Faction = evt["Faction"].Str();
 
-            Commodity = JournalFieldNaming.FixCommodityName(evt["Commodity"].Str());             // evidence of $_name problem, fix to fdname
-            Commodity = JournalFieldNaming.FDNameTranslation(Commodity);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyCommodity = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Commodity);
-            CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
+            Commodity = evt["Commodity"].FDNameNormaliseNull();             // evidence of $_name problem, fix to fdname
+            if (Commodity != null)
+            {
+                FriendlyCommodity = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Commodity);
+                CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
+            }
 
             Count = evt["Count"].IntNull();
 
@@ -362,10 +367,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Name { get; set; }
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
-        public string FDName { get; set; }
+        public string FDName { get; set; }      // not an FDName, but the fdname of the mission, these are not standard fdnames
         public string Faction { get; set; }
 
-        public string Commodity { get; set; }               // The thing shipped. But in pre3.0, this could also be a commodity reward, which was not clear.
+        public FDName Commodity { get; set; }               // The thing shipped. But in pre3.0, this could also be a commodity reward, which was not clear.
         public string CommodityLocalised { get; set; }
         public string FriendlyCommodity { get; set; }
         public int? Count { get; set; }
@@ -571,10 +576,10 @@ namespace EliteDangerousCore.JournalEvents
             return detailed;
         }
 
-        public bool HasReceivedReward(string fdname)
+        public bool HasReceivedReward(FDName fdname)
         {
-            var m = MaterialsReward != null && Array.Find(MaterialsReward, (x) => x.Name.Equals(fdname, StringComparison.InvariantCultureIgnoreCase)) != null;
-            var c = CommodityReward != null && Array.Find(CommodityReward, (x) => x.Name.Equals(fdname, StringComparison.InvariantCultureIgnoreCase)) != null;
+            var m = MaterialsReward != null && Array.Find(MaterialsReward, (x) => x.Name.Equals(fdname)) != null;
+            var c = CommodityReward != null && Array.Find(CommodityReward, (x) => x.Name.Equals(fdname)) != null;
             return m || c;
         }
 
@@ -583,7 +588,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public class MaterialRewards
         {
-            public string Name; // fdname
+            public FDName Name; // fdname
             public string FriendlyName; // our conversion
             public string Name_Localised;       // may be null on reading
             public string Category; // may be null
@@ -592,7 +597,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise()
             {
-                Name = JournalFieldNaming.FDNameTranslation(Name);
+                Name.Normalise();
                 FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
                 Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(Name_Localised ?? "", FriendlyName);
 
@@ -606,14 +611,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public class CommodityRewards
         {
-            public string Name; // fdname
+            public FDName Name; // fdname
             public string FriendlyName; // our conversion
             public string Name_Localised;   // may be null
             public int Count;
 
             public void Normalise()
             {
-                Name = JournalFieldNaming.FDNameTranslation(Name);
+                Name.Normalise();
                 FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
                 Name_Localised = Name_Localised.Alt(FriendlyName);
             }

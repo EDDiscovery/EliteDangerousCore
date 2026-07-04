@@ -28,7 +28,7 @@ namespace EliteDangerousCore
             public string Name { get; set; }         // json, frontier. Field from frontier json is fdevid, then its English Text name after normalisation
             public long BuyPrice { get; set; }       // json, frontier
 
-            public string FDName { get; set; }      // FDName normalised from Name field from frontier json
+            public FDName FDName { get; set; }      // FDName normalised from Name field from frontier json
 
             [QuickJSON.JsonIgnore()]                // too big to output
             public ItemData.ShipModule ModuleInfo { get; set; }      // Module data from item data, may be null if module not found
@@ -42,16 +42,16 @@ namespace EliteDangerousCore
 
             public void Normalise()
             {
-                FDName = JournalFieldNaming.NormaliseFDItemName(Name);          // clean name and move to FDName
+                FDName = FDName.Normalise(Name);          // clean name and move to FDName
                 ItemData.TryGetShipModule(FDName, out ItemData.ShipModule m, true);    // find, or create
                 ModuleInfo = m;
-                Name = ModuleInfo?.EnglishModName ?? FDName;            // set text name
+                Name = ModuleInfo?.EnglishModName ?? FDName.Str();            // set text name
             }
 
             public bool Equals(OutfittingItem other)
             {
-                return (id == other.id && string.Compare(Name, other.Name) == 0 && string.Compare(FDName, other.FDName) == 0 &&
-                         BuyPrice == other.BuyPrice);
+                return (id == other.id && string.Compare(Name, other.Name) == 0 && FDName.Equals(other.FDName) &&                         
+                    BuyPrice == other.BuyPrice);
             }
 
             public string ToStringShort()
@@ -96,7 +96,7 @@ namespace EliteDangerousCore
 
         public List<string> ItemList() { return (from x1 in Items select x1.Name).ToList(); }
 
-        public List<OutfittingItem> FindByFDName(string fdname)
+        public List<OutfittingItem> FindByFDName(FDName fdname)
         { return (from x in Items where x.FDName.Equals(fdname) select x).ToList(); }
 
         // all items with this translated module type name

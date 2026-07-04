@@ -36,11 +36,11 @@ namespace EliteDangerousCore
             public string ModuleName;
             public string ModuleName_Localised;
             public int Class;               // may be zero meaning not there
-            public string[] WeaponMods;     // may be empty/null
+            public FDName[] WeaponMods;     // may be empty/null
             public string FriendlyName;
 
             public LoadoutModule() { }
-            public LoadoutModule(string slot, ulong suitmoduleid,string modulename, string locname, int cls, string[] weaponmods)
+            public LoadoutModule(string slot, ulong suitmoduleid,string modulename, string locname, int cls, FDName[] weaponmods)
             {
                 SlotName = slot; SuitModuleID = suitmoduleid; ModuleName = modulename; ModuleName_Localised = locname;
                 Class = cls; WeaponMods = weaponmods;

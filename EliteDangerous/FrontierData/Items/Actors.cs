@@ -21,35 +21,33 @@ namespace EliteDangerousCore
 {
     public partial class ItemData
     {
-        static public bool IsActor(string fdname)
+        static public bool IsActor(FDName fdname)
         {
-            return actors.ContainsKey(fdname.ToLowerInvariant());
+            return actors.ContainsKey(fdname);
         }
 
         // actors are things like skimmer drones
         // may return null if not known
-        static public Actor GetActor(string fdname, string locname = null)         
+        static public Actor GetActor(FDName fdname, string locname = null)         
         {
-            fdname = fdname.ToLowerInvariant();
             if (actors.TryGetValue(fdname, out Actor var))
                 return var;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Unknown Actor: {{ \"{fdname}\", new Actor(\"{locname ?? fdname.SplitCapsWordFull()}\") }},");
+                System.Diagnostics.Trace.WriteLine($"*** Unknown Actor: {{ \"{fdname}\"), new Actor(\"{locname ?? fdname.SplitCapsWordFull()}\") }},");
                 return null;
             }
         }
 
         // copes with $...;data actors found in NPC messages with semi colon seperated ID text
-        static public Actor GetActorNPC(string fdname)
+        static public Actor GetActorNPC(FDName fdname)
         {
-            int semi = fdname.IndexOf(';');
-            string id = semi>0 ? fdname.Substring(0, semi): fdname;
-            id = id.ToLowerInvariant();
+            int semi = fdname.Str().IndexOf(';');
+            FDName nosemi = new FDName(semi > 0 ? fdname.ToLower().Substring(0, semi) : fdname.ToLower());
 
-            if (actors.TryGetValue(id, out Actor var))
+            if (actors.TryGetValue(nosemi, out Actor var))
             {
-                return new Actor(var.Name + (semi > 0 ? ": " + fdname.Substring(semi + 1).Trim() : ""));
+                return new Actor(var.Name + (semi > 0 ? ": " + fdname.Str().Substring(semi + 1).Trim() : ""));
             }
             else
                 return null;
@@ -62,106 +60,107 @@ namespace EliteDangerousCore
             public Actor(string name) { Name = name; }
         }
 
-        public static Dictionary<string, Actor> actors = new Dictionary<string, Actor>   // DO NOT USE DIRECTLY - public is for checking only
+        // DO NOT USE DIRECTLY - public is for checking only
+        public static Dictionary<FDName, Actor> actors = new Dictionary<FDName, Actor>(new FDNameEqualityComparer())
         {
-             { "skimmerdrone", new Actor("Skimmer Drone") },
-             { "skimmer", new Actor("Skimmer Drone") },
-             { "missileskimmer", new Actor("Skimmer Missile") },
-             { "bossskimmer", new Actor("Boss Skimmer") },
+             { new FDName("skimmerdrone"), new Actor("Skimmer Drone") },
+             { new FDName("skimmer"), new Actor("Skimmer Drone") },
+             { new FDName("missileskimmer"), new Actor("Skimmer Missile") },
+             { new FDName("bossskimmer"), new Actor("Boss Skimmer") },
 
-             { "thargon", new Actor("Thargon") },
-             { "thargonswarm", new Actor("Thargon Swarm") },
-             { "tg_skimmer_01", new Actor("Thargoid Scavenger") },   // seen
-             { "tg_skimmer_02", new Actor("Thargoid Scavenger") },
-             { "tg_skimmer_03", new Actor("Thargoid Scavenger") },
-             { "tg_banshee_01", new Actor("Thargoid Banshee Type 1") },
-             { "tg_banshee_02", new Actor("Thargoid Banshee Type 2") },
-             { "tg_scavenger", new Actor("Thargoid Scavenger") },
-             { "titan_hardpoint01", new Actor("Thargoid Titan") },
-             { "titan_hardpoint02", new Actor("Thargoid Titan") },   // seen
-             { "titan_hardpoint03", new Actor("Thargoid Titan") },
-             { "titan", new Actor("Titan") },
-             { "glaive", new Actor("Thargoid Glaive") },        // seen
-             { "scythe", new Actor("Scythe") },
-             { "scout_cargo", new Actor("Cargo Scout") },
+             { new FDName("thargon"), new Actor("Thargon") },
+             { new FDName("thargonswarm"), new Actor("Thargon Swarm") },
+             { new FDName("tg_skimmer_01"), new Actor("Thargoid Scavenger") },   // seen
+             { new FDName("tg_skimmer_02"), new Actor("Thargoid Scavenger") },
+             { new FDName("tg_skimmer_03"), new Actor("Thargoid Scavenger") },
+             { new FDName("tg_banshee_01"), new Actor("Thargoid Banshee Type 1") },
+             { new FDName("tg_banshee_02"), new Actor("Thargoid Banshee Type 2") },
+             { new FDName("tg_scavenger"), new Actor("Thargoid Scavenger") },
+             { new FDName("titan_hardpoint01"), new Actor("Thargoid Titan") },
+             { new FDName("titan_hardpoint02"), new Actor("Thargoid Titan") },   // seen
+             { new FDName("titan_hardpoint03"), new Actor("Thargoid Titan") },
+             { new FDName("titan"), new Actor("Titan") },
+             { new FDName("glaive"), new Actor("Thargoid Glaive") },        // seen
+             { new FDName("scythe"), new Actor("Scythe") },
+             { new FDName("scout_cargo"), new Actor("Cargo Scout") },
 
-             { "unknownsaucer", new Actor("Thargoid") },
-             { "unknownsaucer_a", new Actor("Thargoid") },
-             { "unknownsaucer_b", new Actor("Thargoid") },
-             { "unknownsaucer_c", new Actor("Thargoid") },
-             { "unknownsaucer_d", new Actor("Thargoid") },
-             { "unknownsaucer_e", new Actor("Thargoid") },  // seen
-             { "unknownsaucer_f", new Actor("Thargoid") },
-             { "unknownsaucer_h", new Actor("Thargoid") },  // seen
+             { new FDName("unknownsaucer"), new Actor("Thargoid") },
+             { new FDName("unknownsaucer_a"), new Actor("Thargoid") },
+             { new FDName("unknownsaucer_b"), new Actor("Thargoid") },
+             { new FDName("unknownsaucer_c"), new Actor("Thargoid") },
+             { new FDName("unknownsaucer_d"), new Actor("Thargoid") },
+             { new FDName("unknownsaucer_e"), new Actor("Thargoid") },  // seen
+             { new FDName("unknownsaucer_f"), new Actor("Thargoid") },
+             { new FDName("unknownsaucer_h"), new Actor("Thargoid") },  // seen
 
-             { "guardian_sentinel", new Actor("Guardian Sentinel") },
+             { new FDName("guardian_sentinel"), new Actor("Guardian Sentinel") },
 
-             { "ps_turretbasemedium02_6m", new Actor("Turret medium 2-6-M") },
-             { "ps_turretbasesmall_3m", new Actor("Turret Small 3 M") },
-             { "ps_turretbasemedium_skiff_6m", new Actor("Turret Medium 6 M") },
+             { new FDName("ps_turretbasemedium02_6m"), new Actor("Turret medium 2-6-M") },
+             { new FDName("ps_turretbasesmall_3m"), new Actor("Turret Small 3 M") },
+             { new FDName("ps_turretbasemedium_skiff_6m"), new Actor("Turret Medium 6 M") },
 
-             { "poi_turretbasea", new Actor("Turret Base") },
-             { "poi_turretbunkera", new Actor("Turret Bunker A") },
-             { "poi_turretplatforma", new Actor("Turret Platform A") },
+             { new FDName("poi_turretbasea"), new Actor("Turret Base") },
+             { new FDName("poi_turretbunkera"), new Actor("Turret Bunker A") },
+             { new FDName("poi_turretplatforma"), new Actor("Turret Platform A") },
 
-             { "mega_defences", new Actor("Mega Defences") },
-             { "mega_turretbunkera", new Actor("Mega Turret Type A") },
-             { "mega_turretplatforma", new Actor("Mega Platform Type A") },
-             { "mega_turretplatformb", new Actor("Mega Platform Type B") },
+             { new FDName("mega_defences"), new Actor("Mega Defences") },
+             { new FDName("mega_turretbunkera"), new Actor("Mega Turret Type A") },
+             { new FDName("mega_turretplatforma"), new Actor("Mega Platform Type A") },
+             { new FDName("mega_turretplatformb"), new Actor("Mega Platform Type B") },
 
-             { "scout", new Actor("Thargoid Scout") },
-             { "scout_q", new Actor("Thargoid Scout (Q)") },
-             { "scout_hq", new Actor("Thargoid Scout (HQ)") },
-             { "scout_nq", new Actor("Thargoid Scout (NQ)") },
+             { new FDName("scout"), new Actor("Thargoid Scout") },
+             { new FDName("scout_q"), new Actor("Thargoid Scout (Q)") },
+             { new FDName("scout_hq"), new Actor("Thargoid Scout (HQ)") },
+             { new FDName("scout_nq"), new Actor("Thargoid Scout (NQ)") },
 
-             { "planetporta", new Actor("Planet Port") },
-             { "planetportb", new Actor("Planet Port") },
-             { "planetportc", new Actor("Planet Port") },
-             { "planetportd", new Actor("Planet Port") },
-             { "planetporte", new Actor("Planet Port") },
-             { "planetportf", new Actor("Planet Port") },
-             { "planetportg", new Actor("Planet Port") },           // seen g, presuming at least a-f
-             { "planetporth", new Actor("Planet Port") },
-             { "planetporti", new Actor("Planet Port") },           // seen up to i now july 24
-             { "planetportj", new Actor("Planet Port") },           // seen may 25
+             { new FDName("planetporta"), new Actor("Planet Port") },
+             { new FDName("planetportb"), new Actor("Planet Port") },
+             { new FDName("planetportc"), new Actor("Planet Port") },
+             { new FDName("planetportd"), new Actor("Planet Port") },
+             { new FDName("planetporte"), new Actor("Planet Port") },
+             { new FDName("planetportf"), new Actor("Planet Port") },
+             { new FDName("planetportg"), new Actor("Planet Port") },           // seen g, presuming at least a-f
+             { new FDName("planetporth"), new Actor("Planet Port") },
+             { new FDName("planetporti"), new Actor("Planet Port") },           // seen up to i now july 24
+             { new FDName("planetportj"), new Actor("Planet Port") },           // seen may 25
 
-             { "diamondback_taxi", new Actor("Taxi (Diamondback)") },
-             { "viper_taxi", new Actor("Taxi (Viper)") },
-             { "adder_taxi", new Actor("Taxi (Adder)") },
-             { "vulture_taxi", new Actor("Taxi (Vulture)") },
+             { new FDName("diamondback_taxi"), new Actor("Taxi (Diamondback)") },
+             { new FDName("viper_taxi"), new Actor("Taxi (Viper)") },
+             { new FDName("adder_taxi"), new Actor("Taxi (Adder)") },
+             { new FDName("vulture_taxi"), new Actor("Taxi (Vulture)") },
 
-             { "oneillcylinder", new Actor("O'Neill Cylinder") },
-             { "oneillorbis", new Actor("O'Neill Orbis") },
-             { "outpostcivilian", new Actor("Civilian Outpost") },
-             { "outpostindustrial", new Actor("Industrial Outpost") },
-             { "outpostcriminal", new Actor("Criminal Outpost") },
-             { "outpostcommercial", new Actor("Commercial Outpost") },
-             { "outpostscientific", new Actor("Scientific Outpost") },
-             { "outpostmilitary", new Actor("Military Outpost") },
-             { "outpost_weaponsplatform_depot", new Actor("Weapons Platform in depot") },
-             { "megashipdockrehab", new Actor("Mega Ship Prison") },
-             { "megashipdocka", new Actor("Mega Ship Dock A") },
-             { "asteroidbase", new Actor("Asteroid Base") },
-             { "bernalsphere", new Actor("Station") },
-             { "coriolis", new Actor("Coriolis Station") },
+             { new FDName("oneillcylinder"), new Actor("O'Neill Cylinder") },
+             { new FDName("oneillorbis"), new Actor("O'Neill Orbis") },
+             { new FDName("outpostcivilian"), new Actor("Civilian Outpost") },
+             { new FDName("outpostindustrial"), new Actor("Industrial Outpost") },
+             { new FDName("outpostcriminal"), new Actor("Criminal Outpost") },
+             { new FDName("outpostcommercial"), new Actor("Commercial Outpost") },
+             { new FDName("outpostscientific"), new Actor("Scientific Outpost") },
+             { new FDName("outpostmilitary"), new Actor("Military Outpost") },
+             { new FDName("outpost_weaponsplatform_depot"), new Actor("Weapons Platform in depot") },
+             { new FDName("megashipdockrehab"), new Actor("Mega Ship Prison") },
+             { new FDName("megashipdocka"), new Actor("Mega Ship Dock A") },
+             { new FDName("asteroidbase"), new Actor("Asteroid Base") },
+             { new FDName("bernalsphere"), new Actor("Station") },
+             { new FDName("coriolis"), new Actor("Coriolis Station") },
 
-             { "carrierdocka", new Actor("Carrier Dock A") },
-             { "carrierdockb", new Actor("Carrier Dock B") },
-             { "carrierdocka_squadron", new Actor("Squadron Carrier Dock A") },
-             { "carrierdockb_squadron", new Actor("Squadron Carrier Dock B") },
+             { new FDName("carrierdocka"), new Actor("Carrier Dock A") },
+             { new FDName("carrierdockb"), new Actor("Carrier Dock B") },
+             { new FDName("carrierdocka_squadron"), new Actor("Squadron Carrier Dock A") },
+             { new FDName("carrierdockb_squadron"), new Actor("Squadron Carrier Dock B") },
 
-             { "federation_capitalship", new Actor("Federation Capital Ship") },
+             { new FDName("federation_capitalship"), new Actor("Federation Capital Ship") },
 
-             { "lizryder", new Actor("Engineer Liz Ryder") },
-             { "heratani", new Actor("Engineer Hera Tani") },
-             { "felicityfarseer", new Actor("Engineer Felicity Farseer") },
-             { "thesarge", new Actor("Engineer The Sarge") },
+             { new FDName("lizryder"), new Actor("Engineer Liz Ryder") },
+             { new FDName("heratani"), new Actor("Engineer Hera Tani") },
+             { new FDName("felicityfarseer"), new Actor("Engineer Felicity Farseer") },
+             { new FDName("thesarge"), new Actor("Engineer The Sarge") },
 
-             { "thedweller", new Actor("The Dweller") },
+             { new FDName("thedweller"), new Actor("The Dweller") },
 
-             { "$name_ax_military", new Actor("AX Military Pilot") },       // seen in NPC texts
+             { new FDName("$name_ax_military"), new Actor("AX Military Pilot") },       // seen in NPC texts
 
-             { "ms_dockablecoreb_twinhull", new Actor("Dockable Twinhull") },
+             { new FDName("ms_dockablecoreb_twinhull"), new Actor("Dockable Twinhull") },
         };
 
 
