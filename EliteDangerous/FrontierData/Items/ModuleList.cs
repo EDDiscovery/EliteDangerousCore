@@ -1704,9 +1704,6 @@ namespace EliteDangerousCore
 
             vanitymodules = new Dictionary<string, ShipModule>
             {
-                {"“mandalay_ppnakato_tail1”", new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"“ Mandalay") },
-                {"“paintjob_cobramkv_ruby_01”", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"“ Paint") },
-                {"“paintjob_sidewinder_faction1_01”", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"“ Paint") },
                 {"adder_shipkit1_bumper1", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Adder Shipkit 1 Bumper 1") },
                 {"adder_shipkit1_bumper2", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Adder Shipkit 1 Bumper 2") },
                 {"adder_shipkit1_bumper3", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Adder Shipkit 1 Bumper 3") },
