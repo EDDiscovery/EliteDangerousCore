@@ -31,6 +31,7 @@ namespace EliteDangerousCore
             PilotsFederation,
             Undefined,      // seen in logs
             PlayerPilots,   // seen in logs
+            FrontlineSolutions, // new operations
         }
 
         // maps the allegiance fdname to an enum.  Spaces can be in the name ("Pilots Federation") to cope with Spansh
