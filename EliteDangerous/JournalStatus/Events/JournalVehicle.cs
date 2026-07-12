@@ -31,7 +31,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Loadout { get; set; }
         public bool PlayerControlled { get; set; }
         public int? ID { get; set; }
-        public bool IsLander => Loadout.ContainsIIC("base") && PlayerControlled == true;
+        public bool IsLander => (Loadout.ContainsIIC("base") || Loadout.ContainsIIC("advanced") || Loadout.ContainsIIC("galactic")) && PlayerControlled == true;
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {

@@ -507,12 +507,12 @@ namespace EliteDangerousCore
                 { "int_fighterbay_size6_class1_free", new ShipModule(-1,ShipModule.ModuleTypes.FighterHangar,"Fighter Hangar Class 6 Rating E Free"){ Cost = 0, Class = 6, Rating = "D", Mass = 40, Integrity = 80, PowerDraw = 0.35, BootTime = 5, Capacity = 2, Rebuilds = 8, AmmoCost = 1030 } },
                 { "int_fighterbay_size7_class1_free", new ShipModule(-1,ShipModule.ModuleTypes.FighterHangar,"Fighter Hangar Class 7 Rating E Free"){ Cost = 0, Class = 7, Rating = "D", Mass = 60, Integrity = 120, PowerDraw = 0.35, BootTime = 5, Capacity = 2, Rebuilds = 15, AmmoCost = 1030 } },
 
-                { "int_fighterbaymk2_size7_class1", new ShipModule(129045541,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar (Free) Class 7 Rating E") },
-                { "int_fighterbaymk2_size7_class1_free", new ShipModule(129045679,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar (Free) Class 7 Rating E") },
-                { "int_fighterbaymk2_size6_class1", new ShipModule(129045539,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar Class 6 Rating E") },
-                { "int_fighterbaymk2_size6_class1_free", new ShipModule(129045678,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar (Free) Class 6 Rating E") },
-                { "int_fighterbaymk2_size5_class1", new ShipModule(129045540,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar Class 5 Rating E") },
-                { "int_fighterbaymk2_size5_class1_free", new ShipModule(129045677,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar (Free) Class 5 Rating E") },
+                { "int_fighterbaymk2_size7_class1", new ShipModule(129045541,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar (Free) Class 7 Rating D") { Cost = 2869128, Class = 7, Rating = "D", Mass = 30, Integrity = 120, PowerDraw = 0.35, BootTime = 5, Capacity = 2 }},
+                { "int_fighterbaymk2_size7_class1_free", new ShipModule(129045679,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar (Free) Class 7 Rating D") { Cost = 0, Class = 7, Rating = "D", Mass = 30, Integrity = 120, PowerDraw = 0.35, BootTime = 5, Capacity = 2 }},
+                { "int_fighterbaymk2_size6_class1", new ShipModule(129045539,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar Class 6 Rating D") { Cost = 2264678, Class = 6, Rating = "D", Mass = 20, Integrity = 80, PowerDraw = 0.35, BootTime = 5, Capacity = 2 }},
+                { "int_fighterbaymk2_size6_class1_free", new ShipModule(129045678,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar (Free) Class 6 Rating D")  { Cost = 0, Class = 6, Rating = "D", Mass = 20, Integrity = 80, PowerDraw = 0.35, BootTime = 5, Capacity = 2 }},
+                { "int_fighterbaymk2_size5_class1", new ShipModule(129045540,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar Class 5 Rating D") { Cost = 0, Class = 505128, Rating = "D", Mass = 10, Integrity = 60, PowerDraw = 0.25, BootTime = 5, Capacity = 1 }},
+                { "int_fighterbaymk2_size5_class1_free", new ShipModule(129045677,ShipModule.ModuleTypes.FighterHangar,"MKII Vessel Hangar (Free) Class 5 Rating D") { Cost = 0, Class = 5, Rating = "D", Mass = 10, Integrity = 60, PowerDraw = 0.25, BootTime = 5, Capacity = 1 }},
 
 
                 // flak
@@ -8045,6 +8045,7 @@ namespace EliteDangerousCore
                 {"paintjob_type9_military_ruby_05", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Ruby 5") },
                 {"paintjob_type9_military_ruby_06", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Ruby 6") },
                 {"paintjob_type9_military_squadron_black", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Squadron Black") },
+                {"paintjob_type9_military_squadron_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Squadron Blue") },
                 {"paintjob_type9_military_squadron_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Squadron Green") },
                 {"paintjob_type9_military_tactical_blue", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Tactical Blue") },
                 {"paintjob_type9_military_tactical_green", new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Tactical Green") },
