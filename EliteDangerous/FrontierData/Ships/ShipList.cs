@@ -367,10 +367,8 @@ namespace EliteDangerousCore
         public void SetUserShipName(JournalSetUserShipName e)
         {
             string sid = Key(e.ShipFD, e.ShipID);
-
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
             Ships[sid] = sm.SetShipDetails(e.Ship, e.ShipFD, e.ShipName, e.ShipIdent); // will clone if data changed..
-            currentid = sid;           // must be in it to do this
             VerifyList();
         }
 
