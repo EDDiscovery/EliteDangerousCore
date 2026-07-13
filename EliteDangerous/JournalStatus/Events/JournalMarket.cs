@@ -189,9 +189,8 @@ namespace EliteDangerousCore.JournalEvents
         public JournalMarketBuy(JObject evt) : base(evt, JournalTypeEnum.MarketBuy)
         {
             MarketID = evt["MarketID"].LongNull();
-            Type = evt["Type"].FDNameNormalise();        // must be FD name
-            Type = JournalFieldNaming.FDNameTranslation(Type);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyType = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Type);           // our translation..
+            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname);
+            FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
             Count = evt["Count"].Int();
             BuyPrice = evt["BuyPrice"].Long();
@@ -238,9 +237,8 @@ namespace EliteDangerousCore.JournalEvents
         public JournalMarketSell(JObject evt) : base(evt, JournalTypeEnum.MarketSell)
         {
             MarketID = evt["MarketID"].LongNull();
-            Type = evt["Type"].FDNameNormalise();                           // FDNAME
-            Type = JournalFieldNaming.FDNameTranslation(Type);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyType = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Type); // goes thru the translator..
+            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname);
+            FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
             Count = evt["Count"].Int();
             SellPrice = evt["SellPrice"].Long();

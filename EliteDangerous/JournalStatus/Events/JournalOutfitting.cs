@@ -80,7 +80,6 @@ namespace EliteDangerousCore.JournalEvents
 
         public long? MarketID { get; set; }
         public bool? Horizons { get; set; }
-
         public override string GetInfo() 
         {
             return YardInfo.Items != null ? (YardInfo.Items.Length.ToString() + " items available".Tx()) : "";

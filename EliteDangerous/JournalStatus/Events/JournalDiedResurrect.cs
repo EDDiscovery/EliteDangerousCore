@@ -14,6 +14,7 @@
  *
  */
 using QuickJSON;
+using System;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -61,10 +62,12 @@ namespace EliteDangerousCore.JournalEvents
             }
             else
             {
+                var ShipType = FDNameHelpers.NormaliseShip(evt["KillerShip"].Str(), out string _);
+
                 // it was an individual
                 Killers = new Killer[1]
                 {
-                    new Killer {  Name = killerName, Name_Localised = evt["KillerName_Localised"].Str(), Ship = evt["KillerShip"].FDNameNormaliseShip(),  Rank = evt["KillerRank"].Str() }
+                    new Killer {  Name = killerName, Name_Localised = evt["KillerName_Localised"].Str(), Ship = ShipType,  Rank = evt["KillerRank"].Str() }
                 };
             }
 
@@ -74,7 +77,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     k.Name = k.Name ?? "";      // ensure set - may not be set for a bad Killers array
                     k.Name_Localised = JournalFieldNaming.CheckLocalisation(k.Name_Localised ?? "", k.Name);
-                    k.FriendlyShip = JournalFieldNaming.GetBetterShipSuitActorName(k.Ship);
+                    k.FriendlyShip = k.Ship.GetBetterShipSuitActorName();
                     //System.Diagnostics.Debug.WriteLine($" >> Died '{k.Name}' '{k.Name_Localised}' '{k.Ship}' '{k.FriendlyShip}' '{k.Rank}'");
                 }
             }
@@ -154,14 +157,17 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalResurrect(JObject evt) : base(evt, JournalTypeEnum.Resurrect)
         {
-            FDOption = evt["Option"].Str();
-            Option = JournalFieldNaming.ResurrectOption(FDOption);
+            FDOption = Enum.TryParse(evt["Option"].Str(), true, out ResurrectTypes s) ? s : ResurrectTypes.Unknown;
+            if (FDOption == ResurrectTypes.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown Resurrect {(evt["Option"].Str())}");
+            Option = FDOption.ToString().SplitCapsWordFull();
             Cost = evt["Cost"].Long();
             Bankrupt = evt["Bankrupt"].Bool();
         }
 
         public string Option { get; set; }      // Friendly, not FDName
-        public string FDOption { get; set; }
+
+        public enum ResurrectTypes { Free, Rebuy, Recover, HandIn, Rejoin, Unknown };
+        public ResurrectTypes FDOption { get; set; }
         public long Cost { get; set; }
         public bool Bankrupt { get; set; }
 

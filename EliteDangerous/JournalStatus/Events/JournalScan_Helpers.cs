@@ -50,6 +50,12 @@ namespace EliteDangerousCore.JournalEvents
             return Materials == null || !Materials.ContainsKey(v) ? 0.0 : Materials[v];
         }
 
+        public double GetMaterialStr(string v)
+        {
+            var fd = new FDName(v);
+            return Materials == null || !Materials.ContainsKey(fd) ? 0.0 : Materials[fd];
+        }
+
         public double? GetAtmosphereComponent(string c)
         {
             if (!HasAtmosphericComposition)

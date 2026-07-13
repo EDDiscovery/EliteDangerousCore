@@ -52,10 +52,10 @@ namespace EliteDangerousCore.JournalEvents
         {
             LoadGameCommander = JournalFieldNaming.SubsituteCommanderName( evt["Commander"].Str() );
             
-            ShipFD = evt["Ship"].FDName();
+            ShipFD = evt["Ship"].FDName();              
             Ship_Localised = evt["Ship_Localised"].StrNull();       // may not be present
 
-            if (!ShipFD.Valid)      // Vega logs show no ship on certain logs.. handle it to prevent warnings.
+            if (!ShipFD.IsValid())      // Vega logs show no ship on certain logs.. handle it to prevent warnings.
             {
                 ShipType = Ship_Localised = UnknownShip;
             }
@@ -63,16 +63,17 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (ItemData.IsShipOrSRVOrFighterOrLander(ShipFD))
                 {
-                    ShipFD.NormaliseShip();
-                    ShipType = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
+                    ShipFD = FDNameHelpers.NormaliseShip(ShipFD.Str(),out string bettername);
+                    ShipType = bettername;
                 }
                 else if ( ItemData.IsSuit(ShipFD))      
                 {
-                    ShipType = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
+                    ShipType = ShipFD.GetBetterShipSuitActorName();
                 }
                 else if ( ItemData.IsTaxi(ShipFD))
                 {
-                    ShipType = JournalFieldNaming.GetBetterShipSuitActorName(new FDName(ShipFD.Str().Replace("_taxi","")));
+                    ShipFD = new FDName(ShipFD.Str().Replace("_taxi", ""));
+                    ShipType = ShipFD.GetBetterShipSuitActorName();
                 }
                 else
                 {

@@ -489,8 +489,8 @@ namespace EliteDangerousCore.Inara
 
             if (mission.Target.HasChars())
                 eventData["targetName"] = mission.Target;
-            if (mission.TargetType.HasChars())
-                eventData["targetType"] = mission.TargetType;
+            if (mission.TargetType > MissionDefinitions.TargetType.NotGiven)
+                eventData["targetType"] = MissionDefinitions.ToFD(mission.TargetType);
             if (mission.KillCount != null)
                 eventData["killCount"] = mission.KillCount;
 

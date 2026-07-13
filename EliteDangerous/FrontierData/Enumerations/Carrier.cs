@@ -41,6 +41,69 @@ namespace EliteDangerousCore
         {
             return ToEnglish(al).Tx();
         }
+
+        public enum ServiceOperationType { Activate, Deactivate, Pause, Resume, Replace, Unknown }
+        public enum ModulePackOperationType { BuyPack, SellPack, RestockPack, Unknown }
+        public enum ShipPackOperationType { BuyPack, SellPack, RestockPack, Unknown }
+
+        // as per frontier CrewRole Entry
+        public enum ServiceType
+        {
+            BridgeCrew, CommodityTrading, TritiumDepot,        // not listed in crew services, but core items
+            Refuel, Repair, Rearm, VoucherRedemption, Shipyard, Outfitting, BlackMarket, Exploration, Bartender, VistaGenomics, PioneerSupplies,
+            Unknown
+        };
+        static public string GetTranslatedServiceName(ServiceType t) { return translatedname[(int)t]; }
+        static public bool IsOptionalService(ServiceType t) { return t >= ServiceType.Refuel && t != ServiceType.Unknown; }
+        static public bool IsValidService(ServiceType t) { return t != ServiceType.Unknown; }
+
+        private static string[] translatedname = new string[] {
+            "Bridge Crew".Tx(),
+            "Commodity Trading".Tx(),
+            "Tritium Depot".Tx(),
+            "Refuel Station".Tx(),
+            "Repair Crews".Tx(),
+            "Armoury".Tx(),
+            "Redemption Office".Tx(),
+            "Shipyard".Tx(),
+            "Outfitting".Tx(),
+            "Secure Warehouse".Tx(),
+            "Universal Cartographics".Tx(),
+            "Concourse Bar".Tx(),
+            "Vista Genomics".Tx(),
+            "Pioneer Supplies".Tx(),
+            "Unknown",
+        };
+        static public int GetServiceCount() { var entries = Enum.GetValues(typeof(ServiceType)); return entries.Length - 1; }      // ignore Unknown
+
+        [System.Diagnostics.DebuggerDisplay("{Service} {CargoSize}t {InstallCost}cr up {UpkeepCost}")]
+        public class ServicesData       // https://elite-dangerous.fandom.com/wiki/Drake-Class_Carrier
+        {
+            public ServicesData(CarrierDefinitions.ServiceType t, long cost, long upkeep, long suspendedcost, int cargosize)
+            { Service = t; InstallCost = cost; UpkeepCost = upkeep; SuspendedUpkeepCost = suspendedcost; CargoSize = cargosize; }
+            public CarrierDefinitions.ServiceType Service { get; set; }
+            public long InstallCost { get; set; }
+            public long UpkeepCost { get; set; }
+            public long SuspendedUpkeepCost { get; set; }
+            public long CargoSize { get; set; }
+        }
+
+        private static ServicesData[] ServiceInformation = new ServicesData[]        // verified with game oct 22
+        {
+            new ServicesData(ServiceType.Refuel,40000000,1500000,750000,500),
+            new ServicesData(ServiceType.Repair,50000000,1500000,750000,180),
+            new ServicesData(ServiceType.Rearm,95000000,1500000,750000,250),
+            new ServicesData(ServiceType.VoucherRedemption,150000000,1850000,850000,100),
+            new ServicesData(ServiceType.Shipyard,250000000,6500000,1800000,3000),
+            new ServicesData(ServiceType.Outfitting,250000000,5000000,1500000,1750),
+            new ServicesData(ServiceType.BlackMarket,165000000,2000000,1250000,250),
+            new ServicesData(ServiceType.Exploration,150000000,1850000,700000,120),
+            new ServicesData(ServiceType.Bartender,200000000,1750000,1250000,150),
+            new ServicesData(ServiceType.VistaGenomics,150000000,1500000,700000,120),
+            new ServicesData(ServiceType.PioneerSupplies,250000000,5000000,1500000,200),
+        };
+        public static ServicesData GetDataOnServiceType(ServiceType t) { return Array.Find(CarrierDefinitions.ServiceInformation, x => x.Service == t); }
+
     }
 }
 

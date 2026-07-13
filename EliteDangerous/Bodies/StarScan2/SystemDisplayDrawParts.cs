@@ -100,7 +100,7 @@ namespace EliteDangerousCore.StarScan2
         }
 
         // Create a signals image, with single image at 0,0 centred
-        private ExtendedControls.ImageElement.List DrawSignals( List<FSSSignal> signallist,         // may be null
+        private ExtendedControls.ImageElement.List DrawSignals( List<Signal> signallist,         // may be null
                                                      List<JournalCodexEntry> codex,      // may be null
                                                      List<IBodyFeature> stations,        // may be null
                                                      int height,  ContextMenuStrip rightclickmenu)
@@ -110,17 +110,17 @@ namespace EliteDangerousCore.StarScan2
             Bitmap bmp = new Bitmap(iconsize, height);
 
             if (signallist == null)
-                signallist = new List<FSSSignal>();     // makes code simpler if we have one
+                signallist = new List<Signal>();     // makes code simpler if we have one
 
             int[] count = new int[]     // in priority order
             {
-                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Station && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
-                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Carrier && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
-                signallist.Where(x => (x.ClassOfSignal == SignalDefinitions.Classification.Installation || x.ClassOfSignal == SignalDefinitions.Classification.Megaship) && x.HasNotExpired(ShowExpiredSignalIcons)).Count(), //before the megaship calssification they were counted as installations, so put them here to not lose the count - might need something better in the future like their own icon
-                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.NotableStellarPhenomena && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
-                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.ResourceExtraction && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
-                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.ConflictZone && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
-                signallist.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.USS && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
+                signallist.Where(x => x.ClassOfSignal == Signal.Classification.Station && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
+                signallist.Where(x => x.ClassOfSignal == Signal.Classification.Carrier && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
+                signallist.Where(x => (x.ClassOfSignal == Signal.Classification.Installation || x.ClassOfSignal == Signal.Classification.Megaship) && x.HasNotExpired(ShowExpiredSignalIcons)).Count(), //before the megaship calssification they were counted as installations, so put them here to not lose the count - might need something better in the future like their own icon
+                signallist.Where(x => x.ClassOfSignal == Signal.Classification.NotableStellarPhenomena && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
+                signallist.Where(x => x.ClassOfSignal == Signal.Classification.ResourceExtraction && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
+                signallist.Where(x => x.ClassOfSignal == Signal.Classification.ConflictZone && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
+                signallist.Where(x => x.ClassOfSignal == Signal.Classification.USS && x.HasNotExpired(ShowExpiredSignalIcons)).Count(),
                 0, // 7, slot for others/expired
                 0, // 8, slot for codex
             };
@@ -178,11 +178,11 @@ namespace EliteDangerousCore.StarScan2
 
             string tip = "";
 
-            var notexpired = FSSSignal.NotExpiredSorted(signallist);
+            var notexpired = Signal.NotExpiredSorted(signallist);
             foreach (var sig in notexpired)
                 tip = tip.AppendPrePad(sig.ToString(), Environment.NewLine);
 
-            var expired = FSSSignal.ExpiredSorted(signallist);
+            var expired = Signal.ExpiredSorted(signallist);
             if (expired.Count > 0)
             {
                 tip = tip.AppendPrePad("Expired".Tx() + ": ", Environment.NewLine + Environment.NewLine);

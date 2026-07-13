@@ -44,19 +44,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Normalise(string cat)
         {
-            if (Name.Valid)
-            {
-                //Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, Name);      // don't bother, its not used
-                if (cat != null)
-                    Category = cat;
-            }
-            else
-            {
-                Name = new FDName("Missing Microresource Name - report");
-                Name_Localised = "Missing Microresource Name - report";
-                Category = "ERROR";
-                System.Diagnostics.Trace.WriteLine("Microresource journal without Name detected");
-            }
+            Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname);
+            if (cat != null)
+                Category = cat;
         }
 
         static public void Normalise(MicroResource[] a, string cat)
@@ -267,7 +257,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else
             {                                       // single entry style
-                Items = new List<MicroResource>() { new MicroResource() };
+                Items = new List<MicroResource>() { new MicroResource() { Name = new FDName("Dummy") } };
                 evt.ToObjectProtected(Items[0].GetType(), true, membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                                             initialobject:Items[0]);        // read fields named in this structure matching JSON names
             }
@@ -403,15 +393,14 @@ namespace EliteDangerousCore.JournalEvents
             // Collect Name, Name_Localised, Category, Count
             Offered = evt["Offered"]?.ToObjectQ<MicroResource[]>()?.ToArray();
             MicroResource.Normalise(Offered,null);
-            Received = evt["Received"].FDNameNormalise();
-            Received_Localised = evt["Received_Localised"].Str();
+
+            Received = FDNameHelpers.NormaliseMatCommods(evt["Received"].Str(), out string engname);
+            Received_FriendlyName = engname;
+            Received_Localised = JournalFieldNaming.CheckLocalisation(evt["Received_Localised"].Str(), Received_FriendlyName); 
+
             Category = evt["Category"].Str();
             Count = evt["Count"].Int();
             MarketID = evt["MarketID"].Long();
-
-            Received_Localised = JournalFieldNaming.CheckLocalisation(Received_Localised, Received.Str());
-            Received = JournalFieldNaming.FDNameTranslation(Received);
-            Received_FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Received);
         }
 
         public MicroResource[] Offered { get; set; }
@@ -445,7 +434,7 @@ namespace EliteDangerousCore.JournalEvents
                     mc.ChangeMR(MicroResource.ShipLocker, EventTimeUTC, m.Category, m.Name, -m.Count);
                 }
 
-                if (Received.Valid)
+                if (Received.IsValid())
                 {
                     MaterialCommodityMicroResourceType.EnsurePresent(Category, Received, Received_Localised);
                     mc.ChangeMR(MicroResource.ShipLocker, EventTimeUTC, Category, Received, Count);

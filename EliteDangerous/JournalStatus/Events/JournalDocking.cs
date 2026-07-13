@@ -128,16 +128,18 @@ namespace EliteDangerousCore.JournalEvents
         public string AssociatedFaction => Faction;
 
         // these are EconomyDefinitions.Economies
-        public bool HasAnyEconomyTypes(string[] fdnames)
+        public bool HasAnyEconomyTypes(EconomyDefinitions.Economy[] fdnames)
         {
-            return fdnames != null && (fdnames.Equals(Economy.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0 ||
-                            (EconomyList != null && Array.FindIndex(EconomyList, 0, x => fdnames.Equals(x.Name.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0));
+            return fdnames != null && (Array.IndexOf(fdnames, Economy) >= 0 || 
+                            (EconomyList!=null && Array.FindIndex(EconomyList,0,x=>Array.IndexOf(fdnames,x)>=0) >=0)
+                    );
+
         }
 
         // these are StationDefinitions.StationServices
-        public bool HasAnyServicesTypes(string[] fdnames)
+        public bool HasAnyServicesTypes(StationDefinitions.StationServices[] fdnames)
         {
-            return fdnames != null && StationServices != null && Array.FindIndex(StationServices, 0, x => fdnames.Equals(x.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0) >= 0;
+            return fdnames != null && StationServices != null && Array.FindIndex(StationServices, 0, x => Array.IndexOf(fdnames,x) >= 0) >= 0;
         }
 
         public class LandingPadList
@@ -231,8 +233,8 @@ namespace EliteDangerousCore.JournalEvents
             var snl = JournalFieldNaming.GetStationNames(evt);
             StationName = snl.Item1;
             StationName_Localised = snl.Item2;
-            FDReason = evt["Reason"].Str();
-            Reason = JournalFieldNaming.DockingDeniedReason(FDReason);
+            FDReason = evt["Reason"].FDName();
+            Reason = FDReason.SplitCapsWordFull();
             FDStationType = StationDefinitions.StarportTypeToEnum( evt["StationType"].StrNull());  // may not be there
             StationType = StationDefinitions.ToEnglish(FDStationType);
             MarketID = evt["MarketID"].LongNull();
@@ -241,7 +243,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationName { get; set; }
         public string StationName_Localised { get; set; }
         public string Reason { get; set; }      // friendly reason make cleaner
-        public string FDReason { get; set; }    // frontier ID
+        public FDName FDReason { get; set; }    // frontier ID
         public string StationType { get; set; } // english, only on later events, else Unknown
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public long? MarketID { get; set; }

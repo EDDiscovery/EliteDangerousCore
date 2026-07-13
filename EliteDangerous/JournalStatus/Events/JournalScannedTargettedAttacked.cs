@@ -17,6 +17,7 @@ using QuickJSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -25,12 +26,14 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalScanned(JObject evt) : base(evt, JournalTypeEnum.Scanned)
         {
-            FDScanType = evt["ScanType"].Str();
-            ScanType = JournalFieldNaming.ScanType(FDScanType);
+            FDScanType = Enum.TryParse(evt["ScanType"].Str(), true, out ScanTypes s) ? s : ScanTypes.Unknown;
+            if (FDScanType == ScanTypes.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown Scanned {(evt["ScanType"].Str())}");
+            ScanType = FDScanType.ToString().SplitCapsWordFull();
         }
 
+        public enum ScanTypes { Cargo , Unknown };
         public string ScanType { get; set; }        // Friendly, not FDEV
-        public string FDScanType { get; set; }        // fdname
+        public ScanTypes FDScanType { get; set; }        // fdname
 
         public override string GetInfo()
         {
@@ -45,12 +48,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             TargetLocked = evt["TargetLocked"].Bool();
 
-            ShipFD = evt["Ship"].FDName();
-            if (ItemData.IsShip(ShipFD))
-            {
-                ShipFD.NormaliseShip();
-                Ship = JournalFieldNaming.GetBetterShipSuitActorName(ShipFD);
-            }
+            ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(),out string bettername);
+            Ship = bettername;
 
             Ship_Localised = JournalFieldNaming.CheckLocalisation(evt["Ship_Localised"].Str(), Ship);
 

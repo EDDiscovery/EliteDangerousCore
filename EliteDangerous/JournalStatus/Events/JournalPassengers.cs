@@ -28,7 +28,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             public ulong MissionID { get; set; }
             public string Type { get; set; }          // Friendly name, not fdev
-            public string FDType { get; set; }        // FDtype
+            public enum PassengerType { Tourist, Refugee, Soldier, Explorer, Terrorist,  Buisness, AidWorker, Security, MinorCelebrity, Criminal, Politician, Protestor,
+                                        Medical, HeadOfState, PoliticalPrisoner, Scientist, POW, Unknown };
+            public PassengerType FDType { get; set; }        // FDtype
             public bool VIP { get; set; }
             public bool Wanted { get; set; }
             public int Count { get; set; }
@@ -45,8 +47,9 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (Passengers p in Manifest)
                 {
-                    p.FDType = p.Type;
-                    p.Type = JournalFieldNaming.PassengerType(p.FDType);
+                    p.FDType = Enum.TryParse(p.Type, true, out Passengers.PassengerType s) ? s : Passengers.PassengerType.Unknown;
+                    if (p.FDType == Passengers.PassengerType.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown Passenger type {p.Type}");
+                    p.Type = p.FDType.ToString().SplitCapsWordFull();
                 }
             }
         }

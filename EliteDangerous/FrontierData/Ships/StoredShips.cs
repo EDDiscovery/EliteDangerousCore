@@ -38,8 +38,8 @@ namespace EliteDangerousCore
 
         public void Normalise()
         {
-            ShipTypeFD = FDName.NormaliseShip(ShipType);
-            ShipType = JournalFieldNaming.GetBetterShipName(ShipTypeFD);
+            ShipTypeFD = FDNameHelpers.NormaliseShip(ShipType, out string bettername);
+            ShipType = bettername;
             ShipType_Localised = ShipType_Localised.Alt(ShipType);
             TransferTimeSpan = new System.TimeSpan((int)(TransferTime / 60 / 60), (int)((TransferTime / 60) % 60), (int)(TransferTime % 60));
             TransferTimeString = TransferTimeSpan.ToString();

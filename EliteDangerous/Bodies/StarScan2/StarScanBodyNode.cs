@@ -76,12 +76,12 @@ namespace EliteDangerousCore.StarScan2
         public double? SMA { get { return Scan != null ? Scan.nSemiMajorAxis : BarycentreScan != null ? BarycentreScan.SemiMajorAxis : BeltData != null ? BeltData.InnerRad : default(double?); } }
         public double? DistLS { get { return Scan != null ? Scan.DistanceFromArrivalLS : default(double?); } }
 
-        public List<JournalSAASignalsFound.SAASignal> Signals { get; private set; } = null;
-        public List<JournalSAASignalsFound.SAAGenus> Genuses { get; private set; } = null;
+        public List<SAASignal> Signals { get; private set; } = null;
+        public List<SAAGenus> Genuses { get; private set; } = null;
         public List<JournalScanOrganic> Organics { get; internal set; } = null;
         public List<IBodyFeature> Features { get; internal set; } = null;               // In SystemNode::SystemBodies we store orbiting stations, for other bodies we store JournalDocked, Touchdown, ApproachSettlement.  
         public List<JournalCodexEntry> CodexEntries { get; private set; } = null;
-        public List<FSSSignal> FSSSignalList { get; private set; } = null;              // only for SystemBodies in StarScan.SystemNode
+        public List<Signal> FSSSignalList { get; private set; } = null;              // only for SystemBodies in StarScan.SystemNode
 
         public bool IsMapped { get; private set; }                                      // recorded here since the scan data can be replaced by a better version later.
         public bool WasMappedEfficiently { get; private set; }
@@ -614,11 +614,11 @@ namespace EliteDangerousCore.StarScan2
         {
             BeltData = sc;
         }
-        public void AddSignals(List<JournalSAASignalsFound.SAASignal> sc)
+        public void AddSignals(List<SAASignal> sc)
         {
             if (Signals == null)
             {
-                Signals = new List<JournalSAASignalsFound.SAASignal>();
+                Signals = new List<SAASignal>();
                 if (Scan != null)               // if we have a scan, we need to point the scan node to the Signals so it can see them
                     Scan.Signals = Signals;
             }
@@ -630,11 +630,11 @@ namespace EliteDangerousCore.StarScan2
                     Signals.Add(g);
             }
         }
-        public void AddGenuses(List<JournalSAASignalsFound.SAAGenus> sc)
+        public void AddGenuses(List<SAAGenus> sc)
         {
             if (Genuses == null)
             {
-                Genuses = new List<JournalSAASignalsFound.SAAGenus>();
+                Genuses = new List<SAAGenus>();
                 if (Scan != null)               // if we have a scan, we need to point the scan node to the item so it can see them
                     Scan.Genuses = Genuses;
             }
@@ -723,10 +723,10 @@ namespace EliteDangerousCore.StarScan2
         }
 
 
-        public void AddFSSSignals(List<FSSSignal> signals)
+        public void AddFSSSignals(List<Signal> signals)
         {
             if (FSSSignalList == null)
-                FSSSignalList = new List<FSSSignal>();
+                FSSSignalList = new List<Signal>();
 
             foreach (var s in signals)
             {
@@ -871,7 +871,7 @@ namespace EliteDangerousCore.StarScan2
             }
             foreach (var x in Signals.EmptyIfNull())
             {
-                sp.Append($"{pad}S:{x.Type_Localised ?? x.Type} {x.Count}");
+                sp.Append($"{pad}S:{x.Type_Localised ?? x.Type.Str()} {x.Count}");
                 sp.AppendCR();
             }
             foreach (var x in Organics.EmptyIfNull())
@@ -881,7 +881,7 @@ namespace EliteDangerousCore.StarScan2
             }
             foreach (var x in Genuses.EmptyIfNull())
             {
-                sp.Append($"{pad}G:{x.Genus_Localised ?? x.Genus}");
+                sp.Append($"{pad}G:{x.Genus_Localised ?? x.Genus.Str()}");
                 sp.AppendCR();
             }
             foreach (var x in FSSSignalList.EmptyIfNull())

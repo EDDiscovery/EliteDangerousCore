@@ -16,29 +16,44 @@ using QuickJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Schema;
 
 namespace EliteDangerousCore
 {
+    // purposely not doing auto conversion to/from string so the use of FDName can be found easier
+
     [System.Diagnostics.DebuggerDisplay("FD {fdname}")]
-    public class FDName : IComparable, IEqualityComparer<FDName>, IEquatable<FDName>
+    public class FDName : IEquatable<FDName>, IComparable<FDName>
     {
-        private string fdname;
-        private string fdname_lower;
-        private int hashcode;
+        public FDName()
+        {
+            this.fdname = this.fdname_lower = "Unknown";
+            this.hashcode = this.fdname_lower.GetHashCode();
+        }
 
         public FDName(string fdname)
         {
-            this.fdname = fdname.HasChars()? fdname : "Unknown";
+            this.fdname = fdname.HasChars() ? fdname : "Unknown";
             this.fdname_lower = this.fdname.ToLowerInvariant();
             this.hashcode = this.fdname_lower.GetHashCode();
         }
+
+        public FDName(QuickJSON.JToken token)      // new July 26 QuickJson constructor
+        {
+            string txt = token.Str("Unknown");
+            this.fdname = txt;
+            this.fdname_lower = this.fdname.ToLowerInvariant();
+            this.hashcode = this.fdname_lower.GetHashCode();
+        }
+
+        public static FDName Empty => new FDName();
 
         public FDName Clone()
         {
             return new FDName(this.fdname);
         }
 
-        public bool Valid => !this.fdname.Equals("Unknown");
+        public bool IsValid => !this.fdname.Equals("Unknown");
 
         public string Str()
         {
@@ -48,54 +63,172 @@ namespace EliteDangerousCore
         {
             return fdname.AlwaysQuoteString();
         }
-
         public string ToLower()
         {
             return fdname_lower;
         }
-
         public string SplitCapsWordFull()
         {
             return fdname.SplitCapsWordFull();
         }
 
-
-        [System.Diagnostics.DebuggerHidden()]       
-        public static explicit operator FDName(string fdname)
+        public QuickJSON.JToken ToJToken()      // new July26 converter for JTOKEN
         {
-            System.Diagnostics.Debug.Assert(false);
-            System.Diagnostics.Debug.WriteLine("Implicit Convert");
-            return new FDName(fdname);
+            return new JToken(fdname);
+        }
+
+        #region Compare
+
+        public static bool operator ==(FDName left, FDName right) { return left is null && right is null ? true : right is null ? false : left.Equals(right); }
+        public static bool operator !=(FDName left, FDName right) { return left is null && right is null ? false : left is null ? true : !left.Equals(right); }
+
+        public override bool Equals(Object obj)        // other may be null
+        {
+            return obj is FDName other ? other.fdname_lower.EqualsIIC(this.fdname_lower) : false;
+        }
+
+        public bool Equals(FDName right)        // other may be null
+        {
+            return !(right is null) && right.fdname_lower.EqualsIIC(this.fdname_lower);
+        }
+
+        public bool Equals(string right)        // other may be null
+        {
+            return right is null ? false : this.fdname_lower.EqualsIIC(right);
+        }
+        public int CompareTo(FDName other)
+        {
+            return fdname_lower.CompareTo(other.fdname_lower); 
+        }
+
+        public int GetHashCode(FDName obj)
+        {
+            return obj.hashcode;
+        }
+        public override int GetHashCode()
+        {
+            return hashcode;
+        }
+
+        public bool Contains(string partname)
+        {
+            return fdname_lower.ContainsIIC(partname.ToLowerInvariant());
+        }
+
+        public bool EndsWith(string partname)
+        {
+            return fdname_lower.EndsWithIIC(partname.ToLowerInvariant());
+        }
+
+        #endregion
+
+        #region Misc
+        public int GetClass()
+        {
+            int ci = fdname_lower.IndexOf("class");
+            int classn = ci > 0 ? fdname_lower.Substring(ci + 5, 1).InvariantParseInt(0) : 0;
+            return classn;
+        }
+
+        public bool IsWeaponArmour()
+        {
+            return fdname_lower.StartsWith("hpt_", StringComparison.InvariantCultureIgnoreCase) ||
+                                            fdname_lower.StartsWith("Int_", StringComparison.InvariantCultureIgnoreCase) ||
+                                            fdname_lower.Contains("_armour_", StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public string GetForeignModuleName(string loc = null, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
+        {
+            if (ItemData.TryGetShipModule(this, out ItemData.ShipModule item, true, slot))
+                return item.TranslatedModTypeString();
+            else
+                return loc ?? fdname;
+        }
+
+        public string GetBetterShipSuitActorName()
+        {
+            if (IsValid == false)
+                return "No Ship/Actor/Suit Name Given";
+
+            string i = ItemData.GetShipName(this);
+
+            if (i != null)
+            {
+                return i;
+            }
+            else if (ItemData.IsActor(this))
+            {
+                string n = ItemData.GetActor(this).Name;
+                return n;
+            }
+            else if (ItemData.IsSuit(this))
+            {
+                return ItemData.GetSuit(this).Name;
+            }
+            else
+            {
+                System.Diagnostics.Trace.WriteLine($"*** Unknown Ship/Suit/Actor: {{ \"{fdname}\", new Actor(\"{SplitCapsWordFull()}\") }},");
+                return SplitCapsWordFull();
+            }
         }
 
 
-        public static explicit operator string(FDName fd)
+        #endregion
+
+        #region vars
+        private string fdname;
+        private string fdname_lower;
+        private int hashcode;
+        #endregion
+    }
+
+    public class FDNameEqualityComparer : IEqualityComparer<FDName>
+    {
+        public bool Equals(FDName left, FDName right)
         {
-            return fd.fdname;
+            return left.Equals(right);
         }
 
-
-        public void Normalise()
+        public int GetHashCode(FDName obj)
         {
-            var norm = Normalise(fdname);
-            fdname = norm.fdname;
-            fdname_lower = norm.fdname_lower;
-            hashcode = norm.hashcode;
+            return obj.GetHashCode();
         }
-        public void NormaliseShip()
+    }
+
+    public static class FDNameHelpers
+    {
+        public static FDName FDName(this JToken tk)     // always gives a non null fdname with non null str()
         {
-            var norm = NormaliseShip(fdname);
-            fdname = norm.fdname;
-            fdname_lower = norm.fdname_lower;
-            hashcode = norm.hashcode;
+            return new FDName(tk != null ? tk.Str() : null);
+        }
+        public static FDName FDNameBlueprint(this JToken tk) // always gives a non null fdname with non null str()
+        {
+            return new FDName(tk != null ? tk.Str("Unknown") : null);
+        }
+        public static FDName FDNameBlueprintNull(this JToken tk)
+        {
+            return tk != null ? new FDName(tk.Str("Unknown")) : null;
         }
 
-        // instances in log on mining and mission entries of commodities in this form, back into fd form
-        // also normalises HPT stuff
-        public static FDName Normalise(string fdname)
+        public static bool IsValid(this FDName s)       // tdb?
+        {
+            return s?.IsValid == true;
+        }
+
+        public static FDName ToFD(this string str)
+        {
+            return new FDName(str);
+        }
+
+        public static string StrNull(this FDName s)
+        {
+            return s?.Str();
+        }
+
+        public static string RemoveFDDecoration(this string fdname)
         {
             if (fdname.Length >= 8 && fdname.StartsWith("$") && fdname.EndsWith("_name;", System.StringComparison.InvariantCultureIgnoreCase))
-                return new FDName(fdname.Substring(1, fdname.Length - 7)); // 1 for '$' plus 6 for '_name;'
+                return fdname.Substring(1, fdname.Length - 7); // 1 for '$' plus 6 for '_name;'
 
             string s = fdname;
             if (s.StartsWith("$int_"))
@@ -116,116 +249,179 @@ namespace EliteDangerousCore
             if (s.StartsWith("$"))                          // seen instances of $python_armour..
                 s = s.Substring(1);
 
-            return new FDName(s);
+            return s;
         }
 
-        public static FDName NormaliseShip(string fdname)
+        public static FDName NormaliseShip(string fdname, out string shipname, bool allownull = false)
         {
             if (fdname.IsEmpty())
-                return new FDName("No Ship Name Given");
-
-            FDName i = ItemData.GetShipFDID(new FDName(fdname));
-
-            if (i != null)
-                return i;
+            {
+                if (allownull)
+                {
+                    shipname = null;
+                    return null;
+                }
+                else
+                {
+                    shipname = "Unknown Ship";
+                    return new FDName("Unknown Ship");
+                }
+            }
             else
             {
-                System.Diagnostics.Trace.WriteLine("*** Unknown FD ship ID:" + fdname);
+                var ret = new FDName(fdname);
+                var ship = ItemData.GetShipProperties(ret);
+                if (ship == null)
+                {
+                    System.Diagnostics.Trace.WriteLine("*** Unknown FD ship ID:" + fdname);
+                    shipname = "Unknown Ship " + fdname;
+                }
+                else
+                    shipname = ship.Name;
+
+                return ret;
+            }
+        }
+        public static FDName NormaliseModules(string fdname, out string modulename, bool allownull = false)
+        {
+            if (fdname.IsEmpty())
+            {
+                if (allownull)
+                {
+                    modulename = null;
+                    return null;
+                }
+                else
+                {
+                    modulename = "Unknown Module";
+                    return new FDName("Unknown Module");
+                }
+            }
+            else
+            {
+                var ret = new FDName(fdname);
+                if (ItemData.TryGetShipModule(ret, out ItemData.ShipModule module, true))
+                {
+                    modulename = module.EnglishModName;
+                }
+                else
+                {
+                    System.Diagnostics.Trace.WriteLine("*** Unknown Module ID:" + fdname);
+                    modulename = "Unknown Module " + fdname;
+                }
+
+                return ret;
+            }
+        }
+        public static FDName NormaliseMatCommods(string fdname, out string matname, bool allownull = false)
+        {
+            if (fdname.IsEmpty())
+            {
+                if (allownull)
+                {
+                    matname = null;
+                    return null;
+                }
+                else
+                {
+                    matname = "Unknown Material/Commodity";
+                    return new FDName("Unknown Material/Commodity");
+                }
+            }
+            else
+            {
+                if (fdname.Length >= 8 && fdname[0] == '$' && fdname.EndsWith("_name;", System.StringComparison.InvariantCultureIgnoreCase))
+                    fdname = fdname.Substring(1, fdname.Length - 7);        // remove decoration
+
+                if (fdnamemangling.TryGetValue(fdname.ToLower(), out string value))     // fix some renaming issues
+                    fdname = value;
+
+                if (MaterialCommodityMicroResourceType.TryGet(fdname, out MaterialCommodityMicroResourceType item))
+                {
+                    matname = item.EnglishName;
+                }
+                else
+                {
+                    System.Diagnostics.Trace.WriteLine("*** Unknown Mat/Commod ID:" + fdname);
+                    matname = fdname.SplitCapsWordFull();
+                }
+
                 return new FDName(fdname);
             }
         }
 
-        public static FDName Empty => new FDName("");
-
-        public bool Contains(string partname)
+        public static FDName NormaliseSignals(string fdname)
         {
-            return fdname_lower.ContainsIIC(partname.ToLowerInvariant());
+            if (fdname.HasChars())
+                return new FDName(fdname.Replace("$SAA_SignalType_", "").Replace(";", "").SplitCapsWordFull());
+            else
+            {
+                return new FDName("Error in Signal no data");
+            }
+        }
+        public static FDName NormaliseGenus(string fdname)
+        {
+            if (fdname.HasChars())
+                return new FDName(fdname.Replace("$Codex_Ent_", "").Replace("_Name;", "").Replace(";", "").Replace("$Codex_", "").SplitCapsWordFull());
+            else
+            {
+                return new FDName("Error in Genus no data");
+            }
         }
 
-        public bool EndsWith(string partname)
-        {
-            return fdname_lower.EndsWithIIC(partname.ToLowerInvariant());
-        }
 
-        public int CompareTo(object obj)
-        {
-            return obj is FDName sfd ? sfd.fdname_lower.CompareTo(this.fdname_lower) : 0;
-        }
 
-        public bool Equals(FDName other)
+        public static Dictionary<string, string> fdnamemangling = new Dictionary<string, string>() // Key: old_identifier, Value: new_identifier
         {
-            return other.fdname_lower.EqualsIIC(this.fdname_lower);
-        }
+            //2.2 to 2.3 changed some of the identifier names.. change the 2.2 ones to 2.3!  Anthor data from his materials db file
 
-        public bool Equals(FDName x, FDName y)
-        {
-            return x.Equals(y);
-        }
-        public int GetHashCode(FDName obj)
-        {
-            return obj.hashcode;
-        }
-        public override int GetHashCode()
-        {
-            return hashcode;
-        }
-        public int GetClass()
-        {
-            int ci = fdname_lower.IndexOf("class");
-            int classn = ci > 0 ? fdname_lower.Substring(ci + 5, 1).InvariantParseInt(0) : 0;
-            return classn;
-        }
+            // July 2018 - removed many, changed above, to match FD 3.1 excel output - we use their IDs.  Netlogentry frontierdata checks these..
 
-        public bool IsWeaponArmour()
-        {
-            return fdname_lower.StartsWith("hpt_", StringComparison.InvariantCultureIgnoreCase) ||
-                                            fdname_lower.StartsWith("Int_", StringComparison.InvariantCultureIgnoreCase) ||
-                                            fdname_lower.Contains("_armour_", StringComparison.InvariantCultureIgnoreCase);
-        }
+            { "aberrantshieldpatternanalysis"       ,  "shieldpatternanalysis" },
+            { "adaptiveencryptorscapture"           ,  "adaptiveencryptors" },
+            { "alyabodysoap"                        ,  "alyabodilysoap" },
+            { "anomalousbulkscandata"               ,  "bulkscandata" },
+            { "anomalousfsdtelemetry"               ,  "fsdtelemetry" },
+            { "atypicaldisruptedwakeechoes"         ,  "disruptedwakeechoes" },
+            { "atypicalencryptionarchives"          ,  "encryptionarchives" },
+            { "azuremilk"                           ,  "bluemilk" },
+            { "cd-75kittenbrandcoffee"              ,  "cd75catcoffee" },
+            { "crackedindustrialfirmware"           ,  "industrialfirmware" },
+            { "dataminedwakeexceptions"             ,  "dataminedwake" },
+            { "distortedshieldcyclerecordings"      ,  "shieldcyclerecordings" },
+            { "eccentrichyperspacetrajectories"     ,  "hyperspacetrajectories" },
+            { "edenapplesofaerial"                  ,  "aerialedenapple" },
+            { "eraninpearlwhiskey"                  ,  "eraninpearlwhisky" },
+            { "exceptionalscrambledemissiondata"    ,  "scrambledemissiondata" },
+            { "inconsistentshieldsoakanalysis"      ,  "shieldsoakanalysis" },
+            { "kachiriginfilterleeches"             ,  "kachiriginleaches" },
+            { "korokungpellets"                     ,  "korrokungpellets" },
+            { "leatheryeggs"                        ,  "alieneggs" },
+            { "lucanonionhead"                      ,  "transgeniconionhead" },
+            { "modifiedconsumerfirmware"            ,  "consumerfirmware" },
+            { "modifiedembeddedfirmware"            ,  "embeddedfirmware" },
+            { "opensymmetrickeys"                   ,  "symmetrickeys" },
+            { "peculiarshieldfrequencydata"         ,  "shieldfrequencydata" },
+            { "rajukrumulti-stoves"                 ,  "rajukrustoves" },
+            { "sanumadecorativemeat"                ,  "sanumameat" },
+            { "securityfirmwarepatch"               ,  "securityfirmware" },
+            { "specialisedlegacyfirmware"           ,  "legacyfirmware" },
+            { "strangewakesolutions"                ,  "wakesolutions" },
+            { "taggedencryptioncodes"               ,  "encryptioncodes" },
+            { "unidentifiedscanarchives"            ,  "scanarchives" },
+            { "unusualencryptedfiles"               ,  "encryptedfiles" },
+            { "utgaroarmillennialeggs"              ,  "utgaroarmillenialeggs" },
+            { "xihebiomorphiccompanions"            ,  "xihecompanions" },
+            { "zeesszeantgrubglue"                  ,  "zeesszeantglue" },
 
-    }
+            {"micro-weavecoolinghoses","coolinghoses"},
+            {"energygridassembly","powergridassembly"},
 
-    public class FDNameEqualityComparer : IEqualityComparer<FDName>
-    {
-        public bool Equals(FDName x, FDName y)
-        {
-            return x.Equals(y);
-        }
+            {"methanolmonohydrate","methanolmonohydratecrystals"},
+            {"muonimager","mutomimager"},
+            {"hardwarediagnosticsensor","diagnosticsensor"},
 
-        public int GetHashCode(FDName obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
-
-    public static class FDNameHelpers
-    {
-        public static FDName FDName(this JToken tk)
-        {
-            return new FDName(tk != null ? tk.Str() : null);
-        }
-        public static FDName FDNameNull(this JToken tk)
-        {
-            return tk != null ? new FDName(tk.Str()) : null;
-        }
-        public static FDName FDNameNormalise(this JToken tk)
-        {
-            return EliteDangerousCore.FDName.Normalise(tk != null ? tk.Str() : "Unknown");
-        }
-        public static FDName FDNameNormaliseNull(this JToken tk)
-        {
-            return tk != null ? EliteDangerousCore.FDName.Normalise(tk.Str()) : null;
-        }
-        public static FDName FDNameNormaliseShip(this JToken tk)
-        {
-            return EliteDangerousCore.FDName.NormaliseShip(tk != null ? tk.Str() : "Unknown");
-        }
-        public static FDName FDNameNormaliseShipNull(this JToken tk)
-        {
-            return tk != null ? EliteDangerousCore.FDName.NormaliseShip(tk.Str()) : null;
-        }
+        };
     }
 
 }
-
-

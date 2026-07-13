@@ -32,7 +32,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Loadout { get; set; }
         public bool PlayerControlled { get; set; }
         public int? ID { get; set; }
-        public bool IsLander => Loadout.ContainsIIC("base") && PlayerControlled == true;
+        public bool IsLander => (Loadout.ContainsIIC("base") || Loadout.ContainsIIC("advanced") || Loadout.ContainsIIC("galactic")) && PlayerControlled == true;
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
@@ -114,8 +114,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalRestockVehicle(JObject evt) : base(evt, JournalTypeEnum.RestockVehicle)
         {
-            TypeFD = evt["Type"].FDNameNormalise();
-            Type = JournalFieldNaming.GetBetterShipName(TypeFD);
+            TypeFD = FDNameHelpers.NormaliseShip(evt["Type"].Str(), out string shipname);
+            Type = shipname;
             Type_Localised = JournalFieldNaming.CheckLocalisation(evt["Type_Localised"].Str(), Type);
             Loadout = evt["Loadout"].Str();
             Cost = evt["Cost"].Long();

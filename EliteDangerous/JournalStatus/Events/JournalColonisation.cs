@@ -28,9 +28,11 @@ namespace EliteDangerousCore.JournalEvents
         {
             evt.ToObjectProtected(this.GetType(), true,
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
-                initialobject: this,
-                customconverter: (ty, ob) => { return FDName.Normalise((string)ob); }
+                initialobject: this
                 );        // read fields named in this structure matching JSON names
+
+            foreach (var x in ResourcesRequired.EmptyIfNull())
+                x.Normalise();
         }
         public long MarketID { get; set; }
         public float ConstructionProgress { get; set; }
@@ -41,7 +43,8 @@ namespace EliteDangerousCore.JournalEvents
         public class ResourcesList : IEquatable<ResourcesList>
         {
             [JsonCustomFormat]
-            public FDName Name { get; set; }        // fdname
+            public FDName Name { get; set; }     
+            public string FriendlyName { get; set; }        // English
             public string Name_Localised { get; set; }
             public int RequiredAmount { get; set; }
             public int ProvidedAmount { get; set; }
@@ -51,6 +54,12 @@ namespace EliteDangerousCore.JournalEvents
             {
                 return Name == other.Name && RequiredAmount == other.RequiredAmount && ProvidedAmount == other.ProvidedAmount &&
                         Payment == other.Payment;
+            }
+
+            public void Normalise()
+            {
+                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname);
+                FriendlyName = engname;
             }
         }
 
@@ -77,7 +86,7 @@ namespace EliteDangerousCore.JournalEvents
             StringBuilder sb = new StringBuilder(1000);
             foreach (ResourcesList x in ResourcesRequired.EmptyIfNull())
             {
-                sb.Append(MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(x.Name));
+                sb.Append(x.Name_Localised.Alt(x.FriendlyName));
                 sb.Append(": ");
                 sb.Append(x.ProvidedAmount);
                 sb.Append(" / ");
@@ -97,9 +106,11 @@ namespace EliteDangerousCore.JournalEvents
         {
             evt.ToObjectProtected(this.GetType(), true,
                membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
-               initialobject: this,
-                customconverter: (ty, ob) => { return FDName.Normalise((string)ob); }
+               initialobject: this
                );        // read fields named in this structure matching JSON names
+            
+            foreach (var x in Contributions.EmptyIfNull())
+                x.Normalise();
         }
         public long MarketID { get; set; }
 
@@ -107,8 +118,14 @@ namespace EliteDangerousCore.JournalEvents
         {
             [JsonCustomFormat]
             public FDName Name { get; set; }        // fdname
+            public string FriendlyName { get; set; } // english
             public string Name_Localised { get; set; }
             public int Amount { get; set; }
+            public void Normalise()
+            {
+                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname);
+                FriendlyName = engname;
+            }
         }
 
         public Contribution[] Contributions { get; set; }
@@ -118,7 +135,7 @@ namespace EliteDangerousCore.JournalEvents
             StringBuilder sb = new StringBuilder(1000);
             foreach (Contribution x in Contributions.EmptyIfNull())
             {
-                sb.Append(MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(x.Name));
+                sb.Append(x.Name_Localised.Alt(x.FriendlyName));
                 sb.Append(": ");
                 sb.Append(x.Amount);
                 sb.Append(" \r\n"); // space for non word wrapped

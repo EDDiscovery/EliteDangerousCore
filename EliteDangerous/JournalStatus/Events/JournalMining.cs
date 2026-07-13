@@ -23,9 +23,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMiningRefined(JObject evt) : base(evt, JournalTypeEnum.MiningRefined)
         {
-            Type = evt["Type"].FDNameNormalise();          // instances of $.._name, translate to FDNAME
-            Type = JournalFieldNaming.FDNameTranslation(Type);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyType = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Type);
+            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname);
+            FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);
         }
 
@@ -79,8 +78,8 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise()
             {
-                Name = JournalFieldNaming.FDNameTranslation(Name);
-                FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
+                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname);
+                FriendlyName = engname;
             }
         }
 
@@ -89,9 +88,12 @@ namespace EliteDangerousCore.JournalEvents
             Content = evt["Content"].Enumeration<AsteroidContent>(AsteroidContent.Low, x=>x.Replace("$AsteroidMaterialContent_","").Replace(";",""));
             Content_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Content_Localised"].Str(), Content.ToString());
 
-            MotherlodeMaterial = evt["MotherlodeMaterial"].FDNameNormalise();
-            FriendlyMotherlodeMaterial = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(MotherlodeMaterial);
-            MotherlodeMaterial_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["MotherlodeMaterial_Localised"].Str(),FriendlyMotherlodeMaterial);
+            MotherlodeMaterial = FDNameHelpers.NormaliseMatCommods(evt["MotherlodeMaterial"].Str(), out string engname, true);
+            if (MotherlodeMaterial != null)
+            {
+                FriendlyMotherlodeMaterial = engname;
+                MotherlodeMaterial_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["MotherlodeMaterial_Localised"].Str(), FriendlyMotherlodeMaterial);
+            }
 
             Remaining = evt["Remaining"].Double();      // 0-100
             Materials = evt["Materials"]?.ToObjectQ<Material[]>()?.ToArray();
@@ -108,7 +110,7 @@ namespace EliteDangerousCore.JournalEvents
         public AsteroidContent Content { get; set; }
         public string Content_Localised { get; set; }
 
-        public FDName MotherlodeMaterial { get; set; }
+        public FDName MotherlodeMaterial { get; set; }      // may be null
         public string MotherlodeMaterial_Localised { get; set; }
         public string FriendlyMotherlodeMaterial { get; set; }
 

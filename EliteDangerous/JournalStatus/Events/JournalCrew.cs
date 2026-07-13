@@ -14,6 +14,7 @@
  *
  */
 using QuickJSON;
+using System;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -151,15 +152,18 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalCrewMemberRoleChange(JObject evt) : base(evt, JournalTypeEnum.CrewMemberRoleChange)
         {
-            Crew = evt["Crew"].Str();
-            FDRole = evt["Role"].Str();
-            Role = JournalFieldNaming.CrewRole(FDRole);
+            Crew =  evt["Crew"].Str();
+            FDRole = Enum.TryParse(evt["Role"].Str(), true, out CrewRole c) ? c : CrewRole.Unknown;
+            if (FDRole == CrewRole.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown crew role {evt["Role"].Str()}");
+            Role = FDRole.ToString().SplitCapsWordFull();
             Telepresence = evt["Telepresence"].Bool();
         }
 
         public string Crew { get; set; }
-        public string Role { get; set; }
-        public string FDRole { get; set; }
+
+        public enum CrewRole { Idle, FireCon, FighterCon , Helm, OnFoot, Unknown }
+        public string  Role { get; set; }
+        public CrewRole FDRole { get; set; }
         public bool Telepresence { get; set; }
 
         public override string GetInfo()
@@ -216,13 +220,14 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalChangeCrewRole(JObject evt) : base(evt, JournalTypeEnum.ChangeCrewRole)
         {
-            FDRole = evt["Role"].Str();
-            Role = JournalFieldNaming.CrewRole(FDRole);
+            FDRole = Enum.TryParse(evt["Role"].Str(), true, out JournalCrewMemberRoleChange.CrewRole c) ? c : JournalCrewMemberRoleChange.CrewRole.Unknown;
+            if (FDRole == JournalCrewMemberRoleChange.CrewRole.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown crew role {evt["Role"].Str()}");
+            Role = FDRole.ToString().SplitCapsWordFull();
             Telepresence = evt["Telepresence"].Bool();
         }
 
         public string Role { get; set; }
-        public string FDRole { get; set; }
+        public JournalCrewMemberRoleChange.CrewRole FDRole { get; set; }
         public bool Telepresence { get; set; }
 
         public override string GetInfo()

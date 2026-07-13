@@ -334,7 +334,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
         [PropertyNameAttribute("Signal information")]
-        public List<JournalSAASignalsFound.SAASignal> Signals { get; set; }             // NOTE Augmented by StarScan - may be null
+        public List<SAASignal> Signals { get; set; }             // NOTE Augmented by StarScan - may be null
         [JsonIgnore]
         [PropertyNameAttribute("Does it contain geo signals")]
         public bool ContainsGeoSignals { get { return Signals?.Count(x => x.IsGeo) > 0 ? true : false; } }
@@ -380,7 +380,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
         [PropertyNameAttribute("Genuses information")]
-        public List<JournalSAASignalsFound.SAAGenus> Genuses { get; set; }          // NOTE Augmented by StarScan - may be null
+        public List<SAAGenus> Genuses { get; set; }          // NOTE Augmented by StarScan - may be null
         [PropertyNameAttribute("Any Genuses")]
         public bool ContainsGenusus { get { return (Genuses?.Count ?? 0) > 0; } }
         [JsonIgnore]

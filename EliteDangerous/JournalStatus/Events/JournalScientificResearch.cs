@@ -23,7 +23,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalScientificResearch(JObject evt) : base(evt, JournalTypeEnum.ScientificResearch)
         {
-            Name = evt["Name"].FDNameNormalise();
+            Name = evt["Name"].FDName();
             Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), Name.Str());
             Count = evt["Count"].Int();
             Category = JournalFieldNaming.NormaliseMaterialCategory(evt["Category"].Str());

@@ -28,19 +28,21 @@ namespace EliteDangerousCore
         public string Name { get; set; }         // loadout name
         public bool Deleted { get; private set; }
 
+        public enum SuitSlot { PrimaryWeapon1, PrimaryWeapon2, SecondaryWeapon };
+
         [System.Diagnostics.DebuggerDisplay("{SlotName}:{SuitModuleID}:{ModuleName}")]
         public class LoadoutModule              // matches names used in journal for module lists
         {
-            public string SlotName;
+            public SuitSlot SlotName;
             public ulong SuitModuleID;
-            public string ModuleName;
+            public FDName ModuleName;
             public string ModuleName_Localised;
             public int Class;               // may be zero meaning not there
             public FDName[] WeaponMods;     // may be empty/null
             public string FriendlyName;
 
             public LoadoutModule() { }
-            public LoadoutModule(string slot, ulong suitmoduleid,string modulename, string locname, int cls, FDName[] weaponmods)
+            public LoadoutModule(SuitSlot slot, ulong suitmoduleid,FDName modulename, string locname, int cls, FDName[] weaponmods)
             {
                 SlotName = slot; SuitModuleID = suitmoduleid; ModuleName = modulename; ModuleName_Localised = locname;
                 Class = cls; WeaponMods = weaponmods;
@@ -53,14 +55,12 @@ namespace EliteDangerousCore
             }
         }
 
-        public Dictionary<string, LoadoutModule> Modules { get; private set; }      // may be empty if not known, never null
+        public Dictionary<SuitSlot, LoadoutModule> Modules { get; private set; }      // may be empty if not known, never null
 
         static public void NormaliseModules( LoadoutModule [] list)
         {
             foreach (var m in list.EmptyIfNull())
             {
-                m.ModuleName = m.ModuleName.ToLowerInvariant();
-                m.SlotName = m.SlotName.ToLowerInvariant();
                 m.FriendlyName = ItemData.GetWeapon(m.ModuleName)?.Name ?? m.ModuleName_Localised;
             }
         }
@@ -77,7 +77,7 @@ namespace EliteDangerousCore
             return true;
         }
 
-        public string GetModuleDescription( string slotname )
+        public string GetModuleDescription( SuitSlot slotname )
         {
             if ( Modules.TryGetValue(slotname, out LoadoutModule m))
             {
@@ -92,13 +92,13 @@ namespace EliteDangerousCore
         public SuitLoadout(DateTime time, ulong id, string name, ulong suitID, bool deleted)
         {
             EventTime = time; ID = id; Name = name; SuitID = suitID; Deleted = deleted;
-            Modules = new Dictionary<string, LoadoutModule>();    // shallow clone
+            Modules = new Dictionary<SuitSlot, LoadoutModule>();    // shallow clone
         }
 
         public SuitLoadout(SuitLoadout other)
         {
             EventTime = other.EventTime; ID = other.ID; Name = other.Name; SuitID = other.SuitID; Deleted = other.Deleted;
-            Modules = new Dictionary<string, LoadoutModule>(other.Modules);    // shallow clone
+            Modules = new Dictionary<SuitSlot, LoadoutModule>(other.Modules);    // shallow clone
         }
     }
 
@@ -175,7 +175,7 @@ namespace EliteDangerousCore
                 DeleteLoadout(time, l.Value.ID);      
         }
 
-        public void Equip(ulong id, string slotname, SuitLoadout.LoadoutModule weap)
+        public void Equip(ulong id, SuitLoadout.SuitSlot slotname, SuitLoadout.LoadoutModule weap)
         {
             if (loadouts.ContainsKey(id))
             {
@@ -190,7 +190,7 @@ namespace EliteDangerousCore
         }
 
 
-        public void Remove(ulong id, string slotname, SuitWeapon weap)
+        public void Remove(ulong id, SuitLoadout.SuitSlot slotname, SuitWeapon weap)
         {
             if (loadouts.ContainsKey(id))
             {

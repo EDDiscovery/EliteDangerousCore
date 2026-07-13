@@ -289,6 +289,14 @@ namespace EliteDangerousCore
         {
             return mcmrlist.ContainsKey(fdname) ? mcmrlist[fdname] : null;
         }
+        public static bool TryGet(FDName fdname, out MaterialCommodityMicroResourceType value)
+        {
+            return mcmrlist.TryGetValue(fdname, out value);
+        }
+        public static bool TryGet(string fdname, out MaterialCommodityMicroResourceType value)
+        {
+            return mcmrlist.TryGetValue(new FDName(fdname), out value);
+        }
 
         public static string GetTranslatedNameByFDName(FDName fdname) // if we have it, give name, else give alt or splitcaps.  
         {
@@ -472,6 +480,13 @@ namespace EliteDangerousCore
 
             return mcmrlist[fdname];
         }
+
+        #region Common items
+
+        public static FDName Drones => new FDName("drones");
+        public static FDName Tritium => new FDName("tritium");
+
+        #endregion
 
 
         #region Initial setup
@@ -1431,72 +1446,6 @@ namespace EliteDangerousCore
             //        System.Diagnostics.Debug.WriteLine($"{x.Value.FDName},");
             //}
 
-        }
-
-
-
-
-        public static Dictionary<string, string> fdnamemangling = new Dictionary<string, string>() // Key: old_identifier, Value: new_identifier
-        {
-            //2.2 to 2.3 changed some of the identifier names.. change the 2.2 ones to 2.3!  Anthor data from his materials db file
-
-            // July 2018 - removed many, changed above, to match FD 3.1 excel output - we use their IDs.  Netlogentry frontierdata checks these..
-
-            { "aberrantshieldpatternanalysis"       ,  "shieldpatternanalysis" },
-            { "adaptiveencryptorscapture"           ,  "adaptiveencryptors" },
-            { "alyabodysoap"                        ,  "alyabodilysoap" },
-            { "anomalousbulkscandata"               ,  "bulkscandata" },
-            { "anomalousfsdtelemetry"               ,  "fsdtelemetry" },
-            { "atypicaldisruptedwakeechoes"         ,  "disruptedwakeechoes" },
-            { "atypicalencryptionarchives"          ,  "encryptionarchives" },
-            { "azuremilk"                           ,  "bluemilk" },
-            { "cd-75kittenbrandcoffee"              ,  "cd75catcoffee" },
-            { "crackedindustrialfirmware"           ,  "industrialfirmware" },
-            { "dataminedwakeexceptions"             ,  "dataminedwake" },
-            { "distortedshieldcyclerecordings"      ,  "shieldcyclerecordings" },
-            { "eccentrichyperspacetrajectories"     ,  "hyperspacetrajectories" },
-            { "edenapplesofaerial"                  ,  "aerialedenapple" },
-            { "eraninpearlwhiskey"                  ,  "eraninpearlwhisky" },
-            { "exceptionalscrambledemissiondata"    ,  "scrambledemissiondata" },
-            { "inconsistentshieldsoakanalysis"      ,  "shieldsoakanalysis" },
-            { "kachiriginfilterleeches"             ,  "kachiriginleaches" },
-            { "korokungpellets"                     ,  "korrokungpellets" },
-            { "leatheryeggs"                        ,  "alieneggs" },
-            { "lucanonionhead"                      ,  "transgeniconionhead" },
-            { "modifiedconsumerfirmware"            ,  "consumerfirmware" },
-            { "modifiedembeddedfirmware"            ,  "embeddedfirmware" },
-            { "opensymmetrickeys"                   ,  "symmetrickeys" },
-            { "peculiarshieldfrequencydata"         ,  "shieldfrequencydata" },
-            { "rajukrumulti-stoves"                 ,  "rajukrustoves" },
-            { "sanumadecorativemeat"                ,  "sanumameat" },
-            { "securityfirmwarepatch"               ,  "securityfirmware" },
-            { "specialisedlegacyfirmware"           ,  "legacyfirmware" },
-            { "strangewakesolutions"                ,  "wakesolutions" },
-            { "taggedencryptioncodes"               ,  "encryptioncodes" },
-            { "unidentifiedscanarchives"            ,  "scanarchives" },
-            { "unusualencryptedfiles"               ,  "encryptedfiles" },
-            { "utgaroarmillennialeggs"              ,  "utgaroarmillenialeggs" },
-            { "xihebiomorphiccompanions"            ,  "xihecompanions" },
-            { "zeesszeantgrubglue"                  ,  "zeesszeantglue" },
-
-            {"micro-weavecoolinghoses","coolinghoses"},
-            {"energygridassembly","powergridassembly"},
-
-            {"methanolmonohydrate","methanolmonohydratecrystals"},
-            {"muonimager","mutomimager"},
-            {"hardwarediagnosticsensor","diagnosticsensor"},
-
-        };
-
-        static public FDName FDNameTranslation(FDName old)
-        {
-            if ( fdnamemangling.TryGetValue(old.ToLower(), out string value))
-            {
-                //System.Diagnostics.Debug.WriteLine("Sub " + old);
-                return new FDName(value);
-            }
-            else
-                return old;
         }
 
         #endregion

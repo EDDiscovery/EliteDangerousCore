@@ -830,7 +830,7 @@ namespace EliteDangerousCore.StarScan2
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Set FSS Signals discovered into system bodies
-        public void AddFSSSignalsDiscovered(List<FSSSignal> signals)
+        public void AddFSSSignalsDiscovered(List<Signal> signals)
         {
             //$"Add FSS Signals {signals.Count} to SystemBodies in `{System.Name}`:{System.SystemAddress}".DO(debugid);
             systemBodies.AddFSSSignals(signals);

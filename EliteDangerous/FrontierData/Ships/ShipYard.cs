@@ -21,7 +21,7 @@ namespace EliteDangerousCore
     [System.Diagnostics.DebuggerDisplay("{Ident(true)} {Ships.Length}")]
     public class ShipYard : IEquatable<ShipYard>
     {
-        [System.Diagnostics.DebuggerDisplay("{ShipType_Localised} {ShipPrice}")]
+        [System.Diagnostics.DebuggerDisplay("{id} {ShipType} `{ShipType_Localised}` `{FriendlyShipType}` {ShipPrice}")]
         public class ShipyardItem : IEquatable<ShipyardItem>
         {           
             public long id { get; set; }                    // json from frontier shipyard.json
@@ -29,12 +29,12 @@ namespace EliteDangerousCore
             public string ShipType_Localised { get; set; }  // json, frontier
             public long ShipPrice { get; set; }             // json, frontier
 
-            public string FriendlyShipType { get; set; }   // from our database
+            public string FriendlyShipType { get; set; }   // from our database, english
 
             public void Normalise()
             {
-                ShipType.NormaliseShip();
-                FriendlyShipType = JournalFieldNaming.GetBetterShipName(ShipType);
+                ShipType = FDNameHelpers.NormaliseShip(ShipType.StrNull(), out string bettername);
+                FriendlyShipType = bettername;
                 ShipType_Localised = JournalFieldNaming.CheckLocalisation(ShipType_Localised,FriendlyShipType);
             }
 

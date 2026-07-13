@@ -26,15 +26,15 @@ namespace EliteDangerousCore.JournalEvents
         public JournalEngineerApply(JObject evt) : base(evt, JournalTypeEnum.EngineerApply)
         {
             Engineer = evt["Engineer"].Str();
-            FDBlueprint = evt["Blueprint"].Str();
-            Blueprint = JournalFieldNaming.Blueprint(FDBlueprint);
+            FDBlueprint = evt["Blueprint"].FDNameBlueprint();
+            Blueprint = FDBlueprint.SplitCapsWordFull();
             Level = evt["Level"].Int();
             Override = evt["Override"].Str();
         }
 
         public string Engineer { get; set; }
         public string Blueprint { get; set; }       // friendly not fdev
-        public string FDBlueprint { get; set; }       // fdname
+        public FDName FDBlueprint { get; set; }       // fdname
         public int Level { get; set; }
         public string Override { get; set; }
 
@@ -53,14 +53,12 @@ namespace EliteDangerousCore.JournalEvents
             EngineerID = evt["EngineerID"].LongNull();
             Type = evt["Type"].Str();
 
-            Commodity = evt["Commodity"].FDName();
-            Commodity = JournalFieldNaming.FDNameTranslation(Commodity);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyCommodity = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Commodity);
+            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out string engname);
+            FriendlyCommodity = engname;
             Commodity_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
 
-            Material = evt["Material"].FDName();
-            Material = JournalFieldNaming.FDNameTranslation(Material);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyMaterial = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Material);
+            Material = FDNameHelpers.NormaliseMatCommods(evt["Material"].Str(), out engname);
+            FriendlyMaterial = engname;
             Material_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Material_Localised"].Str(), FriendlyMaterial);
 
             Quantity = evt["Quantity"].Int();
@@ -129,8 +127,8 @@ namespace EliteDangerousCore.JournalEvents
             SlotFD = ShipSlots.ToEnum(evt["Slot"].StrNull());       // may not be present, pass in null to indicate okay and set it to unknown
             Slot = ShipSlots.ToEnglish(SlotFD);
 
-            ModuleFD = evt["Module"].FDNameNormalise(); // may not be present
-            Module = JournalFieldNaming.GetBetterEnglishModuleName(ModuleFD);
+            ModuleFD = FDNameHelpers.NormaliseModules(evt["Module"].Str(), out string engname);
+            Module = engname;
 
             Engineering = new EngineeringData(evt);
             if (!Engineering.IsValid)       // various frontier records across commanders show crap output
@@ -154,17 +152,19 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         foreach (var kvp in temp)
                         {
-                            FDName fdname = FDName.Normalise(kvp.Key);
-                            string name = MaterialCommodityMicroResourceType.GetByFDName(fdname)?.EnglishName ?? fdname.Str();
-                            var i = new Ingrediant()
+                            var fdname = FDNameHelpers.NormaliseMatCommods(kvp.Key, out engname, true);
+                            if (fdname != null)
                             {
-                                NameFD = fdname,
-                                Name_Localised = name,
-                                Name = name,
-                                Count = kvp.Value
-                            };
+                                var i = new Ingrediant()
+                                {
+                                    NameFD = fdname,
+                                    Name_Localised = engname,
+                                    Name = engname,
+                                    Count = kvp.Value
+                                };
 
-                            Ingredients.Add(i);
+                                Ingredients.Add(i);
+                            }
                         };
                     }
                 }
@@ -172,16 +172,14 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     foreach (JObject jo in (JArray)ingredients)
                     {
-                        FDName fdname = jo["Name"].FDNameNormalise();
+                        var fdname = FDNameHelpers.NormaliseMatCommods(jo["Name"].Str(), out engname, true);
                         if (fdname != null)     // must be present and non null
                         {
-                            string name = MaterialCommodityMicroResourceType.GetByFDName(fdname)?.EnglishName ?? fdname.Str();
-
                             var i = new Ingrediant()
                             {
                                 NameFD = fdname,
-                                Name_Localised = jo["Name_Localised"].Str(name),
-                                Name = name,
+                                Name_Localised = jo["Name_Localised"].Str(engname),
+                                Name = engname,
                                 Count = jo["Count"].Int()
                             };
 
@@ -233,7 +231,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("In Slot".Tx()+": ", ShipSlots.ToLocalisedLanguage(SlotFD),
-                "", JournalFieldNaming.GetForeignModuleName(ModuleFD, null),
+                "", ModuleFD.GetForeignModuleName(),
                 "By".Tx()+": ", Engineering?.Engineer,
                 "Blueprint".Tx()+": ", Engineering?.FriendlyBlueprintName,
                 "Level".Tx()+": ", Engineering?.Level);

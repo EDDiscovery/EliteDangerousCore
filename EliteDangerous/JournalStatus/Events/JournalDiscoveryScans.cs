@@ -78,8 +78,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalFSSSignalDiscovered(JObject evt) : base(evt, JournalTypeEnum.FSSSignalDiscovered)
         {
-            Signals = new List<FSSSignal>();
-            Signals.Add(new FSSSignal(evt, EventTimeUTC));
+            Signals = new List<Signal>();
+            Signals.Add(new Signal(evt, EventTimeUTC));
         }
 
         public void Add(JournalFSSSignalDiscovered next )
@@ -90,7 +90,7 @@ namespace EliteDangerousCore.JournalEvents
         private string SignalNames() { return string.Join(",", Signals?.Select(x => x.SignalName)); }       // for debugger
 
         [PropertyNameAttribute("List of FSS signals")]
-        public List<FSSSignal> Signals { get; set; }            // name used in action packs not changeable. Never null 
+        public List<Signal> Signals { get; set; }            // name used in action packs not changeable. Never null 
 
         public bool IsSignalsOfSystem( long? address)
         {
@@ -104,28 +104,28 @@ namespace EliteDangerousCore.JournalEvents
 
         [JsonIgnore]
         [PropertyNameAttribute("Count of station signals")]
-        public int CountStationSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Station).Count() ?? 0; } }
+        public int CountStationSignals { get { return Signals?.Where(x => x.ClassOfSignal == Signal.Classification.Station).Count() ?? 0; } }
         [JsonIgnore]
         [PropertyNameAttribute("Count of installation signals")]
-        public int CountInstallationSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Installation).Count() ?? 0; } }
+        public int CountInstallationSignals { get { return Signals?.Where(x => x.ClassOfSignal == Signal.Classification.Installation).Count() ?? 0; } }
         [JsonIgnore]
         [PropertyNameAttribute("Count of NSP signals")]
-        public int CountNotableStellarPhenomenaSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.NotableStellarPhenomena).Count() ?? 0; } }
+        public int CountNotableStellarPhenomenaSignals { get { return Signals?.Where(x => x.ClassOfSignal == Signal.Classification.NotableStellarPhenomena).Count() ?? 0; } }
         [JsonIgnore]
         [PropertyNameAttribute("Count of conflict zone signals")]
-        public int CountConflictZoneSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.ConflictZone).Count() ?? 0; } }
+        public int CountConflictZoneSignals { get { return Signals?.Where(x => x.ClassOfSignal == Signal.Classification.ConflictZone).Count() ?? 0; } }
         [JsonIgnore]
         [PropertyNameAttribute("Count of extraction zone signals")]
-        public int CountResourceExtractionZoneSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.ResourceExtraction).Count() ?? 0; } }
+        public int CountResourceExtractionZoneSignals { get { return Signals?.Where(x => x.ClassOfSignal == Signal.Classification.ResourceExtraction).Count() ?? 0; } }
         [JsonIgnore]
         [PropertyNameAttribute("Count of carrier signals")]
-        public int CountCarrierSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Carrier).Count() ?? 0; } }
+        public int CountCarrierSignals { get { return Signals?.Where(x => x.ClassOfSignal == Signal.Classification.Carrier).Count() ?? 0; } }
         [JsonIgnore]
         [PropertyNameAttribute("Count of USS signals")]
-        public int CountUSSSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.USS).Count() ?? 0; } }
+        public int CountUSSSignals { get { return Signals?.Where(x => x.ClassOfSignal == Signal.Classification.USS).Count() ?? 0; } }
         [JsonIgnore]
         [PropertyNameAttribute("Count of other signals")]
-        public int CountOtherSignals { get { return Signals?.Where(x => x.ClassOfSignal == SignalDefinitions.Classification.Other).Count() ?? 0; } }
+        public int CountOtherSignals { get { return Signals?.Where(x => x.ClassOfSignal == Signal.Classification.Other).Count() ?? 0; } }
 
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
@@ -150,13 +150,13 @@ namespace EliteDangerousCore.JournalEvents
                 sb.Build("Detected ; signals".Tx(), Signals.Count);
 
                 // resort the list, when first printed, it will reorder this, then it will be a low power operation
-                FSSSignal.Sort(Signals);
+                Signal.Sort(Signals);
 
                 if (Signals.Count < maxsignals)
                 {
                     foreach (var s in Signals)
                     {
-                        if (s.ClassOfSignal == SignalDefinitions.Classification.USS)
+                        if (s.ClassOfSignal == Signal.Classification.USS)
                             sb.AppendPrePadCS(s.USSTypeLocalised);
                         else
                             sb.AppendPrePadCS(s.SignalName_Localised);
@@ -174,7 +174,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Signals.Count > 1)
             {
                 // resort the list, when first printed, it will reorder this, then it will be a low power operation
-                FSSSignal.Sort(Signals);
+                Signal.Sort(Signals);
                 
                 var sb = new System.Text.StringBuilder(1024);
                 foreach (var s in Signals)
@@ -189,9 +189,9 @@ namespace EliteDangerousCore.JournalEvents
         // return signals, removing duplicates, and starting with the latest jsd.
         // jsd is in add order, so latest one is at end
         // expensive, only done on scan and surveyor display as of dec 22
-        static public List<FSSSignal> SignalList( List<JournalFSSSignalDiscovered> jsd)
+        static public List<Signal> SignalList( List<JournalFSSSignalDiscovered> jsd)
         {
-            List<FSSSignal> list = new List<FSSSignal>();
+            List<Signal> list = new List<Signal>();
             for(int i = jsd.Count-1; i>=0; i--)
             {
                 var j = jsd[i];
@@ -325,7 +325,8 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var s in Signals)      // some don't have localisation
                 {
-                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, JournalFieldNaming.Signals(s.Type));
+                    s.Type = FDNameHelpers.NormaliseSignals(s.Type.StrNull());
+                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.Str());
                 }
             }
             Genuses = evt["Genuses"].ToObjectQ<List<SAAGenus>>();
@@ -333,7 +334,8 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var g in Genuses)      // some don't have localisation
                 {
-                    g.Genus_Localised = JournalFieldNaming.CheckLocalisation(g.Genus_Localised,  JournalFieldNaming.Genus(g.Genus));
+                    g.Genus = FDNameHelpers.NormaliseGenus(g.Genus.StrNull());
+                    g.Genus_Localised = JournalFieldNaming.CheckLocalisation(g.Genus_Localised, g.Genus.Str());
                 }
             }
         }
@@ -392,49 +394,6 @@ namespace EliteDangerousCore.JournalEvents
 
         public string StarSystem { get; set; }      // filled in by Scan system below
 
-        [System.Diagnostics.DebuggerDisplay("{Type} {Count}")]
-        public class SAASignal 
-        {
-            [PropertyNameAttribute("Signal type string, FDName")]
-            public string Type { get; set; }        // material fdname, or $SAA_SignalType..
-            [PropertyNameAttribute("Signal type string, localised")]
-            public string Type_Localised { get; set; }
-            [PropertyNameAttribute("Count of signals")]
-            public int Count { get; set; }
-
-            // JSON export ZMQ, DLL, Web via JournalScan
-
-            [JsonIgnore]
-            [PropertyNameAttribute("Is geo signal")]
-            public bool IsGeo { get { return Type.Contains("$SAA_SignalType_Geological;"); } }
-            [JsonIgnore]
-            [PropertyNameAttribute("Is bio signal")]
-            public bool IsBio { get { return Type.Contains("$SAA_SignalType_Biological;"); } }
-            [JsonIgnore]
-            [PropertyNameAttribute("Is thargoid signal")]           // note Anonmaly is associated with thargoid interactions
-            public bool IsThargoid { get { return Type.Contains("$SAA_SignalType_Thargoid;") || Type.Contains("$SAA_SignalType_PlanetAnomaly;"); } }
-            [JsonIgnore]
-            [PropertyNameAttribute("Is guardian signal")]
-            public bool IsGuardian { get { return Type.Contains("$SAA_SignalType_Guardian;"); } }
-            [JsonIgnore]
-            [PropertyNameAttribute("Is human signal")]
-            public bool IsHuman { get { return Type.Contains("$SAA_SignalType_Human;"); } }
-            [JsonIgnore]
-            [PropertyNameAttribute("Is other signal")]
-            public bool IsOther { get { return Type.Contains("$SAA_SignalType_Other;"); } }
-            [JsonIgnore]
-            [PropertyNameAttribute("Is uncategorised signal")]
-            public bool IsUncategorised { get { return !Type.Contains("$SAA_SignalType"); } }       // probably a material, but you can never tell with FD
-        }
-
-        [System.Diagnostics.DebuggerDisplay("{Genus} {Genus_Localised}")]
-        public class SAAGenus
-        {
-            [PropertyNameAttribute("Genus type string, FDName")]
-            public string Genus { get; set; }        // $Codex_Ent_Bacterial_Genus_Name;
-            [PropertyNameAttribute("Genus type string, localised")]
-            public string Genus_Localised { get; set; }
-        }
 
         public override string SummaryName(ISystem sys)
         {
@@ -457,7 +416,7 @@ namespace EliteDangerousCore.JournalEvents
                     if (indent > 0 && (index > 0 || indentfirst))       // if indent, and its either not first or allowed to indent first
                         sb.Append(inds);
 
-                    sb.Append(logtype ? x.Type : x.Type_Localised.Alt(x.Type));
+                    sb.Append(logtype ? x.Type.Str() : x.Type_Localised.Alt(x.Type.Str()));
                     sb.Append(": ");
                     sb.Append(x.Count.ToString("N0"));
 
@@ -486,7 +445,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     if (indent > 0 && (index > 0 || indentfirst))       // if indent, and its either not first or allowed to indent first
                         sb.Append(inds);
-                    sb.AppendPrePad(logtype ? x.Genus : x.Genus_Localised.Alt(x.Genus));
+                    sb.AppendPrePad(logtype ? x.Genus.Str() : x.Genus_Localised.Alt(x.Genus.Str()));
 
                     if (index++ < list.Count - 1)     // if another to go, separ
                         sb.Append(separ);
@@ -522,13 +481,13 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         // TBD JournalFSSBodySignals fdname?
-        public int Contains(string fdname)      // give count if contains fdname, else zero
+        public int Contains(FDName fdname)      // give count if contains fdname, else zero
         {
-            int index = Signals?.FindIndex((x) => x.Type.Equals(fdname, System.StringComparison.InvariantCultureIgnoreCase)) ?? -1;
+            int index = Signals?.FindIndex((x) => x.Type.Equals(fdname)) ?? -1;
             return (index >= 0) ? Signals[index].Count : 0;
         }
 
-        public object ContainsStr(string fdname, bool showit = true)      // give count if contains fdname, else empty string
+        public object ContainsStr(FDName fdname, bool showit = true)      // give count if contains fdname, else empty string
         {
             int contains = Contains(fdname);
             return showit && contains > 0 ? (object)contains : "";
@@ -546,9 +505,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             foreach (var s in Signals)
             {
-                if (s.Type.HasChars() && s.Type_Localised.HasChars())
+                if (s.Type.IsValid() && s.Type_Localised.HasChars())
                 {
-                    Identifiers.Add(s.Type, s.Type_Localised);
+                    Identifiers.Add(s.Type.Str(), s.Type_Localised);
                 }
             }
         }
@@ -586,12 +545,13 @@ namespace EliteDangerousCore.JournalEvents
             SystemAddress = evt["SystemAddress"].Long();
             BodyName = evt["BodyName"].Str();
             BodyID = evt["BodyID"].Int();
-            Signals = evt["Signals"].ToObjectQ<List<JournalSAASignalsFound.SAASignal>>();
+            Signals = evt["Signals"].ToObjectQ<List<SAASignal>>();
             if (Signals != null)
             {
                 foreach (var s in Signals)      // some don't have localisation
                 {
-                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, JournalFieldNaming.BodySignals(s.Type));
+                    s.Type = FDNameHelpers.NormaliseSignals(s.Type.StrNull());
+                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.Str());
                 }
             }
         }
@@ -607,7 +567,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Frontier body ID")]
         public int BodyID { get; set; }                 // always set
         [PropertyNameAttribute("List of signals")]
-        public List<JournalSAASignalsFound.SAASignal> Signals { get; set; }
+        public List<SAASignal> Signals { get; set; }
 
         [JsonIgnore]
         [PropertyNameAttribute("Does it have geo signals")]

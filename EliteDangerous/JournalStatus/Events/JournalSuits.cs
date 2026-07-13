@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2021-2023 EDDiscovery development team
+ * Copyright 2021-2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- *
  */
 using QuickJSON;
 using System;
@@ -30,15 +28,14 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(this.GetType(), true, 
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     initialobject: this);        // read fields named in this structure matching JSON names
-            if (Name.Valid)    // protect against bad json
-            {
-                FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
-                Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
-            }
+
+            FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
+            Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
         }
 
         public ulong SuitID { get; set; }
-        public FDName Name { get; set; }        
+        [JsonAlwaysCreate]
+        public FDName Name { get; set; }        // always set it so ObjectProtected if it does not see it it still gets set
         public string Name_Localised { get; set; }
         public string FriendlyName { get; set; }
         public long Price { get; set; }
@@ -75,11 +72,9 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(this.GetType(), true, 
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     initialobject: this);        // read fields named in this structure matching JSON names
-            if (Name.Valid)    // protect against bad json
-            {
-                FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
-                Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
-            }
+
+            FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
+            Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
         }
 
         public JournalSellSuit(DateTime utc, ulong id, FDName fdname, string locname, long price, int cmdrid) : base(utc,JournalTypeEnum.SellSuit)
@@ -89,7 +84,8 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public ulong SuitID { get; set; }
-        public FDName Name { get; set; }
+        [JsonAlwaysCreate]
+        public FDName Name { get; set; }        // always set it so ObjectProtected if it does not see it it still gets set
         public string Name_Localised { get; set; }
         public string FriendlyName { get; set; }
         public long Price { get; set; }
@@ -147,15 +143,13 @@ namespace EliteDangerousCore.JournalEvents
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: this);        // read fields named in this structure matching JSON names
 
-            if (SuitName.Valid)    // protect against bad json
-            {
-                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-                SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
-                SuitLoadout.NormaliseModules(Modules);
-            }
+            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
+            SuitLoadout.NormaliseModules(Modules);
         }
 
         public ulong SuitID { get; set; }
+        [JsonAlwaysCreate]
         public FDName SuitName { get; set; }
         public string SuitName_Localised { get; set; }
         public string SuitFriendlyName { get; set; }
@@ -208,15 +202,13 @@ namespace EliteDangerousCore.JournalEvents
                 membersearchflags:System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
                 initialobject: this);        // read fields named in this structure matching JSON names
 
-            if (SuitName.Valid)
-            {
-                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-                SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
-                SuitLoadout.NormaliseModules(Modules);
-            }
+            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
+            SuitLoadout.NormaliseModules(Modules);
         }
 
         public ulong SuitID { get; set; }
+        [JsonAlwaysCreate]
         public FDName SuitName { get; set; }
         public string SuitName_Localised { get; set; }
         public string SuitFriendlyName { get; set; }
@@ -267,14 +259,12 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(this.GetType(), true,
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: this);        // read fields named in this structure matching JSON names
-            if (SuitName.Valid)
-            {
-                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-                SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
-            }
+            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
         }
 
         public ulong SuitID { get; set; }
+        [JsonAlwaysCreate]
         public FDName SuitName { get; set; }
         public string SuitName_Localised { get; set; }
         public string SuitFriendlyName { get; set; }
@@ -307,26 +297,23 @@ namespace EliteDangerousCore.JournalEvents
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: this);        // read fields named in this structure matching JSON names
 
-            if (SuitName.Valid && ModuleName.HasChars())
-            {
-                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-                SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
-                ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
-                SlotFriendlyName = JournalFieldNaming.SuitSlot(SlotName);
-                SlotName = SlotName.ToLowerInvariant();
-                ModuleName = ModuleName.ToLowerInvariant();
-            }
+            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
+            ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
+            SlotFriendlyName = SlotName.ToString().SplitCapsWordFull();
         }
 
         public string LoadoutName { get; set; }
         public ulong SuitID { get; set; }
-        public FDName SuitName { get; set; }        // fdname
+        [JsonAlwaysCreate]
+        public FDName SuitName { get; set; }
         public string SuitName_Localised { get; set; }
         public string SuitFriendlyName { get; set; }
         public ulong LoadoutID { get; set; }
-        public string SlotName { get; set; }        // fdname lower normalised
+        public SuitLoadout.SuitSlot SlotName { get; set; }       
         public string SlotFriendlyName { get; set; }
-        public string ModuleName { get; set; }      // fdname lower normalised
+        [JsonAlwaysCreate]
+        public FDName ModuleName { get; set; }      // fdname 
         public string ModuleName_Localised { get; set; }
         public string ModuleNameFriendly { get; set; }
         public int Class { get; set; }        // may not be there
@@ -381,26 +368,23 @@ namespace EliteDangerousCore.JournalEvents
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: this);        // read fields named in this structure matching JSON names
 
-            if (SuitName.Valid && ModuleName.HasChars())
-            {
-                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-                SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
-                ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
-                SlotFriendlyName = JournalFieldNaming.SuitSlot(SlotName);
-                SlotName = SlotName.ToLowerInvariant();
-                ModuleName = ModuleName.ToLowerInvariant();
-            }
+            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
+            ModuleNameFriendly = ItemData.GetWeapon(ModuleName, ModuleName_Localised)?.Name ?? ModuleName_Localised;
+            SlotFriendlyName = SlotName.ToString().SplitCapsWordFull();
         }
 
         public string LoadoutName { get; set; }
         public ulong SuitID { get; set; }
+        [JsonAlwaysCreate]
         public FDName SuitName { get; set; }        // fdname
         public string SuitName_Localised { get; set; }
         public string SuitFriendlyName { get; set; }    
         public ulong LoadoutID { get; set; }
-        public string SlotName { get; set; }        // fdname lower normalised
+        public SuitLoadout.SuitSlot SlotName { get; set; }        // fdname lower normalised
         public string SlotFriendlyName { get; set; }
-        public string ModuleName { get; set; }      // fdname, lower normalised
+        [JsonAlwaysCreate]
+        public FDName ModuleName { get; set; }     // fdname
         public string ModuleNameFriendly { get; set; }
         public string ModuleName_Localised { get; set; }
         public ulong SuitModuleID { get; set; }         // aka weapon ID
@@ -441,14 +425,12 @@ namespace EliteDangerousCore.JournalEvents
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: this);        // read fields named in this structure matching JSON names
 
-            if (SuitName.Valid)
-            {
-                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-                SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
-            }
+            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
         }
 
         public ulong SuitID { get; set; }
+        [JsonAlwaysCreate]
         public FDName SuitName { get; set; }
         public string SuitName_Localised { get; set; }
         public string SuitFriendlyName { get; set; }
@@ -482,15 +464,13 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(this.GetType(), true, 
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: this);        // read fields named in this structure matching JSON names
-            if (SuitName.Valid)
-            {
-                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
-                SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
-                SuitLoadout.NormaliseModules(Modules);
-            }
+            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
+            SuitLoadout.NormaliseModules(Modules);
         }
 
         public ulong SuitID { get; set; }
+        [JsonAlwaysCreate]
         public FDName SuitName { get; set; }
         public string SuitName_Localised { get; set; }
         public string SuitFriendlyName { get; set; }
@@ -535,14 +515,12 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(this.GetType(), true, 
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: this);        // read fields named in this structure matching JSON names
-            if (Name.Valid)
-            {
-                FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
-                Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
-            }
+            FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
+            Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
         }
 
         public ulong SuitID { get; set; }
+        [JsonAlwaysCreate]
         public FDName Name { get; set; }
         public string Name_Localised { get; set; }
         public string FriendlyName { get; set; }
@@ -570,9 +548,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Cost != 0)
                 mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised, -Cost);
         }
-
-        }
-
+    }
 }
 
 

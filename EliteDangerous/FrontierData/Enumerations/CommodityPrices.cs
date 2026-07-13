@@ -167,7 +167,7 @@ namespace EliteDangerousCore
             {
                 id = jo["id"].Long();
                 fdname_unnormalised = jo["name"].FDName();
-                fdname = jo["name"].FDNameNormalise();
+                fdname = FDNameHelpers.NormaliseMatCommods(fdname_unnormalised.Str(), out _);
 
                 locName = jo["locName"].Str();
                 locName = locName.Alt(fdname.SplitCapsWordFull());      // use locname, if not there, make best loc name possible
@@ -222,7 +222,7 @@ namespace EliteDangerousCore
             {
                 id = jo["id"].Long();
                 fdname_unnormalised = jo["Name"].FDName();
-                fdname = jo["Name"].FDNameNormalise();
+                fdname = FDNameHelpers.NormaliseMatCommods(fdname_unnormalised.Str(), out _);
                 locName = jo["Name_Localised"].Str();
                 if (locName.IsEmpty())
                     locName = fdname.SplitCapsWordFull();
@@ -268,7 +268,7 @@ namespace EliteDangerousCore
             {
                 id = jo["id"].Long();
                 fdname_unnormalised = jo["Name"].FDName();
-                fdname = jo["Name"].FDNameNormalise();
+                fdname = FDNameHelpers.NormaliseMatCommods(fdname_unnormalised.Str(), out _);
                 locName = jo["Name_Localised"].Str();
                 if (locName.IsEmpty())
                     locName = fdname.SplitCapsWordFull();

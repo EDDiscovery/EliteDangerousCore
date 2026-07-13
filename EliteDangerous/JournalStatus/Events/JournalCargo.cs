@@ -35,7 +35,8 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise()
             {
-                Name = JournalFieldNaming.FDNameTranslation(Name);
+                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname);
+                FriendlyName = engname;
                 FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
             }
         }
@@ -158,9 +159,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalEjectCargo(JObject evt) : base(evt, JournalTypeEnum.EjectCargo)
         {
-            Type = evt["Type"].FDName();       // fdname
-            Type = JournalFieldNaming.FDNameTranslation(Type);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyType = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Type);
+            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname);
+            FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
 
             Count = evt["Count"].Int();
@@ -236,7 +236,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            if (CargoType.Valid && Count > 0)
+            if (CargoType.IsValid() && Count > 0)
                 mc.ChangeCommd( EventTimeUTC, CargoType, (UpdateEnum == UpdateTypeEnum.Collect) ? Count : -Count, 0);
         }
 
@@ -272,9 +272,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalCollectCargo(JObject evt) : base(evt, JournalTypeEnum.CollectCargo)
         {
-            Type = evt["Type"].FDName();                               //FDNAME
-            Type = JournalFieldNaming.FDNameTranslation(Type);     // pre-mangle to latest names, in case we are reading old journal records
-            FriendlyType = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Type);
+            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname);
+            FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
             Stolen = evt["Stolen"].Bool();
             MissionID = evt["MissionID"].ULongNull();

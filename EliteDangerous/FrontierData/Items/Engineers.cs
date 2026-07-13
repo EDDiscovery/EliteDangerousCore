@@ -21,10 +21,10 @@ namespace EliteDangerousCore
 {
     public partial class ItemData
     {
-        static public EngineeringInfo GetEngineerInfo(string fdname, string locname = null)        
+        static public EngineeringInfo GetEngineerInfo(string engineername, string locname = null)        
         {
-            fdname = fdname.ToLowerInvariant();
-            if (engineers.TryGetValue(fdname, out EngineeringInfo var))
+            engineername = engineername.ToLowerInvariant();
+            if (engineers.TryGetValue(engineername, out EngineeringInfo var))
                 return var;
             else
             {

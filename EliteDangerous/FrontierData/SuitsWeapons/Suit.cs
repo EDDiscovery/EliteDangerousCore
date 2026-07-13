@@ -34,14 +34,14 @@ namespace EliteDangerousCore
         public Suit(DateTime time, ulong id, FDName fdname, string locname, long price,FDName[] suitmods , bool sold )
         {
             EventTime = time; ID = id; FDName = fdname; Name_Localised = locname; Price = price; Sold = sold; SuitMods = suitmods;
-            if ( fdname.Valid )
+            if ( fdname.IsValid() )
                 FriendlyName = ItemData.GetSuit(fdname, Name_Localised)?.Name ?? Name_Localised;
         }
     }
 
     public class SuitList
     {
-        public Dictionary<ulong, Suit> Suits(uint gen) { return suits.Get(gen, x => x.Sold == false && x.FDName.Valid); }    // all valid unsold suits with valid names. fdname=null special entry
+        public Dictionary<ulong, Suit> Suits(uint gen) { return suits.Get(gen, x => x.Sold == false && x.FDName.IsValid()); }    // all valid unsold suits with valid names. fdname=null special entry
 
         public Suit Suit(ulong suit, uint gen) { return suits.Get(suit, gen); }    // get suit at gen
 

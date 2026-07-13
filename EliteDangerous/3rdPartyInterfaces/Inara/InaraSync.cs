@@ -131,7 +131,7 @@ namespace EliteDangerousCore.Inara
 
                 for( int i = 0; i < history.ShipInformationList.Count; i++)
                 {
-                    Ship si = history.ShipInformationList.Get(i);
+                    Ship si = history.ShipInformationList[i];
                     if ( si.State == Ship.ShipState.Owned && ItemData.IsShip(si.ShipFD))
                     {
                         // loadout may be null if nothing in it.
@@ -208,7 +208,7 @@ namespace EliteDangerousCore.Inara
                     {
                         var je = he.journalEntry as JournalLoadout;
                         var si = he.ShipInformation;
-                        if (si != null && je.ShipFD.Valid && ItemData.IsShip(je.ShipFD)) // if it has an FDname (defensive) and is not SRV/Fighter
+                        if (si != null && je.ShipFD.IsValid() && ItemData.IsShip(je.ShipFD)) // if it has an FDname (defensive) and is not SRV/Fighter
                         {
                             if (je.ShipId == si.ID)
                             {
@@ -444,7 +444,7 @@ namespace EliteDangerousCore.Inara
                 case JournalTypeEnum.CargoDepot: //VERIFIED 16/5/18
                     {
                         var je = he.journalEntry as JournalCargoDepot;
-                        if (je.CargoType.Valid && je.Count > 0)
+                        if (je.CargoType.IsValid() && je.Count > 0)
                         {
                             if (mcmr.TryGetValue(je.CargoType, out MaterialCommodityMicroResource item))
                                 eventstosend.Add(InaraClass.setCommanderInventoryItem(item, heutc));
@@ -472,12 +472,12 @@ namespace EliteDangerousCore.Inara
                 case JournalTypeEnum.EngineerContribution: //VERIFIED 16/5/18
                     {
                         var je = he.journalEntry as JournalEngineerContribution;
-                        if (je.Commodity.Valid)
+                        if (je.Commodity.IsValid())
                         {
                             if (mcmr.TryGetValue(je.Commodity, out MaterialCommodityMicroResource item))
                                 eventstosend.Add(InaraClass.setCommanderInventoryItem(item, heutc));
                         }
-                        if (je.Material.Valid)
+                        if (je.Material.IsValid())
                         {
                             if (mcmr.TryGetValue(je.Material, out MaterialCommodityMicroResource item))
                                 eventstosend.Add(InaraClass.setCommanderInventoryItem(item, heutc));

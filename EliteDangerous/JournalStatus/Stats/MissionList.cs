@@ -186,7 +186,7 @@ namespace EliteDangerousCore
 
         static public List<MissionState> GetAllCombatMissionsLatestFirst(List<MissionState> ms)
         {
-            return ms.Where(x => x.Mission.TargetType.Length > 0 && x.Mission.ExpiryValid).OrderByDescending(y => y.Mission.EventTimeUTC).ToList();
+            return ms.Where(x => x.Mission.TargetType > MissionDefinitions.TargetType.NotGiven && x.Mission.ExpiryValid).OrderByDescending(y => y.Mission.EventTimeUTC).ToList();
         }
 
         static public List<MissionState> GetAllCurrentMissions(List<MissionState> ms, DateTime curtime)

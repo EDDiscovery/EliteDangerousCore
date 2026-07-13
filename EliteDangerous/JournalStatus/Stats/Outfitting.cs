@@ -42,10 +42,10 @@ namespace EliteDangerousCore
 
             public void Normalise()
             {
-                FDName = FDName.Normalise(Name);          // clean name and move to FDName
+                FDName = FDNameHelpers.NormaliseModules(Name, out string engname);
+                Name = engname;
                 ItemData.TryGetShipModule(FDName, out ItemData.ShipModule m, true);    // find, or create
                 ModuleInfo = m;
-                Name = ModuleInfo?.EnglishModName ?? FDName.Str();            // set text name
             }
 
             public bool Equals(OutfittingItem other)

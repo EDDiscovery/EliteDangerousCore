@@ -131,17 +131,16 @@ namespace EliteDangerousCore.JournalEvents
         [System.Diagnostics.DebuggerDisplay("Services {CrewRole} {CrewName} a{Activated} e{Enabled}")]
         public class ServicesClass
         {
-            public string CrewRole { get; set; }
+            public CarrierDefinitions.ServiceType CrewRole { get; set; }
             public bool Activated { get; set; }
             public bool Enabled { get; set; }
             public string CrewName { get; set; }
-            public JournalCarrierCrewServices.ServiceType ServiceType() { return JournalCarrierCrewServices.GetServiceType(CrewRole); }
         }
 
         public List<ServicesClass> Services { get; set; }       // may be null - called 'Crew' in journal buts its all about services
-        public ServicesClass GetService(JournalCarrierCrewServices.ServiceType t) // may be null.  Core services are not listed
+        public ServicesClass GetService(CarrierDefinitions.ServiceType t) // may be null.  Core services are not listed
         {
-            return Services?.Find(x => x.ServiceType() == t);
+            return Services?.Find(x => x.CrewRole == t);
         }
 
         public long GetServicesCost()
@@ -149,7 +148,7 @@ namespace EliteDangerousCore.JournalEvents
             long res = 0;
             foreach( var s in Services.EmptyIfNull())
             {
-                JournalCarrierCrewServices.ServicesData si = JournalCarrierCrewServices.GetDataOnServiceType(s.ServiceType());
+                var si = CarrierDefinitions.GetDataOnServiceType(s.CrewRole);
                 if (si != null)
                 {
                     long delta = s.Activated ? (s.Enabled ? si.UpkeepCost : si.SuspendedUpkeepCost) : 0;
@@ -169,8 +168,6 @@ namespace EliteDangerousCore.JournalEvents
             public string PackTheme { get; set; }
             public int PackTier { get; set; }
         }
-
-
         public List<PackClass> ShipPacks { get; set; }  // may be null
         public int ShipPacksCount() { return ShipPacks?.Count() ?? 0; }
         public List<PackClass> ModulePacks { get; set; }    // may be null
@@ -500,7 +497,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Total { get; set; }
 
         // Istats
-        public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = new FDName("tritium"), Count = -Amount } }; } }
+        public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = MaterialCommodityMicroResourceType.Tritium, Count = -Amount } }; } }
 
         public int CountOfItem { get { return Amount; } }
 
@@ -520,13 +517,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            mc.ChangeCommd( EventTimeUTC, new FDName("tritium"), -Amount, 0);
+            mc.ChangeCommd( EventTimeUTC, MaterialCommodityMicroResourceType.Tritium, -Amount, 0);
         }
 
         public void UpdateStats(Stats stats, ISystem system, string stationfaction)
         {
             if (stationfaction.HasChars())
-                stats.UpdateCommodity(system, new FDName("tritium"), -Amount, 0, stationfaction);
+                stats.UpdateCommodity(system, MaterialCommodityMicroResourceType.Tritium, -Amount, 0, stationfaction);
         }
 
         public void  UpdateCarrierStats(CarrierStats s, bool onfootfleetcarrierunused)
@@ -540,60 +537,20 @@ namespace EliteDangerousCore.JournalEvents
     {
         public long CarrierID { get; set; }
         public CarrierDefinitions.CarrierType CarrierType { get; set; }
-        public string Operation { get; set; }
-        public string CrewRole { get; set; }
+        public CarrierDefinitions.ServiceOperationType Operation { get; set; }
+        public CarrierDefinitions.ServiceType CrewRole { get; set; }
         public string FriendlyCrewRole { get; set; }
         public string CrewName { get; set; }
-
-        // as per frontier CrewRole Entry
-        public enum ServiceType
-        {
-            BridgeCrew, CommodityTrading, TritiumDepot,        // not listed in crew services, but core items
-            Refuel, Repair, Rearm, VoucherRedemption, Shipyard, Outfitting, BlackMarket, Exploration, Bartender, VistaGenomics, PioneerSupplies,
-            Unknown
-        };
-
-        // turn CrewRole into Service type
-        public ServiceType GetServiceType() { return Enum.TryParse(CrewRole, true, out ServiceType typefound) ? typefound : ServiceType.Unknown; }
-        static public ServiceType GetServiceType(string name) { return Enum.TryParse(name, true, out ServiceType typefound) ? typefound : ServiceType.Unknown; }
-
-        public enum OperationType { Activate, Deactivate, Pause, Resume, Replace, Unknown }
-        public OperationType GetOperation() { return Enum.TryParse(Operation, true, out OperationType typefound) ? typefound : OperationType.Unknown; }
-
-        static public string GetTranslatedServiceName(ServiceType t) { return translatedname[(int)t]; }
-
-        static public bool IsOptionalService(ServiceType t) { return t >= ServiceType.Refuel && t != ServiceType.Unknown; }
-        static public bool IsValidService(ServiceType t) { return t != ServiceType.Unknown; }
-
-        static public int GetServiceCount() { var entries = Enum.GetValues(typeof(EliteDangerousCore.JournalEvents.JournalCarrierCrewServices.ServiceType)); return entries.Length - 1; }      // ignore Unknown
-
-        // as per frontier Operation Entry
-
-        [System.Diagnostics.DebuggerDisplay("{Service} {CargoSize}t {InstallCost}cr up {UpkeepCost}")]
-        public class ServicesData       // https://elite-dangerous.fandom.com/wiki/Drake-Class_Carrier
-        {
-            public ServicesData(ServiceType t, long cost, long upkeep, long suspendedcost, int cargosize) 
-            { Service = t; InstallCost = cost; UpkeepCost = upkeep; SuspendedUpkeepCost = suspendedcost; CargoSize = cargosize; }
-            public ServiceType Service { get; set; }
-            public long InstallCost { get; set; }
-            public long UpkeepCost { get; set; }
-            public long SuspendedUpkeepCost { get; set; }
-            public long CargoSize { get; set; }
-        }
-
-        // may return null if names don't match in future.
-        public static ServicesData GetDataOnServiceType(ServiceType t) { return Array.Find(ServiceInformation, x => x.Service == t); }
-
-        // get data on journal service type
-        public ServicesData GetDataOnService { get { var t = GetServiceType();  return Array.Find(ServiceInformation, x => x.Service == t); } }
+        public CarrierDefinitions.ServicesData GetDataOnService => CarrierDefinitions.GetDataOnServiceType(CrewRole);
 
         public JournalCarrierCrewServices(JObject evt) : base(evt, JournalTypeEnum.CarrierCrewServices)
         {
             CarrierID = evt["CarrierID"].Long();
             CarrierType = CarrierDefinitions.ToEnum(evt["CarrierType"].Str());
-            CrewRole = evt["CrewRole"].Str();
-            FriendlyCrewRole = JournalFieldNaming.CrewRole(CrewRole);
-            Operation = evt["Operation"].Str();
+            CrewRole = Enum.TryParse(evt["CrewRole"].Str(), true, out CarrierDefinitions.ServiceType st) ? st : CarrierDefinitions.ServiceType.Unknown;
+            FriendlyCrewRole = CrewRole.ToString().SplitCapsWordFull();
+            Operation = Enum.TryParse(evt["Operation"].Str(), true, out CarrierDefinitions.ServiceOperationType op) ? op : CarrierDefinitions.ServiceOperationType.Unknown;
+            if (Operation == CarrierDefinitions.ServiceOperationType.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown crew service operation {(evt["Operation"].Str())}");
             CrewName = evt["CrewName"].Str();
         }
 
@@ -609,42 +566,6 @@ namespace EliteDangerousCore.JournalEvents
         {
             s.Update(this);
         }
-
-        private static ServicesData[] ServiceInformation = new ServicesData[]        // verified with game oct 22
-        {
-            new ServicesData(ServiceType.Refuel,40000000,1500000,750000,500),
-            new ServicesData(ServiceType.Repair,50000000,1500000,750000,180),
-            new ServicesData(ServiceType.Rearm,95000000,1500000,750000,250),
-            new ServicesData(ServiceType.VoucherRedemption,150000000,1850000,850000,100),
-            new ServicesData(ServiceType.Shipyard,250000000,6500000,1800000,3000),
-            new ServicesData(ServiceType.Outfitting,250000000,5000000,1500000,1750),
-            new ServicesData(ServiceType.BlackMarket,165000000,2000000,1250000,250),
-            new ServicesData(ServiceType.Exploration,150000000,1850000,700000,120),
-            new ServicesData(ServiceType.Bartender,200000000,1750000,1250000,150),
-            new ServicesData(ServiceType.VistaGenomics,150000000,1500000,700000,120),
-            new ServicesData(ServiceType.PioneerSupplies,250000000,5000000,1500000,200),
-        };
-
-
-        private static string[] translatedname = new string[] {
-            "Bridge Crew".Tx(),
-            "Commodity Trading".Tx(),
-            "Tritium Depot".Tx(),
-            "Refuel Station".Tx(),
-            "Repair Crews".Tx(),
-            "Armoury".Tx(),
-            "Redemption Office".Tx(),
-            "Shipyard".Tx(),
-            "Outfitting".Tx(),
-            "Secure Warehouse".Tx(),
-            "Universal Cartographics".Tx(),
-            "Concourse Bar".Tx(),
-            "Vista Genomics".Tx(),
-            "Pioneer Supplies".Tx(),
-            "Unknown",
-        };
-
-
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierFinance)]
@@ -697,7 +618,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public long CarrierID { get; set; }
         public CarrierDefinitions.CarrierType CarrierType { get; set; }
-        public string Operation { get; set; }       // BuyPack, SellPack
+        public CarrierDefinitions.ShipPackOperationType Operation { get; set; }       // BuyPack, SellPack
         public string FriendlyOperation { get; set; }       // BuyPack, SellPack
         public string PackTheme { get; set; }
         public int PackTier { get; set; }
@@ -708,8 +629,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             CarrierID = evt["CarrierID"].Long();
             CarrierType = CarrierDefinitions.ToEnum(evt["CarrierType"].Str());
-            Operation = evt["Operation"].Str();
-            FriendlyOperation = JournalFieldNaming.ShipPackOperation(Operation);
+            Operation = Enum.TryParse(evt["Operation"].Str(), true, out CarrierDefinitions.ShipPackOperationType op) ? op : CarrierDefinitions.ShipPackOperationType.Unknown;
+            if (Operation == CarrierDefinitions.ShipPackOperationType.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown module service operation {(evt["Operation"].Str())}");
+            FriendlyOperation = Operation.ToString().SplitCapsWordFull();
             PackTheme = evt["PackTheme"].Str();
             PackTier = evt["PackTier"].Int();
             Cost = evt["Cost"].LongNull();
@@ -739,7 +661,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public long CarrierID { get; set; }
         public CarrierDefinitions.CarrierType CarrierType { get; set; }
-        public string Operation { get; set; }
+        public CarrierDefinitions.ModulePackOperationType Operation { get; set; }
         public string FriendlyOperation { get; set; }
         public string PackTheme { get; set; }
         public int PackTier { get; set; }
@@ -750,8 +672,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             CarrierID = evt["CarrierID"].Long();
             CarrierType = CarrierDefinitions.ToEnum(evt["CarrierType"].Str());
-            Operation = evt["Operation"].Str();
-            FriendlyOperation = JournalFieldNaming.ModulePackOperation(Operation);
+            Operation = Enum.TryParse(evt["Operation"].Str(), true, out CarrierDefinitions.ModulePackOperationType op) ? op : CarrierDefinitions.ModulePackOperationType.Unknown;
+            FriendlyOperation = Operation.ToString().SplitCapsWordFull();
             PackTheme = evt["PackTheme"].Str();
             PackTier = evt["PackTier"].Int();
             Cost = evt["Cost"].LongNull();
@@ -819,8 +741,8 @@ namespace EliteDangerousCore.JournalEvents
             CancelTrade = evt["CancelTrade"].BoolNull();
 
             Order.BlackMarket = evt["BlackMarket"].Bool();
-            Order.Commodity = evt["Commodity"].FDNameNormalise();
-            Order.Commodity_Localised =JournalFieldNaming.CheckLocalisation(evt["Commodity_Localised"].Str(), Order.Commodity.Str());
+            Order.Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out string engname);
+            Order.Commodity_Localised =JournalFieldNaming.CheckLocalisation(evt["Commodity_Localised"].Str(), engname);
             Order.PurchaseOrder = evt["PurchaseOrder"].IntNull();
             Order.SaleOrder = evt["SaleOrder"].IntNull();
             Order.Price = evt["Price"].Int();

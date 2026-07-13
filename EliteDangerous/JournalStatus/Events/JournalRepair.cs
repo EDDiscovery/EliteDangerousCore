@@ -30,14 +30,13 @@ namespace EliteDangerousCore.JournalEvents
 
                 foreach (var jitem in evt["Items"])
                 {
-                    var itemfd = jitem.FDNameNormalise();
-                    var item = JournalFieldNaming.GetBetterEnglishModuleName(itemfd);
+                    var ModuleFD = FDNameHelpers.NormaliseModules(jitem.Str(), out string engname);
 
                     var repairitem = new RepairItem
                     {
-                        ItemFD = itemfd,
-                        Item = item,
-                        ItemLocalised = JournalFieldNaming.RepairType(item)
+                        ItemFD = ModuleFD,
+                        Item = engname,
+                        ItemLocalised = engname,
                     };
 
                     ItemLocalised = ItemLocalised.AppendPrePad(repairitem.ItemLocalised, ", "); // for the voice pack, keep this going
@@ -54,8 +53,8 @@ namespace EliteDangerousCore.JournalEvents
             }
             else
             {
-                ItemFD = evt["Item"].FDNameNormalise();
-                Item = JournalFieldNaming.GetBetterEnglishModuleName(ItemFD);
+                ItemFD = FDNameHelpers.NormaliseModules(evt["Item"].Str(), out string engname);
+                Item = engname;
                 ItemLocalised = JournalFieldNaming.CheckLocalisation(evt["Item_Localised"].Str(),Item);
             }
 
@@ -79,12 +78,12 @@ namespace EliteDangerousCore.JournalEvents
         public void Ledger(Ledger mcl)
         {
             if ( Cost != 0)
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, JournalFieldNaming.GetForeignModuleName(ItemFD, ItemLocalised), -Cost);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, ItemFD.GetForeignModuleName(ItemLocalised), -Cost);
         }
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(ItemFD,ItemLocalised), "Cost: ; cr;N0".Tx(), Cost );
+            return BaseUtils.FieldBuilder.Build("", ItemFD.GetForeignModuleName(ItemLocalised), "Cost: ; cr;N0".Tx(), Cost );
         }
     }
 
@@ -116,8 +115,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalAfmuRepairs(JObject evt) : base(evt, JournalTypeEnum.AfmuRepairs)
         {
-            ModuleFD = evt["Module"].FDNameNormalise();
-            Module = JournalFieldNaming.GetBetterEnglishModuleName(ModuleFD);
+            ModuleFD = FDNameHelpers.NormaliseModules(evt["Module"].Str(), out string engname);
+            Module = engname;
             ModuleLocalised = JournalFieldNaming.CheckLocalisation(evt["Module_Localised"].Str(), Module);
             FullyRepaired = evt["FullyRepaired"].Bool();
             Health = evt["Health"].Float() * 100.0F;
@@ -131,7 +130,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", JournalFieldNaming.GetForeignModuleName(ModuleFD, ModuleLocalised), "Health: ;%", (int)Health, ";Fully Repaired", FullyRepaired);
+            return BaseUtils.FieldBuilder.Build("", ModuleFD.GetForeignModuleName(ModuleLocalised), "Health: ;%", (int)Health, ";Fully Repaired", FullyRepaired);
         }
     }
 

@@ -34,7 +34,7 @@ namespace EliteDangerousCore.StarScan2
         public int BarycentreScans { get; set; }                 // accumulated barycentre scans, used for debug purposes to know we have stored a barycentre Scan in the tree
         public uint BodyGeneration { get; private set; } = 0;        // changed after each body change
         public uint SignalGeneration { get; private set; } = 0;        // changed after each codex/signal/fss/genus/etc change
-        public List<FSSSignal> FSSSignals { get { return systemBodies.FSSSignalList; } }     // may be null, held in top level body
+        public List<Signal> FSSSignals { get { return systemBodies.FSSSignalList; } }     // may be null, held in top level body
         public List<JournalCodexEntry> CodexEntries { get { return systemBodies.CodexEntries; } }     // System Codex entries, may be null, held in top level body. Codex entries can also be against a body
         public List<IBodyFeature> OrbitingStations { get { return systemBodies.Features; } }     // System orbiting stations, may be null, held in top level body, always Docked
 

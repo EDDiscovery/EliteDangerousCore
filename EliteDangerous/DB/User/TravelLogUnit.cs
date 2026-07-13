@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016-2024 EDDiscovery development team
+ * Copyright 2016-2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -87,7 +87,7 @@ namespace EliteDangerousCore.DB
 
         internal bool Add(SQLiteConnectionUser cn, DbTransaction txn)
         {
-            FetchAll();
+            Initialise();
             System.Diagnostics.Debug.WriteLine($"Add TLU {Path} {filename}");
 
             using (DbCommand cmd = cn.CreateCommand(
@@ -143,66 +143,62 @@ namespace EliteDangerousCore.DB
 
         // Monitor watcher adds TLUs into the DB in LastWrite order so the TLU caches will be in LastWrite order (dictionary keeps insert order)
 
-        static private void FetchAll()
+        public static void Initialise()
         {
-            if (cacheid == null)
-            {
-                cacheid = new Dictionary<long, TravelLogUnit>();
-                cachepath = new Dictionary<string, TravelLogUnit>();
+            cacheid = new Dictionary<long, TravelLogUnit>();
+            cachepath = new Dictionary<string, TravelLogUnit>();
 
-                UserDatabase.Instance.DBRead(cn =>
+            UserDatabase.Instance.DBRead(cn =>
+            {
+                using (DbCommand cmd = cn.CreateCommand("select * from TravelLogUnit Order By id"))
                 {
-                    using (DbCommand cmd = cn.CreateCommand("select * from TravelLogUnit Order By id"))
+                    using (DbDataReader rdr = cmd.ExecuteReader())
                     {
-                        using (DbDataReader rdr = cmd.ExecuteReader())
+                        while (rdr.Read())
                         {
-                            while (rdr.Read())
-                            {
-                                TravelLogUnit sys = new TravelLogUnit(rdr);
-                                System.Diagnostics.Debug.Assert(!cacheid.ContainsKey(sys.ID));
-                                cacheid[sys.ID] = sys;
-                                cachepath[sys.FullName] = sys;       // name is v.important for speed.  Keep case of filename for linux
-                            }
+                            TravelLogUnit sys = new TravelLogUnit(rdr);
+                            System.Diagnostics.Debug.Assert(!cacheid.ContainsKey(sys.ID));
+                            cacheid[sys.ID] = sys;
+                            cachepath[sys.FullName] = sys;       // name is v.important for speed.  Keep case of filename for linux
                         }
                     }
-                });
-            }
+                }
+            });
         }
 
         public static List<string> GetAllNames()
         {
-            FetchAll();
             return cacheid.Values.Select(x=>x.FullName).ToList();
         }
 
+        // can be used before Initialise is called
         // case sensitive.
         public static bool TryGet(string pathfilename, out TravelLogUnit tlu)
         {
-            FetchAll();
-            return cachepath.TryGetValue(pathfilename, out tlu);
+            tlu = null;
+            return cachepath != null ? cachepath.TryGetValue(pathfilename, out tlu) : false;
         }
 
+        // can be used before Initialise is called
         public static TravelLogUnit Get(long id)
         {
-            FetchAll();
-            return cacheid.ContainsKey(id) ? cacheid[id] : null;
+            return cacheid != null && cacheid.ContainsKey(id) ? cacheid[id] : null;
         }
 
+        // can be used before Initialise is called
         public static bool TryGet(long id, out TravelLogUnit tlu)
         {
-            FetchAll();
-            return cacheid.TryGetValue(id, out tlu);
+            tlu = null;
+            return cacheid != null && cacheid.TryGetValue(id, out tlu);
         }
 
         // will be in last write order due to insert order
         public static List<TravelLogUnit> GetCommander(int cmdrid)
         {
-            FetchAll();
             return cacheid.Where(x => x.Value.CommanderId == cmdrid).Select(x=>x.Value).ToList();
         }
 
         public static Dictionary<long, TravelLogUnit> cacheid = null;
-
         // key is in original filename case - do not ToLower it due to linux 
         public static Dictionary<string, TravelLogUnit> cachepath = null;      
     }

@@ -53,7 +53,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalPowerplayCollect(JObject evt) : base(evt, JournalTypeEnum.PowerplayCollect)
         {
             Power = evt["Power"].Str();
-            Type = evt["Type"].FDNameNormalise();
+            Type = evt["Type"].FDName();
             Type_Localised = JournalFieldNaming.CheckLocalisation(evt["Type_Localised"].Str(), Type.Str());
             Count = evt["Count"].Int();
 
@@ -98,7 +98,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalPowerplayDeliver(JObject evt) : base(evt, JournalTypeEnum.PowerplayDeliver)
         {
             Power = evt["Power"].Str();
-            Type = evt["Type"].FDNameNormalise();
+            Type = evt["Type"].FDName();
             Type_Localised = JournalFieldNaming.CheckLocalisation(evt["Type_Localised"].Str(), Type.Str());
             Count = evt["Count"].Int();
         }

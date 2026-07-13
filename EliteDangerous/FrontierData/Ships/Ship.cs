@@ -31,7 +31,7 @@ namespace EliteDangerousCore
         public enum ShipState { Owned, Sold, Destroyed, Imported};
         public ShipState State { get; set; } = ShipState.Owned; // if owned, sold, destroyed. Default owned
         public string ShipType { get; private set; }        // ship type name, nice, fer-de-lance, etc. can be null
-        public FDName ShipFD { get; private set; }          // ship type name, fdname
+        public FDName ShipFD { get; private set; }          // ship type name, fdname, may be null until set
         public string ShipUserName { get; private set; }    // ship name, may be empty or null
         public string ShipUserIdent { get; private set; }   // ship ident, may be empty or null
         public long HullValue { get; private set; }         // may be 0, not known
@@ -771,7 +771,7 @@ namespace EliteDangerousCore
             Ship sm = new Ship(this.ID);
             sm.State = this.State;
             sm.ShipType = this.ShipType;
-            sm.ShipFD = new FDName(this.ShipFD.Str());
+            sm.ShipFD = ShipFD?.Clone();        // may be null
             sm.ShipUserName = this.ShipUserName;
             sm.ShipUserIdent = this.ShipUserIdent;
             sm.FuelLevel = this.FuelLevel;
@@ -835,7 +835,7 @@ namespace EliteDangerousCore
         {
             System.Diagnostics.Debug.Assert(shipfd != null && ship != null);
 
-            bool s1 = ShipFD.Equals(shipfd) == false;
+            bool s1 = ShipFD != shipfd;     // ShipFD may be null
             bool s2 = ship != ShipType;
             bool s3 = name != null && name != ShipUserName;
             bool s4 = ident != null && ident != ShipUserIdent;
@@ -1260,7 +1260,7 @@ namespace EliteDangerousCore
                 jloadout.ShipInformation(sl, "Nowhere", new SystemClass("Sol"));        // create in ShipList.
                 if (sl.Count > 0)
                 {
-                    Ship importedship = sl.Get(0);
+                    Ship importedship = sl[0];
                     importedship.State = Ship.ShipState.Imported;
                     importedship.FuelLevel = importedship.FuelCapacity; // presume half tank
                     return importedship;

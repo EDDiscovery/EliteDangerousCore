@@ -39,8 +39,8 @@ namespace EliteDangerousCore.JournalEvents
             SharedWithOthers = evt["SharedWithOthers"].Bool(false);
             Rewards = evt["Rewards"]?.ToObjectQ<BountyReward[]>();
 
-            TargetLocalised = evt["Target"].StrNull();       // set for skimmer target missions and for on foot bounties
-            Target = evt["Target"].FDNameNormalise();
+            Target = FDNameHelpers.NormaliseShip(evt["Target"].Str(), out string _, true);      // can be null
+            TargetLocalised = Target.Str();         
 
             if (Target != null)         
             {
@@ -53,7 +53,7 @@ namespace EliteDangerousCore.JournalEvents
                 }
                 else if (TargetLocalised.StartsWith("$"))
                 {
-                    TargetLocalised = JournalFieldNaming.GetBetterShipSuitActorName(Target);    // else use suit etc naming
+                    TargetLocalised = Target.GetBetterShipSuitActorName();    // else use suit etc naming
                 }
 
                // System.Diagnostics.Debug.WriteLine($"Bounty {Target} -> {TargetLocalised}");
@@ -234,10 +234,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalCommitCrime(JObject evt) : base(evt, JournalTypeEnum.CommitCrime)
         {
-            FDCrimeType = evt["CrimeType"].Str();
-            CrimeType = JournalFieldNaming.CrimeType(FDCrimeType);
-            //System.Diagnostics.Debug.WriteLine($"{FDCrimeType} -> {CrimeType} -> {CrimeTypeTranslated}");
-
+            FDCrimeType = evt["CrimeType"].FDName();
+            CrimeType = FDCrimeType.SplitCapsWordFull();
             Faction = evt["Faction"].Str();
             Victim = evt["Victim"].Str();
             VictimLocalised = JournalFieldNaming.CheckLocalisation(evt["Victim_Localised"].Str(), Victim);
@@ -245,7 +243,7 @@ namespace EliteDangerousCore.JournalEvents
             Bounty = evt["Bounty"].LongNull();
         }
         public string CrimeType { get; set; }       // friendly name
-        public string FDCrimeType { get; set; }     // FDName
+        public FDName FDCrimeType { get; set; }     // FDName
         public string Faction { get; set; }
         public string Victim { get; set; }
         public string VictimLocalised { get; set; }
@@ -257,7 +255,6 @@ namespace EliteDangerousCore.JournalEvents
         {
             stats.CommitCrime(system,Faction);
         }
-
 
         public override string GetInfo()
         {
@@ -271,21 +268,21 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalCrimeVictim(JObject evt) : base(evt, JournalTypeEnum.CrimeVictim)
         {
-            FDCrimeType = evt["CrimeType"].Str();
-            CrimeType = JournalFieldNaming.CrimeType(FDCrimeType);
+            FDCrimeType = evt["CrimeType"].FDName();
+            CrimeType = FDCrimeType.SplitCapsWordFull();
             Offender = evt["Offender"].Str();
             OffenderLocalised = JournalFieldNaming.CheckLocalisation(evt["Offender_Localised"].Str(), Offender);
             Bounty = evt["Bounty"].Long();
         }
         public string CrimeType { get; set; }       // friendly name
-        public string FDCrimeType { get; set; }
+        public FDName FDCrimeType { get; set; }
         public string Offender { get; set; }
         public string OffenderLocalised { get; set; }
         public long Bounty { get; set; }
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", CrimeType, "Offender ".Tx(), OffenderLocalised, "Bounty: ; cr;N0".Tx(), Bounty);
+            return BaseUtils.FieldBuilder.Build("", Crimes.ToLocalisedLanguage(FDCrimeType), "Offender ".Tx(), OffenderLocalised, "Bounty: ; cr;N0".Tx(), Bounty);
         }
     }
 
@@ -455,8 +452,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalRedeemVoucher(JObject evt) : base(evt, JournalTypeEnum.RedeemVoucher)
         {
-            FDType = evt["Type"].Str();
-            Type = JournalFieldNaming.RedeemVoucherType(FDType);
+            FDType = Enum.TryParse(evt["Type"].Str(), true, out RedeemTypes s) ? s : RedeemTypes.Unknown;
+            if (FDType == RedeemTypes.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown Redeemvoucher {(evt["ScanType"].Str())}");
+            Type = FDType.ToString().SplitCapsWordFull();
             Amount = evt["Amount"].Long();
 
             if (evt.Contains("Factions"))
@@ -484,8 +482,9 @@ namespace EliteDangerousCore.JournalEvents
             BrokerPercentage = evt["BrokerPercentage"].Double();
         }
 
+        public enum RedeemTypes { Bounty, Settlement, Trade, Scannable, Codex, CombatBond, Unknown };
         public string Type { get; set; }
-        public string FDType { get; set; }
+        public RedeemTypes FDType { get; set; }
         public long Amount { get; set; }
         public string Faction { get; set; }     // if multiple, comma separ list.  If empty, its null
         public FactionInfo[] Factions { get; set; }     // null if no factions, else at least one faction here
@@ -539,7 +538,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalClearImpound(JObject evt) : base(evt, JournalTypeEnum.ClearImpound)
         {
-            ShipType = evt["ShipType"].FDNameNormaliseShip();
+            ShipType = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string _);
             ShipType_Localised = JournalFieldNaming.CheckLocalisation(evt["ShipType_Localised"].Str(), ShipType.Str());
             ShipId = evt["ShipID"].ULong();
             MarketID = evt["MarketID"].Long();

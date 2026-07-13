@@ -53,8 +53,8 @@ namespace EliteDangerousCore
 
             public void Normalise()
             {
-                NameFD = FDName.Normalise(Name);                             // Name comes in with strange characters, normalise out
-                Name = JournalFieldNaming.GetBetterEnglishModuleName(NameFD);      // and look up a better name
+                NameFD = FDNameHelpers.NormaliseModules(Name, out string engname);
+                Name = engname;
                 Name_Localised = Name_Localised.Alt(Name);
                 TransferTimeSpan = new System.TimeSpan((int)(TransferTime / 60 / 60), (int)((TransferTime / 60) % 60), (int)(TransferTime % 60));
                 TransferTimeString = TransferTime > 0 ? TransferTimeSpan.ToString() : "";

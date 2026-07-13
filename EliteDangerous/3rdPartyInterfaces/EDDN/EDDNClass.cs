@@ -618,7 +618,7 @@ namespace EliteDangerousCore.EDDN
                 ["marketId"] = journal.MarketID,
                 ["modules"] = new JArray(journal.YardInfo.Items
                                 .Where(m => m.FDName.IsWeaponArmour())      // Use FDName here note
-                                .Select(m => FDName.Normalise(m.FDName.Str()))
+                                .Select(m => m.FDName.Str())
                                 .Distinct()
                                 )
                                 
@@ -1139,7 +1139,7 @@ namespace EliteDangerousCore.EDDN
             message["MarketID"] = journal.MarketID;
             message["StationName"] = journal.StationName;
             message["StationType"] = journal.FDStationType.ToString();
-            message["Reason"] = journal.FDReason;
+            message["Reason"] = journal.FDReason.Str();
 
             msg["message"] = message;
 

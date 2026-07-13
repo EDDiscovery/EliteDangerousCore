@@ -23,9 +23,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSearchAndRescue(JObject evt) : base(evt, JournalTypeEnum.SearchAndRescue)
         {
-            FDName = evt["Name"].FDNameNormalise();
-            FDName = JournalFieldNaming.FDNameTranslation(FDName); // some premangling
-            FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(FDName);
+            FDName = FDNameHelpers.NormaliseMatCommods(evt["Name"].Str(), out string engname);
+            FriendlyName = engname;
             Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Name_Localised"].Str(), FriendlyName);         // always ensure we have one
             Count = evt["Count"].Int();
             Reward = evt["Reward"].Long();

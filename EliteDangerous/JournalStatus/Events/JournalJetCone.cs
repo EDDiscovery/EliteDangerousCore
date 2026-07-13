@@ -39,8 +39,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalJetConeDamage(JObject evt) : base(evt, JournalTypeEnum.JetConeDamage)
         {
-            ModuleFD = evt["Module"].FDNameNormalise();
-            Module = JournalFieldNaming.GetBetterEnglishModuleName(ModuleFD);
+            ModuleFD = FDNameHelpers.NormaliseModules(evt["Module"].Str(), out string engname);
+            Module = engname;
             ModuleLocalised = JournalFieldNaming.CheckLocalisation(evt["Module_Localised"].Str(), Module);
             if (ModuleLocalised.Length == 0)
                 ModuleLocalised = evt["_Localised"].Str();       //Frontier bug - jet cone boost entries are bugged in journal at the moment up to 2.2.
@@ -53,7 +53,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return JournalFieldNaming.GetForeignModuleName(ModuleFD,ModuleLocalised);
+            return ModuleFD.GetForeignModuleName(ModuleLocalised);
         }
     }
 

@@ -114,15 +114,14 @@ namespace EliteDangerousCore.JournalEvents
             Name = JournalFieldNaming.GetBetterMissionName(FDName);
             LocalisedName = JournalFieldNaming.CheckLocalisation(evt["LocalisedName"].Str(), Name);
 
-            TargetType = evt["TargetType"].Str();
-            TargetTypeFriendly = JournalFieldNaming.GetBetterTargetTypeName(TargetType);    // remove $, underscore it
-            TargetTypeLocalised = JournalFieldNaming.CheckLocalisation(evt["TargetType_Localised"].Str(), TargetTypeFriendly);
+            Target = evt["Target"].Str();
+            TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), TargetFriendly);        // copied from Accepted.. no evidence
+
+            TargetType = MissionDefinitions.ToEnum(evt["TargetType"].Str());
+            TargetTypeFriendly = MissionDefinitions.ToEnglish(TargetType);
+            TargetTypeLocalised = MissionDefinitions.ToLocalisedLanguage(TargetType);
 
             TargetFaction = evt["TargetFaction"].Str();
-
-            Target = evt["Target"].Str();
-            TargetFriendly = JournalFieldNaming.GetBetterTargetTypeName(Target);        // remove $, underscore it
-            TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), TargetFriendly);        // not all
 
             KillCount = evt["KillCount"].IntNull();
 
@@ -136,12 +135,10 @@ namespace EliteDangerousCore.JournalEvents
 
             MissionId = evt["MissionID"].ULong();
 
-            Commodity = evt["Commodity"].FDNameNormaliseNull();        // instances of $_name, fix to fdname
+            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out string engname, true);        // allow null
+            FriendlyCommodity = engname;
             if (Commodity != null)
-            { 
-                FriendlyCommodity = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Commodity);
                 CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
-            }
 
             Count = evt["Count"].IntNull();
             Expiry = evt["Expiry"].DateTimeUTC();
@@ -169,13 +166,15 @@ namespace EliteDangerousCore.JournalEvents
         public string DestinationStation { get; private set; }
         public string DestinationSettlement { get; private set; }   // Odyssey 4.0r13 August 22
 
-        public string TargetType { get; private set; }
+        public string Target { get; private set; }
+        public string TargetFriendly => Target;
+        public string TargetLocalised { get; private set; }     // not all.. only for radars etc.
+        public MissionDefinitions.TargetType TargetType { get; private set; }
         public string TargetTypeFriendly { get; private set; }
         public string TargetTypeLocalised { get; private set; }
+
         public string TargetFaction { get; private set; }
-        public string Target { get; private set; }
-        public string TargetFriendly { get; private set; }
-        public string TargetLocalised { get; private set; }     // not all.. only for radars etc.
+
         public int? KillCount { get; private set; }
 
         public DateTime Expiry { get; private set; }            // MARKED as 2000 if not there..
@@ -288,24 +287,22 @@ namespace EliteDangerousCore.JournalEvents
             Name = JournalFieldNaming.GetBetterMissionName(FDName);
             Faction = evt["Faction"].Str();
 
-            Commodity = evt["Commodity"].FDNameNormaliseNull();             // evidence of $_name problem, fix to fdname
+            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out string engname, true);        // allow null
+            FriendlyCommodity = engname;
             if (Commodity != null)
-            {
-                FriendlyCommodity = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Commodity);
                 CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
-            }
 
             Count = evt["Count"].IntNull();
 
-            TargetType = evt["TargetType"].Str();
-            TargetTypeFriendly = JournalFieldNaming.GetBetterTargetTypeName(TargetType);        // remove $, underscores etc
-            TargetTypeLocalised = JournalFieldNaming.CheckLocalisation(evt["TargetTypeLocalised"].Str(), TargetTypeFriendly);     // may be empty..
+            Target = evt["Target"].Str();
+            TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), TargetFriendly);        // copied from Accepted.. no evidence
+
+            TargetType = MissionDefinitions.ToEnum(evt["TargetType"].Str());
+            TargetTypeFriendly = MissionDefinitions.ToEnglish(TargetType);
+            TargetTypeLocalised = MissionDefinitions.ToLocalisedLanguage(TargetType);
 
             TargetFaction = evt["TargetFaction"].Str();
 
-            Target = evt["Target"].Str();
-            TargetFriendly = JournalFieldNaming.GetBetterTargetTypeName(Target);        // remove $, underscores etc
-            TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), TargetFriendly);        // copied from Accepted.. no evidence
 
             Reward = evt["Reward"].LongNull();
             JToken dtk = evt["Donation"];
@@ -376,11 +373,12 @@ namespace EliteDangerousCore.JournalEvents
         public int? Count { get; set; }
 
         public string Target { get; set; }
-        public string TargetLocalised { get; set; }
-        public string TargetFriendly { get; set; }
-        public string TargetType { get; set; }
+        public string TargetFriendly => Target;
+        public string TargetLocalised { get;set; }
+        public MissionDefinitions.TargetType TargetType { get; set; }
         public string TargetTypeLocalised { get; set; }
         public string TargetTypeFriendly { get; set; }
+
         public string TargetFaction { get; set; }
 
         public string DestinationSystem { get; set; }       // not in doc but logs as per aug 22
@@ -597,8 +595,8 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise()
             {
-                Name.Normalise();
-                FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
+                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname);
+                FriendlyName = engname;
                 Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(Name_Localised ?? "", FriendlyName);
 
                 if (Category != null)
@@ -618,8 +616,8 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise()
             {
-                Name.Normalise();
-                FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
+                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname);
+                FriendlyName = engname;
                 Name_Localised = Name_Localised.Alt(FriendlyName);
             }
         }

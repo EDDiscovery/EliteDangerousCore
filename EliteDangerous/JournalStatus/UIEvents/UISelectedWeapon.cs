@@ -28,7 +28,7 @@ namespace EliteDangerousCore.UIEvents
         {
             SelectedWeapon = weapon;
             SelectedWeapon_Localised = loc;
-            HandItem = weapon != null ? ItemData.GetWeaponOrHandItem(weapon) : null;
+            HandItem = weapon != null ? ItemData.GetWeaponOrHandItem(new FDName(weapon)) : null;
         }
 
         public string SelectedWeapon { get; private set; } // may be null, meaning not known. 

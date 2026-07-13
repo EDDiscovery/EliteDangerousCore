@@ -33,23 +33,25 @@ namespace EliteDangerousCore
 
         public static void Add(string id, string text, bool alwaysadd = false)
         {
-            if (id != text || alwaysadd)        // don't add the same stuff
+            //lock (Items)
             {
-                string nid = id.ToLowerInvariant().Trim();
-
-               // lock (identifiers)    // since only changed by HistoryList accumulate, and accessed by foreground, no need I think for a lock
+                if (id != text || alwaysadd)        // don't add the same stuff
                 {
-                    text = text.Replace("&NBSP;", " ");
-                    //System.Diagnostics.Debug.WriteLine($"Identifier {id} -> {nid} -> {text}");
-                    Items[nid] = text;        // keep updating even if a repeat so the latest identifiers is there
-                    Generation++;
+                    string nid = id.ToLowerInvariant().Trim();
+
+                    // lock (identifiers)    // since only changed by HistoryList accumulate, and accessed by foreground, no need I think for a lock
+                    {
+                        text = text.Replace("&NBSP;", " ");
+                        //System.Diagnostics.Debug.WriteLine($"Identifier {id} -> {nid} -> {text}");
+                        Items[nid] = text;        // keep updating even if a repeat so the latest identifiers is there
+                        Generation++;
+                    }
+                }
+                else
+                {
+                    // System.Diagnostics.Debug.WriteLine($"Rejected adding {id} vs {text}");
                 }
             }
-            else
-            {
-               // System.Diagnostics.Debug.WriteLine($"Rejected adding {id} vs {text}");
-            }
-
         }
 
         // return null if 
@@ -57,7 +59,7 @@ namespace EliteDangerousCore
         {
             string nid = id.ToLowerInvariant().Trim();
 
-          //  lock (identifiers)
+            //lock (Items)
             {
                 if (Items.TryGetValue(nid, out string str))
                 {
@@ -76,6 +78,26 @@ namespace EliteDangerousCore
                     return returnnull ? null : id;
                 }
             }
+        }
+
+        static public string TransformSignalBodyName(string name)
+        {
+            var res = Identifiers.Get(name);
+
+            if (res.StartsWithIIC("$SAA_RingHotspot"))        // if still id
+            {
+                int indexof = res.IndexOf("#type=");
+                if (indexof > 0 && res.Length > indexof + 6)
+                {
+                    string mintype = res.Substring(indexof + 6).Replace(";", "").Replace("_name", "").Replace("$", "");
+                    var mcd = MaterialCommodityMicroResourceType.GetByFDName(new FDName(mintype));
+                    if (mcd != null)    // if we find it, translate it, else leave it alone
+                        mintype = mcd.TranslatedName;
+
+                    res = "Ring Hot Spot of type ".Tx() + mintype;
+                }
+            }
+            return res;
         }
 
 #if !TESTHARNESS

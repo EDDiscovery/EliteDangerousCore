@@ -31,15 +31,12 @@ namespace EliteDangerousCore.JournalEvents
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
                     initialobject: this);        // read fields named in this structure matching JSON names
 
-            if (Name.HasChars())
-            {
-                FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
-                Name = Name.ToLowerInvariant(); // normalise
-            }
+            FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
         }
 
         public ulong SuitModuleID { get; set; }
-        public string Name { get; set; }
+        [JsonAlwaysCreate]
+        public FDName Name { get; set; } 
         public string Name_Localised { get; set; }
         public string FriendlyName { get; set; }
         public long Price { get; set; }
@@ -77,14 +74,12 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(this.GetType(), true, 
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     initialobject: this);        // read fields named in this structure matching JSON names
-            if (Name.HasChars())
-            {
-                FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
-                Name = Name.ToLowerInvariant(); // normalise
-            }
+
+            FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
         }
 
-        public string Name { get; set; }
+        [JsonAlwaysCreate]
+        public FDName Name { get; set; } 
         public string Name_Localised { get; set; }
         public string FriendlyName { get; set; }
         public long Price { get; set; }
@@ -124,19 +119,18 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(this.GetType(), true, 
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     initialobject: this);        // read fields named in this structure matching JSON names
-            if (Name.HasChars())
-            {
-                FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
-            }
+
+            FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
         }
 
         public ulong SuitModuleID { get; set; }
-        public string Name { get; set; }
+        [JsonAlwaysCreate]
+        public FDName Name { get; set; } 
         public string Name_Localised { get; set; }
         public string FriendlyName { get; set; }
         public long Cost { get; set; }
         public int Class { get; set; }
-        public FDName[] WeaponMods { get; set; }
+        public FDName[] WeaponMods { get; set; }        // may be null or empty
 
         public override string GetInfo()
         {

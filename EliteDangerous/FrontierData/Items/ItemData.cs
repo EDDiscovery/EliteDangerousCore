@@ -176,7 +176,7 @@ namespace EliteDangerousCore
 
                     string tout = "";
                     foreach (FDName key in vanitynames)
-                        tout += $"                {{{key.WithQuotes()}, new ShipModule({vanitymodules[key].ModuleID},ShipModule.ModuleTypes.{vanitymodules[key].ModType},{vanitymodules[key].EnglishModName.AlwaysQuoteString()}) }},\r\n";
+                        tout += $"                {{new FDName({key.WithQuotes()}), new ShipModule({vanitymodules[key].ModuleID},ShipModule.ModuleTypes.{vanitymodules[key].ModType},{vanitymodules[key].EnglishModName.AlwaysQuoteString()}) }},\r\n";
                     BaseUtils.FileHelpers.TryWriteToFile(outfile, tout);
 
                     // auto update cs file - this breaks the debugger note and causes it to notice text updates. Just ignore
@@ -194,7 +194,7 @@ namespace EliteDangerousCore
                                 newfile.Add(itemmodules[i]);
                                 newfile.Add("            {");
                                 foreach (var keya in vanitynames)
-                                    newfile.Add($"                {{{keya.WithQuotes()}, new ShipModule({vanitymodules[keya].ModuleID},ShipModule.ModuleTypes.{vanitymodules[keya].ModType},{vanitymodules[keya].EnglishModName.AlwaysQuoteString()}) }},");
+                                    newfile.Add($"                {{new FDName({keya.WithQuotes()}), new ShipModule({vanitymodules[keya].ModuleID},ShipModule.ModuleTypes.{vanitymodules[keya].ModType},{vanitymodules[keya].EnglishModName.AlwaysQuoteString()}) }},");
 
                                 while (!itemmodules[++i].Contains("};"))        // go to line with };
                                     ;

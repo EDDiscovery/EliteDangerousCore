@@ -208,7 +208,7 @@ namespace EliteDangerousCore
         }
 
         // a dictionary of module english module type vs translated module type for a set of modules
-        public static Dictionary<string, string> GetModuleTypeNamesTranslations(Dictionary<string, ShipModule> modules)
+        public static Dictionary<string, string> GetModuleTypeNamesTranslations(Dictionary<FDName, ShipModule> modules)
         {
             var ret = new Dictionary<string, string>();
             foreach (var x in modules)

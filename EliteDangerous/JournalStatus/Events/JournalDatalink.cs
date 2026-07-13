@@ -66,13 +66,13 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalDataScanned(JObject evt) : base(evt, JournalTypeEnum.DataScanned)
         {
-            FDType = evt["Type"].Str();
-            Type = JournalFieldNaming.DataLinkType(FDType);
+            FDType = evt["Type"].FDName();
+            Type = FDType.SplitCapsWordFull();
             TypeLocalised = JournalFieldNaming.CheckLocalisation(evt["Type_Localised"].Str(), Type);
         }
 
         public string Type { get; set; }
-        public string FDType { get; set; }
+        public FDName FDType { get; set; }
         public string TypeLocalised { get; set; }
 
         public override string GetInfo()

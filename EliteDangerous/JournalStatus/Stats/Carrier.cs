@@ -375,7 +375,7 @@ namespace EliteDangerousCore
                 if (State.Services == null) // if no array, make it
                     State.Services = new List<CarrierState.ServicesClass>(); // checked this by making carrier states not set Crew.
 
-                CarrierState.ServicesClass srventry = State.Services.Find(x => x.CrewRole.Equals(jentry.CrewRole,StringComparison.InvariantCultureIgnoreCase));        
+                CarrierState.ServicesClass srventry = State.Services.Find(x => x.CrewRole == jentry.CrewRole);        
                 if ( srventry == null )       // if no CrewRoll, make one
                 {
                     srventry = new CarrierState.ServicesClass() { CrewRole = jentry.CrewRole, CrewName=  jentry.CrewName };
@@ -384,9 +384,9 @@ namespace EliteDangerousCore
 
                 // on operation type..
 
-                var optype = jentry.GetOperation();
+                var optype = jentry.Operation;
 
-                if (optype == JournalCarrierCrewServices.OperationType.Activate)
+                if (optype == CarrierDefinitions.ServiceOperationType.Activate)
                 {
                     srventry.Enabled = srventry.Activated = true;
                     srventry.CrewName = jentry.CrewName;
@@ -396,23 +396,23 @@ namespace EliteDangerousCore
                     if (sdata != null)      // may fail due to not having the right name in the table in the future. If not, update ledger
                     {
                         State.Finance.CarrierBalance -= sdata.InstallCost;
-                        Ledger.Add(new LedgerEntry(jentry, StarSystem, Body, State.Finance.CarrierBalance, "+ " + jentry.CrewRole.SplitCapsWordFull()));
+                        Ledger.Add(new LedgerEntry(jentry, StarSystem, Body, State.Finance.CarrierBalance, "+ " + jentry.FriendlyCrewRole));
                     }
 
                 }
-                else if (optype == JournalCarrierCrewServices.OperationType.Deactivate)
+                else if (optype == CarrierDefinitions.ServiceOperationType.Deactivate)
                 {
                     srventry.Enabled = srventry.Activated = false;
                 }
-                else if (optype == JournalCarrierCrewServices.OperationType.Pause)
+                else if (optype == CarrierDefinitions.ServiceOperationType.Pause)
                 {
                     srventry.Enabled = false;
                 }
-                else if (optype == JournalCarrierCrewServices.OperationType.Resume)
+                else if (optype == CarrierDefinitions.ServiceOperationType.Resume)
                 {
                     srventry.Enabled = true;
                 }
-                else if (optype == JournalCarrierCrewServices.OperationType.Replace)
+                else if (optype == CarrierDefinitions.ServiceOperationType.Replace)
                 {
                     srventry.CrewName = jentry.CrewName;   // set crewname
                 }
@@ -432,8 +432,8 @@ namespace EliteDangerousCore
                 CarrierState.PackClass sp = State.ShipPacks.Find(x => x.PackTheme.Equals(j.PackTheme, StringComparison.InvariantCultureIgnoreCase) &&
                                                                        x.PackTier == j.PackTier);
 
-                bool buy = j.Operation.Equals("buypack", StringComparison.InvariantCultureIgnoreCase);
-                bool restock = j.Operation.Equals("restockpack", StringComparison.InvariantCultureIgnoreCase);
+                bool buy = j.Operation == CarrierDefinitions.ShipPackOperationType.BuyPack;
+                bool restock = j.Operation == CarrierDefinitions.ShipPackOperationType.RestockPack;
 
                 if (sp == null && (buy | restock))       // if not there
                 {
@@ -483,8 +483,8 @@ namespace EliteDangerousCore
                 CarrierState.PackClass mp = State.ModulePacks.Find(x => x.PackTheme.Equals(j.PackTheme, StringComparison.InvariantCultureIgnoreCase) &&
                                                                        x.PackTier == j.PackTier);
 
-                bool buy = j.Operation.Equals("buypack", StringComparison.InvariantCultureIgnoreCase);
-                bool restock = j.Operation.Equals("restockpack", StringComparison.InvariantCultureIgnoreCase);
+                bool buy = j.Operation == CarrierDefinitions.ModulePackOperationType.BuyPack;
+                bool restock = j.Operation == CarrierDefinitions.ModulePackOperationType.RestockPack;
 
                 if (mp == null && (buy | restock))       // if not there
                 {

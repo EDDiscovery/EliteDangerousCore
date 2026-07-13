@@ -24,7 +24,7 @@ namespace EliteDangerousCore
     {
         public DateTime EventTime { get; private set; }
         public ulong ID { get; private set; }              // its Frontier ID LoadoutID
-        public string FDName { get; private set; }          // Loadout user name
+        public FDName FDName { get; private set; }          
         public string Name_Localised { get; private set; }
         public string FriendlyName { get; private set; }
         public long Price { get; private set; }
@@ -32,7 +32,7 @@ namespace EliteDangerousCore
         public int Class { get; private set; }
         public FDName[] WeaponMods { get; private set; }
 
-        public SuitWeapon(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, FDName[] weaponmods, bool sold)
+        public SuitWeapon(DateTime time, ulong id, FDName fdname, string namelocalised, long price, int cls, FDName[] weaponmods, bool sold)
         {
             EventTime = time; ID = id;FDName = fdname; Name_Localised = namelocalised; Price = price; Sold = sold; Class = cls; WeaponMods = weaponmods;
             FriendlyName = ItemData.GetWeapon(fdname, Name_Localised)?.Name ?? Name_Localised;
@@ -41,18 +41,18 @@ namespace EliteDangerousCore
 
     public class SuitWeaponList
     {
-        public Dictionary<ulong, SuitWeapon> Weapons(uint gen) { return weapons.Get(gen, x => x.Sold == false && x.FDName.HasChars()); }    // all valid unsold weapons with valid names. fdname=null special entry
+        public Dictionary<ulong, SuitWeapon> Weapons(uint gen) { return weapons.Get(gen, x => x.Sold == false && x.FDName.IsValid()); }    // all valid unsold weapons with valid names. fdname=null special entry
 
         public SuitWeaponList()
         {
         }
 
-        public void Buy(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, FDName[] weaponmods)
+        public void Buy(DateTime time, ulong id, FDName fdname, string namelocalised, long price, int cls, FDName[] weaponmods)
         {
             weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, weaponmods, false);
         }
 
-        public bool VerifyPresence(DateTime time, ulong id, string fdname, string namelocalised, long price, int cls, FDName[] weaponmods)
+        public bool VerifyPresence(DateTime time, ulong id, FDName fdname, string namelocalised, long price, int cls, FDName[] weaponmods)
         {
             var w = weapons.GetLast(id);
 

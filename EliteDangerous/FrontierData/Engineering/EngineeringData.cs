@@ -35,7 +35,7 @@ namespace EliteDangerousCore
     public class EngineeringData
     {
         public string Engineer { get; set; }
-        public  FDName BlueprintName { get; set; }       
+        public FDName BlueprintName { get; set; }       
         public string FriendlyBlueprintName { get; set; }
         public ulong EngineerID { get; set; }
         public ulong BlueprintID { get; set; }
@@ -44,8 +44,7 @@ namespace EliteDangerousCore
         public string ExperimentalEffect { get; set; }      // may be null or maybe empty (due to frontier) use HasChars()
         public string ExperimentalEffect_Localised { get; set; }    // may be null or maybe empty (due to frontier)
         public EngineeringModifiers[] Modifiers { get; set; }       // may be null
-
-        public bool IsValid { get { return Level >= 1 && BlueprintName.Valid; } }
+        public bool IsValid { get { return Level >= 1 && BlueprintName.IsValid(); } }
 
         // Post engineering changes
         public EngineeringData(JObject evt)
@@ -55,12 +54,12 @@ namespace EliteDangerousCore
 
             if (evt.Contains("Blueprint"))     // old form
             {
-                BlueprintName = evt["Blueprint"].FDName();
+                BlueprintName = evt["Blueprint"].FDNameBlueprint();
             }
             else
             {
                 EngineerID = evt["EngineerID"].ULong();     // NEW FORM after engineering changes in about 2018
-                BlueprintName = evt["BlueprintName"].FDName();
+                BlueprintName = evt["BlueprintName"].FDNameBlueprint();
                 BlueprintID = evt["BlueprintID"].ULong();
                 Quality = evt["Quality"].Double(0);
 
@@ -95,7 +94,7 @@ namespace EliteDangerousCore
                 }
             }
 
-            FriendlyBlueprintName = BlueprintName.Valid ? Recipes.GetBetterNameForEngineeringRecipe(BlueprintName) : "??";       // some journal entries has empty blueprints
+            FriendlyBlueprintName = BlueprintName.IsValid() ? Recipes.GetBetterNameForEngineeringRecipe(BlueprintName) : "??";       // some journal entries has empty blueprints
         }
 
         public JObject ToJSONLoadout()  // reproduce the loadout format..
