@@ -2,7 +2,7 @@
  * Copyright 2026-2026 EDDiscovery development team
  *
  * Licensed under the Apache License", Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the License at
+ * file except in coSmpliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -16,6 +16,8 @@ using QuickJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Xml.Schema;
 
 namespace EliteDangerousCore
@@ -23,7 +25,7 @@ namespace EliteDangerousCore
     // purposely not doing auto conversion to/from string so the use of FDName can be found easier
 
     [System.Diagnostics.DebuggerDisplay("FD {fdname}")]
-    public class FDName : IEquatable<FDName>, IComparable<FDName>
+    public class FDName : IEquatable<FDName>, IComparable<FDName>, IEquatable
     {
         public FDName()
         {
@@ -144,32 +146,17 @@ namespace EliteDangerousCore
             else
                 return loc ?? fdname;
         }
-
-        public string GetBetterShipSuitActorName()
+        public string GetForeignModuleType(string loc = null, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
         {
-            if (IsValid == false)
-                return "No Ship/Actor/Suit Name Given";
-
-            string i = ItemData.GetShipName(this);
-
-            if (i != null)
-            {
-                return i;
-            }
-            else if (ItemData.IsActor(this))
-            {
-                string n = ItemData.GetActor(this).Name;
-                return n;
-            }
-            else if (ItemData.IsSuit(this))
-            {
-                return ItemData.GetSuit(this).Name;
-            }
+            if (ItemData.TryGetShipModule(this, out ItemData.ShipModule item, true, slot))
+                return item.TranslatedModTypeString();
             else
-            {
-                System.Diagnostics.Trace.WriteLine($"*** Unknown Ship/Suit/Actor: {{ \"{fdname}\", new Actor(\"{SplitCapsWordFull()}\") }},");
-                return SplitCapsWordFull();
-            }
+                return loc ?? fdname;
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
         }
 
 
@@ -201,15 +188,7 @@ namespace EliteDangerousCore
         {
             return new FDName(tk != null ? tk.Str() : null);
         }
-        public static FDName FDNameBlueprint(this JToken tk) // always gives a non null fdname with non null str()
-        {
-            return new FDName(tk != null ? tk.Str("Unknown") : null);
-        }
-        public static FDName FDNameBlueprintNull(this JToken tk)
-        {
-            return tk != null ? new FDName(tk.Str("Unknown")) : null;
-        }
-
+        
         public static bool IsValid(this FDName s)       // tdb?
         {
             return s?.IsValid == true;
@@ -223,6 +202,10 @@ namespace EliteDangerousCore
         public static string StrNull(this FDName s)
         {
             return s?.Str();
+        }
+        public static string StrAlt(this FDName s, string alt)
+        {
+            return s != null ? s.Str() : alt;
         }
 
         public static string RemoveFDDecoration(this string fdname)
@@ -274,6 +257,7 @@ namespace EliteDangerousCore
                 if (ship == null)
                 {
                     System.Diagnostics.Trace.WriteLine("*** Unknown FD ship ID:" + fdname);
+                    Debugger.Break();
                     shipname = "Unknown Ship " + fdname;
                 }
                 else
@@ -281,7 +265,30 @@ namespace EliteDangerousCore
 
                 return ret;
             }
+
         }
+
+        public static FDName NormaliseShipOrSuitOrActor(string fdname, out string name, bool allownull = false)
+        {
+            if (fdname != null)
+            {
+                FDName fd = new FDName(fdname);
+                if (ItemData.IsSuitTypeName(fd))
+                {
+                    var suit = ItemData.GetSuit(fd);
+                    name = suit?.Name ?? ("Unknown Suit " + fdname);
+                    return fd;
+                }
+                else if (ItemData.IsActor(fd))
+                {
+                    name = ItemData.GetActor(fd).Name;
+                    return fd;
+                }
+            }
+            
+            return NormaliseShip(fdname, out name, allownull);
+        }
+
         public static FDName NormaliseModules(string fdname, out string modulename, bool allownull = false)
         {
             if (fdname.IsEmpty())
@@ -299,6 +306,9 @@ namespace EliteDangerousCore
             }
             else
             {
+                if (fdname.Length >= 8 && fdname[0] == '$' && fdname.EndsWith("_name;", System.StringComparison.InvariantCultureIgnoreCase))
+                    fdname = fdname.Substring(1, fdname.Length - 7);        // remove decoration
+
                 var ret = new FDName(fdname);
                 if (ItemData.TryGetShipModule(ret, out ItemData.ShipModule module, true))
                 {
@@ -307,6 +317,7 @@ namespace EliteDangerousCore
                 else
                 {
                     System.Diagnostics.Trace.WriteLine("*** Unknown Module ID:" + fdname);
+                    Debugger.Break();
                     modulename = "Unknown Module " + fdname;
                 }
 
@@ -343,6 +354,7 @@ namespace EliteDangerousCore
                 else
                 {
                     System.Diagnostics.Trace.WriteLine("*** Unknown Mat/Commod ID:" + fdname);
+                    Debugger.Break();
                     matname = fdname.SplitCapsWordFull();
                 }
 
@@ -350,12 +362,93 @@ namespace EliteDangerousCore
             }
         }
 
+        public static FDName NormaliseMissionName(string fdname, out string engname)
+        {
+            if (fdname.HasChars())
+            {
+                engname = fdname.Replace("_name", "").SplitCapsWordFull();
+                return new FDName(fdname);
+            }
+            else
+            {
+                engname = "Missing Mission Name";
+                Debugger.Break();
+                return new FDName(engname);
+            }
+        }
+
+        public static FDName NormaliseBlueprint(string fdname, out string engname, bool allownull =false) // always gives a non null fdname with non null str()
+        {
+            if (fdname.IsEmpty())
+            {
+                if (allownull)
+                {
+                    engname = null;
+                    return null;
+                }
+                else
+                {
+                    engname = "Unknown Blueprint";
+                    return new FDName("Unknown Blueprint");
+                }
+            }
+            else
+            {
+                var fd = new FDName(fdname);
+                var rp = Recipes.FindRecipe(fd);
+                if (rp != null)
+                    engname = rp.Name;
+                else
+                {
+                    System.Diagnostics.Trace.WriteLine("*** Unknown Blueprint Name:" + fdname);
+                    Debugger.Break();
+                    engname = fdname.SplitCapsWordFull();
+                }
+
+                return fd;
+            }
+        }
+
+        public static FDName NormaliseExperimentalEffect(string fdname, out string engname, bool allownull = false) // always gives a non null fdname with non null str()
+        {
+            if (fdname.IsEmpty())
+            {
+                if (allownull)
+                {
+                    engname = null;
+                    return null;
+                }
+                else
+                {
+                    engname = "Unknown Experimental Effect";
+                    return new FDName("Unknown Experimental Effect");
+                }
+            }
+            else
+            {
+                var fd = new FDName(fdname);
+                var rp = Recipes.FindRecipe(fd);
+                if (rp != null)
+                    engname = rp.Name;
+                else
+                {
+                    System.Diagnostics.Trace.WriteLine("*** Unknown Experimental Effect Name:" + fdname);
+                    Debugger.Break();
+                    engname = fdname.SplitCapsWordFull();
+                }
+
+                return fd;
+            }
+        }
+
+
         public static FDName NormaliseSignals(string fdname)
         {
             if (fdname.HasChars())
                 return new FDName(fdname.Replace("$SAA_SignalType_", "").Replace(";", "").SplitCapsWordFull());
             else
             {
+                Debugger.Break();
                 return new FDName("Error in Signal no data");
             }
         }
@@ -365,11 +458,10 @@ namespace EliteDangerousCore
                 return new FDName(fdname.Replace("$Codex_Ent_", "").Replace("_Name;", "").Replace(";", "").Replace("$Codex_", "").SplitCapsWordFull());
             else
             {
+                Debugger.Break();
                 return new FDName("Error in Genus no data");
             }
         }
-
-
 
         public static Dictionary<string, string> fdnamemangling = new Dictionary<string, string>() // Key: old_identifier, Value: new_identifier
         {

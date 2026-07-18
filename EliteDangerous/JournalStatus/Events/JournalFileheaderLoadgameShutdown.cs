@@ -46,41 +46,44 @@ namespace EliteDangerousCore.JournalEvents
     [System.Diagnostics.DebuggerDisplay("LoadGame {LoadGameCommander} {ShipId} {ShipType} {GameMode} {GameVersion} {Build}")]
     public class JournalLoadGame : JournalEntry, ILedgerJournalEntry, IShipInformation, IShipNaming
     {
-        const string UnknownShip = "Unknown";
-
         public JournalLoadGame(JObject evt) : base(evt, JournalTypeEnum.LoadGame)
         {
-            LoadGameCommander = JournalFieldNaming.SubsituteCommanderName( evt["Commander"].Str() );
-            
-            ShipFD = evt["Ship"].FDName();              
-            Ship_Localised = evt["Ship_Localised"].StrNull();       // may not be present
+            LoadGameCommander = JournalFieldNaming.SubsituteCommanderName(evt["Commander"].Str());
 
-            if (!ShipFD.IsValid())      // Vega logs show no ship on certain logs.. handle it to prevent warnings.
-            {
-                ShipType = Ship_Localised = UnknownShip;
-            }
-            else
-            {
-                if (ItemData.IsShipOrSRVOrFighterOrLander(ShipFD))
-                {
-                    ShipFD = FDNameHelpers.NormaliseShip(ShipFD.Str(),out string bettername);
-                    ShipType = bettername;
-                }
-                else if ( ItemData.IsSuit(ShipFD))      
-                {
-                    ShipType = ShipFD.GetBetterShipSuitActorName();
-                }
-                else if ( ItemData.IsTaxi(ShipFD))
-                {
-                    ShipFD = new FDName(ShipFD.Str().Replace("_taxi", ""));
-                    ShipType = ShipFD.GetBetterShipSuitActorName();
-                }
-                else
-                {
-                    System.Diagnostics.Trace.WriteLine($"*** Loadout in unknown ship type {ShipFD}");
-                    ShipType = ShipFD.SplitCapsWordFull();  // emergency back up
-                }
-            }
+            ShipFD = FDNameHelpers.NormaliseShipOrSuitOrActor(evt["Ship"].Str(), out string engname);        // force something, even Unknown
+            ShipType = engname;
+            Ship_Localised = evt["Ship_Localised"].Str(engname);       // may not be present, so use engname
+
+            //tbd need to recheck
+            //if (!ShipFD.IsValid())      // Vega logs show no ship on certain logs.. handle it to prevent warnings.
+            //{
+            //    ShipType = Ship_Localised = UnknownShip;
+            //}
+            //else
+            //{
+
+
+
+            //    if (ItemData.IsShipOrSRVOrFighterOrLander(ShipFD))
+            //    {
+            //        ShipFD = FDNameHelpers.NormaliseShip(ShipFD.Str(),out string bettername);
+            //        ShipType = bettername;
+            //    }
+            //    else if ( ItemData.IsSuitTypeName(ShipFD))      
+            //    {
+            //        ShipType = ShipFD.GetBetterShipSuitActorName();
+            //    }
+            //    else if ( ItemData.IsTaxi(ShipFD))
+            //    {
+            //        ShipFD = new FDName(ShipFD.Str().Replace("_taxi", ""));
+            //        ShipType = ShipFD.GetBetterShipSuitActorName();
+            //    }
+            //    else
+            //    {
+            //        System.Diagnostics.Trace.WriteLine($"*** Loadout in unknown ship type {ShipFD}");
+            //        ShipType = ShipFD.SplitCapsWordFull();  // emergency back up
+            //    }
+            //}
 
             Ship_Localised = Ship_Localised.Alt(ShipType);
 
@@ -108,9 +111,9 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string LoadGameCommander { get; set; }
+        public FDName ShipFD { get; set; }        // type, fd name
         public string ShipType { get; set; }        // friendly name, fer-de-lance, from our db.  Older Load games did not have Localised
         public string Ship_Localised { get; set; }   // localised
-        public FDName ShipFD { get; set; }        // type, fd name
         public ulong ShipId { get; set; }
         public bool StartLanded { get; set; }
         public bool StartDead { get; set; }
@@ -134,7 +137,7 @@ namespace EliteDangerousCore.JournalEvents
         public string FID { get; set; }
 
         public bool InShip { get { return ItemData.IsShip(ShipFD); } }
-        public bool InSuit { get { return ItemData.IsSuit(ShipFD); } }     // 4.0
+        public bool InSuit { get { return ItemData.IsSuitTypeName(ShipFD); } }     // 4.0
         public bool InTaxi { get { return ItemData.IsTaxi(ShipFD); } }     // 4.0
         public bool InSRV { get { return ItemData.IsSRV(ShipFD); } }
         public bool InFighter { get { return ItemData.IsFighter(ShipFD); } }
@@ -162,7 +165,7 @@ namespace EliteDangerousCore.JournalEvents
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             // only call if in these types from 4.0 we can be on foot or in a taxi
-            if (ShipType != UnknownShip && InShipSRVOrFighterOrLander)
+            if (ShipFD.IsValid && InShipSRVOrFighterOrLander)
             {
                 shp.LoadGame(ShipId, ShipType, ShipFD, ShipName, ShipIdent, FuelLevel, FuelCapacity);
             }

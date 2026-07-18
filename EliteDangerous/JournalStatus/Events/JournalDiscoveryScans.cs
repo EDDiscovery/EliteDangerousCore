@@ -480,7 +480,6 @@ namespace EliteDangerousCore.JournalEvents
             return sb.ToString();
         }
 
-        // TBD JournalFSSBodySignals fdname?
         public int Contains(FDName fdname)      // give count if contains fdname, else zero
         {
             int index = Signals?.FindIndex((x) => x.Type.Equals(fdname)) ?? -1;

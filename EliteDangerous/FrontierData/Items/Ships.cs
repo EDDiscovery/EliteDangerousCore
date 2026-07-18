@@ -70,12 +70,12 @@ namespace EliteDangerousCore
 
         static public bool IsShip(FDName shipfdname)      // any which are not one of the others is called a ship, to allow for new unknown ships
         {
-            return !IsSRVOrFighterOrLander(shipfdname) && !IsSuit(shipfdname) && !IsTaxi(shipfdname) && !IsActor(shipfdname);
+            return !IsSRVOrFighterOrLander(shipfdname) && !IsSuitTypeName(shipfdname) && !IsTaxi(shipfdname) && !IsActor(shipfdname);
         }
 
         static public bool IsShipOrSRVOrFighterOrLander(FDName shipfdname)
         {
-            return !IsSuit(shipfdname) && !IsTaxi(shipfdname);
+            return !IsSuitTypeName(shipfdname) && !IsTaxi(shipfdname);
         }
 
         static public bool IsSRV(FDName shipfdname)
@@ -154,7 +154,7 @@ namespace EliteDangerousCore
 
         static public System.Drawing.Image GetShipImage(FDName fdname)
         {
-            return BaseUtils.Icons.IconSet.GetImage("Ships." + fdname.ToLower());
+            return BaseUtils.Icons.IconSet.GetImage("Ships." + fdname.ToLower().Replace("_taxi",""));
         }
 
         #region ships
@@ -227,7 +227,10 @@ namespace EliteDangerousCore
             if (IconSet.Instance!=null)
             {
                 foreach (var kvp in spaceships)     // check spaceships array for image and missing manu
-                    System.Diagnostics.Debug.Assert(BaseUtils.Icons.IconSet.Contains("Ships." + kvp.Key.ToLower()), $"Missing ship image {kvp.Key}");
+                {
+                    if ( GetShipImage(kvp.Key) == null)
+                        System.Diagnostics.Debug.Assert(false, $"Missing ship image {kvp.Key.Str()}");
+                }
             }
         }
 
@@ -1760,6 +1763,7 @@ namespace EliteDangerousCore
         private static Dictionary<FDName, ShipProperties> spaceships = new Dictionary<FDName, ShipProperties>(new FDNameEqualityComparer())
         {
             { new FDName("adder"),adder},
+            { new FDName("adder_taxi"),adder},
             { new FDName("typex_3"),typex_3},
             { new FDName("typex"),typex},
             { new FDName("typex_2"),typex_2},
@@ -1774,6 +1778,7 @@ namespace EliteDangerousCore
             { new FDName("cutter"),cutter},
             { new FDName("diamondbackxl"),diamondbackxl},
             { new FDName("diamondback"),diamondback},
+            { new FDName("diamondback_taxi"),diamondback},
             { new FDName("dolphin"),dolphin},
             { new FDName("eagle"),eagle},
             { new FDName("explorer_nx"),explorer_nx},
@@ -1805,8 +1810,10 @@ namespace EliteDangerousCore
             { new FDName("type8"),type8},
             { new FDName("type9"),type9},
             { new FDName("viper"),viper},
+            { new FDName("viper_taxi"),viper},
             { new FDName("viper_mkiv"),viper_mkiv},
             { new FDName("vulture"),vulture},
+            { new FDName("vulture_taxi"),vulture},
         };
 
 

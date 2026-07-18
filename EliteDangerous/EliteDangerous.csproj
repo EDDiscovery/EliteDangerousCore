@@ -63,6 +63,7 @@
     <Compile Include="Bodies\StarScan2\StarScanNodePtr.cs" />
     <Compile Include="Bodies\StarScan2\StarScanSystemNodeEvents.cs" />
     <Compile Include="Bodies\StarScan2\SystemDisplayPlanetTree.cs" />
+    <Compile Include="FrontierData\Enumerations\IEquatable.cs" />
     <Compile Include="FrontierData\Enumerations\Missions.cs" />
     <Compile Include="FrontierData\Enumerations\BodyParents.cs" />
     <Compile Include="FrontierData\Enumerations\Rings.cs" />
@@ -236,7 +237,7 @@
     <Compile Include="JournalStatus\Events\JournalCodexEntry.cs" />
     <Compile Include="JournalStatus\Events\JournalSquadrons.cs" />
     <Compile Include="JournalStatus\Events\JournalPowerplay.cs" />
-    <Compile Include="JournalStatus\Events\JournalTechnologyBroker.cs" />
+    <Compile Include="JournalStatus\Events\JournalTechBrokerSciResearchSAndR.cs" />
     <Compile Include="JournalStatus\Events\JournalReputation.cs" />
     <Compile Include="JournalStatus\Events\JournalBodySettlement.cs" />
     <Compile Include="JournalStatus\Events\JournalDiscoveryScans.cs" />
@@ -277,10 +278,8 @@
     <Compile Include="JournalStatus\Events\JournalVehicle.cs" />
     <Compile Include="JournalStatus\Events\JournalScan.cs" />
     <Compile Include="JournalStatus\Events\JournalScannedTargettedAttacked.cs" />
-    <Compile Include="JournalStatus\Events\JournalScientificResearch.cs" />
     <Compile Include="JournalStatus\Events\JournalScreenshot.cs" />
     <Compile Include="JournalStatus\Events\JournalText.cs" />
-    <Compile Include="JournalStatus\Events\JournalSearchAndRescue.cs" />
     <Compile Include="JournalStatus\Events\JournalSupercruise.cs" />
     <Compile Include="JournalStatus\Events\JournalCommander.cs" />
     <Compile Include="JournalStatus\Events\JournalNpcCrew.cs" />

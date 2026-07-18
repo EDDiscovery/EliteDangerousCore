@@ -14,7 +14,9 @@
  *
  */
 using QuickJSON;
+using System;
 using System.Linq;
+using System.Windows.Forms.VisualStyles;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -23,34 +25,47 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalTechnologyBroker(JObject evt) : base(evt, JournalTypeEnum.TechnologyBroker)
         {
-            BrokerType = evt["BrokerType"].Str("Unknown");
+            BrokerType = Enum.TryParse<BrokerTypes>(evt["BrokerType"].Str(""),true,out BrokerTypes res) ? res : BrokerTypes.Unknown;
+            if (BrokerType == BrokerTypes.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown broker type {evt["BrokerType"].Str()}");
+
             MarketID = evt["MarketID"].LongNull();
 
             ItemsUnlocked = evt["ItemsUnlocked"]?.ToObjectQ<Unlocked[]>();      //3.03 entry
             CommodityList = evt["Commodities"]?.ToObjectQ<Commodities[]>();
-            MaterialList = evt["Materials"]?.ToObjectQ<Materials[]>();
+            MaterialList = evt["Materials"]?.ToObject<Materials[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
 
             if (ItemsUnlocked != null)
+            {
                 foreach (Unlocked u in ItemsUnlocked)
-                    u.Name_Localised = JournalFieldNaming.CheckLocalisation(u.Name_Localised??"",u.Name.Str());
+                    u.Name_Localised = JournalFieldNaming.CheckLocalisation(u.Name_Localised ?? "", u.Name.Str());
+            }
 
             if (CommodityList != null)
+            {
                 foreach (Commodities c in CommodityList)
                     c.FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.Name);
+            }
 
             if (MaterialList != null)
+            { 
                 foreach (Materials m in MaterialList)
                 {
                     m.FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(m.Name);
-                    m.Category = JournalFieldNaming.NormaliseMaterialCategory(m.Category);
                 }
+            }
 
             string oldentry = evt["ItemUnlocked"].StrNull();        // 3.02 journal entry
             if (ItemsUnlocked == null && oldentry != null)
                 ItemsUnlocked = new Unlocked[] { new Unlocked() { Name = new FDName(oldentry), Name_Localised = oldentry } };
         }
 
-        public string BrokerType { get; set; }
+
+        public enum BrokerTypes
+        {
+            Unknown, Guardian, Human, Mixed, Rescue,  Salvation, Sirius, TorvalMining
+        };
+
+        public BrokerTypes BrokerType { get; set; }      
         public long? MarketID { get; set; }
         public Unlocked[] ItemsUnlocked { get; set; }
         public Materials[] MaterialList { get; set; }
@@ -75,7 +90,7 @@ namespace EliteDangerousCore.JournalEvents
             public FDName Name;
             public string Name_Localised;
             public string FriendlyName;
-            public string Category;
+            public MaterialCommodityMicroResourceType.CatType Category;
             public int Count;
         }
 
@@ -119,4 +134,70 @@ namespace EliteDangerousCore.JournalEvents
                 mc.ChangeMat(EventTimeUTC, mat.Category, mat.Name, -mat.Count);
         }
     }
+
+
+    [JournalEntryType(JournalTypeEnum.ScientificResearch)]
+    public class JournalScientificResearch : JournalEntry
+    {
+        public JournalScientificResearch(JObject evt) : base(evt, JournalTypeEnum.ScientificResearch)
+        {
+            Name = FDNameHelpers.NormaliseMatCommods(evt["Name"].Str(), out string matname);
+            FriendlyName = matname;
+            Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), matname);
+            Count = evt["Count"].Int();
+            Category = MaterialCommodityMicroResourceType.ToCategory(evt["Category"].Str());
+        }
+
+        public FDName Name { get; set; }
+        public string FriendlyName { get; set; }
+        public string Name_Localised { get; set; }
+        public int Count { get; set; }
+        public MaterialCommodityMicroResourceType.CatType Category { get; set; }
+        public long? MarketID { get; set; }
+
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("", Name_Localised, "Count".Tx() + ": ", Count, "Category".Tx() + ": ", Category);
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.SearchAndRescue)]
+    public class JournalSearchAndRescue : JournalEntry, ICommodityJournalEntry, ILedgerJournalEntry
+    {
+        public JournalSearchAndRescue(JObject evt) : base(evt, JournalTypeEnum.SearchAndRescue)
+        {
+            FDName = FDNameHelpers.NormaliseMatCommods(evt["Name"].Str(), out string engname);
+            FriendlyName = engname;
+            Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Name_Localised"].Str(), FriendlyName);         // always ensure we have one
+            Count = evt["Count"].Int();
+            Reward = evt["Reward"].Long();
+            MarketID = evt["MarketID"].LongNull();
+        }
+
+        public FDName FDName { get; set; }            // Hyperspace, Supercruise
+        public string Name_Localised { get; set; }            // Hyperspace, Supercruise
+        public string FriendlyName { get; set; }            // Hyperspace, Supercruise
+        public int Count { get; set; }
+        public long Reward { get; set; }
+        public long? MarketID { get; set; }
+
+        public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
+        {
+            mc.ChangeCommd(EventTimeUTC, FDName, -Count, 0);
+        }
+
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("", Name_Localised, "Num".Tx() + ": ", Count, "Reward".Tx() + ": ", Reward);
+        }
+
+        public void Ledger(Ledger mcl)
+        {
+            if (Reward > 0)
+            {
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Name_Localised + " " + Count, Reward);
+            }
+        }
+    }
+
 }

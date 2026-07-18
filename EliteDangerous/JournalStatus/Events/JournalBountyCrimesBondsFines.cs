@@ -39,28 +39,12 @@ namespace EliteDangerousCore.JournalEvents
             SharedWithOthers = evt["SharedWithOthers"].Bool(false);
             Rewards = evt["Rewards"]?.ToObjectQ<BountyReward[]>();
 
-            Target = FDNameHelpers.NormaliseShip(evt["Target"].Str(), out string _, true);      // can be null
-            TargetLocalised = Target.Str();         
+            Target = FDNameHelpers.NormaliseShipOrSuitOrActor(evt["Target"].Str(), out string engname, true);      // can be null
 
-            if (Target != null)         
+            if (Target != null)
             {
-                TargetLocalised = evt["Target_Localised"].Str("$");     // if not there, trigger the getter suit naming
-
-                var sp = ItemData.GetShipProperties(Target);        // if its a ship, replace with ship name
-                if (sp != null)
-                {
-                    TargetLocalised = sp.Name;
-                }
-                else if (TargetLocalised.StartsWith("$"))
-                {
-                    TargetLocalised = Target.GetBetterShipSuitActorName();    // else use suit etc naming
-                }
-
-               // System.Diagnostics.Debug.WriteLine($"Bounty {Target} -> {TargetLocalised}");
-            }
-            else
-            {
-
+                FriendlyTarget = engname;
+                TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), engname);  // if not there, trigger the getter suit naming
             }
 
             if ( Rewards == null )                  // for skimmers, its Faction/Reward.  Bug in manual reported to FD 23/5/2018
@@ -92,9 +76,10 @@ namespace EliteDangerousCore.JournalEvents
         public long TotalReward { get; set; }
         public string VictimFaction { get; set; }
         public string VictimFactionLocalised { get; set; }
-        public FDName Target { get; set; }
-        public string TargetLocalised { get; set; }
-        public bool SharedWithOthers { get; set; }
+        public FDName Target { get; set; }                      // can be null
+        public string FriendlyTarget { get; set; }             // can be null, friendly english
+        public string TargetLocalised { get; set; }             // can be null
+        public bool SharedWithOthers { get; set; }  
         public BountyReward[] Rewards { get; set; }
         public string PilotName { get; set; }   //may be null
         public string PilotName_Localised { get; set; } //may be null

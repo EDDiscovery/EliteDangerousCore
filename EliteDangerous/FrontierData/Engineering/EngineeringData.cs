@@ -22,7 +22,7 @@ namespace EliteDangerousCore
     [System.Diagnostics.DebuggerDisplay("{Label} {OriginalValue} -> {Value}")]
     public class EngineeringModifiers
     {
-        public string Label { get; set; }
+        public FDName Label { get; set; }               // identifier, matched with itemdata values
         public string FriendlyLabel { get; set; }
         public string ValueStr { get; set; }            // 3.02 if set, means ones further on do not apply. check first
         public string ValueStr_Localised { get; set; }
@@ -34,14 +34,15 @@ namespace EliteDangerousCore
     [System.Diagnostics.DebuggerDisplay("{Engineer} {BlueprintName} {Level} {ExperimentalEffect}")]
     public class EngineeringData
     {
-        public string Engineer { get; set; }
+        public FDName Engineer { get; set; }
         public FDName BlueprintName { get; set; }       
         public string FriendlyBlueprintName { get; set; }
         public ulong EngineerID { get; set; }
         public ulong BlueprintID { get; set; }
         public int Level { get; set; }
         public double Quality { get; set; }
-        public string ExperimentalEffect { get; set; }      // may be null or maybe empty (due to frontier) use HasChars()
+        public FDName ExperimentalEffect { get; set; }      // may be null or maybe empty (due to frontier) 
+        public string FriendlyExperimentalEffect { get; set; }      // may be null or maybe empty (due to frontier) 
         public string ExperimentalEffect_Localised { get; set; }    // may be null or maybe empty (due to frontier)
         public EngineeringModifiers[] Modifiers { get; set; }       // may be null
         public bool IsValid { get { return Level >= 1 && BlueprintName.IsValid(); } }
@@ -49,36 +50,30 @@ namespace EliteDangerousCore
         // Post engineering changes
         public EngineeringData(JObject evt)
         {
-            Engineer = evt["Engineer"].Str("Unknown");
+            Engineer = evt["Engineer"].FDName();
             Level = evt["Level"].Int();
 
             if (evt.Contains("Blueprint"))     // old form
             {
-                BlueprintName = evt["Blueprint"].FDNameBlueprint();
+                BlueprintName = FDNameHelpers.NormaliseBlueprint(evt["Blueprint"].Str(), out string engname );
+                FriendlyBlueprintName = engname;
             }
             else
             {
                 EngineerID = evt["EngineerID"].ULong();     // NEW FORM after engineering changes in about 2018
-                BlueprintName = evt["BlueprintName"].FDNameBlueprint();
+                BlueprintName = FDNameHelpers.NormaliseBlueprint(evt["BlueprintName"].Str(), out string engname);
+                FriendlyBlueprintName = engname;
                 BlueprintID = evt["BlueprintID"].ULong();
                 Quality = evt["Quality"].Double(0);
 
                 // EngineerCraft has it as Apply.. Loadout has just ExperimentalEffect.  Check both
-                ExperimentalEffect = evt.MultiStr(new string[] { "ExperimentalEffect", "ApplyExperimentalEffect" }, null);
-                if (ExperimentalEffect.HasChars())
+                string effect = evt.MultiStr(new string[] { "ExperimentalEffect", "ApplyExperimentalEffect" }, null);
+
+                if (effect.HasChars())
                 {
-                    string loc = evt["ExperimentalEffect_Localised"].StrNull();
-
-                    // seen records with localised=experimental effect so protect that.
-                    if (loc.EqualsIIC(ExperimentalEffect))
-                    {
-                        var recp = Recipes.FindRecipe(ExperimentalEffect);  // see if we have that recipe for backup name
-                        ExperimentalEffect_Localised = recp?.Name ?? ExperimentalEffect.SplitCapsWordFull();
-                    }
-                    else
-                        ExperimentalEffect_Localised = loc;
-
-                    //System.Diagnostics.Debug.WriteLine($"Exp effect {ExperimentalEffect} loc {loc} recp {recp?.Name} = {ExperimentalEffect_Localised}");
+                    ExperimentalEffect = FDNameHelpers.NormaliseExperimentalEffect(effect, out engname);
+                    FriendlyExperimentalEffect = engname;
+                    ExperimentalEffect_Localised = JournalFieldNaming.CheckLocalisation(evt["ExperimentalEffect_Localised"].Str(), engname);
                 }
 
                 Modifiers = evt["Modifiers"]?.ToObject<EngineeringModifiers[]>(true);     // instances of Value being wrong type - ignore and continue
@@ -86,30 +81,24 @@ namespace EliteDangerousCore
                 if (Modifiers != null)
                 {
                     foreach (EngineeringModifiers v in Modifiers)
-                        v.FriendlyLabel = v.Label.Replace("_", " ").SplitCapsWord();
-                }
-                else
-                {
-
+                        v.FriendlyLabel = v.Label.SplitCapsWordFull();
                 }
             }
-
-            FriendlyBlueprintName = BlueprintName.IsValid() ? Recipes.GetBetterNameForEngineeringRecipe(BlueprintName) : "??";       // some journal entries has empty blueprints
         }
 
         public JObject ToJSONLoadout()  // reproduce the loadout format..
         {
             var jo = new JObject();
-            jo["Engineer"] = Engineer;
+            jo["Engineer"] = Engineer.Str();
             jo["EngineerID"] = EngineerID;
             jo["BlueprintID"] = BlueprintID;
             jo["BlueprintName"] = BlueprintName.Str();
             jo["Level"] = Level;
             jo["Quality"] = Quality;
 
-            if (ExperimentalEffect.HasChars())      // not always present..
+            if (ExperimentalEffect != null)      // not always present..
             {
-                jo["ExperimentalEffect"] = ExperimentalEffect;
+                jo["ExperimentalEffect"] = ExperimentalEffect.Str();
                 jo["ExperimentalEffect_Localised"] = ExperimentalEffect_Localised;
             }
 
@@ -119,7 +108,7 @@ namespace EliteDangerousCore
                 foreach (EngineeringModifiers m in Modifiers)
                 {
                     JObject mod = new JObject();
-                    mod["Label"] = m.Label;
+                    mod["Label"] = m.Label.Str();
                     if (m.ValueStr.HasChars())      // if set, its just a string value
                     {
                         mod["ValueStr"] = m.ValueStr;
@@ -143,15 +132,15 @@ namespace EliteDangerousCore
         public void Build(System.Text.StringBuilder sb)
         {
             sb.BuildSetPad(Environment.NewLine,
-                    "Engineer".Tx()+": "+ " ", Engineer,
+                    "Engineer".Tx()+": "+ " ", Engineer.Str(),
                     "Blueprint".Tx()+": "+ " ", FriendlyBlueprintName,
                     "Level".Tx()+": "+ " ", Level,
                     "Quality".Tx()+": "+ " ", Quality,
                     "Experimental Effect".Tx()+": "+ " ", ExperimentalEffect_Localised);
 
-            if (ExperimentalEffect.HasChars())
+            if (ExperimentalEffect != null)
             {
-                if (specialeffects.TryGetValue(ExperimentalEffect, out ItemData.ShipModule se))   // get the experimental effect ship module modifier
+                if (specialeffects.TryGetValue(ExperimentalEffect.Str(), out ItemData.ShipModule se))   // get the experimental effect ship module modifier
                 {
                     foreach (var kvp in ItemData.ShipModule.GetPropertiesInOrder())     // all properties in the class
                     {
@@ -221,9 +210,9 @@ namespace EliteDangerousCore
             return true;
         }
 
-        public EngineeringModifiers FindModification(string name)
+        public EngineeringModifiers FindModification(FDName name)
         {
-            return Modifiers != null ? Array.Find(Modifiers, x => x.Label.Equals(name, StringComparison.InvariantCultureIgnoreCase)) : null;
+            return Modifiers != null ? Array.Find(Modifiers, x => x.Label == name) : null;
         }
 
         public ItemData.ShipModule EngineerModule(ItemData.ShipModule original, out string report, FDName modulefdname, ShipSlots.Slot slotfd = ShipSlots.Slot.Unknown, bool debugit = false)
@@ -240,16 +229,16 @@ namespace EliteDangerousCore
             // list of primary modifiers in use from the Modifiers list..
 
             List<string> primarymodifiers = new List<string>();
-            foreach( var x in Modifiers.EmptyIfNull())
+            foreach( EngineeringModifiers em in Modifiers.EmptyIfNull())
             {
-                if (modifierfdmapping.TryGetValue(x.Label, out string[] modifyarray) && modifyarray.Length>0)  // get the modifier primary control value if present
+                if (modifierfdmapping.TryGetValue(em.Label.Str(), out string[] modifyarray) && modifyarray.Length>0)  // get the modifier primary control value if present
                     primarymodifiers.Add(modifyarray[0]);
             }
 
             // go thru modifiers
             foreach (EngineeringModifiers mf in Modifiers.EmptyIfNull())        // modifiers may be null
             {
-                if (modifierfdmapping.TryGetValue(mf.Label, out string[] modifyarray))  // get the modify commands from the label
+                if (modifierfdmapping.TryGetValue(mf.Label.Str(), out string[] modifyarray))  // get the modify commands from the label
                 {
                     if ( modifyarray.Length == 0 )
                     {
@@ -298,7 +287,7 @@ namespace EliteDangerousCore
                             bool negativecheck = exceptiontype[0] == '-';
                             string exceptiontext = exceptiontype.Substring(1);
 
-                            bool anyfound = Array.Find(Modifiers, x => x.Label.EqualsIIC(exceptiontext)) != null ||
+                            bool anyfound = Array.Find(Modifiers, x => x.Label.Str().EqualsIIC(exceptiontext)) != null ||
                                           modulefdname.Str().WildCardMatch(exceptiontext, true) == true ||
                                           BlueprintName.Str().EqualsIIC(exceptiontext);
 
@@ -392,9 +381,9 @@ namespace EliteDangerousCore
 
             // now apply special effects
 
-            if (ExperimentalEffect.HasChars())
+            if (ExperimentalEffect != null)
             {
-                if (specialeffects.TryGetValue(ExperimentalEffect, out ItemData.ShipModule se))   // get the experimental effect ship module modifier
+                if (specialeffects.TryGetValue(ExperimentalEffect.Str(), out ItemData.ShipModule se))   // get the experimental effect ship module modifier
                 {
                     foreach (var kvp in ItemData.ShipModule.GetPropertiesInOrder())     // all properties in the class
                     {

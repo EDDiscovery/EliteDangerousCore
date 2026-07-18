@@ -16,6 +16,7 @@
 using QuickJSON;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -24,38 +25,20 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalRepair(JObject evt ) : base(evt, JournalTypeEnum.Repair)
         {
+            Items = new List<RepairItem>();
+
             if (evt["Items"] is JArray)
             {
-                Items = new List<RepairItem>();
-
                 foreach (var jitem in evt["Items"])
                 {
                     var ModuleFD = FDNameHelpers.NormaliseModules(jitem.Str(), out string engname);
-
-                    var repairitem = new RepairItem
-                    {
-                        ItemFD = ModuleFD,
-                        Item = engname,
-                        ItemLocalised = engname,
-                    };
-
-                    ItemLocalised = ItemLocalised.AppendPrePad(repairitem.ItemLocalised, ", "); // for the voice pack, keep this going
- 
-                    Items.Add(repairitem);
-                }
-                
-                if ( Items.Count>0 )
-                {
-                    ItemFD = Items[0].ItemFD;
-                    Item = Items[0].Item;
-                    ItemLocalised = Items[0].ItemLocalised;
+                    Items.Add(new RepairItem() { ItemFD = ModuleFD, Item = engname, ItemLocalised = engname });
                 }
             }
             else
             {
-                ItemFD = FDNameHelpers.NormaliseModules(evt["Item"].Str(), out string engname);
-                Item = engname;
-                ItemLocalised = JournalFieldNaming.CheckLocalisation(evt["Item_Localised"].Str(),Item);
+                var ModuleFD = FDNameHelpers.NormaliseModules(evt["Item"].Str(), out string engname);
+                Items.Add(new RepairItem() { ItemFD = ModuleFD, Item = engname, ItemLocalised = JournalFieldNaming.CheckLocalisation(evt["Item_Localised"].Str(), engname) });
             }
 
             Cost = evt["Cost"].Long();
@@ -67,12 +50,13 @@ namespace EliteDangerousCore.JournalEvents
             public FDName ItemFD { get; set; }
             public string ItemLocalised { get; set; }
         }
-
-        public FDName ItemFD { get; set; }      // first entry of items, for backwards compat
-        public string Item { get; set; }
-        public string ItemLocalised { get; set; }
-
         public List<RepairItem> Items { get; set; }
+
+        // For the voice pack keep these on first entry
+        public FDName ItemFD => Items.Count > 0 ? Items[0].ItemFD : FDName.Empty;
+        public string Item => Items.Count > 0 ? Items[0].Item : "Unknown";
+        public string ItemLocalised => Items.Count > 0 ? Items[0].ItemLocalised : "Unknown";
+
         public long Cost { get; set; }
 
         public void Ledger(Ledger mcl)
@@ -83,7 +67,21 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", ItemFD.GetForeignModuleName(ItemLocalised), "Cost: ; cr;N0".Tx(), Cost );
+            if (Items.Count > 1)
+                return BaseUtils.FieldBuilder.Build("Repaired: ", Items.Count, "Cost: ; cr;N0".Tx(), Cost);
+            else
+                return BaseUtils.FieldBuilder.Build("", ItemFD.GetForeignModuleName(ItemLocalised), "Cost: ; cr;N0".Tx(), Cost);
+        }
+        public override string GetDetailed()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach( var item in Items)
+            {
+                sb.Append(item.ItemFD.GetForeignModuleName(item.ItemLocalised));
+                sb.AppendCR();
+            }
+
+            return sb.ToString() + BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".Tx(), Cost);
         }
     }
 

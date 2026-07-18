@@ -8047,6 +8047,7 @@ namespace EliteDangerousCore
                 {new FDName("paintjob_type9_military_ruby_05"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Ruby 5") },
                 {new FDName("paintjob_type9_military_ruby_06"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Ruby 6") },
                 {new FDName("paintjob_type9_military_squadron_black"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Squadron Black") },
+                {new FDName("paintjob_type9_military_squadron_blue"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Squadron Blue") },
                 {new FDName("paintjob_type9_military_squadron_green"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Squadron Green") },
                 {new FDName("paintjob_type9_military_tactical_blue"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Tactical Blue") },
                 {new FDName("paintjob_type9_military_tactical_green"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Paint Job Type-10 Defender Tactical Green") },

@@ -140,16 +140,17 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMaterialCollected(JObject evt) : base(evt, JournalTypeEnum.MaterialCollected)
         {
-            Category = JournalFieldNaming.NormaliseMaterialCategory(evt["Category"].Str());
             Name = FDNameHelpers.NormaliseMatCommods(evt["Name"].Str(), out string engname);
             FriendlyName = engname;
+            Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), FriendlyName);
+            Category = MaterialCommodityMicroResourceType.ToCategory(evt["Category"].Str());
             Count = evt["Count"].Int(1);
         }
-        public string Category { get; set; }
-        public string FriendlyName { get; set; }
         public FDName Name { get; set; }
+        public string Name_Localised { get; set; }
+        public string FriendlyName { get; set; }
+        public MaterialCommodityMicroResourceType.CatType Category { get; set; }
         public int Count { get; set; }
-
         public int Total { get; set; }      // found from MCL
 
         public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
@@ -162,9 +163,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
-                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".Tx(), Count, "Total".Tx()+": ", Total);
+                return BaseUtils.FieldBuilder.Build("", mcd.TranslatedName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".Tx(), Count, "Total".Tx()+": ", Total);
             else
-                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".Tx(), Count);
+                return BaseUtils.FieldBuilder.Build("", Name_Localised, "< ; items".Tx(), Count);
         }
     }
 
@@ -173,15 +174,17 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMaterialDiscarded(JObject evt) : base(evt, JournalTypeEnum.MaterialDiscarded)
         {
-            Category = JournalFieldNaming.NormaliseMaterialCategory(evt["Category"].Str());
+            Category = MaterialCommodityMicroResourceType.ToCategory(evt["Category"].Str());
             Name = FDNameHelpers.NormaliseMatCommods(evt["Name"].Str(), out string engname);
+            Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), FriendlyName);
             FriendlyName = engname;
             Count = evt["Count"].Int();
         }
 
-        public string Category { get; set; }
         public string FriendlyName { get; set; }
         public FDName Name { get; set; }    // FDName
+        public string Name_Localised { get; set; }
+        public MaterialCommodityMicroResourceType.CatType Category { get; set; }
         public int Count { get; set; }
 
         public int Total { get; set; }      // found from MCL
@@ -196,7 +199,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
-                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".Tx(), Count, "Total".Tx()+": ", Total);
+                return BaseUtils.FieldBuilder.Build("", mcd.TranslatedName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".Tx(), Count, "Total".Tx()+": ", Total);
             else
                 return BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".Tx(), Count);
         }
@@ -207,23 +210,27 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMaterialDiscovered(JObject evt) : base(evt, JournalTypeEnum.MaterialDiscovered)
         {
-            Category = JournalFieldNaming.NormaliseMaterialCategory(evt["Category"].Str());
             Name = FDNameHelpers.NormaliseMatCommods(evt["Name"].Str(), out string engname);
             FriendlyName = engname;
+            Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), FriendlyName);
+            Category = MaterialCommodityMicroResourceType.ToCategory(evt["Category"].Str());
             DiscoveryNumber = evt["DiscoveryNumber"].Int();
         }
 
-        public string Category { get; set; }
-        public FDName Name { get; set; }    // FDName
+        public FDName Name { get; set; }
+        public string Name_Localised { get; set; }
         public string FriendlyName { get; set; }
+        public MaterialCommodityMicroResourceType.CatType Category { get; set; }
         public int DiscoveryNumber { get; set; }
 
         public override string GetInfo()
         {
-            string info = BaseUtils.FieldBuilder.Build("", FriendlyName);
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
+            string info = "";
             if (mcd != null)
-                info += BaseUtils.FieldBuilder.Build(" (", mcd.TranslatedCategory, ";)", mcd.TranslatedType);
+                info += BaseUtils.FieldBuilder.Build("", mcd.TranslatedName, " (", mcd.TranslatedCategory, ";)", mcd.TranslatedType);
+            else
+                info += BaseUtils.FieldBuilder.Build("", Name_Localised, " (", mcd.TranslatedCategory, ";)", mcd.TranslatedType);
 
             if (DiscoveryNumber > 0)
                 info += string.Format(", Discovery {0}".Tx(), DiscoveryNumber);
@@ -239,18 +246,18 @@ namespace EliteDangerousCore.JournalEvents
         public JournalMaterialTrade(JObject evt) : base(evt, JournalTypeEnum.MaterialTrade)
         {
             MarketID = evt["MarketID"].LongNull();
-            TraderType = evt["TraderType"].Str();
+            TraderType = MaterialCommodityMicroResourceType.ToCategory(evt["TraderType"].Str());
 
-            Paid = evt["Paid"]?.ToObjectQ<Traded>();
+            Paid = evt["Paid"]?.ToObject<Traded>(false, process: MaterialCommodityMicroResourceType.ToCategory);
             if (Paid != null)
                 Paid.Normalise();
 
-            Received = evt["Received"]?.ToObjectQ<Traded>();
+            Received = evt["Received"]?.ToObject<Traded>(false, process: MaterialCommodityMicroResourceType.ToCategory);
             if (Received != null)
                 Received.Normalise();
         }
 
-        public string TraderType { get; set; }
+        public MaterialCommodityMicroResourceType.CatType TraderType { get; set; }    
         public long? MarketID { get; set; }
         public Traded Paid { get; set; }      // may be null
         public Traded Received { get; set; } // may be null
@@ -264,7 +271,7 @@ namespace EliteDangerousCore.JournalEvents
             public FDName Material;     //fdname
             public string FriendlyMaterial; // our name
             public string Material_Localised;   // their localised name if present
-            public string Category;     // journal says always there.  If not, use tradertype
+            public MaterialCommodityMicroResourceType.CatType? Category;     // journal says always there.  Evidence says its there, yet i coded it as a null..
             public string Category_Localised;
             public int Quantity;
 
@@ -276,18 +283,17 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (Category != null)       // some entries do not have this
                 {
-                    Category = JournalFieldNaming.NormaliseMaterialCategory(Category);  // fix up any strangeness
-                    Category_Localised = JournalFieldNaming.CheckLocalisation(Category_Localised ?? "", Category);
+                    Category_Localised = JournalFieldNaming.CheckLocalisation(Category_Localised ?? "", Category.ToString());
                 }
             }
         }
 
         public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
-            if (Paid != null && Received != null)
+            if (Paid?.Category != null && Received?.Category != null)
             {
-                mc.ChangeMat( EventTimeUTC, Paid.Category.Alt(TraderType), Paid.Material, -Paid.Quantity);        // use faction - person your using to swap
-                mc.ChangeMat( EventTimeUTC, Received.Category.Alt(TraderType), Received.Material, Received.Quantity);
+                mc.ChangeMat( EventTimeUTC, Paid.Category.Value, Paid.Material, -Paid.Quantity);        // use faction - person your using to swap
+                mc.ChangeMat( EventTimeUTC, Received.Category.Value, Received.Material, Received.Quantity);
             }
         }
 

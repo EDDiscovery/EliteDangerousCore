@@ -20,43 +20,12 @@ namespace EliteDangerousCore
 {
     public static class JournalFieldNaming
     {
-        static public string NormaliseMaterialCategory(string cat)
-        {
-            switch (cat.ToLowerInvariant())
-            {
-                case "raw":
-                case "encoded":
-                case "manufactured":
-                    return cat;
-                case "$microresource_category_encoded;":
-                    return "Encoded";
-                case "$microresource_category_elements;":
-                    return "Raw";
-                case "$microresource_category_manufactured;":
-                    return "Manufactured";
-            }
-
-            // Fallback decoding
-            if (cat.Contains("$"))
-            {
-                int i = cat.LastIndexOf('_');
-                if (i != -1 && i < cat.Length - 1)
-                    cat = cat.Substring(i + 1).Replace(";", "");
-            }
-
-            return cat;
-        }
-
-        static public string GetBetterMissionName(string inname)
-        {
-            return inname.Replace("_name", "").SplitCapsWordFull();
-        }
-
         static public string ShortenMissionName(string inname)
         {
             return inname.Replace("Mission ", "", StringComparison.InvariantCultureIgnoreCase);
         }
 
+        // handle changes in how Frontier writes station info
         static public Tuple<string, string> GetStationNames(JObject evt, string root = "StationName")
         {
             var sn = evt[root].Str();
@@ -78,6 +47,8 @@ namespace EliteDangerousCore
             }
             return new Tuple<string, string>(sn, snloc);
         }
+
+        // handle changes in how Frontier writes station info
         static public Tuple<string, string> GetStationNames(JObject evt)
         {
             var sn = evt["StationName"].Str();
@@ -142,9 +113,6 @@ namespace EliteDangerousCore
             else
                 return CheckLocalisation(loc, alt);
         }
-
-        // attempt to find a better name for name as its a body name
-
 
         public static string SubsituteCommanderName(string cmdrin)      // only for debugging, subsitute a commander name
         {

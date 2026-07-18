@@ -1149,7 +1149,7 @@ namespace EliteDangerousCore
                 foreach (EngineeringModifiers modifier in module.Engineering.Modifiers)
                 {
                     JObject jmodifier = new JObject();
-                    jmodifier["Label"] = modifier.Label;
+                    jmodifier["Label"] = modifier.Label.Str();
                     jmodifier["Value"] = modifier.Value;
                     jmodifier["OriginalValue"] = modifier.OriginalValue;
                     jmodifier["LessIsGood"] = modifier.LessIsGood;
@@ -1159,8 +1159,8 @@ namespace EliteDangerousCore
                 engineering["Modifiers"] = modifiers;
             }
 
-            if (module.Engineering.ExperimentalEffect.HasChars() )
-                engineering["ExperimentalEffect"] = module.Engineering.ExperimentalEffect;
+            if (module.Engineering.ExperimentalEffect != null)
+                engineering["ExperimentalEffect"] = module.Engineering.ExperimentalEffect.Str();
 
             return engineering;
         }

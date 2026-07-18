@@ -111,8 +111,8 @@ namespace EliteDangerousCore.JournalEvents
         public string Content_Localised { get; set; }
 
         public FDName MotherlodeMaterial { get; set; }      // may be null
-        public string MotherlodeMaterial_Localised { get; set; }
-        public string FriendlyMotherlodeMaterial { get; set; }
+        public string MotherlodeMaterial_Localised { get; set; }   // may be null
+        public string FriendlyMotherlodeMaterial { get; set; }  // may be null
 
         public double Remaining { get; set; }
         public Material[] Materials { get; set; }

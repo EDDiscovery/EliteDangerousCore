@@ -191,9 +191,8 @@ namespace EliteDangerousCore
         }
 
         // find by fdname, may be null
-        public static EngineeringRecipe FindRecipe(string fdname)
+        public static EngineeringRecipe FindRecipe(FDName fdname)
         {
-            fdname = fdname.ToLowerInvariant();
             return EngineeringRecipes.Find(x=>x.FDName!=null && x.FDName.Equals(fdname));
         }
 

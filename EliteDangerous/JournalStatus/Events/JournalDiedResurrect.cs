@@ -34,7 +34,7 @@ namespace EliteDangerousCore.JournalEvents
             public string Name;             // always non null 
             public string Name_Localised;   // always non null 
             public FDName Ship;             // always non null 
-            public string Rank;             // may be null
+            public RankDefinitions.CombatRank Rank;  // may be unknown
 
             public string FriendlyShip;     // EDD addition, always non null
         }
@@ -43,46 +43,33 @@ namespace EliteDangerousCore.JournalEvents
         {
             //System.Diagnostics.Debug.WriteLine($"Died {evt.ToString()}");
 
-            string killerName = evt["KillerName"].Str();
-
-            if (killerName.IsEmpty())                       // no killer name
+            if (evt.Contains("Killers"))
             {
-                if (evt["Killers"] != null)                 // by a wing
+                Killers = evt["Killers"].ToObject<Killer[]>(process: (type, str) => Enum.TryParse<RankDefinitions.CombatRank>(str, true, out RankDefinitions.CombatRank cr) ? cr : RankDefinitions.CombatRank.Unknown);
+                foreach (var x in Killers.EmptyIfNull())
                 {
-                    Killers = evt["Killers"].ToObjectQ<Killer[]>();
-                }
-                else 
-                {
-                    string kship = evt["KillerShip"].StrNull();
-                    if (kship != null)
-                    {
-                        Killers = new Killer[1] { new Killer { Name = kship, Name_Localised = kship.SplitCapsWordFull(), Ship = new FDName(kship) } };
-                    }
+                    x.Ship = FDNameHelpers.NormaliseShipOrSuitOrActor(x.Ship.Str(), out string engname);
+                    x.FriendlyShip = engname;
+                    x.Name_Localised = x.Name_Localised != null ? x.Name_Localised : x.Name;
+                    x.Name = x.Name != null && !x.Name.ContainsIIC("$UNKNOWN") ? x.Name : engname;
                 }
             }
-            else
+            else if (evt.Contains("KillerName") || evt.Contains("KillerShip"))
             {
-                var ShipType = FDNameHelpers.NormaliseShip(evt["KillerShip"].Str(), out string _);
+                string killerName = evt["KillerName"].StrNull();        // may not be there
+                var ShipType = FDNameHelpers.NormaliseShipOrSuitOrActor(evt["KillerShip"].Str(), out string engname);
+                var name = killerName != null && !killerName.ContainsIIC("$UNKNOWN") ? killerName : engname;         // Killer Name can be missing
 
-                // it was an individual
                 Killers = new Killer[1]
                 {
-                    new Killer {  Name = killerName, Name_Localised = evt["KillerName_Localised"].Str(), Ship = ShipType,  Rank = evt["KillerRank"].Str() }
+                    new Killer {  Name = name,
+                                Name_Localised = evt["KillerName_Localised"].Str(name),
+                                Ship = ShipType,
+                                Rank = Enum.TryParse<RankDefinitions.CombatRank>(evt["KillerRank"].Str(),true, out RankDefinitions.CombatRank cr) ? cr : RankDefinitions.CombatRank.Unknown,
+                                FriendlyShip = engname,
+                     }
                 };
             }
-
-            if (Killers != null)
-            {
-                foreach (Killer k in Killers)
-                {
-                    k.Name = k.Name ?? "";      // ensure set - may not be set for a bad Killers array
-                    k.Name_Localised = JournalFieldNaming.CheckLocalisation(k.Name_Localised ?? "", k.Name);
-                    k.FriendlyShip = k.Ship.GetBetterShipSuitActorName();
-                    //System.Diagnostics.Debug.WriteLine($" >> Died '{k.Name}' '{k.Name_Localised}' '{k.Ship}' '{k.FriendlyShip}' '{k.Rank}'");
-                }
-            }
-
-            //FillInformation(null, null, out string info, out string detailed); System.Diagnostics.Debug.WriteLine($"Died: {info}");
         }
 
         public Killer[] Killers { get; set; }           // may be null if no killer listed
@@ -104,34 +91,34 @@ namespace EliteDangerousCore.JournalEvents
             if (Killers != null)
             {
                 var sb = new System.Text.StringBuilder(256);
-                sb.Append("Killed by ".Tx());
 
                 foreach (Killer k in Killers)
                 {
                     string kstr = "";
 
-                    if (ItemData.IsSuit(k.Ship))
+                    if (ItemData.IsSuitTypeName(k.Ship))
                     {
                         string type = k.Ship.Contains("citizen") ? k.FriendlyShip.Replace("Suit ", "") : k.FriendlyShip.Replace("Suit", "Trooper");
                         kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", type);
                     }
                     else if (ItemData.IsShip(k.Ship))
                     {
-                        kstr = string.Format("{0} in ship type {1} rank {2}".Tx(), k.Name_Localised, k.FriendlyShip, k.Rank ?? "?");
+                        kstr = string.Format("{0} in ship type {1} rank {2}".Tx(), k.Name_Localised, k.FriendlyShip, k.Rank.ToString());
                     }
                     else if (k.FriendlyShip.HasChars())
                     {
-                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", k.FriendlyShip, "Rank".Tx()+": ", k.Rank);
+                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised != "Unknown" ? k.Name_Localised : null, "", k.FriendlyShip, "Rank".Tx() + ": ", k.Rank.ToString());
                     }
                     else
-                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "Rank".Tx()+": ", k.Rank);
+                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "Rank".Tx() + ": ", k.Rank);
 
                     sb.AppendPrePad(kstr, ", ");
                 }
-                return sb.ToString();
+
+                return "Killed by ".Tx() + sb.ToString();
             }
             else
-                return null;
+                return null;;
         }
 
     }

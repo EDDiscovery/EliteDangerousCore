@@ -135,13 +135,19 @@ namespace EliteDangerousCore.JournalEvents
             ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             ShipPrice = evt["ShipPrice"].Long();
 
-            StoreOldShipFD = FDNameHelpers.NormaliseShip(evt["StoreOldShip"].Str(), out shipname);
-            StoreOldShip = shipname;
-            StoreOldShipId = evt["StoreShipID"].ULongNull();
+            StoreOldShipFD = FDNameHelpers.NormaliseShip(evt["StoreOldShip"].Str(), out shipname, true);
+            if (StoreOldShipFD != null)
+            {
+                StoreOldShip = shipname;
+                StoreOldShipId = evt["StoreShipID"].ULongNull();
+            }
 
-            SellOldShipFD = FDNameHelpers.NormaliseShip(evt["SellOldShip"].Str(), out shipname);
-            SellOldShip = shipname;
-            SellOldShipId = evt["SellShipID"].ULongNull();
+            SellOldShipFD = FDNameHelpers.NormaliseShip(evt["SellOldShip"].Str(), out shipname, true);
+            if (SellOldShipFD != null)
+            {
+                SellOldShip = shipname;
+                SellOldShipId = evt["SellShipID"].ULongNull();
+            }
 
             SellPrice = evt["SellPrice"].LongNull();
 

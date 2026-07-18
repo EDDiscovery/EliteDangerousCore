@@ -47,13 +47,15 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalBuyDrones(JObject evt) : base(evt, JournalTypeEnum.BuyDrones)
         {
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string _);
+            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname);
+            FriendlyType = engname;
             Count = evt["Count"].Int();
             BuyPrice = evt["BuyPrice"].Long();
             TotalCost = evt["TotalCost"].Long();
 
         }
         public FDName Type { get; set; }
+        public string FriendlyType { get; set; }
         public int Count { get; set; }
         public long BuyPrice { get; set; }
         public long TotalCost { get; set; }
@@ -77,12 +79,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Type + " " + Count + " drones", -TotalCost);
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Type + " " + Count + " " + FriendlyType, -TotalCost);
         }
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Type".Tx()+": ", Type, "Count".Tx()+": ", Count, "Total Cost: ; cr;N0".Tx(), TotalCost, "each: ; cr;N0".Tx(), BuyPrice);
+            return BaseUtils.FieldBuilder.Build("Type".Tx()+": ", FriendlyType, "Count".Tx()+": ", Count, "Total Cost: ; cr;N0".Tx(), TotalCost, "each: ; cr;N0".Tx(), BuyPrice);
         }
     }
 
@@ -92,12 +94,14 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSellDrones(JObject evt) : base(evt, JournalTypeEnum.SellDrones)
         {
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string _);
+            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname);
+            FriendlyType = engname;
             Count = evt["Count"].Int();
             SellPrice = evt["SellPrice"].Long();
             TotalSale = evt["TotalSale"].Long();
         }
         public FDName Type { get; set; }
+        public string FriendlyType { get; set; }
         public int Count { get; set; }
         public long SellPrice { get; set; }
         public long TotalSale { get; set; }
@@ -118,12 +122,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Count.ToString() + " " + "Drones".Tx(), TotalSale);
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Count.ToString() + " " + FriendlyType, TotalSale);
         }
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Type, "Count".Tx()+": ", Count, "Price: ; cr;N0".Tx(), SellPrice, "Amount: ; cr;N0".Tx(), TotalSale);
+            return BaseUtils.FieldBuilder.Build("", FriendlyType, "Count".Tx()+": ", Count, "Price: ; cr;N0".Tx(), SellPrice, "Amount: ; cr;N0".Tx(), TotalSale);
         }
     }
 

@@ -15,13 +15,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace EliteDangerousCore
 {
     public partial class ItemData
     {
-        static public bool IsSuit(FDName ifd)       // If a suit..
+        static public bool IsSuitTypeName(FDName ifd)       // If a suit..
         {
             return ifd.Contains("suit");
         }
@@ -34,6 +35,7 @@ namespace EliteDangerousCore
             else
             {
                 int classn = fdname.GetClass();
+                Debugger.Break();
                 System.Diagnostics.Debug.WriteLine($"Unknown Suit: {{ \"{fdname}\", new Suit(\"{locname??fdname.SplitCapsWordFull()}\",{classn},0,0,\"\",\"\",\"\",null) }},");
                 return null;
             }
@@ -95,7 +97,7 @@ namespace EliteDangerousCore
 
         public class Suit 
         {
-            public string Type;         // Name
+            public string Type;         // Name in english
             public int Class;
             public string Name;         // Name and class
             public int PrimaryWeapons;
@@ -219,6 +221,7 @@ namespace EliteDangerousCore
                 13.5, 60, 15,30,10 )) }, // battery, oxygen, items, components, data
 
 
+                 { new FDName("flightsuitai"), new Suit("AI Flight Suit",1,0,0,"","","",null) },
                  { new FDName("lightassaultsuitai_class1"), new Suit("AI Light Assault Suit",1,0,0,"","","",null) },
                  { new FDName("lightassaultsuitai_class2"), new Suit("AI Light Assault Suit",2,0,0,"","","",null) },
                  { new FDName("lightassaultsuitai_class3"), new Suit("AI Light Assault Suit",3,0,0,"","","",null) },

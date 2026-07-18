@@ -77,7 +77,7 @@ namespace EliteDangerousCore
         {
             ships = new Dictionary<string, Ship>();
             StoredModules = new ShipModulesInStore();
-            itemlocalisation = new Dictionary<string, string>();
+            itemlocalisation = new Dictionary<FDName, string>(new FDNameEqualityComparer());
             currentid = null;
         }
 
@@ -101,9 +101,9 @@ namespace EliteDangerousCore
             {
                 if (!sm.Contains(m.SlotFD) || !sm.Same(m))  // no slot, or not the same data.. (ignore localised item)
                 {
-                    if (m.LocalisedItem == null && itemlocalisation.ContainsKey(m.Item))        // if we have a cached localisation, use it
+                    if (m.LocalisedItem == null && itemlocalisation.ContainsKey(m.ItemFD))        // if we have a cached localisation, use it
                     {
-                        m.LocalisedItem = itemlocalisation[m.Item];
+                        m.LocalisedItem = itemlocalisation[m.ItemFD];
                         //                        System.Diagnostics.Debug.WriteLine("Have localisation for " + m.Item + ": " + m.LocalisedItem);
                     }
 
@@ -402,16 +402,16 @@ namespace EliteDangerousCore
 
             ships[sid] = sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed, store back into array (bug may 24!)
 
-            if (e.StoredItem.Length > 0)                             // if we stored something
+            if (e.StoredItemFD != null)                             // if we stored something
                 StoredModules = StoredModules.StoreModule(e.StoredItemFD, e.StoredItem, e.StoredItemLocalised, sys);
 
             ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.BuyItem, e.BuyItemFD, e.BuyItemLocalised);      // replace the slot with this
 
-            itemlocalisation[e.BuyItem] = e.BuyItemLocalised;       // record any localisations
-            if (e.SellItem.Length > 0)
-                itemlocalisation[e.SellItem] = e.SellItemLocalised;
-            if (e.StoredItem.Length > 0)
-                itemlocalisation[e.StoredItem] = e.StoredItemLocalised;
+            itemlocalisation[e.BuyItemFD] = e.BuyItemLocalised;       // record any localisations
+            if (e.SellItemFD != null)
+                itemlocalisation[e.SellItemFD] = e.SellItemLocalised;
+            if (e.StoredItemFD != null)
+                itemlocalisation[e.StoredItemFD] = e.StoredItemLocalised;
 
             VerifyList();
         }
@@ -432,7 +432,7 @@ namespace EliteDangerousCore
             ships[sid] = sm.RemoveModule(e.SlotFD, e.SellItemFD);
 
             if (e.SellItem.Length > 0)
-                itemlocalisation[e.SellItem] = e.SellItemLocalised;
+                itemlocalisation[e.SellItemFD] = e.SellItemLocalised;
 
             VerifyList();
         }
@@ -456,7 +456,7 @@ namespace EliteDangerousCore
 
             sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed
 
-            if (e.ReplacementItem.Length > 0)
+            if (e.ReplacementItemFD != null)
                 ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.ReplacementItem, e.ReplacementItemFD, e.ReplacementItemLocalised);
             else
                 ships[sid] = sm.RemoveModule(e.SlotFD, e.StoredItemFD);
@@ -472,7 +472,7 @@ namespace EliteDangerousCore
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
 
             sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed
-            if (e.SwapOutItem.Length > 0)
+            if (e.SwapOutItemFD != null)
                 StoredModules = StoredModules.StoreModule(e.SwapOutItemFD, e.SwapOutItem, e.SwapOutItemLocalised, sys);
 
             ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.RetrievedItem, e.RetrievedItemFD, e.RetrievedItemLocalised);
@@ -601,7 +601,7 @@ namespace EliteDangerousCore
             }
 
             ulong i = id.Substring(id.IndexOf(":") + 1).InvariantParseULong(0);
-            System.Diagnostics.Debug.WriteLine($"ShipList made new ship {id}.. {i}");
+            //System.Diagnostics.Debug.WriteLine($"ShipList made new ship {id}.. {i}");
             Ship smn = new Ship(i);
             ships[id] = smn;
             return smn;
@@ -640,7 +640,7 @@ namespace EliteDangerousCore
         #endregion
 
         #region vars
-        private Dictionary<string, string> itemlocalisation;
+        private Dictionary<FDName, string> itemlocalisation;        // cache of modules vs item localisation
         private string currentid;
         private Dictionary<string, Ship> ships { get; set; }         // by shipid key
         #endregion

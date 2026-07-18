@@ -401,7 +401,7 @@ namespace EliteDangerousCore.Inara
                         foreach( var x in je.Engineers )
                         {
                             if (x.Valid)      // Frontier lovely logs again - check for validity
-                                eventstosend.Add(InaraClass.setCommanderRankEngineer(x.Engineer, x.Progress, x.Rank, heutc));
+                                eventstosend.Add(InaraClass.setCommanderRankEngineer(x.Engineer.Str(), x.Progress.ToString(), x.Rank, heutc));
                         }
                         break;
                     }

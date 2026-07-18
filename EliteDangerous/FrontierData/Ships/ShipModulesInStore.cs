@@ -32,7 +32,7 @@ namespace EliteDangerousCore
             public long MarketID{ get; set; }       // not while in transit
             public long TransferCost{ get; set; }   // not while in transit
             public int TransferTime{ get; set; }    // not while in transit
-            public string EngineerModifications{ get; set; }    // null if none present
+            public FDName EngineerModifications{ get; set; }    // null if none present
             public double Quality{ get; set; }      // may not be there
             public int Level{ get; set; }           // may not be there
             public bool Hot{ get; set; }
@@ -61,14 +61,14 @@ namespace EliteDangerousCore
                 //System.Diagnostics.Debug.WriteLine($"SD Normalise '{NameFD}' '{Name}' '{Name_Localised}'");
             }
 
-            public StoredModule(FDName fdname, string englishname, string item_localised, string system, string eng, int? level , double? quality, bool? hot)
+            public StoredModule(FDName fdname, string englishname, string item_localised, string system, FDName engmod, int? level , double? quality, bool? hot)
             {
                 NameFD = fdname;
                 Name = englishname;
                 Name_Localised = item_localised.Alt(Name);
                 //System.Diagnostics.Debug.WriteLine($"SD Make '{NameFD}' '{Name}' '{Name_Localised}'");
                 StarSystem = system;
-                EngineerModifications = eng;
+                EngineerModifications = engmod;
                 if (level.HasValue)
                     Level = level.Value;
                 if (quality.HasValue)
@@ -85,7 +85,7 @@ namespace EliteDangerousCore
             {
                 return (StorageSlot == other.StorageSlot && string.Compare(Name, other.Name) == 0 && string.Compare(Name_Localised, other.Name_Localised) == 0 &&
                          string.Compare(StarSystem, other.StarSystem) == 0 && MarketID == other.MarketID && TransferCost == other.TransferCost &&
-                         TransferTime == other.TransferTime && string.Compare(EngineerModifications, other.EngineerModifications) == 0 &&
+                         TransferTime == other.TransferTime && EngineerModifications != other.EngineerModifications &&
                          Quality == other.Quality && Level == other.Level && Hot == other.Hot && InTransit == other.InTransit && BuyPrice == other.BuyPrice);
             }
         }
@@ -107,7 +107,7 @@ namespace EliteDangerousCore
         public ShipModulesInStore StoreModule(FDName fdname, string englishname, string namelocalised, ISystem sys)
         {
             ShipModulesInStore mis = this.ShallowClone();
-            mis.StoredModules.Add(new StoredModule(fdname, englishname, namelocalised ,sys.Name, "", null, null, null));
+            mis.StoredModules.Add(new StoredModule(fdname, englishname, namelocalised ,sys.Name, null, null, null, null));
             return mis;
         }
 
@@ -115,17 +115,17 @@ namespace EliteDangerousCore
         public ShipModulesInStore StoreModule(JournalModuleStore e, ISystem sys)
         {
             ShipModulesInStore mis = this.ShallowClone();
-            mis.StoredModules.Add(new StoredModule(e.StoredItemFD,e.StoredItem, e.StoredItemLocalised,sys.Name, e.EngineerModifications,e.Level,e.Quality,e.Hot));
+            mis.StoredModules.Add(new StoredModule(e.StoredItemFD,e.StoredItem, e.StoredItemLocalised,sys.Name, e.FDEngineerModifications,e.Level,e.Quality,e.Hot));
             return mis;
         }
 
         // MassModuleStore
-        public ShipModulesInStore StoreModule(JournalMassModuleStore.ModuleItem[] items, Dictionary<string, string> itemlocalisation, ISystem sys)
+        public ShipModulesInStore StoreModule(JournalMassModuleStore.ModuleItem[] items, Dictionary<FDName, string> itemlocalisation, ISystem sys)
         {
             ShipModulesInStore mis = this.ShallowClone();
             foreach (var it in items)
             {
-                string local = itemlocalisation.ContainsKey(it.Name) ? itemlocalisation[it.Name] : it.Name;
+                string local = itemlocalisation.ContainsKey(it.NameFD) ? itemlocalisation[it.NameFD] : it.Name;
                 mis.StoredModules.Add(new StoredModule(it.NameFD, it.Name, local, sys.Name, it.EngineerModifications, it.Level, it.Quality, it.Hot ));
             }
             return mis;

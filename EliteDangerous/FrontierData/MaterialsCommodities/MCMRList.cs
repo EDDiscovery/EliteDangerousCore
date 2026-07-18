@@ -133,25 +133,14 @@ namespace EliteDangerousCore
         {
             ChangeInt(utc, MaterialCommodityMicroResourceType.CatType.Commodity, fdname, delta, price, 0);
         }
-        public void ChangeMat(DateTime utc, string catname, FDName fdname, int delta)
+        public void ChangeMat(DateTime utc, MaterialCommodityMicroResourceType.CatType cat, FDName fdname, int delta)
         {
-            var cat = MaterialCommodityMicroResourceType.CategoryFrom(catname);
-            if (cat.HasValue)
-            {
-                ChangeInt(utc, cat.Value, fdname, delta, 0, 0);
-            }
-            else
-                System.Diagnostics.Debug.WriteLine("MCMRLIST Unknown Cat " + catname);
+            ChangeInt(utc, cat, fdname, delta, 0, 0);
         }
-        public void ChangeMR(int cnum, DateTime utc, string catname, FDName fdname, int delta )
+
+        public void ChangeMR(int cnum, DateTime utc, MaterialCommodityMicroResourceType.CatType cat, FDName fdname, int delta )
         {
-            var cat = MaterialCommodityMicroResourceType.CategoryFrom(catname);
-            if (cat.HasValue)
-            {
-                ChangeInt(utc, cat.Value, fdname, delta, 0, cnum);
-            }
-            else
-                System.Diagnostics.Debug.WriteLine("MCMRLIST Unknown Cat " + catname);
+            ChangeInt(utc, cat, fdname, delta, 0, cnum);
         }
 
        //always changes entry 0

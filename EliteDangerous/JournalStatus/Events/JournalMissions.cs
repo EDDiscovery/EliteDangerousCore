@@ -83,7 +83,9 @@ namespace EliteDangerousCore.JournalEvents
         public class MissionItem
         {
             public ulong MissionID { get; set; }
-            public string Name { get; set; }                 // normalised name from $Mission_ .. _Name format
+
+            [JsonAlwaysCreate]
+            public FDName Name { get; set; }                 
             public string Name_Localised { get; set; }       // new '25
             public bool PassengerMission { get; set; }
             public int Expires { get; set; }
@@ -93,12 +95,13 @@ namespace EliteDangerousCore.JournalEvents
             public void Normalise(DateTime utcnow)
             {
                 ExpiryTimeUTC = utcnow.AddSeconds(Expires);
-                Name = JournalFieldNaming.GetBetterMissionName(Name);       // Names are normalised, per MissionAccepted
+                Name = FDNameHelpers.NormaliseMissionName(Name.Str(), out string engname);
+                Name_Localised = Name_Localised ?? engname;
             }
 
             public string Format()
             {
-                return BaseUtils.FieldBuilder.Build("", Name_Localised ?? Name, "<;(Passenger)".Tx(), PassengerMission, " " + "Expires".Tx()+": ", ExpiryTimeUTC.ToLocalTime());
+                return BaseUtils.FieldBuilder.Build("", Name_Localised, "<;(Passenger)".Tx(), PassengerMission, " " + "Expires".Tx()+": ", ExpiryTimeUTC.ToLocalTime());
             }
         }
     }
@@ -110,8 +113,8 @@ namespace EliteDangerousCore.JournalEvents
         public JournalMissionAccepted(JObject evt) : base(evt, JournalTypeEnum.MissionAccepted)
         {
             Faction = evt["Faction"].Str();
-            FDName = evt["Name"].Str();
-            Name = JournalFieldNaming.GetBetterMissionName(FDName);
+            FDName =  FDNameHelpers.NormaliseMissionName(evt["Name"].Str(),out string engname);
+            Name = engname;
             LocalisedName = JournalFieldNaming.CheckLocalisation(evt["LocalisedName"].Str(), Name);
 
             Target = evt["Target"].Str();
@@ -135,7 +138,7 @@ namespace EliteDangerousCore.JournalEvents
 
             MissionId = evt["MissionID"].ULong();
 
-            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out string engname, true);        // allow null
+            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out engname, true);        // allow null
             FriendlyCommodity = engname;
             if (Commodity != null)
                 CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
@@ -157,10 +160,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public ulong MissionId { get; private set; }
 
+        public FDName FDName { get; private set; }                  // original
+        public string Name { get; private set; }                    // english
+        public string LocalisedName { get; private set; }           // always set
+
         public string Faction { get; private set; }                 // in MissionAccepted order
-        public string Name { get; private set; }
-        public string LocalisedName { get; private set; }
-        public string FDName { get; private set; }
 
         public string DestinationSystem { get; private set; }
         public string DestinationStation { get; private set; }
@@ -266,7 +270,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Commodity != null && Count != null && EventTimeUTC < EliteReleaseDates.Release_3_2)           // after this we will rely on Cargo to update us, only safe way to know if something has been stowed
             {
-                if (DeliveryMissions.StartsWith(FDName, StringComparison.InvariantCultureIgnoreCase)>=0 )   // before, we accept only these as mission deliveries
+                if (DeliveryMissions.StartsWith(FDName.Str(), StringComparison.InvariantCultureIgnoreCase)>=0 )   // before, we accept only these as mission deliveries
                 {
                     mc.ChangeCommd(EventTimeUTC, Commodity, (int)Count, 0);
                 }
@@ -283,14 +287,17 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMissionCompleted(JObject evt) : base(evt, JournalTypeEnum.MissionCompleted)
         {
-            FDName = evt["Name"].Str();
-            Name = JournalFieldNaming.GetBetterMissionName(FDName);
+            FDName = FDNameHelpers.NormaliseMissionName(evt["Name"].Str(), out string engname);
+            Name = engname;
+
             Faction = evt["Faction"].Str();
 
-            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out string engname, true);        // allow null
-            FriendlyCommodity = engname;
+            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out engname, true);        // allow null
             if (Commodity != null)
+            {
+                FriendlyCommodity = engname;
                 CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
+            }
 
             Count = evt["Count"].IntNull();
 
@@ -334,7 +341,7 @@ namespace EliteDangerousCore.JournalEvents
                     c.Normalise();
             }
 
-            MaterialsReward = evt["MaterialsReward"]?.ToObjectQ<MaterialRewards[]>();
+            MaterialsReward = evt["MaterialsReward"]?.ToObject<MaterialRewards[]>(process: MaterialCommodityMicroResourceType.ToCategory);
 
             if (MaterialsReward != null)
             {
@@ -362,12 +369,12 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
+        public FDName FDName { get; set; }      
         public string Name { get; set; }
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
-        public string FDName { get; set; }      // not an FDName, but the fdname of the mission, these are not standard fdnames
         public string Faction { get; set; }
 
-        public FDName Commodity { get; set; }               // The thing shipped. But in pre3.0, this could also be a commodity reward, which was not clear.
+        public FDName Commodity { get; set; }               // may be null. The thing shipped. But in pre3.0, this could also be a commodity reward, which was not clear.
         public string CommodityLocalised { get; set; }
         public string FriendlyCommodity { get; set; }
         public int? Count { get; set; }
@@ -417,7 +424,7 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (MaterialRewards m in MaterialsReward)                 // 7/3/2018 not yet fully proven.. changed in 3.02
                 {
                     //System.Diagnostics.Debug.WriteLine($"Mission completed {EventTimeUTC} Materials Reward {m.Name} {m.Category} {m.Count}");
-                    mc.ChangeMat( EventTimeUTC, m.Category.Alt("Raw"), m.Name, m.Count);      // mats from faction of mission
+                    mc.ChangeMat( EventTimeUTC, m.Category?? MaterialCommodityMicroResourceType.CatType.Raw, m.Name, m.Count);      // mats from faction of mission
                 }
             }
         }
@@ -589,7 +596,7 @@ namespace EliteDangerousCore.JournalEvents
             public FDName Name; // fdname
             public string FriendlyName; // our conversion
             public string Name_Localised;       // may be null on reading
-            public string Category; // may be null
+            public MaterialCommodityMicroResourceType.CatType? Category; // may be null...
             public string Category_Localised; // may be null
             public int Count;
 
@@ -601,8 +608,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (Category != null)
                 {
-                    Category = JournalFieldNaming.NormaliseMaterialCategory(Category);
-                    Category_Localised = JournalFieldNaming.CheckLocalisation(Category_Localised ?? "", Category);
+                    Category_Localised = JournalFieldNaming.CheckLocalisation(Category_Localised ?? "", Category.ToString());
                 }
             }
         }
@@ -652,15 +658,15 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMissionFailed(JObject evt) : base(evt, JournalTypeEnum.MissionFailed)
         {
-            FDName = evt["Name"].Str();
-            Name = JournalFieldNaming.GetBetterMissionName(FDName);
+            FDName = FDNameHelpers.NormaliseMissionName(evt["Name"].Str(), out string engname);
+            Name = engname;
             MissionId = evt["MissionID"].ULong();
             Fine = evt["Fine"].LongNull();
         }
 
+        public FDName FDName { get; set; }
         public string Name { get; set; }
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
-        public string FDName { get; set; }
         public ulong MissionId { get; set; }
         public long? Fine { get; set; }
 
@@ -690,8 +696,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMissionRedirected(JObject evt) : base(evt, JournalTypeEnum.MissionRedirected)
         {
-            FDName = evt["Name"].Str();
-            Name = JournalFieldNaming.GetBetterMissionName(FDName);
+            FDName = FDNameHelpers.NormaliseMissionName(evt["Name"].Str(), out string engname);
+            Name = LocalisedName = engname;
             MissionId = evt["MissionID"].ULong();
             NewDestinationStation = evt["NewDestinationStation"].Str();
             OldDestinationStation = evt["OldDestinationStation"].Str();
@@ -699,16 +705,15 @@ namespace EliteDangerousCore.JournalEvents
             OldDestinationSystem = evt["OldDestinationSystem"].Str();
         }
 
+        public FDName FDName { get; set; }
+        public string Name { get; set; }
+        public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public string NewDestinationStation { get; set; }
         public string OldDestinationStation { get; set; }
         public string NewDestinationSystem { get; set; }
         public string OldDestinationSystem { get; set; }
 
         public ulong MissionId { get; set; }
-        public string Name { get; set; }
-        public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
-        public string FDName { get; set; }
-
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("Mission name".Tx()+": ", LocalisedName,
@@ -732,15 +737,15 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMissionAbandoned(JObject evt) : base(evt, JournalTypeEnum.MissionAbandoned)
         {
-            FDName = evt["Name"].Str();
-            Name = JournalFieldNaming.GetBetterMissionName(FDName);
+            FDName = FDNameHelpers.NormaliseMissionName(evt["Name"].Str(), out string engname);
+            Name = engname;
             MissionId = evt["MissionID"].ULong();
             Fine = evt["Fine"].LongNull();
         }
 
+        public FDName FDName { get; set; }
         public string Name { get; set; }
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
-        public string FDName { get; set; }
         public ulong MissionId { get; set; }
         public long? Fine { get; set; }
 

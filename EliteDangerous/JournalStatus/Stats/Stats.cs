@@ -100,14 +100,14 @@ namespace EliteDangerousCore
             }
         }
 
-        public void UpdateEngineerMaterial(ISystem system, string name, FDName namematcom, int amount)
+        public void UpdateEngineerMaterial(ISystem system, FDName engname, FDName namematcom, int amount)
         {
-            UpdateMaterial(system,namematcom, amount, name);
+            UpdateMaterial(system,namematcom, amount, engname.Str());
         }
 
-        public void UpdateEngineerCommodity(ISystem system, string name, FDName namematcom, int amount)
+        public void UpdateEngineerCommodity(ISystem system, FDName engname, FDName namematcom, int amount)
         {
-            UpdateCommodity(system,namematcom, amount, 0, name);
+            UpdateCommodity(system,namematcom, amount, 0, engname.Str());
         }
 
         public void BountyKill(ISystem system, string victimfaction)

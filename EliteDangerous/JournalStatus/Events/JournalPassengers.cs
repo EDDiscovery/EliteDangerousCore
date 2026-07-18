@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2023 EDDiscovery development team
+ * Copyright 2016-2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -15,8 +15,6 @@
  */
 using QuickJSON;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace EliteDangerousCore.JournalEvents
@@ -28,7 +26,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             public ulong MissionID { get; set; }
             public string Type { get; set; }          // Friendly name, not fdev
-            public enum PassengerType { Tourist, Refugee, Soldier, Explorer, Terrorist,  Buisness, AidWorker, Security, MinorCelebrity, Criminal, Politician, Protestor,
+            public enum PassengerType { Tourist, Refugee, Soldier, Explorer, Terrorist,  Business, AidWorker, Security, MinorCelebrity, Criminal, Politician, Protestor,
                                         Medical, HeadOfState, PoliticalPrisoner, Scientist, POW, Unknown };
             public PassengerType FDType { get; set; }        // FDtype
             public bool VIP { get; set; }

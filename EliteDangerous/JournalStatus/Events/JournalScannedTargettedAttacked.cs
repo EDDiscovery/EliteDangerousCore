@@ -31,7 +31,7 @@ namespace EliteDangerousCore.JournalEvents
             ScanType = FDScanType.ToString().SplitCapsWordFull();
         }
 
-        public enum ScanTypes { Cargo , Unknown };
+        public enum ScanTypes { Unknown, Crime, Cargo };
         public string ScanType { get; set; }        // Friendly, not FDEV
         public ScanTypes FDScanType { get; set; }        // fdname
 
@@ -48,34 +48,36 @@ namespace EliteDangerousCore.JournalEvents
         {
             TargetLocked = evt["TargetLocked"].Bool();
 
-            ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(),out string bettername);
-            Ship = bettername;
+            if (TargetLocked)
+            {
+                ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string bettername);
+                Ship = bettername;
 
-            Ship_Localised = JournalFieldNaming.CheckLocalisation(evt["Ship_Localised"].Str(), Ship);
+                Ship_Localised = JournalFieldNaming.CheckLocalisation(evt["Ship_Localised"].Str(), Ship);
 
-            ScanStage = evt["ScanStage"].IntNull();
-            PilotName = evt["PilotName"].StrNull();
-            PilotName_Localised = JournalFieldNaming.CheckLocalisation(evt["PilotName_Localised"].Str(), PilotName);
+                ScanStage = evt["ScanStage"].IntNull();
+                PilotName = evt["PilotName"].StrNull();
+                PilotName_Localised = JournalFieldNaming.CheckLocalisation(evt["PilotName_Localised"].Str(), PilotName);
 
-            PilotRank = evt["PilotRank"].StrNull();
-            if (PilotRank != null)
-                PilotCombatRank = RankDefinitions.CombatRankToEnum(PilotRank);
+                PilotRank = evt["PilotRank"].StrNull();
+                if (PilotRank != null)
+                    PilotCombatRank = RankDefinitions.CombatRankToEnum(PilotRank);
 
-            ShieldHealth = evt["ShieldHealth"].DoubleNull();
-            HullHealth = evt["HullHealth"].DoubleNull();
-            Faction = evt["Faction"].StrNull();
-            LegalStatus = evt["LegalStatus"].StrNull();
-            Bounty = evt["Bounty"].IntNull();
-            SubSystem = evt["SubSystem"].StrNull();
-            SubSystemHealth = evt["SubSystemHealth"].DoubleNull();
-            Power = evt["Power"].StrNull();
+                ShieldHealth = evt["ShieldHealth"].DoubleNull();
+                HullHealth = evt["HullHealth"].DoubleNull();
+                Faction = evt["Faction"].StrNull();
+                LegalStatus = evt["LegalStatus"].StrNull();
+                Bounty = evt["Bounty"].IntNull();
+                SubSystem = evt["SubSystem"].StrNull();
+                SubSystemHealth = evt["SubSystemHealth"].DoubleNull();
+                Power = evt["Power"].StrNull();
+            }
         }
 
         public bool TargetLocked { get; set; }          // if false, no info below
         public int? ScanStage { get; set; }             // targetlocked= true, 0/1/2/3
-
-        public string Ship { get; set; }                // 0 null
         public FDName ShipFD { get; set; }              // 0 null
+        public string Ship { get; set; }                // 0 null
         public string Ship_Localised { get; set; }      // 0 will be empty
         public string PilotName { get; set; }           // 1 null
         public string PilotName_Localised { get; set; } // 1 will be empty 

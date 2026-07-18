@@ -375,7 +375,7 @@ namespace EliteDangerousCore
 
             foreach (var mi in m.ActiveMissions)
             {
-                string kn = Key(mi.MissionID, mi.Name);
+                string kn = Key(mi.MissionID, mi.Name.Str());
                 active.Add(kn);
                 //System.Diagnostics.Debug.WriteLine(m.EventTimeUTC.ToStringZulu() + " Mission " + kn + " is active");
 
@@ -397,13 +397,13 @@ namespace EliteDangerousCore
 
             foreach (var mi in m.FailedMissions)
             {
-                string kn = Key(mi.MissionID, mi.Name);
+                string kn = Key(mi.MissionID, mi.Name.Str());
                 failed.Add(kn);
             }
 
             foreach (var mi in m.CompletedMissions)
             {
-                string kn = Key(mi.MissionID, mi.Name);
+                string kn = Key(mi.MissionID, mi.Name.Str());
                 completed.Add(kn);
             }
 

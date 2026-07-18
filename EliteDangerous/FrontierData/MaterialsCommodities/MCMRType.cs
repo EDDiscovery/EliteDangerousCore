@@ -133,6 +133,9 @@ namespace EliteDangerousCore
             // trailblazers feb 25
             Haematite, Steel,
 
+            // new july 26 ish
+            CuratedCommodity,
+
             //---------------------------------------------------------- Raw
             Carbon = 1000, Iron, Lead, Nickel, Phosphorus, Rhenium, Sulphur, Arsenic,
             Chromium, Germanium, Manganese, Vanadium, Zinc, Zirconium, Boron, Cadmium,
@@ -255,12 +258,31 @@ namespace EliteDangerousCore
                 || fdname.Contains("vanadium") || fdname.Contains("yttrium"));
         }
 
-        static public CatType? CategoryFrom(string s)
+        // for JSON converter
+        public static Object ToCategory(Type t, string text)
         {
-            if (Enum.TryParse<CatType>(s, true, out CatType res))
-                return res;
-            else
-                return null;
+            return ToCategory(text);
+        }
+
+        // deals with decorated names
+        static public CatType ToCategory(string fdname)
+        {
+            if (fdname.HasChars())
+            {
+                if (fdname[0] == '$')
+                {
+                    int i = fdname.LastIndexOf('_');
+                    if (i > 0)
+                        fdname = fdname.Substring(i + 1);
+                    if (fdname[fdname.Length - 1] == ';')
+                        fdname = fdname.Substring(0, fdname.Length - 1);
+                }
+                if (Enum.TryParse<CatType>(fdname, true, out CatType res))
+                    return res;
+            }
+
+            System.Diagnostics.Debug.WriteLine("*** MCMRTYPE Unknown Cat `" + fdname +"`");
+            return CatType.Commodity;       //default
         }
 
         public const int VeryCommonCap = 300;
@@ -444,16 +466,6 @@ namespace EliteDangerousCore
 
         #endregion
 
-        public static MaterialCommodityMicroResourceType EnsurePresent(string catname, FDName fdname, string locname = null)  // By FDNAME
-        {
-            var cat = CategoryFrom(catname);
-            if (cat.HasValue)
-                return EnsurePresent(cat.Value, fdname, locname);
-            else
-                return null;
-        }
-
-
         public static int fakeid = 20000;
 
         public static MaterialCommodityMicroResourceType EnsurePresent(CatType cat, FDName fdname, string locname = null)
@@ -598,6 +610,7 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.IndustrialMaterials, MCMR.Polymers, "Polymers");
             Add(CatType.Commodity, ItemType.IndustrialMaterials, MCMR.Semiconductors, "Semiconductors");
             Add(CatType.Commodity, ItemType.IndustrialMaterials, MCMR.Superconductors, "Superconductors");
+            Add(CatType.Commodity, ItemType.IndustrialMaterials, MCMR.CuratedCommodity, "Curated Commodity Package");
             Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.Beer, "Beer");
             Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.BootlegLiquor, "Bootleg Liquor");
             Add(CatType.Commodity, ItemType.LegalDrugs, MCMR.Liquor, "Liquor");

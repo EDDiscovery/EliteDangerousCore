@@ -264,10 +264,10 @@ namespace EliteDangerousCore.Inara
                 data["isHot"] = x.Hot;
                 data["starsystemName"] = x.StarSystem;
                 data["marketID"] = x.MarketID;
-                if (!x.EngineerModifications.IsEmpty())
+                if (x.EngineerModifications != null)
                 {
                     JObject eng = new JObject();
-                    eng["blueprintName"] = x.EngineerModifications;
+                    eng["blueprintName"] = x.EngineerModifications.Str();
                     eng["blueprintLevel"] = x.Level;
                     eng["blueprintQuality"] = x.Quality;
                     eng["experimentalEffect"] = "";
@@ -363,7 +363,7 @@ namespace EliteDangerousCore.Inara
                     eng["blueprintName"] = x.Engineering.BlueprintName.Str() ?? "";
                     eng["blueprintLevel"] = x.Engineering.Level;
                     eng["blueprintQuality"] = x.Engineering.Quality;
-                    eng["experimentalEffect"] = x.Engineering.ExperimentalEffect??"";
+                    eng["experimentalEffect"] = x.Engineering.ExperimentalEffect?.Str() ?? "";
 
                     if ( x.Engineering.Modifiers != null )
                     {
@@ -372,7 +372,7 @@ namespace EliteDangerousCore.Inara
                         foreach( var y in x.Engineering.Modifiers )
                         {
                             JObject mod = new JObject();
-                            mod["name"] = y.Label;
+                            mod["name"] = y.Label.Str();
                             if (y.ValueStr.HasChars())
                                 mod["value"] = y.ValueStr;
                             else
@@ -457,7 +457,7 @@ namespace EliteDangerousCore.Inara
         static public JToken addCommanderMission(JournalMissionAccepted mission, DateTime dt, string starsystem, string station)
         {
             JObject eventData = new JObject();
-            eventData["missionName"] = mission.FDName;
+            eventData["missionName"] = mission.FDName.Str();
             eventData["missionGameID"] = mission.MissionId;
             eventData["missionExpiry"] = mission.Expiry.ToStringZuluInvariant();
 
