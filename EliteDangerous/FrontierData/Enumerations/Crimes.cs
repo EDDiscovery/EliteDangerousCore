@@ -73,7 +73,7 @@ namespace EliteDangerousCore
             //foreach( var kvp in crimesFDToEnglish) System.Diagnostics.Trace.WriteLine($"[\"{kvp.Key.ToLowerInvariant()}\"] = \"{kvp.Value}\",");
             if (fdname == null)
             {
-                System.Diagnostics.Trace.WriteLine($"**** NULL crime type error");
+                BaseUtils.Debugger.TraceBreak($"**** NULL crime type error");
                 return "Null Crime Type - ERROR";
             }
             else if (crimesFDToEnglish.TryGetValue(fdname, out string english))
@@ -82,7 +82,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Trace.WriteLine($"**** Unknown crime type `{fdname}`");
+                BaseUtils.Debugger.TraceBreak($"**** Unknown crime type `{fdname}`");
                 return fdname.SplitCapsWordFull();
             }
         }

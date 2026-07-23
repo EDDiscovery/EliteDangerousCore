@@ -130,19 +130,19 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalShipyardBuy(JObject evt) : base(evt, JournalTypeEnum.ShipyardBuy)
         {
-            ShipFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname);
+            ShipFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname, this);
             ShipType = shipname;
             ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             ShipPrice = evt["ShipPrice"].Long();
 
-            StoreOldShipFD = FDNameHelpers.NormaliseShip(evt["StoreOldShip"].Str(), out shipname, true);
+            StoreOldShipFD = FDNameHelpers.NormaliseShip(evt["StoreOldShip"].Str(), out shipname, this, true);
             if (StoreOldShipFD != null)
             {
                 StoreOldShip = shipname;
                 StoreOldShipId = evt["StoreShipID"].ULongNull();
             }
 
-            SellOldShipFD = FDNameHelpers.NormaliseShip(evt["SellOldShip"].Str(), out shipname, true);
+            SellOldShipFD = FDNameHelpers.NormaliseShip(evt["SellOldShip"].Str(), out shipname, this, true);
             if (SellOldShipFD != null)
             {
                 SellOldShip = shipname;
@@ -209,7 +209,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalShipyardNew(JObject evt) : base(evt, JournalTypeEnum.ShipyardNew)
         {
-            ShipFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname);
+            ShipFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname, this);
             ShipType = shipname;
             ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             ShipId = evt["NewShipID"].ULong();
@@ -238,7 +238,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalShipyardSell(JObject evt) : base(evt, JournalTypeEnum.ShipyardSell)
         {
             MarketID = evt["MarketID"].LongNull();
-            ShipTypeFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname);
+            ShipTypeFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname, this);
             ShipType = shipname;
             ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             SellShipId = evt["SellShipID"].ULong();
@@ -301,12 +301,12 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalShipyardSwap(JObject evt) : base(evt, JournalTypeEnum.ShipyardSwap)
         {
-            ShipFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname);
+            ShipFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname, this);
             ShipType = shipname;
             ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             ShipId = evt["ShipID"].ULong();
 
-            StoreOldShipFD = FDNameHelpers.NormaliseShip(evt["StoreOldShip"].Str(), out shipname);
+            StoreOldShipFD = FDNameHelpers.NormaliseShip(evt["StoreOldShip"].Str(), out shipname, this);
             StoreOldShip = shipname;
             StoreShipId = evt["StoreShipID"].ULongNull();
 
@@ -341,7 +341,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalShipyardTransfer(JObject evt) : base(evt, JournalTypeEnum.ShipyardTransfer)
         {
-            ShipTypeFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname);
+            ShipTypeFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname, this);
             ShipType = shipname;
             ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             ShipId = evt["ShipID"].ULong();
@@ -392,6 +392,8 @@ namespace EliteDangerousCore.JournalEvents
     }
 
 
+    ulong? Can we have a marketID class?
+
     [JournalEntryType(JournalTypeEnum.StoredShips)]
     public class JournalStoredShips : JournalEntry, IShipInformation
     {
@@ -411,6 +413,13 @@ namespace EliteDangerousCore.JournalEvents
                     x.StarSystem = StarSystem;
                     x.StationName = StationName;
                 }
+            }
+
+            var x1 = evt["ShipsRemote"].ToObjectProtected(typeof(StoredShip[]), false);
+
+            if (x1 is QuickJSON.JTokenExtensions.ToObjectError)
+            {
+
             }
 
             ShipsRemote = evt["ShipsRemote"]?.ToObjectQ<StoredShip[]>();
@@ -493,7 +502,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSellShipOnRebuy(JObject evt) : base(evt, JournalTypeEnum.SellShipOnRebuy)
         {
-            ShipTypeFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname);
+            ShipTypeFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname, this);
             ShipType = shipname;
             ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             System = evt["System"].Str();
@@ -530,7 +539,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalShipyardRedeem(JObject evt) : base(evt, JournalTypeEnum.ShipyardRedeem)
         {
-            ShipFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname);
+            ShipFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname, this);
             ShipType = shipname;
             ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             MarketID = evt["MarketID"].Long();
@@ -554,7 +563,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalShipRedeemed(JObject evt) : base(evt, JournalTypeEnum.ShipRedeemed)
         {
-            ShipFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname);
+            ShipFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname, this);
             ShipType = shipname;
             ShipType_Localised = evt["ShipType_Localised"].Str().Alt(ShipType);
             ShipId = evt["NewShipID"].ULong();
@@ -577,7 +586,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalShipyardBankDeposit(JObject evt) : base(evt, JournalTypeEnum.ShipyardBankDeposit)
         {
-            ShipTypeFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname);
+            ShipTypeFD = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string shipname, this);
             ShipType = shipname;
             ShipTypeLocalised = evt["ShipType_Localised"].Str(ShipType);
             MarketID = evt["MarketID"].Long();
@@ -597,7 +606,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSetUserShipName(JObject evt) : base(evt, JournalTypeEnum.SetUserShipName)
         {
-            ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname);
+            ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
             ShipID = evt["ShipID"].ULong();
             ShipName = evt["UserShipName"].Str();// name to match LoadGame

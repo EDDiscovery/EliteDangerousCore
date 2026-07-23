@@ -32,7 +32,7 @@ namespace EliteDangerousCore.JournalEvents
                 );        // read fields named in this structure matching JSON names
 
             foreach (var x in ResourcesRequired.EmptyIfNull())
-                x.Normalise();
+                x.Normalise(this);
         }
         public long MarketID { get; set; }
         public float ConstructionProgress { get; set; }
@@ -42,7 +42,6 @@ namespace EliteDangerousCore.JournalEvents
         [System.Diagnostics.DebuggerDisplay("{Name_Localised} {RequiredAmount} {ProvidedAmount} {Payment}")]
         public class ResourcesList : IEquatable<ResourcesList>
         {
-            [JsonCustomFormat]
             public FDName Name { get; set; }     
             public string FriendlyName { get; set; }        // English
             public string Name_Localised { get; set; }
@@ -56,9 +55,9 @@ namespace EliteDangerousCore.JournalEvents
                         Payment == other.Payment;
             }
 
-            public void Normalise()
+            public void Normalise(JournalEntry ev)
             {
-                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname);
+                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname, ev);
                 FriendlyName = engname;
             }
         }
@@ -110,20 +109,19 @@ namespace EliteDangerousCore.JournalEvents
                );        // read fields named in this structure matching JSON names
             
             foreach (var x in Contributions.EmptyIfNull())
-                x.Normalise();
+                x.Normalise(this);
         }
         public long MarketID { get; set; }
 
         public class Contribution
         {
-            [JsonCustomFormat]
             public FDName Name { get; set; }        // fdname
             public string FriendlyName { get; set; } // english
             public string Name_Localised { get; set; }
             public int Amount { get; set; }
-            public void Normalise()
+            public void Normalise(JournalEntry ev)
             {
-                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname);
+                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname, ev);
                 FriendlyName = engname;
             }
         }

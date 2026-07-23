@@ -14,11 +14,7 @@
 
 using QuickJSON;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
-using System.Xml.Schema;
 
 namespace EliteDangerousCore
 {
@@ -156,7 +152,8 @@ namespace EliteDangerousCore
 
         public override string ToString()
         {
-            throw new NotImplementedException();
+            BaseUtils.Debugger.TraceBreak($"*** FNAME Using ToString() {Environment.StackTrace}");
+            return fdname;
         }
 
 
@@ -235,7 +232,7 @@ namespace EliteDangerousCore
             return s;
         }
 
-        public static FDName NormaliseShip(string fdname, out string shipname, bool allownull = false)
+        public static FDName NormaliseShip(string fdname, out string shipname, JournalEntry ev, bool allownull = false)
         {
             if (fdname.IsEmpty())
             {
@@ -247,6 +244,7 @@ namespace EliteDangerousCore
                 else
                 {
                     shipname = "Unknown Ship";
+                    BaseUtils.Debugger.TraceBreak($"*** Missing Ship {ev?.EventTimeUTC} {ev?.EventTypeStr}");
                     return new FDName("Unknown Ship");
                 }
             }
@@ -256,8 +254,7 @@ namespace EliteDangerousCore
                 var ship = ItemData.GetShipProperties(ret);
                 if (ship == null)
                 {
-                    System.Diagnostics.Trace.WriteLine("*** Unknown FD ship ID:" + fdname);
-                    Debugger.Break();
+                    BaseUtils.Debugger.TraceBreak($"*** Unknown ship: `{fdname}` {ev?.EventTimeUTC} {ev?.EventTypeStr}");
                     shipname = "Unknown Ship " + fdname;
                 }
                 else
@@ -265,10 +262,9 @@ namespace EliteDangerousCore
 
                 return ret;
             }
-
         }
 
-        public static FDName NormaliseShipOrSuitOrActor(string fdname, out string name, bool allownull = false)
+        public static FDName NormaliseShipOrSuitOrActor(string fdname, out string name, JournalEntry ev, bool allownull = false)
         {
             if (fdname != null)
             {
@@ -286,10 +282,10 @@ namespace EliteDangerousCore
                 }
             }
             
-            return NormaliseShip(fdname, out name, allownull);
+            return NormaliseShip(fdname, out name, ev, allownull);
         }
 
-        public static FDName NormaliseModules(string fdname, out string modulename, bool allownull = false)
+        public static FDName NormaliseModules(string fdname, out string modulename, JournalEntry ev, bool allownull = false)
         {
             if (fdname.IsEmpty())
             {
@@ -301,6 +297,7 @@ namespace EliteDangerousCore
                 else
                 {
                     modulename = "Unknown Module";
+                    BaseUtils.Debugger.TraceBreak("*** Missing Module");
                     return new FDName("Unknown Module");
                 }
             }
@@ -316,15 +313,14 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine("*** Unknown Module ID:" + fdname);
-                    Debugger.Break();
+                    BaseUtils.Debugger.TraceBreak("*** Unknown Module `{fdname}`");
                     modulename = "Unknown Module " + fdname;
                 }
 
                 return ret;
             }
         }
-        public static FDName NormaliseMatCommods(string fdname, out string matname, bool allownull = false)
+        public static FDName NormaliseMatCommods(string fdname, out string matname, JournalEntry ev, bool allownull = false)
         {
             if (fdname.IsEmpty())
             {
@@ -336,6 +332,7 @@ namespace EliteDangerousCore
                 else
                 {
                     matname = "Unknown Material/Commodity";
+                    BaseUtils.Debugger.TraceBreak($"*** Missing Material {ev?.EventTimeUTC} {ev?.EventTypeStr}");
                     return new FDName("Unknown Material/Commodity");
                 }
             }
@@ -353,8 +350,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine("*** Unknown Mat/Commod ID:" + fdname);
-                    Debugger.Break();
+                    BaseUtils.Debugger.TraceBreak($"*** Unknown Mat/Commod `{fdname}` {ev?.EventTimeUTC} {ev?.EventTypeStr}");
                     matname = fdname.SplitCapsWordFull();
                 }
 
@@ -372,12 +368,13 @@ namespace EliteDangerousCore
             else
             {
                 engname = "Missing Mission Name";
-                Debugger.Break();
+                BaseUtils.Debugger.TraceBreak("*** Missing Mission Name");
                 return new FDName(engname);
             }
         }
 
-        public static FDName NormaliseBlueprint(string fdname, out string engname, bool allownull =false) // always gives a non null fdname with non null str()
+        // some pre 3.0 blueprints are not valid anymore, pass ev to check if to moan
+        public static FDName NormaliseBlueprint(string fdname, out string engname, JournalEntry ev, bool allownull =false) 
         {
             if (fdname.IsEmpty())
             {
@@ -389,27 +386,37 @@ namespace EliteDangerousCore
                 else
                 {
                     engname = "Unknown Blueprint";
+
+                    if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
+                        BaseUtils.Debugger.TraceBreak($"*** Missing blueprint {ev?.EventTimeUTC} {ev?.EventTypeStr}");
+
                     return new FDName("Unknown Blueprint");
                 }
             }
             else
             {
                 var fd = new FDName(fdname);
+
                 var rp = Recipes.FindRecipe(fd);
+
                 if (rp != null)
+                {
                     engname = rp.Name;
+                    //   System.Diagnostics.Debug.WriteLine($"known blueprint name {ev?.EventTimeUTC} {ev?.EventTypeStr} : {fdname}");
+                }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine("*** Unknown Blueprint Name:" + fdname);
-                    Debugger.Break();
+                    if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
+                        BaseUtils.Debugger.TraceBreak($"*** Unknown blueprint name `{fdname}` {ev?.EventTimeUTC} {ev?.EventTypeStr}");
+
                     engname = fdname.SplitCapsWordFull();
                 }
-
                 return fd;
             }
         }
 
-        public static FDName NormaliseExperimentalEffect(string fdname, out string engname, bool allownull = false) // always gives a non null fdname with non null str()
+        // some pre 3.0 effects are not valid anymore, pass ev to check if to moan
+        public static FDName NormaliseExperimentalEffect(string fdname, out string engname, JournalEntry ev, bool allownull = false) 
         {
             if (fdname.IsEmpty())
             {
@@ -421,6 +428,10 @@ namespace EliteDangerousCore
                 else
                 {
                     engname = "Unknown Experimental Effect";
+
+                    if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
+                        BaseUtils.Debugger.TraceBreak($"*** Missing exp effect {ev?.EventTimeUTC} {ev?.EventTypeStr}");
+
                     return new FDName("Unknown Experimental Effect");
                 }
             }
@@ -429,11 +440,14 @@ namespace EliteDangerousCore
                 var fd = new FDName(fdname);
                 var rp = Recipes.FindRecipe(fd);
                 if (rp != null)
+                {
                     engname = rp.Name;
+                }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine("*** Unknown Experimental Effect Name:" + fdname);
-                    Debugger.Break();
+                    if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
+                        BaseUtils.Debugger.TraceBreak($"*** Unknown experimental effect {fdname} {ev?.EventTimeUTC} {ev?.EventTypeStr}");
+
                     engname = fdname.SplitCapsWordFull();
                 }
 
@@ -448,7 +462,7 @@ namespace EliteDangerousCore
                 return new FDName(fdname.Replace("$SAA_SignalType_", "").Replace(";", "").SplitCapsWordFull());
             else
             {
-                Debugger.Break();
+                BaseUtils.Debugger.TraceBreak("*** Missing Signals");
                 return new FDName("Error in Signal no data");
             }
         }
@@ -458,7 +472,7 @@ namespace EliteDangerousCore
                 return new FDName(fdname.Replace("$Codex_Ent_", "").Replace("_Name;", "").Replace(";", "").Replace("$Codex_", "").SplitCapsWordFull());
             else
             {
-                Debugger.Break();
+                BaseUtils.Debugger.TraceBreak("*** Missing Genus");
                 return new FDName("Error in Genus no data");
             }
         }

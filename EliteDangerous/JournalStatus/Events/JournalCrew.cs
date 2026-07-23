@@ -153,17 +153,23 @@ namespace EliteDangerousCore.JournalEvents
         public JournalCrewMemberRoleChange(JObject evt) : base(evt, JournalTypeEnum.CrewMemberRoleChange)
         {
             Crew =  evt["Crew"].Str();
-            FDRole = Enum.TryParse(evt["Role"].Str(), true, out CrewRole c) ? c : CrewRole.Unknown;
-            if (FDRole == CrewRole.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown crew role {evt["Role"].Str()}");
-            Role = FDRole.ToString().SplitCapsWordFull();
-            Telepresence = evt["Telepresence"].Bool();
+            if (Crew.HasChars())           // some entries have null
+            {
+                FDRole = Enum.TryParse(evt["Role"].Str(), true, out CrewRole c) ? c : CrewRole.Unknown;
+                if (FDRole == CrewRole.Unknown)
+                {
+                    BaseUtils.Debugger.TraceBreak($"*** Unknown crew role {evt["Role"].Str()}");
+                    ;
+                }
+                Role = FDRole.ToString().SplitCapsWordFull();
+                Telepresence = evt["Telepresence"].Bool();
+            }
         }
 
-        public string Crew { get; set; }
-
-        public enum CrewRole { Idle, FireCon, FighterCon , Helm, OnFoot, Unknown }
-        public string  Role { get; set; }
-        public CrewRole FDRole { get; set; }
+        public string Crew { get; set; }        // may be empty on some bad entries
+        public enum CrewRole { Unknown, Idle, FireCon, FighterCon , Helm, OnFoot }
+        public CrewRole FDRole { get; set; }    // will be unknown on bad entries
+        public string  Role { get; set; }       // english
         public bool Telepresence { get; set; }
 
         public override string GetInfo()
@@ -221,7 +227,11 @@ namespace EliteDangerousCore.JournalEvents
         public JournalChangeCrewRole(JObject evt) : base(evt, JournalTypeEnum.ChangeCrewRole)
         {
             FDRole = Enum.TryParse(evt["Role"].Str(), true, out JournalCrewMemberRoleChange.CrewRole c) ? c : JournalCrewMemberRoleChange.CrewRole.Unknown;
-            if (FDRole == JournalCrewMemberRoleChange.CrewRole.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown crew role {evt["Role"].Str()}");
+            if (FDRole == JournalCrewMemberRoleChange.CrewRole.Unknown)
+            {
+                BaseUtils.Debugger.TraceBreak($"*** Unknown crew role {evt["Role"].Str()}");
+                ;
+            }
             Role = FDRole.ToString().SplitCapsWordFull();
             Telepresence = evt["Telepresence"].Bool();
         }

@@ -33,7 +33,7 @@ namespace EliteDangerousCore
 
             public void Normalise()
             {
-                ShipType = FDNameHelpers.NormaliseShip(ShipType.StrNull(), out string bettername);
+                ShipType = FDNameHelpers.NormaliseShip(ShipType.StrNull(), out string bettername, null);
                 FriendlyShipType = bettername;
                 ShipType_Localised = JournalFieldNaming.CheckLocalisation(ShipType_Localised,FriendlyShipType);
             }

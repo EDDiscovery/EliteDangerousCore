@@ -45,7 +45,7 @@ namespace EliteDangerousCore
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Power Play state is unknown `{fdname}`");
+                BaseUtils.Debugger.TraceBreak($"*** Power Play state is unknown `{fdname}`");
                 return State.Unknown;
             }
         }

@@ -64,7 +64,7 @@ namespace EliteDangerousCore
 
             if (s == null)
             {
-                System.Diagnostics.Debug.WriteLine("Missing Suit {0} {1} {2}", id, fdname, namelocalised);
+                //DebuggerHelpers.DP("SW","Missing Suit {0} {1} {2}", id, fdname.Str(), namelocalised);
                 suits[id] = new Suit(time, id, fdname, namelocalised, price, mods, sold: false);
                 return false;
             }
@@ -72,7 +72,7 @@ namespace EliteDangerousCore
             {
                 if ((s.SuitMods == null && mods != null) || (s.SuitMods != null && mods != null && !s.SuitMods.SequenceEqual(mods)) || ( s.Name_Localised != namelocalised))
                 {
-                    //System.Diagnostics.Debug.WriteLine("Update suit info {0} {1} {2}", id, fdname, namelocalised);
+                    //DebuggerHelpers.DP("SW","Update suit info {0} {1} {2}", id, fdname, namelocalised);
                     suits[id] = new Suit(time, id, fdname, namelocalised, s.Price, mods, sold: false);
                     return false;
                 }
@@ -91,10 +91,10 @@ namespace EliteDangerousCore
                     suits[id] = new Suit(time, id, last.FDName, last.Name_Localised, last.Price, last.SuitMods, sold:true);               // new entry with this time but sold
                 }
                 else
-                    System.Diagnostics.Debug.WriteLine("Suits sold a suit already sold " + id);
+                    Debugger.DP("SW","Suits sold a suit already sold " + id);
             }
             else
-                System.Diagnostics.Debug.WriteLine("Suits sold a suit not seen " + id);
+                Debugger.DP("SW","Suits sold a suit not seen " + id);
         }
 
         public void SwitchTo(DateTime time, ulong id)
@@ -104,7 +104,7 @@ namespace EliteDangerousCore
 
         public void Upgrade(DateTime time, ulong id, FDName fdname, int newclass, long cost)
         {
-            //System.Diagnostics.Debug.WriteLine($"Upgrade {id} to {newclass} for {cost}");
+            //DebuggerHelpers.DP("SW",$"Upgrade {id} to {newclass} for {cost}");
 
             if (suits.ContainsKey(id))
             {
@@ -115,13 +115,13 @@ namespace EliteDangerousCore
                     if ( newsuit != null)
                         suits[id] = new Suit(time, id, newsuit.Item1, newsuit.Item2.Name, last.Price + cost, last.SuitMods, sold:false); 
                     else
-                        System.Diagnostics.Debug.WriteLine("Suits upgrade suit failed to find better suit " + id + " " + fdname);
+                        Debugger.DP("SW","Suits upgrade suit failed to find better suit " + id + " " + fdname);
                 }
                 else
-                    System.Diagnostics.Debug.WriteLine("Suits upgrade a suit already sold " + id);
+                    Debugger.DP("SW","Suits upgrade a suit already sold " + id);
             }
             else
-                System.Diagnostics.Debug.WriteLine("Suits upgrade a suit not seen " + id);
+                Debugger.DP("SW","Suits upgrade a suit not seen " + id);
 
         }
 
@@ -131,19 +131,19 @@ namespace EliteDangerousCore
             {
                 suits.NextGeneration();     // increment number, its cheap operation even if nothing gets changed
 
-                //System.Diagnostics.Debug.WriteLine("***********************" + je.EventTimeUTC + " GENERATION " + items.Generation);
+                //DebuggerHelpers.DP("SW","***********************" + je.EventTimeUTC + " GENERATION " + items.Generation);
 
                 var e = je as ISuitInformation;
                 e.SuitInformation(this, whereami, system);
 
                 if (suits.UpdatesAtThisGeneration == 0)         // if nothing changed, abandon it.
                 {
-                  //  System.Diagnostics.Debug.WriteLine("{0} {1} No changes for Suit Generation {2} Abandon", je.EventTimeUTC.ToString(), je.EventTypeStr, Suits.Generation);
+                  //  DebuggerHelpers.DP("SW","{0} {1} No changes for Suit Generation {2} Abandon", je.EventTimeUTC.ToString(), je.EventTypeStr, Suits.Generation);
                     suits.AbandonGeneration();
                 }
                 else
                 {
-                  //  System.Diagnostics.Debug.WriteLine("{0} {1} Suit List Generation {2} Changes {3}", je.EventTimeUTC.ToString(), je.EventTypeStr, Suits.Generation, Suits.UpdatesAtThisGeneration);
+                  //  DebuggerHelpers.DP("SW","{0} {1} Suit List Generation {2} Changes {3}", je.EventTimeUTC.ToString(), je.EventTypeStr, Suits.Generation, Suits.UpdatesAtThisGeneration);
                 }
             }
 

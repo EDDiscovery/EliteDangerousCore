@@ -33,9 +33,9 @@ namespace EliteDangerousCore.JournalEvents
             public int Stolen { get; set; }
             public ulong? MissionID { get; set; }             // if applicable
 
-            public void Normalise()
+            public void Normalise(JournalEntry ev)
             {
-                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname);
+                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname, ev);
                 FriendlyName = engname;
                 FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
             }
@@ -58,7 +58,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Inventory != null)
             {
                 foreach (Cargo c in Inventory)
-                    c.Normalise();
+                    c.Normalise(this);
             }
         }
         
@@ -159,7 +159,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalEjectCargo(JObject evt) : base(evt, JournalTypeEnum.EjectCargo)
         {
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname);
+            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
 
@@ -272,7 +272,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalCollectCargo(JObject evt) : base(evt, JournalTypeEnum.CollectCargo)
         {
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname);
+            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
             Stolen = evt["Stolen"].Bool();

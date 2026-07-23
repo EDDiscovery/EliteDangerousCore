@@ -22,20 +22,23 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.EngineerApply)]
     public class JournalEngineerApply : JournalEntry
     {
+        // now obsoleted by 3.0
         public JournalEngineerApply(JObject evt) : base(evt, JournalTypeEnum.EngineerApply)
         {
             Engineer = evt["Engineer"].FDName();
-            FDBlueprint = FDNameHelpers.NormaliseBlueprint(evt["Blueprint"].Str(), out string engname);
-            Blueprint = engname;
             Level = evt["Level"].Int();
-            FDOverride = FDNameHelpers.NormaliseExperimentalEffect(evt["Override"].Str(), out engname, true);
+
+            FDOverride = FDNameHelpers.NormaliseExperimentalEffect(evt["Override"].Str(), out string engname, this, true);      // may not be present
             if (FDOverride != null)
                 Override = engname;
+
+            FDBlueprint = FDNameHelpers.NormaliseBlueprint(evt["Blueprint"].Str(), out engname, this);
+            Blueprint = engname;
         }
 
         public FDName Engineer { get; set; }
-        public FDName FDBlueprint { get; set; }       // fdname
-        public string Blueprint { get; set; }       // friendly not fdev
+        public FDName FDBlueprint { get; set; }        // fdname
+        public string Blueprint { get; set; }           // friendly not fdev
         public int Level { get; set; }
         public FDName FDOverride { get; set; }        // may be null
         public string Override { get; set; }        // may be null
@@ -55,16 +58,20 @@ namespace EliteDangerousCore.JournalEvents
             EngineerID = evt["EngineerID"].LongNull();
 
             Type = evt["Type"].Enumeration<ContributionType>(ContributionType.Unknown);
-            if (Type == ContributionType.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown engineer type {evt["Type"].Str()}");
+            if (Type == ContributionType.Unknown)
+            {
+                BaseUtils.Debugger.TraceBreak($"*** Unknown engineer type {evt["Type"].Str()}");
+                ;
+            }
 
-            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out string engname, true);
+            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out string engname, this, true);
             if (Commodity != null)
             {
                 FriendlyCommodity = engname;
                 Commodity_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
             }
 
-            Material = FDNameHelpers.NormaliseMatCommods(evt["Material"].Str(), out engname, true);
+            Material = FDNameHelpers.NormaliseMatCommods(evt["Material"].Str(), out engname, this, true);
             if (Material != null)
             {
                 FriendlyMaterial = engname;
@@ -139,16 +146,9 @@ namespace EliteDangerousCore.JournalEvents
             SlotFD = ShipSlots.ToEnum(evt["Slot"].StrNull());       // may not be present, pass in null to indicate okay and set it to unknown
             Slot = ShipSlots.ToEnglish(SlotFD);
 
-            ModuleFD = FDNameHelpers.NormaliseModules(evt["Module"].Str(), out string engname, true);       // can be missing
+            ModuleFD = FDNameHelpers.NormaliseModules(evt["Module"].Str(), out string engname, this, true);       // can be missing
             if ( ModuleFD!=null)
                 Module = engname;
-
-            Engineering = new EngineeringData(evt);
-            if (!Engineering.IsValid)       // various frontier records across commanders show crap output
-            {
-                // System.Diagnostics.Trace.WriteLine($"Bad Engineering line Craft {evt.ToString()}");
-                Engineering = null;
-            }
 
             IsPreview = evt["IsPreview"].BoolNull();
             JToken ingredients = (JToken)evt["Ingredients"];
@@ -165,7 +165,7 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         foreach (var kvp in temp)
                         {
-                            var fdname = FDNameHelpers.NormaliseMatCommods(kvp.Key, out engname, true);
+                            var fdname = FDNameHelpers.NormaliseMatCommods(kvp.Key, out engname, this, true);
                             if (fdname != null)
                             {
                                 var i = new Ingrediant()
@@ -185,7 +185,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     foreach (JObject jo in (JArray)ingredients)
                     {
-                        var fdname = FDNameHelpers.NormaliseMatCommods(jo["Name"].Str(), out engname, true);
+                        var fdname = FDNameHelpers.NormaliseMatCommods(jo["Name"].Str(), out engname, this, true);
                         if (fdname != null)     // must be present and non null
                         {
                             var i = new Ingrediant()
@@ -202,6 +202,12 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
+            Engineering = new EngineeringData(evt, this);
+            if (!Engineering.IsValid)       // various frontier records across commanders show crap output
+            {
+                // System.Diagnostics.Trace.WriteLine($"Bad Engineering line Craft {evt.ToString()}");
+                Engineering = null;
+            }
         }
 
         public ShipSlots.Slot SlotFD { get; set; }      // may be unknown
@@ -296,7 +302,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public class ProgressInformation
         {
-            public FDName Engineer { get; set; }           // may be null some journals seen on 17/9/22 have no Engineer or EngineerID
+            [JsonAlwaysCreate]
+            public FDName Engineer { get; set; }           // some journals seen on 17/9/22 have no Engineer or EngineerID so force creation with unknown
             public long EngineerID { get; set; }
             public int? Rank { get; set; }       // only when unlocked
 

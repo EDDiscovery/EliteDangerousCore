@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using BaseUtils;
 using EliteDangerousCore.JournalEvents;
 using System;
 using System.Collections.Generic;
@@ -86,12 +87,12 @@ namespace EliteDangerousCore
         {
             string sid = Key(shipfd, id);
 
-            //System.Diagnostics.Debug.WriteLine("Loadout {0} {1} {2} {3}", id, ship, name, ident);
+            //DebuggerHelpers.DP("SL","Loadout {0} {1} {2} {3}", id, ship, name, ident);
 
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
             ships[sid] = sm = sm.SetShipDetails(ship, shipfd, name, ident, 0, 0, HullValue, ModulesValue, Rebuy, unladenmass, reservefuelcap, hullhealth, Hot);     // update ship key, make a fresh one if required.
 
-            //System.Diagnostics.Debug.WriteLine("Loadout " + sid);
+            //DebuggerHelpers.DP("SL","Loadout " + sid);
 
             Ship newsm = null;       // if we change anything, we need a new clone..
 
@@ -104,7 +105,7 @@ namespace EliteDangerousCore
                     if (m.LocalisedItem == null && itemlocalisation.ContainsKey(m.ItemFD))        // if we have a cached localisation, use it
                     {
                         m.LocalisedItem = itemlocalisation[m.ItemFD];
-                        //                        System.Diagnostics.Debug.WriteLine("Have localisation for " + m.Item + ": " + m.LocalisedItem);
+                        //                        DebuggerHelpers.DP("SL","Have localisation for " + m.Item + ": " + m.LocalisedItem);
                     }
 
                     if (newsm == null)              // if not cloned
@@ -160,7 +161,7 @@ namespace EliteDangerousCore
                         }
 
                         sm.SetPriority(shipModule.Priority.Value);
-                        System.Diagnostics.Debug.WriteLine($"Module Info reset ship priority {sm.ItemFD} to {shipModule.Priority.Value}");
+                        Debugger.DP("SL",$"Module Info reset ship priority {sm.ItemFD.Str()} to {shipModule.Priority.Value}");
                     }
                 }
             }
@@ -173,7 +174,7 @@ namespace EliteDangerousCore
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
             ships[sid] = sm = sm.SetShipDetails(ship, shipfd, name, ident, fuellevel, fueltotal);   // this makes a shallow copy if any data has changed..
 
-            //System.Diagnostics.Debug.WriteLine("Load Game " + sid);
+            //DebuggerHelpers.DP("SL","Load Game " + sid);
 
             if (ItemData.IsShip(shipfd))
                 currentid = sid;
@@ -182,7 +183,7 @@ namespace EliteDangerousCore
 
         public void LaunchSRV()
         {
-            //System.Diagnostics.Debug.WriteLine("Launch SRV");
+            //DebuggerHelpers.DP("SL","Launch SRV");
             if (HaveCurrentShip)
                 ships[currentid] = ships[currentid].SetSubVehicle(Ship.SubVehicleType.SRV);
             VerifyList();
@@ -190,14 +191,14 @@ namespace EliteDangerousCore
 
         public void DockSRV()
         {
-            //System.Diagnostics.Debug.WriteLine("Dock SRV");
+            //DebuggerHelpers.DP("SL","Dock SRV");
             if (HaveCurrentShip)
                 ships[currentid] = ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
             VerifyList();
         }
         public void DockLander()
         {
-            //System.Diagnostics.Debug.WriteLine("Dock Lander");
+            //DebuggerHelpers.DP("SL","Dock Lander");
             if (HaveCurrentShip)
                 ships[currentid] = ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
             VerifyList();
@@ -205,14 +206,14 @@ namespace EliteDangerousCore
 
         public void DestroyedSRV()
         {
-            //System.Diagnostics.Debug.WriteLine("Destroyed SRV");
+            //DebuggerHelpers.DP("SL","Destroyed SRV");
             if (HaveCurrentShip)
                 ships[currentid] = ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
             VerifyList();
         }
         public void DestroyedLander()
         {
-            //System.Diagnostics.Debug.WriteLine("Destroyed Lander");
+            //DebuggerHelpers.DP("SL","Destroyed Lander");
             if (HaveCurrentShip)
                 ships[currentid] = ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
             VerifyList();
@@ -220,7 +221,7 @@ namespace EliteDangerousCore
 
         public void LaunchFighter(bool pc)
         {
-            //System.Diagnostics.Debug.WriteLine("Launch Fighter");
+            //DebuggerHelpers.DP("SL","Launch Fighter");
             if (HaveCurrentShip && pc == true)
                 ships[currentid] = ships[currentid].SetSubVehicle(Ship.SubVehicleType.Fighter);
             VerifyList();
@@ -228,7 +229,7 @@ namespace EliteDangerousCore
 
         public void LaunchLander()
         {
-            //System.Diagnostics.Debug.WriteLine("Launch Fighter");
+            //DebuggerHelpers.DP("SL","Launch Fighter");
             if (HaveCurrentShip)
                 ships[currentid] = ships[currentid].SetSubVehicle(Ship.SubVehicleType.Lander);
             VerifyList();
@@ -244,7 +245,7 @@ namespace EliteDangerousCore
 
         public void DockFighter()
         {
-            //System.Diagnostics.Debug.WriteLine("Dock Fighter");
+            //DebuggerHelpers.DP("SL","Dock Fighter");
             if (HaveCurrentShip)
                 ships[currentid] = ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
             VerifyList();
@@ -252,7 +253,7 @@ namespace EliteDangerousCore
 
         public void FighterDestroyed()      // even if NPC controlled, no harm in setting back to none since we must be in ship
         {
-            //System.Diagnostics.Debug.WriteLine("Fighter Destroyed");
+            //DebuggerHelpers.DP("SL","Fighter Destroyed");
             if (HaveCurrentShip)
                 ships[currentid] = ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
             VerifyList();
@@ -290,22 +291,22 @@ namespace EliteDangerousCore
 
                 if (ships.ContainsKey(oldship))
                 {
-                    //System.Diagnostics.Debug.WriteLine(oldship + " Swap Store at " + system + ":" + station);
+                    //DebuggerHelpers.DP("SL",oldship + " Swap Store at " + system + ":" + station);
                     ships[oldship] = ships[oldship].Store(station, system);
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine(e.StoreOldShipFD + " Cant find to swap");
+                    Debugger.DP("SL",e.StoreOldShipFD.Str() + " Cant find to swap");
                 }
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine(e.StoreOldShipFD + " Cant find to swap");
+                Debugger.DP("SL",e.StoreOldShipFD.Str() + " Cant find to swap");
             }
 
             string sid = Key(e.ShipFD, e.ShipId);           //swap to new ship
 
-            //System.Diagnostics.Debug.WriteLine(sid + " Swap to at " + system);
+            //DebuggerHelpers.DP("SL",sid + " Swap to at " + system);
 
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
             sm = sm.SetShipDetails(e.ShipType, e.ShipFD);   // shallow copy if changed
@@ -318,7 +319,7 @@ namespace EliteDangerousCore
         public void ShipyardNew(string ship, FDName shipfd, ulong id)
         {
             string sid = Key(shipfd, id);
-            //System.Diagnostics.Debug.WriteLine(sid + " New");
+            //DebuggerHelpers.DP("SL",sid + " New");
 
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
             ships[sid] = sm.SetShipDetails(ship, shipfd); // shallow copy if changed
@@ -331,12 +332,12 @@ namespace EliteDangerousCore
             string sid = Key(shipfd, id);
             if (ships.ContainsKey(sid))       // if we don't have it, don't worry
             {
-                //System.Diagnostics.Debug.WriteLine(sid + " Sold ");
+                //DebuggerHelpers.DP("SL",sid + " Sold ");
                 ships[sid] = ships[sid].SellShip();
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine(sid + " can't find to Sell");
+                Debugger.DP("SL",sid + " can't find to Sell");
             }
             VerifyList();
         }
@@ -348,7 +349,7 @@ namespace EliteDangerousCore
             sm = sm.SetShipDetails(ship, shipFD);               // set up minimum stuff we know about it
             sm = sm.Transfer(tosystem, tostation, arrivaltime);    // transfer set up
             ships[sid] = sm;
-            //System.Diagnostics.Debug.WriteLine(shipFD + " Transfer from " + fromsystem + " to " + tosystem + ":" + tostation + " arrives " + arrivaltime.ToString());
+            //DebuggerHelpers.DP("SL",shipFD + " Transfer from " + fromsystem + " to " + tosystem + ":" + tostation + " arrives " + arrivaltime.ToString());
             VerifyList();
         }
 
@@ -357,12 +358,12 @@ namespace EliteDangerousCore
             string sid = Key(shipfd, id);
             if (ships.ContainsKey(sid))       // if we don't have it, don't worry
             {
-                //System.Diagnostics.Debug.WriteLine(sid + " store on buy at " + system);
+                //DebuggerHelpers.DP("SL",sid + " store on buy at " + system);
                 ships[sid] = ships[sid].Store(station, system);
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine(sid + " cannot find ship to store on buy");
+                Debugger.DP("SL",sid + " cannot find ship to store on buy");
             }
             VerifyList();
         }
@@ -372,7 +373,7 @@ namespace EliteDangerousCore
             foreach (var i in ships)
             {
                 string sid = Key(i.ShipTypeFD, i.ShipID);
-                //System.Diagnostics.Debug.WriteLine(sid + " Stored info " + i.StarSystem + ":" + i.StationName + " transit" + i.InTransit);
+                //DebuggerHelpers.DP("SL",sid + " Stored info " + i.StarSystem + ":" + i.StationName + " transit" + i.InTransit);
 
                 Ship sm = EnsureShip(sid);              // this either gets current ship or makes a new one.
                 sm = sm.SetShipDetails(i.ShipType, i.ShipTypeFD, i.Name, hot: i.Hot);  // set up minimum stuff we know about it
@@ -601,7 +602,7 @@ namespace EliteDangerousCore
             }
 
             ulong i = id.Substring(id.IndexOf(":") + 1).InvariantParseULong(0);
-            //System.Diagnostics.Debug.WriteLine($"ShipList made new ship {id}.. {i}");
+            //DebuggerHelpers.DP("SL",$"ShipList made new ship {id}.. {i}");
             Ship smn = new Ship(i);
             ships[id] = smn;
             return smn;
@@ -625,7 +626,7 @@ namespace EliteDangerousCore
             {
                 if (multicrew)
                 {
-                    //System.Diagnostics.Debug.WriteLine($"ShipList Ignore {je.EventTimeUTC} {je.EventTypeStr} due to multicrew");
+                    //DebuggerHelpers.DP("SL",$"ShipList Ignore {je.EventTimeUTC} {je.EventTypeStr} due to multicrew");
                 }
                 else
                 {

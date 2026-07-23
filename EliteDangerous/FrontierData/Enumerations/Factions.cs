@@ -59,7 +59,7 @@ namespace EliteDangerousCore
         {
             if (englishname == null)
             {
-                //System.Diagnostics.Trace.WriteLine($"**** No faction state");
+                //BaseUtils.Debugger.DBrk($"**** No faction state");
                 return null;
             }
             else if (parseliststate.TryGetValue(englishname.Replace(" ","").ToLowerInvariant().Trim(),out State value)) // case insensitive
@@ -68,7 +68,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Trace.WriteLine($"**** Unknown faction state `{englishname}`");
+                BaseUtils.Debugger.TraceBreak($"**** Unknown faction state `{englishname}`");
                 return State.Unknown;
             }
         }
@@ -333,7 +333,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine($"*** Bad decode conflict status `{evt["Conflicts"]?.ToString()}`");
+                    BaseUtils.Debugger.TraceBreak($"*** Bad decode conflict status `{evt["Conflicts"]?.ToString()}`");
                 }
 
                 return Conflicts;

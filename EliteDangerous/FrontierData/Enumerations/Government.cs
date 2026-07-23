@@ -55,7 +55,7 @@ namespace EliteDangerousCore
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"**** Unknown government `{fdname}`");
+                BaseUtils.Debugger.TraceBreak($"**** Unknown government `{fdname}`");
                 return Government.Unknown;
             }
         }

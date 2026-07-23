@@ -114,7 +114,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalRestockVehicle(JObject evt) : base(evt, JournalTypeEnum.RestockVehicle)
         {
-            TypeFD = FDNameHelpers.NormaliseShip(evt["Type"].Str(), out string shipname);
+            TypeFD = FDNameHelpers.NormaliseShip(evt["Type"].Str(), out string shipname, this);
             Type = shipname;
             Type_Localised = JournalFieldNaming.CheckLocalisation(evt["Type_Localised"].Str(), Type);
             Loadout = evt["Loadout"].Str();

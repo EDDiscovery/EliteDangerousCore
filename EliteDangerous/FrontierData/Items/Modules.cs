@@ -54,9 +54,11 @@ namespace EliteDangerousCore
 
                     var newmodule = new ShipModule(-1, IsVanity(candidatename) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType, candidatename.Str());
                     string futilemessage = " - this is item unknown to EDD, but IT WILL not affect operation of the program. It would be nice to report it to us so we can add it to known module lists";
-                    System.Diagnostics.Trace.WriteLine($"*** Unknown Module in slot {ShipSlots.ToEnglish(slot)} : {{\"{candidatename.ToLower()}\", new ShipModule(-1,{(IsVanity(candidatename) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename.Str()}\") }}," + futilemessage);
+
+                    BaseUtils.Debugger.TraceBreak($"*** Unknown Module in slot {ShipSlots.ToEnglish(slot)} : {{\"{candidatename.ToLower()}\", new ShipModule(-1,{(IsVanity(candidatename) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename.Str()}\") }}," + futilemessage);
 
                     synthesisedmodules[candidatename] = m = newmodule;                   // lets cache them for completeness..
+                 
                 }
             }
 
@@ -372,7 +374,7 @@ namespace EliteDangerousCore
                 AdvancedMulti_Cannon,
                 AdvancedPlanetaryApproachSuite,
                 AdvancedPlasmaAccelerator,
-                AutoField_MaintenanceUnit,
+                AutoFieldMaintenanceUnit,
                 BeamLaser,
                 Bi_WeaveShieldGenerator,
                 BurstLaser,
@@ -387,7 +389,7 @@ namespace EliteDangerousCore
                 CorrosionResistantCargoRack,
                 CytoscramblerBurstLaser,
                 DecontaminationLimpetController,
-                DetailedSurfaceScanner,
+                SurfaceScanner,
                 EconomyClassPassengerCabin,
                 ElectronicCountermeasure,
                 EnforcerCannon,
@@ -402,7 +404,7 @@ namespace EliteDangerousCore
                 FragmentCannon,
                 FrameShiftDrive,
                 FrameShiftDriveInterdictor,
-                FrameShiftWakeScanner,
+                WakeScanner,
                 FuelScoop,
                 FuelTank,
                 FuelTransferLimpetController,
@@ -422,7 +424,6 @@ namespace EliteDangerousCore
                 KillWarrantScanner,
                 LifeSupport,
                 LightweightAlloy,
-                ////LimpetControl,
                 LuxuryClassPassengerCabin,
                 MetaAlloyHullReinforcement,
                 MilitaryGradeComposite,
@@ -462,7 +463,7 @@ namespace EliteDangerousCore
                 RocketPropelledFSDDisruptor,
                 SeekerMissileRack,
                 SeismicChargeLauncher,
-                Sensors,
+                Sensor,
                 ShieldBooster,
                 ShieldCellBank,
                 ShieldGenerator,
@@ -484,6 +485,9 @@ namespace EliteDangerousCore
 
                 // marks it as a special effect modifier list not a module
                 SpecialEffect,
+
+                // generic for module type recipes
+                Armour, Fighter, Module, Suit, Weapon,
             };
 
             public string EnglishModName { get; set; }     // english name

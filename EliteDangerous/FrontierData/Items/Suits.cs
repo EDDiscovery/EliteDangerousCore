@@ -35,8 +35,8 @@ namespace EliteDangerousCore
             else
             {
                 int classn = fdname.GetClass();
+                System.Diagnostics.Debug.WriteLine($"Unknown Suit: {{ \"{fdname.Str()}\", new Suit(\"{locname??fdname.SplitCapsWordFull()}\",{classn},0,0,\"\",\"\",\"\",null) }},");
                 Debugger.Break();
-                System.Diagnostics.Debug.WriteLine($"Unknown Suit: {{ \"{fdname}\", new Suit(\"{locname??fdname.SplitCapsWordFull()}\",{classn},0,0,\"\",\"\",\"\",null) }},");
                 return null;
             }
         }
@@ -53,6 +53,7 @@ namespace EliteDangerousCore
             }
 
             System.Diagnostics.Trace.WriteLine($"Can't upgrade Suit {fdname}");
+            Debugger.Break();
             return null;
         }
 

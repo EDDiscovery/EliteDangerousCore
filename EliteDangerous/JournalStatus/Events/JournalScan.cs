@@ -459,8 +459,8 @@ namespace EliteDangerousCore.JournalEvents
         public JournalScan(JObject evt) : base(evt, JournalTypeEnum.Scan)
         {
             // older than 3.0 does not have ScanType, will be Unknown ..
-            if (Enum.TryParse<ScanTypeEnum>(evt["ScanType"].Str("xxx"), true, out ScanTypeEnum sct))
-                ScanType = sct;
+            string scantype = evt["ScanType"].StrNull();
+            ScanType = scantype.HasChars() && Enum.TryParse<ScanTypeEnum>(scantype, true, out ScanTypeEnum sct) ? sct: ScanTypeEnum.Unknown;
 
             BodyName = evt["BodyName"].Str();                               // ALL
             BodyID = evt["BodyID"].IntNull();                               // ALL
@@ -636,9 +636,10 @@ namespace EliteDangerousCore.JournalEvents
                 AtmosphereID = Planets.ToEnum(Atmosphere.ToLowerInvariant(), out EDAtmosphereProperty ap);  // convert to internal ID
                 AtmosphereProperty = ap;
 
-                if (AtmosphereID == EDAtmosphereType.Unknown)
+                if (AtmosphereID == EDAtmosphereType.Unknown && evt["AtmosphereType"] != null)      // if unknown, and we had some sort of type etc..
                 {
                     System.Diagnostics.Trace.WriteLine($"** Atmos not recognised {Atmosphere} '{evt["Atmosphere"].Str()}' '{evt["AtmosphereType"].Str()}'");
+                    ;
                 }
 
                 JObject composition = evt["Composition"].Object();

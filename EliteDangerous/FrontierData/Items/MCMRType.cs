@@ -267,21 +267,18 @@ namespace EliteDangerousCore
         // deals with decorated names
         static public CatType ToCategory(string fdname)
         {
-            if (fdname.HasChars())
+            string org = fdname;
+            if ( fdname.StartsWithIIC("$microresource_category_"))
             {
-                if (fdname[0] == '$')
-                {
-                    int i = fdname.LastIndexOf('_');
-                    if (i > 0)
-                        fdname = fdname.Substring(i + 1);
-                    if (fdname[fdname.Length - 1] == ';')
-                        fdname = fdname.Substring(0, fdname.Length - 1);
-                }
-                if (Enum.TryParse<CatType>(fdname, true, out CatType res))
-                    return res;
+                fdname = fdname.Substring(24).ReplaceIfEndsWith(";", "");
+                if (fdname.EqualsIIC("elements"))
+                    fdname = "raw";
             }
 
-            System.Diagnostics.Debug.WriteLine("*** MCMRTYPE Unknown Cat `" + fdname +"`");
+            if (Enum.TryParse<CatType>(fdname, true, out CatType res))
+                return res;
+
+            BaseUtils.Debugger.TraceBreak($"*** MCMRTYPE Unknown Cat `{org}`");
             return CatType.Commodity;       //default
         }
 
@@ -484,7 +481,7 @@ namespace EliteDangerousCore
                     MaterialGroupType mgt = MaterialGroupType.NA;
 
                     Add(cat, it, mgt, (MCMR)fakeid, fdname.Str(), locname ?? fdname.SplitCapsWordFull(), fakeid.ToStringInvariant(), false);
-                    System.Diagnostics.Debug.WriteLine($"*** Unknown Material/Commodity/Microresource: {fdname}, {cat}, {locname} -> {cat}, {it}, {mgt}");
+                    BaseUtils.Debugger.TraceBreak($"*** Unknown Material/Commodity/Microresource: {fdname}, {cat}, {locname} -> {cat}, {it}, {mgt}");
                     fakeid++;
                 }
 
@@ -524,8 +521,7 @@ namespace EliteDangerousCore
 #if DEBUG
             if (shortname.HasChars() && mcmrlist.Values.ToList().Find(x => x.Shortname.Equals(shortname, StringComparison.InvariantCultureIgnoreCase)) != null)
             {
-                System.Diagnostics.Trace.WriteLine("**** Shortname repeat for " + id);
-                System.Diagnostics.Debug.Assert(false);
+                System.Diagnostics.Debug.Assert(false, $"MCRMType Shortname repeat for {id}");
             }
 #endif
             Color colour = Color.Green;

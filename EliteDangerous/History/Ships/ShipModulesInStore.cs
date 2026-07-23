@@ -51,9 +51,9 @@ namespace EliteDangerousCore
                 }
             }
 
-            public void Normalise()
+            public void Normalise(JournalEntry ev)
             {
-                NameFD = FDNameHelpers.NormaliseModules(Name, out string engname);
+                NameFD = FDNameHelpers.NormaliseModules(Name, out string engname,ev);
                 Name = engname;
                 Name_Localised = Name_Localised.Alt(Name);
                 TransferTimeSpan = new System.TimeSpan((int)(TransferTime / 60 / 60), (int)((TransferTime / 60) % 60), (int)(TransferTime % 60));

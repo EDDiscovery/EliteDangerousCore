@@ -62,7 +62,7 @@ namespace EliteDangerousCore
             if (!fdname.HasChars()) // null or empty
                 return TargetType.NotGiven;
 
-            string fdm = fdname.Replace(" ", "").Replace("$MissionUtil_FactionTag_", "");
+            string fdm = fdname.Replace(" ", "").Replace("$MissionUtil_FactionTag_", "").ReplaceIfEndsWith(";","");
 
             if (Enum.TryParse(fdm, true, out TargetType value))
             {
@@ -70,7 +70,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Mission TargetType unknown `{fdname}`");
+                BaseUtils.Debugger.TraceBreak($"*** Mission TargetType unknown `{fdname}`");
                 return TargetType.Unknown;
             }
         }

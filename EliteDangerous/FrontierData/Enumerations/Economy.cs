@@ -66,7 +66,7 @@ namespace EliteDangerousCore
                 return Economy.Unknown;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Economy is unknown `{fdname}`");
+                BaseUtils.Debugger.TraceBreak($"*** Economy is unknown `{fdname}`");
                 return Economy.Unknown;
             }
         }

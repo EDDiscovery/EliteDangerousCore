@@ -50,44 +50,14 @@ namespace EliteDangerousCore.JournalEvents
         {
             LoadGameCommander = JournalFieldNaming.SubsituteCommanderName(evt["Commander"].Str());
 
-            ShipFD = FDNameHelpers.NormaliseShipOrSuitOrActor(evt["Ship"].Str(), out string engname);        // force something, even Unknown
+            string ship = evt["Ship"].Str("sidewinder");        // a few from 2016 is bugged out we will fake a ship for the very few bugged out
+            ShipFD = FDNameHelpers.NormaliseShipOrSuitOrActor(ship, out string engname, this);        // force something, even Unknown
             ShipType = engname;
-            Ship_Localised = evt["Ship_Localised"].Str(engname);       // may not be present, so use engname
-
-            //tbd need to recheck
-            //if (!ShipFD.IsValid())      // Vega logs show no ship on certain logs.. handle it to prevent warnings.
-            //{
-            //    ShipType = Ship_Localised = UnknownShip;
-            //}
-            //else
-            //{
-
-
-
-            //    if (ItemData.IsShipOrSRVOrFighterOrLander(ShipFD))
-            //    {
-            //        ShipFD = FDNameHelpers.NormaliseShip(ShipFD.Str(),out string bettername);
-            //        ShipType = bettername;
-            //    }
-            //    else if ( ItemData.IsSuitTypeName(ShipFD))      
-            //    {
-            //        ShipType = ShipFD.GetBetterShipSuitActorName();
-            //    }
-            //    else if ( ItemData.IsTaxi(ShipFD))
-            //    {
-            //        ShipFD = new FDName(ShipFD.Str().Replace("_taxi", ""));
-            //        ShipType = ShipFD.GetBetterShipSuitActorName();
-            //    }
-            //    else
-            //    {
-            //        System.Diagnostics.Trace.WriteLine($"*** Loadout in unknown ship type {ShipFD}");
-            //        ShipType = ShipFD.SplitCapsWordFull();  // emergency back up
-            //    }
-            //}
-
-            Ship_Localised = Ship_Localised.Alt(ShipType);
-
+            Ship_Localised = JournalFieldNaming.CheckLocalisation(evt["Ship_Localised"].Str(), engname);       // may not be present, so use engname
             ShipId = evt["ShipID"].ULong();
+
+            //System.Diagnostics.Debug.WriteLine($"Loadgame `{ShipFD.Str()}` `{ShipType}` `{Ship_Localised}`");
+
             StartLanded = evt["StartLanded"].Bool();
             StartDead = evt["StartDead"].Bool();
             GameMode = evt["GameMode"].Str();

@@ -47,7 +47,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalBuyDrones(JObject evt) : base(evt, JournalTypeEnum.BuyDrones)
         {
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname);
+            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Count = evt["Count"].Int();
             BuyPrice = evt["BuyPrice"].Long();
@@ -79,7 +79,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Ledger(Ledger mcl)
         {
-            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, Type + " " + Count + " " + FriendlyType, -TotalCost);
+            mcl.AddEvent(Id, EventTimeUTC, EventTypeID, FriendlyType + " " + Count + " " + FriendlyType, -TotalCost);
         }
 
         public override string GetInfo()
@@ -94,7 +94,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSellDrones(JObject evt) : base(evt, JournalTypeEnum.SellDrones)
         {
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname);
+            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Count = evt["Count"].Int();
             SellPrice = evt["SellPrice"].Long();

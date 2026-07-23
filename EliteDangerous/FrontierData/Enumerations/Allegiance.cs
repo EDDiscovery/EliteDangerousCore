@@ -31,6 +31,7 @@ namespace EliteDangerousCore
             PilotsFederation,
             Undefined,      // seen in logs
             PlayerPilots,   // seen in logs
+            FrontlineSolutions,
         }
 
         // maps the allegiance fdname to an enum.  Spaces can be in the name ("Pilots Federation") to cope with Spansh
@@ -48,7 +49,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Allegiance unknown `{fdname}`");
+                BaseUtils.Debugger.TraceBreak($"*** Allegiance unknown `{fdname}`");
                 return Allegiance.Unknown;
             }
         }

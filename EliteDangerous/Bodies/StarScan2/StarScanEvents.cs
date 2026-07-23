@@ -53,7 +53,7 @@ namespace EliteDangerousCore.StarScan2
                             {
                                 // here we found a name, but the system addresses do not match.. therefore a frontier double naming.
 
-                                $"StarScan Two systems with same name {node.System.NameAddress} with {sys.NameAddress}".DO();
+                                $"StarScan Two systems with same name {node.System.NameAddress} with {sys.NameAddress}".DO("SS");
 
                                 systemNodesByName.Remove(node.System.Name);                 // rename existing entry with NameAddress
                                 systemNodesByName.Add(node.System.NameAddress, node);
@@ -78,7 +78,7 @@ namespace EliteDangerousCore.StarScan2
                         // we have a node with the address, primary key.
                         if ( sys.Name != node.System.Name)      // a system has been renamed by frontier..
                         {
-                            $"StarScan Renamed system {node.System.Name} -> {sys.Name}".DO();
+                            $"StarScan Renamed system {node.System.Name} -> {sys.Name}".DO("SS");
                             node.RenamedSystem(sys);
                             systemNodesByName[sys.Name] = node;     // we add it by name to this node, but leave the previous name also pointing to this node...
                         }
@@ -223,7 +223,7 @@ namespace EliteDangerousCore.StarScan2
                     {
                         if (sn.OldScansPresent)                 // we don't mix old scans with new scans. Old scans without parents trees are problematic
                         {
-                            $"Clear Scans of {sn.System.SystemAddress} {sn.System.Name}".DO();
+                            $"Clear Scans of {sn.System.SystemAddress} {sn.System.Name}".DO("SS");
                             sn.ClearBodies();
                         }
 
@@ -268,7 +268,7 @@ namespace EliteDangerousCore.StarScan2
             }
             else
             {
-                $"StarScan Rejected Scan {sc.EventTimeUTC} {sc.BodyName} in `{sc.StarSystem}`:{sc.SystemAddress} found in `{curlocsys}` as missing evidence it was made in this system".DO();
+                $"StarScan Rejected Scan {sc.EventTimeUTC} {sc.BodyName} in `{sc.StarSystem}`:{sc.SystemAddress} found in `{curlocsys}` as missing evidence it was made in this system".DO("SS");
             }
 
         }

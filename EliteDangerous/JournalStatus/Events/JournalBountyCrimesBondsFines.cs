@@ -16,6 +16,7 @@
 
 using QuickJSON;
 using System;
+using System.Diagnostics;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -39,7 +40,7 @@ namespace EliteDangerousCore.JournalEvents
             SharedWithOthers = evt["SharedWithOthers"].Bool(false);
             Rewards = evt["Rewards"]?.ToObjectQ<BountyReward[]>();
 
-            Target = FDNameHelpers.NormaliseShipOrSuitOrActor(evt["Target"].Str(), out string engname, true);      // can be null
+            Target = FDNameHelpers.NormaliseShipOrSuitOrActor(evt["Target"].Str(), out string engname, this, true);      // can be null
 
             if (Target != null)
             {
@@ -438,7 +439,11 @@ namespace EliteDangerousCore.JournalEvents
         public JournalRedeemVoucher(JObject evt) : base(evt, JournalTypeEnum.RedeemVoucher)
         {
             FDType = Enum.TryParse(evt["Type"].Str(), true, out RedeemTypes s) ? s : RedeemTypes.Unknown;
-            if (FDType == RedeemTypes.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown Redeemvoucher {(evt["ScanType"].Str())}");
+            if (FDType == RedeemTypes.Unknown)
+            {
+                BaseUtils.Debugger.TraceBreak($"*** Unknown Redeemvoucher `{(evt["Type"].Str())}` {EventTimeUTC}");
+            }
+
             Type = FDType.ToString().SplitCapsWordFull();
             Amount = evt["Amount"].Long();
 
@@ -523,8 +528,9 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalClearImpound(JObject evt) : base(evt, JournalTypeEnum.ClearImpound)
         {
-            ShipType = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string _);
-            ShipType_Localised = JournalFieldNaming.CheckLocalisation(evt["ShipType_Localised"].Str(), ShipType.Str());
+            ShipType = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string engname, this);
+            FriendlyShipType = engname;
+            ShipType_Localised = JournalFieldNaming.CheckLocalisation(evt["ShipType_Localised"].Str(), engname);
             ShipId = evt["ShipID"].ULong();
             MarketID = evt["MarketID"].Long();
             ShipMarketID = evt["ShipMarketID"].Long();
@@ -532,6 +538,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public FDName ShipType { get; set; }
+        public string FriendlyShipType { get; set; }
         public string ShipType_Localised { get; set; }
         public ulong ShipId { get; set; }
         public long ShipMarketID { get; set; }

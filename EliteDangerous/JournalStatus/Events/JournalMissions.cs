@@ -138,7 +138,7 @@ namespace EliteDangerousCore.JournalEvents
 
             MissionId = evt["MissionID"].ULong();
 
-            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out engname, true);        // allow null
+            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out engname, this, true);        // allow null
             FriendlyCommodity = engname;
             if (Commodity != null)
                 CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
@@ -292,7 +292,7 @@ namespace EliteDangerousCore.JournalEvents
 
             Faction = evt["Faction"].Str();
 
-            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out engname, true);        // allow null
+            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out engname, this, true);        // allow null
             if (Commodity != null)
             {
                 FriendlyCommodity = engname;
@@ -338,7 +338,7 @@ namespace EliteDangerousCore.JournalEvents
             if (CommodityReward != null)
             {
                 foreach (CommodityRewards c in CommodityReward)
-                    c.Normalise();
+                    c.Normalise(this);
             }
 
             MaterialsReward = evt["MaterialsReward"]?.ToObject<MaterialRewards[]>(process: MaterialCommodityMicroResourceType.ToCategory);
@@ -346,7 +346,7 @@ namespace EliteDangerousCore.JournalEvents
             if (MaterialsReward != null)
             {
                 foreach (MaterialRewards m in MaterialsReward)
-                    m.Normalise();
+                    m.Normalise(this);
             }
 
             FactionEffects = evt["FactionEffects"]?.ToObjectQ<FactionEffectsEntry[]>();   
@@ -600,9 +600,9 @@ namespace EliteDangerousCore.JournalEvents
             public string Category_Localised; // may be null
             public int Count;
 
-            public void Normalise()
+            public void Normalise(JournalEntry ev)
             {
-                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname);
+                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname, ev);
                 FriendlyName = engname;
                 Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(Name_Localised ?? "", FriendlyName);
 
@@ -620,9 +620,9 @@ namespace EliteDangerousCore.JournalEvents
             public string Name_Localised;   // may be null
             public int Count;
 
-            public void Normalise()
+            public void Normalise(JournalEntry ev)
             {
-                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname);
+                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname, ev);
                 FriendlyName = engname;
                 Name_Localised = Name_Localised.Alt(FriendlyName);
             }

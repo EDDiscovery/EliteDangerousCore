@@ -30,6 +30,11 @@ namespace EliteDangerousCore
 
         public enum SuitSlot { PrimaryWeapon1, PrimaryWeapon2, SecondaryWeapon };
 
+        public static string ToEnglish(SuitSlot ss)
+        {
+            return ss.ToString().SplitCapsWordFull();
+        }
+
         [System.Diagnostics.DebuggerDisplay("{SlotName}:{SuitModuleID}:{ModuleName}")]
         public class LoadoutModule              // matches names used in journal for module lists
         {
@@ -129,7 +134,7 @@ namespace EliteDangerousCore
 
             if ( s == null )
             {
-                System.Diagnostics.Debug.WriteLine("Missing Loadout {0} {1} {2}", id, name, suitid);
+                Debugger.DP("SW",$"Missing Loadout {id}, {name}, {suitid}");
                 s = new SuitLoadout(time, id, name, suitid, false);
                 foreach (var m in modules.EmptyIfNull())
                     s.Modules[m.SlotName] = m;
@@ -140,7 +145,7 @@ namespace EliteDangerousCore
             {
                 if ( modules != null && (modules.Length != s.Modules.Count || !s.CompareModules(modules) ))
                 {
-                    //System.Diagnostics.Debug.WriteLine("Update Loadout {0} {1} {2}", id, name, suitid);
+                    //DebuggerHelpers.DP("SW","Update Loadout {0} {1} {2}", id, name, suitid);
                     s = new SuitLoadout(time, id, name, suitid, false);
                     foreach (var m in modules.EmptyIfNull())
                         s.Modules[m.SlotName] = m;
@@ -162,10 +167,12 @@ namespace EliteDangerousCore
                     loadouts[id] = new SuitLoadout(time, id, last.Name, last.SuitID, true);               // new entry with this time but sold
                 }
                 else
-                    System.Diagnostics.Debug.WriteLine("Suits deleted a loadout already deleted " + id);
+                {
+                    //DebuggerHelpers.DP("SW","Suits deleted a loadout already deleted " + id);
+                }
             }
             else
-                System.Diagnostics.Debug.WriteLine("Suits deleted an unknown loadout " + id);
+                Debugger.DP("SW","Suits deleted an unknown loadout " + id);
         }
 
         public void DeleteLoadouts(DateTime time, ulong suitid)
@@ -183,10 +190,10 @@ namespace EliteDangerousCore
                 var ld = new SuitLoadout(last);
                 ld.Modules[slotname] = weap;
                 loadouts[id] = ld;
-                //System.Diagnostics.Debug.WriteLine("Suits Equip {0}-{1}-{2} with {3}", last.ID, last.Name, slotname, weap.ModuleName_Localised);
+                //DebuggerHelpers.DP("SW","Suits Equip {0}-{1}-{2} with {3}", last.ID, last.Name, slotname, weap.ModuleName_Localised);
             }
             else
-                System.Diagnostics.Debug.WriteLine("Suits equip an unknown loadout " + id);
+                Debugger.DP("SW","Suits equip an unknown loadout " + id);
         }
 
 
@@ -200,13 +207,15 @@ namespace EliteDangerousCore
                     var ld = new SuitLoadout(last);
                     ld.Modules.Remove(slotname);
                     loadouts[id] = ld;
-                    //System.Diagnostics.Debug.WriteLine("Suits Remove {0}-{1}-{2} with {3}", last.ID, last.Name, slotname, weap.Name_Localised);
+                    //DebuggerHelpers.DP("SW","Suits Remove {0}-{1}-{2} with {3}", last.ID, last.Name, slotname, weap.Name_Localised);
                 }
                 else
-                    System.Diagnostics.Debug.WriteLine("Suits Remove Failed {0}-{1}-{2} with {3}", last.ID, last.Name, slotname, weap.Name_Localised);
+                {
+                    //DebuggerHelpers.DP("SW","Suits Remove Failed {0}-{1}-{2} with {3}", last.ID, last.Name, slotname, weap.Name_Localised);
+                }
             }
             else
-                System.Diagnostics.Debug.WriteLine("Suits remove an unknown loadout " + id);
+                Debugger.DP("SW","Suits remove an unknown loadout " + id);
         }
 
         public void Rename(ulong id, string newname)
@@ -219,7 +228,7 @@ namespace EliteDangerousCore
                 loadouts[id] = ld;
             }
             else
-                System.Diagnostics.Debug.WriteLine("Suits remove an unknown loadout " + id);
+                Debugger.DP("SW","Suits remove an unknown loadout " + id);
         }
 
         public void SwitchTo(DateTime utc, ulong id)
@@ -229,13 +238,13 @@ namespace EliteDangerousCore
 
         public Dictionary<ulong, SuitLoadout> GetLoadoutsForSuit(uint gen, ulong suitid)
         {
-            //System.Diagnostics.Debug.WriteLine("Lookup at gen {0} suitid {1}", gen, suitid);
+            //DebuggerHelpers.DP("SW","Lookup at gen {0} suitid {1}", gen, suitid);
             var ret = loadouts.Get(gen, x => x.SuitID == suitid && x.Deleted == false);
             //if ( ret != null )
             //{
             //    foreach( var kvp in ret)
             //    {
-            //        System.Diagnostics.Debug.WriteLine("..{0} {1}", kvp.Key, kvp.Value.Name);
+            //        DebuggerHelpers.DP("SW","..{0} {1}", kvp.Key, kvp.Value.Name);
             //    }
             //}
             return ret;
@@ -247,19 +256,19 @@ namespace EliteDangerousCore
             {
                 loadouts.NextGeneration();
 
-                //System.Diagnostics.Debug.WriteLine("***********************" + je.EventTimeUTC + " GENERATION " + items.Generation);
+                //DebuggerHelpers.DP("SW","***********************" + je.EventTimeUTC + " GENERATION " + items.Generation);
 
                 var e = je as ISuitLoadoutInformation;
                 e.LoadoutInformation(this, weap, whereami, system);
 
                 if (loadouts.UpdatesAtThisGeneration == 0)         // if nothing changed, abandon it.
                 {
-                   // System.Diagnostics.Debug.WriteLine("{0} {1} No changes for Loadouts Generation {2} Abandon", je.EventTimeUTC.ToString(), je.EventTypeStr, Loadouts.Generation);
+                   // DebuggerHelpers.DP("SW","{0} {1} No changes for Loadouts Generation {2} Abandon", je.EventTimeUTC.ToString(), je.EventTypeStr, Loadouts.Generation);
                     loadouts.AbandonGeneration();
                 }
                 else
                 {
-                   // System.Diagnostics.Debug.WriteLine("{0} {1} Loadouts Generation {2} Changes {3}", je.EventTimeUTC.ToString(), je.EventTypeStr, Loadouts.Generation, Loadouts.UpdatesAtThisGeneration);
+                   // DebuggerHelpers.DP("SW","{0} {1} Loadouts Generation {2} Changes {3}", je.EventTimeUTC.ToString(), je.EventTypeStr, Loadouts.Generation, Loadouts.UpdatesAtThisGeneration);
                 }
             }
 

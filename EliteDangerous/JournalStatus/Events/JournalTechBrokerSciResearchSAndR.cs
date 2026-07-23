@@ -26,7 +26,10 @@ namespace EliteDangerousCore.JournalEvents
         public JournalTechnologyBroker(JObject evt) : base(evt, JournalTypeEnum.TechnologyBroker)
         {
             BrokerType = Enum.TryParse<BrokerTypes>(evt["BrokerType"].Str(""),true,out BrokerTypes res) ? res : BrokerTypes.Unknown;
-            if (BrokerType == BrokerTypes.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown broker type {evt["BrokerType"].Str()}");
+            if (BrokerType == BrokerTypes.Unknown)
+            {
+                BaseUtils.Debugger.TraceBreak($"*** Unknown broker type `{evt["BrokerType"].Str()}` {EventTimeUTC}");
+            }
 
             MarketID = evt["MarketID"].LongNull();
 
@@ -141,7 +144,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalScientificResearch(JObject evt) : base(evt, JournalTypeEnum.ScientificResearch)
         {
-            Name = FDNameHelpers.NormaliseMatCommods(evt["Name"].Str(), out string matname);
+            Name = FDNameHelpers.NormaliseMatCommods(evt["Name"].Str(), out string matname, this);
             FriendlyName = matname;
             Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), matname);
             Count = evt["Count"].Int();
@@ -166,7 +169,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSearchAndRescue(JObject evt) : base(evt, JournalTypeEnum.SearchAndRescue)
         {
-            FDName = FDNameHelpers.NormaliseMatCommods(evt["Name"].Str(), out string engname);
+            FDName = FDNameHelpers.NormaliseMatCommods(evt["Name"].Str(), out string engname, this);
             FriendlyName = engname;
             Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Name_Localised"].Str(), FriendlyName);         // always ensure we have one
             Count = evt["Count"].Int();

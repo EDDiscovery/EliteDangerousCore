@@ -49,10 +49,44 @@ namespace EliteDangerousCore
         // as per frontier CrewRole Entry
         public enum ServiceType
         {
-            BridgeCrew, CommodityTrading, TritiumDepot,        // not listed in crew services, but core items
-            Refuel, Repair, Rearm, VoucherRedemption, Shipyard, Outfitting, BlackMarket, Exploration, Bartender, VistaGenomics, PioneerSupplies,
-            Unknown
+            BridgeCrew, CommodityTrading, TritiumDepot,        // not acrew services, but core items. UserControlCarrier iterates along this list and we use this to guide it
+
+            // searching logs for CarrierStats and CarrierCrewServices gave these july 26
+            Refuel,
+            Repair,
+            Rearm,
+            VoucherRedemption,
+            Shipyard,
+            Outfitting,
+            BlackMarket,
+            Exploration,
+            Bartender,      
+            VistaGenomics,
+            PioneerSupplies,
+
+            // added july 26
+            Captain,
+            CarrierFuel,
+            Commodities,
+
+            Unknown,
+
+            // originally before july 26 Refuel, Repair, Rearm, VoucherRedemption, Shipyard, Outfitting, BlackMarket, Exploration, VistaGenomics, PioneerSupplies,
         };
+        public static ServiceType ToEnumServiceType(string fdname)
+        {
+            if (!fdname.HasChars()) // null or empty
+                return ServiceType.Unknown;
+
+            if (Enum.TryParse<ServiceType>(fdname, true, out ServiceType type))
+                return type;
+            else
+            {
+                BaseUtils.Debugger.TraceBreak("*** Carrier Service type not recognised {fdname}");
+                return ServiceType.Unknown;
+            }
+        }
+
         static public string GetTranslatedServiceName(ServiceType t) { return translatedname[(int)t]; }
         static public bool IsOptionalService(ServiceType t) { return t >= ServiceType.Refuel && t != ServiceType.Unknown; }
         static public bool IsValidService(ServiceType t) { return t != ServiceType.Unknown; }

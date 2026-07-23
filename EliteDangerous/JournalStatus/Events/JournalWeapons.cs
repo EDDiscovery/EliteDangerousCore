@@ -24,8 +24,6 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalBuyWeapon(JObject evt) : base(evt, JournalTypeEnum.BuyWeapon)
         {
-            SuitModuleID = ulong.MaxValue;
-            Class = 1; // presume
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, 
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
@@ -34,14 +32,15 @@ namespace EliteDangerousCore.JournalEvents
             FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
         }
 
-        public ulong SuitModuleID { get; set; }
+        public ulong SuitModuleID { get; set; } = ulong.MaxValue;   // may be missing
         [JsonAlwaysCreate]
-        public FDName Name { get; set; } 
-        public string Name_Localised { get; set; }
+        public FDName Name { get; set; }                    // always there, force always there
         public string FriendlyName { get; set; }
-        public long Price { get; set; }
-        public int Class { get; set; }
-        public FDName[] WeaponMods { get; set; }    // may be null/empty
+        public string Name_Localised { get; set; }
+
+        public long Price { get; set; }                     // always ther
+        public int Class { get; set; } = 1;                 // missing early ones, presume
+        public FDName[] WeaponMods { get; set; }            // may be null/empty
 
         public override string GetInfo()
         {
@@ -69,7 +68,6 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSellWeapon(JObject evt) : base(evt, JournalTypeEnum.SellWeapon)
         {
-            SuitModuleID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, 
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
@@ -78,14 +76,16 @@ namespace EliteDangerousCore.JournalEvents
             FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
         }
 
+        public ulong SuitModuleID { get; set; } = ulong.MaxValue;   // may be missing
+
         [JsonAlwaysCreate]
-        public FDName Name { get; set; } 
-        public string Name_Localised { get; set; }
+        public FDName Name { get; set; }                // always there, force in case
         public string FriendlyName { get; set; }
-        public long Price { get; set; }
-        public ulong SuitModuleID { get; set; }
-        public int Class { get; set; }
-        public string[] WeaponMods { get; set; }    // may be null/empty
+        public string Name_Localised { get; set; }
+
+        public long Price { get; set; }                 // always there
+        public int Class { get; set; }                  // always there
+        public string[] WeaponMods { get; set; }        // may be null/empty
 
 
         public override string GetInfo()
@@ -114,7 +114,6 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalUpgradeWeapon(JObject evt) : base(evt, JournalTypeEnum.UpgradeWeapon)
         {
-            SuitModuleID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, 
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
@@ -123,13 +122,15 @@ namespace EliteDangerousCore.JournalEvents
             FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
         }
 
-        public ulong SuitModuleID { get; set; }
+        public ulong SuitModuleID { get; set; } = ulong.MaxValue;
+
         [JsonAlwaysCreate]
-        public FDName Name { get; set; } 
-        public string Name_Localised { get; set; }
+        public FDName Name { get; set; }                    // always there, force in case
         public string FriendlyName { get; set; }
-        public long Cost { get; set; }
-        public int Class { get; set; }
+        public string Name_Localised { get; set; }
+
+        public long Cost { get; set; }                  // always there
+        public int Class { get; set; }                  // always there
         public FDName[] WeaponMods { get; set; }        // may be null or empty
 
         public override string GetInfo()

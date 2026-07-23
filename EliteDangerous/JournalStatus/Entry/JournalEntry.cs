@@ -395,7 +395,7 @@ namespace EliteDangerousCore
                     else
                     {
                         ret = new JournalUnknown(jo);           // else make a unknown one
-                        System.Diagnostics.Debug.WriteLine("Not Recognised event " + jo.ToString());
+                        System.Diagnostics.Debug.WriteLine("*** Not Recognised event " + jo.ToString());
                     }
                 }
             }

@@ -84,7 +84,7 @@ namespace EliteDangerousCore
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Station Services is unknown `{fdname}`");
+                BaseUtils.Debugger.TraceBreak($"*** Station Services is unknown `{fdname}`");
                 return StationServices.Unknown;
             }
         }
@@ -219,7 +219,7 @@ namespace EliteDangerousCore
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Unknown starport type `{fdname}`");
+                BaseUtils.Debugger.TraceBreak($"*** Unknown starport type `{fdname}`");
                 return StarportTypes.Unknown;
             }
         }
@@ -275,7 +275,7 @@ namespace EliteDangerousCore
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Unknown starport state `{fdname}`");
+                BaseUtils.Debugger.TraceBreak($"*** Unknown starport state `{fdname}`");
                 return StarportState.Unknown;
             }
         }

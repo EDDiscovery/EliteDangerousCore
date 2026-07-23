@@ -42,7 +42,7 @@ namespace EliteDangerousCore
 
             public void Normalise()
             {
-                FDName = FDNameHelpers.NormaliseModules(Name, out string engname);
+                FDName = FDNameHelpers.NormaliseModules(Name, out string engname,null);
                 Name = engname;
                 ItemData.TryGetShipModule(FDName, out ItemData.ShipModule m, true);    // find, or create
                 ModuleInfo = m;

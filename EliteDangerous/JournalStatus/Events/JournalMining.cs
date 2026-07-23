@@ -23,7 +23,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMiningRefined(JObject evt) : base(evt, JournalTypeEnum.MiningRefined)
         {
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname);
+            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);
         }
@@ -75,12 +75,6 @@ namespace EliteDangerousCore.JournalEvents
             public string Name_Localised { get; set; }     
             public string FriendlyName { get; set; }        //friendly
             public double Proportion { get; set; }      // 0-100
-
-            public void Normalise()
-            {
-                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname);
-                FriendlyName = engname;
-            }
         }
 
         public JournalProspectedAsteroid(JObject evt) : base(evt, JournalTypeEnum.ProspectedAsteroid)
@@ -88,7 +82,7 @@ namespace EliteDangerousCore.JournalEvents
             Content = evt["Content"].Enumeration<AsteroidContent>(AsteroidContent.Low, x=>x.Replace("$AsteroidMaterialContent_","").Replace(";",""));
             Content_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Content_Localised"].Str(), Content.ToString());
 
-            MotherlodeMaterial = FDNameHelpers.NormaliseMatCommods(evt["MotherlodeMaterial"].Str(), out string engname, true);
+            MotherlodeMaterial = FDNameHelpers.NormaliseMatCommods(evt["MotherlodeMaterial"].Str(), out string engname, this, true);
             if (MotherlodeMaterial != null)
             {
                 FriendlyMotherlodeMaterial = engname;
@@ -101,7 +95,10 @@ namespace EliteDangerousCore.JournalEvents
             if ( Materials != null )
             {
                 foreach (Material m in Materials)
-                    m.Normalise();
+                {
+                    m.Name = FDNameHelpers.NormaliseMatCommods(m.Name.StrNull(), out engname, this);
+                    m.FriendlyName = engname;
+                }
             }
         }
 

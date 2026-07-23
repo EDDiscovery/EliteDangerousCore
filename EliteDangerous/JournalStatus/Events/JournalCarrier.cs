@@ -266,7 +266,7 @@ namespace EliteDangerousCore.JournalEvents
                 State.Finance.TaxRateRepair = finance["TaxRate_repair"].DoubleNull();
             }
 
-            var ca = evt["Crew"]?.ToObjectQ<CarrierState.ServicesClass[]>();
+            var ca = evt["Crew"]?.ToObject<CarrierState.ServicesClass[]>();
             if (ca != null)
                 State.Services = ca.ToList();
 
@@ -547,10 +547,14 @@ namespace EliteDangerousCore.JournalEvents
         {
             CarrierID = evt["CarrierID"].Long();
             CarrierType = CarrierDefinitions.ToEnum(evt["CarrierType"].Str());
-            CrewRole = Enum.TryParse(evt["CrewRole"].Str(), true, out CarrierDefinitions.ServiceType st) ? st : CarrierDefinitions.ServiceType.Unknown;
+            CrewRole = CarrierDefinitions.ToEnumServiceType(evt["CrewRole"].Str());
             FriendlyCrewRole = CrewRole.ToString().SplitCapsWordFull();
             Operation = Enum.TryParse(evt["Operation"].Str(), true, out CarrierDefinitions.ServiceOperationType op) ? op : CarrierDefinitions.ServiceOperationType.Unknown;
-            if (Operation == CarrierDefinitions.ServiceOperationType.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown crew service operation {(evt["Operation"].Str())}");
+            if (Operation == CarrierDefinitions.ServiceOperationType.Unknown)
+            {
+                BaseUtils.Debugger.TraceBreak($"*** Unknown crew service operation {(evt["Operation"].Str())}");
+                ;
+            }
             CrewName = evt["CrewName"].Str();
         }
 
@@ -630,7 +634,11 @@ namespace EliteDangerousCore.JournalEvents
             CarrierID = evt["CarrierID"].Long();
             CarrierType = CarrierDefinitions.ToEnum(evt["CarrierType"].Str());
             Operation = Enum.TryParse(evt["Operation"].Str(), true, out CarrierDefinitions.ShipPackOperationType op) ? op : CarrierDefinitions.ShipPackOperationType.Unknown;
-            if (Operation == CarrierDefinitions.ShipPackOperationType.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown module service operation {(evt["Operation"].Str())}");
+            if (Operation == CarrierDefinitions.ShipPackOperationType.Unknown)
+            {
+                BaseUtils.Debugger.TraceBreak($"*** Unknown module service operation {(evt["Operation"].Str())}");
+                ;
+            }
             FriendlyOperation = Operation.ToString().SplitCapsWordFull();
             PackTheme = evt["PackTheme"].Str();
             PackTier = evt["PackTier"].Int();
@@ -741,7 +749,7 @@ namespace EliteDangerousCore.JournalEvents
             CancelTrade = evt["CancelTrade"].BoolNull();
 
             Order.BlackMarket = evt["BlackMarket"].Bool();
-            Order.Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out string engname);
+            Order.Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out string engname, this);
             Order.Commodity_Localised =JournalFieldNaming.CheckLocalisation(evt["Commodity_Localised"].Str(), engname);
             Order.PurchaseOrder = evt["PurchaseOrder"].IntNull();
             Order.SaleOrder = evt["SaleOrder"].IntNull();

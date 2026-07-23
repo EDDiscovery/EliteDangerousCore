@@ -139,7 +139,7 @@ namespace EliteDangerousCore
                     return kvp.Key;
             }
 
-            System.Diagnostics.Trace.WriteLine($"*** Reverse lookup shipname failed {englishname}");
+            BaseUtils.Debugger.TraceBreak($"*** Reverse lookup shipname failed {englishname}");
             return null;
         }
 

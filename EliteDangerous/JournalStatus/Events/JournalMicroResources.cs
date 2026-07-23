@@ -44,9 +44,9 @@ namespace EliteDangerousCore.JournalEvents
 
 
         // if cat is set, cat is forced to this value
-        public void Normalise(MaterialCommodityMicroResourceType.CatType? cat)
+        public void Normalise(MaterialCommodityMicroResourceType.CatType? cat, JournalEntry ev)
         {
-            Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname);
+            Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname, ev);
             if (Name_Localised.IsEmpty())
                 Name_Localised = engname;
             if (cat != null)
@@ -54,15 +54,15 @@ namespace EliteDangerousCore.JournalEvents
             else if (Category == null)
             {
                 Category = MaterialCommodityMicroResourceType.CatType.Data;
-                System.Diagnostics.Debug.WriteLine($"*** Missing Category in MR for {Name.Str()}");
+                BaseUtils.Debugger.TraceBreak($"*** Missing Category in MR for {Name.Str()}");
             }
         }
 
         // if cat is set, cat is forced to this value
-        static public void Normalise(MicroResource[] a, MaterialCommodityMicroResourceType.CatType? cat)
+        static public void Normalise(MicroResource[] a, MaterialCommodityMicroResourceType.CatType? cat, JournalEntry ev)
         {
             foreach (MicroResource m in a.EmptyIfNull())
-                m.Normalise(cat);
+                m.Normalise(cat, ev);
         }
 
         static public void List(StringBuilder sb, MicroResource[] mat, string prefix = " ")
@@ -89,13 +89,13 @@ namespace EliteDangerousCore.JournalEvents
             // these collect Name, Name_Localised, MissionID, OwnerID, Count
             
             Items = evt["Items"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
-            MicroResource.Normalise(Items, MaterialCommodityMicroResourceType.CatType.Item);
+            MicroResource.Normalise(Items, MaterialCommodityMicroResourceType.CatType.Item, this);
             Components = evt["Components"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
-            MicroResource.Normalise(Components, MaterialCommodityMicroResourceType.CatType.Component);
+            MicroResource.Normalise(Components, MaterialCommodityMicroResourceType.CatType.Component ,this);
             Consumables = evt["Consumables"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
-            MicroResource.Normalise(Consumables, MaterialCommodityMicroResourceType.CatType.Consumable);
+            MicroResource.Normalise(Consumables, MaterialCommodityMicroResourceType.CatType.Consumable , this);
             Data = evt["Data"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
-            MicroResource.Normalise(Data, MaterialCommodityMicroResourceType.CatType.Data);
+            MicroResource.Normalise(Data, MaterialCommodityMicroResourceType.CatType.Data, this);
         }
 
         // helper function for IAdditionalFiles
@@ -276,7 +276,7 @@ namespace EliteDangerousCore.JournalEvents
             }
 
             // fix up naming don't override cat
-            MicroResource.Normalise(Items.ToArray(), null);
+            MicroResource.Normalise(Items.ToArray(), null, this);
             Price = evt["Price"].Int();
             MarketID = evt["MarketID"].Long();
             if (Items != null)
@@ -343,7 +343,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             // collect Name, Name_Localised, Category, Count
             Items = evt["MicroResources"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
-            MicroResource.Normalise(Items,null);
+            MicroResource.Normalise(Items,null, this);
             Price = evt["Price"].Long();
             MarketID = evt["MarketID"].Long();
             if (Items != null)
@@ -405,9 +405,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             // Collect Name, Name_Localised, Category, Count
             Offered = evt["Offered"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
-            MicroResource.Normalise(Offered,null);
+            MicroResource.Normalise(Offered,null, this);
 
-            Received = FDNameHelpers.NormaliseMatCommods(evt["Received"].Str(), out string engname);
+            Received = FDNameHelpers.NormaliseMatCommods(evt["Received"].Str(), out string engname, this);
             Received_FriendlyName = engname;
             Received_Localised = JournalFieldNaming.CheckLocalisation(evt["Received_Localised"].Str(), Received_FriendlyName);
 
@@ -506,9 +506,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             // collect Name, Name_localised, OwnerId, Count, Type
             Added = evt["Added"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
-            MicroResource.Normalise(Added,null);
+            MicroResource.Normalise(Added,null, this);
             Removed = evt["Removed"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
-            MicroResource.Normalise(Removed,null);
+            MicroResource.Normalise(Removed,null, this);
         }
 
         public void Add(JournalBackpackChange other)
@@ -582,7 +582,7 @@ namespace EliteDangerousCore.JournalEvents
             //Collect Name, Name_Localised,  Type, OwnerId, Count. Enable custom attributes to allow type to alias to category
             evt.ToObjectProtected(Resource.GetType(), true, membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
                             initialobject: Resource, MaterialCommodityMicroResourceType.ToCategory);        // read fields named in this structure matching JSON names
-            Resource.Normalise(null);
+            Resource.Normalise(null,this);
             Stolen = evt["Stolen"].Bool();
         }
 
@@ -619,7 +619,7 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(Resource.GetType(), true, 
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: Resource, MaterialCommodityMicroResourceType.ToCategory);        // read fields named in this structure matching JSON names
-            Resource.Normalise(null);
+            Resource.Normalise(null, this);
         }
 
         public JournalDropItems(DateTime utc, MicroResource res, long tluid, int cmdr, long id) : base(utc, JournalTypeEnum.DropItems)
@@ -652,7 +652,7 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(Resource.GetType(), true,
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     initialobject: Resource, MaterialCommodityMicroResourceType.ToCategory);        // read fields named in this structure matching JSON names
-            Resource.Normalise(null);
+            Resource.Normalise(null,this);
         }
 
         // use to make a use consumable JE 
@@ -683,7 +683,7 @@ namespace EliteDangerousCore.JournalEvents
             TotalCount = evt["TotalCount"].Int();
             MarketID = evt["MarketID"].Long();
             MicroResources = evt["MicroResources"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
-            MicroResource.Normalise(MicroResources, null);
+            MicroResource.Normalise(MicroResources, null, this);
         }
 
         public int TotalCount { get; set; }
@@ -721,7 +721,7 @@ namespace EliteDangerousCore.JournalEvents
             TotalCount = evt["TotalCount"].Int();
             MarketID = evt["MarketID"].Long();
             MicroResources = evt["MicroResources"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
-            MicroResource.Normalise(MicroResources, null);
+            MicroResource.Normalise(MicroResources, null, this);
         }
 
         public int TotalCount { get; set; }

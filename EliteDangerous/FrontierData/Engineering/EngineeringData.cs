@@ -47,31 +47,33 @@ namespace EliteDangerousCore
         public EngineeringModifiers[] Modifiers { get; set; }       // may be null
         public bool IsValid { get { return Level >= 1 && BlueprintName.IsValid(); } }
 
-        // Post engineering changes
-        public EngineeringData(JObject evt)
+        // Post engineering changes.  visible moan turns on off complaining about blueprint/effect misses
+        public EngineeringData(JObject evt, JournalEntry ev)
         {
             Engineer = evt["Engineer"].FDName();
             Level = evt["Level"].Int();
 
             if (evt.Contains("Blueprint"))     // old form
             {
-                BlueprintName = FDNameHelpers.NormaliseBlueprint(evt["Blueprint"].Str(), out string engname );
+                // old pre 3.0 form, don't moan about the recipies
+                BlueprintName = FDNameHelpers.NormaliseBlueprint(evt["Blueprint"].Str(), out string engname, ev);
                 FriendlyBlueprintName = engname;
             }
             else
             {
                 EngineerID = evt["EngineerID"].ULong();     // NEW FORM after engineering changes in about 2018
-                BlueprintName = FDNameHelpers.NormaliseBlueprint(evt["BlueprintName"].Str(), out string engname);
-                FriendlyBlueprintName = engname;
                 BlueprintID = evt["BlueprintID"].ULong();
                 Quality = evt["Quality"].Double(0);
+
+                BlueprintName = FDNameHelpers.NormaliseBlueprint(evt["BlueprintName"].Str(), out string engname, ev);
+                FriendlyBlueprintName = engname;
 
                 // EngineerCraft has it as Apply.. Loadout has just ExperimentalEffect.  Check both
                 string effect = evt.MultiStr(new string[] { "ExperimentalEffect", "ApplyExperimentalEffect" }, null);
 
                 if (effect.HasChars())
                 {
-                    ExperimentalEffect = FDNameHelpers.NormaliseExperimentalEffect(effect, out engname);
+                    ExperimentalEffect = FDNameHelpers.NormaliseExperimentalEffect(effect, out engname, ev);
                     FriendlyExperimentalEffect = engname;
                     ExperimentalEffect_Localised = JournalFieldNaming.CheckLocalisation(evt["ExperimentalEffect_Localised"].Str(), engname);
                 }
@@ -161,7 +163,7 @@ namespace EliteDangerousCore
                 {
                     if (m.ValueStr != null)
                     {
-                        sb.Build("", m.Label, "<:", m.ValueStr_Localised ?? m.ValueStr ?? "Not set");
+                        sb.Build("", m.FriendlyLabel, "<:", m.ValueStr_Localised ?? m.ValueStr ?? "Not set");
                     }
                     else
                     {
@@ -350,7 +352,7 @@ namespace EliteDangerousCore
                             if (pset == "PowerDraw" && mf.Value == 0)       // this occurs for engineering a detailed surface scanner, the power draw 0->0, but it may be more than just this module, so generic catch
                             {
                                 if ( debugit )
-                                    System.Diagnostics.Debug.WriteLine($"*** Engineering setting a null value to zero, module {modulefdname} at {slotfd}, blueprint '{this.BlueprintName}' se '{this.ExperimentalEffect}' para '{pset}' ignoring it silently");
+                                    BaseUtils.Debugger.TraceBreak($"*** Engineering setting a null value to zero, module {modulefdname} at {slotfd}, blueprint '{this.BlueprintName}' se '{this.ExperimentalEffect}' para '{pset}' ignoring it silently");
                             }
                             else
                             {

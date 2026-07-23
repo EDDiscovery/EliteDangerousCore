@@ -37,9 +37,10 @@ namespace EliteDangerousCore.JournalEvents
             Multicrew = evt["Multicrew"].BoolNull();
 
             JToken jm = evt["EDDMapColor"];
-            MapColor = jm.Int(EDCommander.Current.MapColour);
-            if (jm.IsNull())
-                evt["EDDMapColor"] = EDCommander.Current.MapColour;      // new entries get this default map colour if its not already there
+            if ( jm != null) 
+                MapColor = jm.Int();
+            else 
+                evt["EDDMapColor"] = EDCommander.Current?.MapColour ?? 0;      // new entries get this default map colour if its not already there
         }
 
         public JournalFSDJump(DateTime utc, ISystem sys, int colour, bool edsmsynced, SystemSource datasource) : base(utc, sys, JournalTypeEnum.FSDJump, edsmsynced)
@@ -238,9 +239,10 @@ namespace EliteDangerousCore.JournalEvents
             DistFromStarLS = evt["DistFromStarLS"].DoubleNull();
 
             JToken jm = evt["EDDMapColor"];
-            MapColor = jm.Int(EDCommander.Current.MapColour);
-            if (jm.IsNull())
-                evt["EDDMapColor"] = EDCommander.Current.MapColour;      // new entries get this default map colour if its not already there
+            if ( jm != null)
+                MapColor = jm.Int();
+            else
+                evt["EDDMapColor"] = EDCommander.Current?.MapColour ?? 0;      // new entries get this default map colour if its not already there. For debugging, allow no commander
         }
 
         public CarrierDefinitions.CarrierType CarrierType { get; } = CarrierDefinitions.CarrierType.UnknownType;        // stupid journal does not tell

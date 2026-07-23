@@ -48,7 +48,7 @@ namespace EliteDangerousCore.JournalEvents
                 Killers = evt["Killers"].ToObject<Killer[]>(process: (type, str) => Enum.TryParse<RankDefinitions.CombatRank>(str, true, out RankDefinitions.CombatRank cr) ? cr : RankDefinitions.CombatRank.Unknown);
                 foreach (var x in Killers.EmptyIfNull())
                 {
-                    x.Ship = FDNameHelpers.NormaliseShipOrSuitOrActor(x.Ship.Str(), out string engname);
+                    x.Ship = FDNameHelpers.NormaliseShipOrSuitOrActor(x.Ship.Str(), out string engname, this);
                     x.FriendlyShip = engname;
                     x.Name_Localised = x.Name_Localised != null ? x.Name_Localised : x.Name;
                     x.Name = x.Name != null && !x.Name.ContainsIIC("$UNKNOWN") ? x.Name : engname;
@@ -57,7 +57,7 @@ namespace EliteDangerousCore.JournalEvents
             else if (evt.Contains("KillerName") || evt.Contains("KillerShip"))
             {
                 string killerName = evt["KillerName"].StrNull();        // may not be there
-                var ShipType = FDNameHelpers.NormaliseShipOrSuitOrActor(evt["KillerShip"].Str(), out string engname);
+                var ShipType = FDNameHelpers.NormaliseShipOrSuitOrActor(evt["KillerShip"].Str(), out string engname, this);
                 var name = killerName != null && !killerName.ContainsIIC("$UNKNOWN") ? killerName : engname;         // Killer Name can be missing
 
                 Killers = new Killer[1]
@@ -145,7 +145,11 @@ namespace EliteDangerousCore.JournalEvents
         public JournalResurrect(JObject evt) : base(evt, JournalTypeEnum.Resurrect)
         {
             FDOption = Enum.TryParse(evt["Option"].Str(), true, out ResurrectTypes s) ? s : ResurrectTypes.Unknown;
-            if (FDOption == ResurrectTypes.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown Resurrect {(evt["Option"].Str())}");
+            if (FDOption == ResurrectTypes.Unknown) 
+            { 
+                BaseUtils.Debugger.TraceBreak($"*** Unknown Resurrect {(evt["Option"].Str())}");
+                ;  
+            }
             Option = FDOption.ToString().SplitCapsWordFull();
             Cost = evt["Cost"].Long();
             Bankrupt = evt["Bankrupt"].Bool();
@@ -153,7 +157,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Option { get; set; }      // Friendly, not FDName
 
-        public enum ResurrectTypes { Free, Rebuy, Recover, HandIn, Rejoin, Unknown };
+        public enum ResurrectTypes { Free, Rebuy, Recover, HandIn, Rejoin, Escape, Unknown };
         public ResurrectTypes FDOption { get; set; }
         public long Cost { get; set; }
         public bool Bankrupt { get; set; }

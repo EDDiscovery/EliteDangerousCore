@@ -111,7 +111,7 @@ namespace EliteDangerousCore.StarScan2
                 if ( ss== null)     // if create new one each time..
                     ss = new EliteDangerousCore.StarScan2.StarScan();
                 
-                DebuggerHelpers.OutputControl += "StarScan";        // turn on debugging
+                Debugger.OutputControl += "StarScan";        // turn on debugging
 
                 uint gen = 1817272;
                 uint siggen = 202992;

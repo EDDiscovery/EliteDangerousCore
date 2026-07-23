@@ -31,13 +31,13 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var jitem in evt["Items"])
                 {
-                    var ModuleFD = FDNameHelpers.NormaliseModules(jitem.Str(), out string engname);
+                    var ModuleFD = FDNameHelpers.NormaliseModules(jitem.Str(), out string engname, this);
                     Items.Add(new RepairItem() { ItemFD = ModuleFD, Item = engname, ItemLocalised = engname });
                 }
             }
             else
             {
-                var ModuleFD = FDNameHelpers.NormaliseModules(evt["Item"].Str(), out string engname);
+                var ModuleFD = FDNameHelpers.NormaliseModules(evt["Item"].Str(), out string engname, this);
                 Items.Add(new RepairItem() { ItemFD = ModuleFD, Item = engname, ItemLocalised = JournalFieldNaming.CheckLocalisation(evt["Item_Localised"].Str(), engname) });
             }
 
@@ -113,7 +113,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalAfmuRepairs(JObject evt) : base(evt, JournalTypeEnum.AfmuRepairs)
         {
-            ModuleFD = FDNameHelpers.NormaliseModules(evt["Module"].Str(), out string engname);
+            ModuleFD = FDNameHelpers.NormaliseModules(evt["Module"].Str(), out string engname, this);
             Module = engname;
             ModuleLocalised = JournalFieldNaming.CheckLocalisation(evt["Module_Localised"].Str(), Module);
             FullyRepaired = evt["FullyRepaired"].Bool();

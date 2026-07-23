@@ -18,13 +18,21 @@ namespace EliteDangerousCore
 {
     public static class EliteReleaseDates
     {
+        // https://elite-dangerous.fandom.com/wiki/Content_update_history
         public static DateTime GammaStart {get; } = new DateTime(2014, 11, 22, 4, 0, 0, DateTimeKind.Utc);
         public static DateTime GameRelease {get; } =  new DateTime(2014, 12, 14, 12, 0, 0, DateTimeKind.Utc);
         public static DateTime EDSMRelease {get; } =  new DateTime(2015, 6, 1, 12, 0, 0, DateTimeKind.Utc);
         public static DateTime Release_2_2 {get; } =  new DateTime(2017, 4, 11, 12, 0, 0, DateTimeKind.Utc);
+        public static DateTime Release_3_0 { get; } = new DateTime(2018, 2, 27, 12, 0, 0, DateTimeKind.Utc);        // beyond
+        public static DateTime Release_3_1 { get; } = new DateTime(2018, 6, 28, 12, 0, 0, DateTimeKind.Utc);
         public static DateTime Release_3_2 {get; } =  new DateTime(2018, 8, 28, 10, 0, 0, DateTimeKind.Utc);
-        public static DateTime Release_3_3 {get; } =  new DateTime(2018, 12, 11, 9, 0, 0, DateTimeKind.Utc);
-        public static DateTime Odyssey5 {get; } =  new DateTime(2021, 7, 1,12,0,0, DateTimeKind.Utc);
+        public static DateTime Release_3_3 { get; } = new DateTime(2018, 12, 11, 9, 0, 0, DateTimeKind.Utc);
+        public static DateTime April_Update_1 { get; } = new DateTime(2019, 4, 23, 9, 0, 0, DateTimeKind.Utc);
+        public static DateTime September_Update_3_5 { get; } = new DateTime(2019, 9, 18, 9, 0, 0, DateTimeKind.Utc);
+        public static DateTime January_2020_Update { get; } = new DateTime(2020, 1, 14, 9, 0, 0, DateTimeKind.Utc);
+        public static DateTime June_2020_FleetCarriers { get; } = new DateTime(2020, 6, 9, 9, 0, 0, DateTimeKind.Utc);
+        public static DateTime Odyssey1 { get; } = new DateTime(2021, 5, 19, 12, 0, 0, DateTimeKind.Utc);
+        public static DateTime Odyssey5 { get; } = new DateTime(2021, 7, 1, 12, 0, 0, DateTimeKind.Utc);
         public static DateTime Odyssey14 {get; } =  new DateTime(2022, 11, 29, 12, 0, 0, DateTimeKind.Utc);          //Galaxy split Live/Legacy
         public static DateTime OdysseyType8 {get; } =  new DateTime(2024, 8, 7, 12, 0, 0, DateTimeKind.Utc);
         public static DateTime Ascendency {get; } =  new DateTime(2024, 10, 22, 12, 0, 0, DateTimeKind.Utc);         // power play 2.0

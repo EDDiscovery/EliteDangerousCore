@@ -27,11 +27,16 @@ namespace EliteDangerousCore.JournalEvents
         public JournalScanned(JObject evt) : base(evt, JournalTypeEnum.Scanned)
         {
             FDScanType = Enum.TryParse(evt["ScanType"].Str(), true, out ScanTypes s) ? s : ScanTypes.Unknown;
-            if (FDScanType == ScanTypes.Unknown) System.Diagnostics.Debug.WriteLine($"*** Unknown Scanned {(evt["ScanType"].Str())}");
+            if (FDScanType == ScanTypes.Unknown)
+            {
+                BaseUtils.Debugger.TraceBreak($"*** Unknown Scanned: {(evt["ScanType"].Str())}");
+                ;
+            }
+
             ScanType = FDScanType.ToString().SplitCapsWordFull();
         }
 
-        public enum ScanTypes { Unknown, Crime, Cargo };
+        public enum ScanTypes { Unknown, Crime, Cargo , Data , Xeno };
         public string ScanType { get; set; }        // Friendly, not FDEV
         public ScanTypes FDScanType { get; set; }        // fdname
 
@@ -50,7 +55,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (TargetLocked)
             {
-                ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string bettername);
+                ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string bettername, this);
                 Ship = bettername;
 
                 Ship_Localised = JournalFieldNaming.CheckLocalisation(evt["Ship_Localised"].Str(), Ship);

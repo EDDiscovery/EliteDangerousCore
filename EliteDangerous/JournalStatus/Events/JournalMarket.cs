@@ -189,7 +189,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalMarketBuy(JObject evt) : base(evt, JournalTypeEnum.MarketBuy)
         {
             MarketID = evt["MarketID"].LongNull();
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname);
+            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
             Count = evt["Count"].Int();
@@ -237,7 +237,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalMarketSell(JObject evt) : base(evt, JournalTypeEnum.MarketSell)
         {
             MarketID = evt["MarketID"].LongNull();
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname);
+            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
             Count = evt["Count"].Int();

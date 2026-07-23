@@ -34,7 +34,7 @@ namespace EliteDangerousCore
                 return var;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Unknown Actor: {{ \"{fdname}\"), new Actor(\"{locname ?? fdname.SplitCapsWordFull()}\") }},");
+               BaseUtils.Debugger.TraceBreak($"*** Unknown Actor: {{ \"{fdname}\"), new Actor(\"{locname ?? fdname.SplitCapsWordFull()}\") }},");
                 return null;
             }
         }
@@ -64,6 +64,7 @@ namespace EliteDangerousCore
         public static Dictionary<FDName, Actor> actors = new Dictionary<FDName, Actor>(new FDNameEqualityComparer())
         {
              { new FDName("skimmerdrone"), new Actor("Skimmer Drone") },
+             { new FDName("bombskimmerdrone"), new Actor("Bomb Skimmer Drone") },
              { new FDName("skimmer"), new Actor("Skimmer Drone") },
              { new FDName("missileskimmer"), new Actor("Skimmer Missile") },
              { new FDName("bossskimmer"), new Actor("Boss Skimmer") },

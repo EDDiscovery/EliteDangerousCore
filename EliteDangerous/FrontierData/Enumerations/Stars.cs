@@ -117,6 +117,7 @@ namespace EliteDangerousCore
             if (starStr2EnumLookup.ContainsKey(searchstr))
                 return starStr2EnumLookup[searchstr];
 
+            BaseUtils.Debugger.TraceBreak($"*** Star type is unknown `{star}`");
             return EDStar.Unknown;
         }
 

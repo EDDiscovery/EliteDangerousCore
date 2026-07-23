@@ -58,7 +58,7 @@ namespace EliteDangerousCore
 
             if (w == null)
             {
-                System.Diagnostics.Debug.WriteLine("Missing weapon {0} {1} {2}", id, fdname, namelocalised);
+                //DebuggerHelpers.DP("SW","Missing weapon {0} {1} {2}", id, fdname.Str(), namelocalised);
                 weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, weaponmods, false);
                 return false;
             }
@@ -67,7 +67,7 @@ namespace EliteDangerousCore
                 // if differs in cls, or weapons mods is null but new one isnt, or both are set but different
                 if ( w.Class != cls || (w.WeaponMods == null && weaponmods != null ) || (w.WeaponMods != null && weaponmods != null && !w.WeaponMods.SequenceEqual(weaponmods)))
                 {
-                    //System.Diagnostics.Debug.WriteLine("Update weapon info {0} {1} {2}", id, fdname, namelocalised);
+                    //DebuggerHelpers.DP("SW","Update weapon info {0} {1} {2}", id, fdname, namelocalised);
                     weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, w.Price, cls, weaponmods, false);
                     return false;
                 }
@@ -86,10 +86,10 @@ namespace EliteDangerousCore
                     weapons[id] = new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, last.Class, last.WeaponMods, true);               // new entry with this time but sold
                 }
                 else
-                    System.Diagnostics.Debug.WriteLine("Weapons sold a weapon already sold " + id);
+                    Debugger.DP("SW","Weapons sold a weapon already sold " + id);
             }
             else
-                System.Diagnostics.Debug.WriteLine("Weapons sold a weapon not seen " + id);
+                Debugger.DP("SW","Weapons sold a weapon not seen " + id);
         }
 
         public void Upgrade(DateTime time, ulong id, int cls, FDName[] weaponmods)
@@ -102,10 +102,10 @@ namespace EliteDangerousCore
                     weapons[id] = new SuitWeapon(time, id, last.FDName, last.Name_Localised, last.Price, cls, weaponmods, false);
                 }
                 else
-                    System.Diagnostics.Debug.WriteLine("Weapons upgrade but already sold " + id);
+                    Debugger.DP("SW","Weapons upgrade but already sold " + id);
             }
             else
-                System.Diagnostics.Debug.WriteLine("Weapons upgrade a weapon not seen " + id);
+                Debugger.DP("SW","Weapons upgrade a weapon not seen " + id);
         }
 
         public uint Process(JournalEntry je, string whereami, ISystem system)
@@ -114,19 +114,19 @@ namespace EliteDangerousCore
             {
                 weapons.NextGeneration();     // increment number, its cheap operation even if nothing gets changed
 
-                //System.Diagnostics.Debug.WriteLine("***********************" + je.EventTimeUTC + " GENERATION " + items.Generation);
+                //DebuggerHelpers.DP("SW","***********************" + je.EventTimeUTC + " GENERATION " + items.Generation);
 
                 IWeaponInformation e = je as IWeaponInformation;
                 e.WeaponInformation(this,whereami,system);
 
                 if (weapons.UpdatesAtThisGeneration == 0)         // if nothing changed, abandon it.
                 {
-                  //  System.Diagnostics.Debug.WriteLine("{0} {1} No changes for Weapon Generation {2} Abandon", je.EventTimeUTC.ToString(), je.EventTypeStr, Weapons.Generation);
+                  //  DebuggerHelpers.DP("SW","{0} {1} No changes for Weapon Generation {2} Abandon", je.EventTimeUTC.ToString(), je.EventTypeStr, Weapons.Generation);
                     weapons.AbandonGeneration();
                 }
                 else
                 {
-               //     System.Diagnostics.Debug.WriteLine("{0} {1} Weapon List Generation {2} Changes {3}", je.EventTimeUTC.ToString(), je.EventTypeStr, Weapons.Generation, Weapons.UpdatesAtThisGeneration);
+               //     DebuggerHelpers.DP("SW","{0} {1} Weapon List Generation {2} Changes {3}", je.EventTimeUTC.ToString(), je.EventTypeStr, Weapons.Generation, Weapons.UpdatesAtThisGeneration);
                 }
             }
 

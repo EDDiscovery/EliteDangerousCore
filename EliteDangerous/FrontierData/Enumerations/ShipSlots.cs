@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Management.Instrumentation;
 
 namespace EliteDangerousCore
 {
@@ -431,7 +430,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Slots unknown `{fdname}`");
+                BaseUtils.Debugger.TraceBreak($"*** Ship slot unknown `{fdname}`");
                 return Slot.Unknown;
             }
         }

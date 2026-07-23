@@ -381,7 +381,7 @@ namespace EliteDangerousCore
             get
             {
                 lock (locker)
-                    return commanders[CurrentCmdrID];
+                    return commanders?[CurrentCmdrID] ?? null;
             }
         }
 

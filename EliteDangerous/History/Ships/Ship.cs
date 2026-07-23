@@ -289,12 +289,12 @@ namespace EliteDangerousCore
         public double FuelWarningPercent
         {
             get { return fuelwarningpercent; }
-            set { fuelwarningpercent = value; EliteDangerousCore.DB.UserDatabase.Instance.PutSetting("ShipInformation:" + ShipFD + ID.ToStringInvariant() + "Warninglevel", value); }
+            set { fuelwarningpercent = value; EliteDangerousCore.DB.UserDatabase.Instance.PutSetting("ShipInformation:" + ShipFD.Str() + ID.ToStringInvariant() + "Warninglevel", value); }
         }
         public void UpdateFuelWarningPercent()
         {
             if ( fuelwarningpercent == -999 )
-                fuelwarningpercent = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ShipInformation:" + ShipFD + ID.ToStringInvariant() + "Warninglevel", 0);
+                fuelwarningpercent = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ShipInformation:" + ShipFD.Str() + ID.ToStringInvariant() + "Warninglevel", 0);
         }
 
         public bool HasWeapons()

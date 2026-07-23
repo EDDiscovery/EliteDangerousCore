@@ -44,7 +44,7 @@ namespace EliteDangerousCore
                 return cr;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"**** Unknown rank `{rank}`");
+                BaseUtils.Debugger.TraceBreak($"**** Unknown rank `{rank}`");
                 return CombatRank.Unknown;
             }
         }

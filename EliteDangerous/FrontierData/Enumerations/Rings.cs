@@ -46,7 +46,7 @@ namespace EliteDangerousCore
                 RingClassID = rc;
             else
             {
-                System.Diagnostics.Debug.WriteLine($"!!! Unknown Ring Class {RingClass}");
+                BaseUtils.Debugger.TraceBreak($"!!! Unknown Ring Class {RingClass}");
             }
         }
 

@@ -41,7 +41,7 @@ namespace EliteDangerousCore
                 return value;
             else
             {
-                System.Diagnostics.Trace.WriteLine($"*** Security is unknown `{fdname}`");
+                BaseUtils.Debugger.TraceBreak($"*** Security is unknown `{fdname}`");
                 return Security.Unknown;
             }
         }

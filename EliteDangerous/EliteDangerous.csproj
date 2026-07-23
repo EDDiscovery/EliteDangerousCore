@@ -81,7 +81,7 @@
     <Compile Include="FrontierData\Enumerations\Carrier.cs" />
     <Compile Include="FrontierData\Enumerations\FDName.cs" />
     <Compile Include="FrontierData\Items\ModuleList.cs" />
-    <Compile Include="FrontierData\Ships\ShipModuleDisplay.cs" />
+    <Compile Include="History\Ships\ShipModuleDisplay.cs" />
     <Compile Include="JournalStatus\Computers\FactionsStatsComputer.cs" />
     <Compile Include="JournalStatus\Computers\JournalStatsInfo.cs" />
     <Compile Include="Config\EliteConfigInstance.cs" />
@@ -209,23 +209,23 @@
     <Compile Include="JournalStatus\Entry\JournalFieldNaming.cs" />
     <Compile Include="JournalStatus\Stats\Ledger.cs" />
     <Compile Include="DB\User\TravelLogUnitLogReader.cs" />
-    <Compile Include="FrontierData\MaterialsCommodities\MCMRType.cs" />
-    <Compile Include="FrontierData\MaterialsCommodities\MCMRList.cs" />
-    <Compile Include="FrontierData\Recipes\Recipes.cs" />
+    <Compile Include="FrontierData\Items\MCMRType.cs" />
+    <Compile Include="History\Materials\MCMRList.cs" />
+    <Compile Include="FrontierData\Items\Recipes.cs" />
     <Compile Include="JournalStatus\Stats\MissionList.cs" />
     <Compile Include="JournalStatus\Stats\Outfitting.cs" />
-    <Compile Include="FrontierData\Recipes\RecipesHelpers.cs" />
-    <Compile Include="FrontierData\Ships\ShipModulesInStore.cs" />
-    <Compile Include="FrontierData\Ships\ShipList.cs" />
-    <Compile Include="FrontierData\Ships\ShipModule.cs" />
+    <Compile Include="FrontierData\Items\RecipesHelpers.cs" />
+    <Compile Include="History\Ships\ShipModulesInStore.cs" />
+    <Compile Include="History\Ships\ShipList.cs" />
+    <Compile Include="History\Ships\ShipModule.cs" />
     <Compile Include="FrontierData\Items\Modules.cs" />
     <Compile Include="JournalStatus\xNetLogs\NetLogClass.cs" />
     <Compile Include="JournalStatus\xNetLogs\NetLogReader.cs" />
     <Compile Include="FrontierData\Enumerations\Ranks.cs" />
     <Compile Include="Bodies\RoutePlotter\RoutePlotter.cs" />
-    <Compile Include="FrontierData\Ships\Ship.cs" />
-    <Compile Include="FrontierData\Ships\StoredShips.cs" />
-    <Compile Include="FrontierData\Ships\ShipYard.cs" />
+    <Compile Include="History\Ships\Ship.cs" />
+    <Compile Include="History\Ships\StoredShips.cs" />
+    <Compile Include="History\Ships\ShipYard.cs" />
     <Compile Include="Bodies\StarDistances\StarDistanceComputer.cs" />
     <Compile Include="Bodies\Systems\SystemClass.cs" />
     <Compile Include="History\Entry\HistoryTravel.cs" />
@@ -294,9 +294,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="JournalStatus\UIEvents\UIEvents.cs" />
-    <Compile Include="FrontierData\SuitsWeapons\SuitLoadouts.cs" />
-    <Compile Include="FrontierData\SuitsWeapons\Weapons.cs" />
-    <Compile Include="FrontierData\SuitsWeapons\Suit.cs" />
+    <Compile Include="History\SuitsWeapons\SuitLoadouts.cs" />
+    <Compile Include="History\SuitsWeapons\Weapons.cs" />
+    <Compile Include="History\SuitsWeapons\Suit.cs" />
     <Compile Include="DB\System\EliteNameClassifier.cs" />
     <Compile Include="DB\System\SQLiteConnectionSystem.cs" />
     <Compile Include="Bodies\Systems\SystemCache.cs" />
