@@ -245,7 +245,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMaterialTrade(JObject evt) : base(evt, JournalTypeEnum.MaterialTrade)
         {
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
             TraderType = MaterialCommodityMicroResourceType.ToCategory(evt["TraderType"].Str());
 
             Paid = evt["Paid"]?.ToObject<Traded>(false, process: MaterialCommodityMicroResourceType.ToCategory);
@@ -258,7 +258,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public MaterialCommodityMicroResourceType.CatType TraderType { get; set; }    
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
         public Traded Paid { get; set; }      // may be null
         public Traded Received { get; set; } // may be null
 

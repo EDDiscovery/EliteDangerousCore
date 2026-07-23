@@ -29,7 +29,7 @@ namespace EliteDangerousCore.JournalEvents
             Station = evt["station"].Str();
             Station_Localised = JournalFieldNaming.CheckLocalisation(evt["station_localised"].Str(), Station);
             StarSystem = evt["starsystem"].Str();
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
             Rescan(evt["commodities"].Array());
         }
 
@@ -49,7 +49,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public JournalEDDCommodityPrices(System.DateTime utc, long? marketid, string station, string station_localised, string starsystem, int cmdrid, JArray commds) :
+        public JournalEDDCommodityPrices(System.DateTime utc, MarketID marketid, string station, string station_localised, string starsystem, int cmdrid, JArray commds) :
                                         base(utc, JournalTypeEnum.EDDCommodityPrices, marketid, station, station_localised, starsystem, cmdrid)
         {
             Rescan(commds);
@@ -64,7 +64,7 @@ namespace EliteDangerousCore.JournalEvents
                 ["starsystem"] = StarSystem,
                 ["station"] = Station,
                 ["station_localised"] = Station_Localised,
-                ["MarketID"] = MarketID,
+                ["MarketID"] = MarketID.Value,
                 ["commodities"] = JToken.FromObject(Commodities, true)
             };
 

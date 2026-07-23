@@ -29,7 +29,7 @@ namespace EliteDangerousCore.JournalEvents
             Rescan(evt);
         }
 
-        public JournalOutfitting(DateTime utc, string sn, string snloc, string sys, long mid, Tuple<long, string, long>[] list, int cmdrid, bool horizons = true) :
+        public JournalOutfitting(DateTime utc, string sn, string snloc, string sys, MarketID mid, Tuple<long, string, long>[] list, int cmdrid, bool horizons = true) :
             base(utc, JournalTypeEnum.Outfitting)
         {
             MarketID = mid;
@@ -43,7 +43,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             var snloc = JournalFieldNaming.GetStationNames(evt);
             YardInfo = new Outfitting(snloc.Item1, snloc.Item2, evt["StarSystem"].Str(), EventTimeUTC, evt["Items"]?.ToObjectQ<Outfitting.OutfittingItem[]>());
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
             Horizons = evt["Horizons"].BoolNull();
         }
 
@@ -67,7 +67,7 @@ namespace EliteDangerousCore.JournalEvents
                 ["event"] = EventTypeStr,
                 ["StationName"] = YardInfo.StationName,
                 ["StarSystem"] = YardInfo.StarSystem,
-                ["MarketID"] = MarketID,
+                ["MarketID"] = MarketID.Value,
                 ["Horizons"] = Horizons,
                 ["Items"] = itemlist,
             };
@@ -78,7 +78,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public Outfitting YardInfo;
 
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
         public bool? Horizons { get; set; }
         public override string GetInfo() 
         {

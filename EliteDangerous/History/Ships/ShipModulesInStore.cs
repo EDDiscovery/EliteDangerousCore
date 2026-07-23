@@ -29,7 +29,7 @@ namespace EliteDangerousCore
             public string Name { get; set; }         // English name, keyed on this
             public string Name_Localised{ get; set; }
             public string StarSystem{ get; set; }       // not while in transit
-            public long MarketID{ get; set; }       // not while in transit
+            public MarketID MarketID{ get; set; }       // not while in transit
             public long TransferCost{ get; set; }   // not while in transit
             public int TransferTime{ get; set; }    // not while in transit
             public FDName EngineerModifications{ get; set; }    // null if none present

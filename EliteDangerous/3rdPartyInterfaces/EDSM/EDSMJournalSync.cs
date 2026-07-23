@@ -273,8 +273,8 @@ namespace EliteDangerousCore.EDSM
                 if (he.Status.IsDocked)
                 {
                     json["_stationName"] = he.WhereAmI;
-                    if (he.Status.MarketID != null)
-                        json["_stationMarketId"] = he.Status.MarketID;
+                    if (he.Status.MarketID?.HasValue == true)
+                        json["_stationMarketId"] = he.Status.MarketID.Value;
                 }
                 json["_shipId"] = he.Status.ShipID;
                 entries.Add(json);

@@ -445,7 +445,7 @@ namespace EliteDangerousCore.Spansh
 
                             // prohibited commodities
 
-                            station.MarketID = evt["market_id"].LongNull();
+                            station.MarketID = new MarketID(evt["market_id"]);
 
                             JArray market = evt["market"].Array();
                             if (market != null)

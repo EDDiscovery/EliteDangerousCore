@@ -64,6 +64,7 @@
     <Compile Include="Bodies\StarScan2\StarScanSystemNodeEvents.cs" />
     <Compile Include="Bodies\StarScan2\SystemDisplayPlanetTree.cs" />
     <Compile Include="FrontierData\Enumerations\IEquatable.cs" />
+    <Compile Include="FrontierData\Enumerations\MarketID.cs" />
     <Compile Include="FrontierData\Enumerations\Missions.cs" />
     <Compile Include="FrontierData\Enumerations\BodyParents.cs" />
     <Compile Include="FrontierData\Enumerations\Rings.cs" />

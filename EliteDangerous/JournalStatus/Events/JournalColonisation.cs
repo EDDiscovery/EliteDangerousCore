@@ -34,7 +34,7 @@ namespace EliteDangerousCore.JournalEvents
             foreach (var x in ResourcesRequired.EmptyIfNull())
                 x.Normalise(this);
         }
-        public long MarketID { get; set; }
+        public MarketID MarketID { get; set; }
         public float ConstructionProgress { get; set; }
         public bool ConstructionComplete { get; set; }
         public bool ConstructionFailed { get; set; }
@@ -111,7 +111,7 @@ namespace EliteDangerousCore.JournalEvents
             foreach (var x in Contributions.EmptyIfNull())
                 x.Normalise(this);
         }
-        public long MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         public class Contribution
         {

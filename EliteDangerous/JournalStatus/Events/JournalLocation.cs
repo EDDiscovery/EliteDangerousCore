@@ -65,7 +65,7 @@ namespace EliteDangerousCore.JournalEvents
             Latitude = evt["Latitude"].DoubleNull();
             Longitude = evt["Longitude"].DoubleNull();
 
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
 
             // station data only if docked..
 
@@ -116,7 +116,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationName_Localised { get; set; } // will be null if not docked
         public string StationType { get; set; } // will be null if not docked, english name
         public double? DistFromStarLS { get; set; }
-        public StationDefinitions.Classification MarketClass() { return MarketID != null ? StationDefinitions.Classify(MarketID.Value, FDStationType) : StationDefinitions.Classification.Unknown; }
+        public StationDefinitions.Classification MarketClass() { return MarketID != null ? StationDefinitions.Classify(MarketID, FDStationType) : StationDefinitions.Classification.Unknown; }
 
         // 3.3.2 will be empty/null for previous logs.
         public FactionDefinitions.State StationFactionState { get; set; } // fdname

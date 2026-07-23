@@ -532,8 +532,8 @@ namespace EliteDangerousCore.JournalEvents
             FriendlyShipType = engname;
             ShipType_Localised = JournalFieldNaming.CheckLocalisation(evt["ShipType_Localised"].Str(), engname);
             ShipId = evt["ShipID"].ULong();
-            MarketID = evt["MarketID"].Long();
-            ShipMarketID = evt["ShipMarketID"].Long();
+            MarketID = new MarketID(evt["MarketID"]);
+            ShipMarketID = new MarketID(evt["ShipMarketID"]);
             System = evt["System"].StrNull();
         }
 
@@ -541,8 +541,8 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyShipType { get; set; }
         public string ShipType_Localised { get; set; }
         public ulong ShipId { get; set; }
-        public long ShipMarketID { get; set; }
-        public long MarketID { get; set; }
+        public MarketID ShipMarketID { get; set; }
+        public MarketID MarketID { get; set; }
         public string System { get; set; }  //patch 17, so may be null
 
         public override string GetInfo()

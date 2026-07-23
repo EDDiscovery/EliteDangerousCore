@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
             StationState = StationDefinitions.StarportStateToEnum( evt["StationState"].Str("None") );    // missed, added, nov 22, only on bad starports.  Default None
             StarSystem = evt["StarSystem"].Str();
             SystemAddress = evt["SystemAddress"].LongNull();
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
             CockpitBreach = evt["CockpitBreach"].Bool();
 
             JToken jk = (JToken)evt["StationFaction"];
@@ -85,8 +85,8 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportState StationState { get; set; }            // fdname, only present in stations not normal - UnderAttack, Damaged, UnderRepairs. None otherwise
         public string StarSystem { get; set; }
         public long? SystemAddress { get; set; }
-        public long? MarketID { get; set; }
-        public StationDefinitions.Classification MarketClass() { return MarketID != null ? StationDefinitions.Classify(MarketID.Value, FDStationType) : StationDefinitions.Classification.Unknown; }
+        public MarketID MarketID { get; set; }
+        public StationDefinitions.Classification MarketClass() { return MarketID != null ? StationDefinitions.Classify(MarketID, FDStationType) : StationDefinitions.Classification.Unknown; }
         public bool CockpitBreach { get; set; }
         public string Faction { get; set; }                         // station faction
         public FactionDefinitions.State FactionState { get; set; }       // FDName
@@ -210,14 +210,14 @@ namespace EliteDangerousCore.JournalEvents
             StationName_Localised = snl.Item2;
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());  // may not be there
             StationType = StationDefinitions.ToEnglish(FDStationType);
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
         }
 
         public string StationName { get; set; }
         public string StationName_Localised { get; set; }
         public string StationType { get; set; } // english, only on later events, else Unknown
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         public override string GetInfo()
         {
@@ -237,7 +237,7 @@ namespace EliteDangerousCore.JournalEvents
             Reason = FDReason.SplitCapsWordFull();
             FDStationType = StationDefinitions.StarportTypeToEnum( evt["StationType"].StrNull());  // may not be there
             StationType = StationDefinitions.ToEnglish(FDStationType);
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
         }
 
         public string StationName { get; set; }
@@ -246,7 +246,7 @@ namespace EliteDangerousCore.JournalEvents
         public FDName FDReason { get; set; }    // frontier ID
         public string StationType { get; set; } // english, only on later events, else Unknown
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         public override string GetInfo()
         {
@@ -265,7 +265,7 @@ namespace EliteDangerousCore.JournalEvents
             LandingPad = evt["LandingPad"].Int();
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());    // may not be there
             StationType = StationDefinitions.ToEnglish(FDStationType);
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
         }
 
         public string StationName { get; set; }
@@ -273,7 +273,7 @@ namespace EliteDangerousCore.JournalEvents
         public int LandingPad { get; set; }
         public string StationType { get; set; } // english, only on later events, else Unknown
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         public override string GetInfo()
         {
@@ -291,7 +291,7 @@ namespace EliteDangerousCore.JournalEvents
             StationName_Localised = snl.Item2;
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());        // may not be there in earlier ones
             StationType = StationDefinitions.ToEnglish(FDStationType);
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
             LandingPads = evt["LandingPads"]?.ToObjectQ<JournalDocked.LandingPadList>();      // only from odyssey release 5
         }
 
@@ -299,7 +299,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationName_Localised { get; set; }
         public string StationType { get; set; } // english, only on later events, else Unknown
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
         public JournalDocked.LandingPadList LandingPads { get; set; } // 4.0 update 5
 
         public override string GetInfo()
@@ -318,14 +318,14 @@ namespace EliteDangerousCore.JournalEvents
             StationName_Localised = snl.Item2;
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull()); // may not be present
             StationType = StationDefinitions.ToEnglish(FDStationType);
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
         }
 
         public string StationName { get; set; }
         public string StationName_Localised { get; set; }
         public string StationType { get; set; } // english, only on later events, else Unknown
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         public override string GetInfo()
         {
@@ -344,7 +344,7 @@ namespace EliteDangerousCore.JournalEvents
             StationName_Localised = snl.Item2;
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());  // may not be there
             StationType = StationDefinitions.ToEnglish(FDStationType);
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
         }
@@ -353,7 +353,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationName_Localised { get; set; }
         public string StationType { get; set; } // english, only on later events, else Unknown
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }

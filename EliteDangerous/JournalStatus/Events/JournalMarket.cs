@@ -28,7 +28,7 @@ namespace EliteDangerousCore.JournalEvents
         {
         }
 
-        public JournalCommodityPricesBase(System.DateTime utc, JournalTypeEnum type, long? marketid, string station, string station_localised, string starsystem, int cmdrid)
+        public JournalCommodityPricesBase(System.DateTime utc, JournalTypeEnum type, MarketID marketid, string station, string station_localised, string starsystem, int cmdrid)
                                             : base(utc, type)
         {
             MarketID = marketid;
@@ -45,7 +45,7 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportTypes FDStationType { get; protected set; }         // FDName, may be null on older events, and from CAPI
         public string CarrierDockingAccess { get; protected set; }  // will be null when not in carrier or from CAPI
         public string StarSystem { get; set; }
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
         public List<CCommodities> Commodities { get; protected set; }   // never null
 
         public bool HasCommodity(FDName fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname)) >= 0; }
@@ -130,7 +130,7 @@ namespace EliteDangerousCore.JournalEvents
             StationType = StationDefinitions.ToEnglish(FDStationType);
             CarrierDockingAccess = evt["CarrierDockingAccess"].StrNull();
             StarSystem = evt["StarSystem"].Str();
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
 
             Commodities = new List<CCommodities>(); // always made..
             JArray jcommodities = (JArray)evt["Items"];
@@ -188,7 +188,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMarketBuy(JObject evt) : base(evt, JournalTypeEnum.MarketBuy)
         {
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
             Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
@@ -203,7 +203,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Count { get; set; }
         public long BuyPrice { get; set; }
         public long TotalCost { get; set; }
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         // Istats
         public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = Type, Count = Count } }; } }
@@ -236,7 +236,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMarketSell(JObject evt) : base(evt, JournalTypeEnum.MarketSell)
         {
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
             Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
@@ -260,7 +260,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool IllegalGoods { get; set; }
         public bool StolenGoods { get; set; }
         public bool BlackMarket { get; set; }
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         public long Profit { get { return (SellPrice - AvgPricePaid) * Count; } }
 

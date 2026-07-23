@@ -105,12 +105,12 @@ namespace EliteDangerousCore.Inara
                     eventstosend.Add(InaraClass.setCommanderShip(si.ShipFD, si.ID, last.EventTimeUTC,
                                                                 si.ShipUserName, si.ShipUserIdent, true, si.Hot,
                                                                 si.HullValue, si.ModulesValue, si.Rebuy, last.System.Name,
-                                                                last.Status.IsDocked ? last.WhereAmI : null, last.Status.IsDocked ? last.Status.MarketID : null));
+                                                                last.Status.IsDocked ? last.WhereAmI : null, last.Status.MarketID));
                 }
 
                 eventstosend.Add(InaraClass.setCommanderCredits(last.Credits, last.Assets, last.Loan, last.EventTimeUTC));
 
-                eventstosend.Add(InaraClass.setCommanderTravelLocation(last.System.Name, last.Status.IsDocked ? last.WhereAmI : null, last.Status.MarketID.HasValue ? last.Status.MarketID : null, last.EventTimeUTC));
+                eventstosend.Add(InaraClass.setCommanderTravelLocation(last.System.Name, last.Status.IsDocked ? last.WhereAmI : null, last.Status.MarketID, last.EventTimeUTC));
 
                 CmdrCredits = last.Credits;
             }

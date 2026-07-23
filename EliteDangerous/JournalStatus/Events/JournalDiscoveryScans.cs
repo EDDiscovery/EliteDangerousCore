@@ -279,7 +279,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasLatLong => false;
         public string Name => null;
         public string Name_Localised => null;
-        public long? MarketID => null;
+        public MarketID MarketID => null;
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
         public string StationFaction => null;
 
@@ -388,7 +388,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasLatLong => false;
         public string Name => null;
         public string Name_Localised => null;
-        public long? MarketID => null;
+        public MarketID MarketID => null;
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
         public string StationFaction => null;
 
@@ -621,7 +621,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasLatLong => false;
         public string Name => null;
         public string Name_Localised => null;
-        public long? MarketID => null;
+        public MarketID MarketID => null;
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
         public string StationFaction => null;
 

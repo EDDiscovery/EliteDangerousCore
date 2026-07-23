@@ -230,7 +230,7 @@ namespace EliteDangerousCore.JournalEvents
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].Str());
             StationType = StationDefinitions.ToEnglish(FDStationType);
 
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
 
             // don't bother with StationGovernment, StationFaction, StationEconomy, StationEconomies
 

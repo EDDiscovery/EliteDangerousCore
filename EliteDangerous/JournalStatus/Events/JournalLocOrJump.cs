@@ -64,7 +64,7 @@ namespace EliteDangerousCore.JournalEvents
         public string BodyName => Body;
         public string Name { get; set; } = null;            // set when Location docked.
         public string Name_Localised { get; set; } = null;
-        public long? MarketID { get; set; } = null;         // set when Location docked.
+        public MarketID MarketID { get; set; } = null;         // set when Location docked.
         public StationDefinitions.StarportTypes FDStationType { get; set; } = StationDefinitions.StarportTypes.Unknown;
         public string StationFaction { get; set; } = null; // 3.3.2 will be empty/null for previous logs.
 

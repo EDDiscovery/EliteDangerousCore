@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016-2022 EDDiscovery development team
+ * Copyright 2016-2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -26,7 +26,7 @@ namespace EliteDangerousCore
         public bool Hot { get; set; }        // both
 
         public string StarSystem { get; set; }   // remote only and when not in transit, but filled in for local
-        public long ShipMarketID { get; set; }   //remote
+        public MarketID ShipMarketID { get; set; }   //remote
         public long TransferPrice { get; set; }  //remote
         public long TransferTime { get; set; }   //remote
         public bool InTransit { get; set; }      //remote, and that means StarSystem is not there.

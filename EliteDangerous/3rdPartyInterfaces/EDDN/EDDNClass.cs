@@ -615,7 +615,7 @@ namespace EliteDangerousCore.EDDN
                 ["timestamp"] = journal.EventTimeUTC.ToStringZuluInvariant(),
                 ["systemName"] = journal.YardInfo.StarSystem,
                 ["stationName"] = journal.YardInfo.StationName,
-                ["marketId"] = journal.MarketID,
+                ["marketId"] = journal.MarketID.Value,
                 ["modules"] = new JArray(journal.YardInfo.Items
                                 .Where(m => m.FDName.IsWeaponArmour())      // Use FDName here note
                                 .Select(m => m.FDName.Str())
@@ -652,7 +652,7 @@ namespace EliteDangerousCore.EDDN
                 ["timestamp"] = journal.EventTimeUTC.ToStringZuluInvariant(),
                 ["systemName"] = journal.Yard.StarSystem,
                 ["stationName"] = journal.Yard.StationName,
-                ["marketId"] = journal.MarketID,
+                ["marketId"] = journal.MarketID.Value,
                 ["ships"] = new JArray(journal.Yard.Ships.Select(m => m.ShipType).Distinct())      // ship type if FDName
             };
 
@@ -957,7 +957,7 @@ namespace EliteDangerousCore.EDDN
         // pass thru gameversion/build as its used for both journal market and capi EDDCommodityPrices
 
         public JObject CreateEDDNCommodityMessage(string gameversion, string build, List<CCommodities> commodities, bool odyssey, bool horizons, string systemName, 
-                                string stationName, StationDefinitions.StarportTypes stationType, string carrieraccess, long? marketID, DateTime time)
+                                string stationName, StationDefinitions.StarportTypes stationType, string carrieraccess, MarketID marketID, DateTime time)
         {
             if (commodities == null) // now allowed to send empty lists for FC purposes (jan 21)
                 return null;
@@ -975,7 +975,7 @@ namespace EliteDangerousCore.EDDN
                 message["stationType"] = stationType.ToString();
             if (carrieraccess.HasChars())                   // it may be null
                 message["carrierDockingAccess"] = carrieraccess;
-            message["marketId"] = marketID;
+            message["marketId"] = marketID.Value;
             message["timestamp"] = time.ToStringZuluInvariant();
 
             JArray JAcommodities = new JArray();
@@ -1099,7 +1099,7 @@ namespace EliteDangerousCore.EDDN
             message["event"] = "FCMaterials";
             message["horizons"] = journal.IsHorizons;
             message["odyssey"] = journal.IsOdyssey;
-            message["MarketID"] = journal.MarketID;
+            message["MarketID"] = journal.MarketID.Value;
             message["CarrierName"] = journal.CarrierName;
             message["CarrierID"] = journal.CarrierID;
 
@@ -1136,7 +1136,7 @@ namespace EliteDangerousCore.EDDN
             message["event"] = "DockingDenied";
             message["horizons"] = journal.IsHorizons;
             message["odyssey"] = journal.IsOdyssey;
-            message["MarketID"] = journal.MarketID;
+            message["MarketID"] = journal.MarketID.Value;
             message["StationName"] = journal.StationName;
             message["StationType"] = journal.FDStationType.ToString();
             message["Reason"] = journal.FDReason.Str();
@@ -1159,7 +1159,7 @@ namespace EliteDangerousCore.EDDN
             message["event"] = "DockingGranted";
             message["horizons"] = journal.IsHorizons;
             message["odyssey"] = journal.IsOdyssey;
-            message["MarketID"] = journal.MarketID;
+            message["MarketID"] = journal.MarketID.Value;
             message["StationName"] = journal.StationName;
             message["StationType"] = journal.FDStationType.ToString();
             message["LandingPad"] = journal.LandingPad;

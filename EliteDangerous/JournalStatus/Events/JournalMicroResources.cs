@@ -278,7 +278,7 @@ namespace EliteDangerousCore.JournalEvents
             // fix up naming don't override cat
             MicroResource.Normalise(Items.ToArray(), null, this);
             Price = evt["Price"].Int();
-            MarketID = evt["MarketID"].Long();
+            MarketID = new MarketID(evt["MarketID"]);
             if (Items != null)
                 TotalCount = Items.Select(x => x.Count).Sum();          // do it this way, so its consistent across both forms
         }
@@ -286,7 +286,7 @@ namespace EliteDangerousCore.JournalEvents
         public List<MicroResource> Items { get; set; } = null;      // may be null
         public int Price { get; set; }
         public int TotalCount { get; set; }
-        public long MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         public override string GetInfo()
         {
@@ -345,14 +345,14 @@ namespace EliteDangerousCore.JournalEvents
             Items = evt["MicroResources"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
             MicroResource.Normalise(Items,null, this);
             Price = evt["Price"].Long();
-            MarketID = evt["MarketID"].Long();
+            MarketID = new MarketID(evt["MarketID"]);
             if (Items != null)
                 TotalCount = Items.Select(x => x.Count).Sum();          // do it this way, so its consistent across both forms
         }
 
         public MicroResource[] Items { get; set; } = null;
         public long Price { get; set; }
-        public long MarketID { get; set; }
+        public MarketID MarketID { get; set; }
         public int TotalCount { get; set; }
 
         public override string GetInfo()
@@ -413,7 +413,7 @@ namespace EliteDangerousCore.JournalEvents
 
             Category = MaterialCommodityMicroResourceType.ToCategory(evt["Category"].Str());
             Count = evt["Count"].Int();
-            MarketID = evt["MarketID"].Long();
+            MarketID = new MarketID(evt["MarketID"]);
         }
 
         public MicroResource[] Offered { get; set; }
@@ -422,7 +422,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Received_FriendlyName { get; set; }
         public MaterialCommodityMicroResourceType.CatType Category { get; set; }
         public int Count { get; set; }
-        public long MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         public override string GetInfo()
         {
@@ -681,14 +681,14 @@ namespace EliteDangerousCore.JournalEvents
         public JournalDeliverPowerMicroResources(JObject evt) : base(evt, JournalTypeEnum.DeliverPowerMicroResources)
         {
             TotalCount = evt["TotalCount"].Int();
-            MarketID = evt["MarketID"].Long();
+            MarketID = new MarketID(evt["MarketID"]);
             MicroResources = evt["MicroResources"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
             MicroResource.Normalise(MicroResources, null, this);
         }
 
         public int TotalCount { get; set; }
         public MicroResource[] MicroResources { get; set; }
-        public long MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         public override string GetInfo()
         {
@@ -719,14 +719,14 @@ namespace EliteDangerousCore.JournalEvents
         public JournalRequestPowerMicroResources(JObject evt) : base(evt, JournalTypeEnum.RequestPowerMicroResources)
         {
             TotalCount = evt["TotalCount"].Int();
-            MarketID = evt["MarketID"].Long();
+            MarketID = new MarketID(evt["MarketID"]);
             MicroResources = evt["MicroResources"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
             MicroResource.Normalise(MicroResources, null, this);
         }
 
         public int TotalCount { get; set; }
         public MicroResource[] MicroResources { get; set; }
-        public long MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         public override string GetInfo()
         {

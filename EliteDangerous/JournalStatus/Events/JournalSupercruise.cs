@@ -108,7 +108,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasLatLong => false;
         public string Name { get; set; } = null;            // feature name
         public string Name_Localised { get; set; } = null;
-        public long? MarketID => null;
+        public MarketID MarketID => null;
         public StationDefinitions.StarportTypes FDStationType { get; set; } = StationDefinitions.StarportTypes.Unknown;
         public string StationFaction => null;
 
@@ -144,13 +144,13 @@ namespace EliteDangerousCore.JournalEvents
             Location = evt["Type"].Str();
             Location_Localised = evt["Type_Localised"].StrNull();
             Threat = evt["Threat"].Int();
-            MarketID = evt["MarketID"].Long();
+            MarketID = new MarketID(evt["MarketID"]);
         }
 
         public string Location { get; set; }
         public string Location_Localised { get; set; }      // may be null if not present
         public int Threat { get; set; }
-        public long MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         public override string GetInfo()
         {

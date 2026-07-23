@@ -354,21 +354,24 @@ namespace EliteDangerousCore
             ColonisationPort,
         }
 
-        public static Classification Classify(long marketid, StarportTypes type)
+        public static Classification Classify(MarketID marketid, StarportTypes type)
         {
-            long topcode = marketid / 1000000; // codes 128, 3220 etc.
-            if (topcode == 3400)
-                return Classification.RescueShip;
-            if (type == StarportTypes.Megaship || topcode == 3600)
-                return Classification.MegaShip;
-            if (type == StarportTypes.SpaceConstructionDepot)
-                return Classification.SpaceConstructionDepot;
-            if (topcode >= 3700 && topcode <= 3770)                 // these are all fleet carriers, some are called surface stations by error
-                return Classification.FleetCarrier;
-            if (topcode >= 3950 && topcode <= 3990)
-                return Classification.ColonisationShip;
-            if (topcode >= 4200 && topcode <= 4290)                  // only 4200-4230 seen, allow space
-                return Classification.ColonisationPort;
+            if (marketid != null)
+            {
+                ulong topcode = marketid.Value / 1000000; // codes 128, 3220 etc.
+                if (topcode == 3400)
+                    return Classification.RescueShip;
+                if (type == StarportTypes.Megaship || topcode == 3600)
+                    return Classification.MegaShip;
+                if (type == StarportTypes.SpaceConstructionDepot)
+                    return Classification.SpaceConstructionDepot;
+                if (topcode >= 3700 && topcode <= 3770)                 // these are all fleet carriers, some are called surface stations by error
+                    return Classification.FleetCarrier;
+                if (topcode >= 3950 && topcode <= 3990)
+                    return Classification.ColonisationShip;
+                if (topcode >= 4200 && topcode <= 4290)                  // only 4200-4230 seen, allow space
+                    return Classification.ColonisationPort;
+            }
             return Classification.NormalPort;
         }
 

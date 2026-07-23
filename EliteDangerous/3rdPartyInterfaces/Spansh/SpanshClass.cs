@@ -41,9 +41,9 @@ namespace EliteDangerousCore.Spansh
         {
             return BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "system/" + sysaddr.ToStringInvariant());
         }
-        static public bool LaunchBrowserForStationByMarketID(long marketid)
+        static public bool LaunchBrowserForStationByMarketID(MarketID marketid)
         {
-            return BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "station/" + marketid.ToStringInvariant());
+            return BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "station/" + marketid.ToString());
         }
 
         static public bool LaunchBrowserForStationByFullBodyID(long fullbodyid)

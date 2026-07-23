@@ -31,7 +31,7 @@ namespace EliteDangerousCore.JournalEvents
                 BaseUtils.Debugger.TraceBreak($"*** Unknown broker type `{evt["BrokerType"].Str()}` {EventTimeUTC}");
             }
 
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
 
             ItemsUnlocked = evt["ItemsUnlocked"]?.ToObjectQ<Unlocked[]>();      //3.03 entry
             CommodityList = evt["Commodities"]?.ToObjectQ<Commodities[]>();
@@ -69,7 +69,7 @@ namespace EliteDangerousCore.JournalEvents
         };
 
         public BrokerTypes BrokerType { get; set; }      
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
         public Unlocked[] ItemsUnlocked { get; set; }
         public Materials[] MaterialList { get; set; }
         public Commodities[] CommodityList { get; set; }
@@ -156,7 +156,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised { get; set; }
         public int Count { get; set; }
         public MaterialCommodityMicroResourceType.CatType Category { get; set; }
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         public override string GetInfo()
         {
@@ -174,7 +174,7 @@ namespace EliteDangerousCore.JournalEvents
             Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Name_Localised"].Str(), FriendlyName);         // always ensure we have one
             Count = evt["Count"].Int();
             Reward = evt["Reward"].Long();
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
         }
 
         public FDName FDName { get; set; }            // Hyperspace, Supercruise
@@ -182,7 +182,7 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyName { get; set; }            // Hyperspace, Supercruise
         public int Count { get; set; }
         public long Reward { get; set; }
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {

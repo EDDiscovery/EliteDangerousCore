@@ -203,8 +203,8 @@ namespace EliteDangerousCore.JournalEvents
             CargoType = evt["CargoType"].FDName();     // item counts
             FriendlyCargoType = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(CargoType);
             Count = evt["Count"].Int(0);
-            StartMarketID = evt["StartMarketID"].Long();
-            EndMarketID = evt["EndMarketID"].Long();
+            StartMarketID = new MarketID(evt["StartMarketID"]);
+            EndMarketID = new MarketID(evt["EndMarketID"]);
             ItemsCollected = evt["ItemsCollected"].Int();
             ItemsDelivered = evt["ItemsDelivered"].Int();
             TotalItemsToDeliver = evt["TotalItemsToDeliver"].Int();
@@ -225,8 +225,8 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyCargoType { get; set; }
         public int Count { get; set; }  // 3.03         deliver/collect only.  0 if not known.
 
-        public long StartMarketID { get; set; }
-        public long EndMarketID { get; set; }
+        public MarketID StartMarketID { get; set; }
+        public MarketID EndMarketID { get; set; }
 
         public int ItemsCollected { get; set; }             // current total stats
         public int ItemsDelivered { get; set; }

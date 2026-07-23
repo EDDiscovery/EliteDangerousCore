@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasLatLong => false;
         public string Name => null;
         public string Name_Localised => null;
-        public long? MarketID => null;
+        public MarketID MarketID => null;
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
         public string StationFaction => null;
         public override string SummaryName(ISystem sys)
@@ -94,7 +94,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool HasLatLong => false;
         public string Name => null;
         public string Name_Localised => null;
-        public long? MarketID => null;
+        public MarketID MarketID => null;
         public string StationFaction => null;
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.Unknown;
 
@@ -123,7 +123,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             Name = evt["Name"].Str();
             Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), Name);
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
             Latitude = evt["Latitude"].DoubleNull();
             Longitude = evt["Longitude"].DoubleNull();
             SystemAddress = evt["SystemAddress"].LongNull();
@@ -155,7 +155,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised { get; set; }  // there for $Ancient; etc
         public string StationType => "OnFootSettlement";// Fixed to this, no information on specific type of planet station, aligned with Docked
         public StationDefinitions.StarportTypes FDStationType => StationDefinitions.StarportTypes.OnFootSettlement;     // Fixed to this, no information on specific type of planet station
-        public long? MarketID { get; set; }         // appears 2018
+        public MarketID MarketID { get; set; }         // appears 2018
         public double? Latitude { get; set; }       // 3.3
         public double? Longitude { get; set; }
         public bool HasLatLong { get { return Latitude.HasValue && Longitude.HasValue; } }

@@ -38,7 +38,7 @@ namespace EliteDangerousCore.JournalEvents
             StationName_Localised = snl.Item2;
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());        // may not be embarking from a station, accept 
             StationType = StationDefinitions.ToEnglish(FDStationType);
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
         }
 
         // called by MakeHistory entry in case a Event needs more info, as this does
@@ -73,7 +73,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationName_Localised { get; set; }
         public string StationType { get; set; } // friendly, may be null
         public StationDefinitions.StarportTypes FDStationType { get; set; }   // may be null
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         protected override JournalTypeEnum IconEventType { get { return SRV ? JournalTypeEnum.EmbarkSRV : JournalTypeEnum.Embark; } }
 
@@ -120,7 +120,7 @@ namespace EliteDangerousCore.JournalEvents
             HasStationTypeName = StationName.HasChars() && evt["StationType"] != null;
             FDStationType = StationDefinitions.StarportTypeToEnum(evt["StationType"].StrNull());        // null means its not present, will be set to Unknown
             StationType = StationDefinitions.ToEnglish(FDStationType);
-            MarketID = evt["MarketID"].LongNull();
+            MarketID = new MarketID(evt["MarketID"]);
         }
 
         public bool SRV { get; set; }       // 4.0 alpha 1
@@ -141,7 +141,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationName_Localised { get; set; } 
         public string StationType { get; set; } // english friendly, may be Unknown if not there
         public StationDefinitions.StarportTypes FDStationType { get; set; }   // will be Unknown for no station given
-        public long? MarketID { get; set; }
+        public MarketID MarketID { get; set; }
 
         protected override JournalTypeEnum IconEventType { get { return SRV ? JournalTypeEnum.DisembarkSRV : JournalTypeEnum.Disembark; } }
 

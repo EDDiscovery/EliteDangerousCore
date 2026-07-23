@@ -78,7 +78,7 @@ namespace EliteDangerousCore.Spansh
                 if (station.Government_Localised != null)
                     station.Government = GovernmentNameToEnum(station.Government_Localised);
 
-                station.MarketID = evt["id"].LongNull();
+                station.MarketID = new MarketID(evt["id"]);
 
                 var ss = evt["services"].Array();
                 if (ss != null)

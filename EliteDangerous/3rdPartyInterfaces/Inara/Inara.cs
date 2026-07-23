@@ -301,7 +301,7 @@ namespace EliteDangerousCore.Inara
                                               string username = null, string userid = null, bool? curship = null,
                                               bool? ishot = null,
                                               long? shipHullValue = null, long? shipModulesValue = null, long? shipRebuyCost = null,
-                                              string starsystemName = null, string stationName = null, long? MarketID = null)
+                                              string starsystemName = null, string stationName = null, MarketID MarketID = null)
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname.Str();
@@ -324,8 +324,8 @@ namespace EliteDangerousCore.Inara
                 eventData["starsystemName"] = starsystemName;
             if (stationName.HasChars())
                 eventData["stationName"] = stationName;
-            if (MarketID != null)
-                eventData["marketID"] = MarketID;
+            if (MarketID?.HasValue == true)
+                eventData["marketID"] = MarketID.Value;
 
             return Event("setCommanderShip", dt, eventData);
         }
@@ -398,29 +398,29 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderShipLoadout", dt, eventData);
         }
 
-        static public JToken setCommanderShipTransfer(FDName fdname, ulong id, string starsystem, string station, long? marketid, int transfertimesec, DateTime dt)
+        static public JToken setCommanderShipTransfer(FDName fdname, ulong id, string starsystem, string station, MarketID marketid, int transfertimesec, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname.Str();
             eventData["shipGameID"] = id;
             eventData["starsystemName"] = starsystem;
             eventData["stationName"] = station;
-            if (marketid != null)
-                eventData["marketID"] = marketid;
+            if (marketid?.HasValue == true)
+                eventData["marketID"] = marketid.Value;
             if (transfertimesec > 0)
                 eventData["transferTime"] = transfertimesec;
             return Event("setCommanderShipTransfer", dt, eventData);
         }
 
-        static public JToken addCommanderTravelDock(FDName fdname, ulong id, string starsystem, string station, long ? marketid, DateTime dt)
+        static public JToken addCommanderTravelDock(FDName fdname, ulong id, string starsystem, string station, MarketID marketid, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname.Str();
             eventData["shipGameID"] = id;
             eventData["starsystemName"] = starsystem;
             eventData["stationName"] = station;
-            if (marketid != null)
-                eventData["marketID"] = marketid;
+            if (marketid?.HasValue == true)
+                eventData["marketID"] = marketid.Value;
             return Event("addCommanderTravelDock", dt, eventData);
         }
 
@@ -443,14 +443,14 @@ namespace EliteDangerousCore.Inara
             return Event("addCommanderTravelCarrierJump", dt, eventData);
         }
 
-        static public JToken setCommanderTravelLocation(string starsystem, string station, long? marketid, DateTime dt)
+        static public JToken setCommanderTravelLocation(string starsystem, string station, MarketID marketid, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["starsystemName"] = starsystem;
             if (station.HasChars())
                 eventData["stationName"] = station;
-            if (marketid != null)
-                eventData["marketID"] = marketid;
+            if (marketid?.HasValue == true)
+                eventData["marketID"] = marketid.Value;
             return Event("setCommanderTravelLocation", dt, eventData);
         }
 

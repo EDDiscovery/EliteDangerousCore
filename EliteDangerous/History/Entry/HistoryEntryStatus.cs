@@ -99,7 +99,7 @@ namespace EliteDangerousCore
         public bool HasBodyID { get { return BodyID >= 0; } }
         public string StationName_Localised => CurrentLocation?.Name_Localised;
         public StationDefinitions.StarportTypes? FDStationType => CurrentLocation?.FDStationType;
-        public long? MarketID => CurrentLocation?.MarketID;
+        public MarketID MarketID => CurrentLocation?.MarketID;      // may be null
         public string StationFaction => CurrentLocation?.StationFaction;
 
         // Non null when approached a body. ApproachBody has the same fields in as IBodyFeature so use this to make more compatible

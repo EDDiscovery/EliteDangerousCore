@@ -184,7 +184,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSellOrganicData(JObject evt) : base(evt, JournalTypeEnum.SellOrganicData)
         {
-            MarketID = evt["MarketID"].Long();
+            MarketID = new MarketID(evt["MarketID"]);
             Bios = evt["BioData"]?.ToObjectQ<BioData[]>();
             TotalValue = 0;
             if ( Bios!=null)
@@ -209,7 +209,7 @@ namespace EliteDangerousCore.JournalEvents
         };
 
         public BioData[] Bios;
-        public long MarketID;
+        public MarketID MarketID;
         public long TotalValue;
 
         public override string GetInfo()

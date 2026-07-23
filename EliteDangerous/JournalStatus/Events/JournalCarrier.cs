@@ -873,7 +873,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void Rescan(JObject evt)
         {
-            MarketID = evt["MarketID"].Long();
+            MarketID = new MarketID(evt["MarketID"]);
             CarrierID = evt["CarrierID"].Str();
             CarrierType = CarrierDefinitions.ToEnum(evt["CarrierType"].Str());
             CarrierName = evt["CarrierName"].Str();
@@ -902,7 +902,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public long MarketID { get; set; }
+        public MarketID MarketID { get; set; }
         public string CarrierID { get; set; }       // NOTE different to other carrier events
         public CarrierDefinitions.CarrierType CarrierType { get; set; }
         public string CarrierName { get; set; }
