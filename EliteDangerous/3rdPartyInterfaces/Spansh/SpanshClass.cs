@@ -32,23 +32,23 @@ namespace EliteDangerousCore.Spansh
         public static TimeSpan MaxCacheAge = new TimeSpan(7, 0, 0, 0);
 
         #region Browser
-        static public string URLForSystem(long sysaddr)
+        static public string URLForSystem(SystemAddress sysaddr)
         {
-            return RootURL + "system/" + sysaddr.ToStringInvariant();
+            return RootURL + "system/" + sysaddr.ToString();
         }
 
-        static public bool LaunchBrowserForSystem(long sysaddr)
+        static public bool LaunchBrowserForSystem(SystemAddress sysaddr)
         {
-            return BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "system/" + sysaddr.ToStringInvariant());
+            return BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "system/" + sysaddr.ToString());
         }
         static public bool LaunchBrowserForStationByMarketID(MarketID marketid)
         {
             return BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "station/" + marketid.ToString());
         }
 
-        static public bool LaunchBrowserForStationByFullBodyID(long fullbodyid)
+        static public bool LaunchBrowserForStationByFullBodyID(BodySystemAddress fullbodyid)
         {
-            return BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "body/" + fullbodyid.ToStringInvariant());
+            return BaseUtils.BrowserInfo.LaunchBrowser(RootURL + "body/" + fullbodyid.ToString());
         }
 
         static public bool LaunchBrowserForSystem(string name)
@@ -56,15 +56,15 @@ namespace EliteDangerousCore.Spansh
             SpanshClass sp = new SpanshClass();
             ISystem s = sp.GetSystem(name);
             if (s != null)
-                return LaunchBrowserForSystem(s.SystemAddress.Value);
+                return LaunchBrowserForSystem(s.SystemAddress);
             return false;
         }
 
         static public bool LaunchBrowserForSystem(ISystem sys)
         {
-            if (sys.SystemAddress.HasValue)
+            if (sys.SystemAddress.IsValid)
             {
-                return LaunchBrowserForSystem(sys.SystemAddress.Value);
+                return LaunchBrowserForSystem(sys.SystemAddress);
             }
             else
                 return LaunchBrowserForSystem(sys.Name);
@@ -106,7 +106,7 @@ namespace EliteDangerousCore.Spansh
                 {
                     string rname = body["name"].Str();
 
-                    var sys = new SystemClass(rname, body["id64"].Long(), body["x"].Double(), body["y"].Double(), body["z"].Double(), SystemSource.FromSpansh);
+                    var sys = new SystemClass(rname, new SystemAddress(body["id64"]), body["x"].Double(), body["y"].Double(), body["z"].Double(), SystemSource.FromSpansh);
 
                     if (rname.Equals(name, StringComparison.InvariantCultureIgnoreCase) && sys.Triage())
                     {
@@ -119,9 +119,9 @@ namespace EliteDangerousCore.Spansh
             return null;
         }
         // find system info of address case insensitive
-        public ISystem GetSystem(long address)
+        public ISystem GetSystem(SystemAddress address)
         {
-            var response = RequestGet($"dump/{address}");
+            var response = RequestGet($"dump/{address.ToString()}");
 
             if (response.Error)
                 return null;
@@ -132,7 +132,7 @@ namespace EliteDangerousCore.Spansh
             {
                // BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\getsystem.json", json?.ToString(true));
                 if (json.Contains("system"))
-                    return new SystemClass(json["system"].I("name").Str(),json["system"].I("id64").Long(), SystemSource.FromSpansh);
+                    return new SystemClass(json["system"].I("name").Str(),new SystemAddress(json["system"].I("id64")), SystemSource.FromSpansh);
             }
 
             return null;
@@ -149,7 +149,7 @@ namespace EliteDangerousCore.Spansh
             else if ( sys.Name.IsEmpty())
             {
                 SpanshClass sp = new SpanshClass();
-                sys = sp.GetSystem(sys.SystemAddress.Value);       // name and system address filled
+                sys = sp.GetSystem(sys.SystemAddress);       // name and system address filled
             }
 
             return sys;

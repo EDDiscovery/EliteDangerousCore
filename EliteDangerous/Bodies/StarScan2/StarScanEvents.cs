@@ -109,7 +109,7 @@ namespace EliteDangerousCore.StarScan2
         {
             // we need this info to proceed.
 
-            if (sc.SystemAddress != null && sys.SystemAddress == sc.SystemAddress && sc.BodyID != null && sc.BodyName != null && true)
+            if (sc.SystemAddress.IsValid && sys.SystemAddress == sc.SystemAddress && sc.BodyID != null && sc.BodyName != null && true)
             {
                 bool stdname = sc.BodyName.StartsWith(sys.Name) && sc.BodyName.Length > sys.Name.Length;
                 string ownname = stdname ? sc.BodyName.Substring(sys.Name.Length).Trim() : sc.BodyName;
@@ -193,10 +193,10 @@ namespace EliteDangerousCore.StarScan2
             lock (masterlock)
             {
                 // first try system address from the scan to find the entry.
-                if (!sc.SystemAddress.HasValue || !systemNodesByAddress.TryGetValue(sc.SystemAddress.Value, out sn))
+                if (!sc.SystemAddress.IsValid || !systemNodesByAddress.TryGetValue(sc.SystemAddress.Value, out sn))
                 {
                     // failed, lets use the get/add system method as it does more extensive checks on this
-                    if (sc.StarSystem.HasChars() || sc.SystemAddress.HasValue)
+                    if (sc.StarSystem.HasChars() || sc.SystemAddress.IsValid)
                     {
                         sn = GetOrAddSystem(new SystemClass(sc.StarSystem, sc.SystemAddress));
                     }
@@ -272,31 +272,31 @@ namespace EliteDangerousCore.StarScan2
             }
 
         }
-
+        
         public void AddBarycentre(JournalScanBaryCentre sc, ISystem sys, bool saveit = true)
         {
-            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have basic info
+            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress)     // if we have basic info
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
                 lock (sn)
                 {
                     if (sn.AddBaryCentreScan(sc) == null)        // can't assign, store in pending
-                        AddPending(sys.SystemAddress.Value, sc);
+                        AddPending(sys.SystemAddress, sc);
                 }
             }
         }
 
         public void AddCodexEntryToSystem(JournalCodexEntry sc, ISystem sys)
         {
-            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. 
+            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. 
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
                 lock (sn)
                 {
                     if (sn.AddCodexEntryToSystem(sc) == null) // can't assign, store in pending
-                        AddPending(sys.SystemAddress.Value, sc);
+                        AddPending(sys.SystemAddress, sc);
                 }
             }
         }
@@ -304,7 +304,7 @@ namespace EliteDangerousCore.StarScan2
 
         public void SetFSSDiscoveryScan(int? bodycount, int? nonbodycount, ISystem sys)
         {
-            if (sys.SystemAddress != null )     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
+            if (sys.SystemAddress.IsValid )     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -318,9 +318,9 @@ namespace EliteDangerousCore.StarScan2
         // these might not be in the right system, if not, we need to pend it until it is.
         public bool AddFSSSignalsDiscovered(JournalFSSSignalDiscovered sc, bool pendit = true)
         {
-            if (sc.Signals[0].SystemAddress.HasValue )
+            if (sc.Signals[0].SystemAddress.IsValid )
             {
-                if (TryGetSystemNode(sc.Signals[0].SystemAddress.Value, out SystemNode sn))     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
+                if (TryGetSystemNode(sc.Signals[0].SystemAddress, out SystemNode sn))     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
                 {
                     lock (sn)
                     {
@@ -329,21 +329,21 @@ namespace EliteDangerousCore.StarScan2
                     }
                 }
                 else
-                    AddPending(sc.Signals[0].SystemAddress.Value, sc);
+                    AddPending(sc.Signals[0].SystemAddress, sc);
             }
             return false;
         }
 
         public void AddScanOrganic(JournalScanOrganic sc, ISystem sys)
         {
-            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
+            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
                 lock (sn)
                 {
                     if (sn.AddScanOrganicToBody(sc) == null) // can't assign, store in pending
-                        AddPending(sys.SystemAddress.Value, sc);
+                        AddPending(sys.SystemAddress, sc);
                 }
             }
         }
@@ -351,7 +351,7 @@ namespace EliteDangerousCore.StarScan2
         // we get this for a planet
         public void AddTouchdown(JournalTouchdown sc, ISystem sys)
         {
-            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress && sc.BodyID != null)     // if we have basic info. First ones did not have body ID
+            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress && sc.BodyID != null)     // if we have basic info. First ones did not have body ID
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -361,7 +361,7 @@ namespace EliteDangerousCore.StarScan2
                 lock (sn)
                 {
                     if (sn.AddSurfaceFeatureToBody(sc) == null) // can't assign, store in pending
-                        AddPending(sys.SystemAddress.Value, sc);
+                        AddPending(sys.SystemAddress, sc);
                 }
             }
         }
@@ -369,7 +369,7 @@ namespace EliteDangerousCore.StarScan2
         // we get this for a planet
         public void AddApproachSettlement(JournalApproachSettlement sc, ISystem sys)
         {
-            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress && sc.BodyID != null)     // if we have basic info. First ones did not have body ID
+            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress && sc.BodyID != null)     // if we have basic info. First ones did not have body ID
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -379,7 +379,7 @@ namespace EliteDangerousCore.StarScan2
                 lock (sn)
                 {
                     if (sn.AddSurfaceFeatureToBody(sc) == null) // can't assign, store in pending
-                        AddPending(sys.SystemAddress.Value, sc);
+                        AddPending(sys.SystemAddress, sc);
                 }
             }
         }
@@ -387,7 +387,7 @@ namespace EliteDangerousCore.StarScan2
         // from planets only
         public void AddFSSBodySignalsToBody(JournalFSSBodySignals sc, ISystem sys)
         {
-            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
+            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -397,7 +397,7 @@ namespace EliteDangerousCore.StarScan2
                 lock (sn)
                 {
                     if (sn.AddFSSBodySignalsToBody(sc) == null) // can't assign, store in pending
-                        AddPending(sys.SystemAddress.Value, sc);
+                        AddPending(sys.SystemAddress, sc);
                 }
             }
         }
@@ -406,7 +406,7 @@ namespace EliteDangerousCore.StarScan2
         // SAASignalsFound always had bodyid and system
         public void AddSAASignalsFound(JournalSAASignalsFound sc, ISystem sys)
         {
-            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress)     // if we have filled in basic info
+            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress)     // if we have filled in basic info
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -417,7 +417,7 @@ namespace EliteDangerousCore.StarScan2
                 lock (sn)
                 {
                     if (sn.AddSAASignalsFound(sc) == null) // can't assign, store in pending
-                         AddPending(sys.SystemAddress.Value, sc);
+                         AddPending(sys.SystemAddress, sc);
                 }
             }
         }
@@ -425,7 +425,7 @@ namespace EliteDangerousCore.StarScan2
         // we can get this for a body HIP 17403 A 4 a, or a ring Borann A 2 B Ring
         public void AddSAAScanComplete(JournalSAAScanComplete sc, ISystem sys)
         {
-            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress )     // if we have basic info. 
+            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress )     // if we have basic info. 
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -436,7 +436,7 @@ namespace EliteDangerousCore.StarScan2
                 lock (sn)
                 {
                     if (sn.AddSAAScanComplete(sc) == null) // can't assign, store in pending
-                        AddPending(sys.SystemAddress.Value, sc);
+                        AddPending(sys.SystemAddress, sc);
                 }
             }
         }
@@ -445,21 +445,21 @@ namespace EliteDangerousCore.StarScan2
         // we have augmented the information with BodyID/Body due to HistoryEntryStatus or Spansh provides it for planet stations
         public void AddDocking(JournalDocked sc, ISystem sys)
         {
-            if (sys.SystemAddress != null && sc.SystemAddress == sys.SystemAddress )     // if we have basic info. 
+            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress )     // if we have basic info. 
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
                 lock (sn)
                 {
                     if (sn.AddDocking(sc) == null) // can't assign, store in pending
-                        AddPending(sys.SystemAddress.Value, sc);
+                        AddPending(sys.SystemAddress, sc);
                 }
             }
         }
 
         public void AddDestinationSelected(JournalEDDDestinationSelected sc, ISystem sys)
         {
-            if (sys.SystemAddress != null )
+            if (sys.SystemAddress.IsValid )
             {
                 //System.Diagnostics.Debug.WriteLine($"StarScan got call to add EDD Destination Selected {sc.TargetName_Localised ?? sc.TargetName}");
             }
@@ -551,15 +551,15 @@ namespace EliteDangerousCore.StarScan2
         }
 
 
-        private void AddPending(long systemaddress, JournalEntry sc)
+        private void AddPending(SystemAddress systemaddress, JournalEntry sc)
         {
             lock(masterlock)
             {
-                if (!pendingsystemaddressevents.TryGetValue(systemaddress, out List<JournalEntry> jelist))
+                if (!pendingsystemaddressevents.TryGetValue(systemaddress.Value, out List<JournalEntry> jelist))
                 {
-                    pendingsystemaddressevents[systemaddress] = new List<JournalEntry>();
+                    pendingsystemaddressevents[systemaddress.Value] = new List<JournalEntry>();
                 }
-                pendingsystemaddressevents[systemaddress].Add(sc);
+                pendingsystemaddressevents[systemaddress.Value].Add(sc);
             }
 
         }
@@ -568,11 +568,11 @@ namespace EliteDangerousCore.StarScan2
 
 
         #region vars
-        private Dictionary<long, SystemNode> systemNodesByAddress { get; set; } = new Dictionary<long, SystemNode>();       // by address
+        private Dictionary<ulong, SystemNode> systemNodesByAddress { get; set; } = new Dictionary<ulong, SystemNode>();       // by address (we don't use SystemAddress as they would be unique as of coding)
         private Dictionary<string, SystemNode> systemNodesByName { get; set; } = new Dictionary<string, SystemNode>(StringComparer.InvariantCultureIgnoreCase);       // by name.
         private Dictionary<string, SystemNode> systemNodesByNameDuplicated { get; set; } = new Dictionary<string, SystemNode>(StringComparer.InvariantCultureIgnoreCase);       // by name in duplication list
 
-        private Dictionary<long, List<JournalEntry>> pendingsystemaddressevents = new Dictionary<long, List<JournalEntry>>();   // list of pending entries because their bodies are not yet available
+        private Dictionary<ulong, List<JournalEntry>> pendingsystemaddressevents = new Dictionary<ulong, List<JournalEntry>>();   // list of pending entries because their bodies are not yet available
 
         private object masterlock = new object();
 

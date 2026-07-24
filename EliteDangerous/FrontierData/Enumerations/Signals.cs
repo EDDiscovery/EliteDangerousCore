@@ -40,7 +40,7 @@ namespace EliteDangerousCore
         [PropertyNameAttribute("Optional time remaining seconds for USS types")]
         public double? TimeRemaining { get; set; }          // null if not expiring
         [PropertyNameAttribute("Optional Frontier system address")]
-        public long? SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
 
         [PropertyNameAttribute("Is it a station")]
         public bool? IsStation { get; set; }
@@ -103,7 +103,7 @@ namespace EliteDangerousCore
 
             TimeRemaining = evt["TimeRemaining"].DoubleNull();  // USS only, checked
 
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
 
             IsStation = evt["IsStation"].BoolNull();
 

@@ -38,7 +38,7 @@ namespace EliteDangerousCore
         public ISystem StarSystem { get; private set; } = new SystemClass("Unknown");  // where is it?. always set
         public string Body { get; private set; } = "";                           // normally set by carrierjump/carrierbuy
         public int BodyID { get; private set; } = 0;                             
-        public long SystemAddress { get; private set; }                          // its ID
+        public SystemAddress SystemAddress { get; private set; }                          // its ID
 
         public string CurrentPositionText { get { return StarSystem.Name + (Body.Equals(StarSystem.Name, StringComparison.InvariantCultureIgnoreCase) || Body.IsEmpty() ? "" : (": " + Body.ReplaceIfStartsWith(StarSystem.Name).Trim())); } }
 
@@ -53,7 +53,7 @@ namespace EliteDangerousCore
 
         // from CarrierJumpRequest
         public string NextStarSystem { get; private set; }              // null if not jumping
-        public long NextSystemAddress { get; private set; }
+        public SystemAddress NextSystemAddress { get; private set; }
         public string NextBody { get; private set; }                    // null if not jumping. If jumping, its empty or the body name
         public int NextBodyID { get; private set; }                     // 0 or the body id
         public DateTime? EstimatedJumpTimeUTC { get; private set; }     // we set this up from carrier jump request so we can count out the jump even if no carrier jump
@@ -258,8 +258,8 @@ namespace EliteDangerousCore
                 // if no last jump, or different system on top of stack
                 if (jh == null || jh.StarSystem.Name != j.StarSystem || jh.Body != j.Body || jh.BodyID != j.BodyID)
                 {
-                    StarSystem = new SystemClass(j.StarSystem, null, j.StarPos.X, j.StarPos.Y, j.StarPos.Z);                  // set new location with position
-                    SystemAddress = j.SystemAddress ?? 0;
+                    StarSystem = new SystemClass(j.StarSystem, j.SystemAddress, j.StarPos.X, j.StarPos.Y, j.StarPos.Z);                  // set new location with position
+                    SystemAddress = j.SystemAddress;
                     Body = NextBody ?? j.Body ?? j.StarSystem;        // you should always have a nextbody, but if debugging.. 
                     BodyID = NextBodyID;
 

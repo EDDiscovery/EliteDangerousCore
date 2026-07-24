@@ -155,7 +155,7 @@ namespace EliteDangerousCore.StarScan2
         {
             lock (masterlock)
             {
-                if (sys.SystemAddress.HasValue && systemNodesByAddress.TryGetValue(sys.SystemAddress.Value, out var systemNode))
+                if (sys.SystemAddress.IsValid && systemNodesByAddress.TryGetValue(sys.SystemAddress.Value, out var systemNode))
                 {
                     return systemNode;
                 }
@@ -169,11 +169,11 @@ namespace EliteDangerousCore.StarScan2
         }
 
         // Find system thru address
-        public bool TryGetSystemNode(long addr, out SystemNode sn)
+        public bool TryGetSystemNode(SystemAddress addr, out SystemNode sn)
         {
             lock (masterlock)
             {
-                return systemNodesByAddress.TryGetValue(addr, out sn);
+                return systemNodesByAddress.TryGetValue(addr.Value, out sn);
             }
         }
 
@@ -193,20 +193,20 @@ namespace EliteDangerousCore.StarScan2
         }
 
         // try and find the ISystem of an address
-        public ISystem GetISystem(long addr)
+        public ISystem GetISystem(SystemAddress addr)
         {
             lock (masterlock)
             {
-                return systemNodesByAddress.TryGetValue(addr, out var node) ? node.System : null;
+                return systemNodesByAddress.TryGetValue(addr.Value, out var node) ? node.System : null;
             }
         }
 
         // try and find the system thru address, using StarScan, and if not using the SystemCache/DB/Lookup
-        public ISystem GetISystemWithCache(long addr, WebExternalDataLookup lookup = WebExternalDataLookup.None)
+        public ISystem GetISystemWithCache(SystemAddress addr, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
             lock (masterlock)
             {
-                if (systemNodesByAddress.TryGetValue(addr, out var node) )
+                if (systemNodesByAddress.TryGetValue(addr.Value, out var node) )
                     return node.System;
                 else
                     return SystemCache.FindSystem(addr, lookup);
@@ -226,7 +226,7 @@ namespace EliteDangerousCore.StarScan2
         {
             lock (masterlock)
             {
-                List<long> todeletesys = new List<long>();
+                List<ulong> todeletesys = new List<ulong>();
 
                 foreach (var kvp in pendingsystemaddressevents)
                 {
@@ -252,7 +252,7 @@ namespace EliteDangerousCore.StarScan2
                         System.Diagnostics.Trace.WriteLine($"StarScan Pending left system {sn.System} count {kvp.Value.Count}");
                         foreach (var entry in kvp.Value)
                         {
-                            System.Diagnostics.Trace.WriteLine($" .. {entry.EventTimeUTC} {entry.EventTypeStr} {entry.GetInfo(sn.System)}");
+                            System.Diagnostics.Trace.WriteLine($" .. {entry.EventTimeUTC} {entry.EventTypeStr} {entry.GetInfo()}");
                         }
                     }
                     else

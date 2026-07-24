@@ -44,7 +44,7 @@ namespace EliteDangerousCore
         public string SelectedWeaponLocalised { get; set; } = null;
         public string DestinationName { get; set; } = null;           // when you have set a target, a body, station, system
         public string DestinationNameLoc { get; set; } = null;        // when you have a $.. id
-        public long? DestinationSystemAddress { get; set; } = null;
+        public SystemAddress DestinationSystemAddress { get; set; } = null;
         public int? DestinationBodyID { get; set; } = null;
 
         #endregion
@@ -268,7 +268,7 @@ namespace EliteDangerousCore
                         string newdestination = destination["Name"].StrNull();
                         string newdestinationloc = destination["Name_Localised"].StrNull();
                         int? newbody = destination["Body"].IntNull();
-                        long? newsys = destination["System"].LongNull();
+                        SystemAddress newsys = new SystemAddress(destination["System"]);        
 
                         // present.. if changed
                         if (newdestination != DestinationName || newdestinationloc != DestinationNameLoc || newbody != DestinationBodyID || newsys != DestinationSystemAddress) 
@@ -281,9 +281,9 @@ namespace EliteDangerousCore
 
                             // if we have seen a change before (so we don't double record it after start) and have a valid destination, record it in the journal
 
-                            if (destinationSawChanged && DestinationSystemAddress.HasValue && DestinationBodyID.HasValue && DestinationName.HasChars())       
+                            if (destinationSawChanged && DestinationSystemAddress.IsValid && DestinationBodyID.HasValue && DestinationName.HasChars())       
                             {
-                                var ne = new JournalEDDDestinationSelected(EventTimeUTC, EDCommander.CurrentCmdrID, DestinationSystemAddress.Value, DestinationBodyID.Value, DestinationName, DestinationNameLoc);
+                                var ne = new JournalEDDDestinationSelected(EventTimeUTC, EDCommander.CurrentCmdrID, DestinationSystemAddress, DestinationBodyID.Value, DestinationName, DestinationNameLoc);
                                 ne.Add(ne.CreateJSON());
                                 jevents.Add(ne);
                             }

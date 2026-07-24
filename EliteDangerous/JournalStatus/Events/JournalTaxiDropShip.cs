@@ -54,7 +54,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalDropshipDeploy(JObject evt) : base(evt, JournalTypeEnum.DropshipDeploy)
         {
             StarSystem = evt["StarSystem"].Str();
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             Body = evt["StarSystem"].Str();
             BodyID = evt["BodyID"].IntNull();
             OnStation = evt["OnStation"].Bool();
@@ -62,7 +62,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StarSystem { get; set; }
-        public long? SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
         public string Body { get; set; }
         public int? BodyID { get; set; }
         public bool OnStation { get; set; }

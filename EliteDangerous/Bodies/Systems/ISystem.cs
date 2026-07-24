@@ -46,7 +46,7 @@ namespace EliteDangerousCore
         int Zi { get; set; }
         bool HasCoordinate { get; }
         int GridID { get; set; }
-        long? SystemAddress { get; set; }
+        SystemAddress SystemAddress { get; set; }       // may be invalid
         long? EDSMID { get; set; }      // if sourced from EDSM DB or web
         object Tag { get; set; }        // Aux data on this isystem. Normally a string containing information on it
 

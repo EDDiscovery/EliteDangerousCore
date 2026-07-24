@@ -36,7 +36,7 @@ namespace EliteDangerousCore.JournalEvents
 
             StationState = StationDefinitions.StarportStateToEnum( evt["StationState"].Str("None") );    // missed, added, nov 22, only on bad starports.  Default None
             StarSystem = evt["StarSystem"].Str();
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             MarketID = new MarketID(evt["MarketID"]);
             CockpitBreach = evt["CockpitBreach"].Bool();
 
@@ -84,7 +84,7 @@ namespace EliteDangerousCore.JournalEvents
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public StationDefinitions.StarportState StationState { get; set; }            // fdname, only present in stations not normal - UnderAttack, Damaged, UnderRepairs. None otherwise
         public string StarSystem { get; set; }
-        public long? SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
         public MarketID MarketID { get; set; }
         public StationDefinitions.Classification MarketClass() { return MarketID != null ? StationDefinitions.Classify(MarketID, FDStationType) : StationDefinitions.Classification.Unknown; }
         public bool CockpitBreach { get; set; }

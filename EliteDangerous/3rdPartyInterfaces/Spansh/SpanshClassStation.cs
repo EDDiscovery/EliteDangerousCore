@@ -42,7 +42,7 @@ namespace EliteDangerousCore.Spansh
             if (sys == null)
                 return null;
 
-            BaseUtils.HttpCom.Response response = RequestGet("dump/" + sys.SystemAddress.ToStringInvariant());
+            BaseUtils.HttpCom.Response response = RequestGet("dump/" + sys.SystemAddress.Value.ToStringInvariant());
 
             if (response.Error)
                 return null;
@@ -383,7 +383,8 @@ namespace EliteDangerousCore.Spansh
                             station.Faction = evt["controlling_minor_faction"].StrNull();
 
                             station.DistanceRefSystem = evt["distance"].Double();      // system info at base of object
-                            station.System = new SystemClass(evt["system_name"].Str(), evt["system_id64"].LongNull(), evt["system_x"].Double(), evt["system_y"].Double(), evt["system_z"].Double(), SystemSource.FromSpansh);
+                            var sysaddr = new SystemAddress(evt["system_id64"]);
+                            station.System = new SystemClass(evt["system_name"].Str(),sysaddr, evt["system_x"].Double(), evt["system_y"].Double(), evt["system_z"].Double(), SystemSource.FromSpansh);
 
                             station.BodyName = evt["body_name"].StrNull();
                             station.BodyType = BodyDefinitions.GetBodyType(evt["body_type"].Str());

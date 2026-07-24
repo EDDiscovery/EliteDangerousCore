@@ -32,7 +32,7 @@ namespace EliteDangerousCore.Spansh
                 return stationinfo;
 
             string sysname = jsystem["name"].StrNull();                       // must have these now
-            long? sysaddr = jsystem["id64"].LongNull();
+            var sysaddr = new SystemAddress(jsystem["id64"]);
 
             if (sysname == null || sysaddr == null)
                 return stationinfo;

@@ -23,7 +23,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public string StarSystem { get; set; }
         public EMK.LightGeometry.Vector3 StarPos { get; set; }
-        public long? SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
         public string Body { get; set; }            // March 2019 introduced the destination body you jumped to
         public BodyDefinitions.BodyType BodyType { get; set; }      // as of JAN 26 : Barycentre, Star, StellarRing types
         public int? BodyID { get; set; }
@@ -105,7 +105,7 @@ namespace EliteDangerousCore.JournalEvents
 
             StarPos = pos;
 
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
 
             Body = evt["Body"].StrNull();
             BodyID = evt["BodyID"].IntNull();

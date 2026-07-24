@@ -30,7 +30,7 @@ namespace EliteDangerousCore.JournalEvents
             NearestDestination = evt["NearestDestination"].StrNull();
             NearestDestination_Localised = JournalFieldNaming.CheckLocalisation(evt["NearestDestination_Localised"].StrNull(), NearestDestination);
             StarSystem = evt["StarSystem"].StrNull();
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             Body = evt["Body"].StrNull();
             BodyID = evt["BodyID"].IntNull();
             OnPlanet = evt["OnPlanet"].BoolNull();
@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
         public string NearestDestination_Localised { get; set; }
 
         public string StarSystem { get; set; }      // 4.0 alpha 4 on
-        public long? SystemAddress { get; set; }    // early ones did not have
+        public SystemAddress SystemAddress { get; set; }    // early ones did not have
         public string Body { get; set; }            // early ones did not have
         public int? BodyID { get; set; }            // early ones did not have
         public bool? OnStation { get; set; }        
@@ -80,7 +80,7 @@ namespace EliteDangerousCore.JournalEvents
             NearestDestination = evt["NearestDestination"].StrNull();
             NearestDestination_Localised = JournalFieldNaming.CheckLocalisation(evt["NearestDestination_Localised"].StrNull(), NearestDestination);
             StarSystem = evt["StarSystem"].StrNull();
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             Body = evt["Body"].StrNull();
             BodyID = evt["BodyID"].IntNull();
             OnPlanet = evt["OnPlanet"].BoolNull();
@@ -95,7 +95,7 @@ namespace EliteDangerousCore.JournalEvents
         public string NearestDestination_Localised { get; set; }
 
         public string StarSystem { get; set; }      //4.0 alpha 4 on
-        public long? SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
         public string Body { get; set; }            // early ones did not have
         public int? BodyID { get; set; }            // early ones did not have
         public bool? OnStation { get; set; }

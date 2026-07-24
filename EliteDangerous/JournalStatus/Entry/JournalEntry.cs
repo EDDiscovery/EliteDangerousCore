@@ -100,7 +100,7 @@ namespace EliteDangerousCore
             public string WhereAmI { get; set; }
             public string BodyName { get; set; }
             public string NextJumpSystemName { get; set; }
-            public long? NextJumpSystemAddress { get; set; }
+            public SystemAddress NextJumpSystemAddress { get; set; }
         };
 
         // these may or may not be overriden by class.  
@@ -126,7 +126,7 @@ namespace EliteDangerousCore
         }
 
         // GetInfo/GetInfo(fid) always return string
-        public string GetInfo(ISystem sys, string wai = "?", string bn = "?", string nsn = "?", long nsa = 0)
+        public string GetInfo(ISystem sys, string wai, string bn, string nsn, SystemAddress nsa)
         {
             string ret = GetInfo();
             if (ret == null)
@@ -138,7 +138,7 @@ namespace EliteDangerousCore
         }
 
         // GetDetailed/GetDetailed(fid) may return null
-        public string GetDetailed(ISystem sys, string wai = "?", string bn = "?", string nsn = "?", long nsa = 0)
+        public string GetDetailed(ISystem sys, string wai, string bn, string nsn, SystemAddress nsa)
         {
             string ret = GetDetailed();
             if (ret == null)

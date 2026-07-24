@@ -157,7 +157,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StarSystem { get; set; }
-        public long SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
 
         public override string GetInfo()
         {
@@ -187,7 +187,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StarSystem { get; set; }
-        public long SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
     }
 
 

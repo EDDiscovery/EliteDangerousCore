@@ -129,7 +129,7 @@ namespace EliteDangerousCore.Spansh
                     notes = notes.AppendPrePad("Profit so far: " + deal["cumulative_profit"].Int(), Environment.NewLine);
 
                     {
-                        long id64 = source["system_id64"].Long();
+                        var id64 = new SystemAddress(source["system_id64"]);
                         string name = source["system"].Str();
                         double x = source["x"].Double();
                         double y = source["y"].Double();
@@ -143,7 +143,7 @@ namespace EliteDangerousCore.Spansh
                     if (i == deals.Count - 1)
                     {
                         JObject destination = deal["destination"].Object();
-                        long id64 = destination["system_id64"].Long();
+                        SystemAddress id64 = new SystemAddress(destination["system_id64"]);
                         string name = destination["system"].Str();
                         double x = destination["x"].Double();
                         double y = destination["y"].Double();
@@ -193,7 +193,7 @@ namespace EliteDangerousCore.Spansh
 
                     foreach (JObject sys in systems)
                     {
-                        long id64 = sys["id64"].Long();
+                        SystemAddress id64 = new SystemAddress(sys["id64"]);
                         string name = sys["system"].Str();
                         double x = sys["x"].Double();
                         double y = sys["y"].Double();
@@ -253,7 +253,7 @@ namespace EliteDangerousCore.Spansh
 
                     foreach (JObject sys in jumps)
                     {
-                        long id64 = sys["id64"].Long();
+                        SystemAddress id64 = new SystemAddress(sys["id64"]);
                         string name = sys["name"].Str();
                         double x = sys["x"].Double();
                         double y = sys["y"].Double();
@@ -336,7 +336,7 @@ namespace EliteDangerousCore.Spansh
 
                     foreach (JObject sys in jumps)
                     {
-                        long id64 = sys["id64"].Long(0);
+                        SystemAddress id64 = new SystemAddress(sys["id64"]);
                         string name = sys["name"].Str();
                         double x = sys["x"].Double();
                         double y = sys["y"].Double();
@@ -410,7 +410,7 @@ namespace EliteDangerousCore.Spansh
 
                     foreach (JObject sys in results)
                     {
-                        long id64 = sys["id64"].Str("0").InvariantParseLong(0);
+                        SystemAddress id64 = new SystemAddress(sys["id64"]);
                         string name = sys["name"].Str();
                         double x = sys["x"].Double();
                         double y = sys["y"].Double();
@@ -534,7 +534,7 @@ namespace EliteDangerousCore.Spansh
             {
                 if (sys is JObject)
                 {
-                    long id64 = sys["id64"].Str("0").InvariantParseLong(0);
+                    SystemAddress id64 = new SystemAddress(sys["id64"]);
                     string name = sys["name"].Str();
                     double x = sys["x"].Double();
                     double y = sys["y"].Double();

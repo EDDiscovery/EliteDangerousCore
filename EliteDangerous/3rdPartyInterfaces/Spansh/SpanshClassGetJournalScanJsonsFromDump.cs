@@ -25,20 +25,18 @@ namespace EliteDangerousCore.Spansh
             //System.Diagnostics.Debug.WriteLine($"Spansh bodies found {foundsystem.Name} {foundsystem.SystemAddress}");
 
             JArray resultsarray;
-            string sysname = null;
-            long? sysaddr = null;
 
             resultsarray = spanshdump != null ? spanshdump["system"].I("bodies").Array() : null;
-            sysname = spanshdump["system"].I("name").StrNull();                       // must have these now
-            sysaddr = spanshdump["system"].I("id64").LongNull();
+            var sysname = spanshdump["system"].I("name").StrNull();                       // must have these now
+            var sysaddr = new SystemAddress(spanshdump["system"].I("id64"));
 
-            if (resultsarray != null && sysname.HasChars() && sysaddr.HasValue)
+            if (resultsarray != null && sysname.HasChars() && sysaddr.IsValid)
             {
                 JArray retresult = new JArray();
 
                 foreach (var so in resultsarray)
                 {
-                    JObject scan = ConvertToJournalScan(so, sysname, sysaddr.Value);
+                    JObject scan = ConvertToJournalScan(so, sysname, sysaddr);
                     if ( scan != null )
                     {
                         retresult.Add(scan);

@@ -159,7 +159,7 @@ namespace EliteDangerousCore.Spansh
                         {
                             List<JournalScan> bodies = new List<JournalScan>();
 
-                            SystemClass systemgot = new SystemClass(journalscans[0]["StarSystem"].Str(), journalscans[0]["SystemAddress"].LongNull());
+                            SystemClass systemgot = new SystemClass(journalscans[0]["StarSystem"].Str(), new SystemAddress(journalscans[0]["SystemAddress"]));
 
                             foreach (JObject jo in journalscans)
                             {
@@ -221,7 +221,7 @@ namespace EliteDangerousCore.Spansh
             if (foundsystem == null)        // if failed, return nothing
                 return null;
 
-            BaseUtils.HttpCom.Response response = RequestGet("dump/" + foundsystem.SystemAddress.ToStringInvariant());
+            BaseUtils.HttpCom.Response response = RequestGet("dump/" + foundsystem.SystemAddress.Value.ToStringInvariant());
 
             if (response.Error)
                 return null;
@@ -242,7 +242,7 @@ namespace EliteDangerousCore.Spansh
 
             // find by name and address, using the pattern of naming to pick out the right parts
             int iname = cachefiles.FindIndex(x => x.Contains($"{prefix}__{searchsystem.Name.ToLowerInvariant().SafeFileString()}__"));     // by name, making sure we use the safe file string chars
-            int iaddr = searchsystem.SystemAddress.HasValue ? cachefiles.FindIndex(x => x.Contains($"__{searchsystem.SystemAddress.Value.ToStringInvariant()}.json")) : -1;
+            int iaddr = searchsystem.SystemAddress.IsValid ? cachefiles.FindIndex(x => x.Contains($"__{searchsystem.SystemAddress.Value.ToStringInvariant()}.json")) : -1;
 
             string cachefile = iaddr >= 0 ? cachefiles[iaddr] : iname >= 0 ? cachefiles[iname] : null;       // prefer address, else use name
             if (cachefile != null)
@@ -265,7 +265,7 @@ namespace EliteDangerousCore.Spansh
         public static void WriteToFileCache(JObject spanshdump, ISystem foundsystem, string prefix)
         {
             // give the finalised name to the cache file. 
-            string name = $"{prefix}__{foundsystem.Name.ToLowerInvariant()}__{(foundsystem.SystemAddress ?? 0).ToStringInvariant()}.json";
+            string name = $"{prefix}__{foundsystem.Name.ToLowerInvariant()}__{foundsystem.SystemAddress.ToString()}.json";
             string cachefile = System.IO.Path.Combine(EliteConfigInstance.InstanceOptions.ScanCachePath, name.SafeFileString());
             BaseUtils.FileHelpers.TryWriteToFile(cachefile, spanshdump.ToString(true));      // save to file so we don't have to reload
         }

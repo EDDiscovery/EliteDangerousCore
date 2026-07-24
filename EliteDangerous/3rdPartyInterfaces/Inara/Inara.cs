@@ -263,7 +263,7 @@ namespace EliteDangerousCore.Inara
                 data["itemValue"] = x.BuyPrice;
                 data["isHot"] = x.Hot;
                 data["starsystemName"] = x.StarSystem;
-                data["marketID"] = x.MarketID;
+                data["marketID"] = x.MarketID.Value;
                 if (x.EngineerModifications != null)
                 {
                     JObject eng = new JObject();

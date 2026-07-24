@@ -43,7 +43,7 @@ namespace EliteDangerousCore
             });
         }
 
-        public static System.Threading.Tasks.Task<ISystem> FindSystemAsync(long address, WebExternalDataLookup lookup = WebExternalDataLookup.None)
+        public static System.Threading.Tasks.Task<ISystem> FindSystemAsync(SystemAddress address, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
             return System.Threading.Tasks.Task.Run(() =>
             {
@@ -76,7 +76,7 @@ namespace EliteDangerousCore
         }
 
         // sychronous, find address 
-        public static ISystem FindSystem(long address, WebExternalDataLookup lookup = WebExternalDataLookup.None)
+        public static ISystem FindSystem(SystemAddress address, WebExternalDataLookup lookup = WebExternalDataLookup.None)
         {
             return FindSystem(new SystemClass(address), lookup);
         }
@@ -105,7 +105,7 @@ namespace EliteDangerousCore
                         Spansh.SpanshClass sp = new Spansh.SpanshClass();    
 
                         if (find.HasAddress)
-                            found = sp.GetSystem(find.SystemAddress.Value);
+                            found = sp.GetSystem(find.SystemAddress);
                         else if ( find.HasName )
                             found = sp.GetSystem(find.Name);
                     }
@@ -418,7 +418,7 @@ namespace EliteDangerousCore
                                                  double maxfromwanted,
                                                  SystemsNearestMetric routemethod,
                                                  int limitto,
-                                                 HashSet<long> discard)
+                                                 HashSet<ulong> discard)
         {
             List<ISystem> candidates;
 
@@ -434,7 +434,7 @@ namespace EliteDangerousCore
                                  })
                                  .Where(s => s.dw < maxfromwanted &&
                                              s.dc < maxfromcurpos &&
-                                             (discard == null || (s.sys.EDSMID.HasValue ? !discard.Contains(s.sys.EDSMID.Value) : !discard.Contains(s.sys.SystemAddress ?? 0))))
+                                             (discard == null || (s.sys.EDSMID.HasValue ? !discard.Contains((ulong)s.sys.EDSMID.Value) : !discard.Contains(s.sys.SystemAddress.Value))))
                                  .OrderBy(s => s.dw)
                                  .Select(s => s.sys)
                                  .ToList();
@@ -447,7 +447,7 @@ namespace EliteDangerousCore
                     DB.SystemsDB.GetSystemNearestTo(currentpos, wantedpos, maxfromcurpos, maxfromwanted, limitto, cn, (s) =>
                     {
                         AddToCache(s);
-                        if (discard == null || (s.EDSMID.HasValue ? !discard.Contains(s.EDSMID.Value) : !discard.Contains(s.SystemAddress ?? 0)))
+                        if (discard == null || (s.EDSMID.HasValue ? !discard.Contains((ulong)s.EDSMID.Value) : !discard.Contains(s.SystemAddress.Value)))
                         {
                             candidates.Add(s);
                         }

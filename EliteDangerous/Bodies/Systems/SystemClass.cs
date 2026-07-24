@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics;
+using BaseUtils;
 
 namespace EliteDangerousCore
 {
@@ -22,7 +23,7 @@ namespace EliteDangerousCore
     public class SystemClassBase : ISystemBase
     {
         public bool HasName => Name.HasChars() && Name != "UnKnown";
-        public bool HasAddress => SystemAddress.HasValue;
+        public bool HasAddress => SystemAddress.IsValid;
 
         public const float XYZScalar = 128.0F;     // scaling between DB stored values and floats
 
@@ -48,17 +49,17 @@ namespace EliteDangerousCore
 
         [QuickJSON.JsonIgnore()]
         public int GridID { get; set; }
-        public long? SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }       //always set, may be invalid
         public long? EDSMID { get; set; }
 
         [QuickJSON.JsonIgnore()]
         public object Tag { get; set; }
 
         [QuickJSON.JsonIgnore()]
-        public string Key { get { return SystemAddress.HasValue ? SystemAddress.ToStringInvariant() : Name.ToLowerInvariant(); } }
+        public string Key { get { return SystemAddress.IsValid ? SystemAddress.Value.ToStringInvariant() : Name.ToLowerInvariant(); } }
 
         [QuickJSON.JsonIgnore()]
-        public string NameAddress { get { return Name.ToLowerInvariant() + ":" + (SystemAddress.HasValue ? SystemAddress.ToStringInvariant() : ""); } }
+        public string NameAddress { get { return Name.ToLowerInvariant() + ":" + (SystemAddress.IsValid ? SystemAddress.ToString() : ""); } }
 
         public SystemClassBase()
         {
@@ -86,7 +87,7 @@ namespace EliteDangerousCore
             this.Yi = sys.Yi;
             this.Zi = sys.Zi;
             this.GridID = sys.GridID;
-            this.SystemAddress = sys.SystemAddress;
+            this.SystemAddress = new SystemAddress(sys.SystemAddress.Value);
             this.EDSMID = sys.EDSMID;
         }
 
@@ -154,6 +155,7 @@ namespace EliteDangerousCore
     {
         public SystemClass() : base()
         {
+            SystemAddress = new SystemAddress();
         }
 
         public SystemClass(ISystem sys) : base(sys)
@@ -165,15 +167,16 @@ namespace EliteDangerousCore
         public SystemClass(string name) : base()
         {
             Name = name;
+            SystemAddress = new SystemAddress();
         }
-        public SystemClass(long addr) : base()
+        public SystemClass(SystemAddress addr) : base()
         {
             Name = "";
             SystemAddress = addr;
         }
 
         // with no co-ords
-        public SystemClass(string name, long? systemaddress, SystemSource src = SystemSource.Synthesised) : base()
+        public SystemClass(string name, SystemAddress systemaddress, SystemSource src = SystemSource.Synthesised) : base()
         {
             Name = name;
             SystemAddress = systemaddress;
@@ -181,7 +184,7 @@ namespace EliteDangerousCore
         }
 
         // with co-ords
-        public SystemClass(string name, long? systemaddress, double vx, double vy, double vz, SystemSource src = SystemSource.Synthesised, EDStar starclass = EDStar.Unknown) : base(name, vx, vy, vz)
+        public SystemClass(string name, SystemAddress systemaddress, double vx, double vy, double vz, SystemSource src = SystemSource.Synthesised, EDStar starclass = EDStar.Unknown) : base(name, vx, vy, vz)
         {
             SystemAddress = systemaddress;
             Source = src;
@@ -189,7 +192,7 @@ namespace EliteDangerousCore
         }
 
         // used by EDSMClass
-        public SystemClass(string name, long edsmid, long? systemaddress, SystemSource src) : base()
+        public SystemClass(string name, long edsmid, SystemAddress systemaddress, SystemSource src) : base()
         {
             Name = name;
             EDSMID = edsmid;
@@ -198,7 +201,7 @@ namespace EliteDangerousCore
         }
 
         // used by EDSMClass
-        public SystemClass(string name, long edsmid, long? systemaddress, double vx, double vy, double vz, SystemSource src) : base(name, vx, vy, vz)
+        public SystemClass(string name, long edsmid, SystemAddress systemaddress, double vx, double vy, double vz, SystemSource src) : base(name, vx, vy, vz)
         {
             EDSMID = edsmid;
             SystemAddress = systemaddress;
@@ -206,7 +209,7 @@ namespace EliteDangerousCore
         }
 
         // used by StoreDB
-        public SystemClass(string name, int xi, int yi, int zi, long? sysaddress, long? edsmid, int gridid, EDStar startype, SystemSource src) : base(name, xi, yi, zi, gridid)
+        public SystemClass(string name, int xi, int yi, int zi, SystemAddress sysaddress, long? edsmid, int gridid, EDStar startype, SystemSource src) : base(name, xi, yi, zi, gridid)
         {
             SystemAddress = sysaddress;
             EDSMID = edsmid;
@@ -243,7 +246,7 @@ namespace EliteDangerousCore
 
         public override string ToString()
         {
-            if (SystemAddress != null && EDSMID != null)
+            if (SystemAddress.IsValid && EDSMID != null)
                 return string.Format($"{Name} @ {X:N3},{Y:N3},{Z:N3}: {EDSMID}, {SystemAddress}");
             else if (SystemAddress != null)
                 return string.Format($"{Name} @ {X:N3},{Y:N3},{Z:N3}: {SystemAddress}");

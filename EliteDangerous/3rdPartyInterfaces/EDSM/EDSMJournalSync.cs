@@ -268,8 +268,8 @@ namespace EliteDangerousCore.EDSM
                 json.Remove(JournalLocOrJump.EDSMJournalMarker);     // remove this from JSON send to EDSM
                 json["_systemName"] = he.System.Name;
                 json["_systemCoordinates"] = new JArray(he.System.X, he.System.Y, he.System.Z);
-                if (he.System.SystemAddress != null)
-                    json["_systemAddress"] = he.System.SystemAddress;
+                if (he.System.SystemAddress.IsValid)
+                    json["_systemAddress"] = he.System.SystemAddress.Value;
                 if (he.Status.IsDocked)
                 {
                     json["_stationName"] = he.WhereAmI;

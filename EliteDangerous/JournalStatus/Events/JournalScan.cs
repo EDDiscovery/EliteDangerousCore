@@ -56,7 +56,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Name of star")]
         public string StarSystem { get; private set; }                      // direct (3.5)
         [PropertyNameAttribute("Internal Frontier ID, is empty for older scans")]
-        public long? SystemAddress { get; private set; }                    // direct (3.5)
+        public SystemAddress SystemAddress { get; private set; }                    // direct (3.5)
         [PropertyNameAttribute("In light seconds")]
         public double DistanceFromArrivalLS { get; private set; }           // direct
         [PropertyNameAttribute("In meters")]
@@ -466,7 +466,7 @@ namespace EliteDangerousCore.JournalEvents
             BodyID = evt["BodyID"].IntNull();                               // ALL
 
             StarSystem = evt["StarSystem"].StrNull();                       // ALL    
-            SystemAddress = evt["SystemAddress"].LongNull();                // ALL    
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);                // ALL    
             DistanceFromArrivalLS = evt["DistanceFromArrivalLS"].Double();  // ALL 
             WasDiscovered = evt["WasDiscovered"].BoolNull();                // ALL new 3.4
             WasMapped = evt["WasMapped"].BoolNull();                        // ALL new 3.4

@@ -26,11 +26,11 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalDiscoveryScan(JObject evt) : base(evt, JournalTypeEnum.DiscoveryScan)
         {
-            SystemAddress = evt["SystemAddress"].Long();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             Bodies = evt["Bodies"].Int();
         }
 
-        public long SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
         public int Bodies { get; set; }
 
         public override string GetInfo(FillInformationData fid)
@@ -49,7 +49,7 @@ namespace EliteDangerousCore.JournalEvents
             Progress = evt["Progress"].Double() * 100.0;
             BodyCount = evt["BodyCount"].Int();
             NonBodyCount = evt["NonBodyCount"].Int();
-            SystemAddress = evt["SystemAddress"].LongNull();        // appeared later
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);        // appeared later
             SystemName = evt["SystemName"].StrNull();               // appeared later
         }
 
@@ -57,7 +57,7 @@ namespace EliteDangerousCore.JournalEvents
         public int BodyCount { get; set; }
         public int NonBodyCount { get; set; }
         public string SystemName { get; set; }      // not always present, may be null
-        public long? SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             s.SetFSSDiscoveryScan(BodyCount, NonBodyCount, system);
@@ -92,7 +92,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("List of FSS signals")]
         public List<Signal> Signals { get; set; }            // name used in action packs not changeable. Never null 
 
-        public bool IsSignalsOfSystem( long? address)
+        public bool IsSignalsOfSystem( SystemAddress address)
         {
             return Signals.Count > 0 && Signals[0].SystemAddress == address;
         }
@@ -234,11 +234,11 @@ namespace EliteDangerousCore.JournalEvents
         public JournalNavBeaconScan(JObject evt) : base(evt, JournalTypeEnum.NavBeaconScan)
         {
             NumBodies = evt["NumBodies"].Int();
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
         }
 
         public int NumBodies { get; set; }
-        public long? SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
 
         public override string GetInfo()
         {
@@ -261,14 +261,14 @@ namespace EliteDangerousCore.JournalEvents
             BodyID = evt["BodyID"].Int();
             ProbesUsed = evt["ProbesUsed"].Int();
             EfficiencyTarget = evt["EfficiencyTarget"].Int();
-            SystemAddress = evt["SystemAddress"].LongNull();        // Early ones did not have it (before 11/12/19)
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);        // Early ones did not have it (before 11/12/19)
         }
 
         public string BodyName { get; set; }        // always there
         public int BodyID { get; set; }             // always there
         public int ProbesUsed { get; set; }         // always there
         public int EfficiencyTarget { get; set; }   // always there
-        public long? SystemAddress { get; set; }    // 3.5, augmented by AddStarScan for previous ones
+        public SystemAddress SystemAddress { get; set; }    // 3.5, augmented by AddStarScan for previous ones
         public string StarSystem { get; set; }      // augmented by AddStarScan
 
         // IBodyNameAndID
@@ -286,7 +286,7 @@ namespace EliteDangerousCore.JournalEvents
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             StarSystem = system.Name;
-            if (SystemAddress == null)
+            if (SystemAddress.IsNotValid)
                 SystemAddress = system.SystemAddress;
             s.AddSAAScanComplete(this, system);
         }
@@ -318,7 +318,7 @@ namespace EliteDangerousCore.JournalEvents
 
             BodyType = BodyDefinitions.IsBodyNameARing(BodyName) ? BodyDefinitions.BodyType.PlanetaryRing : BodyDefinitions.BodyType.Planet;
 
-            SystemAddress = evt["SystemAddress"].Long();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             BodyID = evt["BodyID"].Int();
             Signals = evt["Signals"].ToObjectQ<List<SAASignal>>();
             if (Signals != null)
@@ -341,7 +341,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         [PropertyNameAttribute("Frontier system address")]
-        public long? SystemAddress { get; set; }                // always set
+        public SystemAddress SystemAddress { get; set; }                // always set
         [PropertyNameAttribute("Body name")]
         public string BodyName { get; set; }                    // always set
         [PropertyNameAttribute("Frontier body ID")]
@@ -495,7 +495,7 @@ namespace EliteDangerousCore.JournalEvents
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             StarSystem = system.Name;
-            if (SystemAddress == null)
+            if (SystemAddress.IsNotValid)
                 SystemAddress = system.SystemAddress;
             s.AddSAASignalsFound(this, system);
         }
@@ -519,11 +519,11 @@ namespace EliteDangerousCore.JournalEvents
         public JournalFSSAllBodiesFound(JObject evt) : base(evt, JournalTypeEnum.FSSAllBodiesFound)
         {
             SystemName = evt["SystemName"].Str();
-            SystemAddress = evt["SystemAddress"].Long();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             Count = evt["Count"].Int();
         }
 
-        public long SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
         public string SystemName { get; set; }
         public int Count { get; set; }
 
@@ -541,7 +541,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalFSSBodySignals(JObject evt) : base(evt, JournalTypeEnum.FSSBodySignals)
         {
-            SystemAddress = evt["SystemAddress"].Long();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             BodyName = evt["BodyName"].Str();
             BodyID = evt["BodyID"].Int();
             Signals = evt["Signals"].ToObjectQ<List<SAASignal>>();
@@ -560,7 +560,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Frontier system name")]
         public string StarSystem { get; set; }          // not in JSON, augmented by AddStarScan
         [PropertyNameAttribute("Frontier system address")]
-        public long? SystemAddress { get; set; }        // always set
+        public SystemAddress SystemAddress { get; set; }        // always set
         [PropertyNameAttribute("Body name")]
         public string BodyName { get; set; }            // always set
         [PropertyNameAttribute("Frontier body ID")]
@@ -682,7 +682,8 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         [PropertyNameAttribute("Frontier internal system address")]
-        public long SystemAddress { get; set; }
+        [JsonAlwaysCreate]
+        public SystemAddress SystemAddress { get; set; }
         [PropertyNameAttribute("Internal Frontier ID")]
         public int Body { get; set; }
         [PropertyNameAttribute("Frontier Genus ID")]

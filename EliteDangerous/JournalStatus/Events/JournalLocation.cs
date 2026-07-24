@@ -99,7 +99,7 @@ namespace EliteDangerousCore.JournalEvents
 
         }
 
-        public JournalLocation(DateTime utc, string sysname, long? sysaddr,
+        public JournalLocation(DateTime utc, string sysname, SystemAddress sysaddr,
                                 string bodyname, BodyDefinitions.BodyType bt, int? bodyid,
                                 string stationname = null, string stationnameloc = null, StationDefinitions.StarportTypes fdstationtype = StationDefinitions.StarportTypes.Unknown,
                                 string name = null, string name_loc = null,

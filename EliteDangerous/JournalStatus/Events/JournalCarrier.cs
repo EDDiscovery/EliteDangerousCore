@@ -182,7 +182,7 @@ namespace EliteDangerousCore.JournalEvents
         public CarrierDefinitions.CarrierType CarrierType { get; set; }
         public long BoughtAtMarket { get; set; }        // market id 
         public string Location { get; set; }        // starsystem
-        public long SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
         public long Price { get; set; }
         public string Variant { get; set; }
         public string Callsign { get; set; }
@@ -193,7 +193,7 @@ namespace EliteDangerousCore.JournalEvents
             CarrierType = CarrierDefinitions.ToEnum(evt["CarrierType"].Str());
             BoughtAtMarket = evt["BoughtAtMarket"].Long();
             Location = evt["Location"].Str();
-            SystemAddress = evt["SystemAddress"].Long();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             Price = evt["Price"].Long();
             Variant = evt["Variant"].Str();
             Callsign = evt["Callsign"].Str();
@@ -359,7 +359,7 @@ namespace EliteDangerousCore.JournalEvents
         public long CarrierID { get; set; }
         public CarrierDefinitions.CarrierType CarrierType { get; set; }
         public string SystemName { get; set; }
-        public long SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
         public string Body { get; set; }        // if to system, journal seems to write Body==System Name. Body will always be non null
         public int BodyID { get; set; }         // will be 0 or the body id
 
@@ -371,7 +371,7 @@ namespace EliteDangerousCore.JournalEvents
             CarrierType = CarrierDefinitions.ToEnum(evt["CarrierType"].Str());
             SystemName = evt["SystemName"].Str();
             Body = evt["Body"].Str();
-            SystemAddress = evt["SystemAddress"].Long();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             BodyID = evt["BodyID"].Int();
             if (evt["DepartureTime"]!=null)
                 DepartureTime = evt["DepartureTime"].DateTimeUTC();
@@ -978,7 +978,7 @@ namespace EliteDangerousCore.JournalEvents
         public long CarrierID { get; set; }
         public CarrierDefinitions.CarrierType CarrierType { get; set; }
         public string StarSystem { get; set; }
-        public long SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
         public int BodyID { get; set; }         // will be 0 or the body id
 
         public JournalCarrierLocation(JObject evt) : base(evt, JournalTypeEnum.CarrierLocation)
@@ -986,7 +986,7 @@ namespace EliteDangerousCore.JournalEvents
             CarrierID = evt["CarrierID"].Long();
             CarrierType = CarrierDefinitions.ToEnum(evt["CarrierType"].Str());
             StarSystem = evt["StarSystem"].Str("Unknown");
-            SystemAddress = evt["SystemAddress"].Long();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             BodyID = evt["BodyID"].Int();
         }
 

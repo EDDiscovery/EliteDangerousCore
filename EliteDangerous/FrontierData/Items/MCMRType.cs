@@ -481,7 +481,7 @@ namespace EliteDangerousCore
                     MaterialGroupType mgt = MaterialGroupType.NA;
 
                     Add(cat, it, mgt, (MCMR)fakeid, fdname.Str(), locname ?? fdname.SplitCapsWordFull(), fakeid.ToStringInvariant(), false);
-                    BaseUtils.Debugger.TraceBreak($"*** Unknown Material/Commodity/Microresource: {fdname}, {cat}, {locname} -> {cat}, {it}, {mgt}");
+                    BaseUtils.Debugger.TraceBreak($"*** Unknown Material/Commodity/Microresource: {fdname.Str()}, {cat}, {locname} -> {cat}, {it}, {mgt}");
                     fakeid++;
                 }
 

@@ -34,7 +34,7 @@ namespace EliteDangerousCore.UIEvents
             double health, bool lowh, double gravity, double temp, UITemperature.TempState tempstate, double oxygen, bool lowox,
             string selw, string selwloc, 
             FSDStateType fsd, bool breathableatmosphere,
-            string dname, string dnameloc, int? did, long? dsysaddr,
+            string dname, string dnameloc, int? did, SystemAddress dsysaddr,
             DateTime time, bool refresh) : this(time, refresh)
         {
             UIMode = uim;
@@ -104,7 +104,7 @@ namespace EliteDangerousCore.UIEvents
         public string DestinationName { get; private set; }      // may be null
         public string DestinationName_Localised { get; private set; }      // only if name needs localisation
         public int? DestinationBodyID { get; private set; }      // may be null
-        public long? DestinationSystemAddress { get; private set; } // may be null
+        public SystemAddress DestinationSystemAddress { get; private set; } // may be null
 
         public override string ToString()
         {

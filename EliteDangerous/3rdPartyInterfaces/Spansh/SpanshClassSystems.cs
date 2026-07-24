@@ -160,9 +160,9 @@ namespace EliteDangerousCore.Spansh
                             double yr = sysobj["y"].Double();
                             double zr = sysobj["z"].Double();
                             string name = sysobj["name"].StrNull();
-                            long? sa = sysobj["id64"].LongNull();
+                            var sysaddr = new SystemAddress(sysobj["id64"]);
 
-                            if (name != null && sa != null)     // triage out
+                            if (name != null && sysaddr.IsValid)     // triage out
                             {
                                 EDStar startype = EDStar.Unknown;
 
@@ -186,7 +186,7 @@ namespace EliteDangerousCore.Spansh
                                     }
                                 }
 
-                                SystemClass sy = new SystemClass(name, sa, xr, yr, zr, SystemSource.FromSpansh, startype);
+                                SystemClass sy = new SystemClass(name, sysaddr, xr, yr, zr, SystemSource.FromSpansh, startype);
 
                                 if (sy.Triage())
                                 {

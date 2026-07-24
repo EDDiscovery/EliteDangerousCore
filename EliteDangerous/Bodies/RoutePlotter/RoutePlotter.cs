@@ -33,7 +33,7 @@ namespace EliteDangerousCore
         public SystemCache.SystemsNearestMetric RouteMethod;
         public bool UseFsdBoost;
         public WebExternalDataLookup WebLookup;
-        public HashSet<long> DiscardList;
+        public HashSet<ulong> DiscardList;
 
         public class ReturnInfo
         {

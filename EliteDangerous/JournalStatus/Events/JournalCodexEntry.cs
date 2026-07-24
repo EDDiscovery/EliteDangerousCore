@@ -36,7 +36,7 @@ namespace EliteDangerousCore.JournalEvents
             Region = evt["Region"].Str();
             Region_Localised = evt["Region_Localised"].Str();
             System = evt["System"].Str();
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             BodyID = evt["BodyID"].IntNull();
             IsNewEntry = evt["IsNewEntry"].BoolNull();
             NewTraitsDiscovered = evt["NewTraitsDiscovered"].BoolNull();
@@ -76,7 +76,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("System name")]
         public string System { get; set; }
         [PropertyNameAttribute("FD System address")]
-        public long? SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
         [PropertyNameAttribute("FD Body ID - not on all entries")]
         public int? BodyID { get; set; }
         [PropertyNameAttribute("Is it a new entry")]

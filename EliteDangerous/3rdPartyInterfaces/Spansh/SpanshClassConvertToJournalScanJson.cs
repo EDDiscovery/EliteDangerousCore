@@ -21,7 +21,7 @@ namespace EliteDangerousCore.Spansh
     {
         // convert a spansh scan node to a JournalScan compatible JSON
         // may return null if not liked
-        private static JObject ConvertToJournalScan(JToken so, string sysname, long sysaddr)
+        private static JObject ConvertToJournalScan(JToken so, string sysname, SystemAddress sysaddr)
         {
             bool dump = true;
             try
@@ -36,7 +36,7 @@ namespace EliteDangerousCore.Spansh
 
                 evt["BodyID"] = so[dump ? "bodyId" : "body_id"];
                 evt["StarSystem"] = sysname;
-                evt["SystemAddress"] = sysaddr;
+                evt["SystemAddress"] = sysaddr.Value;
                 evt["DistanceFromArrivalLS"] = so[dump ? "distanceToArrival" : "distance_to_arrival"];
                 evt["WasDiscovered"] = true;        // obv, since spansh has the data
                 evt["WasMapped"] = false;

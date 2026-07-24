@@ -74,13 +74,8 @@ namespace EliteDangerousCore
 
         public int Visits { get; private set; }                                     // set by Historylist, visits up to this point in time
 
-        public long? FullBodyID { get {                                     // only if at a body
-                if (System.SystemAddress.HasValue && Status.HasBodyID)
-                    return System.SystemAddress.Value | ((long)entryStatus.BodyID.Value << 55);
-                else
-                    return null;
-            } }
-
+        public BodySystemAddress FullBodyID => (System.SystemAddress.IsValid && Status.HasBodyID) ? new BodySystemAddress(System.SystemAddress, Status.BodyID.Value) : null;
+           
         public string GetNoteText() { return journalEntry.SNC?.Note ?? ""; }      // get SNC note text or empty string
 
         // These parts are held here so we don't create new Status Entries each time
@@ -274,7 +269,8 @@ namespace EliteDangerousCore
             if (ret == null)
             {
                 JournalEntry.FillInformationData fid = new JournalEntry.FillInformationData()
-                { System = this.System, WhereAmI = this.WhereAmI, BodyName = this.Status.WhereAmI, NextJumpSystemName = this.Status.FSDJumpNextSystemName, NextJumpSystemAddress = this.Status.FSDJumpNextSystemAddress };
+                { System = this.System, WhereAmI = this.WhereAmI, BodyName = this.Status.WhereAmI, NextJumpSystemName = this.Status.FSDJumpNextSystemName, 
+                                    NextJumpSystemAddress = this.Status.FSDJumpNextSystemAddress };
 
                 ret = journalEntry.GetInfo(fid);
             }

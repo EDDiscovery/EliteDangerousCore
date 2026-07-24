@@ -20,9 +20,9 @@ namespace EliteDangerousCore.DB
     public partial class SystemsDB
     {
         // return hashset of edsmid/system id (dep on DB) of permit systems
-        static public HashSet<long> GetPermitSystems()
+        static public HashSet<ulong> GetPermitSystems()
         {
-            HashSet<long> ret = new HashSet<long>();
+            HashSet<ulong> ret = new HashSet<ulong>();
             SystemsDatabase.Instance.DBRead(db =>
             {
                 using (var selectSectorCmd = db.CreateSelect("PermitSystems", "edsmid"))
@@ -31,7 +31,7 @@ namespace EliteDangerousCore.DB
                     {
                         while (reader.Read())
                         {
-                            ret.Add((long)reader[0]);
+                            ret.Add((ulong)reader[0]);
                         }
                     };
                 };

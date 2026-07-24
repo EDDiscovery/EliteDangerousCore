@@ -99,7 +99,7 @@ namespace EliteDangerousCore
 
             if (he.journalEntry is IStarScan ss)
             {
-                (he.journalEntry as IStarScan).AddStarScan(StarScan2, he.System);
+                ss.AddStarScan(StarScan2, he.System);
             }
 
             if ((LastSystem == null || he.System.Name != LastSystem) && he.System.Name != "Unknown")   // if system is not last, we moved somehow (FSD, location, carrier jump), add

@@ -78,12 +78,12 @@ namespace EliteDangerousCore.JournalEvents
         public JournalEDDDestinationSelected(JObject evt) : base(evt, JournalTypeEnum.EDDDestinationSelected)
         {
             Target_BodyID = evt["BodyID"].Int(-1);
-            Target_SystemAddress = evt["SystemAddress"].Long(-1);
+            Target_SystemAddress = new SystemAddress(evt["SystemAddress"]);
             TargetName = evt["TargetName"].Str();
             TargetName_Localised = evt["TargetName_Localised"].StrNull();
         }
 
-        public JournalEDDDestinationSelected(DateTime utc, int cmdrid, long systemaddress, int bodyid, string targetname, string targetname_localised) : base(utc,JournalTypeEnum.EDDDestinationSelected)
+        public JournalEDDDestinationSelected(DateTime utc, int cmdrid, SystemAddress systemaddress, int bodyid, string targetname, string targetname_localised) : base(utc,JournalTypeEnum.EDDDestinationSelected)
         {
             Target_SystemAddress = systemaddress;
             Target_BodyID = bodyid;
@@ -94,11 +94,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public string TargetName { get; set; }          // these are set when UI Destination changes
         public string TargetName_Localised { get; set; }
-        public long Target_SystemAddress { get; set; }
+        public SystemAddress Target_SystemAddress { get; set; }
         public int  Target_BodyID { get; set; }
 
         public string SystemName { get; set; }      // seen in, set by starscan
-        public long? SystemAddress { get; set; }     // seen in, set by starscan
+        public SystemAddress SystemAddress { get; set; }     // seen in, set by starscan
 
         public override string SummaryName(ISystem sys)
         {
@@ -123,7 +123,7 @@ namespace EliteDangerousCore.JournalEvents
                 ["timestamp"] = EventTimeUTC.ToStringZuluInvariant(),
                 ["event"] = EventTypeStr,
                 ["BodyID"] = Target_BodyID,
-                ["SystemAddress"] = Target_SystemAddress,
+                ["SystemAddress"] = Target_SystemAddress.Value,
                 ["TargetName"] = TargetName,
                 ["TargetName_Localised"] = TargetName_Localised,
             };

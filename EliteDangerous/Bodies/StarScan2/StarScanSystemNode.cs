@@ -261,7 +261,7 @@ namespace EliteDangerousCore.StarScan2
         {
             JObject json = new JObject();
             json["System"] = System.Name;
-            if (System.SystemAddress != null)
+            if (System.SystemAddress.IsValid)
             {
                 json["Address"] = System.SystemAddress.Value;
             }

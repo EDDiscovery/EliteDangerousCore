@@ -27,14 +27,14 @@ namespace EliteDangerousCore.JournalEvents
         public JournalSupercruiseEntry(JObject evt ) : base(evt, JournalTypeEnum.SupercruiseEntry)
         {
             StarSystem = evt["StarSystem"].Str();
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
             Wanted = evt["Wanted"].BoolNull();
         }
 
         public string StarSystem { get; set; }
-        public long? SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
 
         public bool? Taxi { get; set; }             //4.0 alpha 4
         public bool? Multicrew { get; set; }
@@ -60,7 +60,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalSupercruiseExit(JObject evt) : base(evt, JournalTypeEnum.SupercruiseExit)
         {
             StarSystem = evt["StarSystem"].Str();
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             Body = evt["Body"].Str();
             BodyID = evt["BodyID"].IntNull();
             BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
@@ -73,7 +73,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public JournalSupercruiseExit(DateTime utc, string starSystem, long? systemAddress, string body, BodyDefinitions.BodyType bodyType, int? bodyID,
+        public JournalSupercruiseExit(DateTime utc, string starSystem, SystemAddress systemAddress, string body, BodyDefinitions.BodyType bodyType, int? bodyID,
                             string name, string nameloc, StationDefinitions.StarportTypes fd,
                             bool? taxi, bool? multicrew
             ) : base(utc,JournalTypeEnum.SupercruiseExit,0)
@@ -91,7 +91,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string StarSystem { get; set; }          // always there
-        public long? SystemAddress { get; set; }        // 2018 on, augmented below with AddStarScan
+        public SystemAddress SystemAddress { get; set; }        // 2018 on, augmented below with AddStarScan
         public string Body { get; set; }                // always there
         public int? BodyID { get; set; }                // 2018 on
         public BodyDefinitions.BodyType BodyType { get; set; }      // late 2016
@@ -114,7 +114,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan s, ISystem system)
         {
-            if (SystemAddress == null)
+            if (!SystemAddress.IsValid)
                 SystemAddress = system.SystemAddress;
             s.AddLocation(this, system);
         }

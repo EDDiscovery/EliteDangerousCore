@@ -135,10 +135,10 @@ namespace EliteDangerousCore.DLL
 
                 // v7
                 fsdjumpnextsystemname = he.Status.FSDJumpNextSystemName ?? "",
-                fsdjumpnextsystemaddress = he.Status.FSDJumpNextSystemAddress ?? 0,
-                systemaddress = he.System.SystemAddress ?? 0,
+                fsdjumpnextsystemaddress = (long)(he.Status.FSDJumpNextSystemAddress?.Value ?? 0),
+                systemaddress = (long)(he.System.SystemAddress.Value),
                 marketid = (long)(he.Status.MarketID?.Value ?? 0),
-                fullbodyid = he.FullBodyID ?? 0,
+                fullbodyid = (long)(he.FullBodyID?.Value ?? 0),
                 loan = he.Loan,
                 assets = he.Assets,
                 currentboost = he.Status.CurrentBoost,

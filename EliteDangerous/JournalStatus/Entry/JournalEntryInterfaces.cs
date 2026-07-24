@@ -68,7 +68,7 @@ namespace EliteDangerousCore
         int? BodyID { get; }
         BodyDefinitions.BodyType BodyType { get; }
         string StarSystem { get; }
-        long? SystemAddress { get; }
+        SystemAddress SystemAddress { get; }
         double? Latitude { get; set; }
         double? Longitude { get; set; }
         bool HasLatLong { get; }
@@ -92,7 +92,7 @@ namespace EliteDangerousCore
     {
         bool Docked { get; }
         string StarSystem { get; }
-        long? SystemAddress { get; }
+        SystemAddress SystemAddress { get; }
         string StationName { get; }
         string StationName_Localised { get; }
         StationDefinitions.StarportTypes FDStationType { get; }  // only on later events, else Unknown

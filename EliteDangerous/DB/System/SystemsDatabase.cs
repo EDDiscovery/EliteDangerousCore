@@ -35,11 +35,11 @@ namespace EliteDangerousCore.DB
         public bool HasStarType { get { return DBSource == "SPANSH"; } }
         public bool HasSystemAddresses { get { return DBSource == "SPANSH"; } }
         public bool DBUpdating { get; private set; } = true;                // we are updating the DB (unlikely to be wrong, but maybe due to race condition it may be just before a lock is taken)
-        public HashSet<long> PermitSystems { get; private set; }            // list of permit systems
+        public HashSet<ulong> PermitSystems { get; private set; }            // list of permit systems
 
         public bool IsPermitSystem(ISystem s)
         {
-            return HasSystemAddresses ? PermitSystems.Contains(s.SystemAddress ?? -1) : PermitSystems.Contains(s.EDSMID ?? -1);
+            return HasSystemAddresses ? PermitSystems.Contains(s.SystemAddress.Value) : PermitSystems.Contains((ulong)(s.EDSMID ?? 0));
         }
 
         public static SystemsDatabase Instance
@@ -219,7 +219,7 @@ namespace EliteDangerousCore.DB
                     foreach (var sys in systems)
                     {
                         // so we need coords, and if edsm db, we need an edsm id, or for spansh we need a system address 
-                        if (sys.HasCoordinate && ((!spansh && sys.EDSMID.HasValue) || (spansh && sys.SystemAddress.HasValue)))
+                        if (sys.HasCoordinate && ((!spansh && sys.EDSMID.HasValue) || (spansh && sys.SystemAddress.IsValid)))
                         {
                             JObject jo = new JObject
                             {

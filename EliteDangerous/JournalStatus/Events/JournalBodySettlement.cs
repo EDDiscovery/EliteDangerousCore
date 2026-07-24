@@ -23,7 +23,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalApproachBody(JObject evt) : base(evt, JournalTypeEnum.ApproachBody)
         {
             StarSystem = evt["StarSystem"].StrNull();
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             Body = evt["Body"].Str();
             BodyID = evt["BodyID"].Int();
         }
@@ -35,7 +35,7 @@ namespace EliteDangerousCore.JournalEvents
         // IBodyNameAndID
 
         public string StarSystem { get; set; }          // very early ones missed this, augmented by AddStarScan
-        public long? SystemAddress { get; set; }        // always been there
+        public SystemAddress SystemAddress { get; set; }        // always been there
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
         public string BodyName => Body;
         int? IBodyFeature.BodyID => BodyID;
@@ -63,7 +63,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (StarSystem == null)
                 StarSystem = system.Name;
-            if (SystemAddress == null)
+            if (SystemAddress.IsNotValid)
                 SystemAddress = system.SystemAddress;
             s.AddLocation(this, system);
         }
@@ -75,7 +75,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalLeaveBody(JObject evt) : base(evt, JournalTypeEnum.LeaveBody)
         {
             StarSystem = evt["StarSystem"].Str();
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             Body = evt["Body"].Str();
             BodyID = evt["BodyID"].Int();
         }
@@ -85,7 +85,7 @@ namespace EliteDangerousCore.JournalEvents
 
         // IBodyNameAndID
         public string StarSystem { get; set; }      // always been there
-        public long? SystemAddress { get; set; }// always been there
+        public SystemAddress SystemAddress { get; set; }// always been there
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
         public string BodyName => Body;
         int? IBodyFeature.BodyID => BodyID;
@@ -126,7 +126,7 @@ namespace EliteDangerousCore.JournalEvents
             MarketID = new MarketID(evt["MarketID"]);
             Latitude = evt["Latitude"].DoubleNull();
             Longitude = evt["Longitude"].DoubleNull();
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             BodyID = evt["BodyID"].IntNull();
             BodyName = evt["BodyName"].StrNull();
 
@@ -160,7 +160,7 @@ namespace EliteDangerousCore.JournalEvents
         public double? Longitude { get; set; }
         public bool HasLatLong { get { return Latitude.HasValue && Longitude.HasValue; } }
         public string StarSystem { get; set; }      // augmented by AddStarScan below
-        public long? SystemAddress { get; set; }    // from event, may be null, 2019, augmented by AddStarScan below
+        public SystemAddress SystemAddress { get; set; }    // from event, may be null, 2019, augmented by AddStarScan below
         public int? BodyID { get; set; }            // from event, may be null as 2016 ones did not have it in. 2019 it came in
         public string BodyName { get; set; }        // from event, may be null
         public BodyDefinitions.BodyType BodyType => BodyDefinitions.BodyType.Planet;
@@ -216,7 +216,7 @@ namespace EliteDangerousCore.JournalEvents
         public void AddStarScan(StarScan s, ISystem system)
         {
             StarSystem = system.Name;
-            if (SystemAddress == null)
+            if (SystemAddress.IsNotValid)
                 SystemAddress = system.SystemAddress;
             s.AddApproachSettlement(this, system);
         }

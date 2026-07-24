@@ -145,7 +145,7 @@ namespace EliteDangerousCore
         // non null when in jump sequence
         public JournalStartJump JumpSequence { get; private set; }  // MAY BE NULL
         public string FSDJumpNextSystemName => JumpSequence?.StarSystem;
-        public long? FSDJumpNextSystemAddress => JumpSequence?.SystemAddress;
+        public SystemAddress FSDJumpNextSystemAddress => JumpSequence?.SystemAddress;
         public bool FSDJumpSequence => JumpSequence != null;    // true from startjump until location/fsdjump
 
         // non null when booked a taxi or dropship, up to embark, then null

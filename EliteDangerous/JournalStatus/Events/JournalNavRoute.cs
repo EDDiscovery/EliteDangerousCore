@@ -37,38 +37,37 @@ namespace EliteDangerousCore.JournalEvents
 
                 foreach (JObject jo in route)
                 {
-                    var starsys = jo["StarSystem"];         // beta: address, 3.7 : StarSystem 
-                    var sysaddr = jo["SystemAddress"];      // beta: not present, 3.7 address
                     var starpos = new EMK.LightGeometry.Vector3(
                         jo["StarPos"][0].Float(),
                         jo["StarPos"][1].Float(),
                         jo["StarPos"][2].Float()
                     );
                     var starclass = jo["StarClass"].Str();
+                    var sedsc = Stars.ToEnum(starclass);
 
-                    if (sysaddr == null)                    // if no SystemAddress, its beta
+                    if (jo.Contains("SystemAddress"))
                     {
-                        routeents.Add(new NavRouteEntry
-                        {
-                            SystemAddress = starsys.Long(), // yes the beta had it in there
-                            StarPos = starpos,
-                            StarClass = starclass
-                        });
-                    }
-                    else
-                    {
-                        var sedsc = Stars.ToEnum(starclass);
-
                         routeents.Add(new NavRouteEntry     // 3.7 will have this
                         {
-                            StarSystem = starsys.Str(),
-                            SystemAddress = sysaddr.Long(),
+                            StarSystem = jo["StarSystem"].Str(),
+                            SystemAddress = new SystemAddress(jo["SystemAddress"]),
                             StarPos = starpos,
                             StarClass = starclass,
                             EDStarClass = sedsc
-                        }) ;
+                        });
 
-                        SystemClass s = new SystemClass(routeents.Last().StarSystem, sysaddr.Long(), starpos.X, starpos.Y, starpos.Z, SystemSource.FromJournal, sedsc);
+                    }
+                    else
+                    {
+                        var nr = new NavRouteEntry
+                        {
+                            SystemAddress = new SystemAddress(jo["StarSystem"]), // yes the beta had it in there
+                            StarPos = starpos,
+                            StarClass = starclass
+                        };
+                        routeents.Add(nr);
+
+                        SystemClass s = new SystemClass(routeents.Last().StarSystem, nr.SystemAddress, starpos.X, starpos.Y, starpos.Z, SystemSource.FromJournal, sedsc);
                         SystemCache.AddSystemToCache(s);     // inform cache of this known system
                     }
                 }
@@ -114,7 +113,7 @@ namespace EliteDangerousCore.JournalEvents
                 for (int i = 1; i < Route.Length; i++)
                 {
                     var r = Route[i];
-                    string n = r.StarSystem ?? r.SystemAddress.ToStringInvariant();     // star system has been seen to be empty
+                    string n = r.StarSystem ?? r.SystemAddress.ToString();     // star system has been seen to be empty
 
                     if (i == 1)         // first one, just the system, no append
                     {
@@ -153,7 +152,7 @@ namespace EliteDangerousCore.JournalEvents
                 for (int i = 1; i < Route.Length; i++)
                 {
                     var r = Route[i];
-                    string n = r.StarSystem ?? r.SystemAddress.ToStringInvariant();     // star system has been seen to be empty
+                    string n = r.StarSystem ?? r.SystemAddress.ToString();     // star system has been seen to be empty
                     sb.AppendPrePad(n + " @ " + r.StarPos.X.ToString("N1") + "," + r.StarPos.Y.ToString("N1") + "," + r.StarPos.Z.ToString("N1") + " " + r.StarClass, System.Environment.NewLine);
                 }
                 return sb.ToString();
@@ -191,7 +190,7 @@ namespace EliteDangerousCore.JournalEvents
         public class NavRouteEntry
         {
             public string StarSystem { get; set; }
-            public long SystemAddress { get; set; }
+            public SystemAddress SystemAddress { get; set; }
             public EMK.LightGeometry.Vector3 StarPos { get; set; }
             public string StarClass { get; set; }
             public EDStar EDStarClass { get; set; }

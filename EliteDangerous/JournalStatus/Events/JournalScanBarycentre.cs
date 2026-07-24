@@ -26,7 +26,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalScanBaryCentre(JObject evt) : base(evt, JournalTypeEnum.ScanBaryCentre)
         {
             StarSystem = evt["StarSystem"].Str();
-            SystemAddress = evt["SystemAddress"].Long();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             BodyID = evt["BodyID"].Int();                               // ALL
             SemiMajorAxis = evt["SemiMajorAxis"].Double();   
             Eccentricity = evt["Eccentricity"].Double();
@@ -41,7 +41,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Barycentre system")]
         public string StarSystem { get; private set; }
         [PropertyNameAttribute("Frontier system address")]
-        public long SystemAddress { get; private set; }
+        public SystemAddress SystemAddress { get; private set; }
         [PropertyNameAttribute("Frontier body ID")]
         public int BodyID { get; private set; }
 

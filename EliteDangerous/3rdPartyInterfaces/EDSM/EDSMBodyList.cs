@@ -109,8 +109,8 @@ namespace EliteDangerousCore.EDSM
 
                         EDSMClass edsm = new EDSMClass();
 
-                        if (sys.SystemAddress != null && sys.SystemAddress > 0)
-                            jobj = edsm.GetBodiesByID64(sys.SystemAddress.Value);
+                        if (sys.SystemAddress.IsValid)
+                            jobj = edsm.GetBodiesByID64(sys.SystemAddress);
                         else if (sys.Name != null)
                             jobj = edsm.GetBodies(sys.Name);
 
@@ -121,7 +121,7 @@ namespace EliteDangerousCore.EDSM
                             //BaseUtils.FileHelpers.TryWriteToFile(@"c:\code\edsmbodies.json", jobj?.ToString(true));
 
                             // make sure we have a sys from the results not the system we came in with as it may lack data
-                            sys = new SystemClass(jobj["name"].Str(), jobj["id64"].Long(), SystemSource.FromEDSM);
+                            sys = new SystemClass(jobj["name"].Str(), new SystemAddress(jobj["id64"].ULong()), SystemSource.FromEDSM);
                         }
                         else
                             jobj = null;           // ensure null at this point
@@ -161,8 +161,8 @@ namespace EliteDangerousCore.EDSM
                         var cdata = new BodiesResults(sys, bodies);
                         if (sys.Name.HasChars())
                             BodyCache[sys.Name.ToLowerInvariant()] = cdata;
-                        if (sys.SystemAddress.HasValue)
-                            BodyCache[sys.SystemAddress.Value.ToStringInvariant()] = cdata;
+                        if (sys.SystemAddress.IsValid)
+                            BodyCache[sys.SystemAddress.ToString()] = cdata;
 
                         System.Diagnostics.Debug.WriteLine($"EDSM Lookup complete {sys.Name} {sys.SystemAddress} {bodies.Count} cache {fromcache}");
                         return cdata;
@@ -172,8 +172,8 @@ namespace EliteDangerousCore.EDSM
                         //System.Diagnostics.Debug.WriteLine($"EDSM Web Lookup complete no info {sys.Name}");
                         if (sys.Name.HasChars())
                             BodyCache[sys.Name.ToLowerInvariant()] = null;
-                        if (sys.SystemAddress.HasValue)
-                            BodyCache[sys.SystemAddress.Value.ToStringInvariant()] = null;
+                        if (sys.SystemAddress.IsValid)
+                            BodyCache[sys.SystemAddress.ToString()] = null;
                     }
                 }
             }
@@ -186,7 +186,7 @@ namespace EliteDangerousCore.EDSM
         }
 
         // Verified Nov 20,  by scan panel
-        private static JObject ConvertFromEDSMBodies(JObject jo, long? sysaddr)        // protect yourself against bad JSON
+        private static JObject ConvertFromEDSMBodies(JObject jo, SystemAddress sysaddr)        // protect yourself against bad JSON
         {
             //System.Diagnostics.Debug.WriteLine($"EDSM Body {jo.ToString(true)}");
             JObject jout = new JObject
@@ -200,7 +200,7 @@ namespace EliteDangerousCore.EDSM
                 ["ScanType"] = "Detailed",
             };
 
-            if (sysaddr != null)
+            if (sysaddr.IsValid)
                 jout["SystemAddress"] = sysaddr.Value;
 
             if (!jo["discovery"].IsNull())       // much more defense around this.. EDSM gives discovery=null back

@@ -637,7 +637,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public class InfluenceTrend
         {
-            public long SystemAddress;
+            public SystemAddress SystemAddress;
             public string Trend;
             public string Influence; // not in very early ones
         }

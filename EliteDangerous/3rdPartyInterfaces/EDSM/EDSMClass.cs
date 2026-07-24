@@ -416,8 +416,8 @@ namespace EliteDangerousCore.EDSM
                             ISystem sc = SystemCache.FindSystemInCacheDB(new SystemClass(name), db);      // find in our DB only.  may be null
                             if (sc != null)     // yes it is
                             {
-                                if (!sc.SystemAddress.HasValue)                                     // fill in any values
-                                    sc.SystemAddress = jo["systemId64"].LongNull();
+                                if (!sc.SystemAddress.IsValid)                                     // fill in any values
+                                    sc.SystemAddress = new SystemAddress(jo["systemId64"]);
                                 if (!sc.EDSMID.HasValue)
                                     sc.EDSMID = jo["systemId"].LongNull();
                             }
@@ -440,7 +440,7 @@ namespace EliteDangerousCore.EDSM
                             if ( found != null )
                             {
                                 JObject jo = systems[i].Item2;
-                                SystemClass sc = new SystemClass(jo["system"].Str(), jo["systemId"].Long(), jo["systemId64"].LongNull(), SystemSource.FromEDSM);
+                                SystemClass sc = new SystemClass(jo["system"].Str(), jo["systemId"].Long(), new SystemAddress(jo["systemId64"]), SystemSource.FromEDSM);
                                 sc.X = found["coords"].I("x").Double(0);
                                 sc.Y = found["coords"].I("y").Double(0);
                                 sc.Z = found["coords"].I("z").Double(0);
@@ -526,7 +526,7 @@ namespace EliteDangerousCore.EDSM
                         JObject coords = s["coords"].Object();
                         if (coords != null)
                         {
-                            SystemClass sys = new SystemClass(s["name"].Str("Unknown"), s["id"].Long(), s["id64"].LongNull(),
+                            SystemClass sys = new SystemClass(s["name"].Str("Unknown"), s["id"].Long(), new SystemAddress(s["id64"]),
                                                             coords["x"].Double(), coords["y"].Double(), coords["z"].Double(), SystemSource.FromEDSM);
                             list.Add(sys);
                         }
@@ -579,7 +579,7 @@ namespace EliteDangerousCore.EDSM
 
                 foreach (JObject sysname in msg)
                 {
-                    SystemClass sys = new SystemClass(sysname["name"].Str("Unknown"), sysname["id"].Long(), sysname["id64"].LongNull(), SystemSource.FromEDSM);
+                    SystemClass sys = new SystemClass(sysname["name"].Str("Unknown"), sysname["id"].Long(), new SystemAddress(sysname["id64"]), SystemSource.FromEDSM);
 
                     if (sys.Name.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -634,7 +634,7 @@ namespace EliteDangerousCore.EDSM
                     {
                         foreach (JObject sysname in msg)
                         {
-                            SystemClass sys = new SystemClass(sysname["name"].Str("Unknown"),sysname["id"].Long(), sysname["id64"].LongNull(), SystemSource.FromEDSM);        // make a system from EDSM
+                            SystemClass sys = new SystemClass(sysname["name"].Str("Unknown"),sysname["id"].Long(), new SystemAddress(sysname["id64"]), SystemSource.FromEDSM);        // make a system from EDSM
                             JObject co = (JObject)sysname["coords"];
                             if (co != null)
                             {
@@ -688,7 +688,7 @@ namespace EliteDangerousCore.EDSM
                     {
                         foreach (JObject sysname in msg)
                         {
-                            SystemClass sys = new SystemClass(sysname["name"].Str("Unknown"), sysname["id"].Long(), sysname["id64"].LongNull(), SystemSource.FromEDSM);   // make a EDSM system
+                            SystemClass sys = new SystemClass(sysname["name"].Str("Unknown"), sysname["id"].Long(), new SystemAddress(sysname["id64"]), SystemSource.FromEDSM);   // make a EDSM system
                             JObject co = (JObject)sysname["coords"];
                             if (co != null)
                             {
@@ -762,9 +762,9 @@ namespace EliteDangerousCore.EDSM
         }
 
         // Verified april 23 with xyz return and edsmid/system 64 return
-        public JObject GetSystemByAddress(long id64)
+        public JObject GetSystemByAddress(SystemAddress id64)
         {
-            string query = "?systemId64=" + id64.ToStringInvariant() + "&showInformation=1&includeHidden=1&showCoordinates=1&&showId=1";
+            string query = "?systemId64=" + id64.ToString() + "&showInformation=1&includeHidden=1&showCoordinates=1&&showId=1";
             var response = RequestGet("api-v1/system" + query);
             if (response.Error)
                 return null;
@@ -814,9 +814,9 @@ namespace EliteDangerousCore.EDSM
             return msg;
         }
 
-        private JObject GetBodiesByID64(long id64)       // Verified Nov 20, null if bad json
+        private JObject GetBodiesByID64(SystemAddress id64)       // Verified Nov 20, null if bad json
         {
-            string query = "bodies?systemId64=" + id64.ToStringInvariant();
+            string query = "bodies?systemId64=" + id64.ToString();
             var response = RequestGet("api-system-v1/" + query);
             if (response.Error)
                 return null;

@@ -28,7 +28,7 @@ namespace EliteDangerousCore.JournalEvents
             Multicrew = evt["Multicrew"].Bool();
             ShipID = evt["ID"].ULongNull();
             StarSystem = evt["StarSystem"].StrNull();
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             Body = evt["Body"].StrNull();
             BodyID = evt["BodyID"].LongNull();
             OnPlanet = evt["OnPlanet"].BoolNull();
@@ -64,7 +64,7 @@ namespace EliteDangerousCore.JournalEvents
         public ulong? ShipID { get; set; }
 
         public string StarSystem { get; set; }      //4.0 alpha 4 on
-        public long? SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
         public string Body { get; set; }
         public long? BodyID { get; set; }
         public bool? OnStation { get; set; }
@@ -109,7 +109,7 @@ namespace EliteDangerousCore.JournalEvents
             Multicrew = evt["Multicrew"].Bool();
             ShipID = evt["ID"].ULongNull();
             StarSystem = evt["StarSystem"].StrNull();
-            SystemAddress = evt["SystemAddress"].LongNull();
+            SystemAddress = new SystemAddress(evt["SystemAddress"]);
             Body = evt["Body"].StrNull();
             BodyID = evt["BodyID"].LongNull();
             OnPlanet = evt["OnPlanet"].BoolNull();
@@ -131,7 +131,7 @@ namespace EliteDangerousCore.JournalEvents
         public ulong? ShipID { get; set; }
 
         public string StarSystem { get; set; }      //4.0 alpha 4 on
-        public long? SystemAddress { get; set; }
+        public SystemAddress SystemAddress { get; set; }
         public string Body { get; set; }
         public long? BodyID { get; set; }
         public bool? OnStation { get; set; }            // note bugs means this is unreliable

@@ -22,7 +22,7 @@ namespace EliteDangerousCore.UIEvents
         {
         }
 
-        public UIDestination(string name, string nameloc, int? body, long? systemaddress, DateTime time, bool refresh) : this(time, refresh)
+        public UIDestination(string name, string nameloc, int? body, SystemAddress systemaddress, DateTime time, bool refresh) : this(time, refresh)
         {
             Name = name; Name_Localised = nameloc;
             BodyID = body;SystemAddress = systemaddress;
@@ -31,7 +31,7 @@ namespace EliteDangerousCore.UIEvents
         public string Name { get; private set; }            // may be null, no destination
         public string Name_Localised { get; private set; }            // may be null, not localised
         public int? BodyID { get; private set; }            // may be null, no destination
-        public long? SystemAddress { get; private set; }        // may be null, no destination
+        public SystemAddress SystemAddress { get; private set; }        // may be null, no destination
         public override string ToString()   
         {
             return $"{Name}: {BodyID}: {SystemAddress}";

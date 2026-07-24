@@ -64,6 +64,7 @@
     <Compile Include="Bodies\StarScan2\StarScanSystemNodeEvents.cs" />
     <Compile Include="Bodies\StarScan2\SystemDisplayPlanetTree.cs" />
     <Compile Include="FrontierData\Enumerations\IEquatable.cs" />
+    <Compile Include="Bodies\Systems\SystemAddress.cs" />
     <Compile Include="FrontierData\Enumerations\MarketID.cs" />
     <Compile Include="FrontierData\Enumerations\Missions.cs" />
     <Compile Include="FrontierData\Enumerations\BodyParents.cs" />
@@ -146,7 +147,6 @@
     <Compile Include="FrontierData\Enumerations\EstimatedValues.cs" />
     <Compile Include="FrontierData\Enumerations\FrontierFolder.cs" />
     <Compile Include="JournalStatus\Events\JournalColonisation.cs" />
-    <Compile Include="JournalStatus\Entry\JournalTest.cs" />
     <Compile Include="JournalStatus\Events\JournalFSDJumpCarrierJump.cs" />
     <Compile Include="JournalStatus\Events\JournalLocOrJump.cs" />
     <Compile Include="JournalStatus\Stats\EngineerCrafting.cs" />
