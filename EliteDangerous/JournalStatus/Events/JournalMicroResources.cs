@@ -33,7 +33,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised { get; set; }              // JSON, All
 
         public ulong OwnerID { get; set; }                      // JSON, ShipLockerMaterials          CollectItems, DropItems
-        public ulong MissionID { get; set; }                    // JSON, ShipLockerMaterials          DropItems, may be -1, invalid
+        public MissionID MissionID { get; set; }                    // JSON, ShipLockerMaterials          DropItems, may be -1, invalid
 
         public int Count { get; set; }                          // JSON, ShipLockerMaterials, BuyMicroResource, SellMicroResource, TradeMicroResources
 

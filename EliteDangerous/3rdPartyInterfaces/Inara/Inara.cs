@@ -458,7 +458,7 @@ namespace EliteDangerousCore.Inara
         {
             JObject eventData = new JObject();
             eventData["missionName"] = mission.FDName.Str();
-            eventData["missionGameID"] = mission.MissionId;
+            eventData["missionGameID"] = mission.MissionID.Value;
             eventData["missionExpiry"] = mission.Expiry.ToStringZuluInvariant();
 
             if (mission.Influence.HasChars())
@@ -506,17 +506,17 @@ namespace EliteDangerousCore.Inara
             return Event("addCommanderMission", dt, eventData);
         }
 
-        static public JToken setCommanderMissionAbandoned(ulong id, DateTime dt)
+        static public JToken setCommanderMissionAbandoned(MissionID id, DateTime dt)
         {
             JObject eventData = new JObject();
-            eventData["missionGameID"] = id;
+            eventData["missionGameID"] = id.Value;
             return Event("setCommanderMissionAbandoned", dt, eventData);
         }
 
         static public JToken setCommanderMissionCompleted(JournalMissionCompleted mission)
         {
             JObject eventData = new JObject();
-            eventData["missionGameID"] = mission.MissionId;
+            eventData["missionGameID"] = mission.MissionID.Value;
 
             if (mission.Donation != null)
                 eventData["donationCredits"] = mission.Donation.Value;
@@ -580,10 +580,10 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderMissionCompleted", mission.EventTimeUTC, eventData);
         }
 
-        static public JToken setCommanderMissionFailed(ulong id, DateTime dt)
+        static public JToken setCommanderMissionFailed(MissionID id, DateTime dt)
         {
             JObject eventData = new JObject();
-            eventData["missionGameID"] = id;
+            eventData["missionGameID"] = id.Value;
             return Event("setCommanderMissionFailed", dt, eventData);
         }
 

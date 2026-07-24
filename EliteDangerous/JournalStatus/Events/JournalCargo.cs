@@ -31,7 +31,8 @@ namespace EliteDangerousCore.JournalEvents
             public string FriendlyName { get; set; }            
             public int Count { get; set; }
             public int Stolen { get; set; }
-            public ulong? MissionID { get; set; }             // if applicable
+            [JsonAlwaysCreate]
+            public MissionID MissionID { get; set; }             // if applicable, may be invalid
 
             public void Normalise(JournalEntry ev)
             {
@@ -132,7 +133,7 @@ namespace EliteDangerousCore.JournalEvents
                     if (c.Stolen > 0)
                         stolen = c.Stolen;
                     sb.AppendCR();
-                    sb.Build("", c.FriendlyName, "<: "+ "; items".Tx(), c.Count, "(;)", stolen, "<; (Mission Cargo)".Tx(), c.MissionID != null);
+                    sb.Build("", c.FriendlyName, "<: "+ "; items".Tx(), c.Count, "(;)", stolen, "<; (Mission Cargo)".Tx(), c.MissionID.IsValid);
                 }
                 return sb.ToString();
             }
@@ -166,7 +167,7 @@ namespace EliteDangerousCore.JournalEvents
             Count = evt["Count"].Int();
             Abandoned = evt["Abandoned"].Bool();
             PowerplayOrigin = evt["PowerplayOrigin"].Str();
-            MissionID = evt["MissionID"].ULongNull();
+            MissionID = new MissionID(evt["MissionID"]);
         }
 
         public FDName Type { get; set; }                    // FDName
@@ -176,7 +177,7 @@ namespace EliteDangerousCore.JournalEvents
         public int Count { get; set; }
         public bool Abandoned { get; set; }
         public string PowerplayOrigin { get; set; }
-        public ulong? MissionID { get; set; }             // if applicable
+        public MissionID MissionID { get; set; }             // always made, may be invalid
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
@@ -186,7 +187,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("", Type_Localised, "Count".Tx()+": ", Count,
-                            "<; (Mission Cargo)".Tx(), MissionID != null,
+                            "<; (Mission Cargo)".Tx(), MissionID.IsValid,
                             ";Abandoned".Tx(), Abandoned, "PowerPlay".Tx()+": ", PowerplayOrigin);
         }
     }
@@ -196,7 +197,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalCargoDepot(JObject evt) : base(evt, JournalTypeEnum.CargoDepot)
         {
-            MissionId = evt["MissionID"].ULong();
+            MissionID = new MissionID(evt["MissionID"]);
             UpdateType = evt["UpdateType"].Str();        // must be FD name
             System.Enum.TryParse<UpdateTypeEnum>(UpdateType, out UpdateTypeEnum u);
             UpdateEnum = u;
@@ -217,7 +218,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public enum UpdateTypeEnum { Unknown, Collect, Deliver, WingUpdate }
 
-        public ulong MissionId { get; set; }
+        public MissionID MissionID { get; set; }            // always made, may be invalid
         public string UpdateType { get; set; }
         public UpdateTypeEnum UpdateEnum { get; set; }
 
@@ -276,14 +277,14 @@ namespace EliteDangerousCore.JournalEvents
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
             Stolen = evt["Stolen"].Bool();
-            MissionID = evt["MissionID"].ULongNull();
+            MissionID = new MissionID(evt["MissionID"]);
         }
 
         public FDName Type { get; set; }                    // FDNAME..
         public string FriendlyType { get; set; }            // translated name
         public string Type_Localised { get; set; }            // always set
         public bool Stolen { get; set; }
-        public ulong? MissionID { get; set; }             // if applicable
+        public MissionID MissionID { get; set; }             // if applicable, always made
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool innormalspace) 
         {
@@ -291,7 +292,7 @@ namespace EliteDangerousCore.JournalEvents
         }
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Type_Localised, ";Stolen".Tx(), Stolen, "<; (Mission Cargo)".Tx(), MissionID != null);
+            return BaseUtils.FieldBuilder.Build("", Type_Localised, ";Stolen".Tx(), Stolen, "<; (Mission Cargo)".Tx(), MissionID.IsValid);
         }
     }
 
@@ -302,7 +303,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             public FDName Type { get; set; }
             public string Type_Localised { get; set; }
-            public ulong MissionID { get; set; }            // only on some types of transfers, not in journal doc, found in logs.
+            public MissionID MissionID { get; set; }            // only on some types of transfers, not in journal doc, found in logs.
             public int Count { get; set; }
             public string Direction { get; set; }       // tocarrier , toship, tosrv
         }

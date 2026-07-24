@@ -18,6 +18,7 @@ using QuickJSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -82,7 +83,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public class MissionItem
         {
-            public ulong MissionID { get; set; }
+            [JsonAlwaysCreate]
+            public MissionID MissionID { get; set; }
 
             [JsonAlwaysCreate]
             public FDName Name { get; set; }                 
@@ -136,7 +138,7 @@ namespace EliteDangerousCore.JournalEvents
             Influence = evt["Influence"].Str();
             Reputation = evt["Reputation"].Str();
 
-            MissionId = evt["MissionID"].ULong();
+            MissionID = new MissionID(evt["MissionID"]);
 
             Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out engname, this, true);        // allow null
             FriendlyCommodity = engname;
@@ -158,7 +160,7 @@ namespace EliteDangerousCore.JournalEvents
 
         }
 
-        public ulong MissionId { get; private set; }
+        public MissionID MissionID { get; private set; }
 
         public FDName FDName { get; private set; }                  // original
         public string Name { get; private set; }                    // english
@@ -321,7 +323,7 @@ namespace EliteDangerousCore.JournalEvents
                     Donation = dtk.LongNull();
             }
 
-            MissionId = evt["MissionID"].ULong();
+            MissionID = new MissionID(evt["MissionID"]);
 
             DestinationSystem = evt["DestinationSystem"].Str().Replace("$MISSIONUTIL_MULTIPLE_INNER_SEPARATOR;", ",")
                                                               .Replace("$MISSIONUTIL_MULTIPLE_FINAL_SEPARATOR;", ",");       // multi missions get this strange list;
@@ -395,7 +397,7 @@ namespace EliteDangerousCore.JournalEvents
         public long? Reward { get; set; }
         public long? Donation { get; set; }
         public string[] PermitsAwarded { get; set; }
-        public ulong MissionId { get; set; }
+        public MissionID MissionID { get; set; }
 
         public CommodityRewards[] CommodityReward { get; set; }
         public MaterialRewards[] MaterialsReward { get; set; }
@@ -660,14 +662,14 @@ namespace EliteDangerousCore.JournalEvents
         {
             FDName = FDNameHelpers.NormaliseMissionName(evt["Name"].Str(), out string engname);
             Name = engname;
-            MissionId = evt["MissionID"].ULong();
+            MissionID = new MissionID(evt["MissionID"]);
             Fine = evt["Fine"].LongNull();
         }
 
         public FDName FDName { get; set; }
         public string Name { get; set; }
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
-        public ulong MissionId { get; set; }
+        public MissionID MissionID { get; set; }
         public long? Fine { get; set; }
 
         public override string GetInfo()
@@ -698,7 +700,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             FDName = FDNameHelpers.NormaliseMissionName(evt["Name"].Str(), out string engname);
             Name = LocalisedName = engname;
-            MissionId = evt["MissionID"].ULong();
+            MissionID = new MissionID(evt["MissionID"]);
             NewDestinationStation = evt["NewDestinationStation"].Str();
             OldDestinationStation = evt["OldDestinationStation"].Str();
             NewDestinationSystem = evt["NewDestinationSystem"].Str();
@@ -713,7 +715,7 @@ namespace EliteDangerousCore.JournalEvents
         public string NewDestinationSystem { get; set; }
         public string OldDestinationSystem { get; set; }
 
-        public ulong MissionId { get; set; }
+        public MissionID MissionID { get; set; }
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("Mission name".Tx()+": ", LocalisedName,
@@ -739,14 +741,14 @@ namespace EliteDangerousCore.JournalEvents
         {
             FDName = FDNameHelpers.NormaliseMissionName(evt["Name"].Str(), out string engname);
             Name = engname;
-            MissionId = evt["MissionID"].ULong();
+            MissionID = new MissionID(evt["MissionID"]);
             Fine = evt["Fine"].LongNull();
         }
 
         public FDName FDName { get; set; }
         public string Name { get; set; }
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
-        public ulong MissionId { get; set; }
+        public MissionID MissionID { get; set; }
         public long? Fine { get; set; }
 
 
@@ -760,6 +762,70 @@ namespace EliteDangerousCore.JournalEvents
             mlist.Abandoned(this);
         }
 
+    }
+
+    [JournalEntryType(JournalTypeEnum.Passengers)]
+    public class JournalPassengers : JournalEntry
+    {
+        public class Passengers
+        {
+            [JsonAlwaysCreate]
+            public MissionID MissionID { get; set; }
+            public string Type { get; set; }          // Friendly name, not fdev
+            public enum PassengerType
+            {
+                Tourist, Refugee, Soldier, Explorer, Terrorist, Business, AidWorker, Security, MinorCelebrity, Criminal, Politician,
+                Protester,
+                Medical, HeadOfState, PoliticalPrisoner, Scientist, POW, Unknown
+            };
+            public PassengerType FDType { get; set; }        // FDtype
+            public bool VIP { get; set; }
+            public bool Wanted { get; set; }
+            public int Count { get; set; }
+
+            public Passengers()
+            { }
+        }
+
+        public JournalPassengers(JObject evt) : base(evt, JournalTypeEnum.Passengers)
+        {
+            Manifest = evt["Manifest"]?.ToObjectQ<Passengers[]>();
+
+            if (Manifest != null)
+            {
+                foreach (Passengers p in Manifest)
+                {
+                    if (!p.Type.HasChars())
+                        p.Type = "Tourist";     // a few have this missing in typical frontier style, just fill it in
+
+                    p.FDType = Enum.TryParse(p.Type, true, out Passengers.PassengerType s) ? s : Passengers.PassengerType.Unknown;
+                    if (p.FDType == Passengers.PassengerType.Unknown)
+                    {
+                        BaseUtils.Debugger.TraceBreak($"*** Unknown Passenger type {p.Type}");
+                        ;
+                    }
+                    p.Type = p.FDType.ToString().SplitCapsWordFull();
+                }
+            }
+        }
+
+        public Passengers[] Manifest { get; set; }
+
+        public override string GetInfo()
+        {
+            if (Manifest != null && Manifest.Length > 0)
+            {
+                StringBuilder sb = new System.Text.StringBuilder();
+                foreach (Passengers p in Manifest)
+                {
+                    sb.AppendSemiColonS().Build("", p.Type, "< ", p.Count, "; (VIP)", p.VIP, ";(Wanted)".Tx(), p.Wanted);
+                }
+
+                return sb.ToString();
+            }
+            else
+                return "No Passengers".Tx();
+        }
     }
 
 

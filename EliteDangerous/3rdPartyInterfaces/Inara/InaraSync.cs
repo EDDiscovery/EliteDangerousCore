@@ -284,13 +284,13 @@ namespace EliteDangerousCore.Inara
                 case JournalTypeEnum.MissionAbandoned:// VERIFIED 18/5/2018
                     {
                         var je = he.journalEntry as JournalMissionAbandoned;
-                        eventstosend.Add(InaraClass.setCommanderMissionAbandoned(je.MissionId, heutc));
+                        eventstosend.Add(InaraClass.setCommanderMissionAbandoned(je.MissionID, heutc));
                         break;
                     }
                 case JournalTypeEnum.MissionFailed:// VERIFIED 18/5/2018
                     {
                         var je = he.journalEntry as JournalMissionFailed;
-                        eventstosend.Add(InaraClass.setCommanderMissionFailed(je.MissionId, heutc));
+                        eventstosend.Add(InaraClass.setCommanderMissionFailed(je.MissionID, heutc));
                         break;
                     }
 

@@ -39,7 +39,7 @@ namespace EliteDangerousCore
 
         public bool InProgress { get { return (State == StateTypes.InProgress); } }
         public bool InProgressDateTime(DateTime compare) { return InProgress && DateTime.Compare(compare, Mission.Expiry)<0; }
-        public ulong Id { get { return Mission.MissionId; } }                         // id of entry
+        public MissionID Id { get { return Mission.MissionID; } }                         // id of entry
 
         public string DestinationSystemStationSettlement()        // allowing for redirection
         {
@@ -234,7 +234,7 @@ namespace EliteDangerousCore
 
         public void CargoDepot(JournalCargoDepot cd)
         {
-            string key = GetExistingKeyFromID(cd.MissionId);
+            string key = GetExistingKeyFromID(cd.MissionID);
 
             if (key != null)
             {
@@ -437,9 +437,9 @@ namespace EliteDangerousCore
             }
         }
 
-        public string GetExistingKeyFromID(ulong id)       // some only have mission ID, generated after accept. Find on key, may return null
+        public string GetExistingKeyFromID(MissionID id)       // some only have mission ID, generated after accept. Find on key, may return null
         {
-            string frontpart = id.ToStringInvariant() + ":";
+            string frontpart = id.ToString() + ":";
 
             foreach (var kvp in history.GetLast())
             {
@@ -463,12 +463,12 @@ namespace EliteDangerousCore
             return history.Generation;
         }
 
-        public static string Key(JournalMissionFailed m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
-        public static string Key(JournalMissionCompleted m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
-        public static string Key(JournalMissionAccepted m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
-        public static string Key(JournalMissionRedirected m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
-        public static string Key(JournalMissionAbandoned m) { return m.MissionId.ToStringInvariant() + ":" + m.Name; }
-        public static string Key(ulong id, string name) { return id.ToStringInvariant() + ":" + name; }
+        public static string Key(JournalMissionFailed m) { return m.MissionID.ToString() + ":" + m.Name; }
+        public static string Key(JournalMissionCompleted m) { return m.MissionID.ToString() + ":" + m.Name; }
+        public static string Key(JournalMissionAccepted m) { return m.MissionID.ToString() + ":" + m.Name; }
+        public static string Key(JournalMissionRedirected m) { return m.MissionID.ToString() + ":" + m.Name; }
+        public static string Key(JournalMissionAbandoned m) { return m.MissionID.ToString() + ":" + m.Name; }
+        public static string Key(MissionID id, string name) { return id.ToString() + ":" + name; }
 
         private GenerationalDictionary<string, MissionState> history;
     }

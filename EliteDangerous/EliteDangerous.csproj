@@ -83,6 +83,7 @@
     <Compile Include="FrontierData\Enumerations\Carrier.cs" />
     <Compile Include="FrontierData\Enumerations\FDName.cs" />
     <Compile Include="FrontierData\Items\ModuleList.cs" />
+    <Compile Include="FrontierData\Enumerations\MissionID.cs" />
     <Compile Include="History\Ships\ShipModuleDisplay.cs" />
     <Compile Include="JournalStatus\Computers\FactionsStatsComputer.cs" />
     <Compile Include="JournalStatus\Computers\JournalStatsInfo.cs" />
@@ -270,7 +271,6 @@
     <Compile Include="JournalStatus\Events\JournalMining.cs" />
     <Compile Include="JournalStatus\Events\JournalModules.cs" />
     <Compile Include="JournalStatus\Events\JournalPVPKill.cs" />
-    <Compile Include="JournalStatus\Events\JournalPassengers.cs" />
     <Compile Include="JournalStatus\Events\JournalRankProgress.cs" />
     <Compile Include="JournalStatus\Events\JournalRefuel.cs" />
     <Compile Include="JournalStatus\Events\JournalMusic.cs" />
