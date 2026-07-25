@@ -47,7 +47,7 @@ namespace EliteDangerousCore
     {
         FDName ShipFD { get;}
         string ShipType { get;  }       // english friendly name
-        ulong ShipId { get;  }
+        ShipID ShipId { get;  }
     }
 
     public interface IStarScan

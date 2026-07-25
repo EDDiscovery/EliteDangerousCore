@@ -26,7 +26,7 @@ namespace EliteDangerousCore.JournalEvents
             SRV = evt["SRV"].Bool();
             Taxi = evt["Taxi"].Bool();
             Multicrew = evt["Multicrew"].Bool();
-            ShipID = evt["ID"].ULongNull();
+            ShipID = new ShipID(evt["ID"]);
             StarSystem = evt["StarSystem"].StrNull();
             SystemAddress = new SystemAddress(evt["SystemAddress"]);
             Body = evt["Body"].StrNull();
@@ -44,9 +44,9 @@ namespace EliteDangerousCore.JournalEvents
         // called by MakeHistory entry in case a Event needs more info, as this does
         public override void AdjustEntry(ShipList shp)
         {
-            if (ShipID.HasValue)
+            if (ShipID.IsValid)
             {
-                var shipfd = shp.GetSRVOrLanderOrFighter(ShipID.Value)?.ShipFD;
+                var shipfd = shp.GetSRVOrLanderOrFighter(ShipID)?.ShipFD;
                 if (shipfd != null && ItemData.IsLander(shipfd))
                 {
                     SRV = false;
@@ -61,7 +61,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool Multicrew { get; set; }
         public bool Ship { get { return !SRV && !Taxi && !Multicrew; } }
 
-        public ulong? ShipID { get; set; }
+        public ShipID ShipID { get; set; }      // may not be there
 
         public string StarSystem { get; set; }      //4.0 alpha 4 on
         public SystemAddress SystemAddress { get; set; }
@@ -107,7 +107,7 @@ namespace EliteDangerousCore.JournalEvents
             SRV = evt["SRV"].Bool();
             Taxi = evt["Taxi"].Bool();
             Multicrew = evt["Multicrew"].Bool();
-            ShipID = evt["ID"].ULongNull();
+            ShipID = new ShipID(evt["ID"]);
             StarSystem = evt["StarSystem"].StrNull();
             SystemAddress = new SystemAddress(evt["SystemAddress"]);
             Body = evt["Body"].StrNull();
@@ -128,7 +128,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool Multicrew { get; set; }
         public bool Ship { get { return !SRV && !Taxi && !Multicrew; } }
 
-        public ulong? ShipID { get; set; }
+        public ShipID ShipID { get; set; }
 
         public string StarSystem { get; set; }      //4.0 alpha 4 on
         public SystemAddress SystemAddress { get; set; }

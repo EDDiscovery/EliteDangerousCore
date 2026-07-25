@@ -23,7 +23,7 @@ namespace EliteDangerousCore
     public class SuitWeapon
     {
         public DateTime EventTime { get; private set; }
-        public ulong ID { get; private set; }              // its Frontier ID LoadoutID
+        public WeaponID ID { get; private set; }              // its Frontier ID LoadoutID
         public FDName FDName { get; private set; }          
         public string Name_Localised { get; private set; }
         public string FriendlyName { get; private set; }
@@ -32,7 +32,7 @@ namespace EliteDangerousCore
         public int Class { get; private set; }
         public FDName[] WeaponMods { get; private set; }
 
-        public SuitWeapon(DateTime time, ulong id, FDName fdname, string namelocalised, long price, int cls, FDName[] weaponmods, bool sold)
+        public SuitWeapon(DateTime time, WeaponID id, FDName fdname, string namelocalised, long price, int cls, FDName[] weaponmods, bool sold)
         {
             EventTime = time; ID = id;FDName = fdname; Name_Localised = namelocalised; Price = price; Sold = sold; Class = cls; WeaponMods = weaponmods;
             FriendlyName = ItemData.GetWeapon(fdname, Name_Localised)?.Name ?? Name_Localised;
@@ -41,42 +41,45 @@ namespace EliteDangerousCore
 
     public class SuitWeaponList
     {
-        public Dictionary<ulong, SuitWeapon> Weapons(uint gen) { return weapons.Get(gen, x => x.Sold == false && x.FDName.IsValid()); }    // all valid unsold weapons with valid names. fdname=null special entry
+        public Dictionary<WeaponID, SuitWeapon> Weapons(uint gen) { return weapons.Get(gen, x => x.Sold == false && x.FDName.IsValid()); }    // all valid unsold weapons with valid names. fdname=null special entry
 
         public SuitWeaponList()
         {
         }
 
-        public void Buy(DateTime time, ulong id, FDName fdname, string namelocalised, long price, int cls, FDName[] weaponmods)
+        public void Buy(DateTime time, WeaponID id, FDName fdname, string namelocalised, long price, int cls, FDName[] weaponmods)
         {
             weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, weaponmods, false);
         }
 
-        public bool VerifyPresence(DateTime time, ulong id, FDName fdname, string namelocalised, long price, int cls, FDName[] weaponmods)
+        public bool VerifyPresence(DateTime time, WeaponID id, FDName fdname, string namelocalised, long price, int cls, FDName[] weaponmods)
         {
-            var w = weapons.GetLast(id);
+            if (id.IsValid)     // early entries did not have weapon IDs
+            {
+                var w = weapons.GetLast(id);
 
-            if (w == null)
-            {
-                //DebuggerHelpers.DP("SW","Missing weapon {0} {1} {2}", id, fdname.Str(), namelocalised);
-                weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, weaponmods, false);
-                return false;
-            }
-            else 
-            {
-                // if differs in cls, or weapons mods is null but new one isnt, or both are set but different
-                if ( w.Class != cls || (w.WeaponMods == null && weaponmods != null ) || (w.WeaponMods != null && weaponmods != null && !w.WeaponMods.SequenceEqual(weaponmods)))
+                if (w == null)
                 {
-                    //DebuggerHelpers.DP("SW","Update weapon info {0} {1} {2}", id, fdname, namelocalised);
-                    weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, w.Price, cls, weaponmods, false);
+                    //DebuggerHelpers.DP("SW","Missing weapon {0} {1} {2}", id, fdname.Str(), namelocalised);
+                    weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, weaponmods, false);
                     return false;
+                }
+                else
+                {
+                    // if differs in cls, or weapons mods is null but new one isnt, or both are set but different
+                    if (w.Class != cls || (w.WeaponMods == null && weaponmods != null) || (w.WeaponMods != null && weaponmods != null && !w.WeaponMods.SequenceEqual(weaponmods)))
+                    {
+                        //DebuggerHelpers.DP("SW","Update weapon info {0} {1} {2}", id, fdname, namelocalised);
+                        weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, w.Price, cls, weaponmods, false);
+                        return false;
+                    }
                 }
             }
 
             return true;
         }
 
-        public void Sell(DateTime time, ulong id)
+        public void Sell(DateTime time, WeaponID id)
         {
             if (weapons.ContainsKey(id))
             {
@@ -92,7 +95,7 @@ namespace EliteDangerousCore
                 Debugger.DP("SW","Weapons sold a weapon not seen " + id);
         }
 
-        public void Upgrade(DateTime time, ulong id, int cls, FDName[] weaponmods)
+        public void Upgrade(DateTime time, WeaponID id, int cls, FDName[] weaponmods)
         {
             if (weapons.ContainsKey(id))
             {
@@ -133,7 +136,7 @@ namespace EliteDangerousCore
             return weapons.Generation;        // return the generation we are on.
         }
 
-        public GenerationalDictionary<ulong, SuitWeapon> weapons { get; private set; } = new GenerationalDictionary<ulong, SuitWeapon>();
+        public GenerationalDictionary<WeaponID, SuitWeapon> weapons { get; private set; } = new GenerationalDictionary<WeaponID, SuitWeapon>();
 
     }
 }

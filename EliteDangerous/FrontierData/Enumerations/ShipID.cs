@@ -17,12 +17,13 @@ using System;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("SA{ID}")]
-    public class SystemAddress : IEquatable<SystemAddress>, IComparable<SystemAddress>, IEquatable
+
+    [System.Diagnostics.DebuggerDisplay("SID{ID}")]
+    public class ShipID : IEquatable<ShipID>, IComparable<ShipID>, IEquatable
     {
         private ulong ID;
 
-        public SystemAddress(JToken tk)
+        public ShipID(JToken tk)
         {
             if (tk == null)
                 ID = 0;
@@ -35,11 +36,11 @@ namespace EliteDangerousCore
             return new JToken(ID);
         }
 
-        public SystemAddress(ulong mid)
+        public ShipID(ulong mid)
         {
             ID = mid;
         }
-        public SystemAddress()
+        public ShipID()
         {
             ID = 0;
         }
@@ -52,17 +53,17 @@ namespace EliteDangerousCore
                 return ID.ToStringInvariant();
         }
 
-        public bool Equals(SystemAddress other)
+        public bool Equals(ShipID other)
         {
             return other != null ? this.ID == other.ID : false;
         }
 
         public override bool Equals(Object obj)        // other may be null
         {
-            return obj is SystemAddress other ? other.ID == this.ID : false;
+            return obj is ShipID other ? other.ID == this.ID : false;
         }
 
-        public int CompareTo(SystemAddress other)
+        public int CompareTo(ShipID other)
         {
             return this.ID.CompareTo(other.ID);
         }
@@ -72,8 +73,8 @@ namespace EliteDangerousCore
             return ID.GetHashCode();
         }
 
-        public static bool operator ==(SystemAddress left, SystemAddress right) { return left is null && right is null ? true : right is null ? false : left.Equals(right); }
-        public static bool operator !=(SystemAddress left, SystemAddress right) { return left is null && right is null ? false : left is null ? true : !left.Equals(right); }
+        public static bool operator ==(ShipID left, ShipID right) { return left is null && right is null ? true : right is null ? false : left.Equals(right); }
+        public static bool operator !=(ShipID left, ShipID right) { return left is null && right is null ? false : left is null ? true : !left.Equals(right); }
 
         public bool IsValid => ID != 0;
         public bool IsNotValid => ID == 0;
@@ -81,27 +82,4 @@ namespace EliteDangerousCore
     }
 
 
-    /// <summary>
-    /// Body and system address combined.
-    /// </summary>
-    [System.Diagnostics.DebuggerDisplay("BSA{ID}")]
-    public class BodySystemAddress 
-    {
-        private ulong ID;
-
-        public BodySystemAddress(SystemAddress addr, int bodyid)
-        {
-            ID = addr.Value | ((ulong)bodyid) << 55;
-        }
-        public bool IsValid => ID != 0;
-        public bool IsNotValid => ID == 0;
-        public ulong Value => ID;
-        public override string ToString()       // null if not defined
-        {
-            if (ID == 0)
-                return null;
-            else
-                return ID.ToStringInvariant();
-        }
-    }
 }

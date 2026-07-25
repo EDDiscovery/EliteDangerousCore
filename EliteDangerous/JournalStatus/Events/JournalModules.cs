@@ -26,7 +26,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string engname, this);
             ShipType = engname;
-            ShipId = evt["ShipID"].ULong();
+            ShipId = new ShipID(evt["ShipID"]);
             ShipName = evt["ShipName"].Str();
             ShipIdent = evt["ShipIdent"].Str();
             HullValue = evt["HullValue"].LongNull();
@@ -97,7 +97,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string ShipType { get; set; }        // type, pretty name fer-de-lance
         public FDName ShipFD { get; set; }        // type,  fdname
-        public ulong ShipId { get; set; }
+        public ShipID ShipId { get; set; }
         public string ShipName { get; set; } // : user-defined ship name
         public string ShipIdent { get; set; } //   user-defined ship ID string
         public long? HullValue { get; set; }   //3.0
@@ -175,7 +175,7 @@ namespace EliteDangerousCore.JournalEvents
 
             ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out engname, this);
             Ship = engname;
-            ShipId = evt["ShipID"].ULong();
+            ShipId = new ShipID(evt["ShipID"]);
 
             SellItemFD = FDNameHelpers.NormaliseModules(evt["SellItem"].Str(), out engname, this, true);       // allowed null
             if (SellItemFD != null)
@@ -200,7 +200,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Ship { get; set; }
         public FDName ShipFD { get; set; }
-        public ulong ShipId { get; set; }
+        public ShipID ShipId { get; set; }
 
         public string BuyItem { get; set; }                     // english name
         public FDName BuyItemFD { get; set; }
@@ -270,7 +270,7 @@ namespace EliteDangerousCore.JournalEvents
 
             ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname , this);
             Ship = shipname;
-            ShipId = evt["ShipID"].ULong();
+            ShipId = new ShipID(evt["ShipID"]);
         }
 
         public string BuyItem { get; set; }     // english name
@@ -279,7 +279,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Ship { get; set; }
         public FDName ShipFD { get; set; }
-        public ulong ShipId { get; set; }
+        public ShipID ShipId { get; set; }
 
         public MarketID MarketID { get; set; }
         public long BuyPrice { get; set; }
@@ -319,7 +319,7 @@ namespace EliteDangerousCore.JournalEvents
 
             ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
-            ShipId = evt["ShipID"].ULong();
+            ShipId = new ShipID(evt["ShipID"]);
 
             MarketID = new MarketID(evt["MarketID"]);
         }
@@ -332,7 +332,7 @@ namespace EliteDangerousCore.JournalEvents
         public long SellPrice { get; set; }
         public string Ship { get; set; }
         public FDName ShipFD { get; set; }
-        public ulong ShipId { get; set; }
+        public ShipID ShipId { get; set; }
         public MarketID MarketID { get; set; }
 
         public void Ledger(Ledger mcl)
@@ -371,7 +371,7 @@ namespace EliteDangerousCore.JournalEvents
 
             ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
-            ShipId = evt["ShipID"].ULong();
+            ShipId = new ShipID(evt["ShipID"]);
 
             ServerId = evt["ServerId"].Int();
         }
@@ -383,7 +383,7 @@ namespace EliteDangerousCore.JournalEvents
         public long SellPrice { get; set; }
         public FDName ShipFD { get; set; }
         public string Ship { get; set; }
-        public ulong ShipId { get; set; }
+        public ShipID ShipId { get; set; }
         public int ServerId { get; set; }
 
         public void Ledger(Ledger mcl)
@@ -423,7 +423,7 @@ namespace EliteDangerousCore.JournalEvents
 
             ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
-            ShipId = evt["ShipID"].ULong();
+            ShipId = new ShipID(evt["ShipID"]);
 
             // early entries had this bust
             RetrievedItemFD = FDNameHelpers.NormaliseModules(evt["RetrievedItem"].Str(), out string engname, this, true);
@@ -456,7 +456,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Ship { get; set; }            // always there
         public FDName ShipFD { get; set; }
-        public ulong ShipId { get; set; }
+        public ShipID ShipId { get; set; }
 
         public FDName RetrievedItemFD { get; set; }                 // may be null for busted first ones
         public string RetrievedItem { get; set; }                   // english
@@ -524,7 +524,7 @@ namespace EliteDangerousCore.JournalEvents
 
             ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
-            ShipId = evt["ShipID"].ULong();
+            ShipId = new ShipID(evt["ShipID"]);
 
             StoredItemFD = FDNameHelpers.NormaliseModules(evt["StoredItem"].Str(), out string engname, this);
             StoredItem = engname;
@@ -552,7 +552,7 @@ namespace EliteDangerousCore.JournalEvents
         public ShipSlots.Slot SlotFD { get; set; }
         public string Ship { get; set; }
         public FDName ShipFD { get; set; }
-        public ulong ShipId { get; set; }
+        public ShipID ShipId { get; set; }
         public string StoredItem { get; set; }  // english
         public FDName StoredItemFD { get; set; }
         public string StoredItemLocalised { get; set; }
@@ -633,7 +633,7 @@ namespace EliteDangerousCore.JournalEvents
 
             ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
-            ShipId = evt["ShipID"].ULong();
+            ShipId = new ShipID(evt["ShipID"]);
 
             MarketID = new MarketID(evt["MarketID"]);
         }
@@ -652,7 +652,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Ship { get; set; }
         public FDName ShipFD { get; set; }
-        public ulong ShipId { get; set; }
+        public ShipID ShipId { get; set; }
         public MarketID MarketID { get; set; }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -819,7 +819,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
-            ShipId = evt["ShipID"].ULong();
+            ShipId = new ShipID(evt["ShipID"]);
 
             ModuleItems = evt["Items"]?.ToObjectQ<ModuleItem[]>();
             MarketID = new MarketID(evt["MarketID"]);
@@ -838,7 +838,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Ship { get; set; }
         public FDName ShipFD { get; set; }
-        public ulong ShipId { get; set; }
+        public ShipID ShipId { get; set; }
         public MarketID MarketID { get; set; }
 
         public ModuleItem[] ModuleItems { get; set; }
@@ -899,7 +899,7 @@ namespace EliteDangerousCore.JournalEvents
 
             ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
-            ShipId = evt["ShipID"].ULong();
+            ShipId = new ShipID(evt["ShipID"]);
 
             ServerId = evt["ServerId"].Int();
             nTransferTime = evt["TransferTime"].IntNull();
@@ -913,7 +913,7 @@ namespace EliteDangerousCore.JournalEvents
         public long TransferCost { get; set; }
         public FDName ShipFD { get; set; }
         public string Ship { get; set; }
-        public ulong ShipId { get; set; }
+        public ShipID ShipId { get; set; }
         public int ServerId { get; set; }
         public int? nTransferTime { get; set; }
         public string FriendlyTransferTime { get; set; }

@@ -289,15 +289,15 @@ namespace EliteDangerousCore.Inara
             return Event("addCommanderShip", dt, eventData);
         }
 
-        static public JToken delCommanderShip(FDName fdname, ulong id, DateTime dt)
+        static public JToken delCommanderShip(FDName fdname, ShipID id, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname.Str();
-            eventData["shipGameID"] = id;
+            eventData["shipGameID"] = id.Value;
             return Event("delCommanderShip", dt, eventData);
         }
 
-        static public JToken setCommanderShip(FDName fdname, ulong id, DateTime dt,
+        static public JToken setCommanderShip(FDName fdname, ShipID id, DateTime dt,
                                               string username = null, string userid = null, bool? curship = null,
                                               bool? ishot = null,
                                               long? shipHullValue = null, long? shipModulesValue = null, long? shipRebuyCost = null,
@@ -305,7 +305,7 @@ namespace EliteDangerousCore.Inara
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname.Str();
-            eventData["shipGameID"] = id;
+            eventData["shipGameID"] = id.Value;
             if ( username.HasChars())
                 eventData["shipName"] = username;
             if ( userid.HasChars())
@@ -330,14 +330,14 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderShip", dt, eventData);
         }
 
-        static public JToken setCommanderShipLoadout(FDName fdname, ulong id, IEnumerable<ShipModule> list, DateTime dt)
+        static public JToken setCommanderShipLoadout(FDName fdname, ShipID id, IEnumerable<ShipModule> list, DateTime dt)
         {
             if (list.Count() == 0)      // no loadout, nothing to send..
                 return null;
 
             JObject eventData = new JObject();
             eventData["shipType"] = fdname.Str();
-            eventData["shipGameID"] = id;
+            eventData["shipGameID"] = id.Value;
 
             JArray items = new JArray();
             foreach (var x in list)
@@ -398,11 +398,11 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderShipLoadout", dt, eventData);
         }
 
-        static public JToken setCommanderShipTransfer(FDName fdname, ulong id, string starsystem, string station, MarketID marketid, int transfertimesec, DateTime dt)
+        static public JToken setCommanderShipTransfer(FDName fdname, ShipID id, string starsystem, string station, MarketID marketid, int transfertimesec, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname.Str();
-            eventData["shipGameID"] = id;
+            eventData["shipGameID"] = id.Value;
             eventData["starsystemName"] = starsystem;
             eventData["stationName"] = station;
             if (marketid?.HasValue == true)
@@ -412,11 +412,11 @@ namespace EliteDangerousCore.Inara
             return Event("setCommanderShipTransfer", dt, eventData);
         }
 
-        static public JToken addCommanderTravelDock(FDName fdname, ulong id, string starsystem, string station, MarketID marketid, DateTime dt)
+        static public JToken addCommanderTravelDock(FDName fdname, ShipID id, string starsystem, string station, MarketID marketid, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname.Str();
-            eventData["shipGameID"] = id;
+            eventData["shipGameID"] = id.Value;
             eventData["starsystemName"] = starsystem;
             eventData["stationName"] = station;
             if (marketid?.HasValue == true)
@@ -424,21 +424,21 @@ namespace EliteDangerousCore.Inara
             return Event("addCommanderTravelDock", dt, eventData);
         }
 
-        static public JToken addCommanderTravelFSDJump(FDName fdname, ulong id, string starsystem, double distance, DateTime dt)
+        static public JToken addCommanderTravelFSDJump(FDName fdname, ShipID id, string starsystem, double distance, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname.Str();
-            eventData["shipGameID"] = id;
+            eventData["shipGameID"] = id.Value;
             eventData["starsystemName"] = starsystem;
             eventData["jumpDistance"] = distance;
             return Event("addCommanderTravelFSDJump", dt, eventData);
         }
 
-        static public JToken addCommanderTravelCarrierJump(FDName fdname, ulong id, string starsystem, DateTime dt)
+        static public JToken addCommanderTravelCarrierJump(FDName fdname, ShipID id, string starsystem, DateTime dt)
         {
             JObject eventData = new JObject();
             eventData["shipType"] = fdname.Str();
-            eventData["shipGameID"] = id;
+            eventData["shipGameID"] = id.Value;
             eventData["starsystemName"] = starsystem;
             return Event("addCommanderTravelCarrierJump", dt, eventData);
         }

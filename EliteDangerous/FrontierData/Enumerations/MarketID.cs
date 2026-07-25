@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace EliteDangerousCore
-{ 
+{
+    [System.Diagnostics.DebuggerDisplay("MID{ID}")]
     public class MarketID : IEquatable<MarketID>, IComparable<MarketID>, IEquatable
     {
         private ulong ID;

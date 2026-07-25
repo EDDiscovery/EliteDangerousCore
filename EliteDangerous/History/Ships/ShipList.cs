@@ -36,7 +36,7 @@ namespace EliteDangerousCore
         public Ship CurrentShip { get { return HaveCurrentShip ? ships[currentid] : null; } }
 
         // IDs have been repeated, need more than just that
-        private string Key(FDName fdname, ulong i) { return fdname.ToLower() + ":" + i.ToStringInvariant(); }
+        private string Key(FDName fdname, ShipID i) { return fdname.ToLower() + ":" + i.ToString(); }
 
         public Ship GetShipByShortName(string sn)
         {
@@ -58,14 +58,14 @@ namespace EliteDangerousCore
             int index = lst.FindIndex(x => x.ShipFullInfo().IndexOf(sn, StringComparison.InvariantCultureIgnoreCase) != -1);
             return (index >= 0) ? lst[index] : null;
         }
-        public Ship GetShip(ulong id)
+        public Ship GetShip(ShipID id)
         {
             List<Ship> lst = ships.Values.ToList();
             int index = lst.FindIndex(x => x.ID == id);
             return (index >= 0) ? lst[index] : null;
         }
 
-        public Ship GetSRVOrLanderOrFighter(ulong id)       // ID and must be a SRV/Fighter/Lander, and this is because in debug logs we could have a repeat over time of the same ID
+        public Ship GetSRVOrLanderOrFighter(ShipID id)       // ID and must be a SRV/Fighter/Lander, and this is because in debug logs we could have a repeat over time of the same ID
         {
             List<Ship> lst = ships.Values.ToList();
             int index = lst.FindIndex(x => x.ID == id && ItemData.IsSRVOrFighterOrLander(x.ShipFD));
@@ -82,7 +82,7 @@ namespace EliteDangerousCore
             currentid = null;
         }
 
-        public void Loadout(ulong id, string ship, FDName shipfd, string name, string ident, List<ShipModule> modulelist,
+        public void Loadout(ShipID id, string ship, FDName shipfd, string name, string ident, List<ShipModule> modulelist,
                         long HullValue, long ModulesValue, long Rebuy, double unladenmass, double reservefuelcap, double hullhealth, bool? Hot)
         {
             string sid = Key(shipfd, id);
@@ -168,7 +168,7 @@ namespace EliteDangerousCore
         }
 
 
-        public void LoadGame(ulong id, string ship, FDName shipfd, string name, string ident, double fuellevel, double fueltotal)        // LoadGame..
+        public void LoadGame(ShipID id, string ship, FDName shipfd, string name, string ident, double fuellevel, double fueltotal)        // LoadGame..
         {
             string sid = Key(shipfd, id);
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
@@ -235,7 +235,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void RestockVehicle(ulong id, FDName shipfd, string ship, string Loadout)
+        public void RestockVehicle(ShipID id, FDName shipfd, string ship, string Loadout)
         {
             string sid = Key(shipfd, id);
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
@@ -285,9 +285,9 @@ namespace EliteDangerousCore
 
         public void ShipyardSwap(JournalShipyardSwap e, string station, string system)
         {
-            if (e.StoreShipId.HasValue)    // if we have an old ship ID (old records do not)
+            if (e.StoreShipId?.IsValid == true)    // if we have an old ship ID (old records do not)
             {
-                string oldship = Key(e.StoreOldShipFD, e.StoreShipId.Value);
+                string oldship = Key(e.StoreOldShipFD, e.StoreShipId);
 
                 if (ships.ContainsKey(oldship))
                 {
@@ -316,7 +316,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void ShipyardNew(string ship, FDName shipfd, ulong id)
+        public void ShipyardNew(string ship, FDName shipfd, ShipID id)
         {
             string sid = Key(shipfd, id);
             //DebuggerHelpers.DP("SL",sid + " New");
@@ -327,7 +327,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void Sell(FDName shipfd, ulong id)
+        public void Sell(FDName shipfd, ShipID id)
         {
             string sid = Key(shipfd, id);
             if (ships.ContainsKey(sid))       // if we don't have it, don't worry
@@ -342,7 +342,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void Transfer(string ship, FDName shipFD, ulong id, string fromsystem, string tosystem, string tostation, DateTime arrivaltime)
+        public void Transfer(string ship, FDName shipFD, ShipID id, string fromsystem, string tosystem, string tostation, DateTime arrivaltime)
         {
             string sid = Key(shipFD, id);
             Ship sm = EnsureShip(sid);              // this either gets current ship or makes a new one.
@@ -353,7 +353,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void Store(FDName shipfd, ulong id, string station, string system)
+        public void Store(FDName shipfd, ShipID id, string station, string system)
         {
             string sid = Key(shipfd, id);
             if (ships.ContainsKey(sid))       // if we don't have it, don't worry
@@ -388,7 +388,7 @@ namespace EliteDangerousCore
 
         public void SetUserShipName(JournalSetUserShipName e)
         {
-            string sid = Key(e.ShipFD, e.ShipID);
+            string sid = Key(e.ShipFD, e.ShipId);
 
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
             ships[sid] = sm.SetShipDetails(e.Ship, e.ShipFD, e.ShipName, e.ShipIdent); // will clone if data changed..
@@ -597,13 +597,13 @@ namespace EliteDangerousCore
                     return sm;
                 else
                 {
-                    ships[Key(sm.ShipFD, newsoldid++)] = sm;              // okay, we place this information on back ID list+  all Ids of this will now refer to new entry
+                    ships[Key(sm.ShipFD, new ShipID(newsoldid++))] = sm;              // okay, we place this information on back ID list+  all Ids of this will now refer to new entry
                 }
             }
 
             ulong i = id.Substring(id.IndexOf(":") + 1).InvariantParseULong(0);
             //DebuggerHelpers.DP("SL",$"ShipList made new ship {id}.. {i}");
-            Ship smn = new Ship(i);
+            Ship smn = new Ship(new ShipID(i));
             ships[id] = smn;
             return smn;
         }

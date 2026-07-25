@@ -43,7 +43,7 @@ namespace EliteDangerousCore.JournalEvents
 
 
     [JournalEntryType(JournalTypeEnum.LoadGame)]
-    [System.Diagnostics.DebuggerDisplay("LoadGame {LoadGameCommander} {ShipId} {ShipType} {GameMode} {GameVersion} {Build}")]
+    [System.Diagnostics.DebuggerDisplay("LoadGame {LoadGameCommander} {ShipId.Value} {ShipType} {GameMode} {GameVersion} {Build}")]
     public class JournalLoadGame : JournalEntry, ILedgerJournalEntry, IShipInformation, IShipNaming
     {
         public JournalLoadGame(JObject evt) : base(evt, JournalTypeEnum.LoadGame)
@@ -54,7 +54,7 @@ namespace EliteDangerousCore.JournalEvents
             ShipFD = FDNameHelpers.NormaliseShipOrSuitOrActor(ship, out string engname, this);        // force something, even Unknown
             ShipType = engname;
             Ship_Localised = JournalFieldNaming.CheckLocalisation(evt["Ship_Localised"].Str(), engname);       // may not be present, so use engname
-            ShipId = evt["ShipID"].ULong();
+            ShipId = new ShipID(evt["ShipID"]);
 
             //System.Diagnostics.Debug.WriteLine($"Loadgame `{ShipFD.Str()}` `{ShipType}` `{Ship_Localised}`");
 
@@ -84,7 +84,7 @@ namespace EliteDangerousCore.JournalEvents
         public FDName ShipFD { get; set; }        // type, fd name
         public string ShipType { get; set; }        // friendly name, fer-de-lance, from our db.  Older Load games did not have Localised
         public string Ship_Localised { get; set; }   // localised
-        public ulong ShipId { get; set; }
+        public ShipID ShipId { get; set; }
         public bool StartLanded { get; set; }
         public bool StartDead { get; set; }
         public string GameMode { get; set; }

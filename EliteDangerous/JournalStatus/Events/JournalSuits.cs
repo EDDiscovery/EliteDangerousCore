@@ -24,7 +24,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalBuySuit(JObject evt) : base(evt, JournalTypeEnum.BuySuit)
         {
             // Limit search to this class only using DeclaredOnly.
-            evt.ToObjectProtected(this.GetType(), true, 
+            evt.ToObjectProtected(this.GetType(), true,
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     initialobject: this);        // read fields named in this structure matching JSON names
 
@@ -32,8 +32,8 @@ namespace EliteDangerousCore.JournalEvents
             Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
         }
 
-        public ulong SuitID { get; set; } = ulong.MaxValue;     // may be missing in early ones
-
+        [JsonAlwaysCreate]
+        public SuitID SuitID { get; set; }     // may be missing in early ones
         [JsonAlwaysCreate]
         public FDName Name { get; set; }                // always there, set just in case
         public string FriendlyName { get; set; }
@@ -50,7 +50,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)
         {
-            if (SuitID != ulong.MaxValue)
+            if (SuitID.IsValid)
             {
                 shp.Buy(EventTimeUTC, SuitID, Name, Name_Localised, Price, SuitMods);
             }
@@ -77,13 +77,14 @@ namespace EliteDangerousCore.JournalEvents
             Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
         }
 
-        public JournalSellSuit(DateTime utc, ulong id, FDName fdname, string locname, long price, int cmdrid) : base(utc,JournalTypeEnum.SellSuit)
+        public JournalSellSuit(DateTime utc, SuitID id, FDName fdname, string locname, long price, int cmdrid) : base(utc,JournalTypeEnum.SellSuit)
         {
             SuitID = id; Name = fdname; Name_Localised = locname; price = Price;
             SetCommander(cmdrid);
         }
 
-        public ulong SuitID { get; set; } = ulong.MaxValue;     // may be missing in early ones
+        [JsonAlwaysCreate]
+        public SuitID SuitID { get; set; }      // may be missing in early ones
         [JsonAlwaysCreate]
         public FDName Name { get; set; }            // always there, set just in case
         public string Name_Localised { get; set; }
@@ -94,12 +95,11 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".Tx(), Price);
-            
         }
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)
         {
-            if (SuitID != ulong.MaxValue)
+            if (SuitID.IsValid)
             {
                 shp.Sell(EventTimeUTC, SuitID);
             }
@@ -112,7 +112,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
-            if (SuitID != ulong.MaxValue)
+            if (SuitID.IsValid)
             {
                 shp.DeleteLoadouts(EventTimeUTC, SuitID);   // all loadouts for this suit deleted
             }
@@ -123,7 +123,7 @@ namespace EliteDangerousCore.JournalEvents
             JObject evt = new JObject();
             evt["timestamp"] = EventTimeUTC;
             evt["event"] = EventTypeStr;
-            evt["SuitID"] = SuitID;
+            evt["SuitID"] = SuitID.Value;
             evt["Name"] = Name.Str();
             evt["Name_Localised"] = Name_Localised;
             evt["Price"] = Price;
@@ -149,10 +149,13 @@ namespace EliteDangerousCore.JournalEvents
             }
             SuitLoadout.NormaliseModules(Modules);
         }
-        public ulong LoadoutID { get; set; }
+
+        [JsonAlwaysCreate]
+        public LoadoutID LoadoutID { get; set; }
         public string LoadoutName { get; set; }
 
-        public ulong SuitID { get; set; } = ulong.MaxValue;     // indicating missing, early records had it missing
+        [JsonAlwaysCreate]
+        public SuitID SuitID { get; set; }      // indicating missing, early records had it missing
         public FDName SuitName { get; set; }                    // may be null for early records
         public string SuitFriendlyName { get; set; }            // may be null for early records
         public string SuitName_Localised { get; set; }          // may be null for early records
@@ -168,7 +171,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)      // executed first
         {
-            if (SuitID != ulong.MaxValue)
+            if (SuitID.IsValid)
             {
                 shp.VerifyPresence(EventTimeUTC, SuitID, SuitName, SuitName_Localised, 0, SuitMods);
             }
@@ -184,7 +187,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
-            if (SuitID != ulong.MaxValue)
+            if (SuitID.IsValid)
             {
                 shp.CreateLoadout(EventTimeUTC, LoadoutID, LoadoutName, SuitID, Modules);
             }
@@ -197,7 +200,6 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSuitLoadout(JObject evt) : base(evt, JournalTypeEnum.SuitLoadout)
         {
-            SuitID = ulong.MaxValue;
             // Limit search to this class only using DeclaredOnly.
             evt.ToObjectProtected(this.GetType(), true, 
                 membersearchflags:System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
@@ -208,10 +210,12 @@ namespace EliteDangerousCore.JournalEvents
             SuitLoadout.NormaliseModules(Modules);
         }
 
-        public ulong LoadoutID { get; set; }
+        [JsonAlwaysCreate]
+        public LoadoutID LoadoutID { get; set; }
         public string LoadoutName { get; set; }
 
-        public ulong SuitID { get; set; } = ulong.MaxValue;     // indicating missing, early records had it missing
+        [JsonAlwaysCreate]
+        public SuitID SuitID { get; set; }      // indicating missing, early records had it missing
         [JsonAlwaysCreate]
         public FDName SuitName { get; set; }                    // always there
         public string SuitName_Localised { get; set; }
@@ -223,13 +227,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID % 10000, "", SuitFriendlyName, "< ==> ", LoadoutName);
+            return BaseUtils.FieldBuilder.Build("", SuitID.Value % 10000, "", LoadoutID.Value % 10000, "", SuitFriendlyName, "< ==> ", LoadoutName);
             
         }
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)      // executed first
         {
-            if (SuitID != ulong.MaxValue)
+            if (SuitID.IsValid)
             {
                 shp.VerifyPresence(EventTimeUTC, SuitID, SuitName, SuitName_Localised, 0, SuitMods);
             }
@@ -245,7 +249,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
-            if (SuitID != ulong.MaxValue)
+            if (SuitID.IsValid)
             {
                 shp.VerifyPresence(EventTimeUTC, LoadoutID, LoadoutName, SuitID, Modules);
             }
@@ -269,10 +273,13 @@ namespace EliteDangerousCore.JournalEvents
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
             }
         }
-        public ulong LoadoutID { get; set; }
+
+        [JsonAlwaysCreate]
+        public LoadoutID LoadoutID { get; set; }
         public string LoadoutName { get; set; }
 
-        public ulong SuitID { get; set; } = ulong.MaxValue;     // indicating missing, early records had it missing
+        [JsonAlwaysCreate]
+        public SuitID SuitID { get; set; }           // indicating missing, early records had it missing
         public FDName SuitName { get; set; }                    // may be null for early records
         public string SuitFriendlyName { get; set; }            // may be null for early records
         public string SuitName_Localised { get; set; }          // may be null for early records
@@ -284,7 +291,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
-            if (SuitID != ulong.MaxValue)
+            if (SuitID.IsValid)
             {
                 shp.DeleteLoadout(EventTimeUTC, LoadoutID);
             }
@@ -315,12 +322,14 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public ulong LoadoutID { get; set; }
+        [JsonAlwaysCreate]
+        public LoadoutID LoadoutID { get; set; }
         public string LoadoutName { get; set; }
         public SuitLoadout.SuitSlot SlotName { get; set; }
         public string SlotFriendlyName { get; set; }
 
-        public ulong SuitID { get; set; } = ulong.MaxValue;     // indicating missing, early records had it missing 
+        [JsonAlwaysCreate]
+        public SuitID SuitID { get; set; } // indicating missing, early records had it missing 
         public FDName SuitName { get; set; }                    // may be null, missing in v.early ones, 
         public string SuitFriendlyName { get; set; }            // may be null, missing in v.early ones, 
         public string SuitName_Localised { get; set; }          // may be null, missing in v.early ones, 
@@ -331,18 +340,18 @@ namespace EliteDangerousCore.JournalEvents
 
         public int Class { get; set; }                          // may not be there
         public FDName[] WeaponMods { get; set; }                // fdname, may be null or empty
-        public ulong SuitModuleID { get; set; }                 // aka weapon ID
+        public WeaponID SuitModuleID { get; set; }                 // aka weapon ID
 
         public override string GetInfo()
         {
             string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x=>x.Str()).ToArray()) : null;
-            return BaseUtils.FieldBuilder.Build("", SuitID % 10000, "", LoadoutID%10000, "", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< ++> ", ModuleNameFriendly, "Class".Tx()+": ", Class, "Mods".Tx()+": ", wmod);
+            return BaseUtils.FieldBuilder.Build("", SuitID.Value % 10000, "", LoadoutID.Value %10000, "", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< ++> ", ModuleNameFriendly, "Class".Tx()+": ", Class, "Mods".Tx()+": ", wmod);
             
         }
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)      // executed first
         {
-            if (SuitID != ulong.MaxValue && SuitName != null)
+            if (SuitID.IsValid && SuitName != null)
             {
                 shp.VerifyPresence(EventTimeUTC, SuitID, SuitName, SuitName_Localised, 0, new FDName[] { });
             }
@@ -350,7 +359,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void WeaponInformation(SuitWeaponList shp, string whereami, ISystem system)      // executed second
         {
-            if (SuitID != ulong.MaxValue && SuitName != null)
+            if (SuitID.IsValid && SuitName != null)
             {
                 shp.VerifyPresence(EventTimeUTC, SuitModuleID, ModuleName, ModuleName_Localised, 0, Class, WeaponMods);
             }
@@ -358,7 +367,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)   // excuted third
         {
-            if (SuitID != ulong.MaxValue && SuitName != null)
+            if (SuitID.IsValid && SuitName != null)
             {
                 shp.VerifyPresence(EventTimeUTC, LoadoutID, LoadoutName, SuitID, null);
 
@@ -391,13 +400,15 @@ namespace EliteDangerousCore.JournalEvents
             SlotFriendlyName = SuitLoadout.ToEnglish(SlotName);
         }
 
-        public ulong SuitID { get; set; } = ulong.MaxValue;     // always
-        [JsonAlwaysCreate]              
+        [JsonAlwaysCreate]
+        public SuitID SuitID { get; set; } // always
+        [JsonAlwaysCreate]
         public FDName SuitName { get; set; }                    // always
         public string SuitName_Localised { get; set; }          // always
         public string SuitFriendlyName { get; set; }           // always
 
-        public ulong LoadoutID { get; set; }                // always
+        [JsonAlwaysCreate]
+        public LoadoutID LoadoutID { get; set; }                // always
         public string LoadoutName { get; set; }             // always
 
         public SuitLoadout.SuitSlot SlotName { get; set; }        // always
@@ -407,7 +418,7 @@ namespace EliteDangerousCore.JournalEvents
         public string ModuleNameFriendly { get; set; }
         public string ModuleName_Localised { get; set; }
         
-        public ulong SuitModuleID { get; set; }         // aka weapon ID
+        public WeaponID SuitModuleID { get; set; }         // aka weapon ID
 
         public int Class { get; set; }        // may not be there
         public string[] WeaponMods { get; set; }    // fdname, may be null or empty
@@ -420,7 +431,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
-            if (SuitID != ulong.MaxValue)
+            if (SuitID.IsValid)
             {
                 var w = weap.weapons.GetLast(SuitModuleID);
                 if (w != null && w.Sold == false)
@@ -451,13 +462,15 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public ulong SuitID { get; set; } = ulong.MaxValue; // always
+        [JsonAlwaysCreate]
+        public SuitID SuitID { get; set; }                 // always
         [JsonAlwaysCreate]
         public FDName SuitName { get; set; }                // always, ensure
         public string SuitFriendlyName { get; set; }        // always
         public string SuitName_Localised { get; set; }      // always
 
-        public ulong LoadoutID { get; set; }                // always
+        [JsonAlwaysCreate]
+        public LoadoutID LoadoutID { get; set; }                // always
         public string LoadoutName { get; set; }             // always
 
         public override string GetInfo()
@@ -465,10 +478,9 @@ namespace EliteDangerousCore.JournalEvents
             return BaseUtils.FieldBuilder.Build("", SuitFriendlyName, "<: ==> ", LoadoutName);
             
         }
-
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
-            if (SuitID != ulong.MaxValue)
+            if (SuitID.IsValid)
             {
                 shp.VerifyPresence(EventTimeUTC, LoadoutID, LoadoutName, SuitID, null);
                 shp.Rename(LoadoutID, LoadoutName);
@@ -495,10 +507,13 @@ namespace EliteDangerousCore.JournalEvents
 
             SuitLoadout.NormaliseModules(Modules);
         }
-        public ulong LoadoutID { get; set; }                    // always
+
+        [JsonAlwaysCreate]
+        public LoadoutID LoadoutID { get; set; }                    // always
         public string LoadoutName { get; set; }                 // always
 
-        public ulong SuitID { get; set; } = ulong.MaxValue;     // may not be present
+        [JsonAlwaysCreate]
+        public SuitID SuitID { get; set; }          // may not be present
         public FDName SuitName { get; set; }                    // may not be present
         public string SuitName_Localised { get; set; }          // may not be present
         public string SuitFriendlyName { get; set; }            // may not be present
@@ -514,7 +529,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)
         {
-            if (SuitID != ulong.MaxValue && SuitName != null)
+            if (SuitID.IsValid && SuitName != null)
             {
                 shp.VerifyPresence(EventTimeUTC, SuitID, SuitName, SuitName_Localised, 0, SuitMods);
                 shp.SwitchTo(EventTimeUTC, SuitID);
@@ -523,7 +538,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void LoadoutInformation(SuitLoadoutList shp, SuitWeaponList weap, string whereami, ISystem system)
         {
-            if (SuitID != ulong.MaxValue)
+            if (SuitID.IsValid)
             {
                 shp.VerifyPresence(EventTimeUTC, LoadoutID, LoadoutName, SuitID, Modules);
                 shp.SwitchTo(EventTimeUTC, LoadoutID);
@@ -544,7 +559,8 @@ namespace EliteDangerousCore.JournalEvents
             Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
         }
 
-        public ulong SuitID { get; set; } = ulong.MaxValue;     // may not be present
+        [JsonAlwaysCreate]
+        public SuitID SuitID { get; set; }              // may not be present
         [JsonAlwaysCreate]
         public FDName Name { get; set; }                        // always present, ensure
         public string FriendlyName { get; set; }                // always
@@ -558,12 +574,11 @@ namespace EliteDangerousCore.JournalEvents
             long? p = Cost > 0 ? Cost : default(long?);
             string smod = SuitMods != null ? string.Join(", ", SuitMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
             return BaseUtils.FieldBuilder.Build("", Name_Localised, "< => ", Class, "Mods".Tx()+": ", smod, "Cost: ; cr;N0".Tx(), p);
-            
         }
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)
         {
-            if (SuitID != ulong.MaxValue)
+            if (SuitID.IsValid)
             {
                 shp.Upgrade(EventTimeUTC, SuitID, Name, Class, Cost);
             }

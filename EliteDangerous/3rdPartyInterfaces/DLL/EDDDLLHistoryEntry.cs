@@ -126,7 +126,7 @@ namespace EliteDangerousCore.DLL
                 stationfaction = he.Status.StationFaction ?? "Unknown",
                 shiptypefd = he.Status.ShipTypeFD ?? "Unknown",
                 oncrewwithcaptain = he.Status.OnCrewWithCaptain ?? "",
-                shipid = he.Status.ShipID,
+                shipid = he.Status.ShipID?.Value ?? ulong.MaxValue,
                 bodyid = he.Status.BodyID ?? -1,
 
                 //v6

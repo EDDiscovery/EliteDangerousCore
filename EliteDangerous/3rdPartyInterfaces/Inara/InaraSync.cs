@@ -162,10 +162,10 @@ namespace EliteDangerousCore.Inara
                     {
                         var je = he.journalEntry as JournalShipyardBuy;
 
-                        if (je.StoreOldShipFD != null && je.StoreOldShipId.HasValue)
-                            eventstosend.Add(InaraClass.setCommanderShip(je.StoreOldShipFD, je.StoreOldShipId.Value, heutc, curship: false, starsystemName: he.System.Name, stationName: he.WhereAmI));
-                        if (je.SellOldShipFD != null && je.SellOldShipId.HasValue)
-                            eventstosend.Add(InaraClass.delCommanderShip(je.SellOldShipFD, je.SellOldShipId.Value, heutc));
+                        if (je.StoreOldShipFD != null && je.StoreOldShipId?.IsValid == true)
+                            eventstosend.Add(InaraClass.setCommanderShip(je.StoreOldShipFD, je.StoreOldShipId, heutc, curship: false, starsystemName: he.System.Name, stationName: he.WhereAmI));
+                        if (je.SellOldShipFD != null && je.SellOldShipId?.IsValid == true)
+                            eventstosend.Add(InaraClass.delCommanderShip(je.SellOldShipFD, je.SellOldShipId, heutc));
 
                         eventstosend.Add(InaraClass.setCommanderCredits(he.Credits, he.Assets, he.Loan, heutc));
                         CmdrCredits = he.Credits;
@@ -192,7 +192,7 @@ namespace EliteDangerousCore.Inara
                 case JournalTypeEnum.ShipyardSwap: // VERIFIED 18/5/2018
                     {
                         var je = he.journalEntry as JournalShipyardSwap;
-                        eventstosend.Add(InaraClass.setCommanderShip(je.StoreOldShipFD, je.StoreShipId.Value, heutc, curship: false, starsystemName: he.System.Name, stationName: he.WhereAmI));
+                        eventstosend.Add(InaraClass.setCommanderShip(je.StoreOldShipFD, je.StoreShipId, heutc, curship: false, starsystemName: he.System.Name, stationName: he.WhereAmI));
                         eventstosend.Add(InaraClass.setCommanderShip(je.ShipFD, je.ShipId, heutc, curship: true, starsystemName: he.System.Name, stationName: he.WhereAmI));
                         break;
                     }
@@ -234,7 +234,7 @@ namespace EliteDangerousCore.Inara
                 case JournalTypeEnum.SetUserShipName: // VERIFIED 18/5/2018
                     {
                         var je = he.journalEntry as JournalSetUserShipName;
-                        eventstosend.Add(InaraClass.setCommanderShip(je.ShipFD, je.ShipID, heutc, curship: true, username: je.ShipName, userid: je.ShipIdent, starsystemName: he.System.Name, stationName: he.WhereAmI));
+                        eventstosend.Add(InaraClass.setCommanderShip(je.ShipFD, je.ShipId, heutc, curship: true, username: je.ShipName, userid: je.ShipIdent, starsystemName: he.System.Name, stationName: he.WhereAmI));
                         break;
                     }
 

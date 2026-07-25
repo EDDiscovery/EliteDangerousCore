@@ -66,6 +66,7 @@
     <Compile Include="FrontierData\Enumerations\IEquatable.cs" />
     <Compile Include="Bodies\Systems\SystemAddress.cs" />
     <Compile Include="FrontierData\Enumerations\MarketID.cs" />
+    <Compile Include="FrontierData\Enumerations\ShipID.cs" />
     <Compile Include="FrontierData\Enumerations\Missions.cs" />
     <Compile Include="FrontierData\Enumerations\BodyParents.cs" />
     <Compile Include="FrontierData\Enumerations\Rings.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="FrontierData\Items\ModuleList.cs" />
     <Compile Include="FrontierData\Enumerations\MissionID.cs" />
     <Compile Include="History\Ships\ShipModuleDisplay.cs" />
+    <Compile Include="History\SuitsWeapons\SuitWeaponLoadoutID.cs" />
     <Compile Include="JournalStatus\Computers\FactionsStatsComputer.cs" />
     <Compile Include="JournalStatus\Computers\JournalStatsInfo.cs" />
     <Compile Include="Config\EliteConfigInstance.cs" />

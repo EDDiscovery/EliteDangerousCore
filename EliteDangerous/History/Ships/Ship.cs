@@ -27,7 +27,7 @@ namespace EliteDangerousCore
     {
         #region Information interface
 
-        public ulong ID { get; private set; }                 // its Frontier ID.     ID's are moved to high range when sold
+        public ShipID ID { get; private set; }                 // its Frontier ID.     ID's are moved to high range when sold
         public enum ShipState { Owned, Sold, Destroyed, Imported};
         public ShipState State { get; set; } = ShipState.Owned; // if owned, sold, destroyed. Default owned
         public string ShipType { get; private set; }        // ship type name, nice, fer-de-lance, etc. can be null
@@ -289,12 +289,12 @@ namespace EliteDangerousCore
         public double FuelWarningPercent
         {
             get { return fuelwarningpercent; }
-            set { fuelwarningpercent = value; EliteDangerousCore.DB.UserDatabase.Instance.PutSetting("ShipInformation:" + ShipFD.Str() + ID.ToStringInvariant() + "Warninglevel", value); }
+            set { fuelwarningpercent = value; EliteDangerousCore.DB.UserDatabase.Instance.PutSetting("ShipInformation:" + ShipFD.Str() + ID.ToString() + "Warninglevel", value); }
         }
         public void UpdateFuelWarningPercent()
         {
             if ( fuelwarningpercent == -999 )
-                fuelwarningpercent = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ShipInformation:" + ShipFD.Str() + ID.ToStringInvariant() + "Warninglevel", 0);
+                fuelwarningpercent = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ShipInformation:" + ShipFD.Str() + ID.ToString() + "Warninglevel", 0);
         }
 
         public bool HasWeapons()
@@ -760,7 +760,7 @@ namespace EliteDangerousCore
 
         #region Creating and changing
 
-        public Ship(ulong id)
+        public Ship(ShipID id)
         {
             ID = id;
             Modules = new Dictionary<ShipSlots.Slot, ShipModule>();
@@ -1172,7 +1172,7 @@ namespace EliteDangerousCore
             jo["timestamp"] = DateTime.UtcNow.ToStringZuluInvariant();
             jo["event"] = "Loadout";
             jo["Ship"] = ShipFD.Str();
-            jo["ShipID"] = ID;
+            jo["ShipID"] = ID.Value;
             if (!string.IsNullOrEmpty(ShipUserName))
                 jo["ShipName"] = ShipUserName;
             if (!string.IsNullOrEmpty(ShipUserIdent))

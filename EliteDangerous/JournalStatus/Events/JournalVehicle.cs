@@ -120,7 +120,7 @@ namespace EliteDangerousCore.JournalEvents
             Loadout = evt["Loadout"].Str();
             Cost = evt["Cost"].Long();
             Count = evt["Count"].Int();
-            ID = evt["ID"].ULongNull();
+            ID = new ShipID(evt["ID"]);
         }
 
         public FDName TypeFD { get; set; }
@@ -129,7 +129,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Loadout { get; set; }
         public long Cost { get; set; }
         public int Count { get; set; }
-        public ulong? ID { get; set; }                        // since 2023 ish.
+        public ShipID ID { get; set; }                        // since 2023 ish.
         public bool IsLander => ItemData.IsLander(TypeFD);
 
         public void Ledger(Ledger mcl)
@@ -139,9 +139,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
-            if (ID.HasValue)
+            if (ID.IsValid)
             {
-                shp.RestockVehicle(ID.Value, TypeFD, Type_Localised, Loadout);
+                shp.RestockVehicle(ID, TypeFD, Type_Localised, Loadout);
             }
         }
 

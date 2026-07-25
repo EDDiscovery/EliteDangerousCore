@@ -109,7 +109,7 @@ namespace EliteDangerousCore
 
         // always a ship, never a SRV or fighter
         public IShipNaming CurrentShip { get; private set; }            // MAY BE NULL
-        public ulong ShipID => CurrentShip?.ShipId ?? ulong.MaxValue;
+        public ShipID ShipID => CurrentShip?.ShipId;                    // may be null
         public string ShipType => CurrentShip?.ShipType ?? "Unknown";
         public string ShipTypeFD => CurrentShip?.ShipFD.Str() ?? "Unknown";
 

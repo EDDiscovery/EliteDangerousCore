@@ -23,7 +23,7 @@ namespace EliteDangerousCore
     public class Suit
     {
         public DateTime EventTime { get; private set; }
-        public ulong ID { get; private set; }                // its Frontier SuitID
+        public SuitID ID { get; private set; }                // its Frontier SuitID
         public FDName FDName { get; private set; }          // suit type
         public string Name_Localised { get; private set; }         // localised
         public string FriendlyName { get; private set; }
@@ -31,7 +31,7 @@ namespace EliteDangerousCore
         public bool Sold { get; private set; }
         public FDName[] SuitMods { get; private set; }     // may be null or empty
 
-        public Suit(DateTime time, ulong id, FDName fdname, string locname, long price,FDName[] suitmods , bool sold )
+        public Suit(DateTime time, SuitID id, FDName fdname, string locname, long price,FDName[] suitmods , bool sold )
         {
             EventTime = time; ID = id; FDName = fdname; Name_Localised = locname; Price = price; Sold = sold; SuitMods = suitmods;
             if ( fdname.IsValid() )
@@ -41,24 +41,24 @@ namespace EliteDangerousCore
 
     public class SuitList
     {
-        public Dictionary<ulong, Suit> Suits(uint gen) { return suits.Get(gen, x => x.Sold == false && x.FDName.IsValid()); }    // all valid unsold suits with valid names. fdname=null special entry
+        public Dictionary<SuitID, Suit> Suits(uint gen) { return suits.Get(gen, x => x.Sold == false && x.FDName.IsValid()); }    // all valid unsold suits with valid names. fdname=null special entry
 
-        public Suit Suit(ulong suit, uint gen) { return suits.Get(suit, gen); }    // get suit at gen
+        public Suit Suit(SuitID suit, uint gen) { return suits.Get(suit, gen); }    // get suit at gen
 
-        public ulong CurrentID(uint gen) { return suits.Get(CURSUITID, gen)?.ID ?? 0; }
+        public SuitID CurrentID(uint gen) { return suits.Get(CURSUITID, gen)?.ID ?? new SuitID(); }
 
-        public const ulong CURSUITID = 1111;          // special marker to track current suit.. 
+        public static SuitID CURSUITID = new SuitID(1111);          // special marker to track current suit.. 
 
         public SuitList()
         {
         }
 
-        public void Buy(DateTime time, ulong id, FDName fdname, string namelocalised, long price, FDName[] mods)
+        public void Buy(DateTime time, SuitID id, FDName fdname, string namelocalised, long price, FDName[] mods)
         {
             suits[id] = new Suit(time, id, fdname, namelocalised, price, mods, sold: false);
         }
 
-        public bool VerifyPresence(DateTime time, ulong id, FDName fdname, string namelocalised, long price, FDName[] mods)
+        public bool VerifyPresence(DateTime time, SuitID id, FDName fdname, string namelocalised, long price, FDName[] mods)
         {
             var s = suits.GetLast(id);
 
@@ -81,7 +81,7 @@ namespace EliteDangerousCore
             return true;
         }
 
-        public void Sell(DateTime time, ulong id)
+        public void Sell(DateTime time, SuitID id)
         {
             if (suits.ContainsKey(id))
             {
@@ -97,12 +97,12 @@ namespace EliteDangerousCore
                 Debugger.DP("SW","Suits sold a suit not seen " + id);
         }
 
-        public void SwitchTo(DateTime time, ulong id)
+        public void SwitchTo(DateTime time, SuitID id)
         {
             suits[CURSUITID] = new Suit(time, id, null, null, 0, null, false);
         }
 
-        public void Upgrade(DateTime time, ulong id, FDName fdname, int newclass, long cost)
+        public void Upgrade(DateTime time, SuitID id, FDName fdname, int newclass, long cost)
         {
             //DebuggerHelpers.DP("SW",$"Upgrade {id} to {newclass} for {cost}");
 
@@ -150,7 +150,7 @@ namespace EliteDangerousCore
             return suits.Generation;        // return the generation we are on.
         }
 
-        private GenerationalDictionary<ulong, Suit> suits { get; set; } = new GenerationalDictionary<ulong, Suit>();
+        private GenerationalDictionary<SuitID, Suit>  suits { get; set; } = new GenerationalDictionary<SuitID, Suit>();
     }
 
 

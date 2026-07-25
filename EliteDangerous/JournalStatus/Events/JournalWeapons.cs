@@ -32,8 +32,8 @@ namespace EliteDangerousCore.JournalEvents
             FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
         }
 
-        public ulong SuitModuleID { get; set; } = ulong.MaxValue;   // may be missing
         [JsonAlwaysCreate]
+        public WeaponID SuitModuleID { get; set; }    // may be missing
         public FDName Name { get; set; }                    // always there, force always there
         public string FriendlyName { get; set; }
         public string Name_Localised { get; set; }
@@ -50,7 +50,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void WeaponInformation(SuitWeaponList shp, string whereami, ISystem system)
         {
-            if (SuitModuleID != ulong.MaxValue)
+            if (SuitModuleID.IsValid)
             {
                 shp.Buy(EventTimeUTC, SuitModuleID, Name, Name_Localised, Price, Class, WeaponMods);    
             }
@@ -76,7 +76,8 @@ namespace EliteDangerousCore.JournalEvents
             FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
         }
 
-        public ulong SuitModuleID { get; set; } = ulong.MaxValue;   // may be missing
+        [JsonAlwaysCreate]
+        public WeaponID SuitModuleID { get; set; }    // may be missing
 
         [JsonAlwaysCreate]
         public FDName Name { get; set; }                // always there, force in case
@@ -95,7 +96,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void WeaponInformation(SuitWeaponList shp, string whereami, ISystem system)
         {
-            if (SuitModuleID != ulong.MaxValue)
+            if (SuitModuleID.IsValid)
             {
                 shp.Sell(EventTimeUTC, SuitModuleID);
             }
@@ -122,7 +123,8 @@ namespace EliteDangerousCore.JournalEvents
             FriendlyName = ItemData.GetWeapon(Name, Name_Localised)?.Name ?? Name_Localised;
         }
 
-        public ulong SuitModuleID { get; set; } = ulong.MaxValue;
+        [JsonAlwaysCreate]
+        public WeaponID SuitModuleID { get; set; }    // may be missing
 
         [JsonAlwaysCreate]
         public FDName Name { get; set; }                    // always there, force in case
@@ -142,7 +144,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void WeaponInformation(SuitWeaponList shp, string whereami, ISystem system)
         {
-            if (SuitModuleID != ulong.MaxValue)
+            if (SuitModuleID.IsValid)
             {
                 shp.Upgrade(EventTimeUTC, SuitModuleID, Class, WeaponMods);
             }

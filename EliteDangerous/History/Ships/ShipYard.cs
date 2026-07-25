@@ -23,8 +23,9 @@ namespace EliteDangerousCore
     {
         [System.Diagnostics.DebuggerDisplay("{id} {ShipType} `{ShipType_Localised}` `{FriendlyShipType}` {ShipPrice}")]
         public class ShipyardItem : IEquatable<ShipyardItem>
-        {           
-            public long id { get; set; }                    // json from frontier shipyard.json
+        {
+            [QuickJSON.JsonAlwaysCreate]
+            public ShipID id { get; set; }                    // json from frontier shipyard.json
             public FDName ShipType { get; set; }            // json, frontier, FDName, direct from entries
             public string ShipType_Localised { get; set; }  // json, frontier
             public long ShipPrice { get; set; }             // json, frontier

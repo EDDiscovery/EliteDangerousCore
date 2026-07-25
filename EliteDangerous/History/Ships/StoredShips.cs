@@ -18,7 +18,8 @@ namespace EliteDangerousCore
 {
     public class StoredShip : IEquatable<StoredShip>
     {
-        public ulong ShipID { get; set; }      // both
+        [QuickJSON.JsonAlwaysCreate]
+        public ShipID ShipID { get; set; }      // both
         public string ShipType { get; set; }   // both, JSON->shipfd, normalised to text
         public string ShipType_Localised { get; set; } // both
         public string Name { get; set; }     // Both

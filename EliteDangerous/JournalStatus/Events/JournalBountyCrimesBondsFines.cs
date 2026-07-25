@@ -331,7 +331,7 @@ namespace EliteDangerousCore.JournalEvents
             AllFines = evt["AllFines"].Bool();
             Faction = evt["Faction"].Str();
             Faction_Localised = JournalFieldNaming.CheckLocalisation(evt["Faction_Localised"].Str(), Faction);
-            ShipId = evt["ShipID"].ULong();
+            ShipId = new ShipID(evt["ShipID"]);
         }
 
         public long Amount { get; set; }
@@ -339,7 +339,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool AllFines { get; set; }
         public string Faction { get; set; }      // may be blank
         public string Faction_Localised { get; set; }    // may be blank
-        public ulong ShipId { get; set; }
+        public ShipID ShipId { get; set; }
 
         public void Ledger(Ledger mcl)
         {
@@ -370,7 +370,7 @@ namespace EliteDangerousCore.JournalEvents
             AllFines = evt["AllFines"].Bool();
             Faction = evt["Faction"].Str();
             Faction_Localised = JournalFieldNaming.CheckLocalisation(evt["Faction_Localised"].Str(), Faction);
-            ShipId = evt["ShipID"].ULong();
+            ShipId = new ShipID(evt["ShipID"]);
         }
 
         public long Amount { get; set; }
@@ -378,7 +378,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool AllFines { get; set; }
         public string Faction { get; set; } // may be blank
         public string Faction_Localised { get; set; }       // may be blank
-        public ulong ShipId { get; set; }
+        public ShipID ShipId { get; set; }
 
         public void Ledger(Ledger mcl)
         {
@@ -531,7 +531,7 @@ namespace EliteDangerousCore.JournalEvents
             ShipType = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string engname, this);
             FriendlyShipType = engname;
             ShipType_Localised = JournalFieldNaming.CheckLocalisation(evt["ShipType_Localised"].Str(), engname);
-            ShipId = evt["ShipID"].ULong();
+            ShipId = new ShipID(evt["ShipID"]);
             MarketID = new MarketID(evt["MarketID"]);
             ShipMarketID = new MarketID(evt["ShipMarketID"]);
             System = evt["System"].StrNull();
@@ -540,7 +540,7 @@ namespace EliteDangerousCore.JournalEvents
         public FDName ShipType { get; set; }
         public string FriendlyShipType { get; set; }
         public string ShipType_Localised { get; set; }
-        public ulong ShipId { get; set; }
+        public ShipID ShipId { get; set; }
         public MarketID ShipMarketID { get; set; }
         public MarketID MarketID { get; set; }
         public string System { get; set; }  //patch 17, so may be null

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2021 - 2024 EDDiscovery development team
+ * Copyright 2021 - 2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -23,8 +23,8 @@ namespace EliteDangerousCore
     public class SuitLoadout
     {
         public DateTime EventTime { get; private set; }
-        public ulong ID { get; private set; }                // its Frontier LoadoutID
-        public ulong SuitID { get; private set; }                // its associated Frontier SuitID
+        public LoadoutID ID { get; private set; }                // its Frontier LoadoutID
+        public SuitID SuitID { get; private set; }                // its associated Frontier SuitID
         public string Name { get; set; }         // loadout name
         public bool Deleted { get; private set; }
 
@@ -39,7 +39,9 @@ namespace EliteDangerousCore
         public class LoadoutModule              // matches names used in journal for module lists
         {
             public SuitSlot SlotName;
-            public ulong SuitModuleID;
+            [QuickJSON.JsonAlwaysCreate]
+            public WeaponID SuitModuleID;
+            [QuickJSON.JsonAlwaysCreate]
             public FDName ModuleName;
             public string ModuleName_Localised;
             public int Class;               // may be zero meaning not there
@@ -47,7 +49,7 @@ namespace EliteDangerousCore
             public string FriendlyName;
 
             public LoadoutModule() { }
-            public LoadoutModule(SuitSlot slot, ulong suitmoduleid,FDName modulename, string locname, int cls, FDName[] weaponmods)
+            public LoadoutModule(SuitSlot slot, WeaponID suitmoduleid,FDName modulename, string locname, int cls, FDName[] weaponmods)
             {
                 SlotName = slot; SuitModuleID = suitmoduleid; ModuleName = modulename; ModuleName_Localised = locname;
                 Class = cls; WeaponMods = weaponmods;
@@ -94,7 +96,7 @@ namespace EliteDangerousCore
         }
 
 
-        public SuitLoadout(DateTime time, ulong id, string name, ulong suitID, bool deleted)
+        public SuitLoadout(DateTime time, LoadoutID id, string name, SuitID suitID, bool deleted)
         {
             EventTime = time; ID = id; Name = name; SuitID = suitID; Deleted = deleted;
             Modules = new Dictionary<SuitSlot, LoadoutModule>();    // shallow clone
@@ -109,18 +111,18 @@ namespace EliteDangerousCore
 
     public class SuitLoadoutList
     {
-        public Dictionary<ulong, SuitLoadout> Loadouts(uint gen) { return loadouts.Get(gen, x => x.Name.HasChars()); }    // all valid loadouts. Name=null indicates special entry
-        public SuitLoadout Loadout(ulong id, uint gen) { return loadouts.Get(id, gen); }    // get loadout at gen
+        public Dictionary<LoadoutID, SuitLoadout> Loadouts(uint gen) { return loadouts.Get(gen, x => x.Name.HasChars()); }    // all valid loadouts. Name=null indicates special entry
+        public SuitLoadout Loadout(LoadoutID id, uint gen) { return loadouts.Get(id, gen); }    // get loadout at gen
 
-        public ulong CurrentID(uint gen) { return loadouts.Get(CURLOADOUTID, gen)?.ID ?? 0; }
+        public LoadoutID CurrentID(uint gen) { return loadouts.Get(CURLOADOUTID, gen)?.ID ?? new LoadoutID(); }
 
-        public const ulong CURLOADOUTID = 1111;          // special marker to track current suit.. use to ignore the current entry marker
+        public static LoadoutID CURLOADOUTID = new LoadoutID(1111);          // special marker to track current suit.. use to ignore the current entry marker
 
         public SuitLoadoutList()
         {
         }
 
-        public void CreateLoadout(DateTime time, ulong id, string name, ulong suitid, SuitLoadout.LoadoutModule[] modules) // modules may be null
+        public void CreateLoadout(DateTime time, LoadoutID id, string name, SuitID suitid, SuitLoadout.LoadoutModule[] modules) // modules may be null
         {
             var s = new SuitLoadout(time, id, name, suitid, false);
             foreach (var m in modules.EmptyIfNull())
@@ -128,7 +130,7 @@ namespace EliteDangerousCore
             loadouts[id] = s;
         }
 
-        public bool VerifyPresence(DateTime time, ulong id, string name, ulong suitid, SuitLoadout.LoadoutModule[] modules)// modules may be null
+        public bool VerifyPresence(DateTime time, LoadoutID id, string name, SuitID suitid, SuitLoadout.LoadoutModule[] modules)// modules may be null
         {
             var s = loadouts.GetLast(id);
 
@@ -157,7 +159,7 @@ namespace EliteDangerousCore
             return true;
         }
 
-        public void DeleteLoadout(DateTime time, ulong id)
+        public void DeleteLoadout(DateTime time, LoadoutID id)
         {
             if (loadouts.ContainsKey(id))
             {
@@ -175,14 +177,14 @@ namespace EliteDangerousCore
                 Debugger.DP("SW","Suits deleted an unknown loadout " + id);
         }
 
-        public void DeleteLoadouts(DateTime time, ulong suitid)
+        public void DeleteLoadouts(DateTime time, SuitID suitid)
         {
             var loadoutstoremove = loadouts.GetLast(x => x.SuitID == suitid);       // all with this suit id
             foreach (var l in loadoutstoremove)
                 DeleteLoadout(time, l.Value.ID);      
         }
 
-        public void Equip(ulong id, SuitLoadout.SuitSlot slotname, SuitLoadout.LoadoutModule weap)
+        public void Equip(LoadoutID id, SuitLoadout.SuitSlot slotname, SuitLoadout.LoadoutModule weap)
         {
             if (loadouts.ContainsKey(id))
             {
@@ -197,7 +199,7 @@ namespace EliteDangerousCore
         }
 
 
-        public void Remove(ulong id, SuitLoadout.SuitSlot slotname, SuitWeapon weap)
+        public void Remove(LoadoutID id, SuitLoadout.SuitSlot slotname, SuitWeapon weap)
         {
             if (loadouts.ContainsKey(id))
             {
@@ -218,7 +220,7 @@ namespace EliteDangerousCore
                 Debugger.DP("SW","Suits remove an unknown loadout " + id);
         }
 
-        public void Rename(ulong id, string newname)
+        public void Rename(LoadoutID id, string newname)
         {
             if (loadouts.ContainsKey(id))
             {
@@ -231,12 +233,12 @@ namespace EliteDangerousCore
                 Debugger.DP("SW","Suits remove an unknown loadout " + id);
         }
 
-        public void SwitchTo(DateTime utc, ulong id)
+        public void SwitchTo(DateTime utc, LoadoutID id)
         {
-            loadouts[CURLOADOUTID] = new SuitLoadout(utc, id, null, 0, false);
+            loadouts[CURLOADOUTID] = new SuitLoadout(utc, id, null, new SuitID(), false);       // fake way of storing the current loadout ID
         }
 
-        public Dictionary<ulong, SuitLoadout> GetLoadoutsForSuit(uint gen, ulong suitid)
+        public Dictionary<LoadoutID, SuitLoadout> GetLoadoutsForSuit(uint gen, SuitID suitid)
         {
             //DebuggerHelpers.DP("SW","Lookup at gen {0} suitid {1}", gen, suitid);
             var ret = loadouts.Get(gen, x => x.SuitID == suitid && x.Deleted == false);
@@ -275,7 +277,7 @@ namespace EliteDangerousCore
             return loadouts.Generation;        // return the generation we are on.
         }
 
-        private GenerationalDictionary<ulong, SuitLoadout> loadouts { get; set; } = new GenerationalDictionary<ulong, SuitLoadout>();
+        private GenerationalDictionary<LoadoutID, SuitLoadout> loadouts { get; set; } = new GenerationalDictionary<LoadoutID, SuitLoadout>();
 
     }
 

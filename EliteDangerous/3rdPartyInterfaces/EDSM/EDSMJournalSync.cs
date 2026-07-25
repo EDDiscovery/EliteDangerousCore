@@ -276,7 +276,7 @@ namespace EliteDangerousCore.EDSM
                     if (he.Status.MarketID?.HasValue == true)
                         json["_stationMarketId"] = he.Status.MarketID.Value;
                 }
-                json["_shipId"] = he.Status.ShipID;
+                json["_shipId"] = he.Status.ShipID?.Value ?? 0;
                 entries.Add(json);
             }
 
