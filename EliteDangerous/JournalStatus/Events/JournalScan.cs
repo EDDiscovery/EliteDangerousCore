@@ -315,8 +315,8 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Does it have materials list")]
         public bool HasMaterials { get { return Materials != null && Materials.Any(); } }
         [PropertyNameAttribute("Materials dictionary, in %")]
-        public Dictionary<FDName, double> Materials { get; private set; }       // fdname and name is the same for materials on planets.  name is lower case
-        public bool HasMaterial(FDName name) { return Materials != null && Materials.ContainsKey(name); }
+        public Dictionary<MCFDName, double> Materials { get; private set; }       // fdname and name is the same for materials on planets.  name is lower case
+        public bool HasMaterial(MCFDName name) { return Materials != null && Materials.ContainsKey(name); }
         [PropertyNameAttribute("List of materials, comma separated")]
         public string MaterialList { get { if (Materials != null) { var na = (from x in Materials select x.Key.Str()).ToArray(); return String.Join(",", na); } else return null; } }
 
@@ -664,7 +664,7 @@ namespace EliteDangerousCore.JournalEvents
                 JToken mats = evt["Materials"];
                 if (mats != null)
                 {
-                    Materials = new Dictionary<FDName, double>(new FDNameEqualityComparer());
+                    Materials = new Dictionary<MCFDName, double>(new MCFDNameEqualityComparer());
 
                     if (mats.IsObject)
                     {
@@ -674,7 +674,7 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         foreach (JObject jo in mats)                                        // name in fd logs is lower case
                         {
-                            FDName item = new FDName(jo["Name"].Str("Default"));
+                            MCFDName item = new MCFDName(jo["Name"].Str("Default"));
                             Materials[item] = jo["Percent"].Double();
                         }
                     }

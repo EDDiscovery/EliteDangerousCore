@@ -29,7 +29,7 @@ namespace EliteDangerousCore.JournalEvents
         public const int ShipLocker = 0;                        // index into MCMRList for types
         public const int BackPack = 1;
 
-        public FDName Name { get; set; }                        // JSON, normalised to lower case, All
+        public MCFDName Name { get; set; }                        // JSON, normalised to lower case, All
         public string Name_Localised { get; set; }              // JSON, All
 
         public ulong OwnerID { get; set; }                      // JSON, ShipLockerMaterials          CollectItems, DropItems
@@ -46,7 +46,7 @@ namespace EliteDangerousCore.JournalEvents
         // if cat is set, cat is forced to this value
         public void Normalise(MaterialCommodityMicroResourceType.CatType? cat, JournalEntry ev)
         {
-            Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname, ev);
+            Name = MCFDName.Normalise(Name.StrNull(), out string engname, ev);
             if (Name_Localised.IsEmpty())
                 Name_Localised = engname;
             if (cat != null)
@@ -118,14 +118,14 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public List<Tuple<FDName,int>> Merge(MicroResource[] array)         // array can have repeats if owned by others or mission id different, we don't care, merge
+        public List<Tuple<MCFDName,int>> Merge(MicroResource[] array)         // array can have repeats if owned by others or mission id different, we don't care, merge
         {
-            Dictionary<FDName, int> entries = new Dictionary<FDName, int>();
+            var entries = new Dictionary<MCFDName, int>();
             foreach( var e in array)
             {
                 entries[e.Name] = (entries.ContainsKey(e.Name) ? entries[e.Name] : 0) + e.Count;        // sum them
             }
-            return entries.Select(x => new Tuple<FDName, int>(x.Key, x.Value)).ToList();
+            return entries.Select(x => new Tuple<MCFDName, int>(x.Key, x.Value)).ToList();
         }
 
         // helper function for IMicroResourceJournalEntry
@@ -267,7 +267,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else
             {                                       // single entry style
-                Items = new List<MicroResource>() { new MicroResource() { Name = new FDName("Dummy") } };
+                Items = new List<MicroResource>() { new MicroResource() { Name = new MCFDName("Dummy") } };
                 evt.ToObjectProtected(Items[0].GetType(), true, 
                                             membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                                             initialobject:Items[0],
@@ -407,7 +407,7 @@ namespace EliteDangerousCore.JournalEvents
             Offered = evt["Offered"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
             MicroResource.Normalise(Offered,null, this);
 
-            Received = FDNameHelpers.NormaliseMatCommods(evt["Received"].Str(), out string engname, this);
+            Received = MCFDName.Normalise(evt["Received"].Str(), out string engname, this);
             Received_FriendlyName = engname;
             Received_Localised = JournalFieldNaming.CheckLocalisation(evt["Received_Localised"].Str(), Received_FriendlyName);
 
@@ -417,7 +417,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public MicroResource[] Offered { get; set; }
-        public FDName Received { get; set; }
+        public MCFDName Received { get; set; }
         public string Received_Localised { get; set; }
         public string Received_FriendlyName { get; set; }
         public MaterialCommodityMicroResourceType.CatType Category { get; set; }
@@ -447,7 +447,7 @@ namespace EliteDangerousCore.JournalEvents
                     mc.ChangeMR(MicroResource.ShipLocker, EventTimeUTC, m.Category.Value, m.Name, -m.Count);
                 }
 
-                if (Received.IsValid())
+                if (Received.IsValid)
                 {
                     MaterialCommodityMicroResourceType.EnsurePresent(Category, Received, Received_Localised);
                     mc.ChangeMR(MicroResource.ShipLocker, EventTimeUTC, Category, Received, Count);

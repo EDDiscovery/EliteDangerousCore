@@ -114,7 +114,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalRestockVehicle(JObject evt) : base(evt, JournalTypeEnum.RestockVehicle)
         {
-            TypeFD = FDNameHelpers.NormaliseShip(evt["Type"].Str(), out string shipname, this);
+            TypeFD = VehicleFDName.Normalise(evt["Type"].Str(), out string shipname, this);
             Type = shipname;
             Type_Localised = JournalFieldNaming.CheckLocalisation(evt["Type_Localised"].Str(), Type);
             Loadout = evt["Loadout"].Str();
@@ -123,14 +123,14 @@ namespace EliteDangerousCore.JournalEvents
             ID = new ShipID(evt["ID"]);
         }
 
-        public FDName TypeFD { get; set; }
+        public VehicleFDName TypeFD { get; set; }
         public string Type { get; set; }                    // better name
         public string Type_Localised { get; set; }          // new June 26, evidence of it from 2021!
         public string Loadout { get; set; }
         public long Cost { get; set; }
         public int Count { get; set; }
         public ShipID ID { get; set; }                        // since 2023 ish.
-        public bool IsLander => ItemData.IsLander(TypeFD);
+        public bool IsLander => TypeFD.VehicleType == VehicleFDName.VehicleTypeEnum.Lander;
 
         public void Ledger(Ledger mcl)
         {
@@ -145,7 +145,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        protected override JournalTypeEnum IconEventType { get { return ItemData.IsSRV(TypeFD) ? JournalTypeEnum.RestockVehicle_SRV : JournalTypeEnum.RestockVehicle_Fighter; } }
+        protected override JournalTypeEnum IconEventType { get { return TypeFD.VehicleType == VehicleFDName.VehicleTypeEnum.SRV ? JournalTypeEnum.RestockVehicle_SRV : JournalTypeEnum.RestockVehicle_Fighter; } }
 
         public override string GetInfo()
         {
@@ -214,15 +214,15 @@ namespace EliteDangerousCore.JournalEvents
     public class JournalDockSRV : JournalEntry, IShipInformation
     {
         public int? ID { get; set; }
-        public FDName SRVType;          // new odyssey 9, dec 21, may be null
+        public VehicleFDName SRVType;          // new odyssey 9, dec 21, may be null
         public string SRVType_Localised; // new odyssey 9, dec 21, may be null
-        public bool IsLander => ItemData.IsLander(SRVType);
+        public bool IsLander => SRVType.VehicleType == VehicleFDName.VehicleTypeEnum.Lander;
 
         public JournalDockSRV(JObject evt) : base(evt, JournalTypeEnum.DockSRV)
         {
             ID = evt["ID"].IntNull();
-            SRVType = evt["SRVType"].FDName();
-            SRVType_Localised = JournalFieldNaming.CheckLocalisation(evt["SRVType_Localised"].StrNull(), SRVType.Str());
+            SRVType = VehicleFDName.Normalise(evt["SRVType"].Str(), out string engname, this);
+            SRVType_Localised = JournalFieldNaming.CheckLocalisation(evt["SRVType_Localised"].StrNull(), engname);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -250,15 +250,15 @@ namespace EliteDangerousCore.JournalEvents
     {
         public int? ID { get; set; }
 
-        public FDName SRVType;          // new odyssey 9, dec 21, may be null
+        public VehicleFDName SRVType;          // new odyssey 9, dec 21, may be null
         public string SRVType_Localised; // new odyssey 9, dec 21, may be null
-        public bool IsLander => ItemData.IsLander(SRVType);
+        public bool IsLander => SRVType.VehicleType == VehicleFDName.VehicleTypeEnum.Lander;
 
         public JournalSRVDestroyed(JObject evt) : base(evt, JournalTypeEnum.SRVDestroyed)
         {
             ID = evt["ID"].IntNull();
-            SRVType = evt["SRVType"].FDName();
-            SRVType_Localised = JournalFieldNaming.CheckLocalisation(evt["SRVType_Localised"].StrNull(), SRVType.Str());
+            SRVType = VehicleFDName.Normalise(evt["SRVType"].Str(), out string engname, this);
+            SRVType_Localised = JournalFieldNaming.CheckLocalisation(evt["SRVType_Localised"].StrNull(), engname);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)

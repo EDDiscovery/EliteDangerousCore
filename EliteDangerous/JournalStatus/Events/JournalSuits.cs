@@ -28,14 +28,15 @@ namespace EliteDangerousCore.JournalEvents
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     initialobject: this);        // read fields named in this structure matching JSON names
 
-            FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
+            Name = SuitFDName.Normalise(Name.Str(), out string engname, this);
+            FriendlyName = engname;
             Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
         }
 
         [JsonAlwaysCreate]
         public SuitID SuitID { get; set; }     // may be missing in early ones
         [JsonAlwaysCreate]
-        public FDName Name { get; set; }                // always there, set just in case
+        public SuitFDName Name { get; set; }                // always there, set just in case
         public string FriendlyName { get; set; }
         public string Name_Localised { get; set; }
         public long Price { get; set; }
@@ -73,11 +74,12 @@ namespace EliteDangerousCore.JournalEvents
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     initialobject: this);        // read fields named in this structure matching JSON names
 
-            FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
+            Name = SuitFDName.Normalise(Name.Str(), out string engname, this);
+            FriendlyName = engname;
             Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
         }
 
-        public JournalSellSuit(DateTime utc, SuitID id, FDName fdname, string locname, long price, int cmdrid) : base(utc,JournalTypeEnum.SellSuit)
+        public JournalSellSuit(DateTime utc, SuitID id, SuitFDName fdname, string locname, long price, int cmdrid) : base(utc,JournalTypeEnum.SellSuit)
         {
             SuitID = id; Name = fdname; Name_Localised = locname; price = Price;
             SetCommander(cmdrid);
@@ -86,7 +88,7 @@ namespace EliteDangerousCore.JournalEvents
         [JsonAlwaysCreate]
         public SuitID SuitID { get; set; }      // may be missing in early ones
         [JsonAlwaysCreate]
-        public FDName Name { get; set; }            // always there, set just in case
+        public SuitFDName Name { get; set; }            // always there, set just in case
         public string Name_Localised { get; set; }
         public string FriendlyName { get; set; }
         public long Price { get; set; }
@@ -144,7 +146,8 @@ namespace EliteDangerousCore.JournalEvents
 
             if (SuitName != null)           // early records has this missing
             {
-                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+                SuitName = SuitFDName.Normalise(SuitName.Str(), out string engname, this);
+                SuitFriendlyName = engname;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
             }
             SuitLoadout.NormaliseModules(Modules);
@@ -156,7 +159,7 @@ namespace EliteDangerousCore.JournalEvents
 
         [JsonAlwaysCreate]
         public SuitID SuitID { get; set; }      // indicating missing, early records had it missing
-        public FDName SuitName { get; set; }                    // may be null for early records
+        public SuitFDName SuitName { get; set; }                    // may be null for early records
         public string SuitFriendlyName { get; set; }            // may be null for early records
         public string SuitName_Localised { get; set; }          // may be null for early records
 
@@ -205,7 +208,8 @@ namespace EliteDangerousCore.JournalEvents
                 membersearchflags:System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
                 initialobject: this);        // read fields named in this structure matching JSON names
 
-            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName = SuitFDName.Normalise(SuitName.Str(), out string engname, this);
+            SuitFriendlyName = engname;
             SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
             SuitLoadout.NormaliseModules(Modules);
         }
@@ -217,7 +221,7 @@ namespace EliteDangerousCore.JournalEvents
         [JsonAlwaysCreate]
         public SuitID SuitID { get; set; }      // indicating missing, early records had it missing
         [JsonAlwaysCreate]
-        public FDName SuitName { get; set; }                    // always there
+        public SuitFDName SuitName { get; set; }                    // always there
         public string SuitName_Localised { get; set; }
         public string SuitFriendlyName { get; set; }
 
@@ -269,7 +273,8 @@ namespace EliteDangerousCore.JournalEvents
             
             if (SuitName != null)
             {
-                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+                SuitName = SuitFDName.Normalise(SuitName.Str(), out string engname, this);
+                SuitFriendlyName = engname;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
             }
         }
@@ -280,7 +285,7 @@ namespace EliteDangerousCore.JournalEvents
 
         [JsonAlwaysCreate]
         public SuitID SuitID { get; set; }           // indicating missing, early records had it missing
-        public FDName SuitName { get; set; }                    // may be null for early records
+        public SuitFDName SuitName { get; set; }                    // may be null for early records
         public string SuitFriendlyName { get; set; }            // may be null for early records
         public string SuitName_Localised { get; set; }          // may be null for early records
 
@@ -312,7 +317,8 @@ namespace EliteDangerousCore.JournalEvents
 
             if (SuitName != null)
             {
-                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+                SuitName = SuitFDName.Normalise(SuitName.Str(), out string engname, this);
+                SuitFriendlyName = engname;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
             }
 
@@ -330,7 +336,7 @@ namespace EliteDangerousCore.JournalEvents
 
         [JsonAlwaysCreate]
         public SuitID SuitID { get; set; } // indicating missing, early records had it missing 
-        public FDName SuitName { get; set; }                    // may be null, missing in v.early ones, 
+        public SuitFDName SuitName { get; set; }                    // may be null, missing in v.early ones, 
         public string SuitFriendlyName { get; set; }            // may be null, missing in v.early ones, 
         public string SuitName_Localised { get; set; }          // may be null, missing in v.early ones, 
 
@@ -389,7 +395,8 @@ namespace EliteDangerousCore.JournalEvents
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: this);        // read fields named in this structure matching JSON names
 
-            SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+            SuitName = SuitFDName.Normalise(SuitName.Str(), out string engname, this);
+            SuitFriendlyName = engname;
             SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
 
             if (ModuleName != null)
@@ -403,7 +410,7 @@ namespace EliteDangerousCore.JournalEvents
         [JsonAlwaysCreate]
         public SuitID SuitID { get; set; } // always
         [JsonAlwaysCreate]
-        public FDName SuitName { get; set; }                    // always
+        public SuitFDName SuitName { get; set; }                    // always
         public string SuitName_Localised { get; set; }          // always
         public string SuitFriendlyName { get; set; }           // always
 
@@ -457,7 +464,8 @@ namespace EliteDangerousCore.JournalEvents
 
             if (SuitName != null)
             {
-                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+                SuitName = SuitFDName.Normalise(SuitName.Str(), out string engname, this);
+                SuitFriendlyName = engname;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
             }
         }
@@ -465,7 +473,7 @@ namespace EliteDangerousCore.JournalEvents
         [JsonAlwaysCreate]
         public SuitID SuitID { get; set; }                 // always
         [JsonAlwaysCreate]
-        public FDName SuitName { get; set; }                // always, ensure
+        public SuitFDName SuitName { get; set; }                // always, ensure
         public string SuitFriendlyName { get; set; }        // always
         public string SuitName_Localised { get; set; }      // always
 
@@ -501,7 +509,8 @@ namespace EliteDangerousCore.JournalEvents
 
             if (SuitName != null)
             {
-                SuitFriendlyName = ItemData.GetSuit(SuitName, SuitName_Localised)?.Name ?? SuitName_Localised;
+                SuitName = SuitFDName.Normalise(SuitName.Str(), out string engname, this);
+                SuitFriendlyName = engname;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
             }
 
@@ -514,7 +523,7 @@ namespace EliteDangerousCore.JournalEvents
 
         [JsonAlwaysCreate]
         public SuitID SuitID { get; set; }          // may not be present
-        public FDName SuitName { get; set; }                    // may not be present
+        public SuitFDName SuitName { get; set; }                    // may not be present
         public string SuitName_Localised { get; set; }          // may not be present
         public string SuitFriendlyName { get; set; }            // may not be present
         public FDName[] SuitMods { get; set; }                  // may be null or empty
@@ -555,14 +564,15 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(this.GetType(), true, 
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: this);        // read fields named in this structure matching JSON names
-            FriendlyName = ItemData.GetSuit(Name, Name_Localised)?.Name ?? Name_Localised;
+            Name = SuitFDName.Normalise(Name.Str(), out string engname, this);
+            FriendlyName = engname;
             Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
         }
 
         [JsonAlwaysCreate]
         public SuitID SuitID { get; set; }              // may not be present
         [JsonAlwaysCreate]
-        public FDName Name { get; set; }                        // always present, ensure
+        public SuitFDName Name { get; set; }                        // always present, ensure
         public string FriendlyName { get; set; }                // always
         public string Name_Localised { get; set; }              // always
         public long Cost { get; set; }                          // always

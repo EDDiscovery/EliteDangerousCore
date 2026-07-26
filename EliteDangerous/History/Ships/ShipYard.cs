@@ -26,7 +26,9 @@ namespace EliteDangerousCore
         {
             [QuickJSON.JsonAlwaysCreate]
             public ShipID id { get; set; }                    // json from frontier shipyard.json
-            public FDName ShipType { get; set; }            // json, frontier, FDName, direct from entries
+
+            [QuickJSON.JsonAlwaysCreate]
+            public VehicleFDName ShipType { get; set; }            // json, frontier, FDName, direct from entries
             public string ShipType_Localised { get; set; }  // json, frontier
             public long ShipPrice { get; set; }             // json, frontier
 
@@ -34,7 +36,7 @@ namespace EliteDangerousCore
 
             public void Normalise()
             {
-                ShipType = FDNameHelpers.NormaliseShip(ShipType.StrNull(), out string bettername, null);
+                ShipType = VehicleFDName.Normalise(ShipType.Str(), out string bettername, null);
                 FriendlyShipType = bettername;
                 ShipType_Localised = JournalFieldNaming.CheckLocalisation(ShipType_Localised,FriendlyShipType);
             }

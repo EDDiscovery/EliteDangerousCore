@@ -77,9 +77,9 @@ namespace EliteDangerousCore
         public bool HasItemWithDemandAndPrice(FDName fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname) && x.HasDemandAndPrice) >= 0; }
 
         // go thru the market array, and see if any of the fdnames given matches that market entry
-        public bool HasAnyItem(FDName[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname)>=0 ) >= 0; }
-        public bool HasAnyItemInStock(FDName[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname) >= 0 && x.HasStock) >= 0; }
-        public bool HasAnyItemWithDemandAndPrice(FDName[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname) >= 0 && x.HasDemandAndPrice) >= 0; }
+        public bool HasAnyItem(MCFDName[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname)>=0 ) >= 0; }
+        public bool HasAnyItemInStock(MCFDName[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname) >= 0 && x.HasStock) >= 0; }
+        public bool HasAnyItemWithDemandAndPrice(MCFDName[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname) >= 0 && x.HasDemandAndPrice) >= 0; }
 
         public bool HasOutfitting { get; set; }// see market
         public List<Outfitting.OutfittingItem> Outfitting { get; set; }     // may be null
@@ -91,7 +91,7 @@ namespace EliteDangerousCore
         public bool HasShipyard { get; set; }   // see market
         public List<ShipYard.ShipyardItem> Shipyard { get; set; }     // may be null
         public DateTime ShipyardUpdateUTC { get; set; }
-        public bool HasAnyShipTypes(FDName[] fdnames) { return Shipyard != null && Shipyard.FindIndex(x => fdnames.IndexOf(x.ShipType) >= 0) >= 0; }
+        public bool HasAnyShipTypes(VehicleFDName[] fdnames) { return Shipyard != null && Shipyard.FindIndex(x => fdnames.IndexOf(x.ShipType) >= 0) >= 0; }
         public double ShipyardAgeInDays { get { return DateTime.UtcNow.Subtract(ShipyardUpdateUTC).TotalDays; } }
         public string ShipyardStateString { get { if (HasShipyard && Shipyard != null) return $"\u2713 {ShipyardAgeInDays:N1}"; else if (HasShipyard) return "\u2713 ND"; else return ""; } }
 

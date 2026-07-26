@@ -40,7 +40,7 @@ namespace EliteDangerousCore.JournalEvents
             SharedWithOthers = evt["SharedWithOthers"].Bool(false);
             Rewards = evt["Rewards"]?.ToObjectQ<BountyReward[]>();
 
-            Target = FDNameHelpers.NormaliseShipOrSuitOrActor(evt["Target"].Str(), out string engname, this, true);      // can be null
+            Target = VehicleActorSuitFDName.Normalise(evt["Target"].Str(), out string engname, this, true);      // can be null
 
             if (Target != null)
             {
@@ -77,7 +77,7 @@ namespace EliteDangerousCore.JournalEvents
         public long TotalReward { get; set; }
         public string VictimFaction { get; set; }
         public string VictimFactionLocalised { get; set; }
-        public FDName Target { get; set; }                      // can be null
+        public VehicleActorSuitFDName Target { get; set; }                      // can be null
         public string FriendlyTarget { get; set; }             // can be null, friendly english
         public string TargetLocalised { get; set; }             // can be null
         public bool SharedWithOthers { get; set; }  
@@ -201,7 +201,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string Type { get { return "Capital Ship Bond".Tx(); } }
-        public FDName Target { get { return FDName.Empty; } }
+        public VehicleActorSuitFDName Target => VehicleActorSuitFDName.Empty;
         public string TargetFaction { get { return VictimFaction; } }
 
         public bool HasFaction(string faction)
@@ -292,7 +292,7 @@ namespace EliteDangerousCore.JournalEvents
         public int? NumberRewards { get; set; }                      // EDD addition, number of rewards
 
         public string Type { get { return "Faction Kill Bond".Tx(); } }
-        public FDName Target { get { return FDName.Empty; } }
+        public VehicleActorSuitFDName Target => VehicleActorSuitFDName.Empty;
         public string TargetFaction { get { return VictimFaction; } }
 
 
@@ -528,7 +528,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalClearImpound(JObject evt) : base(evt, JournalTypeEnum.ClearImpound)
         {
-            ShipType = FDNameHelpers.NormaliseShip(evt["ShipType"].Str(), out string engname, this);
+            ShipType = VehicleFDName.Normalise(evt["ShipType"].Str(), out string engname, this);
             FriendlyShipType = engname;
             ShipType_Localised = JournalFieldNaming.CheckLocalisation(evt["ShipType_Localised"].Str(), engname);
             ShipId = new ShipID(evt["ShipID"]);
@@ -537,7 +537,7 @@ namespace EliteDangerousCore.JournalEvents
             System = evt["System"].StrNull();
         }
 
-        public FDName ShipType { get; set; }
+        public VehicleFDName ShipType { get; set; }
         public string FriendlyShipType { get; set; }
         public string ShipType_Localised { get; set; }
         public ShipID ShipId { get; set; }

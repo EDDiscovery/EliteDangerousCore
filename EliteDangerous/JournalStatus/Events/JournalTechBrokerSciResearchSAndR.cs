@@ -82,7 +82,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public class Commodities
         {
-            public FDName Name;
+            [JsonAlwaysCreate]
+            public MCFDName Name;
             public string Name_Localised;
             public string FriendlyName;
             public int Count;
@@ -90,7 +91,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public class Materials
         {
-            public FDName Name;
+            [JsonAlwaysCreate]
+            public MCFDName Name;
             public string Name_Localised;
             public string FriendlyName;
             public MaterialCommodityMicroResourceType.CatType Category;
@@ -144,14 +146,14 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalScientificResearch(JObject evt) : base(evt, JournalTypeEnum.ScientificResearch)
         {
-            Name = FDNameHelpers.NormaliseMatCommods(evt["Name"].Str(), out string matname, this);
+            Name = MCFDName.Normalise(evt["Name"].Str(), out string matname, this);
             FriendlyName = matname;
             Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), matname);
             Count = evt["Count"].Int();
             Category = MaterialCommodityMicroResourceType.ToCategory(evt["Category"].Str());
         }
 
-        public FDName Name { get; set; }
+        public MCFDName Name { get; set; }
         public string FriendlyName { get; set; }
         public string Name_Localised { get; set; }
         public int Count { get; set; }
@@ -169,7 +171,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSearchAndRescue(JObject evt) : base(evt, JournalTypeEnum.SearchAndRescue)
         {
-            FDName = FDNameHelpers.NormaliseMatCommods(evt["Name"].Str(), out string engname, this);
+            FDName = MCFDName.Normalise(evt["Name"].Str(), out string engname, this);
             FriendlyName = engname;
             Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Name_Localised"].Str(), FriendlyName);         // always ensure we have one
             Count = evt["Count"].Int();
@@ -177,7 +179,7 @@ namespace EliteDangerousCore.JournalEvents
             MarketID = new MarketID(evt["MarketID"]);
         }
 
-        public FDName FDName { get; set; }            // Hyperspace, Supercruise
+        public MCFDName FDName { get; set; }            // Hyperspace, Supercruise
         public string Name_Localised { get; set; }            // Hyperspace, Supercruise
         public string FriendlyName { get; set; }            // Hyperspace, Supercruise
         public int Count { get; set; }

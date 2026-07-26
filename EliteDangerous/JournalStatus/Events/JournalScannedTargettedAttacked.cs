@@ -55,7 +55,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (TargetLocked)
             {
-                ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string bettername, this);
+                ShipFD = VehicleFDName.Normalise(evt["Ship"].Str(), out string bettername, this);
                 Ship = bettername;
 
                 Ship_Localised = JournalFieldNaming.CheckLocalisation(evt["Ship_Localised"].Str(), Ship);
@@ -81,7 +81,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public bool TargetLocked { get; set; }          // if false, no info below
         public int? ScanStage { get; set; }             // targetlocked= true, 0/1/2/3
-        public FDName ShipFD { get; set; }              // 0 null
+        public VehicleFDName ShipFD { get; set; }              // 0 null
         public string Ship { get; set; }                // 0 null
         public string Ship_Localised { get; set; }      // 0 will be empty
         public string PilotName { get; set; }           // 1 null

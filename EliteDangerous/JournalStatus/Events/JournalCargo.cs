@@ -26,7 +26,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public class Cargo
         {
-            public FDName Name { get; set; }            // FDNAME
+            public MCFDName Name { get; set; }            // FDNAME
             public string Name_Localised { get; set; }
             public string FriendlyName { get; set; }            
             public int Count { get; set; }
@@ -36,7 +36,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname, ev);
+                Name = MCFDName.Normalise(Name.StrNull(), out string engname, ev);
                 FriendlyName = engname;
                 FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
             }
@@ -147,7 +147,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (Inventory != null)
                 {
-                    List<Tuple<FDName, int>> counts = Inventory.Select(x => new Tuple<FDName, int>(x.Name, x.Count)).ToList();      // TBC
+                    List<Tuple<MCFDName, int>> counts = Inventory.Select(x => new Tuple<MCFDName, int>(x.Name, x.Count)).ToList();      // TBC
                     mc.Update(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Commodity, counts);
                 }
             }
@@ -160,7 +160,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalEjectCargo(JObject evt) : base(evt, JournalTypeEnum.EjectCargo)
         {
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
+            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
 
@@ -170,7 +170,7 @@ namespace EliteDangerousCore.JournalEvents
             MissionID = new MissionID(evt["MissionID"]);
         }
 
-        public FDName Type { get; set; }                    // FDName
+        public MCFDName Type { get; set; }                    // FDName
         public string FriendlyType { get; set; }            // translated name
         public string Type_Localised { get; set; }            // always set
 
@@ -201,8 +201,8 @@ namespace EliteDangerousCore.JournalEvents
             UpdateType = evt["UpdateType"].Str();        // must be FD name
             System.Enum.TryParse<UpdateTypeEnum>(UpdateType, out UpdateTypeEnum u);
             UpdateEnum = u;
-            CargoType = evt["CargoType"].FDName();     // item counts
-            FriendlyCargoType = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(CargoType);
+            CargoType = MCFDName.Normalise(evt["CargoType"].Str(), out string engname, this);
+            FriendlyCargoType = engname;
             Count = evt["Count"].Int(0);
             StartMarketID = new MarketID(evt["StartMarketID"]);
             EndMarketID = new MarketID(evt["EndMarketID"]);
@@ -222,7 +222,7 @@ namespace EliteDangerousCore.JournalEvents
         public string UpdateType { get; set; }
         public UpdateTypeEnum UpdateEnum { get; set; }
 
-        public FDName CargoType { get; set; } // 3.03       deliver/collect only    - what you have done now.  Blank if not known (<3.03)
+        public MCFDName CargoType { get; set; } // 3.03       deliver/collect only    - what you have done now.  Blank if not known (<3.03)
         public string FriendlyCargoType { get; set; }
         public int Count { get; set; }  // 3.03         deliver/collect only.  0 if not known.
 
@@ -237,7 +237,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            if (CargoType.IsValid() && Count > 0)
+            if (CargoType.IsValid && Count > 0)
                 mc.ChangeCommd( EventTimeUTC, CargoType, (UpdateEnum == UpdateTypeEnum.Collect) ? Count : -Count, 0);
         }
 
@@ -273,14 +273,14 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalCollectCargo(JObject evt) : base(evt, JournalTypeEnum.CollectCargo)
         {
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
+            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
             Stolen = evt["Stolen"].Bool();
             MissionID = new MissionID(evt["MissionID"]);
         }
 
-        public FDName Type { get; set; }                    // FDNAME..
+        public MCFDName Type { get; set; }                    // FDNAME..
         public string FriendlyType { get; set; }            // translated name
         public string Type_Localised { get; set; }            // always set
         public bool Stolen { get; set; }
@@ -301,7 +301,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public class TransferClass
         {
-            public FDName Type { get; set; }
+            [JsonAlwaysCreate]
+            public MCFDName Type { get; set; }
             public string Type_Localised { get; set; }
             public MissionID MissionID { get; set; }            // only on some types of transfers, not in journal doc, found in logs.
             public int Count { get; set; }

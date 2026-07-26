@@ -42,7 +42,8 @@ namespace EliteDangerousCore.JournalEvents
         [System.Diagnostics.DebuggerDisplay("{Name_Localised} {RequiredAmount} {ProvidedAmount} {Payment}")]
         public class ResourcesList : IEquatable<ResourcesList>
         {
-            public FDName Name { get; set; }     
+            [JsonAlwaysCreate]
+            public MCFDName Name { get; set; }     
             public string FriendlyName { get; set; }        // English
             public string Name_Localised { get; set; }
             public int RequiredAmount { get; set; }
@@ -57,7 +58,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname, ev);
+                Name = MCFDName.Normalise(Name.StrNull(), out string engname, ev);
                 FriendlyName = engname;
             }
         }
@@ -115,13 +116,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public class Contribution
         {
-            public FDName Name { get; set; }        // fdname
+            [JsonAlwaysCreate]
+            public MCFDName Name { get; set; }        // fdname
             public string FriendlyName { get; set; } // english
             public string Name_Localised { get; set; }
             public int Amount { get; set; }
             public void Normalise(JournalEntry ev)
             {
-                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname, ev);
+                Name = MCFDName.Normalise(Name.StrNull(), out string engname, ev);
                 FriendlyName = engname;
             }
         }

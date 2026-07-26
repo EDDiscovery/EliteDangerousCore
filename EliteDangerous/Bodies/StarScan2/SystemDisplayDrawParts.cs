@@ -40,7 +40,7 @@ namespace EliteDangerousCore.StarScan2
 
             ExtendedControls.ImageElement.List images = new ExtendedControls.ImageElement.List();
 
-            foreach (KeyValuePair<FDName, double> sd in sn.Materials)
+            foreach (KeyValuePair<MCFDName, double> sd in sn.Materials)
             {
                 Color fillc = Color.Yellow;
                 string abv = sd.Key.Str().Substring(0, 1);

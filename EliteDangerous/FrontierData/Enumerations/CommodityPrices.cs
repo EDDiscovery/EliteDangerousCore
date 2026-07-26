@@ -23,9 +23,9 @@ namespace EliteDangerousCore
         public long id { get; private set; }
 
         [JsonName("name")]                                  // Oct 22: No sign of a JSON.FromObject use.  I think this is old but may as well maintain. Maintain CAPI output names when emitting, even though we use a different naming
-        public FDName fdname { get; private set; }          // EDDN use : name is lower cased in CAPI but thats all to match Marketing use of it
+        public MCFDName fdname { get; private set; }          // EDDN use : name is lower cased in CAPI but thats all to match Marketing use of it
         [JsonIgnore]
-        public FDName fdname_unnormalised { get; private set; }  // unnormalised, with FD decoration, if present
+        public MCFDName fdname_unnormalised { get; private set; }  // unnormalised, with FD decoration, if present
         public string locName { get; private set; }
 
         [JsonName("categoryname")]
@@ -133,7 +133,7 @@ namespace EliteDangerousCore
             ComparisionLR = ComparisionRL = "";
         }
 
-        public CCommodities(long id, FDName fdname, string locname, string cat, string loccat, int buyprice, int sellprice, int demandbracket, int stockbracket, int stock, int demand)
+        public CCommodities(long id, MCFDName fdname, string locname, string cat, string loccat, int buyprice, int sellprice, int demandbracket, int stockbracket, int stock, int demand)
         {
             this.id = id;
             this.fdname_unnormalised = this.fdname = fdname;
@@ -166,8 +166,8 @@ namespace EliteDangerousCore
             try
             {
                 id = jo["id"].Long();
-                fdname_unnormalised = jo["name"].FDName();
-                fdname = FDNameHelpers.NormaliseMatCommods(fdname_unnormalised.Str(), out _, null);
+                fdname_unnormalised = jo["name"].MCFDName();
+                fdname = MCFDName.Normalise(fdname_unnormalised.Str(), out _, null);
 
                 locName = jo["locName"].Str();
                 locName = locName.Alt(fdname.SplitCapsWordFull());      // use locname, if not there, make best loc name possible
@@ -221,8 +221,8 @@ namespace EliteDangerousCore
             try
             {
                 id = jo["id"].Long();
-                fdname_unnormalised = jo["Name"].FDName();
-                fdname = FDNameHelpers.NormaliseMatCommods(fdname_unnormalised.Str(), out _, null);
+                fdname_unnormalised = jo["Name"].MCFDName();
+                fdname = MCFDName.Normalise(fdname_unnormalised.Str(), out _, null);
                 locName = jo["Name_Localised"].Str();
                 if (locName.IsEmpty())
                     locName = fdname.SplitCapsWordFull();
@@ -267,8 +267,8 @@ namespace EliteDangerousCore
             try
             {
                 id = jo["id"].Long();
-                fdname_unnormalised = jo["Name"].FDName();
-                fdname = FDNameHelpers.NormaliseMatCommods(fdname_unnormalised.Str(), out _, null);
+                fdname_unnormalised = jo["Name"].MCFDName();
+                fdname = MCFDName.Normalise(fdname_unnormalised.Str(), out _, null);
                 locName = jo["Name_Localised"].Str();
                 if (locName.IsEmpty())
                     locName = fdname.SplitCapsWordFull();
@@ -311,7 +311,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    fdname = fdname_unnormalised = new FDName(spanshname);
+                    fdname = fdname_unnormalised = new MCFDName(spanshname);
                     locName = fdname.Str();
                     loccategory = category = jo["category"].Str();
                 }

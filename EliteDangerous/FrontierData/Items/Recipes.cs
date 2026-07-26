@@ -163,7 +163,7 @@ namespace EliteDangerousCore
         }
 
         // always returns a string, may be empty
-        public static string UsedInRecipesByFDName(FDName fdname, string join = ", ")
+        public static string UsedInRecipesByFDName(MCFDName fdname, string join = ", ")
         {
             string s = Recipes.UsedInEngineeringByFDName(fdname, join);
             s = s.AppendPrePad(Recipes.UsedInSythesisByFDName(fdname, join), join);
@@ -171,7 +171,7 @@ namespace EliteDangerousCore
         }
 
         // always returns a string, may be empty
-        public static string UsedInSythesisByFDName(FDName fdname, string join = ", ")
+        public static string UsedInSythesisByFDName(MCFDName fdname, string join = ", ")
         {
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
             if (mc != null && SynthesisRecipesByMaterial.ContainsKey(mc))
@@ -184,7 +184,7 @@ namespace EliteDangerousCore
         }
 
         // always returns a string, may be empty
-        public static string UsedInEngineeringByFDName(FDName fdname, string join = ", ")
+        public static string UsedInEngineeringByFDName(MCFDName fdname, string join = ", ")
         {
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
             if (mc != null && EngineeringRecipesByMaterial.ContainsKey(mc))

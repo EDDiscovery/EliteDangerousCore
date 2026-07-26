@@ -50,8 +50,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             LoadGameCommander = JournalFieldNaming.SubsituteCommanderName(evt["Commander"].Str());
 
-            string ship = evt["Ship"].Str("sidewinder");        // a few from 2016 is bugged out we will fake a ship for the very few bugged out
-            ShipFD = FDNameHelpers.NormaliseShipOrSuitOrActor(ship, out string engname, this);        // force something, even Unknown
+            string vname = evt["Ship"].Str("sidewinder");        // a few from 2016 is bugged out we will fake a ship for the very few bugged out
+            ShipFD = VehicleFDName.Normalise(vname, out string engname, this);        // force something, even Unknown
             ShipType = engname;
             Ship_Localised = JournalFieldNaming.CheckLocalisation(evt["Ship_Localised"].Str(), engname);       // may not be present, so use engname
             ShipId = new ShipID(evt["ShipID"]);
@@ -81,7 +81,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string LoadGameCommander { get; set; }
-        public FDName ShipFD { get; set; }        // type, fd name
+        public VehicleFDName ShipFD { get; set; }      // type, fd name. May not be a ship, use TransportType to find out
         public string ShipType { get; set; }        // friendly name, fer-de-lance, from our db.  Older Load games did not have Localised
         public string Ship_Localised { get; set; }   // localised
         public ShipID ShipId { get; set; }
@@ -106,14 +106,6 @@ namespace EliteDangerousCore.JournalEvents
 
         public string FID { get; set; }
 
-        public bool InShip { get { return ItemData.IsShip(ShipFD); } }
-        public bool InSuit { get { return ItemData.IsSuitTypeName(ShipFD); } }     // 4.0
-        public bool InTaxi { get { return ItemData.IsTaxi(ShipFD); } }     // 4.0
-        public bool InSRV { get { return ItemData.IsSRV(ShipFD); } }
-        public bool InFighter { get { return ItemData.IsFighter(ShipFD); } }
-        public bool IsLander { get { return ItemData.IsLander(ShipFD); } }
-        public bool InShipSRVOrFighterOrLander { get { return ItemData.IsShipOrSRVOrFighterOrLander(ShipFD); } }
-
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship".Tx()+": ", ShipType, "Name".Tx()+": ", ShipName, "Ident".Tx()+": ", ShipIdent, "Credits: ;;N0".Tx(), Credits);
@@ -135,7 +127,7 @@ namespace EliteDangerousCore.JournalEvents
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             // only call if in these types from 4.0 we can be on foot or in a taxi
-            if (ShipFD.IsValid && InShipSRVOrFighterOrLander)
+            if (ShipFD.IsValid && ShipFD.IsShipSRVFighterLander)
             {
                 shp.LoadGame(ShipId, ShipType, ShipFD, ShipName, ShipIdent, FuelLevel, FuelCapacity);
             }

@@ -21,9 +21,9 @@ namespace EliteDangerousCore
 
     public static class MaterialCommoditiesRecipe
     {
-        static public Dictionary<FDName, int> TotalList(List<MaterialCommodityMicroResource> mcl)      // holds totals list by FDName, used during computation of below functions
+        static public Dictionary<MCFDName, int> TotalList(List<MaterialCommodityMicroResource> mcl)      // holds totals list by FDName, used during computation of below functions
         {
-            var used = new Dictionary<FDName, int>();
+            var used = new Dictionary<MCFDName, int>();
             foreach (var x in mcl)
                 used.Add(x.Details.FDName, x.Count);
             return used;
@@ -35,7 +35,7 @@ namespace EliteDangerousCore
                             Recipes.Recipe r,       // the receipe to do..
                             int tomake,         // how many to make..
                             List<MaterialCommodityMicroResource> currentcontents,   
-                            Dictionary<FDName, int> available,     // current available totals, started at what we have, then decreased if required as you process 
+                            Dictionary<MCFDName, int> available,     // current available totals, started at what we have, then decreased if required as you process 
                             Dictionary<MaterialCommodityMicroResourceType, int> totalneeded = null,      // This is the total amount needed of items
                             bool reducetotals = true)
         {

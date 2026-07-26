@@ -717,7 +717,7 @@ namespace EliteDangerousCore.JournalEvents
         public class TradeOrder
         {
             public bool BlackMarket { get; set; }
-            public FDName Commodity { get; set; }
+            public MCFDName Commodity { get; set; }
             public string Commodity_Localised { get; set; }
             public int Price { get; set; }
             public int? PurchaseOrder { get; set; }     // non null if purchase order
@@ -749,7 +749,7 @@ namespace EliteDangerousCore.JournalEvents
             CancelTrade = evt["CancelTrade"].BoolNull();
 
             Order.BlackMarket = evt["BlackMarket"].Bool();
-            Order.Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out string engname, this);
+            Order.Commodity = MCFDName.Normalise(evt["Commodity"].Str(), out string engname, this);
             Order.Commodity_Localised =JournalFieldNaming.CheckLocalisation(evt["Commodity_Localised"].Str(), engname);
             Order.PurchaseOrder = evt["PurchaseOrder"].IntNull();
             Order.SaleOrder = evt["SaleOrder"].IntNull();

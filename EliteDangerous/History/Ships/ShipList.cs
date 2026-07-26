@@ -25,8 +25,8 @@ namespace EliteDangerousCore
     {
         public int Count => ships.Count;
         public Ship this[int n] => ships.Values.ToArray()[n];
-        public IEnumerable<Ship> OwnedSpaceShips() { return ships.Where(x => x.Value.State == Ship.ShipState.Owned && ItemData.IsShip(x.Value.ShipFD)).Select(x => x.Value); }
-        public IEnumerable<Ship> SoldDestroyedSpaceShips() { return ships.Where(x => x.Value.State != Ship.ShipState.Owned && ItemData.IsShip(x.Value.ShipFD)).Select(x => x.Value); }
+        public IEnumerable<Ship> OwnedSpaceShips() { return ships.Where(x => x.Value.State == Ship.ShipState.Owned && x.Value.ShipFD.VehicleType == VehicleFDName.VehicleTypeEnum.Ship).Select(x => x.Value); }
+        public IEnumerable<Ship> SoldDestroyedSpaceShips() { return ships.Where(x => x.Value.State != Ship.ShipState.Owned && x.Value.ShipFD.VehicleType == VehicleFDName.VehicleTypeEnum.Ship).Select(x => x.Value); }
 
         public ShipModulesInStore StoredModules { get; private set; }       // stored modules
 
@@ -36,7 +36,7 @@ namespace EliteDangerousCore
         public Ship CurrentShip { get { return HaveCurrentShip ? ships[currentid] : null; } }
 
         // IDs have been repeated, need more than just that
-        private string Key(FDName fdname, ShipID i) { return fdname.ToLower() + ":" + i.ToString(); }
+        private string Key(VehicleFDName fdname, ShipID i) { return fdname.ToLower() + ":" + i.ToString(); }
 
         public Ship GetShipByShortName(string sn)
         {
@@ -68,7 +68,7 @@ namespace EliteDangerousCore
         public Ship GetSRVOrLanderOrFighter(ShipID id)       // ID and must be a SRV/Fighter/Lander, and this is because in debug logs we could have a repeat over time of the same ID
         {
             List<Ship> lst = ships.Values.ToList();
-            int index = lst.FindIndex(x => x.ID == id && ItemData.IsSRVOrFighterOrLander(x.ShipFD));
+            int index = lst.FindIndex(x => x.ID == id && x.ShipFD.IsSRVOrFighterOrLander);
             return (index >= 0) ? lst[index] : null;
         }
 
@@ -82,7 +82,7 @@ namespace EliteDangerousCore
             currentid = null;
         }
 
-        public void Loadout(ShipID id, string ship, FDName shipfd, string name, string ident, List<ShipModule> modulelist,
+        public void Loadout(ShipID id, string ship, VehicleFDName shipfd, string name, string ident, List<ShipModule> modulelist,
                         long HullValue, long ModulesValue, long Rebuy, double unladenmass, double reservefuelcap, double hullhealth, bool? Hot)
         {
             string sid = Key(shipfd, id);
@@ -168,7 +168,7 @@ namespace EliteDangerousCore
         }
 
 
-        public void LoadGame(ShipID id, string ship, FDName shipfd, string name, string ident, double fuellevel, double fueltotal)        // LoadGame..
+        public void LoadGame(ShipID id, string ship, VehicleFDName shipfd, string name, string ident, double fuellevel, double fueltotal)        // LoadGame..
         {
             string sid = Key(shipfd, id);
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
@@ -176,7 +176,7 @@ namespace EliteDangerousCore
 
             //DebuggerHelpers.DP("SL","Load Game " + sid);
 
-            if (ItemData.IsShip(shipfd))
+            if (shipfd.VehicleType == VehicleFDName.VehicleTypeEnum.Ship)
                 currentid = sid;
             VerifyList();
         }
@@ -235,7 +235,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void RestockVehicle(ShipID id, FDName shipfd, string ship, string Loadout)
+        public void RestockVehicle(ShipID id, VehicleFDName shipfd, string ship, string Loadout)
         {
             string sid = Key(shipfd, id);
             Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
@@ -316,7 +316,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void ShipyardNew(string ship, FDName shipfd, ShipID id)
+        public void ShipyardNew(string ship, VehicleFDName shipfd, ShipID id)
         {
             string sid = Key(shipfd, id);
             //DebuggerHelpers.DP("SL",sid + " New");
@@ -327,7 +327,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void Sell(FDName shipfd, ShipID id)
+        public void Sell(VehicleFDName shipfd, ShipID id)
         {
             string sid = Key(shipfd, id);
             if (ships.ContainsKey(sid))       // if we don't have it, don't worry
@@ -342,7 +342,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void Transfer(string ship, FDName shipFD, ShipID id, string fromsystem, string tosystem, string tostation, DateTime arrivaltime)
+        public void Transfer(string ship, VehicleFDName shipFD, ShipID id, string fromsystem, string tosystem, string tostation, DateTime arrivaltime)
         {
             string sid = Key(shipFD, id);
             Ship sm = EnsureShip(sid);              // this either gets current ship or makes a new one.
@@ -353,7 +353,7 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void Store(FDName shipfd, ShipID id, string station, string system)
+        public void Store(VehicleFDName shipfd, ShipID id, string station, string system)
         {
             string sid = Key(shipfd, id);
             if (ships.ContainsKey(sid))       // if we don't have it, don't worry

@@ -189,7 +189,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalMarketBuy(JObject evt) : base(evt, JournalTypeEnum.MarketBuy)
         {
             MarketID = new MarketID(evt["MarketID"]);
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
+            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
             Count = evt["Count"].Int();
@@ -197,7 +197,7 @@ namespace EliteDangerousCore.JournalEvents
             TotalCost = evt["TotalCost"].Long();
         }
 
-        public FDName Type { get; set; }                // FDNAME
+        public MCFDName Type { get; set; }                // FDNAME
         public string Type_Localised { get; set; }      // Always set
         public string FriendlyType { get; set; }        // translated name
         public int Count { get; set; }
@@ -237,7 +237,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalMarketSell(JObject evt) : base(evt, JournalTypeEnum.MarketSell)
         {
             MarketID = new MarketID(evt["MarketID"]);
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
+            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
             Count = evt["Count"].Int();
@@ -249,7 +249,7 @@ namespace EliteDangerousCore.JournalEvents
             BlackMarket = evt["BlackMarket"].Bool();
         }
 
-        public FDName Type { get; set; }
+        public MCFDName Type { get; set; }
         public string FriendlyType { get; set; }
         public string Type_Localised { get; set; }      // always set
 

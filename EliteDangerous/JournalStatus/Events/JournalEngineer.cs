@@ -64,14 +64,14 @@ namespace EliteDangerousCore.JournalEvents
                 ;
             }
 
-            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out string engname, this, true);
+            Commodity = MCFDName.Normalise(evt["Commodity"].Str(), out string engname, this, true);
             if (Commodity != null)
             {
                 FriendlyCommodity = engname;
                 Commodity_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
             }
 
-            Material = FDNameHelpers.NormaliseMatCommods(evt["Material"].Str(), out engname, this, true);
+            Material = MCFDName.Normalise(evt["Material"].Str(), out engname, this, true);
             if (Material != null)
             {
                 FriendlyMaterial = engname;
@@ -88,11 +88,11 @@ namespace EliteDangerousCore.JournalEvents
         public enum ContributionType { Unknown, Bond, Bounty, Commodity, Credits, Materials };
         public ContributionType Type { get; set; }        // Commodity, Bounty, Bond, Materials
 
-        public FDName Commodity { get; set; }           // may be null
+        public MCFDName Commodity { get; set; }           // may be null
         public string FriendlyCommodity { get; set; }   // may be null
         public string Commodity_Localised { get; set; }     // may be null
 
-        public FDName Material { get; set; }            // may be null
+        public MCFDName Material { get; set; }            // may be null
         public string FriendlyMaterial { get; set; }    // may be null
         public string Material_Localised { get; set; }      // may be null
 
@@ -165,7 +165,7 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         foreach (var kvp in temp)
                         {
-                            var fdname = FDNameHelpers.NormaliseMatCommods(kvp.Key, out engname, this, true);
+                            var fdname = MCFDName.Normalise(kvp.Key, out engname, this, true);
                             if (fdname != null)
                             {
                                 var i = new Ingrediant()
@@ -185,7 +185,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     foreach (JObject jo in (JArray)ingredients)
                     {
-                        var fdname = FDNameHelpers.NormaliseMatCommods(jo["Name"].Str(), out engname, this, true);
+                        var fdname = MCFDName.Normalise(jo["Name"].Str(), out engname, this, true);
                         if (fdname != null)     // must be present and non null
                         {
                             var i = new Ingrediant()
@@ -222,7 +222,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public class Ingrediant
         {
-            public FDName NameFD { get; set; }          // normalised name
+            public MCFDName NameFD { get; set; }          // normalised name
             public string Name { get; set; }            // json, then english name
             public string Name_Localised { get; set; }  // localised, or Name
             public int Count { get; set; }              // count

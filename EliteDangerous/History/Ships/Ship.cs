@@ -31,7 +31,7 @@ namespace EliteDangerousCore
         public enum ShipState { Owned, Sold, Destroyed, Imported};
         public ShipState State { get; set; } = ShipState.Owned; // if owned, sold, destroyed. Default owned
         public string ShipType { get; private set; }        // ship type name, nice, fer-de-lance, etc. can be null
-        public FDName ShipFD { get; private set; }          // ship type name, fdname, may be null until set
+        public VehicleFDName ShipFD { get; private set; }          // ship type name, fdname, may be null until set
         public string ShipUserName { get; private set; }    // ship name, may be empty or null
         public string ShipUserIdent { get; private set; }   // ship ident, may be empty or null
         public long HullValue { get; private set; }         // may be 0, not known
@@ -46,7 +46,6 @@ namespace EliteDangerousCore
 
         // for this ship, the ship properites. May be null
         public ItemData.ShipProperties GetShipProperties()  { return ItemData.GetShipProperties(ShipFD); }
-
 
         // Modules
 
@@ -828,7 +827,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public Ship SetShipDetails(string ship, FDName shipfd, string name = null, string ident = null, 
+        public Ship SetShipDetails(string ship, VehicleFDName shipfd, string name = null, string ident = null, 
                                     double fuellevel = 0, double fueltotal = 0,
                                     long hullvalue = 0, long modulesvalue = 0, long rebuy = 0,
                                     double unladenmass = 0, double reservefuelcapacity = 0 , double hullhealth = 0, bool? hot = null)

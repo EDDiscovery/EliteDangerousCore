@@ -492,7 +492,7 @@ namespace EliteDangerousCore.Spansh
                                 foreach (JObject ship in shipyard)
                                 {
                                     string shipname = ship["name"].Str();
-                                    FDName fdname = ItemData.ReverseShipLookup(shipname);
+                                    VehicleFDName fdname = ItemData.ReverseShipLookup(shipname);
                                     if (fdname != null)
                                     {
                                         var si = new ShipYard.ShipyardItem { ShipType =fdname, ShipPrice = ship["price"].Long() };

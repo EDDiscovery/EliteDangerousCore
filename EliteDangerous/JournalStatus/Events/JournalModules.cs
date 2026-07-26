@@ -24,7 +24,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalLoadout(JObject evt) : base(evt, JournalTypeEnum.Loadout)
         {
-            ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string engname, this);
+            ShipFD = VehicleFDName.Normalise(evt["Ship"].Str(), out string engname, this);
             ShipType = engname;
             ShipId = new ShipID(evt["ShipID"]);
             ShipName = evt["ShipName"].Str();
@@ -96,7 +96,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string ShipType { get; set; }        // type, pretty name fer-de-lance
-        public FDName ShipFD { get; set; }        // type,  fdname
+        public VehicleFDName ShipFD { get; set; }        // type,  fdname
         public ShipID ShipId { get; set; }
         public string ShipName { get; set; } // : user-defined ship name
         public string ShipIdent { get; set; } //   user-defined ship ID string
@@ -173,7 +173,7 @@ namespace EliteDangerousCore.JournalEvents
             BuyItemLocalised = JournalFieldNaming.CheckLocalisation(evt["BuyItem_Localised"].Str(),BuyItem);
             BuyPrice = evt["BuyPrice"].Long();
 
-            ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out engname, this);
+            ShipFD = VehicleFDName.Normalise(evt["Ship"].Str(), out engname, this);
             Ship = engname;
             ShipId = new ShipID(evt["ShipID"]);
 
@@ -199,7 +199,7 @@ namespace EliteDangerousCore.JournalEvents
         public ShipSlots.Slot SlotFD { get; set; }
 
         public string Ship { get; set; }
-        public FDName ShipFD { get; set; }
+        public VehicleFDName ShipFD { get; set; }
         public ShipID ShipId { get; set; }
 
         public string BuyItem { get; set; }                     // english name
@@ -268,7 +268,7 @@ namespace EliteDangerousCore.JournalEvents
             MarketID = new MarketID(evt["MarketID"]);
             BuyPrice = evt["BuyPrice"].Long();
 
-            ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname , this);
+            ShipFD = VehicleFDName.Normalise(evt["Ship"].Str(), out string shipname , this);
             Ship = shipname;
             ShipId = new ShipID(evt["ShipID"]);
         }
@@ -278,7 +278,7 @@ namespace EliteDangerousCore.JournalEvents
         public string BuyItemLocalised { get; set; }
 
         public string Ship { get; set; }
-        public FDName ShipFD { get; set; }
+        public VehicleFDName ShipFD { get; set; }
         public ShipID ShipId { get; set; }
 
         public MarketID MarketID { get; set; }
@@ -317,7 +317,7 @@ namespace EliteDangerousCore.JournalEvents
 
             SellPrice = evt["SellPrice"].Long();
 
-            ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
+            ShipFD = VehicleFDName.Normalise(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
             ShipId = new ShipID(evt["ShipID"]);
 
@@ -331,7 +331,7 @@ namespace EliteDangerousCore.JournalEvents
         public string SellItemLocalised { get; set; }
         public long SellPrice { get; set; }
         public string Ship { get; set; }
-        public FDName ShipFD { get; set; }
+        public VehicleFDName ShipFD { get; set; }
         public ShipID ShipId { get; set; }
         public MarketID MarketID { get; set; }
 
@@ -369,7 +369,7 @@ namespace EliteDangerousCore.JournalEvents
 
             SellPrice = evt["SellPrice"].Long();
 
-            ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
+            ShipFD = VehicleFDName.Normalise(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
             ShipId = new ShipID(evt["ShipID"]);
 
@@ -381,7 +381,7 @@ namespace EliteDangerousCore.JournalEvents
         public FDName SellItemFD { get; set; }
         public string SellItemLocalised { get; set; }
         public long SellPrice { get; set; }
-        public FDName ShipFD { get; set; }
+        public VehicleFDName ShipFD { get; set; }
         public string Ship { get; set; }
         public ShipID ShipId { get; set; }
         public int ServerId { get; set; }
@@ -421,7 +421,7 @@ namespace EliteDangerousCore.JournalEvents
             SlotFD = ShipSlots.ToEnum(evt["Slot"].Str());
             Slot = ShipSlots.ToEnglish(SlotFD);
 
-            ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
+            ShipFD = VehicleFDName.Normalise(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
             ShipId = new ShipID(evt["ShipID"]);
 
@@ -455,7 +455,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Slot { get; set; }        // english
 
         public string Ship { get; set; }            // always there
-        public FDName ShipFD { get; set; }
+        public VehicleFDName ShipFD { get; set; }
         public ShipID ShipId { get; set; }
 
         public FDName RetrievedItemFD { get; set; }                 // may be null for busted first ones
@@ -522,7 +522,7 @@ namespace EliteDangerousCore.JournalEvents
             SlotFD = ShipSlots.ToEnum(evt["Slot"].Str());
             Slot = ShipSlots.ToEnglish(SlotFD);
 
-            ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
+            ShipFD = VehicleFDName.Normalise(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
             ShipId = new ShipID(evt["ShipID"]);
 
@@ -551,7 +551,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Slot { get; set; }
         public ShipSlots.Slot SlotFD { get; set; }
         public string Ship { get; set; }
-        public FDName ShipFD { get; set; }
+        public VehicleFDName ShipFD { get; set; }
         public ShipID ShipId { get; set; }
         public string StoredItem { get; set; }  // english
         public FDName StoredItemFD { get; set; }
@@ -631,7 +631,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             ToItemLocalised = JournalFieldNaming.CheckLocalisation(evt["ToItem_Localised"].Str(), ToItem);        // if ToItem is null or not there, this won't be
 
-            ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
+            ShipFD = VehicleFDName.Normalise(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
             ShipId = new ShipID(evt["ShipID"]);
 
@@ -651,7 +651,7 @@ namespace EliteDangerousCore.JournalEvents
         public string ToItemLocalised { get; set; }
 
         public string Ship { get; set; }
-        public FDName ShipFD { get; set; }
+        public VehicleFDName ShipFD { get; set; }
         public ShipID ShipId { get; set; }
         public MarketID MarketID { get; set; }
 
@@ -815,9 +815,10 @@ namespace EliteDangerousCore.JournalEvents
     [JournalEntryType(JournalTypeEnum.MassModuleStore)]
     public class JournalMassModuleStore : JournalEntry, IShipInformation
     {
+
         public JournalMassModuleStore(JObject evt) : base(evt, JournalTypeEnum.MassModuleStore)
         {
-            ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
+            ShipFD = VehicleFDName.Normalise(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
             ShipId = new ShipID(evt["ShipID"]);
 
@@ -837,7 +838,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string Ship { get; set; }
-        public FDName ShipFD { get; set; }
+        public VehicleFDName ShipFD { get; set; }
         public ShipID ShipId { get; set; }
         public MarketID MarketID { get; set; }
 
@@ -897,7 +898,7 @@ namespace EliteDangerousCore.JournalEvents
 
             TransferCost = evt["TransferCost"].Long();
 
-            ShipFD = FDNameHelpers.NormaliseShip(evt["Ship"].Str(), out string shipname, this);
+            ShipFD = VehicleFDName.Normalise(evt["Ship"].Str(), out string shipname, this);
             Ship = shipname;
             ShipId = new ShipID(evt["ShipID"]);
 
@@ -911,7 +912,7 @@ namespace EliteDangerousCore.JournalEvents
         public FDName StoredItemFD { get; set; }
         public string StoredItemLocalised { get; set; }
         public long TransferCost { get; set; }
-        public FDName ShipFD { get; set; }
+        public VehicleFDName ShipFD { get; set; }
         public string Ship { get; set; }
         public ShipID ShipId { get; set; }
         public int ServerId { get; set; }

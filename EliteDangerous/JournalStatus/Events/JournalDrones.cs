@@ -47,14 +47,14 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalBuyDrones(JObject evt) : base(evt, JournalTypeEnum.BuyDrones)
         {
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
+            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Count = evt["Count"].Int();
             BuyPrice = evt["BuyPrice"].Long();
             TotalCost = evt["TotalCost"].Long();
 
         }
-        public FDName Type { get; set; }
+        public MCFDName Type { get; set; }
         public string FriendlyType { get; set; }
         public int Count { get; set; }
         public long BuyPrice { get; set; }
@@ -63,7 +63,7 @@ namespace EliteDangerousCore.JournalEvents
         // Istats
         public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = Type, Count = Count } }; } }
 
-        public FDName FDNameOfItem { get { return Type; } }        // implement IStatsJournalEntryMatCommod
+        public MCFDName FDNameOfItem { get { return Type; } }        // implement IStatsJournalEntryMatCommod
         public int CountOfItem { get { return Count; } }
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
@@ -94,13 +94,13 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSellDrones(JObject evt) : base(evt, JournalTypeEnum.SellDrones)
         {
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
+            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Count = evt["Count"].Int();
             SellPrice = evt["SellPrice"].Long();
             TotalSale = evt["TotalSale"].Long();
         }
-        public FDName Type { get; set; }
+        public MCFDName Type { get; set; }
         public string FriendlyType { get; set; }
         public int Count { get; set; }
         public long SellPrice { get; set; }

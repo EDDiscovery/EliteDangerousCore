@@ -23,12 +23,12 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMiningRefined(JObject evt) : base(evt, JournalTypeEnum.MiningRefined)
         {
-            Type = FDNameHelpers.NormaliseMatCommods(evt["Type"].Str(), out string engname, this);
+            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);
         }
 
-        public FDName Type { get; set; }                                        // FIXED fdname always.. vital it stays this way
+        public MCFDName Type { get; set; }                                        // FIXED fdname always.. vital it stays this way
         public string FriendlyType { get; set; }
         public string Type_Localised { get; set; }
 
@@ -71,7 +71,8 @@ namespace EliteDangerousCore.JournalEvents
     {
         public class Material
         {
-            public FDName Name { get; set; }        //FDNAME
+            [JsonAlwaysCreate]
+            public MCFDName Name { get; set; }        //FDNAME
             public string Name_Localised { get; set; }     
             public string FriendlyName { get; set; }        //friendly
             public double Proportion { get; set; }      // 0-100
@@ -82,7 +83,7 @@ namespace EliteDangerousCore.JournalEvents
             Content = evt["Content"].Enumeration<AsteroidContent>(AsteroidContent.Low, x=>x.Replace("$AsteroidMaterialContent_","").Replace(";",""));
             Content_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Content_Localised"].Str(), Content.ToString());
 
-            MotherlodeMaterial = FDNameHelpers.NormaliseMatCommods(evt["MotherlodeMaterial"].Str(), out string engname, this, true);
+            MotherlodeMaterial = MCFDName.Normalise(evt["MotherlodeMaterial"].Str(), out string engname, this, true);
             if (MotherlodeMaterial != null)
             {
                 FriendlyMotherlodeMaterial = engname;
@@ -96,7 +97,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (Material m in Materials)
                 {
-                    m.Name = FDNameHelpers.NormaliseMatCommods(m.Name.StrNull(), out engname, this);
+                    m.Name = MCFDName.Normalise(m.Name.StrNull(), out engname, this);
                     m.FriendlyName = engname;
                 }
             }
@@ -107,7 +108,7 @@ namespace EliteDangerousCore.JournalEvents
         public AsteroidContent Content { get; set; }
         public string Content_Localised { get; set; }
 
-        public FDName MotherlodeMaterial { get; set; }      // may be null
+        public MCFDName MotherlodeMaterial { get; set; }      // may be null
         public string MotherlodeMaterial_Localised { get; set; }   // may be null
         public string FriendlyMotherlodeMaterial { get; set; }  // may be null
 

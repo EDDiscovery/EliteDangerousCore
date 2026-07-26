@@ -526,7 +526,7 @@ namespace EliteDangerousCore.JournalEvents
                 sb.AppendSPC();
 
                 int index = 0;
-                foreach (KeyValuePair<FDName, double> mat in Materials)
+                foreach (var mat in Materials)
                 {
                     if (index++ > 0)
                         sb.Append(indents);
@@ -535,7 +535,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
         // has trailing LF
-        public void DisplayMaterial(StringBuilder sb, FDName fdname, double percent, List<MaterialCommodityMicroResource> historicmatlist = null,
+        public void DisplayMaterial(StringBuilder sb, MCFDName fdname, double percent, List<MaterialCommodityMicroResource> historicmatlist = null,
                                                                       List<MaterialCommodityMicroResource> currentmatlist = null)
         {
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);

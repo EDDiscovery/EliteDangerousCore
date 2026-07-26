@@ -33,13 +33,13 @@ namespace EliteDangerousCore
         public bool InTransit { get; set; }      //remote, and that means StarSystem is not there.
 
         public string StationName { get; set; }  // local only, null otherwise, not compared due to it being computed
-        public FDName ShipTypeFD { get; set; } // both, computed
+        public VehicleFDName ShipTypeFD { get; set; } // both, computed
         public System.TimeSpan TransferTimeSpan { get; set; }        // computed
         public string TransferTimeString { get; set; } // computed
 
         public void Normalise()
         {
-            ShipTypeFD = FDNameHelpers.NormaliseShip(ShipType, out string bettername, null);
+            ShipTypeFD = VehicleFDName.Normalise(ShipType, out string bettername, null);
             ShipType = bettername;
             ShipType_Localised = ShipType_Localised.Alt(ShipType);
             TransferTimeSpan = new System.TimeSpan((int)(TransferTime / 60 / 60), (int)((TransferTime / 60) % 60), (int)(TransferTime % 60));

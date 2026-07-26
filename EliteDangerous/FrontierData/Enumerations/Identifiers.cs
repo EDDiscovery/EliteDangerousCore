@@ -90,7 +90,7 @@ namespace EliteDangerousCore
                 if (indexof > 0 && res.Length > indexof + 6)
                 {
                     string mintype = res.Substring(indexof + 6).Replace(";", "").Replace("_name", "").Replace("$", "");
-                    var mcd = MaterialCommodityMicroResourceType.GetByFDName(new FDName(mintype));
+                    var mcd = MaterialCommodityMicroResourceType.GetByFDName(new MCFDName(mintype));
                     if (mcd != null)    // if we find it, translate it, else leave it alone
                         mintype = mcd.TranslatedName;
 

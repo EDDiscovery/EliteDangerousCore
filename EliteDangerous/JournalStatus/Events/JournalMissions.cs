@@ -140,7 +140,7 @@ namespace EliteDangerousCore.JournalEvents
 
             MissionID = new MissionID(evt["MissionID"]);
 
-            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out engname, this, true);        // allow null
+            Commodity = MCFDName.Normalise(evt["Commodity"].Str(), out engname, this, true);        // allow null
             FriendlyCommodity = engname;
             if (Commodity != null)
                 CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
@@ -189,7 +189,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Influence { get; private set; }
         public string Reputation { get; private set; }
 
-        public FDName Commodity { get; private set; }               //fdname, this is for delivery missions, stuff being transported. Null otherwise
+        public MCFDName Commodity { get; private set; }               //fdname, this is for delivery missions, stuff being transported. Null otherwise
         public string CommodityLocalised { get; private set; }
         public string FriendlyCommodity { get; private set; }       //db name
         public int? Count { get; private set; }
@@ -294,7 +294,7 @@ namespace EliteDangerousCore.JournalEvents
 
             Faction = evt["Faction"].Str();
 
-            Commodity = FDNameHelpers.NormaliseMatCommods(evt["Commodity"].Str(), out engname, this, true);        // allow null
+            Commodity = MCFDName.Normalise(evt["Commodity"].Str(), out engname, this, true);        // allow null
             if (Commodity != null)
             {
                 FriendlyCommodity = engname;
@@ -376,7 +376,7 @@ namespace EliteDangerousCore.JournalEvents
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public string Faction { get; set; }
 
-        public FDName Commodity { get; set; }               // may be null. The thing shipped. But in pre3.0, this could also be a commodity reward, which was not clear.
+        public MCFDName Commodity { get; set; }               // may be null. The thing shipped. But in pre3.0, this could also be a commodity reward, which was not clear.
         public string CommodityLocalised { get; set; }
         public string FriendlyCommodity { get; set; }
         public int? Count { get; set; }
@@ -595,7 +595,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public class MaterialRewards
         {
-            public FDName Name; // fdname
+            public MCFDName Name; // fdname
             public string FriendlyName; // our conversion
             public string Name_Localised;       // may be null on reading
             public MaterialCommodityMicroResourceType.CatType? Category; // may be null...
@@ -604,7 +604,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname, ev);
+                Name = MCFDName.Normalise(Name.StrNull(), out string engname, ev);
                 FriendlyName = engname;
                 Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(Name_Localised ?? "", FriendlyName);
 
@@ -617,14 +617,14 @@ namespace EliteDangerousCore.JournalEvents
 
         public class CommodityRewards
         {
-            public FDName Name; // fdname
+            public MCFDName Name; // fdname
             public string FriendlyName; // our conversion
             public string Name_Localised;   // may be null
             public int Count;
 
             public void Normalise(JournalEntry ev)
             {
-                Name = FDNameHelpers.NormaliseMatCommods(Name.StrNull(), out string engname, ev);
+                Name = MCFDName.Normalise(Name.StrNull(), out string engname, ev);
                 FriendlyName = engname;
                 Name_Localised = Name_Localised.Alt(FriendlyName);
             }

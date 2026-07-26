@@ -33,7 +33,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             public string Name;             // always non null 
             public string Name_Localised;   // always non null 
-            public FDName Ship;             // always non null 
+            public VehicleActorSuitFDName Ship;             // always non null , may be actor as well as ship
             public RankDefinitions.CombatRank Rank;  // may be unknown
 
             public string FriendlyShip;     // EDD addition, always non null
@@ -48,7 +48,7 @@ namespace EliteDangerousCore.JournalEvents
                 Killers = evt["Killers"].ToObject<Killer[]>(process: (type, str) => Enum.TryParse<RankDefinitions.CombatRank>(str, true, out RankDefinitions.CombatRank cr) ? cr : RankDefinitions.CombatRank.Unknown);
                 foreach (var x in Killers.EmptyIfNull())
                 {
-                    x.Ship = FDNameHelpers.NormaliseShipOrSuitOrActor(x.Ship.Str(), out string engname, this);
+                    x.Ship = VehicleActorSuitFDName.Normalise(x.Ship.Str(), out string engname, this);
                     x.FriendlyShip = engname;
                     x.Name_Localised = x.Name_Localised != null ? x.Name_Localised : x.Name;
                     x.Name = x.Name != null && !x.Name.ContainsIIC("$UNKNOWN") ? x.Name : engname;
@@ -57,7 +57,7 @@ namespace EliteDangerousCore.JournalEvents
             else if (evt.Contains("KillerName") || evt.Contains("KillerShip"))
             {
                 string killerName = evt["KillerName"].StrNull();        // may not be there
-                var ShipType = FDNameHelpers.NormaliseShipOrSuitOrActor(evt["KillerShip"].Str(), out string engname, this);
+                var ShipType = VehicleActorSuitFDName.Normalise(evt["KillerShip"].Str(), out string engname, this);
                 var name = killerName != null && !killerName.ContainsIIC("$UNKNOWN") ? killerName : engname;         // Killer Name can be missing
 
                 Killers = new Killer[1]
@@ -96,12 +96,12 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     string kstr = "";
 
-                    if (ItemData.IsSuitTypeName(k.Ship))
+                    if (k.Ship.VehicleType == VehicleFDName.VehicleTypeEnum.Suit)
                     {
                         string type = k.Ship.Contains("citizen") ? k.FriendlyShip.Replace("Suit ", "") : k.FriendlyShip.Replace("Suit", "Trooper");
                         kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", type);
                     }
-                    else if (ItemData.IsShip(k.Ship))
+                    else if (k.Ship.VehicleType == VehicleFDName.VehicleTypeEnum.Ship)
                     {
                         kstr = string.Format("{0} in ship type {1} rank {2}".Tx(), k.Name_Localised, k.FriendlyShip, k.Rank.ToString());
                     }

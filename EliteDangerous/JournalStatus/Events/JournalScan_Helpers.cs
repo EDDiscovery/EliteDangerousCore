@@ -45,14 +45,14 @@ namespace EliteDangerousCore.JournalEvents
                 return null;
         }
 
-        public double GetMaterial(FDName v)
+        public double GetMaterial(MCFDName v)
         {
             return Materials == null || !Materials.ContainsKey(v) ? 0.0 : Materials[v];
         }
 
         public double GetMaterialStr(string v)
         {
-            var fd = new FDName(v);
+            var fd = new MCFDName(v);
             return Materials == null || !Materials.ContainsKey(fd) ? 0.0 : Materials[fd];
         }
 
@@ -168,7 +168,7 @@ namespace EliteDangerousCore.JournalEvents
                 int standard = 0;
                 int premium = 0;
 
-                foreach (KeyValuePair<FDName, double> mat in Materials)
+                foreach (var mat in Materials)
                 {
                     string usedin = Recipes.UsedInSythesisByFDName(mat.Key);
                     if (usedin.Contains("FSD-Basic"))
@@ -200,7 +200,7 @@ namespace EliteDangerousCore.JournalEvents
 
         // adds to mats hash (if required) if one found.
         // returns number of jumponiums in body
-        public int Jumponium(HashSet<FDName> mats = null)
+        public int Jumponium(HashSet<MCFDName> mats = null)
         {
             int count = 0;
 

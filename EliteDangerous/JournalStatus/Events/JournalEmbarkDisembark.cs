@@ -47,7 +47,7 @@ namespace EliteDangerousCore.JournalEvents
             if (ShipID.IsValid)
             {
                 var shipfd = shp.GetSRVOrLanderOrFighter(ShipID)?.ShipFD;
-                if (shipfd != null && ItemData.IsLander(shipfd))
+                if (shipfd != null && shipfd.VehicleType == VehicleFDName.VehicleTypeEnum.Lander)
                 {
                     SRV = false;
                     IsLander = true;

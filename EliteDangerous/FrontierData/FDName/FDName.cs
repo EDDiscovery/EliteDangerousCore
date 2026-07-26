@@ -179,13 +179,14 @@ namespace EliteDangerousCore
         }
     }
 
+
     public static class FDNameHelpers
     {
         public static FDName FDName(this JToken tk)     // always gives a non null fdname with non null str()
         {
             return new FDName(tk != null ? tk.Str() : null);
         }
-        
+
         public static bool IsValid(this FDName s)       // tdb?
         {
             return s?.IsValid == true;
@@ -196,6 +197,10 @@ namespace EliteDangerousCore
             return new FDName(str);
         }
 
+        public static MCFDName MCFDName(this JToken tk)     // always gives a non null fdname with non null str()
+        {
+            return new MCFDName(tk != null ? tk.Str() : null);
+        }
         public static string StrNull(this FDName s)
         {
             return s?.Str();
@@ -230,59 +235,6 @@ namespace EliteDangerousCore
                 s = s.Substring(1);
 
             return s;
-        }
-
-        public static FDName NormaliseShip(string fdname, out string shipname, JournalEntry ev, bool allownull = false)
-        {
-            if (fdname.IsEmpty())
-            {
-                if (allownull)
-                {
-                    shipname = null;
-                    return null;
-                }
-                else
-                {
-                    shipname = "Unknown Ship";
-                    BaseUtils.Debugger.TraceBreak($"*** Missing Ship {ev?.EventTimeUTC} {ev?.EventTypeStr}");
-                    return new FDName("Unknown Ship");
-                }
-            }
-            else
-            {
-                var ret = new FDName(fdname);
-                var ship = ItemData.GetShipProperties(ret);
-                if (ship == null)
-                {
-                    BaseUtils.Debugger.TraceBreak($"*** Unknown ship: `{fdname}` {ev?.EventTimeUTC} {ev?.EventTypeStr}");
-                    shipname = "Unknown Ship " + fdname;
-                }
-                else
-                    shipname = ship.Name;
-
-                return ret;
-            }
-        }
-
-        public static FDName NormaliseShipOrSuitOrActor(string fdname, out string name, JournalEntry ev, bool allownull = false)
-        {
-            if (fdname != null)
-            {
-                FDName fd = new FDName(fdname);
-                if (ItemData.IsSuitTypeName(fd))
-                {
-                    var suit = ItemData.GetSuit(fd);
-                    name = suit?.Name ?? ("Unknown Suit " + fdname);
-                    return fd;
-                }
-                else if (ItemData.IsActor(fd))
-                {
-                    name = ItemData.GetActor(fd).Name;
-                    return fd;
-                }
-            }
-            
-            return NormaliseShip(fdname, out name, ev, allownull);
         }
 
         public static FDName NormaliseModules(string fdname, out string modulename, JournalEntry ev, bool allownull = false)
@@ -320,44 +272,6 @@ namespace EliteDangerousCore
                 return ret;
             }
         }
-        public static FDName NormaliseMatCommods(string fdname, out string matname, JournalEntry ev, bool allownull = false)
-        {
-            if (fdname.IsEmpty())
-            {
-                if (allownull)
-                {
-                    matname = null;
-                    return null;
-                }
-                else
-                {
-                    matname = "Unknown Material/Commodity";
-                    BaseUtils.Debugger.TraceBreak($"*** Missing Material {ev?.EventTimeUTC} {ev?.EventTypeStr}");
-                    return new FDName("Unknown Material/Commodity");
-                }
-            }
-            else
-            {
-                if (fdname.Length >= 8 && fdname[0] == '$' && fdname.EndsWith("_name;", System.StringComparison.InvariantCultureIgnoreCase))
-                    fdname = fdname.Substring(1, fdname.Length - 7);        // remove decoration
-
-                if (fdnamemangling.TryGetValue(fdname.ToLower(), out string value))     // fix some renaming issues
-                    fdname = value;
-
-                if (MaterialCommodityMicroResourceType.TryGet(fdname, out MaterialCommodityMicroResourceType item))
-                {
-                    matname = item.EnglishName;
-                }
-                else
-                {
-                    BaseUtils.Debugger.TraceBreak($"*** Unknown Mat/Commod `{fdname}` {ev?.EventTimeUTC} {ev?.EventTypeStr}");
-                    matname = fdname.SplitCapsWordFull();
-                }
-
-                return new FDName(fdname);
-            }
-        }
-
         public static FDName NormaliseMissionName(string fdname, out string engname)
         {
             if (fdname.HasChars())
@@ -477,57 +391,6 @@ namespace EliteDangerousCore
             }
         }
 
-        public static Dictionary<string, string> fdnamemangling = new Dictionary<string, string>() // Key: old_identifier, Value: new_identifier
-        {
-            //2.2 to 2.3 changed some of the identifier names.. change the 2.2 ones to 2.3!  Anthor data from his materials db file
-
-            // July 2018 - removed many, changed above, to match FD 3.1 excel output - we use their IDs.  Netlogentry frontierdata checks these..
-
-            { "aberrantshieldpatternanalysis"       ,  "shieldpatternanalysis" },
-            { "adaptiveencryptorscapture"           ,  "adaptiveencryptors" },
-            { "alyabodysoap"                        ,  "alyabodilysoap" },
-            { "anomalousbulkscandata"               ,  "bulkscandata" },
-            { "anomalousfsdtelemetry"               ,  "fsdtelemetry" },
-            { "atypicaldisruptedwakeechoes"         ,  "disruptedwakeechoes" },
-            { "atypicalencryptionarchives"          ,  "encryptionarchives" },
-            { "azuremilk"                           ,  "bluemilk" },
-            { "cd-75kittenbrandcoffee"              ,  "cd75catcoffee" },
-            { "crackedindustrialfirmware"           ,  "industrialfirmware" },
-            { "dataminedwakeexceptions"             ,  "dataminedwake" },
-            { "distortedshieldcyclerecordings"      ,  "shieldcyclerecordings" },
-            { "eccentrichyperspacetrajectories"     ,  "hyperspacetrajectories" },
-            { "edenapplesofaerial"                  ,  "aerialedenapple" },
-            { "eraninpearlwhiskey"                  ,  "eraninpearlwhisky" },
-            { "exceptionalscrambledemissiondata"    ,  "scrambledemissiondata" },
-            { "inconsistentshieldsoakanalysis"      ,  "shieldsoakanalysis" },
-            { "kachiriginfilterleeches"             ,  "kachiriginleaches" },
-            { "korokungpellets"                     ,  "korrokungpellets" },
-            { "leatheryeggs"                        ,  "alieneggs" },
-            { "lucanonionhead"                      ,  "transgeniconionhead" },
-            { "modifiedconsumerfirmware"            ,  "consumerfirmware" },
-            { "modifiedembeddedfirmware"            ,  "embeddedfirmware" },
-            { "opensymmetrickeys"                   ,  "symmetrickeys" },
-            { "peculiarshieldfrequencydata"         ,  "shieldfrequencydata" },
-            { "rajukrumulti-stoves"                 ,  "rajukrustoves" },
-            { "sanumadecorativemeat"                ,  "sanumameat" },
-            { "securityfirmwarepatch"               ,  "securityfirmware" },
-            { "specialisedlegacyfirmware"           ,  "legacyfirmware" },
-            { "strangewakesolutions"                ,  "wakesolutions" },
-            { "taggedencryptioncodes"               ,  "encryptioncodes" },
-            { "unidentifiedscanarchives"            ,  "scanarchives" },
-            { "unusualencryptedfiles"               ,  "encryptedfiles" },
-            { "utgaroarmillennialeggs"              ,  "utgaroarmillenialeggs" },
-            { "xihebiomorphiccompanions"            ,  "xihecompanions" },
-            { "zeesszeantgrubglue"                  ,  "zeesszeantglue" },
-
-            {"micro-weavecoolinghoses","coolinghoses"},
-            {"energygridassembly","powergridassembly"},
-
-            {"methanolmonohydrate","methanolmonohydratecrystals"},
-            {"muonimager","mutomimager"},
-            {"hardwarediagnosticsensor","diagnosticsensor"},
-
-        };
     }
 
 }
