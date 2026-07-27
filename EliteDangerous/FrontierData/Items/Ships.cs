@@ -182,7 +182,7 @@ namespace EliteDangerousCore
 
             foreach (var kvp in Manu)
             {
-                spaceships[new VehicleFDName(kvp.Key.ToLowerInvariant())].Manufacturer = kvp.Value;
+                spaceships[new VehicleFDName(kvp.Key,VehicleFDName.VehicleTypeEnum.Ship)].Manufacturer = kvp.Value;
             }
 
             foreach (var kvp in spaceships)     // check spaceships array for image and missing manu
@@ -204,7 +204,7 @@ namespace EliteDangerousCore
         // EDSY START
         private static ShipProperties sidewinder = new ShipProperties()
         {
-            FDID = new VehicleFDName("SideWinder"),
+            FDID = new VehicleFDName("SideWinder",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 25F,
             Name = "Sidewinder",
             Speed = 220,
@@ -235,7 +235,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties cobramkiii = new ShipProperties()
         {
-            FDID = new VehicleFDName("CobraMkIII"),
+            FDID = new VehicleFDName("CobraMkIII",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 180F,
             Name = "Cobra Mk III",
             Speed = 280,
@@ -266,7 +266,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties empire_trader = new ShipProperties()
         {
-            FDID = new VehicleFDName("Empire_Trader"),
+            FDID = new VehicleFDName("Empire_Trader",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 400F,
             Name = "Imperial Clipper",
             Speed = 300,
@@ -297,7 +297,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties federation_dropship = new ShipProperties()
         {
-            FDID = new VehicleFDName("Federation_Dropship"),
+            FDID = new VehicleFDName("Federation_Dropship",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 580F,
             Name = "Federal Dropship",
             Speed = 180,
@@ -328,7 +328,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties python = new ShipProperties()
         {
-            FDID = new VehicleFDName("Python"),
+            FDID = new VehicleFDName("Python",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 350F,
             Name = "Python",
             Speed = 230,
@@ -359,7 +359,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties anaconda = new ShipProperties()
         {
-            FDID = new VehicleFDName("Anaconda"),
+            FDID = new VehicleFDName("Anaconda",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 400F,
             Name = "Anaconda",
             Speed = 180,
@@ -390,7 +390,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties empire_courier = new ShipProperties()
         {
-            FDID = new VehicleFDName("Empire_Courier"),
+            FDID = new VehicleFDName("Empire_Courier",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 35F,
             Name = "Imperial Courier",
             Speed = 280,
@@ -421,7 +421,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties cobramkiv = new ShipProperties()
         {
-            FDID = new VehicleFDName("CobraMkIV"),
+            FDID = new VehicleFDName("CobraMkIV",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 210F,
             Name = "Cobra Mk IV",
             Speed = 200,
@@ -452,7 +452,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties typex = new ShipProperties()
         {
-            FDID = new VehicleFDName("TypeX"),
+            FDID = new VehicleFDName("TypeX",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 400F,
             Name = "Alliance Chieftain",
             Speed = 230,
@@ -483,7 +483,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties typex_2 = new ShipProperties()
         {
-            FDID = new VehicleFDName("TypeX_2"),
+            FDID = new VehicleFDName("TypeX_2",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 500F,
             Name = "Alliance Crusader",
             Speed = 180,
@@ -514,7 +514,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties krait_light = new ShipProperties()
         {
-            FDID = new VehicleFDName("Krait_Light"),
+            FDID = new VehicleFDName("Krait_Light",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 270F,
             Name = "Krait Phantom",
             Speed = 250,
@@ -545,7 +545,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties mamba = new ShipProperties()
         {
-            FDID = new VehicleFDName("Mamba"),
+            FDID = new VehicleFDName("Mamba",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 250F,
             Name = "Mamba",
             Speed = 310,
@@ -576,7 +576,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties typex_3 = new ShipProperties()
         {
-            FDID = new VehicleFDName("TypeX_3"),
+            FDID = new VehicleFDName("TypeX_3",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 450F,
             Name = "Alliance Challenger",
             Speed = 200,
@@ -607,7 +607,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties krait_mkii = new ShipProperties()
         {
-            FDID = new VehicleFDName("Krait_MkII"),
+            FDID = new VehicleFDName("Krait_MkII",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 320F,
             Name = "Krait Mk II",
             Speed = 240,
@@ -638,7 +638,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties python_nx = new ShipProperties()
         {
-            FDID = new VehicleFDName("Python_NX"),
+            FDID = new VehicleFDName("Python_NX",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 450F,
             Name = "Python Mk II",
             Speed = 256,
@@ -669,7 +669,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties cobramkv = new ShipProperties()
         {
-            FDID = new VehicleFDName("CobraMkV"),
+            FDID = new VehicleFDName("CobraMkV",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 150F,
             Name = "Cobra Mk V",
             Speed = 290,
@@ -700,7 +700,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties corsair = new ShipProperties()
         {
-            FDID = new VehicleFDName("Corsair"),
+            FDID = new VehicleFDName("Corsair",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 265F,
             Name = "Corsair",
             Speed = 280,
@@ -731,7 +731,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties eagle = new ShipProperties()
         {
-            FDID = new VehicleFDName("Eagle"),
+            FDID = new VehicleFDName("Eagle",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 50F,
             Name = "Eagle",
             Speed = 240,
@@ -762,7 +762,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties viper = new ShipProperties()
         {
-            FDID = new VehicleFDName("Viper"),
+            FDID = new VehicleFDName("Viper",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 50F,
             Name = "Viper Mk III",
             Speed = 320,
@@ -793,7 +793,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties vulture = new ShipProperties()
         {
-            FDID = new VehicleFDName("Vulture"),
+            FDID = new VehicleFDName("Vulture",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 230F,
             Name = "Vulture",
             Speed = 210,
@@ -824,7 +824,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties ferdelance = new ShipProperties()
         {
-            FDID = new VehicleFDName("FerDeLance"),
+            FDID = new VehicleFDName("FerDeLance",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 250F,
             Name = "Fer-de-Lance",
             Speed = 260,
@@ -855,7 +855,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties empire_eagle = new ShipProperties()
         {
-            FDID = new VehicleFDName("Empire_Eagle"),
+            FDID = new VehicleFDName("Empire_Eagle",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 50F,
             Name = "Imperial Eagle",
             Speed = 300,
@@ -886,7 +886,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties federation_dropship_mkii = new ShipProperties()
         {
-            FDID = new VehicleFDName("Federation_Dropship_MkII"),
+            FDID = new VehicleFDName("Federation_Dropship_MkII",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 480F,
             Name = "Federal Assault Ship",
             Speed = 210,
@@ -917,7 +917,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties federation_gunship = new ShipProperties()
         {
-            FDID = new VehicleFDName("Federation_Gunship"),
+            FDID = new VehicleFDName("Federation_Gunship",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 580F,
             Name = "Federal Gunship",
             Speed = 170,
@@ -948,7 +948,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties viper_mkiv = new ShipProperties()
         {
-            FDID = new VehicleFDName("Viper_MkIV"),
+            FDID = new VehicleFDName("Viper_MkIV",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 190F,
             Name = "Viper Mk IV",
             Speed = 270,
@@ -979,7 +979,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties smallcombat01_nx = new ShipProperties()
         {
-            FDID = new VehicleFDName("SmallCombat01_NX"),
+            FDID = new VehicleFDName("SmallCombat01_NX",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 190F,
             Name = "Kestrel Mk II",
             Speed = 270,
@@ -1010,7 +1010,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties hauler = new ShipProperties()
         {
-            FDID = new VehicleFDName("Hauler"),
+            FDID = new VehicleFDName("Hauler",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 14F,
             Name = "Hauler",
             Speed = 200,
@@ -1041,7 +1041,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties type6 = new ShipProperties()
         {
-            FDID = new VehicleFDName("Type6"),
+            FDID = new VehicleFDName("Type6",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 155F,
             Name = "Type-6 Transporter",
             Speed = 220,
@@ -1072,7 +1072,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties type7 = new ShipProperties()
         {
-            FDID = new VehicleFDName("Type7"),
+            FDID = new VehicleFDName("Type7",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 350F,
             Name = "Type-7 Transporter",
             Speed = 180,
@@ -1103,7 +1103,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties type9 = new ShipProperties()
         {
-            FDID = new VehicleFDName("Type9"),
+            FDID = new VehicleFDName("Type9",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 850F,
             Name = "Type-9 Heavy",
             Speed = 130,
@@ -1134,7 +1134,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties independant_trader = new ShipProperties()
         {
-            FDID = new VehicleFDName("Independant_Trader"),
+            FDID = new VehicleFDName("Independant_Trader",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 180F,
             Name = "Keelback",
             Speed = 200,
@@ -1165,7 +1165,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties type9_military = new ShipProperties()
         {
-            FDID = new VehicleFDName("Type9_Military"),
+            FDID = new VehicleFDName("Type9_Military",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 1200F,
             Name = "Type-10 Defender",
             Speed = 180,
@@ -1196,7 +1196,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties type8 = new ShipProperties()
         {
-            FDID = new VehicleFDName("Type8"),
+            FDID = new VehicleFDName("Type8",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 400F,
             Name = "Type-8 Transporter",
             Speed = 200,
@@ -1227,7 +1227,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties lakonminer = new ShipProperties()
         {
-            FDID = new VehicleFDName("LakonMiner"),
+            FDID = new VehicleFDName("LakonMiner",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 320F,
             Name = "Type-11 Prospector",
             Speed = 270,
@@ -1258,7 +1258,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties adder = new ShipProperties()
         {
-            FDID = new VehicleFDName("Adder"),
+            FDID = new VehicleFDName("Adder",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 35F,
             Name = "Adder",
             Speed = 220,
@@ -1289,7 +1289,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties asp = new ShipProperties()
         {
-            FDID = new VehicleFDName("Asp"),
+            FDID = new VehicleFDName("Asp",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 280F,
             Name = "Asp Explorer",
             Speed = 250,
@@ -1320,7 +1320,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties diamondback = new ShipProperties()
         {
-            FDID = new VehicleFDName("DiamondBack"),
+            FDID = new VehicleFDName("DiamondBack",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 170F,
             Name = "Diamondback Scout",
             Speed = 280,
@@ -1351,7 +1351,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties diamondbackxl = new ShipProperties()
         {
-            FDID = new VehicleFDName("DiamondBackXL"),
+            FDID = new VehicleFDName("DiamondBackXL",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 260F,
             Name = "Diamondback Explorer",
             Speed = 260,
@@ -1382,7 +1382,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties asp_scout = new ShipProperties()
         {
-            FDID = new VehicleFDName("Asp_Scout"),
+            FDID = new VehicleFDName("Asp_Scout",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 150F,
             Name = "Asp Scout",
             Speed = 220,
@@ -1413,7 +1413,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties mandalay = new ShipProperties()
         {
-            FDID = new VehicleFDName("Mandalay"),
+            FDID = new VehicleFDName("Mandalay",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 230F,
             Name = "Mandalay",
             Speed = 280,
@@ -1444,7 +1444,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties explorer_nx = new ShipProperties()
         {
-            FDID = new VehicleFDName("Explorer_NX"),
+            FDID = new VehicleFDName("Explorer_NX",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 950F,
             Name = "Caspian Explorer",
             Speed = 210,
@@ -1475,7 +1475,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties orca = new ShipProperties()
         {
-            FDID = new VehicleFDName("Orca"),
+            FDID = new VehicleFDName("Orca",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 290F,
             Name = "Orca",
             Speed = 300,
@@ -1506,7 +1506,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties belugaliner = new ShipProperties()
         {
-            FDID = new VehicleFDName("BelugaLiner"),
+            FDID = new VehicleFDName("BelugaLiner",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 950F,
             Name = "Beluga Liner",
             Speed = 200,
@@ -1537,7 +1537,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties dolphin = new ShipProperties()
         {
-            FDID = new VehicleFDName("Dolphin"),
+            FDID = new VehicleFDName("Dolphin",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 140F,
             Name = "Dolphin",
             Speed = 250,
@@ -1568,7 +1568,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties federation_corvette = new ShipProperties()
         {
-            FDID = new VehicleFDName("Federation_Corvette"),
+            FDID = new VehicleFDName("Federation_Corvette",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 900F,
             Name = "Federal Corvette",
             Speed = 200,
@@ -1599,7 +1599,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties cutter = new ShipProperties()
         {
-            FDID = new VehicleFDName("Cutter"),
+            FDID = new VehicleFDName("Cutter",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 1100F,
             Name = "Imperial Cutter",
             Speed = 200,
@@ -1630,7 +1630,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties panthermkii = new ShipProperties()
         {
-            FDID = new VehicleFDName("PantherMkII"),
+            FDID = new VehicleFDName("PantherMkII",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 1200F,
             Name = "Panther Clipper Mk II",
             Speed = 180,
@@ -1663,7 +1663,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties lynxhighliner = new ShipProperties()
         {
-            FDID = new VehicleFDName("Mediumtransport01"),
+            FDID = new VehicleFDName("Mediumtransport01",VehicleFDName.VehicleTypeEnum.Ship),
             HullMass = 260F,
             Name = "Lynx Highliner",
             Speed = 203,
@@ -1729,58 +1729,58 @@ namespace EliteDangerousCore
 
         private static Dictionary<VehicleFDName, ShipProperties> spaceships = new Dictionary<VehicleFDName, ShipProperties>(new ShipFDNameEqualityComparer())
         {
-            { new VehicleFDName("adder"),adder},
-            { new VehicleFDName("adder_taxi"),adder},
-            { new VehicleFDName("typex_3"),typex_3},
-            { new VehicleFDName("typex"),typex},
-            { new VehicleFDName("typex_2"),typex_2},
-            { new VehicleFDName("anaconda"),anaconda},
-            { new VehicleFDName("asp"),asp},
-            { new VehicleFDName("asp_scout"),asp_scout},
-            { new VehicleFDName("belugaliner"),belugaliner},
-            { new VehicleFDName("cobramkiii"),cobramkiii},
-            { new VehicleFDName("cobramkiv"),cobramkiv},
-            { new VehicleFDName("cobramkv"),cobramkv},
-            { new VehicleFDName("corsair"),corsair},
-            { new VehicleFDName("cutter"),cutter},
-            { new VehicleFDName("diamondbackxl"),diamondbackxl},
-            { new VehicleFDName("diamondback"),diamondback},
-            { new VehicleFDName("diamondback_taxi"),diamondback},
-            { new VehicleFDName("dolphin"),dolphin},
-            { new VehicleFDName("eagle"),eagle},
-            { new VehicleFDName("explorer_nx"),explorer_nx},
-            { new VehicleFDName("federation_dropship_mkii"), federation_dropship_mkii},
-            { new VehicleFDName("federation_corvette"),federation_corvette},
-            { new VehicleFDName("federation_dropship"),federation_dropship},
-            { new VehicleFDName("federation_gunship"),federation_gunship},
-            { new VehicleFDName("ferdelance"),ferdelance},
-            { new VehicleFDName("hauler"),hauler},
-            { new VehicleFDName("empire_trader"),empire_trader},
-            { new VehicleFDName("empire_courier"),empire_courier},
-            { new VehicleFDName("empire_eagle"),empire_eagle},
-            { new VehicleFDName("independant_trader"),independant_trader},
-            { new VehicleFDName("krait_mkii"),krait_mkii},
-            { new VehicleFDName("krait_light"),krait_light},
-            { new VehicleFDName("smallcombat01_nx"),smallcombat01_nx},
-            { new VehicleFDName("lakonminer"),lakonminer },
-            { new VehicleFDName("mamba"),mamba},
-            { new VehicleFDName("mandalay"),mandalay},
-            { new VehicleFDName("mediumtransport01"), lynxhighliner },
-            { new VehicleFDName("orca"),orca},
-            { new VehicleFDName("panthermkii"), panthermkii },
-            { new VehicleFDName("python"),python},
-            { new VehicleFDName("python_nx"),python_nx},
-            { new VehicleFDName("sidewinder"),sidewinder},
-            { new VehicleFDName("type9_military"),type9_military},
-            { new VehicleFDName("type6"),type6},
-            { new VehicleFDName("type7"),type7},
-            { new VehicleFDName("type8"),type8},
-            { new VehicleFDName("type9"),type9},
-            { new VehicleFDName("viper"),viper},
-            { new VehicleFDName("viper_taxi"),viper},
-            { new VehicleFDName("viper_mkiv"),viper_mkiv},
-            { new VehicleFDName("vulture"),vulture},
-            { new VehicleFDName("vulture_taxi"),vulture},
+            { new VehicleFDName("adder",VehicleFDName.VehicleTypeEnum.Ship),adder},
+            { new VehicleFDName("adder_taxi",VehicleFDName.VehicleTypeEnum.Ship),adder},
+            { new VehicleFDName("typex_3",VehicleFDName.VehicleTypeEnum.Ship),typex_3},
+            { new VehicleFDName("typex",VehicleFDName.VehicleTypeEnum.Ship),typex},
+            { new VehicleFDName("typex_2",VehicleFDName.VehicleTypeEnum.Ship),typex_2},
+            { new VehicleFDName("anaconda",VehicleFDName.VehicleTypeEnum.Ship),anaconda},
+            { new VehicleFDName("asp",VehicleFDName.VehicleTypeEnum.Ship),asp},
+            { new VehicleFDName("asp_scout",VehicleFDName.VehicleTypeEnum.Ship),asp_scout},
+            { new VehicleFDName("belugaliner",VehicleFDName.VehicleTypeEnum.Ship),belugaliner},
+            { new VehicleFDName("cobramkiii",VehicleFDName.VehicleTypeEnum.Ship),cobramkiii},
+            { new VehicleFDName("cobramkiv",VehicleFDName.VehicleTypeEnum.Ship),cobramkiv},
+            { new VehicleFDName("cobramkv",VehicleFDName.VehicleTypeEnum.Ship),cobramkv},
+            { new VehicleFDName("corsair",VehicleFDName.VehicleTypeEnum.Ship),corsair},
+            { new VehicleFDName("cutter",VehicleFDName.VehicleTypeEnum.Ship),cutter},
+            { new VehicleFDName("diamondbackxl",VehicleFDName.VehicleTypeEnum.Ship),diamondbackxl},
+            { new VehicleFDName("diamondback",VehicleFDName.VehicleTypeEnum.Ship),diamondback},
+            { new VehicleFDName("diamondback_taxi",VehicleFDName.VehicleTypeEnum.Ship),diamondback},
+            { new VehicleFDName("dolphin",VehicleFDName.VehicleTypeEnum.Ship),dolphin},
+            { new VehicleFDName("eagle",VehicleFDName.VehicleTypeEnum.Ship),eagle},
+            { new VehicleFDName("explorer_nx",VehicleFDName.VehicleTypeEnum.Ship),explorer_nx},
+            { new VehicleFDName("federation_dropship_mkii",VehicleFDName.VehicleTypeEnum.Ship), federation_dropship_mkii},
+            { new VehicleFDName("federation_corvette",VehicleFDName.VehicleTypeEnum.Ship),federation_corvette},
+            { new VehicleFDName("federation_dropship",VehicleFDName.VehicleTypeEnum.Ship),federation_dropship},
+            { new VehicleFDName("federation_gunship",VehicleFDName.VehicleTypeEnum.Ship),federation_gunship},
+            { new VehicleFDName("ferdelance",VehicleFDName.VehicleTypeEnum.Ship),ferdelance},
+            { new VehicleFDName("hauler",VehicleFDName.VehicleTypeEnum.Ship),hauler},
+            { new VehicleFDName("empire_trader",VehicleFDName.VehicleTypeEnum.Ship),empire_trader},
+            { new VehicleFDName("empire_courier",VehicleFDName.VehicleTypeEnum.Ship),empire_courier},
+            { new VehicleFDName("empire_eagle",VehicleFDName.VehicleTypeEnum.Ship),empire_eagle},
+            { new VehicleFDName("independant_trader",VehicleFDName.VehicleTypeEnum.Ship),independant_trader},
+            { new VehicleFDName("krait_mkii",VehicleFDName.VehicleTypeEnum.Ship),krait_mkii},
+            { new VehicleFDName("krait_light",VehicleFDName.VehicleTypeEnum.Ship),krait_light},
+            { new VehicleFDName("smallcombat01_nx",VehicleFDName.VehicleTypeEnum.Ship),smallcombat01_nx},
+            { new VehicleFDName("lakonminer",VehicleFDName.VehicleTypeEnum.Ship),lakonminer },
+            { new VehicleFDName("mamba",VehicleFDName.VehicleTypeEnum.Ship),mamba},
+            { new VehicleFDName("mandalay",VehicleFDName.VehicleTypeEnum.Ship),mandalay},
+            { new VehicleFDName("mediumtransport01",VehicleFDName.VehicleTypeEnum.Ship), lynxhighliner },
+            { new VehicleFDName("orca",VehicleFDName.VehicleTypeEnum.Ship),orca},
+            { new VehicleFDName("panthermkii",VehicleFDName.VehicleTypeEnum.Ship), panthermkii },
+            { new VehicleFDName("python",VehicleFDName.VehicleTypeEnum.Ship),python},
+            { new VehicleFDName("python_nx",VehicleFDName.VehicleTypeEnum.Ship),python_nx},
+            { new VehicleFDName("sidewinder",VehicleFDName.VehicleTypeEnum.Ship),sidewinder},
+            { new VehicleFDName("type9_military",VehicleFDName.VehicleTypeEnum.Ship),type9_military},
+            { new VehicleFDName("type6",VehicleFDName.VehicleTypeEnum.Ship),type6},
+            { new VehicleFDName("type7",VehicleFDName.VehicleTypeEnum.Ship),type7},
+            { new VehicleFDName("type8",VehicleFDName.VehicleTypeEnum.Ship),type8},
+            { new VehicleFDName("type9",VehicleFDName.VehicleTypeEnum.Ship),type9},
+            { new VehicleFDName("viper",VehicleFDName.VehicleTypeEnum.Ship),viper},
+            { new VehicleFDName("viper_taxi",VehicleFDName.VehicleTypeEnum.Ship),viper},
+            { new VehicleFDName("viper_mkiv",VehicleFDName.VehicleTypeEnum.Ship),viper_mkiv},
+            { new VehicleFDName("vulture",VehicleFDName.VehicleTypeEnum.Ship),vulture},
+            { new VehicleFDName("vulture_taxi",VehicleFDName.VehicleTypeEnum.Ship),vulture},
         };
 
 
@@ -1790,7 +1790,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties nomad = new ShipProperties()
         {
-            FDID = new VehicleFDName("Lander01"),
+            FDID = new VehicleFDName("Lander01",VehicleFDName.VehicleTypeEnum.Lander),
             HullMass = 38F,
             Name = "Nomad",
             Manufacturer = "Falcon Delacy",
@@ -1820,7 +1820,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties imperial_fighter = new ShipProperties()
         {
-            FDID = new VehicleFDName("Empire_Fighter"),
+            FDID = new VehicleFDName("Empire_Fighter",VehicleFDName.VehicleTypeEnum.Fighter),
             HullMass = 0F,
             Name = "Imperial Fighter",
             Manufacturer = "Gutamaya",
@@ -1844,7 +1844,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties federation_fighter = new ShipProperties()
         {
-            FDID = new VehicleFDName("Federation_Fighter"),
+            FDID = new VehicleFDName("Federation_Fighter",VehicleFDName.VehicleTypeEnum.Fighter),
             HullMass = 0F,
             Name = "F63 Condor",
             Manufacturer = "Core Dynamics",
@@ -1870,7 +1870,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties taipan_fighter = new ShipProperties()
         {
-            FDID = new VehicleFDName("Independent_Fighter"),
+            FDID = new VehicleFDName("Independent_Fighter",VehicleFDName.VehicleTypeEnum.Fighter),
             HullMass = 0F,
             Name = "Taipan",
             Manufacturer = "Faulcon DeLacy",
@@ -1894,7 +1894,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties GDN_Hybrid_v1_fighter = new ShipProperties()
         {
-            FDID = new VehicleFDName("GDN_Hybrid_Fighter_V1"),
+            FDID = new VehicleFDName("GDN_Hybrid_Fighter_V1",VehicleFDName.VehicleTypeEnum.Fighter),
             HullMass = 0F,
             Name = "Guardian Hybrid Fighter V1",
             Manufacturer = "Unknown",
@@ -1918,7 +1918,7 @@ namespace EliteDangerousCore
         };
         private static ShipProperties GDN_Hybrid_v2_fighter = new ShipProperties()
         {
-            FDID = new VehicleFDName("GDN_Hybrid_Fighter_V2"),
+            FDID = new VehicleFDName("GDN_Hybrid_Fighter_V2",VehicleFDName.VehicleTypeEnum.Fighter),
             HullMass = 0F,
             Name = "Guardian Hybrid Fighter V2",
             Manufacturer = "Unknown",
@@ -1941,7 +1941,7 @@ namespace EliteDangerousCore
         };
         private static ShipProperties GDN_Hybrid_v3_fighter = new ShipProperties()
         {
-            FDID = new VehicleFDName("GDN_Hybrid_Fighter_V3"),
+            FDID = new VehicleFDName("GDN_Hybrid_Fighter_V3",VehicleFDName.VehicleTypeEnum.Fighter),
             HullMass = 0F,
             Name = "Guardian Hybrid Fighter V3",
             Manufacturer = "Unknown",
@@ -1964,7 +1964,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties srv = new ShipProperties()
         {
-            FDID = new VehicleFDName("TestBuggy"),
+            FDID = new VehicleFDName("TestBuggy",VehicleFDName.VehicleTypeEnum.SRV),
             HullMass = 0F,
             Name = "Scarab SRV",
             Manufacturer = "Vodel",
@@ -1983,7 +1983,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties combatsrv = new ShipProperties()
         {
-            FDID = new VehicleFDName("Combat_Multicrew_SRV_01"),
+            FDID = new VehicleFDName("Combat_Multicrew_SRV_01",VehicleFDName.VehicleTypeEnum.SRV),
             HullMass = 0F,
             Name = "Scorpion Combat SRV",
             Manufacturer = "Vodel",
@@ -2001,15 +2001,15 @@ namespace EliteDangerousCore
 
         private static Dictionary<VehicleFDName, ShipProperties> srvandfighters = new Dictionary<VehicleFDName, ShipProperties>(new ShipFDNameEqualityComparer())
         {
-            { new VehicleFDName("empire_fighter"),  imperial_fighter},
-            { new VehicleFDName("federation_fighter"),  federation_fighter},
-            { new VehicleFDName("independent_fighter"),  taipan_fighter},       //EDDI evidence
-            { new VehicleFDName("testbuggy"),  srv},
-            { new VehicleFDName("combat_multicrew_srv_01"),  combatsrv},
-            { new VehicleFDName("gdn_hybrid_fighter_v1"),  GDN_Hybrid_v1_fighter},
-            { new VehicleFDName("gdn_hybrid_fighter_v2"),  GDN_Hybrid_v2_fighter},
-            { new VehicleFDName("gdn_hybrid_fighter_v3"),  GDN_Hybrid_v3_fighter},
-            { new VehicleFDName("lander01"),nomad},
+            { new VehicleFDName("empire_fighter",VehicleFDName.VehicleTypeEnum.Fighter),  imperial_fighter},
+            { new VehicleFDName("federation_fighter",VehicleFDName.VehicleTypeEnum.Fighter),  federation_fighter},
+            { new VehicleFDName("independent_fighter",VehicleFDName.VehicleTypeEnum.Fighter),  taipan_fighter},       //EDDI evidence
+            { new VehicleFDName("gdn_hybrid_fighter_v1",VehicleFDName.VehicleTypeEnum.Fighter),  GDN_Hybrid_v1_fighter},
+            { new VehicleFDName("gdn_hybrid_fighter_v2",VehicleFDName.VehicleTypeEnum.Fighter),  GDN_Hybrid_v2_fighter},
+            { new VehicleFDName("gdn_hybrid_fighter_v3",VehicleFDName.VehicleTypeEnum.Fighter),  GDN_Hybrid_v3_fighter},
+            { new VehicleFDName("testbuggy",VehicleFDName.VehicleTypeEnum.SRV),  srv},
+            { new VehicleFDName("combat_multicrew_srv_01",VehicleFDName.VehicleTypeEnum.SRV),  combatsrv},
+            { new VehicleFDName("lander01",VehicleFDName.VehicleTypeEnum.Lander),nomad},
         };
 
         #endregion

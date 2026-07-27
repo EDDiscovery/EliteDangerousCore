@@ -202,7 +202,7 @@ namespace EliteDangerousCore.JournalEvents
             UpdateType = evt["UpdateType"].Str();        // must be FD name
             System.Enum.TryParse<UpdateTypeEnum>(UpdateType, out UpdateTypeEnum u);
             UpdateEnum = u;
-            CargoType = MCFDName.Normalise(evt["CargoType"].Str(), out string engname, this);
+            CargoType = MCFDName.Normalise(evt["CargoType"].Str(), out string engname, this, true);     // may be missing
             FriendlyCargoType = engname;
             Count = evt["Count"].Int(0);
             StartMarketID = new MarketID(evt["StartMarketID"]);
@@ -223,7 +223,7 @@ namespace EliteDangerousCore.JournalEvents
         public string UpdateType { get; set; }
         public UpdateTypeEnum UpdateEnum { get; set; }
 
-        public MCFDName CargoType { get; set; } // 3.03       deliver/collect only    - what you have done now.  Blank if not known (<3.03)
+        public MCFDName CargoType { get; set; }         // 3.03 may be null
         public string FriendlyCargoType { get; set; }
         public int Count { get; set; }  // 3.03         deliver/collect only.  0 if not known.
 
@@ -238,7 +238,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            if (CargoType.IsValid && Count > 0)
+            if (CargoType?.IsValid == true && Count > 0)
                 mc.ChangeCommd( EventTimeUTC, CargoType, (UpdateEnum == UpdateTypeEnum.Collect) ? Count : -Count, 0);
         }
 

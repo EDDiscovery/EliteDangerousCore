@@ -441,10 +441,10 @@ namespace EliteDangerousCore.Inara
                         break;
                     }
 
-                case JournalTypeEnum.CargoDepot: //VERIFIED 16/5/18
+                case JournalTypeEnum.CargoDepot:
                     {
                         var je = he.journalEntry as JournalCargoDepot;
-                        if (je.CargoType.IsValid && je.Count > 0)
+                        if (je.CargoType?.IsValid == true && je.Count > 0)
                         {
                             if (mcmr.TryGetValue(je.CargoType, out MaterialCommodityMicroResource item))
                                 eventstosend.Add(InaraClass.setCommanderInventoryItem(item, heutc));

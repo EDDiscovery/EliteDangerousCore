@@ -34,16 +34,16 @@ namespace EliteDangerousCore
         }
     }
 
-    public class ModLabelFDNameEqualityComparer : IEqualityComparer<ModLabelFDName>
-    {
-        public bool Equals(ModLabelFDName left, ModLabelFDName right)
-        {
-            return left.Equals(right);
-        }
+    //public class ModLabelFDNameEqualityComparer : IEqualityComparer<ModLabelFDName>
+    //{
+    //    public bool Equals(ModLabelFDName left, ModLabelFDName right)
+    //    {
+    //        return left.Equals(right);
+    //    }
 
-        public int GetHashCode(ModLabelFDName obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
+    //    public int GetHashCode(ModLabelFDName obj)
+    //    {
+    //        return obj.GetHashCode();
+    //    }
+    //}
 }

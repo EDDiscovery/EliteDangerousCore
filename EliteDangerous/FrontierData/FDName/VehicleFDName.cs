@@ -19,6 +19,8 @@ using System.Collections.Generic;
 namespace EliteDangerousCore
 {
     // Vehicles, ship/lander/srv/fighter/suit
+
+    [System.Diagnostics.DebuggerDisplay("FD {Str()}: {VehicleType}")]
     public class VehicleFDName : FDName
     {
         public VehicleFDName() : base()
@@ -29,6 +31,10 @@ namespace EliteDangerousCore
         public VehicleFDName(string fdname) : base(fdname)
         {
             SetVT();
+        }
+        public VehicleFDName(string fdname, VehicleTypeEnum vh) : base(fdname)
+        {
+            VehicleType = vh;
         }
 
         public VehicleFDName(QuickJSON.JToken token) : base(token)
@@ -45,16 +51,16 @@ namespace EliteDangerousCore
 
         private void SetVT()
         {
-            string shipfdname = "";     // TBD
-            if (shipfdname.ContainsIIC("_taxi"))
+            string str = Str();
+            if (str.ContainsIIC("_taxi"))
                 VehicleType = VehicleTypeEnum.Taxi;
-            else if (shipfdname.EqualsIIC("testbuggy") || shipfdname.ContainsIIC("_SRV"))
+            else if (str.EqualsIIC("testbuggy") || str.ContainsIIC("_SRV"))
                 VehicleType = VehicleTypeEnum.SRV;
-            else if (shipfdname.ContainsIIC("suit"))
+            else if (str.ContainsIIC("suit"))
                 VehicleType = VehicleTypeEnum.Suit;
-            else if (shipfdname.ContainsIIC("lander"))
+            else if (str.ContainsIIC("lander"))
                 VehicleType = VehicleTypeEnum.Lander;
-            else if (shipfdname.ContainsIIC("_fighter"))
+            else if (str.ContainsIIC("_fighter"))
                 VehicleType = VehicleTypeEnum.Fighter;
             else
                 VehicleType = VehicleTypeEnum.Ship;
@@ -112,28 +118,27 @@ namespace EliteDangerousCore
         }
     }
 
-    public class ShipFDNameEqualityComparer : IEqualityComparer<VehicleFDName>
-    {
-        public bool Equals(VehicleFDName left, VehicleFDName right)
-        {
-            return left.Equals(right);
-        }
+    //public class ShipFDNameEqualityComparer : IEqualityComparer<VehicleFDName>
+    //{
+    //    public bool Equals(VehicleFDName left, VehicleFDName right)
+    //    {
+    //        return left.Equals(right);
+    //    }
 
-        public int GetHashCode(VehicleFDName obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
+    //    public int GetHashCode(VehicleFDName obj)
+    //    {
+    //        return obj.GetHashCode();
+    //    }
+    //}
 
-    // Must be a suit
-
+    // Suit only
     public class SuitFDName : VehicleFDName
     {
         public SuitFDName() : base()
         {
         }
 
-        public SuitFDName(string fdname) : base(fdname)
+        public SuitFDName(string fdname) : base(fdname, VehicleTypeEnum.Suit)
         {
         }
 
@@ -158,19 +163,20 @@ namespace EliteDangerousCore
 
     }
 
-    public class SuitFDNameEqualityComparer : IEqualityComparer<VehicleFDName>
-    {
-        public bool Equals(VehicleFDName left, VehicleFDName right)
-        {
-            return left.Equals(right);
-        }
+    //public class SuitFDNameEqualityComparer : IEqualityComparer<VehicleFDName>
+    //{
+    //    public bool Equals(VehicleFDName left, VehicleFDName right)
+    //    {
+    //        return left.Equals(right);
+    //    }
 
-        public int GetHashCode(VehicleFDName obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
+    //    public int GetHashCode(VehicleFDName obj)
+    //    {
+    //        return obj.GetHashCode();
+    //    }
+    //}
 
+    // Vehicles, ship/lander/srv/fighter/suit and Actors
     public class VehicleActorSuitFDName : SuitFDName
     {
         public VehicleActorSuitFDName() : base()
@@ -192,16 +198,33 @@ namespace EliteDangerousCore
 
         public static new VehicleActorSuitFDName Normalise(string fdname, out string name, JournalEntry ev, bool allownull = false)
         {
-            var ac = ItemData.GetActor(new ActorFDName(fdname));
-            if (ac != null)
+            if (fdname.IsEmpty())
             {
-                name = ac.Name;
-                return new VehicleActorSuitFDName(fdname, VehicleTypeEnum.Actor);
+                if (allownull)
+                {
+                    name = null;
+                    return null;
+                }
+                else
+                {
+                    name = "Unknown Ship/Actor/Suit";
+                    BaseUtils.Debugger.TraceBreak($"*** Missing Ship/Actor/Suit {ev?.EventTimeUTC} {ev?.EventTypeStr}");
+                    return new VehicleActorSuitFDName(name);
+                }
             }
             else
             {
-                var ret = VehicleFDName.Normalise(fdname, out name, ev, allownull);
-                return new VehicleActorSuitFDName(ret.Str(), ret.VehicleType);
+                var ac = ItemData.GetActor(new ActorFDName(fdname));       
+                if (ac != null)
+                {
+                    name = ac.Name;
+                    return new VehicleActorSuitFDName(fdname, VehicleTypeEnum.Actor);
+                }
+                else
+                {
+                    var ret = VehicleFDName.Normalise(fdname, out name, ev);
+                    return new VehicleActorSuitFDName(ret.Str(), ret.VehicleType);
+                }
             }
         }
 

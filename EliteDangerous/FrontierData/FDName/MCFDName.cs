@@ -135,16 +135,16 @@ namespace EliteDangerousCore
 
     }
 
-    public class MCFDNameEqualityComparer : IEqualityComparer<MCFDName>
-    {
-        public bool Equals(MCFDName left, MCFDName right)
-        {
-            return left.Equals(right);
-        }
+    //public class MCFDNameEqualityComparer : IEqualityComparer<MCFDName>
+    //{
+    //    public bool Equals(MCFDName left, MCFDName right)
+    //    {
+    //        return left.Equals(right);
+    //    }
 
-        public int GetHashCode(MCFDName obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
+    //    public int GetHashCode(MCFDName obj)
+    //    {
+    //        return obj.GetHashCode();
+    //    }
+    //}
 }

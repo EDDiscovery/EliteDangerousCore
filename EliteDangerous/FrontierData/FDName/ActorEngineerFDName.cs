@@ -34,18 +34,18 @@ namespace EliteDangerousCore
         }
     }
 
-    public class ActorFDNameEqualityComparer : IEqualityComparer<ActorFDName>
-    {
-        public bool Equals(ActorFDName left, ActorFDName right)
-        {
-            return left.Equals(right);
-        }
+    //public class ActorFDNameEqualityComparer : IEqualityComparer<ActorFDName>
+    //{
+    //    public bool Equals(ActorFDName left, ActorFDName right)
+    //    {
+    //        return left.Equals(right);
+    //    }
 
-        public int GetHashCode(ActorFDName obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
+    //    public int GetHashCode(ActorFDName obj)
+    //    {
+    //        return obj.GetHashCode();
+    //    }
+    //}
 
 
     public class EngineerFDName : FDName

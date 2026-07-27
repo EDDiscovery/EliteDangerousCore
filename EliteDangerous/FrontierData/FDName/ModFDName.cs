@@ -99,16 +99,16 @@ namespace EliteDangerousCore
         }
     }
 
-    public class ModFDNameEqualityComparer : IEqualityComparer<ModFDName>
-    {
-        public bool Equals(ModFDName left, ModFDName right)
-        {
-            return left.Equals(right);
-        }
+    //public class ModFDNameEqualityComparer : IEqualityComparer<ModFDName>
+    //{
+    //    public bool Equals(ModFDName left, ModFDName right)
+    //    {
+    //        return left.Equals(right);
+    //    }
 
-        public int GetHashCode(ModFDName obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
+    //    public int GetHashCode(ModFDName obj)
+    //    {
+    //        return obj.GetHashCode();
+    //    }
+    //}
 }

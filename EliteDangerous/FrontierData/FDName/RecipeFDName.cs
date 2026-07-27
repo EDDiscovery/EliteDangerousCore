@@ -75,16 +75,16 @@ namespace EliteDangerousCore
         }
     }
 
-    public class RecipeFDNameEqualityComparer : IEqualityComparer<RecipeFDName>
-    {
-        public bool Equals(RecipeFDName left, RecipeFDName right)
-        {
-            return left.Equals(right);
-        }
+    //public class RecipeFDNameEqualityComparer : IEqualityComparer<RecipeFDName>
+    //{
+    //    public bool Equals(RecipeFDName left, RecipeFDName right)
+    //    {
+    //        return left.Equals(right);
+    //    }
 
-        public int GetHashCode(RecipeFDName obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
+    //    public int GetHashCode(RecipeFDName obj)
+    //    {
+    //        return obj.GetHashCode();
+    //    }
+    //}
 }

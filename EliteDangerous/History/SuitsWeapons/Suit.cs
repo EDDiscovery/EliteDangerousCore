@@ -99,7 +99,7 @@ namespace EliteDangerousCore
 
         public void SwitchTo(DateTime time, SuitID id)
         {
-            suits[CURSUITID] = new Suit(time, id, null, null, 0, null, false);
+            suits[CURSUITID] = new Suit(time, id, new SuitFDName("flightsuit"), null, 0, null, false);      // dummy one to mark which is the suit selected
         }
 
         public void Upgrade(DateTime time, SuitID id, SuitFDName fdname, int newclass, long cost)

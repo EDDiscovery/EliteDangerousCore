@@ -33,10 +33,7 @@ namespace EliteDangerousCore
             if (actors.TryGetValue(fdname, out Actor var))
                 return var;
             else
-            {
-               BaseUtils.Debugger.TraceBreak($"*** Unknown Actor: {{ \"{fdname}\"), new Actor(\"{locname ?? fdname.SplitCapsWordFull()}\") }},");
                 return null;
-            }
         }
 
         // copes with $...;data actors found in NPC messages with semi colon seperated ID text

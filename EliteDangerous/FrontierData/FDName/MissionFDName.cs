@@ -49,16 +49,16 @@ namespace EliteDangerousCore
         }
     }
 
-    public class MissionFDNameEqualityComparer : IEqualityComparer<MissionFDName>
-    {
-        public bool Equals(MissionFDName left, MissionFDName right)
-        {
-            return left.Equals(right);
-        }
+    //public class MissionFDNameEqualityComparer : IEqualityComparer<MissionFDName>
+    //{
+    //    public bool Equals(MissionFDName left, MissionFDName right)
+    //    {
+    //        return left.Equals(right);
+    //    }
 
-        public int GetHashCode(MissionFDName obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
+    //    public int GetHashCode(MissionFDName obj)
+    //    {
+    //        return obj.GetHashCode();
+    //    }
+    //}
 }

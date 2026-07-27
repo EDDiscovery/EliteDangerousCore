@@ -61,16 +61,16 @@ namespace EliteDangerousCore
         }
     }
 
-    public class HandItemFDNameEqualityComparer : IEqualityComparer<HandItemFDName>
-    {
-        public bool Equals(HandItemFDName left, HandItemFDName right)
-        {
-            return left.Equals(right);
-        }
+    //public class HandItemFDNameEqualityComparer : IEqualityComparer<HandItemFDName>
+    //{
+    //    public bool Equals(HandItemFDName left, HandItemFDName right)
+    //    {
+    //        return left.Equals(right);
+    //    }
 
-        public int GetHashCode(HandItemFDName obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
+    //    public int GetHashCode(HandItemFDName obj)
+    //    {
+    //        return obj.GetHashCode();
+    //    }
+    //}
 }

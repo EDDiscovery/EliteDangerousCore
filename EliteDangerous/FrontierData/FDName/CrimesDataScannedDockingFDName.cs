@@ -34,18 +34,18 @@ namespace EliteDangerousCore
         }
     }
 
-    public class CrimesFDNameEqualityComparer : IEqualityComparer<CrimesFDName>
-    {
-        public bool Equals(CrimesFDName left, CrimesFDName right)
-        {
-            return left.Equals(right);
-        }
+    //public class CrimesFDNameEqualityComparer : IEqualityComparer<CrimesFDName>
+    //{
+    //    public bool Equals(CrimesFDName left, CrimesFDName right)
+    //    {
+    //        return left.Equals(right);
+    //    }
 
-        public int GetHashCode(CrimesFDName obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
+    //    public int GetHashCode(CrimesFDName obj)
+    //    {
+    //        return obj.GetHashCode();
+    //    }
+    //}
 
 
     public class DockingFDName : FDName
@@ -85,8 +85,8 @@ namespace EliteDangerousCore
 
         public static DataScannedFDName Normalise(string fdname, out string engname)
         {
-            if (fdname.Length >= 8 && fdname.StartsWith("$Datascan_") && fdname.EndsWith("_name;", System.StringComparison.InvariantCultureIgnoreCase))
-                fdname = fdname.Substring(10, fdname.Length - 6 - 10);        // remove decoration
+            if (fdname.Length >= 8 && fdname.StartsWithIIC("$Datascan_") && fdname.EndsWith(";", System.StringComparison.InvariantCultureIgnoreCase))
+                fdname = fdname.Substring(10, fdname.Length - 1 - 10);        // remove decoration
 
             engname = fdname.SplitCapsWordFull();
             return new DataScannedFDName(fdname);

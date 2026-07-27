@@ -67,6 +67,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalDataScanned(JObject evt) : base(evt, JournalTypeEnum.DataScanned)
         {
             FDType = DataScannedFDName.Normalise(evt["Type"].Str(),out string engname);
+            System.Diagnostics.Debug.Assert(!FDType.Contains("$"));
             Type = engname;
             TypeLocalised = JournalFieldNaming.CheckLocalisation(evt["Type_Localised"].Str(), engname);
         }

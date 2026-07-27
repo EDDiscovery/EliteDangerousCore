@@ -70,7 +70,7 @@ namespace EliteDangerousCore
 
         public override string ToString()
         {
-            BaseUtils.Debugger.TraceBreak($"*** FNAME Using ToString() {Environment.StackTrace}");
+            BaseUtils.Debugger.TraceBreak($"*** !!! YOUR USING FNAME Using ToString() {Environment.StackTrace}");
             return fdname;
         }
 
