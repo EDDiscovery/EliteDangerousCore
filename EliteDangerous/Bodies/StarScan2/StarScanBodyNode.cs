@@ -886,7 +886,7 @@ namespace EliteDangerousCore.StarScan2
             }
             foreach (var x in FSSSignalList.EmptyIfNull())
             {
-                sp.Append($"{pad}FSS:{x.SignalName_Localised ?? x.SignalName} {x.USSType}");
+                sp.Append($"{pad}FSS:{x.SignalName_Localised ?? x.SignalName.Str()} {x.USSType}");
                 sp.AppendCR();
             }
             foreach (var x in Features.EmptyIfNull())

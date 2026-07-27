@@ -32,6 +32,17 @@ namespace EliteDangerousCore
         public SignalFDName(QuickJSON.JToken token) : base(token)
         {
         }
+
+        public static SignalFDName NormaliseSAAFSSSignals(string fdname)
+        {
+            if (fdname.HasChars())
+                return new SignalFDName(fdname.Replace("$SAA_SignalType_", "").Replace(";", "").SplitCapsWordFull());
+            else
+            {
+                BaseUtils.Debugger.TraceBreak("*** Missing Signals");
+                return new SignalFDName("Error in Signal no data");
+            }
+        }
     }
     public class GenusFDName : FDName
     {
@@ -45,6 +56,17 @@ namespace EliteDangerousCore
 
         public GenusFDName(QuickJSON.JToken token) : base(token)
         {
+        }
+
+        public static GenusFDName Normalise(string fdname)
+        {
+            if (fdname.HasChars())
+                return new GenusFDName(fdname.Replace("$Codex_Ent_", "").Replace("_Name;", "").Replace(";", "").Replace("$Codex_", "").SplitCapsWordFull());
+            else
+            {
+                BaseUtils.Debugger.TraceBreak("*** Missing Genus");
+                return new GenusFDName("Error in Genus no data");
+            }
         }
     }
 

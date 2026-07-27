@@ -310,7 +310,7 @@ namespace EliteDangerousCore.JournalEvents
             public ProgressType Progress { get; set; }
             public int? RankProgress { get; set; }  // newish 3.x only when unlocked
 
-            public bool Valid { get { return Engineer?.IsValid() == true; } }    // valid..
+            public bool Valid { get { return Engineer.IsValid == true; } }    // valid..
         }
 
         public JournalEngineerProgress(JObject evt) : base(evt, JournalTypeEnum.EngineerProgress)

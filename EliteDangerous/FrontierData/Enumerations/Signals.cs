@@ -24,7 +24,7 @@ namespace EliteDangerousCore
     public class Signal
     {
         [PropertyNameAttribute("Signal name string, FDName")]
-        public string SignalName { get; set; }          // can be "Lewis Dock", "$...", no real form
+        public SignalFDName SignalName { get; set; }          // can be "Lewis Dock", "$...", no real form
         [PropertyNameAttribute("Signal name localised")]
         public string SignalName_Localised { get; set; }
         [PropertyNameAttribute("Signal type, may not be present in old data")]
@@ -81,9 +81,9 @@ namespace EliteDangerousCore
         // Make a signal description from JSON
         public Signal(JObject evt, System.DateTime EventTimeUTC)
         {
-            SignalName = evt["SignalName"].Str();
+            SignalName = new SignalFDName(evt["SignalName"].Str());
             string signalnamelocalised = evt["SignalName_Localised"].Str();     // not present for stations/installations
-            SignalName_Localised = signalnamelocalised.Alt(SignalName);         // don't mangle if no localisation, its prob not there because its a proper name
+            SignalName_Localised = signalnamelocalised.Alt(SignalName.Str());         // don't mangle if no localisation, its prob not there because its a proper name
             SignalType = evt["SignalType"].Str();
 
             SpawningState = evt["SpawningState"].Str();          // USS only, checked
@@ -187,7 +187,7 @@ namespace EliteDangerousCore
             return expired;
         }
 
-        private static Classification GetClassification(string fdsignalname, string fdsignaltype, bool isstation, string signalnamelocalised)
+        private static Classification GetClassification(SignalFDName fdsignalname, string fdsignaltype, bool isstation, string signalnamelocalised)
         {
             Classification signalclass = Classification.Other;
 
@@ -215,7 +215,7 @@ namespace EliteDangerousCore
                     signalclass = Classification.USS;
                 else if (fdsignaltype.Equals("Generic", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.Other;
-                else if (fdsignaltype.Equals("Codex", StringComparison.InvariantCultureIgnoreCase) && fdsignalname.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignaltype.Equals("Codex", StringComparison.InvariantCultureIgnoreCase) && fdsignalname.StartsWith("$Fixed_Event_Life"))
                     signalclass = Classification.NotableStellarPhenomena;
                 else if (fdsignaltype.Equals("Codex", StringComparison.InvariantCultureIgnoreCase))
                     signalclass = Classification.Codex;
@@ -226,13 +226,13 @@ namespace EliteDangerousCore
             {
                 if (isstation == true)          // station flag
                     signalclass = ClassifyStationName(fdsignalname);
-                else if (fdsignalname.StartsWith("$USS", StringComparison.InvariantCultureIgnoreCase) || fdsignalname.StartsWith("$RANDOM", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignalname.StartsWith("$USS") || fdsignalname.StartsWith("$RANDOM"))
                     signalclass = Classification.USS;
-                else if (fdsignalname.StartsWith("$Warzone", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignalname.StartsWith("$Warzone"))
                     signalclass = Classification.ConflictZone;
-                else if (fdsignalname.StartsWith("$Fixed_Event_Life", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignalname.StartsWith("$Fixed_Event_Life"))
                     signalclass = Classification.NotableStellarPhenomena;
-                else if (fdsignalname.StartsWith("$MULTIPLAYER_SCENARIO14", StringComparison.InvariantCultureIgnoreCase) || fdsignalname.StartsWith("$MULTIPLAYER_SCENARIO7", StringComparison.InvariantCultureIgnoreCase))
+                else if (fdsignalname.StartsWith("$MULTIPLAYER_SCENARIO14") || fdsignalname.StartsWith("$MULTIPLAYER_SCENARIO7"))
                     signalclass = Classification.ResourceExtraction;
                 else if (fdsignalname.Contains("-class"))
                     signalclass = Classification.Megaship;
@@ -245,8 +245,9 @@ namespace EliteDangerousCore
             return signalclass;
         }
         
-        public static Classification ClassifyStationName(string fdsignalname)
+        public static Classification ClassifyStationName(SignalFDName signal)
         {
+            string fdsignalname = signal.ToLower();
             int dash = fdsignalname.LastIndexOf('-');
             if (fdsignalname.Length >= 5 && dash == fdsignalname.Length - 4 && char.IsLetterOrDigit(fdsignalname[dash + 1]) && char.IsLetterOrDigit(fdsignalname[dash - 1]))
                 return Classification.Carrier;
@@ -279,7 +280,8 @@ namespace EliteDangerousCore
     public class SAASignal
     {
         [PropertyNameAttribute("Signal type string, FDName")]
-        public FDName Type { get; set; }        // material fdname, or $SAA_SignalType..
+        [JsonAlwaysCreate]
+        public SignalFDName Type { get; set; }        // material fdname, or $SAA_SignalType..
         [PropertyNameAttribute("Signal type string, localised")]
         public string Type_Localised { get; set; }
         [PropertyNameAttribute("Count of signals")]
@@ -316,7 +318,8 @@ namespace EliteDangerousCore
     public class SAAGenus
     {
         [PropertyNameAttribute("Genus type string, FDName")]
-        public FDName Genus { get; set; }        // $Codex_Ent_Bacterial_Genus_Name;
+        [JsonAlwaysCreate]
+        public GenusFDName Genus { get; set; }        // $Codex_Ent_Bacterial_Genus_Name;
         [PropertyNameAttribute("Genus type string, localised")]
         public string Genus_Localised { get; set; }
 

@@ -233,8 +233,8 @@ namespace EliteDangerousCore.JournalEvents
             var snl = JournalFieldNaming.GetStationNames(evt);
             StationName = snl.Item1;
             StationName_Localised = snl.Item2;
-            FDReason = evt["Reason"].FDName();
-            Reason = FDReason.SplitCapsWordFull();
+            FDReason = DockingFDName.Normalise(evt["Reason"].Str(), out string engname);
+            Reason = engname;
             FDStationType = StationDefinitions.StarportTypeToEnum( evt["StationType"].StrNull());  // may not be there
             StationType = StationDefinitions.ToEnglish(FDStationType);
             MarketID = new MarketID(evt["MarketID"]);
@@ -243,7 +243,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StationName { get; set; }
         public string StationName_Localised { get; set; }
         public string Reason { get; set; }      // friendly reason make cleaner
-        public FDName FDReason { get; set; }    // frontier ID
+        public DockingFDName FDReason { get; set; }    // frontier ID
         public string StationType { get; set; } // english, only on later events, else Unknown
         public StationDefinitions.StarportTypes FDStationType { get; set; }  // only on later events, else Unknown
         public MarketID MarketID { get; set; }

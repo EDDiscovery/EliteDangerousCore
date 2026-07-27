@@ -65,7 +65,7 @@ namespace EliteDangerousCore
             return ToLower().Replace("_taxi", "");
         }
 
-        public new VehicleFDName Clone()
+        public VehicleFDName Clone()
         {
             return new VehicleFDName(this.Str());
         }
@@ -205,6 +205,6 @@ namespace EliteDangerousCore
             }
         }
 
-        public static new VehicleActorSuitFDName Empty => new VehicleActorSuitFDName("", VehicleTypeEnum.Unknown);
+        public static VehicleActorSuitFDName Empty => new VehicleActorSuitFDName("", VehicleTypeEnum.Unknown);
     }
 }

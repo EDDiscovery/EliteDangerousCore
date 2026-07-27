@@ -21,7 +21,7 @@ namespace EliteDangerousCore
     // purposely not doing auto conversion to/from string so the use of FDName can be found easier
 
     [System.Diagnostics.DebuggerDisplay("FD {fdname}")]
-    public class FDName : IEquatable<FDName>, IComparable<FDName>, IEquatable
+    public abstract class FDName : IEquatable<FDName>, IComparable<FDName>, IEquatable
     {
         public FDName()
         {
@@ -42,13 +42,6 @@ namespace EliteDangerousCore
             this.fdname = txt;
             this.fdname_lower = this.fdname.ToLowerInvariant();
             this.hashcode = this.fdname_lower.GetHashCode();
-        }
-
-        public static FDName Empty => new FDName();
-
-        public FDName Clone()
-        {
-            return new FDName(this.fdname);
         }
 
         public bool IsValid => !this.fdname.Equals("Unknown");
@@ -115,11 +108,15 @@ namespace EliteDangerousCore
         }
         public bool Contains(string partname)
         {
-            return fdname_lower.ContainsIIC(partname.ToLowerInvariant());
+            return fdname_lower.ContainsIIC(partname);
         }
         public bool EndsWith(string partname)
         {
-            return fdname_lower.EndsWithIIC(partname.ToLowerInvariant());
+            return fdname_lower.EndsWithIIC(partname);
+        }
+        public bool StartsWith(string partname)
+        {
+            return fdname_lower.StartsWithIIC(partname);
         }
 
         #endregion
@@ -130,100 +127,4 @@ namespace EliteDangerousCore
         private int hashcode;
         #endregion
     }
-
-    public class FDNameEqualityComparer : IEqualityComparer<FDName>
-    {
-        public bool Equals(FDName left, FDName right)
-        {
-            return left.Equals(right);
-        }
-
-        public int GetHashCode(FDName obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
-
-
-    public static class FDNameHelpers
-    {
-        public static FDName FDName(this JToken tk)     // always gives a non null fdname with non null str()
-        {
-            return new FDName(tk != null ? tk.Str() : null);
-        }
-
-        public static bool IsValid(this FDName s)       // tdb?
-        {
-            return s?.IsValid == true;
-        }
-
-        public static FDName ToFD(this string str)
-        {
-            return new FDName(str);
-        }
-
-        public static MCFDName MCFDName(this JToken tk)     // always gives a non null fdname with non null str()
-        {
-            return new MCFDName(tk != null ? tk.Str() : null);
-        }
-        public static string StrNull(this FDName s)
-        {
-            return s?.Str();
-        }
-        public static string StrAlt(this FDName s, string alt)
-        {
-            return s != null ? s.Str() : alt;
-        }
-
-        public static string RemoveFDDecoration(this string fdname)
-        {
-            if (fdname.Length >= 8 && fdname.StartsWith("$") && fdname.EndsWith("_name;", System.StringComparison.InvariantCultureIgnoreCase))
-                return fdname.Substring(1, fdname.Length - 7); // 1 for '$' plus 6 for '_name;'
-
-            string s = fdname;
-            if (s.StartsWith("$int_"))
-                s = s.Replace("$int_", "Int_");
-            if (s.StartsWith("int_"))
-                s = s.Replace("int_", "Int_");
-            if (s.StartsWith("$hpt_"))
-                s = s.Replace("$hpt_", "Hpt_");
-            if (s.StartsWith("hpt_"))
-                s = s.Replace("hpt_", "Hpt_");
-            if (s.Contains("_armour_"))
-                s = s.Replace("_armour_", "_Armour_");      // normalise to Armour upper cas.. its a bit over the place with case..
-            if (s.EndsWith("_name;", StringComparison.InvariantCultureIgnoreCase))
-            {
-                //System.Diagnostics.Debug.WriteLine("Correct " + s);
-                s = s.Substring(0, s.Length - 6);
-            }
-            if (s.StartsWith("$"))                          // seen instances of $python_armour..
-                s = s.Substring(1);
-
-            return s;
-        }
-
-
-        public static FDName NormaliseSignals(string fdname)
-        {
-            if (fdname.HasChars())
-                return new FDName(fdname.Replace("$SAA_SignalType_", "").Replace(";", "").SplitCapsWordFull());
-            else
-            {
-                BaseUtils.Debugger.TraceBreak("*** Missing Signals");
-                return new FDName("Error in Signal no data");
-            }
-        }
-        public static FDName NormaliseGenus(string fdname)
-        {
-            if (fdname.HasChars())
-                return new FDName(fdname.Replace("$Codex_Ent_", "").Replace("_Name;", "").Replace(";", "").Replace("$Codex_", "").SplitCapsWordFull());
-            else
-            {
-                BaseUtils.Debugger.TraceBreak("*** Missing Genus");
-                return new FDName("Error in Genus no data");
-            }
-        }
-
-    }
-
 }

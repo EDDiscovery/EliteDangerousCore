@@ -21,54 +21,54 @@ namespace EliteDangerousCore
     {
         // from EDCD 
 
-        private static Dictionary<FDName, string> crimesFDToEnglish = new Dictionary<FDName, string>(new FDNameEqualityComparer())
+        private static Dictionary<CrimesFDName, string> crimesFDToEnglish = new Dictionary<CrimesFDName, string>(new CrimesFDNameEqualityComparer())
         {
-            ["assault".ToFD()] = "Assault",
-            ["collidedatspeedinnofirezone".ToFD()] = "Collided at speed in a no fire zone",
-            ["collidedatspeedinnofirezone_hulldamage".ToFD()] = "Collided at speed in a no fire zone resulting in hull damage",
-            ["disobeypolice".ToFD()] = "Disobeyed a order from the police",
-            ["dockingmajorblockingairlock".ToFD()] = "Blocking an airlock",
-            ["dockingmajorblockinglandingpad".ToFD()] = "Blocking a landing pad",
-            ["dockingmajortresspass".ToFD()] = "Tresspass",
-            ["dockingminorblockingairlock".ToFD()] = "Minor blocking of an airlock",
-            ["dockingminorblockinglandingpad".ToFD()] = "Minor blocking of a landing pad",
-            ["dockingminortresspass".ToFD()] = "Minor tresspass",
-            ["dumpingdangerous".ToFD()] = "Ejecting goods in a dangerous place",
-            ["dumpingnearstation".ToFD()] = "Ejecting goods near station",
-            ["fireinnofirezone".ToFD()] = "Firing weapons in a no fire zone",
-            ["fireinstation".ToFD()] = "Firing inside station",
-            ["illegalcargo".ToFD()] = "Carrying illegal cargo",
-            ["interdiction".ToFD()] = "Interdiction",
-            ["murder".ToFD()] = "Murder of pilot on ship",
-            ["onfoot_assault".ToFD()] = "Assaulting a Person",
-            ["onfoot_arccutteruse".ToFD()] = "Using an arc cutter",
-            ["onfoot_breakingandentering".ToFD()] = "Illegal Entry",
-            ["onfoot_carryingillegaldata".ToFD()] = "Carrying illegal data",
-            ["onfoot_carryingillegalgoods".ToFD()] = "Carrying illegal goods",
-            ["onfoot_carryingstolengoods".ToFD()] = "Carrying stolen goods",
-            ["onfoot_damagingdefences".ToFD()] = "Damaging station defenses",
-            ["onfoot_datatransfer".ToFD()] = "Illegal transfer of data",
-            ["onfoot_detectionofweapon".ToFD()] = "Carrying a weapon in violation of rules",
-            ["onfoot_ebreachuse".ToFD()] = "Using an E Breach",
-            ["onfoot_failuretosubmittopolice".ToFD()] = "Failure to submit to scan",
-            ["onfoot_identitytheft".ToFD()] = "Identity theft",
-            ["onfoot_murder".ToFD()] = "Murder of a person",
-            ["onfoot_overchargeintent".ToFD()] = "Intending to overcharge an access port",
-            ["onfoot_overchargedport".ToFD()] = "Illegal Overcharging an access port",
-            ["onfoot_profilecloningintent".ToFD()] = "Cloning a persons security profile",
-            ["onfoot_propertytheft".ToFD()] = "Theft of station property",
-            ["onfoot_recklessendangerment".ToFD()] = "Reckless Endangerment",
-            ["onfoot_theft".ToFD()] = "Theft of items",
-            ["onfoot_trespass".ToFD()] = "Tresspass on station",
-            ["passengerwanted".ToFD()] = "Wanted passenger",
-            ["piracy".ToFD()] = "Piracy",
-            ["recklessweaponsdischarge".ToFD()] = "Discharging a weapon",
-            ["shuttledestruction".ToFD()] = "Destroying an APEX Shuttle",
-            ["stationtamperingminor".ToFD()] = "Tampering with a station",
+            [new CrimesFDName("assault")] = "Assault",
+            [new CrimesFDName("collidedatspeedinnofirezone")] = "Collided at speed in a no fire zone",
+            [new CrimesFDName("collidedatspeedinnofirezone_hulldamage")] = "Collided at speed in a no fire zone resulting in hull damage",
+            [new CrimesFDName("disobeypolice")] = "Disobeyed a order from the police",
+            [new CrimesFDName("dockingmajorblockingairlock")] = "Blocking an airlock",
+            [new CrimesFDName("dockingmajorblockinglandingpad")] = "Blocking a landing pad",
+            [new CrimesFDName("dockingmajortresspass")] = "Tresspass",
+            [new CrimesFDName("dockingminorblockingairlock")] = "Minor blocking of an airlock",
+            [new CrimesFDName("dockingminorblockinglandingpad")] = "Minor blocking of a landing pad",
+            [new CrimesFDName("dockingminortresspass")] = "Minor tresspass",
+            [new CrimesFDName("dumpingdangerous")] = "Ejecting goods in a dangerous place",
+            [new CrimesFDName("dumpingnearstation")] = "Ejecting goods near station",
+            [new CrimesFDName("fireinnofirezone")] = "Firing weapons in a no fire zone",
+            [new CrimesFDName("fireinstation")] = "Firing inside station",
+            [new CrimesFDName("illegalcargo")] = "Carrying illegal cargo",
+            [new CrimesFDName("interdiction")] = "Interdiction",
+            [new CrimesFDName("murder")] = "Murder of pilot on ship",
+            [new CrimesFDName("onfoot_assault")] = "Assaulting a Person",
+            [new CrimesFDName("onfoot_arccutteruse")] = "Using an arc cutter",
+            [new CrimesFDName("onfoot_breakingandentering")] = "Illegal Entry",
+            [new CrimesFDName("onfoot_carryingillegaldata")] = "Carrying illegal data",
+            [new CrimesFDName("onfoot_carryingillegalgoods")] = "Carrying illegal goods",
+            [new CrimesFDName("onfoot_carryingstolengoods")] = "Carrying stolen goods",
+            [new CrimesFDName("onfoot_damagingdefences")] = "Damaging station defenses",
+            [new CrimesFDName("onfoot_datatransfer")] = "Illegal transfer of data",
+            [new CrimesFDName("onfoot_detectionofweapon")] = "Carrying a weapon in violation of rules",
+            [new CrimesFDName("onfoot_ebreachuse")] = "Using an E Breach",
+            [new CrimesFDName("onfoot_failuretosubmittopolice")] = "Failure to submit to scan",
+            [new CrimesFDName("onfoot_identitytheft")] = "Identity theft",
+            [new CrimesFDName("onfoot_murder")] = "Murder of a person",
+            [new CrimesFDName("onfoot_overchargeintent")] = "Intending to overcharge an access port",
+            [new CrimesFDName("onfoot_overchargedport")] = "Illegal Overcharging an access port",
+            [new CrimesFDName("onfoot_profilecloningintent")] = "Cloning a persons security profile",
+            [new CrimesFDName("onfoot_propertytheft")] = "Theft of station property",
+            [new CrimesFDName("onfoot_recklessendangerment")] = "Reckless Endangerment",
+            [new CrimesFDName("onfoot_theft")] = "Theft of items",
+            [new CrimesFDName("onfoot_trespass")] = "Tresspass on station",
+            [new CrimesFDName("passengerwanted")] = "Wanted passenger",
+            [new CrimesFDName("piracy")] = "Piracy",
+            [new CrimesFDName("recklessweaponsdischarge")] = "Discharging a weapon",
+            [new CrimesFDName("shuttledestruction")] = "Destroying an APEX Shuttle",
+            [new CrimesFDName("stationtamperingminor")] = "Tampering with a station",
         };
 
         // maps CrimeType FDname to an english string
-        public static string ToEnglish( FDName fdname)
+        public static string ToEnglish( CrimesFDName fdname)
         {
             //foreach( var kvp in crimesFDToEnglish) System.Diagnostics.Trace.WriteLine($"[\"{kvp.Key.ToLowerInvariant()}\"] = \"{kvp.Value}\",");
             if (fdname == null)
@@ -88,7 +88,7 @@ namespace EliteDangerousCore
         }
 
         // localised language or english
-        public static string ToLocalisedLanguage(FDName fdname )
+        public static string ToLocalisedLanguage(CrimesFDName fdname )
         {
             return ToEnglish(fdname).Tx();
         }

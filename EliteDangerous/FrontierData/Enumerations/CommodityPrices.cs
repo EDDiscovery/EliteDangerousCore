@@ -166,7 +166,7 @@ namespace EliteDangerousCore
             try
             {
                 id = jo["id"].Long();
-                fdname_unnormalised = jo["name"].MCFDName();
+                fdname_unnormalised = new MCFDName(jo["name"].Str());
                 fdname = MCFDName.Normalise(fdname_unnormalised.Str(), out _, null);
 
                 locName = jo["locName"].Str();
@@ -221,7 +221,7 @@ namespace EliteDangerousCore
             try
             {
                 id = jo["id"].Long();
-                fdname_unnormalised = jo["Name"].MCFDName();
+                fdname_unnormalised = new MCFDName(jo["Name"].Str());
                 fdname = MCFDName.Normalise(fdname_unnormalised.Str(), out _, null);
                 locName = jo["Name_Localised"].Str();
                 if (locName.IsEmpty())
@@ -267,7 +267,7 @@ namespace EliteDangerousCore
             try
             {
                 id = jo["id"].Long();
-                fdname_unnormalised = jo["Name"].MCFDName();
+                fdname_unnormalised = new MCFDName(jo["Name"].Str());
                 fdname = MCFDName.Normalise(fdname_unnormalised.Str(), out _, null);
                 locName = jo["Name_Localised"].Str();
                 if (locName.IsEmpty())

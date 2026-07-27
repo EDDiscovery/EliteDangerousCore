@@ -33,7 +33,7 @@ namespace EliteDangerousCore
         {
         }
 
-        public new MCFDName Clone()
+        public MCFDName Clone()
         {
             return new MCFDName(Str());
         }

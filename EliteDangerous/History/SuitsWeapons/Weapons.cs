@@ -41,7 +41,7 @@ namespace EliteDangerousCore
 
     public class SuitWeaponList
     {
-        public Dictionary<WeaponID, SuitWeapon> Weapons(uint gen) { return weapons.Get(gen, x => x.Sold == false && x.FDName.IsValid()); }    // all valid unsold weapons with valid names. fdname=null special entry
+        public Dictionary<WeaponID, SuitWeapon> Weapons(uint gen) { return weapons.Get(gen, x => x.Sold == false && x.FDName.IsValid); }    // all valid unsold weapons with valid names. fdname=null special entry
 
         public SuitWeaponList()
         {

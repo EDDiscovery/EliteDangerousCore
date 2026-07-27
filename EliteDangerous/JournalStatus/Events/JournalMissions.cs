@@ -595,6 +595,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public class MaterialRewards
         {
+            [JsonAlwaysCreate]
             public MCFDName Name; // fdname
             public string FriendlyName; // our conversion
             public string Name_Localised;       // may be null on reading
@@ -604,7 +605,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = MCFDName.Normalise(Name.StrNull(), out string engname, ev);
+                Name = MCFDName.Normalise(Name.Str(), out string engname, ev);
                 FriendlyName = engname;
                 Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(Name_Localised ?? "", FriendlyName);
 
@@ -617,6 +618,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public class CommodityRewards
         {
+            [JsonAlwaysCreate]
             public MCFDName Name; // fdname
             public string FriendlyName; // our conversion
             public string Name_Localised;   // may be null
@@ -624,7 +626,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = MCFDName.Normalise(Name.StrNull(), out string engname, ev);
+                Name = MCFDName.Normalise(Name.Str(), out string engname, ev);
                 FriendlyName = engname;
                 Name_Localised = Name_Localised.Alt(FriendlyName);
             }

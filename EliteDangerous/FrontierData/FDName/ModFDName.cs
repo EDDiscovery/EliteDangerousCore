@@ -33,12 +33,12 @@ namespace EliteDangerousCore
         {
         }
 
-        public new ModFDName Clone()
+        public ModFDName Clone()
         {
             return new ModFDName(Str());
         }
 
-        public static new ModFDName Empty => new ModFDName();
+        public static ModFDName Empty => new ModFDName();
 
         public static ModFDName Normalise(string fdname, out string modulename, JournalEntry ev, bool allownull = false)
         {

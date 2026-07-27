@@ -218,9 +218,9 @@ namespace EliteDangerousCore.JournalEvents
 
             foreach ( var s in Signals)
             {
-                if ( s.SignalName.HasChars() && s.SignalName_Localised.HasChars() )
+                if ( s.SignalName.IsValid && s.SignalName_Localised.HasChars() )
                 {
-                    Identifiers.Add(s.SignalName, s.SignalName_Localised);
+                    Identifiers.Add(s.SignalName.Str(), s.SignalName_Localised);
                 }
             }
         }
@@ -325,7 +325,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var s in Signals)      // some don't have localisation
                 {
-                    s.Type = FDNameHelpers.NormaliseSignals(s.Type.StrNull());
+                    s.Type = SignalFDName.NormaliseSAAFSSSignals(s.Type.Str());
                     s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.Str());
                 }
             }
@@ -334,7 +334,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var g in Genuses)      // some don't have localisation
                 {
-                    g.Genus = FDNameHelpers.NormaliseGenus(g.Genus.StrNull());
+                    g.Genus = GenusFDName.Normalise(g.Genus.Str());
                     g.Genus_Localised = JournalFieldNaming.CheckLocalisation(g.Genus_Localised, g.Genus.Str());
                 }
             }
@@ -480,13 +480,13 @@ namespace EliteDangerousCore.JournalEvents
             return sb.ToString();
         }
 
-        public int Contains(FDName fdname)      // give count if contains fdname, else zero
+        public int Contains(SignalFDName fdname)      // give count if contains fdname, else zero
         {
             int index = Signals?.FindIndex((x) => x.Type.Equals(fdname)) ?? -1;
             return (index >= 0) ? Signals[index].Count : 0;
         }
 
-        public object ContainsStr(FDName fdname, bool showit = true)      // give count if contains fdname, else empty string
+        public object ContainsStr(SignalFDName fdname, bool showit = true)      // give count if contains fdname, else empty string
         {
             int contains = Contains(fdname);
             return showit && contains > 0 ? (object)contains : "";
@@ -504,7 +504,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             foreach (var s in Signals)
             {
-                if (s.Type.IsValid() && s.Type_Localised.HasChars())
+                if (s.Type.IsValid && s.Type_Localised.HasChars())
                 {
                     Identifiers.Add(s.Type.Str(), s.Type_Localised);
                 }
@@ -538,7 +538,6 @@ namespace EliteDangerousCore.JournalEvents
     public class JournalFSSBodySignals : JournalEntry, IStarScan, IBodyFeature
     {
         // From planets only
-
         public JournalFSSBodySignals(JObject evt) : base(evt, JournalTypeEnum.FSSBodySignals)
         {
             SystemAddress = new SystemAddress(evt["SystemAddress"]);
@@ -549,7 +548,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var s in Signals)      // some don't have localisation
                 {
-                    s.Type = FDNameHelpers.NormaliseSignals(s.Type.StrNull());
+                    s.Type = SignalFDName.NormaliseSAAFSSSignals(s.Type.Str());
                     s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.Str());
                 }
             }

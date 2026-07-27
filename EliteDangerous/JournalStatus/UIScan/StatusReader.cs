@@ -304,8 +304,8 @@ namespace EliteDangerousCore
                     }
 
                     string cur_weapon = jo["SelectedWeapon"].StrNull();                 // null if not there
-                    if (cur_weapon != null)                                            // name is decorated, fix
-                        cur_weapon.RemoveFDDecoration();
+                    if (cur_weapon != null)                                             // name is decorated, fix
+                        cur_weapon = HandItemFDName.Normalise(cur_weapon);              
                     string cur_weaponloc = jo["SelectedWeapon_Localised"].Str();        // empty if not there
 
                     if (cur_weapon != SelectedWeapon || changedmajormode)

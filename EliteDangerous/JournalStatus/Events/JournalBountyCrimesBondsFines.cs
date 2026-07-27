@@ -220,7 +220,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalCommitCrime(JObject evt) : base(evt, JournalTypeEnum.CommitCrime)
         {
-            FDCrimeType = evt["CrimeType"].FDName();
+            FDCrimeType = new CrimesFDName(evt["CrimeType"].Str());
             CrimeType = FDCrimeType.SplitCapsWordFull();
             Faction = evt["Faction"].Str();
             Victim = evt["Victim"].Str();
@@ -229,7 +229,7 @@ namespace EliteDangerousCore.JournalEvents
             Bounty = evt["Bounty"].LongNull();
         }
         public string CrimeType { get; set; }       // friendly name
-        public FDName FDCrimeType { get; set; }     // FDName
+        public CrimesFDName FDCrimeType { get; set; }     // FDName
         public string Faction { get; set; }
         public string Victim { get; set; }
         public string VictimLocalised { get; set; }
@@ -254,14 +254,14 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalCrimeVictim(JObject evt) : base(evt, JournalTypeEnum.CrimeVictim)
         {
-            FDCrimeType = evt["CrimeType"].FDName();
+            FDCrimeType = new CrimesFDName(evt["CrimeType"].Str()); 
             CrimeType = FDCrimeType.SplitCapsWordFull();
             Offender = evt["Offender"].Str();
             OffenderLocalised = JournalFieldNaming.CheckLocalisation(evt["Offender_Localised"].Str(), Offender);
             Bounty = evt["Bounty"].Long();
         }
         public string CrimeType { get; set; }       // friendly name
-        public FDName FDCrimeType { get; set; }
+        public CrimesFDName FDCrimeType { get; set; }
         public string Offender { get; set; }
         public string OffenderLocalised { get; set; }
         public long Bounty { get; set; }

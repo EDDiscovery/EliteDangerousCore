@@ -26,6 +26,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public class Cargo
         {
+            [JsonAlwaysCreate]
             public MCFDName Name { get; set; }            // FDNAME
             public string Name_Localised { get; set; }
             public string FriendlyName { get; set; }            
@@ -36,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = MCFDName.Normalise(Name.StrNull(), out string engname, ev);
+                Name = MCFDName.Normalise(Name.Str(), out string engname, ev);
                 FriendlyName = engname;
                 FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
             }

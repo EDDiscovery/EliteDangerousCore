@@ -46,4 +46,21 @@ namespace EliteDangerousCore
             return obj.GetHashCode();
         }
     }
+
+
+    public class EngineerFDName : FDName
+    {
+        public EngineerFDName() : base()
+        {
+        }
+
+        public EngineerFDName(string fdname) : base(fdname)
+        {
+        }
+
+        public EngineerFDName(QuickJSON.JToken token) : base(token)
+        {
+        }
+    }
+
 }

@@ -63,10 +63,10 @@
     <Compile Include="Bodies\StarScan2\StarScanNodePtr.cs" />
     <Compile Include="Bodies\StarScan2\StarScanSystemNodeEvents.cs" />
     <Compile Include="Bodies\StarScan2\SystemDisplayPlanetTree.cs" />
+    <Compile Include="FrontierData\FDName\CrimesDataScannedDockingFDName.cs" />
     <Compile Include="FrontierData\FDName\SignalsGenusFDName.cs" />
-    <Compile Include="FrontierData\FDName\EngineerFDName.cs" />
     <Compile Include="FrontierData\FDName\ModLabelFDName.cs" />
-    <Compile Include="FrontierData\FDName\ActorFDName.cs" />
+    <Compile Include="FrontierData\FDName\ActorEngineerFDName.cs" />
     <Compile Include="FrontierData\FDName\HandItemFDName.cs" />
     <Compile Include="FrontierData\FDName\RecipeFDName.cs" />
     <Compile Include="FrontierData\FDName\MissionFDName.cs" />

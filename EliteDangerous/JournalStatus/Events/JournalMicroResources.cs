@@ -29,6 +29,7 @@ namespace EliteDangerousCore.JournalEvents
         public const int ShipLocker = 0;                        // index into MCMRList for types
         public const int BackPack = 1;
 
+        [JsonAlwaysCreate]
         public MCFDName Name { get; set; }                        // JSON, normalised to lower case, All
         public string Name_Localised { get; set; }              // JSON, All
 
@@ -46,7 +47,7 @@ namespace EliteDangerousCore.JournalEvents
         // if cat is set, cat is forced to this value
         public void Normalise(MaterialCommodityMicroResourceType.CatType? cat, JournalEntry ev)
         {
-            Name = MCFDName.Normalise(Name.StrNull(), out string engname, ev);
+            Name = MCFDName.Normalise(Name.Str(), out string engname, ev);
             if (Name_Localised.IsEmpty())
                 Name_Localised = engname;
             if (cat != null)

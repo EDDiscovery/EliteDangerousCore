@@ -1051,7 +1051,7 @@ namespace EliteDangerousCore.EDDN
                     JObject sj = new JObject();
 
                     sj["timestamp"] = sig.RecordedUTC.ToStringZuluInvariant();
-                    sj["SignalName"] = sig.SignalName;
+                    sj["SignalName"] = sig.SignalName.Str();
                     if (sig.SignalType.HasChars())
                         sj["SignalType"] = sig.SignalType;
                     if (sig.IsStation.HasValue)
