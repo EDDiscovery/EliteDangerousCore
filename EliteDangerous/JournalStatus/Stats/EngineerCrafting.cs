@@ -22,10 +22,10 @@ namespace EliteDangerousCore
 {
     public class EngineerCrafting
     {
-        public static FDName TechBrokerID = new FDName("Tech Broker");
+        public static EngineerFDName TechBrokerID = new EngineerFDName("Tech Broker");
 
         // Get vertical slice of engineer or tech broker. In add order. Note it can hold any of the journal types involved in engineering
-        public List<HistoryEntry> Get(uint gen, FDName engineer) { return crafting.GetHistoryOfKey(gen, engineer)?.Values.ToList(); }
+        public List<HistoryEntry> Get(uint gen, EngineerFDName engineer) { return crafting.GetHistoryOfKey(gen, engineer)?.Values.ToList(); }
 
         public EngineerCrafting()
         {
@@ -51,7 +51,7 @@ namespace EliteDangerousCore
             return crafting.Generation;        // return the generation we are on.
         }
 
-        private GenerationalDictionary<FDName, HistoryEntry> crafting { get; set; } = new GenerationalDictionary<FDName, HistoryEntry>();
+        private GenerationalDictionary<EngineerFDName, HistoryEntry> crafting { get; set; } = new GenerationalDictionary<EngineerFDName, HistoryEntry>();
     }
 }
 

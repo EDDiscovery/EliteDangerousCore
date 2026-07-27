@@ -68,9 +68,9 @@ namespace EliteDangerousCore
 
                                 ShipModule.ModuleTypes modtype = (ShipModule.ModuleTypes)Enum.Parse(typeof(ShipModule.ModuleTypes), type.Substring(type.LastIndexOf(".") + 1));
 
-                                ShipModule sm = new ShipModule(fid.Value, modtype, GenerateCandidateModuleName(new FDName(text)).Str());
+                                ShipModule sm = new ShipModule(fid.Value, modtype, GenerateCandidateModuleName(new ModFDName(text)).Str());
 
-                                FDName id = new FDName(idn);
+                                ModFDName id = new ModFDName(idn);
                                 if (!vanitymodules.ContainsKey(id) && !shipmodules.ContainsKey(id) && !othershipmodules.ContainsKey(id))
                                 {
                                     System.Diagnostics.Debug.WriteLine($"Added new module {fid.Value}, {sm.ModuleID} {sm.ModType} {sm.EnglishModName}");
@@ -168,14 +168,14 @@ namespace EliteDangerousCore
                 {
                     System.Diagnostics.Trace.WriteLine($"*** NEW MODULES!");
 
-                    List<FDName> vanitynames = vanitymodules.Keys.ToList();
+                    var vanitynames = vanitymodules.Keys.ToList();
                     vanitynames.Sort();
 
                     // output to file
                     string outfile = @"c:\code\vanity.lst";
 
                     string tout = "";
-                    foreach (FDName key in vanitynames)
+                    foreach (var key in vanitynames)
                         tout += $"                {{new FDName({key.WithQuotes()}), new ShipModule({vanitymodules[key].ModuleID},ShipModule.ModuleTypes.{vanitymodules[key].ModType},{vanitymodules[key].EnglishModName.AlwaysQuoteString()}) }},\r\n";
                     BaseUtils.FileHelpers.TryWriteToFile(outfile, tout);
 

@@ -78,7 +78,7 @@ namespace EliteDangerousCore
         {
             ships = new Dictionary<string, Ship>();
             StoredModules = new ShipModulesInStore();
-            itemlocalisation = new Dictionary<FDName, string>(new FDNameEqualityComparer());
+            itemlocalisation = new Dictionary<ModFDName, string>(new ModFDNameEqualityComparer());
             currentid = null;
         }
 
@@ -641,7 +641,7 @@ namespace EliteDangerousCore
         #endregion
 
         #region vars
-        private Dictionary<FDName, string> itemlocalisation;        // cache of modules vs item localisation
+        private Dictionary<ModFDName, string> itemlocalisation;        // cache of modules vs item localisation
         private string currentid;
         private Dictionary<string, Ship> ships { get; set; }         // by shipid key
         #endregion

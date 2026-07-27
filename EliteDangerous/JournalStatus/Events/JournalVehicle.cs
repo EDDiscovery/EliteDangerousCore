@@ -187,14 +187,14 @@ namespace EliteDangerousCore.JournalEvents
             Loadout = evt["Loadout"].Str();
             PlayerControlled = evt["PlayerControlled"].Bool(true);
             ID = evt["ID"].IntNull();
-            SRVType = evt["SRVType"].FDName();      // should not need ship norm
-            SRVType_Localised = evt["SRVType_Localised"].StrNull();
+            SRVType = VehicleFDName.Normalise(evt["SRVType"].Str(), out string engname, this);
+            SRVType_Localised = JournalFieldNaming.CheckLocalisation(evt["SRVType_Localised"].StrNull(), engname);
         }
         public string Loadout { get; set; }
         public bool PlayerControlled { get; set; }
         public int? ID { get; set; }
 
-        public FDName SRVType;          // new odyssey 9, dec 21, may be null
+        public VehicleFDName SRVType;          // new odyssey 9, dec 21, may be null
         public string SRVType_Localised; // new odyssey 9, dec 21, may be null
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)

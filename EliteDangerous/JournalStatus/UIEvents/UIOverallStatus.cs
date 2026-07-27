@@ -61,7 +61,7 @@ namespace EliteDangerousCore.UIEvents
             BreathableAtmosphere = breathableatmosphere;
             SelectedWeapon = selw;
             SelectedWeapon_Localised = selwloc;
-            HandItem = SelectedWeapon != null ? ItemData.GetWeaponOrHandItem(new FDName(SelectedWeapon)) : null;
+            HandItem = SelectedWeapon != null ? ItemData.GetWeaponOrHandItem(new HandItemFDName(SelectedWeapon)) : null;
             DestinationName = dname;
             DestinationName_Localised = dnameloc;
             DestinationBodyID = did;

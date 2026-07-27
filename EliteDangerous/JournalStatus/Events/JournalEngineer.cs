@@ -25,22 +25,22 @@ namespace EliteDangerousCore.JournalEvents
         // now obsoleted by 3.0
         public JournalEngineerApply(JObject evt) : base(evt, JournalTypeEnum.EngineerApply)
         {
-            Engineer = evt["Engineer"].FDName();
+            Engineer = new EngineerFDName(evt["Engineer"].Str());
             Level = evt["Level"].Int();
 
-            FDOverride = FDNameHelpers.NormaliseExperimentalEffect(evt["Override"].Str(), out string engname, this, true);      // may not be present
+            FDOverride = RecipeFDName.Normalise(evt["Override"].Str(), out string engname, this, true);      // may not be present
             if (FDOverride != null)
                 Override = engname;
 
-            FDBlueprint = FDNameHelpers.NormaliseBlueprint(evt["Blueprint"].Str(), out engname, this);
+            FDBlueprint = RecipeFDName.Normalise(evt["Blueprint"].Str(), out engname, this);
             Blueprint = engname;
         }
 
-        public FDName Engineer { get; set; }
-        public FDName FDBlueprint { get; set; }        // fdname
+        public EngineerFDName Engineer { get; set; }
+        public RecipeFDName FDBlueprint { get; set; }        // fdname
         public string Blueprint { get; set; }           // friendly not fdev
         public int Level { get; set; }
-        public FDName FDOverride { get; set; }        // may be null
+        public RecipeFDName FDOverride { get; set; }        // may be null
         public string Override { get; set; }        // may be null
 
         public override string GetInfo()
@@ -54,7 +54,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalEngineerContribution(JObject evt) : base(evt, JournalTypeEnum.EngineerContribution)
         {
-            Engineer = evt["Engineer"].FDName();
+            Engineer = new EngineerFDName(evt["Engineer"].Str());
             EngineerID = evt["EngineerID"].LongNull();
 
             Type = evt["Type"].Enumeration<ContributionType>(ContributionType.Unknown);
@@ -82,7 +82,7 @@ namespace EliteDangerousCore.JournalEvents
             TotalQuantity = evt["TotalQuantity"].Int();
         }
 
-        public FDName Engineer { get; set; }
+        public EngineerFDName Engineer { get; set; }
         public long? EngineerID { get; set; }
 
         public enum ContributionType { Unknown, Bond, Bounty, Commodity, Credits, Materials };
@@ -146,7 +146,7 @@ namespace EliteDangerousCore.JournalEvents
             SlotFD = ShipSlots.ToEnum(evt["Slot"].StrNull());       // may not be present, pass in null to indicate okay and set it to unknown
             Slot = ShipSlots.ToEnglish(SlotFD);
 
-            ModuleFD = FDNameHelpers.NormaliseModules(evt["Module"].Str(), out string engname, this, true);       // can be missing
+            ModuleFD = ModFDName.Normalise(evt["Module"].Str(), out string engname, this, true);       // can be missing
             if ( ModuleFD!=null)
                 Module = engname;
 
@@ -213,7 +213,7 @@ namespace EliteDangerousCore.JournalEvents
         public ShipSlots.Slot SlotFD { get; set; }      // may be unknown
         public string Slot { get; set; }        // English name, not present in v1 of this version
 
-        public FDName ModuleFD { get; set; }    // may be null on very early ones
+        public ModFDName ModuleFD { get; set; }    // may be null on very early ones
         public string Module { get; set; }      // English module name, not present in V1 of this version
 
         public EngineeringData Engineering { get; set; }        // may be null if engineering invalid, which some frontier modules have 
@@ -303,7 +303,7 @@ namespace EliteDangerousCore.JournalEvents
         public class ProgressInformation
         {
             [JsonAlwaysCreate]
-            public FDName Engineer { get; set; }           // some journals seen on 17/9/22 have no Engineer or EngineerID so force creation with unknown
+            public EngineerFDName Engineer { get; set; }           // some journals seen on 17/9/22 have no Engineer or EngineerID so force creation with unknown
             public long EngineerID { get; set; }
             public int? Rank { get; set; }       // only when unlocked
 
@@ -321,7 +321,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 Engineers = new ProgressInformation[1];
                 Engineers[0] = new ProgressInformation();
-                Engineers[0].Engineer = evt["Engineer"].FDName();
+                Engineers[0].Engineer = new EngineerFDName(evt["Engineer"].Str());
                 Engineers[0].EngineerID = evt["EngineerID"].Long();
                 Engineers[0].Rank = evt["Rank"].IntNull();
                 Engineers[0].Progress = evt["Progress"].Enumeration<ProgressType>(ProgressType.Unknown);
@@ -353,7 +353,7 @@ namespace EliteDangerousCore.JournalEvents
             return sb.ToString();
         }
 
-        public ProgressType? GetProgress(FDName engineer)        // use in case text changed in frontier data
+        public ProgressType? GetProgress(EngineerFDName engineer)        // use in case text changed in frontier data
         {
             int found = Array.FindIndex(Engineers, x => x.Engineer == engineer);
             if (found >= 0)
@@ -364,14 +364,14 @@ namespace EliteDangerousCore.JournalEvents
                 return null;
         }
 
-        public string[] ApplyProgress(string[] engineers)
+        public string[] ApplyProgress(EngineerFDName[] engineers)
         {
             string[] ret = new string[engineers.Length];
             for (int i = 0; i < engineers.Length; i++)
             {
-                ret[i] = engineers[i];
+                ret[i] = engineers[i].Str();
 
-                int found = Array.FindIndex(Engineers, x => x.Engineer.Str().Equals(engineers[i], StringComparison.InvariantCultureIgnoreCase));
+                int found = Array.FindIndex(Engineers, x => x.Engineer == engineers[i]);
                 if (found >= 0)
                 {
                     if (Engineers[found].Progress == ProgressType.Unlocked)

@@ -59,7 +59,7 @@ namespace EliteDangerousCore.JournalEvents
 
             string oldentry = evt["ItemUnlocked"].StrNull();        // 3.02 journal entry
             if (ItemsUnlocked == null && oldentry != null)
-                ItemsUnlocked = new Unlocked[] { new Unlocked() { Name = new FDName(oldentry), Name_Localised = oldentry } };
+                ItemsUnlocked = new Unlocked[] { new Unlocked() { Name = new EngineerFDName(oldentry), Name_Localised = oldentry } };
         }
 
 
@@ -76,7 +76,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public class Unlocked
         {
-            public FDName Name;
+            public EngineerFDName Name;
             public string Name_Localised;
         }
 

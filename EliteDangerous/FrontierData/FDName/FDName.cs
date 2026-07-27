@@ -75,6 +75,12 @@ namespace EliteDangerousCore
             return new JToken(fdname);
         }
 
+        public override string ToString()
+        {
+            BaseUtils.Debugger.TraceBreak($"*** FNAME Using ToString() {Environment.StackTrace}");
+            return fdname;
+        }
+
         #region Compare
 
         public static bool operator ==(FDName left, FDName right) { return left is null && right is null ? true : right is null ? false : left.Equals(right); }
@@ -107,55 +113,14 @@ namespace EliteDangerousCore
         {
             return hashcode;
         }
-
         public bool Contains(string partname)
         {
             return fdname_lower.ContainsIIC(partname.ToLowerInvariant());
         }
-
         public bool EndsWith(string partname)
         {
             return fdname_lower.EndsWithIIC(partname.ToLowerInvariant());
         }
-
-        #endregion
-
-        #region Misc
-        public int GetClass()
-        {
-            int ci = fdname_lower.IndexOf("class");
-            int classn = ci > 0 ? fdname_lower.Substring(ci + 5, 1).InvariantParseInt(0) : 0;
-            return classn;
-        }
-
-        public bool IsWeaponArmour()
-        {
-            return fdname_lower.StartsWith("hpt_", StringComparison.InvariantCultureIgnoreCase) ||
-                                            fdname_lower.StartsWith("Int_", StringComparison.InvariantCultureIgnoreCase) ||
-                                            fdname_lower.Contains("_armour_", StringComparison.InvariantCultureIgnoreCase);
-        }
-
-        public string GetForeignModuleName(string loc = null, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
-        {
-            if (ItemData.TryGetShipModule(this, out ItemData.ShipModule item, true, slot))
-                return item.TranslatedModTypeString();
-            else
-                return loc ?? fdname;
-        }
-        public string GetForeignModuleType(string loc = null, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
-        {
-            if (ItemData.TryGetShipModule(this, out ItemData.ShipModule item, true, slot))
-                return item.TranslatedModTypeString();
-            else
-                return loc ?? fdname;
-        }
-
-        public override string ToString()
-        {
-            BaseUtils.Debugger.TraceBreak($"*** FNAME Using ToString() {Environment.StackTrace}");
-            return fdname;
-        }
-
 
         #endregion
 
@@ -235,138 +200,6 @@ namespace EliteDangerousCore
                 s = s.Substring(1);
 
             return s;
-        }
-
-        public static FDName NormaliseModules(string fdname, out string modulename, JournalEntry ev, bool allownull = false)
-        {
-            if (fdname.IsEmpty())
-            {
-                if (allownull)
-                {
-                    modulename = null;
-                    return null;
-                }
-                else
-                {
-                    modulename = "Unknown Module";
-                    BaseUtils.Debugger.TraceBreak("*** Missing Module");
-                    return new FDName("Unknown Module");
-                }
-            }
-            else
-            {
-                if (fdname.Length >= 8 && fdname[0] == '$' && fdname.EndsWith("_name;", System.StringComparison.InvariantCultureIgnoreCase))
-                    fdname = fdname.Substring(1, fdname.Length - 7);        // remove decoration
-
-                var ret = new FDName(fdname);
-                if (ItemData.TryGetShipModule(ret, out ItemData.ShipModule module, true))
-                {
-                    modulename = module.EnglishModName;
-                }
-                else
-                {
-                    BaseUtils.Debugger.TraceBreak("*** Unknown Module `{fdname}`");
-                    modulename = "Unknown Module " + fdname;
-                }
-
-                return ret;
-            }
-        }
-        public static FDName NormaliseMissionName(string fdname, out string engname)
-        {
-            if (fdname.HasChars())
-            {
-                engname = fdname.Replace("_name", "").SplitCapsWordFull();
-                return new FDName(fdname);
-            }
-            else
-            {
-                engname = "Missing Mission Name";
-                BaseUtils.Debugger.TraceBreak("*** Missing Mission Name");
-                return new FDName(engname);
-            }
-        }
-
-        // some pre 3.0 blueprints are not valid anymore, pass ev to check if to moan
-        public static FDName NormaliseBlueprint(string fdname, out string engname, JournalEntry ev, bool allownull =false) 
-        {
-            if (fdname.IsEmpty())
-            {
-                if (allownull)
-                {
-                    engname = null;
-                    return null;
-                }
-                else
-                {
-                    engname = "Unknown Blueprint";
-
-                    if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
-                        BaseUtils.Debugger.TraceBreak($"*** Missing blueprint {ev?.EventTimeUTC} {ev?.EventTypeStr}");
-
-                    return new FDName("Unknown Blueprint");
-                }
-            }
-            else
-            {
-                var fd = new FDName(fdname);
-
-                var rp = Recipes.FindRecipe(fd);
-
-                if (rp != null)
-                {
-                    engname = rp.Name;
-                    //   System.Diagnostics.Debug.WriteLine($"known blueprint name {ev?.EventTimeUTC} {ev?.EventTypeStr} : {fdname}");
-                }
-                else
-                {
-                    if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
-                        BaseUtils.Debugger.TraceBreak($"*** Unknown blueprint name `{fdname}` {ev?.EventTimeUTC} {ev?.EventTypeStr}");
-
-                    engname = fdname.SplitCapsWordFull();
-                }
-                return fd;
-            }
-        }
-
-        // some pre 3.0 effects are not valid anymore, pass ev to check if to moan
-        public static FDName NormaliseExperimentalEffect(string fdname, out string engname, JournalEntry ev, bool allownull = false) 
-        {
-            if (fdname.IsEmpty())
-            {
-                if (allownull)
-                {
-                    engname = null;
-                    return null;
-                }
-                else
-                {
-                    engname = "Unknown Experimental Effect";
-
-                    if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
-                        BaseUtils.Debugger.TraceBreak($"*** Missing exp effect {ev?.EventTimeUTC} {ev?.EventTypeStr}");
-
-                    return new FDName("Unknown Experimental Effect");
-                }
-            }
-            else
-            {
-                var fd = new FDName(fdname);
-                var rp = Recipes.FindRecipe(fd);
-                if (rp != null)
-                {
-                    engname = rp.Name;
-                }
-                else
-                {
-                    if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
-                        BaseUtils.Debugger.TraceBreak($"*** Unknown experimental effect {fdname} {ev?.EventTimeUTC} {ev?.EventTypeStr}");
-
-                    engname = fdname.SplitCapsWordFull();
-                }
-
-                return fd;
-            }
         }
 
 

@@ -148,6 +148,14 @@ namespace EliteDangerousCore
                 System.Diagnostics.Debug.WriteLine($"*** Suit not recognised properly {fdname}");
             return new SuitFDName(ret.Str());
         }
+
+        public int GetClass()
+        {
+            int ci = ToLower().IndexOf("class");
+            int classn = ci > 0 ? ToLower().Substring(ci + 5, 1).InvariantParseInt(0) : 0;
+            return classn;
+        }
+
     }
 
     public class SuitFDNameEqualityComparer : IEqualityComparer<VehicleFDName>
@@ -175,7 +183,7 @@ namespace EliteDangerousCore
 
         public VehicleActorSuitFDName(QuickJSON.JToken token) : base(token)
         {
-            var ac = ItemData.GetActor(new FDName(Str()));
+            var ac = ItemData.GetActor(new ActorFDName(Str()));
             if (ac != null)
             {
                 VehicleType = VehicleTypeEnum.Actor;
@@ -184,7 +192,7 @@ namespace EliteDangerousCore
 
         public static new VehicleActorSuitFDName Normalise(string fdname, out string name, JournalEntry ev, bool allownull = false)
         {
-            var ac = ItemData.GetActor(new FDName(fdname));
+            var ac = ItemData.GetActor(new ActorFDName(fdname));
             if (ac != null)
             {
                 name = ac.Name;

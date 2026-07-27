@@ -48,8 +48,8 @@ namespace EliteDangerousCore.JournalEvents
         public MarketID MarketID { get; set; }
         public List<CCommodities> Commodities { get; protected set; }   // never null
 
-        public bool HasCommodity(FDName fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname)) >= 0; }
-        public bool HasCommodityToBuy(FDName fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname) && x.HasStock) >= 0; }
+        public bool HasCommodity(MCFDName fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname)) >= 0; }
+        public bool HasCommodityToBuy(MCFDName fdname) { return Commodities.FindIndex(x => x.fdname.Equals(fdname) && x.HasStock) >= 0; }
 
         public override string GetInfo()
         {

@@ -20,13 +20,13 @@ namespace EliteDangerousCore
 {
     public partial class ItemData
     {
-        static public Weapon GetWeapon(FDName fdname, string locname = null)         // suit weapons only
+        static public Weapon GetWeapon(HandItemFDName fdname, string locname = null)         // suit weapons only
         {
             HandItem hi = GetWeaponOrHandItem(fdname, locname);
             return hi as Weapon;        // null if not
         }
 
-        static public HandItem GetWeaponOrHandItem(FDName fdname, string locname = null)   // all hand items
+        static public HandItem GetWeaponOrHandItem(HandItemFDName fdname, string locname = null)   // all hand items
         {
             if (weapons.TryGetValue(fdname, out Weapon var))
                 return var;
@@ -103,7 +103,7 @@ namespace EliteDangerousCore
             // headshot  Weapon_HeadshotDamage https://elite-dangerous.fandom.com/wiki/Headshot_Damage 1.5x
             // Applied at suit level Suit_IncreasedAmmoReserves https://elite-dangerous.fandom.com/wiki/Extra_Ammo_Capacity 1.5x
 
-            public WeaponStats ApplyEngineering(FDName[] mods)
+            public WeaponStats ApplyEngineering(HandItemFDName[] mods)
             {
                 if (mods.Length > 0)
                 {
@@ -125,39 +125,39 @@ namespace EliteDangerousCore
             }
         }
 
-        public static Dictionary<FDName, HandItem> onfoothanditems = new Dictionary<FDName, HandItem>(new FDNameEqualityComparer())   // DO NOT USE DIRECTLY - public is for checking only
+        public static Dictionary<HandItemFDName, HandItem> onfoothanditems = new Dictionary<HandItemFDName, HandItem>(new HandItemFDNameEqualityComparer())   // DO NOT USE DIRECTLY - public is for checking only
         {
-            { new FDName("humanoid_fists"), new HandItem("Fists", HandItem.HandItemClass.Fists) },
-            { new FDName("humanoid_rechargetool"), new HandItem("Recharger", HandItem.HandItemClass.Utility) },
-            { new FDName("humanoid_companalyser"), new HandItem("Profile Analyser", HandItem.HandItemClass.Utility) },
-            { new FDName("humanoid_sampletool"), new HandItem("Genetic Sampler", HandItem.HandItemClass.Utility) },
-            { new FDName("humanoid_repairtool"), new HandItem("Arc Cutter", HandItem.HandItemClass.Utility) },
+            { new HandItemFDName("humanoid_fists"), new HandItem("Fists", HandItem.HandItemClass.Fists) },
+            { new HandItemFDName("humanoid_rechargetool"), new HandItem("Recharger", HandItem.HandItemClass.Utility) },
+            { new HandItemFDName("humanoid_companalyser"), new HandItem("Profile Analyser", HandItem.HandItemClass.Utility) },
+            { new HandItemFDName("humanoid_sampletool"), new HandItem("Genetic Sampler", HandItem.HandItemClass.Utility) },
+            { new HandItemFDName("humanoid_repairtool"), new HandItem("Arc Cutter", HandItem.HandItemClass.Utility) },
         };
 
-        public static Dictionary<FDName, Weapon> weapons = new Dictionary<FDName, Weapon>(new FDNameEqualityComparer())   // DO NOT USE DIRECTLY - public is for checking only
+        public static Dictionary<HandItemFDName, Weapon> weapons = new Dictionary<HandItemFDName, Weapon>(new HandItemFDNameEqualityComparer())   // DO NOT USE DIRECTLY - public is for checking only
         {
-             { new FDName("wpn_m_assaultrifle_kinetic_fauto"), new Weapon("Karma AR-50", true, Weapon.WeaponDamageType.Kinetic, Weapon.HandItemClass.LongRangeRifle, Weapon.WeaponFireMode.Automatic,new WeaponStats[] {
+             { new HandItemFDName("wpn_m_assaultrifle_kinetic_fauto"), new Weapon("Karma AR-50", true, Weapon.WeaponDamageType.Kinetic, Weapon.HandItemClass.LongRangeRifle, Weapon.WeaponFireMode.Automatic,new WeaponStats[] {
                     new WeaponStats(0.9,10,40,240,50,2.0),      // game wiki https://elite-dangerous.fandom.com/wiki/Karma_AR-50
                     new WeaponStats(1.2,10,40,240,50,2.0),      // game x1.33 
                     new WeaponStats(1.6,10,40,240,50,2.0),      // wiki x1.33
                     new WeaponStats(2.0,10,40,240,50,2.0),      // wiki x1.25
                     new WeaponStats(2.5,10,40,240,50,2.0),  }) },   // wiki x1.25
 
-             { new FDName("wpn_m_submachinegun_kinetic_fauto"), new Weapon("Karma C-44", true, Weapon.WeaponDamageType.Kinetic, Weapon.HandItemClass.Carbine, Weapon.WeaponFireMode.Automatic, new WeaponStats[] {
+             { new HandItemFDName("wpn_m_submachinegun_kinetic_fauto"), new Weapon("Karma C-44", true, Weapon.WeaponDamageType.Kinetic, Weapon.HandItemClass.Carbine, Weapon.WeaponFireMode.Automatic, new WeaponStats[] {
                  new WeaponStats(0.65,13.3,60,360,20,2.0),      // wiki https://elite-dangerous.fandom.com/wiki/Karma_C-44
                  new WeaponStats(0.85,13.3,60,360,20,2.0),      // wiki
                  new WeaponStats(1.1,13.3,60,360,20,2.0),       // game
                  new WeaponStats(1.5,13.3,60,360,20,2.0),       // wiki          
                  new WeaponStats(1.875,13.3,60,360,20,2.0),  }) },    // TBD Guess at same muliplier of 1.25
 
-             { new FDName("wpn_s_pistol_kinetic_sauto"), new Weapon("Karma P-15", false, Weapon.WeaponDamageType.Kinetic, Weapon.HandItemClass.Pistol, Weapon.WeaponFireMode.SemiAutomatic, new WeaponStats[] {
+             { new HandItemFDName("wpn_s_pistol_kinetic_sauto"), new Weapon("Karma P-15", false, Weapon.WeaponDamageType.Kinetic, Weapon.HandItemClass.Pistol, Weapon.WeaponFireMode.SemiAutomatic, new WeaponStats[] {
                  new WeaponStats(1.4,10,24,240,25,2.0),         // game https://elite-dangerous.fandom.com/wiki/Karma_P-15
                  new WeaponStats(1.8,10,24,240,25,2.0),         // game
                  new WeaponStats(2.4,10,24,240,25,2.0),         // game
                  new WeaponStats(2.7,10,24,240,25,2.0),         // guess
                  new WeaponStats(3,10,24,240,25,2.0),  }) },    // guess at x1.25
 
-            { new FDName("wpn_m_launcher_rocket_sauto"), new Weapon("Karma L-6", true, Weapon.WeaponDamageType.Explosive, Weapon.HandItemClass.Launcher, Weapon.WeaponFireMode.Automatic, new WeaponStats[] {
+            { new HandItemFDName("wpn_m_launcher_rocket_sauto"), new Weapon("Karma L-6", true, Weapon.WeaponDamageType.Explosive, Weapon.HandItemClass.Launcher, Weapon.WeaponFireMode.Automatic, new WeaponStats[] {
                 new WeaponStats(40,1,2,8,300,1.0),              // game - wiki wrong on 1  https://elite-dangerous.fandom.com/wiki/Karma_L-6 
                 new WeaponStats(52.4,1,2,8,300,1.0),            // game
                 new WeaponStats(69.2,1,2,8,300,1.0),            // game
@@ -165,21 +165,21 @@ namespace EliteDangerousCore
                 new WeaponStats(119.2,1,2,8,300,1.0), }) },     // wiki
 
 
-             { new FDName("wpn_m_assaultrifle_laser_fauto"), new Weapon("TK Aphelion", true, Weapon.WeaponDamageType.Thermal, Weapon.HandItemClass.Rifle, Weapon.WeaponFireMode.Automatic, new WeaponStats[] {
+             { new HandItemFDName("wpn_m_assaultrifle_laser_fauto"), new Weapon("TK Aphelion", true, Weapon.WeaponDamageType.Thermal, Weapon.HandItemClass.Rifle, Weapon.WeaponFireMode.Automatic, new WeaponStats[] {
                  new WeaponStats(1.6,5.7,25,150,70,1.0),    // game
                  new WeaponStats(2,5.7,25,150,70,1.0),      // wiki https://elite-dangerous.fandom.com/wiki/TK_Aphelion
                  new WeaponStats(2.7,5.7,25,150,70,1.0),    // game
                  new WeaponStats(3.6,5.7,25,150,70,1.0),    // wiki
                  new WeaponStats(4.4,5.7,25,150,70,1.0), }) },    // wiki
 
-             { new FDName("wpn_m_submachinegun_laser_fauto"), new Weapon("TK Eclipse", true, Weapon.WeaponDamageType.Thermal, Weapon.HandItemClass.Carbine, Weapon.WeaponFireMode.Automatic, new WeaponStats[] {
+             { new HandItemFDName("wpn_m_submachinegun_laser_fauto"), new Weapon("TK Eclipse", true, Weapon.WeaponDamageType.Thermal, Weapon.HandItemClass.Carbine, Weapon.WeaponFireMode.Automatic, new WeaponStats[] {
                  new WeaponStats(0.9,10,40,280,25,1.0),     // game wiki has it at 0.85 https://elite-dangerous.fandom.com/wiki/TK_Eclipse
                  new WeaponStats(1.1,10,40,280,25,1.0),     // game
                  new WeaponStats(1.5,10,40,280,25,1.0),     // wiki
                  new WeaponStats(1.9,10,40,280,25,1.0),     // wiki
                  new WeaponStats(2.375,10,40,280,25,1.0),   }) }, // guess at x1.24
 
-             { new FDName("wpn_s_pistol_laser_sauto"), new Weapon("TK Zenith", false, Weapon.WeaponDamageType.Thermal, Weapon.HandItemClass.Pistol, Weapon.WeaponFireMode.Burst, new WeaponStats[] {
+             { new HandItemFDName("wpn_s_pistol_laser_sauto"), new Weapon("TK Zenith", false, Weapon.WeaponDamageType.Thermal, Weapon.HandItemClass.Pistol, Weapon.WeaponFireMode.Burst, new WeaponStats[] {
                  new WeaponStats(1.7,5.7,18,180,35,1.0),    // game, frontier data - note wiki is wrong https://elite-dangerous.fandom.com/wiki/TK_Zenith
                  new WeaponStats(2.2,5.7,18,180,35,1.0),    // game
                  new WeaponStats(2.9,5.7,18,180,35,1.0),    // game
@@ -187,28 +187,28 @@ namespace EliteDangerousCore
                  new WeaponStats(4.5,5.7,18,180,35,1.0),   }) }, // guess x1.25
 
 
-            { new FDName("wpn_m_sniper_plasma_charged"), new Weapon("Manticore Executioner", true, Weapon.WeaponDamageType.Plasma, Weapon.HandItemClass.LongRangeRifle, Weapon.WeaponFireMode.SemiAutomatic,new WeaponStats[] {
+            { new HandItemFDName("wpn_m_sniper_plasma_charged"), new Weapon("Manticore Executioner", true, Weapon.WeaponDamageType.Plasma, Weapon.HandItemClass.LongRangeRifle, Weapon.WeaponFireMode.SemiAutomatic,new WeaponStats[] {
                 new WeaponStats(15,0.8,3,30,100,2.0),       // game
                 new WeaponStats(19.6,0.8,3,30,100,2.0),     // wiki https://elite-dangerous.fandom.com/wiki/Manticore_Executioner
                 new WeaponStats(26,0.8,3,30,100,2.0),       // wiki
                 new WeaponStats(34,0.8,3,30,100,2.0),       // wiki
                 new WeaponStats(44.7,0.8,3,30,100,2.0), }) },   // wiki
 
-            { new FDName("wpn_m_assaultrifle_plasma_fauto"), new Weapon("Manticore Oppressor", true, Weapon.WeaponDamageType.Plasma, Weapon.HandItemClass.Rifle, Weapon.WeaponFireMode.Automatic, new WeaponStats[] {
+            { new HandItemFDName("wpn_m_assaultrifle_plasma_fauto"), new Weapon("Manticore Oppressor", true, Weapon.WeaponDamageType.Plasma, Weapon.HandItemClass.Rifle, Weapon.WeaponFireMode.Automatic, new WeaponStats[] {
                 new WeaponStats(0.8,6.7,50,300,35,1.5),     // game
                 new WeaponStats(1.0,6.7,50,300,35,1.5),     // game
                 new WeaponStats(1.4,6.7,50,300,35,1.5),     // wiki https://elite-dangerous.fandom.com/wiki/Manticore_Oppressor
                 new WeaponStats(1.8,6.7,50,300,35,1.5),     // wiki
                 new WeaponStats(2.4,6.7,50,300,35,1.5),  }) },  // wiki
 
-            { new FDName("wpn_m_shotgun_plasma_doublebarrel"), new Weapon("Manticore Intimidator", true,  Weapon.WeaponDamageType.Plasma, Weapon.HandItemClass.ShotGun, Weapon.WeaponFireMode.SemiAutomatic,new WeaponStats[] {
+            { new HandItemFDName("wpn_m_shotgun_plasma_doublebarrel"), new Weapon("Manticore Intimidator", true,  Weapon.WeaponDamageType.Plasma, Weapon.HandItemClass.ShotGun, Weapon.WeaponFireMode.SemiAutomatic,new WeaponStats[] {
                 new WeaponStats(1.8,1.25,2,24,7,1.5),       // game https://elite-dangerous.fandom.com/wiki/Manticore_Intimidator does not match either frontier or in-game numbers
                 new WeaponStats(2.3,1.25,2,24,7,1.5),       // game
                 new WeaponStats(3.2,1.25,2,24,7,1.5),       // guess 
                 new WeaponStats(4.14,1.25,2,24,7,1.5),      // guess 
                 new WeaponStats(5.52,1.25,2,24,7,1.5), }) }, // guess
 
-            { new FDName("wpn_s_pistol_plasma_charged"), new Weapon("Manticore Tormentor", false, Weapon.WeaponDamageType.Plasma, Weapon.HandItemClass.Pistol, Weapon.WeaponFireMode.SemiAutomatic, new WeaponStats[] {
+            { new HandItemFDName("wpn_s_pistol_plasma_charged"), new Weapon("Manticore Tormentor", false, Weapon.WeaponDamageType.Plasma, Weapon.HandItemClass.Pistol, Weapon.WeaponFireMode.SemiAutomatic, new WeaponStats[] {
                 new WeaponStats(7.5,1.7,6,72,15,2.0),       // game 
                 new WeaponStats(9.8,1.7,6,72,15,2.0),       // wiki https://elite-dangerous.fandom.com/wiki/Manticore_Tormentor
                 new WeaponStats(13,1.7,6,72,15,2.0),        // wiki

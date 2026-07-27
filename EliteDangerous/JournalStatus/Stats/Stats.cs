@@ -100,12 +100,12 @@ namespace EliteDangerousCore
             }
         }
 
-        public void UpdateEngineerMaterial(ISystem system, FDName engname, MCFDName namematcom, int amount)
+        public void UpdateEngineerMaterial(ISystem system, EngineerFDName engname, MCFDName namematcom, int amount)
         {
             UpdateMaterial(system,namematcom, amount, engname.Str());
         }
 
-        public void UpdateEngineerCommodity(ISystem system, FDName engname, MCFDName namematcom, int amount)
+        public void UpdateEngineerCommodity(ISystem system, EngineerFDName engname, MCFDName namematcom, int amount)
         {
             UpdateCommodity(system,namematcom, amount, 0, engname.Str());
         }

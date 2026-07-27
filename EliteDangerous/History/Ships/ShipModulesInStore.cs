@@ -25,14 +25,14 @@ namespace EliteDangerousCore
         public class StoredModule: IEquatable<StoredModule> // storage used by journal event..
         {
             public int StorageSlot{ get; set; }
-            public FDName NameFD{ get; set; }
+            public ModFDName NameFD{ get; set; }
             public string Name { get; set; }         // English name, keyed on this
             public string Name_Localised{ get; set; }
             public string StarSystem{ get; set; }       // not while in transit
             public MarketID MarketID{ get; set; }       // not while in transit
             public long TransferCost{ get; set; }   // not while in transit
             public int TransferTime{ get; set; }    // not while in transit
-            public FDName EngineerModifications{ get; set; }    // null if none present
+            public RecipeFDName EngineerModifications{ get; set; }    // null if none present
             public double Quality{ get; set; }      // may not be there
             public int Level{ get; set; }           // may not be there
             public bool Hot{ get; set; }
@@ -53,7 +53,7 @@ namespace EliteDangerousCore
 
             public void Normalise(JournalEntry ev)
             {
-                NameFD = FDNameHelpers.NormaliseModules(Name, out string engname,ev);
+                NameFD = ModFDName.Normalise(Name, out string engname,ev);
                 Name = engname;
                 Name_Localised = Name_Localised.Alt(Name);
                 TransferTimeSpan = new System.TimeSpan((int)(TransferTime / 60 / 60), (int)((TransferTime / 60) % 60), (int)(TransferTime % 60));
@@ -61,7 +61,7 @@ namespace EliteDangerousCore
                 //System.Diagnostics.Debug.WriteLine($"SD Normalise '{NameFD}' '{Name}' '{Name_Localised}'");
             }
 
-            public StoredModule(FDName fdname, string englishname, string item_localised, string system, FDName engmod, int? level , double? quality, bool? hot)
+            public StoredModule(ModFDName fdname, string englishname, string item_localised, string system, RecipeFDName engmod, int? level , double? quality, bool? hot)
             {
                 NameFD = fdname;
                 Name = englishname;
@@ -104,7 +104,7 @@ namespace EliteDangerousCore
         }
 
         // ModuleBuy, ModuleBuyAndStore , ModuleRetrieve
-        public ShipModulesInStore StoreModule(FDName fdname, string englishname, string namelocalised, ISystem sys)
+        public ShipModulesInStore StoreModule(ModFDName fdname, string englishname, string namelocalised, ISystem sys)
         {
             ShipModulesInStore mis = this.ShallowClone();
             mis.StoredModules.Add(new StoredModule(fdname, englishname, namelocalised ,sys.Name, null, null, null, null));
@@ -120,7 +120,7 @@ namespace EliteDangerousCore
         }
 
         // MassModuleStore
-        public ShipModulesInStore StoreModule(JournalMassModuleStore.ModuleItem[] items, Dictionary<FDName, string> itemlocalisation, ISystem sys)
+        public ShipModulesInStore StoreModule(JournalMassModuleStore.ModuleItem[] items, Dictionary<ModFDName, string> itemlocalisation, ISystem sys)
         {
             ShipModulesInStore mis = this.ShallowClone();
             foreach (var it in items)

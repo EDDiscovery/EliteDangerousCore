@@ -29,9 +29,9 @@ namespace EliteDangerousCore
         public string FriendlyName { get; private set; }
         public long Price { get; private set; }             // may be 0, not known
         public bool Sold { get; private set; }
-        public FDName[] SuitMods { get; private set; }     // may be null or empty
+        public RecipeFDName[] SuitMods { get; private set; }     // may be null or empty
 
-        public Suit(DateTime time, SuitID id, SuitFDName fdname, string locname, long price,FDName[] suitmods , bool sold )
+        public Suit(DateTime time, SuitID id, SuitFDName fdname, string locname, long price,RecipeFDName[] suitmods , bool sold )
         {
             EventTime = time; ID = id; FDName = fdname; Name_Localised = locname; Price = price; Sold = sold; SuitMods = suitmods;
             if ( fdname.IsValid )
@@ -53,12 +53,12 @@ namespace EliteDangerousCore
         {
         }
 
-        public void Buy(DateTime time, SuitID id, SuitFDName fdname, string namelocalised, long price, FDName[] mods)
+        public void Buy(DateTime time, SuitID id, SuitFDName fdname, string namelocalised, long price, RecipeFDName[] mods)
         {
             suits[id] = new Suit(time, id, fdname, namelocalised, price, mods, sold: false);
         }
 
-        public bool VerifyPresence(DateTime time, SuitID id, SuitFDName fdname, string namelocalised, long price, FDName[] mods)
+        public bool VerifyPresence(DateTime time, SuitID id, SuitFDName fdname, string namelocalised, long price, RecipeFDName[] mods)
         {
             var s = suits.GetLast(id);
 

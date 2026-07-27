@@ -31,13 +31,13 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var jitem in evt["Items"])
                 {
-                    var ModuleFD = FDNameHelpers.NormaliseModules(jitem.Str(), out string engname, this);
+                    var ModuleFD = ModFDName.Normalise(jitem.Str(), out string engname, this);
                     Items.Add(new RepairItem() { ItemFD = ModuleFD, Item = engname, ItemLocalised = engname });
                 }
             }
             else
             {
-                var ModuleFD = FDNameHelpers.NormaliseModules(evt["Item"].Str(), out string engname, this);
+                var ModuleFD = ModFDName.Normalise(evt["Item"].Str(), out string engname, this);
                 Items.Add(new RepairItem() { ItemFD = ModuleFD, Item = engname, ItemLocalised = JournalFieldNaming.CheckLocalisation(evt["Item_Localised"].Str(), engname) });
             }
 
@@ -47,13 +47,13 @@ namespace EliteDangerousCore.JournalEvents
         public class RepairItem
         {
             public string Item { get; set; }        // English name
-            public FDName ItemFD { get; set; }
+            public ModFDName ItemFD { get; set; }
             public string ItemLocalised { get; set; }
         }
         public List<RepairItem> Items { get; set; }
 
         // For the voice pack keep these on first entry
-        public FDName ItemFD => Items.Count > 0 ? Items[0].ItemFD : FDName.Empty;
+        public ModFDName ItemFD => Items.Count > 0 ? Items[0].ItemFD : ModFDName.Empty;
         public string Item => Items.Count > 0 ? Items[0].Item : "Unknown";
         public string ItemLocalised => Items.Count > 0 ? Items[0].ItemLocalised : "Unknown";
 
@@ -113,7 +113,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalAfmuRepairs(JObject evt) : base(evt, JournalTypeEnum.AfmuRepairs)
         {
-            ModuleFD = FDNameHelpers.NormaliseModules(evt["Module"].Str(), out string engname, this);
+            ModuleFD = ModFDName.Normalise(evt["Module"].Str(), out string engname, this);
             Module = engname;
             ModuleLocalised = JournalFieldNaming.CheckLocalisation(evt["Module_Localised"].Str(), Module);
             FullyRepaired = evt["FullyRepaired"].Bool();
@@ -121,7 +121,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string Module { get; set; }  // english
-        public FDName ModuleFD { get; set; }
+        public ModFDName ModuleFD { get; set; }
         public string ModuleLocalised { get; set; }
         public bool FullyRepaired { get; set; }
         public float Health { get; set; }

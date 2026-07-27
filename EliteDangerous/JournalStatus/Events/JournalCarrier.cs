@@ -967,9 +967,9 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         // pattern also used in journaldocking stationinfo
-        public bool HasItem(FDName fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname)) >= 0; }
-        public bool HasItemToBuy(FDName fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname) && x.HasStock) >= 0; }
-        public bool HasItemToSell(FDName fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname) && x.HasDemandAndPrice) >= 0; }
+        public bool HasItem(MCFDName fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname)) >= 0; }
+        public bool HasItemToBuy(MCFDName fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname) && x.HasStock) >= 0; }
+        public bool HasItemToSell(MCFDName fdname) { return Items != null && Items.FindIndex(x => x.fdname.Equals(fdname) && x.HasDemandAndPrice) >= 0; }
     }
 
     [JournalEntryType(JournalTypeEnum.CarrierLocation)]

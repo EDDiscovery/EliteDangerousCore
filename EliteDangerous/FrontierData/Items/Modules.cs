@@ -29,7 +29,7 @@ namespace EliteDangerousCore
 
     public partial class ItemData
     {
-        static public bool TryGetShipModule(FDName fdid, out ShipModule m, bool synthesiseit, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
+        static public bool TryGetShipModule(ModFDName fdid, out ShipModule m, bool synthesiseit, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
         {
             m = null;
 
@@ -50,7 +50,7 @@ namespace EliteDangerousCore
             {
                 lock (synthesisedmodules)  // lock for safety
                 {
-                    FDName candidatename = GenerateCandidateModuleName(fdid);
+                    ModFDName candidatename = GenerateCandidateModuleName(fdid);
 
                     var newmodule = new ShipModule(-1, IsVanity(candidatename) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType, candidatename.Str());
                     string futilemessage = " - this is item unknown to EDD, but IT WILL not affect operation of the program. It would be nice to report it to us so we can add it to known module lists";
@@ -65,7 +65,7 @@ namespace EliteDangerousCore
             return state;
         }
 
-        internal static FDName GenerateCandidateModuleName(FDName unknown)
+        internal static ModFDName GenerateCandidateModuleName(ModFDName unknown)
         {
             string candidatename = unknown.Str();
 
@@ -155,18 +155,18 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Constructshipfed ", "Construct Ship Federation ", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace("Corporatefleet ", "Corporate Fleet ", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace("Corporate Fleet Fleet", "Corporate Fleet ", StringComparison.InvariantCultureIgnoreCase);
-            return new FDName(candidatename);
+            return new ModFDName(candidatename);
         }
 
         // List of ship modules. Synthesised are not included
         // default is buyable modules only
         // you can include other types
         // compressarmour removes all armour entries except the ones for the sidewinder
-        static public Dictionary<FDName, ShipModule> GetShipModules(bool includebuyable = true, bool includenonbuyable = false, bool includesrv = false,
+        static public Dictionary<ModFDName, ShipModule> GetShipModules(bool includebuyable = true, bool includenonbuyable = false, bool includesrv = false,
                                                                     bool includefighter = false, bool includevanity = false, bool addunknowntype = false,
                                                                     bool compressarmourtosidewinderonly = false)
         {
-            Dictionary<FDName, ShipModule> ml = new Dictionary<FDName, ShipModule>(new FDNameEqualityComparer());
+            Dictionary<ModFDName, ShipModule> ml = new Dictionary<ModFDName, ShipModule>(new ModFDNameEqualityComparer());
 
             if (includebuyable)
             {
@@ -203,14 +203,14 @@ namespace EliteDangerousCore
             }
             if (addunknowntype)
             {
-                FDName unknown = new FDName("Unknown");
+                ModFDName unknown = new ModFDName("Unknown");
                 ml[unknown] = new ShipModule(-1, ShipModule.ModuleTypes.UnknownType, "Unknown Type");
             }
             return ml;
         }
 
         // a dictionary of module english module type vs translated module type for a set of modules
-        public static Dictionary<string, string> GetModuleTypeNamesTranslations(Dictionary<FDName, ShipModule> modules)
+        public static Dictionary<string, string> GetModuleTypeNamesTranslations(Dictionary<ModFDName, ShipModule> modules)
         {
             var ret = new Dictionary<string, string>();
             foreach (var x in modules)
@@ -246,14 +246,14 @@ namespace EliteDangerousCore
             return ret.ToArray();
         }
 
-        static public bool IsVanity(FDName ifd)
+        static public bool IsVanity(ModFDName ifd)
         {
             string[] vlist = new[] { "bobble", "decal", "enginecustomisation", "nameplate", "paintjob",
                                     "shipkit", "weaponcustomisation", "voicepack" , "lights", "spoiler" , "wings", "bumper"};
             return Array.Find(vlist, x => ifd.Contains(x)) != null;
         }
 
-        static public bool IsFuelTank(FDName ifd)
+        static public bool IsFuelTank(ModFDName ifd)
         {
             return ifd.Contains("int_fueltank");
         }

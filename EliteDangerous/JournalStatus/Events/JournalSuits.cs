@@ -40,7 +40,7 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyName { get; set; }
         public string Name_Localised { get; set; }
         public long Price { get; set; }
-        public FDName[] SuitMods { get; set; }          // may be null or empty
+        public RecipeFDName[] SuitMods { get; set; }          // may be null or empty
 
         public override string GetInfo()
         {
@@ -163,7 +163,7 @@ namespace EliteDangerousCore.JournalEvents
         public string SuitFriendlyName { get; set; }            // may be null for early records
         public string SuitName_Localised { get; set; }          // may be null for early records
 
-        public FDName[] SuitMods { get; set; }                  // may be null or empty
+        public RecipeFDName[] SuitMods { get; set; }                  // may be null or empty
 
         public SuitLoadout.LoadoutModule[] Modules { get; set; }
 
@@ -225,7 +225,7 @@ namespace EliteDangerousCore.JournalEvents
         public string SuitName_Localised { get; set; }
         public string SuitFriendlyName { get; set; }
 
-        public FDName[] SuitMods { get; set; }          // may be null or empty
+        public RecipeFDName[] SuitMods { get; set; }          // may be null or empty
 
         public SuitLoadout.LoadoutModule[] Modules { get; set; }
 
@@ -340,12 +340,12 @@ namespace EliteDangerousCore.JournalEvents
         public string SuitFriendlyName { get; set; }            // may be null, missing in v.early ones, 
         public string SuitName_Localised { get; set; }          // may be null, missing in v.early ones, 
 
-        public FDName ModuleName { get; set; }                  // always there unless bug in journal
+        public HandItemFDName ModuleName { get; set; }                  // always there unless bug in journal
         public string ModuleNameFriendly { get; set; }
         public string ModuleName_Localised { get; set; }
 
         public int Class { get; set; }                          // may not be there
-        public FDName[] WeaponMods { get; set; }                // fdname, may be null or empty
+        public RecipeFDName[] WeaponMods { get; set; }                // fdname, may be null or empty
         public WeaponID SuitModuleID { get; set; }                 // aka weapon ID
 
         public override string GetInfo()
@@ -359,7 +359,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (SuitID.IsValid && SuitName != null)
             {
-                shp.VerifyPresence(EventTimeUTC, SuitID, SuitName, SuitName_Localised, 0, new FDName[] { });
+                shp.VerifyPresence(EventTimeUTC, SuitID, SuitName, SuitName_Localised, 0, new RecipeFDName[] { });
             }
         }
 
@@ -421,7 +421,7 @@ namespace EliteDangerousCore.JournalEvents
         public SuitLoadout.SuitSlot SlotName { get; set; }        // always
         public string SlotFriendlyName { get; set; }            // always
 
-        public FDName ModuleName { get; set; }                  
+        public HandItemFDName ModuleName { get; set; }                  
         public string ModuleNameFriendly { get; set; }
         public string ModuleName_Localised { get; set; }
         
@@ -526,7 +526,7 @@ namespace EliteDangerousCore.JournalEvents
         public SuitFDName SuitName { get; set; }                    // may not be present
         public string SuitName_Localised { get; set; }          // may not be present
         public string SuitFriendlyName { get; set; }            // may not be present
-        public FDName[] SuitMods { get; set; }                  // may be null or empty
+        public RecipeFDName[] SuitMods { get; set; }                  // may be null or empty
 
         public SuitLoadout.LoadoutModule[] Modules;             // may be null or empty
 
@@ -577,7 +577,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Name_Localised { get; set; }              // always
         public long Cost { get; set; }                          // always
         public int Class { get; set; }                          // always
-        public FDName[] SuitMods { get; set; }                  // may be null or empty
+        public RecipeFDName[] SuitMods { get; set; }                  // may be null or empty
 
         public override string GetInfo()
         {

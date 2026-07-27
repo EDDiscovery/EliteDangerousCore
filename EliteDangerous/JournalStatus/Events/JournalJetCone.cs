@@ -42,19 +42,19 @@ namespace EliteDangerousCore.JournalEvents
             string modid = evt["Module"].Str();
             if (modid.HasChars())     // earl ones from 2016 were really borked
             {
-                ModuleFD = FDNameHelpers.NormaliseModules(modid, out string engname, this);
+                ModuleFD = ModFDName.Normalise(modid, out string engname, this);
                 Module = engname;
             }
             else
             {
-                ModuleFD = FDName.Empty;
+                ModuleFD = ModFDName.Empty;
                 Module = ModuleFD.Str();
             }
 
             ModuleLocalised = JournalFieldNaming.CheckLocalisation(evt["Module_Localised"].Str(), Module);
         }
 
-        public FDName ModuleFD { get; set; }
+        public ModFDName ModuleFD { get; set; }
         public string Module { get; set; }      // english name
         public string ModuleLocalised { get; set; }
 

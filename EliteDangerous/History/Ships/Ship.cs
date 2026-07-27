@@ -943,7 +943,7 @@ namespace EliteDangerousCore
             return this;
         }
 
-        public Ship AddModule(string slot, ShipSlots.Slot slotfd, string itemname, FDName itemfd, string itemlocalised)
+        public Ship AddModule(string slot, ShipSlots.Slot slotfd, string itemname, ModFDName itemfd, string itemlocalised)
         {
             if (!Modules.ContainsKey(slotfd) || Modules[slotfd].Item.Equals(itemname) == false)       // if does not have it, or item is not the same..
             {
@@ -959,7 +959,7 @@ namespace EliteDangerousCore
             return this;
         }
 
-        public Ship RemoveModule(ShipSlots.Slot slot, FDName itemfd)
+        public Ship RemoveModule(ShipSlots.Slot slot, ModFDName itemfd)
         {
             if (Modules.ContainsKey(slot))       // if has it..
             {
@@ -996,8 +996,8 @@ namespace EliteDangerousCore
             return sm ?? this;
         }
 
-        public Ship SwapModule(string fromslot, ShipSlots.Slot fromslotfd, string fromitem, FDName fromitemfd, string fromiteml,
-                                          string toslot, ShipSlots.Slot toslotfd, string toitem, FDName toitemfd, string toiteml)
+        public Ship SwapModule(string fromslot, ShipSlots.Slot fromslotfd, string fromitem, ModFDName fromitemfd, string fromiteml,
+                                          string toslot, ShipSlots.Slot toslotfd, string toitem, ModFDName toitemfd, string toiteml)
         {
             Ship sm = this.ShallowClone();
             if (Modules.ContainsKey(fromslotfd))
@@ -1020,7 +1020,7 @@ namespace EliteDangerousCore
             return sm;
         }
 
-        public Ship Craft(ShipSlots.Slot slotfd, FDName item, EngineeringData eng)
+        public Ship Craft(ShipSlots.Slot slotfd, ModFDName item, EngineeringData eng)
         {
             if (Modules.ContainsKey(slotfd) && Modules[slotfd].ItemFD.Equals(item))       // craft, module must be there, otherwise just ignore
             {

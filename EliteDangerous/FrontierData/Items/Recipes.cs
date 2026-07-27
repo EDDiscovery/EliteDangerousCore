@@ -98,7 +98,7 @@ namespace EliteDangerousCore
             public int? Level { get; set; } = null;
             public ItemData.ShipModule.ModuleTypes[] ModuleType { get; private set; }
             public string[] Engineers { get ; private set; }
-            public FDName FDName { get; private set; }       // only certain types have a fdname, others are null
+            public RecipeFDName FDName { get; private set; }       // only certain types have a fdname, others are null
             public int MercCoins { get; set; }              // future use
             public string LevelAsString => Level?.ToString() ?? "NA";
             public string ModuleListSplitCaps => string.Join(",", ModuleType.Select(x => x.ToString().SplitCapsWordFull()));
@@ -107,7 +107,7 @@ namespace EliteDangerousCore
             public EngineeringRecipe(string name, string fdname, string ingredientlist, ItemData.ShipModule.ModuleTypes moduletype, int lvl, string engnrs, int merccoins = 0)   // normal recipes
                 : base(name, ingredientlist)
             {
-                this.FDName = new FDName(fdname);
+                this.FDName = new RecipeFDName(fdname);
                 Level= lvl;
                 ModuleType = new ItemData.ShipModule.ModuleTypes[] { moduletype };
                 Engineers = engnrs.Split(',');
@@ -117,7 +117,7 @@ namespace EliteDangerousCore
             public EngineeringRecipe(string name, string fdname, string type, ItemData.ShipModule.ModuleTypes moduletype, string ingredientlist)        // for tech broker
                 : base(name, ingredientlist)
             {
-                this.FDName = new FDName(fdname);
+                this.FDName = new RecipeFDName(fdname);
                 ModuleType = new ItemData.ShipModule.ModuleTypes[] { moduletype };
                 Engineers = type.Split(',');
             }
@@ -125,7 +125,7 @@ namespace EliteDangerousCore
             public EngineeringRecipe(string n, string fdname, string moduletypelist, string ingredientlist)        // for special effects
                 : base(n, ingredientlist)
             {
-                this.FDName = new FDName(fdname);
+                this.FDName = new RecipeFDName(fdname);
                 string[] modlist = moduletypelist.Split(",");
                 ModuleType = new ItemData.ShipModule.ModuleTypes[modlist.Length];
                 for (int i = 0; i < modlist.Length; i++)
@@ -140,7 +140,7 @@ namespace EliteDangerousCore
             public EngineeringRecipe(string n, string fdname, ItemData.ShipModule.ModuleTypes moduletype, string ingredientlist)        // for special effects
                 : base(n, ingredientlist)
             {
-                this.FDName = new FDName(fdname);
+                this.FDName = new RecipeFDName(fdname);
                 ModuleType = new ItemData.ShipModule.ModuleTypes[] { moduletype };
                 Engineers = new string[] { "Special Effect" };
             }
@@ -157,7 +157,7 @@ namespace EliteDangerousCore
                 : base(name + (manu != "All" ? (": " + manu) : ""), ingredientlist)
             {
                 ModuleType = new ItemData.ShipModule.ModuleTypes[] { moduletype };
-                this.FDName = new FDName(fdname);
+                this.FDName = new RecipeFDName(fdname);
                 Engineers = eng.Split(',');
             }
         }
@@ -196,7 +196,7 @@ namespace EliteDangerousCore
                 return "";
         }
 
-        public static string GetBetterNameForEngineeringRecipe(FDName fdname)
+        public static string GetBetterNameForEngineeringRecipe(RecipeFDName fdname)
         {
             var f = EngineeringRecipes.Find(x => x.FDName != null && x.FDName == fdname);
             if (f == null)
@@ -210,10 +210,10 @@ namespace EliteDangerousCore
             return SynthesisRecipes.Find(x => x.Name.Equals(recipename, StringComparison.InvariantCultureIgnoreCase) && x.Level.Equals(level, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private static Dictionary<FDName, int> FDNameLookup = new Dictionary<FDName, int>( new FDNameEqualityComparer());
+        private static Dictionary<RecipeFDName, int> FDNameLookup = new Dictionary<RecipeFDName, int>( new RecipeFDNameEqualityComparer());
 
         // find by fdname, return null if not found
-        public static EngineeringRecipe FindRecipe(FDName fdname)
+        public static EngineeringRecipe FindRecipe(RecipeFDName fdname)
         {
             lock (FDNameLookup)         // in case multithreaded
             {
@@ -238,7 +238,7 @@ namespace EliteDangerousCore
                                 string last = x.FDName.Str().Substring(underscore);
                                 string modname = x.ModuleType[0].ToString();
 
-                                FDName composite = (first + "_" + modname + last).ToFD();            // Sensor_sensor_lightweight
+                                RecipeFDName composite = new RecipeFDName(first + "_" + modname + last);            // Sensor_sensor_lightweight
                                 if (!FDNameLookup.ContainsKey(composite))        // add first instance of name
                                 {
                                     FDNameLookup[composite] = i;        // also this added
@@ -250,7 +250,7 @@ namespace EliteDangerousCore
                                 else if (modname == "CollectorLimpetController")
                                     modname = "CollectionLimpet";
 
-                                composite = (modname + last).ToFD();            // Heatsinklauncher_lightweight , AFM_lightweight
+                                composite = new RecipeFDName(modname + last);            // Heatsinklauncher_lightweight , AFM_lightweight
                                 if (!FDNameLookup.ContainsKey(composite))        // add first instance of name
                                 {
                                     FDNameLookup[composite] = i;        // also this added

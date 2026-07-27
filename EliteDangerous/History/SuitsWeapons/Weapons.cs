@@ -24,15 +24,15 @@ namespace EliteDangerousCore
     {
         public DateTime EventTime { get; private set; }
         public WeaponID ID { get; private set; }              // its Frontier ID LoadoutID
-        public FDName FDName { get; private set; }          
+        public HandItemFDName FDName { get; private set; }          
         public string Name_Localised { get; private set; }
         public string FriendlyName { get; private set; }
         public long Price { get; private set; }
         public bool Sold { get; private set; }
         public int Class { get; private set; }
-        public FDName[] WeaponMods { get; private set; }
+        public RecipeFDName[] WeaponMods { get; private set; }
 
-        public SuitWeapon(DateTime time, WeaponID id, FDName fdname, string namelocalised, long price, int cls, FDName[] weaponmods, bool sold)
+        public SuitWeapon(DateTime time, WeaponID id, HandItemFDName fdname, string namelocalised, long price, int cls, RecipeFDName[] weaponmods, bool sold)
         {
             EventTime = time; ID = id;FDName = fdname; Name_Localised = namelocalised; Price = price; Sold = sold; Class = cls; WeaponMods = weaponmods;
             FriendlyName = ItemData.GetWeapon(fdname, Name_Localised)?.Name ?? Name_Localised;
@@ -47,12 +47,12 @@ namespace EliteDangerousCore
         {
         }
 
-        public void Buy(DateTime time, WeaponID id, FDName fdname, string namelocalised, long price, int cls, FDName[] weaponmods)
+        public void Buy(DateTime time, WeaponID id, HandItemFDName fdname, string namelocalised, long price, int cls, RecipeFDName[] weaponmods)
         {
             weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, weaponmods, false);
         }
 
-        public bool VerifyPresence(DateTime time, WeaponID id, FDName fdname, string namelocalised, long price, int cls, FDName[] weaponmods)
+        public bool VerifyPresence(DateTime time, WeaponID id, HandItemFDName fdname, string namelocalised, long price, int cls, RecipeFDName[] weaponmods)
         {
             if (id.IsValid)     // early entries did not have weapon IDs
             {
@@ -95,7 +95,7 @@ namespace EliteDangerousCore
                 Debugger.DP("SW","Weapons sold a weapon not seen " + id);
         }
 
-        public void Upgrade(DateTime time, WeaponID id, int cls, FDName[] weaponmods)
+        public void Upgrade(DateTime time, WeaponID id, int cls, RecipeFDName[] weaponmods)
         {
             if (weapons.ContainsKey(id))
             {

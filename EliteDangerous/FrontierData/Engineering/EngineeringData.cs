@@ -22,7 +22,7 @@ namespace EliteDangerousCore
     [System.Diagnostics.DebuggerDisplay("{Label} {OriginalValue} -> {Value}")]
     public class EngineeringModifiers
     {
-        public FDName Label { get; set; }               // identifier, matched with itemdata values
+        public ModLabelFDName Label { get; set; }               // identifier, matched with itemdata values
         public string FriendlyLabel { get; set; }
         public string ValueStr { get; set; }            // 3.02 if set, means ones further on do not apply. check first
         public string ValueStr_Localised { get; set; }
@@ -34,29 +34,29 @@ namespace EliteDangerousCore
     [System.Diagnostics.DebuggerDisplay("{Engineer} {BlueprintName} {Level} {ExperimentalEffect}")]
     public class EngineeringData
     {
-        public FDName Engineer { get; set; }
-        public FDName BlueprintName { get; set; }       
+        public EngineerFDName Engineer { get; set; }
+        public RecipeFDName BlueprintName { get; set; }       
         public string FriendlyBlueprintName { get; set; }
         public ulong EngineerID { get; set; }
         public ulong BlueprintID { get; set; }
         public int Level { get; set; }
         public double Quality { get; set; }
-        public FDName ExperimentalEffect { get; set; }      // may be null or maybe empty (due to frontier) 
+        public RecipeFDName ExperimentalEffect { get; set; }      // may be null or maybe empty (due to frontier) 
         public string FriendlyExperimentalEffect { get; set; }      // may be null or maybe empty (due to frontier) 
         public string ExperimentalEffect_Localised { get; set; }    // may be null or maybe empty (due to frontier)
         public EngineeringModifiers[] Modifiers { get; set; }       // may be null
-        public bool IsValid { get { return Level >= 1 && BlueprintName.IsValid(); } }
+        public bool IsValid { get { return Level >= 1 && BlueprintName.IsValid; } }
 
         // Post engineering changes.  visible moan turns on off complaining about blueprint/effect misses
         public EngineeringData(JObject evt, JournalEntry ev)
         {
-            Engineer = evt["Engineer"].FDName();
+            Engineer = new EngineerFDName(evt["Engineer"].Str());
             Level = evt["Level"].Int();
 
             if (evt.Contains("Blueprint"))     // old form
             {
                 // old pre 3.0 form, don't moan about the recipies
-                BlueprintName = FDNameHelpers.NormaliseBlueprint(evt["Blueprint"].Str(), out string engname, ev);
+                BlueprintName = RecipeFDName.Normalise(evt["Blueprint"].Str(), out string engname, ev);
                 FriendlyBlueprintName = engname;
             }
             else
@@ -65,7 +65,7 @@ namespace EliteDangerousCore
                 BlueprintID = evt["BlueprintID"].ULong();
                 Quality = evt["Quality"].Double(0);
 
-                BlueprintName = FDNameHelpers.NormaliseBlueprint(evt["BlueprintName"].Str(), out string engname, ev);
+                BlueprintName = RecipeFDName.Normalise(evt["BlueprintName"].Str(), out string engname, ev);
                 FriendlyBlueprintName = engname;
 
                 // EngineerCraft has it as Apply.. Loadout has just ExperimentalEffect.  Check both
@@ -73,7 +73,7 @@ namespace EliteDangerousCore
 
                 if (effect.HasChars())
                 {
-                    ExperimentalEffect = FDNameHelpers.NormaliseExperimentalEffect(effect, out engname, ev);
+                    ExperimentalEffect = RecipeFDName.Normalise(effect, out engname, ev);
                     FriendlyExperimentalEffect = engname;
                     ExperimentalEffect_Localised = JournalFieldNaming.CheckLocalisation(evt["ExperimentalEffect_Localised"].Str(), engname);
                 }
@@ -142,7 +142,7 @@ namespace EliteDangerousCore
 
             if (ExperimentalEffect != null)
             {
-                if (specialeffects.TryGetValue(ExperimentalEffect.Str(), out ItemData.ShipModule se))   // get the experimental effect ship module modifier
+                if (specialeffects.TryGetValue(ExperimentalEffect, out ItemData.ShipModule se))   // get the experimental effect ship module modifier
                 {
                     foreach (var kvp in ItemData.ShipModule.GetPropertiesInOrder())     // all properties in the class
                     {
@@ -212,12 +212,12 @@ namespace EliteDangerousCore
             return true;
         }
 
-        public EngineeringModifiers FindModification(FDName name)
+        public EngineeringModifiers FindModification(ModFDName name)
         {
             return Modifiers != null ? Array.Find(Modifiers, x => x.Label == name) : null;
         }
 
-        public ItemData.ShipModule EngineerModule(ItemData.ShipModule original, out string report, FDName modulefdname, ShipSlots.Slot slotfd = ShipSlots.Slot.Unknown, bool debugit = false)
+        public ItemData.ShipModule EngineerModule(ItemData.ShipModule original, out string report, ModFDName modulefdname, ShipSlots.Slot slotfd = ShipSlots.Slot.Unknown, bool debugit = false)
         {
             report = "";
 
@@ -233,14 +233,14 @@ namespace EliteDangerousCore
             List<string> primarymodifiers = new List<string>();
             foreach( EngineeringModifiers em in Modifiers.EmptyIfNull())
             {
-                if (modifierfdmapping.TryGetValue(em.Label.Str(), out string[] modifyarray) && modifyarray.Length>0)  // get the modifier primary control value if present
+                if (modifierfdmapping.TryGetValue(em.Label, out string[] modifyarray) && modifyarray.Length>0)  // get the modifier primary control value if present
                     primarymodifiers.Add(modifyarray[0]);
             }
 
             // go thru modifiers
             foreach (EngineeringModifiers mf in Modifiers.EmptyIfNull())        // modifiers may be null
             {
-                if (modifierfdmapping.TryGetValue(mf.Label.Str(), out string[] modifyarray))  // get the modify commands from the label
+                if (modifierfdmapping.TryGetValue(mf.Label, out string[] modifyarray))  // get the modify commands from the label
                 {
                     if ( modifyarray.Length == 0 )
                     {
@@ -385,7 +385,7 @@ namespace EliteDangerousCore
 
             if (ExperimentalEffect != null)
             {
-                if (specialeffects.TryGetValue(ExperimentalEffect.Str(), out ItemData.ShipModule se))   // get the experimental effect ship module modifier
+                if (specialeffects.TryGetValue(ExperimentalEffect, out ItemData.ShipModule se))   // get the experimental effect ship module modifier
                 {
                     foreach (var kvp in ItemData.ShipModule.GetPropertiesInOrder())     // all properties in the class
                     {
@@ -400,7 +400,7 @@ namespace EliteDangerousCore
                             {
                                 dynamic curvalue = kvp.Key.GetValue(original);        // get original value
 
-                                if (!specialeffectmodcontrol.TryGetValue(kvp.Key.Name, out double controlmod))
+                                if (!specialeffectmodcontrol.TryGetValue(new ModLabelFDName(kvp.Key.Name), out double controlmod))
                                     controlmod = 100;
 
                                 dynamic nextvalue = controlmod == 0 ? modificationvalue : controlmod == 1 ? curvalue + modificationvalue : curvalue * (1 + modificationvalue / controlmod);
@@ -454,30 +454,30 @@ namespace EliteDangerousCore
         //      ! don't do if the exceptions stop the application. A list of exceptions,  | separated
         //          An exception is +/- <Engineering Variable>|<module name>|<blueprint name>.  - means it can't be true, + means it must be true
 
-        static private Dictionary<string, string[]> modifierfdmapping = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
+        static private Dictionary<ModLabelFDName, string[]> modifierfdmapping = new Dictionary<ModLabelFDName, string[]>(new ModLabelFDNameEqualityComparer())
         {
             // multiple ones
 
-            ["DamagePerSecond"] = new string[] { "DPS", "Damage!-Damage|-RateOfFire",     // change Damage as long as .. modifier labels are not there
+            [new ModLabelFDName("DamagePerSecond")] = new string[] { "DPS", "Damage!-Damage|-RateOfFire",     // change Damage as long as .. modifier labels are not there
                                                         "BreachDamage!-Damage|-RateOfFire",           // change BreachDamage as long as .. is not there
                                                 },
-            ["Damage"] = new string[] { "Damage", "BreachDamage",
+            [new ModLabelFDName("Damage")] = new string[] { "Damage", "BreachDamage",
                                                   "BurstInterval!+hpt_railgun*|+Weapon_HighCapacity",   // change burstinterval if module is railgun and recipe is High Capacity
                                                   // error "BurstInterval!+hpt_guardian_gausscannon*"   // change burstinterval if module is guass cannon
           
                                                 },
-            ["RateOfFire"] = new string[] { "RateOfFire", 
+            [new ModLabelFDName("RateOfFire")] = new string[] { "RateOfFire",
                                                    "/BurstInterval!-hpt_railgun*|-hpt_slugshot*",       // reduce by as long as not these types
                                                    "/2BurstInterval!+hpt_guardian_gausscannon*",       // double reduce if gauss cannon (this overrides above)
                                            },
 
-            ["ShieldGenStrength"] = new string[] { "OptStrength", "MinStrength", "MaxStrength" },
+            [new ModLabelFDName("ShieldGenStrength")] = new string[] { "OptStrength", "MinStrength", "MaxStrength" },
 
-            ["ShieldGenOptimalMass"] = new string[] { "OptMass", "MinMass" },
+            [new ModLabelFDName("ShieldGenOptimalMass")] = new string[] { "OptMass", "MinMass" },
 
-            ["EngineOptimalMass"] = new string[] { "OptMass", "MinMass", "MaxMass" },
+            [new ModLabelFDName("EngineOptimalMass")] = new string[] { "OptMass", "MinMass", "MaxMass" },
 
-            ["EngineOptPerformance"] = new string[] { "EngineOptMultiplier",
+            [new ModLabelFDName("EngineOptPerformance")] = new string[] { "EngineOptMultiplier",
                                                                 nameof(ItemData.ShipModule.EngineMinMultiplier) ,
                                                                 nameof(ItemData.ShipModule.EngineMaxMultiplier),
                                                                 nameof(ItemData.ShipModule.MinimumSpeedModifier)+ enginefastonly ,
@@ -490,270 +490,270 @@ namespace EliteDangerousCore
                                                                 nameof(ItemData.ShipModule.OptimalRotationModifier)+ enginefastonly,
                                                                 nameof(ItemData.ShipModule.MaximumRotationModifier)+ enginefastonly,
                                                     },
-            ["Range"] = new string[] { "TypicalEmission", "Range", },
+            [new ModLabelFDName("Range")] = new string[] { "TypicalEmission", "Range", },
 
             // simples. Empty string[] means there is no equivalent engineering variable we know about..
 
-            ["Mass"] = new string[] { nameof(ItemData.ShipModule.Mass), },
-            ["Integrity"] = new string[] { nameof(ItemData.ShipModule.Integrity) },
-            ["PowerDraw"] = new string[] { nameof(ItemData.ShipModule.PowerDraw) },
-            ["BootTime"] = new string[] { nameof(ItemData.ShipModule.BootTime) },
-            ["ShieldBankSpinUp"] = new string[] { nameof(ItemData.ShipModule.SCBSpinUp) },
-            ["ShieldBankDuration"] = new string[] { nameof(ItemData.ShipModule.SCBDuration) },
-            ["ShieldBankReinforcement"] = new string[] { nameof(ItemData.ShipModule.ShieldReinforcement) },
-            ["ShieldBankHeat"] = new string[] { nameof(ItemData.ShipModule.ThermalLoad) },
-            ["DistributorDraw"] = new string[] { nameof(ItemData.ShipModule.DistributorDraw) },
-            ["ThermalLoad"] = new string[] { nameof(ItemData.ShipModule.ThermalLoad) },
-            ["ArmourPenetration"] = new string[] { nameof(ItemData.ShipModule.ArmourPiercing) },
-            ["MaximumRange"] = new string[] { nameof(ItemData.ShipModule.Range) },
-            ["FalloffRange"] = new string[] { nameof(ItemData.ShipModule.Falloff) },
-            ["ShotSpeed"] = new string[] { nameof(ItemData.ShipModule.Speed) },
-            ["BurstRateOfFire"] = new string[] { nameof(ItemData.ShipModule.BurstRateOfFire) },
-            ["BurstSize"] = new string[] { nameof(ItemData.ShipModule.BurstSize) },
-            ["AmmoClipSize"] = new string[] { nameof(ItemData.ShipModule.Clip) },
-            ["AmmoMaximum"] = new string[] { nameof(ItemData.ShipModule.Ammo) },
-            ["RoundsPerShot"] = new string[] { nameof(ItemData.ShipModule.Rounds) },
-            ["ReloadTime"] = new string[] { nameof(ItemData.ShipModule.ReloadTime) },
-            ["BreachDamage"] = new string[] { nameof(ItemData.ShipModule.BreachDamage) },
-            ["BreachPercent"] = new string[] { nameof(ItemData.ShipModule.BreachModuleDamageAfterBreach), },
-            ["MinBreachChance"] = new string[] { nameof(ItemData.ShipModule.BreachMin) },
-            ["MaxBreachChance"] = new string[] { nameof(ItemData.ShipModule.BreachMax) },
-            ["Jitter"] = new string[] { nameof(ItemData.ShipModule.Jitter) },
-            ["WeaponMode"] = new string[] { },
-            ["DamageType"] = new string[] { },
-            ["$Thermic;"] = new string[] { },       // new june 26
-            ["$Kinetic;"] = new string[] { },       // new june 26
-            ["ShieldGenMinimumMass"] = new string[] { nameof(ItemData.ShipModule.MinMass) },
-            ["ShieldGenMaximumMass"] = new string[] { nameof(ItemData.ShipModule.MaxMass) },
-            ["ShieldGenMinStrength"] = new string[] { nameof(ItemData.ShipModule.MinStrength) },
-            ["ShieldGenMaxStrength"] = new string[] { nameof(ItemData.ShipModule.MaxStrength) },
-            ["RegenRate"] = new string[] { nameof(ItemData.ShipModule.RegenRate) },
-            ["BrokenRegenRate"] = new string[] { nameof(ItemData.ShipModule.BrokenRegenRate) },
-            ["EnergyPerRegen"] = new string[] { nameof(ItemData.ShipModule.MWPerUnit) },
-            ["FSDOptimalMass"] = new string[] { nameof(ItemData.ShipModule.OptMass) },
-            ["FSDHeatRate"] = new string[] { nameof(ItemData.ShipModule.ThermalLoad) },
-            ["MaxFuelPerJump"] = new string[] { nameof(ItemData.ShipModule.MaxFuelPerJump) },
-            ["EngineMinimumMass"] = new string[] { nameof(ItemData.ShipModule.MinMass) },
-            ["MaximumMass"] = new string[] { nameof(ItemData.ShipModule.MaxMass) },
-            ["EngineMinPerformance"] = new string[] { nameof(ItemData.ShipModule.EngineMinMultiplier) },
-            ["EngineMaxPerformance"] = new string[] { nameof(ItemData.ShipModule.EngineMaxMultiplier) },
-            ["EngineHeatRate"] = new string[] { nameof(ItemData.ShipModule.ThermalLoad) },
-            ["PowerCapacity"] = new string[] { nameof(ItemData.ShipModule.PowerGen) },
-            ["HeatEfficiency"] = new string[] { nameof(ItemData.ShipModule.HeatEfficiency) },
-            ["WeaponsCapacity"] = new string[] { nameof(ItemData.ShipModule.WeaponsCapacity) },
-            ["WeaponsRecharge"] = new string[] { nameof(ItemData.ShipModule.WeaponsRechargeRate) },
-            ["EnginesCapacity"] = new string[] { nameof(ItemData.ShipModule.EngineCapacity) },
-            ["EnginesRecharge"] = new string[] { nameof(ItemData.ShipModule.EngineRechargeRate) },
-            ["SystemsCapacity"] = new string[] { nameof(ItemData.ShipModule.SystemsCapacity) },
-            ["SystemsRecharge"] = new string[] { nameof(ItemData.ShipModule.SystemsRechargeRate) },
-            ["DefenceModifierHealthMultiplier"] = new string[] { nameof(ItemData.ShipModule.HullStrengthBonus) },
-            ["DefenceModifierHealthAddition"] = new string[] { nameof(ItemData.ShipModule.HullReinforcement) },
-            ["DefenceModifierShieldMultiplier"] = new string[] { nameof(ItemData.ShipModule.ShieldReinforcement) },
-            ["DefenceModifierShieldAddition"] = new string[] { nameof(ItemData.ShipModule.AdditionalReinforcement) },
-            ["CollisionResistance"] = new string[] { },
-            ["KineticResistance"] = new string[] { nameof(ItemData.ShipModule.KineticResistance) },
-            ["ThermicResistance"] = new string[] { nameof(ItemData.ShipModule.ThermalResistance) },
-            ["ExplosiveResistance"] = new string[] { nameof(ItemData.ShipModule.ExplosiveResistance) },
-            ["CausticResistance"] = new string[] { nameof(ItemData.ShipModule.CausticResistance) },
-            ["FSDInterdictorRange"] = new string[] { nameof(ItemData.ShipModule.TargetMaxTime) },
-            ["FSDInterdictorFacingLimit"] = new string[] { nameof(ItemData.ShipModule.Angle) },
-            ["ScannerRange"] = new string[] { nameof(ItemData.ShipModule.Range) },
-            ["DiscoveryScannerRange"] = new string[] { },
-            ["DiscoveryScannerPassiveRange"] = new string[] { },
-            ["MaxAngle"] = new string[] { nameof(ItemData.ShipModule.Angle) },
-            ["ScannerTimeToScan"] = new string[] { nameof(ItemData.ShipModule.Time) },
-            ["ChaffJamDuration"] = new string[] { nameof(ItemData.ShipModule.Time) },
-            ["ECMRange"] = new string[] { nameof(ItemData.ShipModule.Range) },
-            ["ECMTimeToCharge"] = new string[] { nameof(ItemData.ShipModule.Time) },
-            ["ECMActivePowerConsumption"] = new string[] { nameof(ItemData.ShipModule.ActivePower) },
-            ["ECMHeat"] = new string[] { nameof(ItemData.ShipModule.ThermalLoad) },
-            ["ECMCooldown"] = new string[] { nameof(ItemData.ShipModule.ReloadTime) },
-            ["HeatSinkDuration"] = new string[] { nameof(ItemData.ShipModule.Time) },
-            ["ThermalDrain"] = new string[] { nameof(ItemData.ShipModule.ThermalDrain) },
-            ["NumBuggySlots"] = new string[] { nameof(ItemData.ShipModule.Capacity) },
-            ["CargoCapacity"] = new string[] { nameof(ItemData.ShipModule.Size) },
-            ["MaxActiveDrones"] = new string[] { nameof(ItemData.ShipModule.Limpets) },
-            ["DroneTargetRange"] = new string[] { nameof(ItemData.ShipModule.TargetRange) },
-            ["DroneLifeTime"] = new string[] { nameof(ItemData.ShipModule.Time) },
-            ["DroneSpeed"] = new string[] { nameof(ItemData.ShipModule.Speed) },
-            ["DroneMultiTargetSpeed"] = new string[] { nameof(ItemData.ShipModule.MultiTargetSpeed) },
-            ["DroneFuelCapacity"] = new string[] { nameof(ItemData.ShipModule.FuelTransfer) },
-            ["DroneRepairCapacity"] = new string[] { nameof(ItemData.ShipModule.MaxRepairMaterialCapacity) },
-            ["DroneHackingTime"] = new string[] { nameof(ItemData.ShipModule.HackTime) },
-            ["DroneMinJettisonedCargo"] = new string[] { nameof(ItemData.ShipModule.MinCargo) },
-            ["DroneMaxJettisonedCargo"] = new string[] { nameof(ItemData.ShipModule.MaxCargo) },
-            ["FuelScoopRate"] = new string[] { nameof(ItemData.ShipModule.RefillRate) },
-            ["FuelCapacity"] = new string[] { nameof(ItemData.ShipModule.Size) },
-            ["OxygenTimeCapacity"] = new string[] { nameof(ItemData.ShipModule.Time) },
-            ["RefineryBins"] = new string[] { nameof(ItemData.ShipModule.Capacity) },
-            ["AFMRepairCapacity"] = new string[] { nameof(ItemData.ShipModule.Ammo) },
-            ["AFMRepairConsumption"] = new string[] { nameof(ItemData.ShipModule.RateOfRepairConsumption) },
-            ["AFMRepairPerAmmo"] = new string[] { nameof(ItemData.ShipModule.RepairCostPerMat) },
-            ["MaxRange"] = new string[] { nameof(ItemData.ShipModule.Range) },
-            ["SensorTargetScanAngle"] = new string[] { nameof(ItemData.ShipModule.Angle) },
-            ["VehicleCargoCapacity"] = new string[] { },
-            ["VehicleHullMass"] = new string[] { },
-            ["VehicleFuelCapacity"] = new string[] { },
-            ["VehicleArmourHealth"] = new string[] { },
-            ["VehicleShieldHealth"] = new string[] { },
-            ["FighterMaxSpeed"] = new string[] { },
-            ["FighterBoostSpeed"] = new string[] { },
-            ["FighterPitchRate"] = new string[] { },
-            ["FighterDPS"] = new string[] { },
-            ["FighterYawRate"] = new string[] { },
-            ["FighterRollRate"] = new string[] { },
-            ["CabinCapacity"] = new string[] { nameof(ItemData.ShipModule.Passengers) },
-            ["CabinClass"] = new string[] { nameof(ItemData.ShipModule.CabinClass) },
-            ["DisruptionBarrierRange"] = new string[] { nameof(ItemData.ShipModule.Range) },
-            ["DisruptionBarrierChargeDuration"] = new string[] { nameof(ItemData.ShipModule.Time) },
-            ["DisruptionBarrierActivePower"] = new string[] { nameof(ItemData.ShipModule.MWPerSec) },
-            ["DisruptionBarrierCooldown"] = new string[] { nameof(ItemData.ShipModule.ReloadTime) },
-            ["WingDamageReduction"] = new string[] { },
-            ["WingMinDuration"] = new string[] { },
-            ["WingMaxDuration"] = new string[] { },
-            ["ShieldSacrificeAmountRemoved"] = new string[] { },
-            ["ShieldSacrificeAmountGiven"] = new string[] { },
-            ["FSDJumpRangeBoost"] = new string[] { nameof(ItemData.ShipModule.AdditionalRange) },
-            ["FSDFuelUseIncrease"] = new string[] { },
-            ["BoostSpeedMultiplier"] = new string[] { },
-            ["BoostAugmenterPowerUse"] = new string[] { },
-            ["ModuleDefenceAbsorption"] = new string[] { nameof(ItemData.ShipModule.Protection) },
-            ["DSS_RangeMult"] = new string[] { },
-            ["DSS_AngleMult"] = new string[] { },
-            ["DSS_RateMult"] = new string[] { },
-            ["DSS_PatchRadius"] = new string[] { nameof(ItemData.ShipModule.ProbeRadius) },
+            [new ModLabelFDName("Mass")] = new string[] { nameof(ItemData.ShipModule.Mass), },
+            [new ModLabelFDName("Integrity")] = new string[] { nameof(ItemData.ShipModule.Integrity) },
+            [new ModLabelFDName("PowerDraw")] = new string[] { nameof(ItemData.ShipModule.PowerDraw) },
+            [new ModLabelFDName("BootTime")] = new string[] { nameof(ItemData.ShipModule.BootTime) },
+            [new ModLabelFDName("ShieldBankSpinUp")] = new string[] { nameof(ItemData.ShipModule.SCBSpinUp) },
+            [new ModLabelFDName("ShieldBankDuration")] = new string[] { nameof(ItemData.ShipModule.SCBDuration) },
+            [new ModLabelFDName("ShieldBankReinforcement")] = new string[] { nameof(ItemData.ShipModule.ShieldReinforcement) },
+            [new ModLabelFDName("ShieldBankHeat")] = new string[] { nameof(ItemData.ShipModule.ThermalLoad) },
+            [new ModLabelFDName("DistributorDraw")] = new string[] { nameof(ItemData.ShipModule.DistributorDraw) },
+            [new ModLabelFDName("ThermalLoad")] = new string[] { nameof(ItemData.ShipModule.ThermalLoad) },
+            [new ModLabelFDName("ArmourPenetration")] = new string[] { nameof(ItemData.ShipModule.ArmourPiercing) },
+            [new ModLabelFDName("MaximumRange")] = new string[] { nameof(ItemData.ShipModule.Range) },
+            [new ModLabelFDName("FalloffRange")] = new string[] { nameof(ItemData.ShipModule.Falloff) },
+            [new ModLabelFDName("ShotSpeed")] = new string[] { nameof(ItemData.ShipModule.Speed) },
+            [new ModLabelFDName("BurstRateOfFire")] = new string[] { nameof(ItemData.ShipModule.BurstRateOfFire) },
+            [new ModLabelFDName("BurstSize")] = new string[] { nameof(ItemData.ShipModule.BurstSize) },
+            [new ModLabelFDName("AmmoClipSize")] = new string[] { nameof(ItemData.ShipModule.Clip) },
+            [new ModLabelFDName("AmmoMaximum")] = new string[] { nameof(ItemData.ShipModule.Ammo) },
+            [new ModLabelFDName("RoundsPerShot")] = new string[] { nameof(ItemData.ShipModule.Rounds) },
+            [new ModLabelFDName("ReloadTime")] = new string[] { nameof(ItemData.ShipModule.ReloadTime) },
+            [new ModLabelFDName("BreachDamage")] = new string[] { nameof(ItemData.ShipModule.BreachDamage) },
+            [new ModLabelFDName("BreachPercent")] = new string[] { nameof(ItemData.ShipModule.BreachModuleDamageAfterBreach), },
+            [new ModLabelFDName("MinBreachChance")] = new string[] { nameof(ItemData.ShipModule.BreachMin) },
+            [new ModLabelFDName("MaxBreachChance")] = new string[] { nameof(ItemData.ShipModule.BreachMax) },
+            [new ModLabelFDName("Jitter")] = new string[] { nameof(ItemData.ShipModule.Jitter) },
+            [new ModLabelFDName("WeaponMode")] = new string[] { },
+            [new ModLabelFDName("DamageType")] = new string[] { },
+            [new ModLabelFDName("$Thermic;")] = new string[] { },       // new june 26
+            [new ModLabelFDName("$Kinetic;")] = new string[] { },       // new june 26
+            [new ModLabelFDName("ShieldGenMinimumMass")] = new string[] { nameof(ItemData.ShipModule.MinMass) },
+            [new ModLabelFDName("ShieldGenMaximumMass")] = new string[] { nameof(ItemData.ShipModule.MaxMass) },
+            [new ModLabelFDName("ShieldGenMinStrength")] = new string[] { nameof(ItemData.ShipModule.MinStrength) },
+            [new ModLabelFDName("ShieldGenMaxStrength")] = new string[] { nameof(ItemData.ShipModule.MaxStrength) },
+            [new ModLabelFDName("RegenRate")] = new string[] { nameof(ItemData.ShipModule.RegenRate) },
+            [new ModLabelFDName("BrokenRegenRate")] = new string[] { nameof(ItemData.ShipModule.BrokenRegenRate) },
+            [new ModLabelFDName("EnergyPerRegen")] = new string[] { nameof(ItemData.ShipModule.MWPerUnit) },
+            [new ModLabelFDName("FSDOptimalMass")] = new string[] { nameof(ItemData.ShipModule.OptMass) },
+            [new ModLabelFDName("FSDHeatRate")] = new string[] { nameof(ItemData.ShipModule.ThermalLoad) },
+            [new ModLabelFDName("MaxFuelPerJump")] = new string[] { nameof(ItemData.ShipModule.MaxFuelPerJump) },
+            [new ModLabelFDName("EngineMinimumMass")] = new string[] { nameof(ItemData.ShipModule.MinMass) },
+            [new ModLabelFDName("MaximumMass")] = new string[] { nameof(ItemData.ShipModule.MaxMass) },
+            [new ModLabelFDName("EngineMinPerformance")] = new string[] { nameof(ItemData.ShipModule.EngineMinMultiplier) },
+            [new ModLabelFDName("EngineMaxPerformance")] = new string[] { nameof(ItemData.ShipModule.EngineMaxMultiplier) },
+            [new ModLabelFDName("EngineHeatRate")] = new string[] { nameof(ItemData.ShipModule.ThermalLoad) },
+            [new ModLabelFDName("PowerCapacity")] = new string[] { nameof(ItemData.ShipModule.PowerGen) },
+            [new ModLabelFDName("HeatEfficiency")] = new string[] { nameof(ItemData.ShipModule.HeatEfficiency) },
+            [new ModLabelFDName("WeaponsCapacity")] = new string[] { nameof(ItemData.ShipModule.WeaponsCapacity) },
+            [new ModLabelFDName("WeaponsRecharge")] = new string[] { nameof(ItemData.ShipModule.WeaponsRechargeRate) },
+            [new ModLabelFDName("EnginesCapacity")] = new string[] { nameof(ItemData.ShipModule.EngineCapacity) },
+            [new ModLabelFDName("EnginesRecharge")] = new string[] { nameof(ItemData.ShipModule.EngineRechargeRate) },
+            [new ModLabelFDName("SystemsCapacity")] = new string[] { nameof(ItemData.ShipModule.SystemsCapacity) },
+            [new ModLabelFDName("SystemsRecharge")] = new string[] { nameof(ItemData.ShipModule.SystemsRechargeRate) },
+            [new ModLabelFDName("DefenceModifierHealthMultiplier")] = new string[] { nameof(ItemData.ShipModule.HullStrengthBonus) },
+            [new ModLabelFDName("DefenceModifierHealthAddition")] = new string[] { nameof(ItemData.ShipModule.HullReinforcement) },
+            [new ModLabelFDName("DefenceModifierShieldMultiplier")] = new string[] { nameof(ItemData.ShipModule.ShieldReinforcement) },
+            [new ModLabelFDName("DefenceModifierShieldAddition")] = new string[] { nameof(ItemData.ShipModule.AdditionalReinforcement) },
+            [new ModLabelFDName("CollisionResistance")] = new string[] { },
+            [new ModLabelFDName("KineticResistance")] = new string[] { nameof(ItemData.ShipModule.KineticResistance) },
+            [new ModLabelFDName("ThermicResistance")] = new string[] { nameof(ItemData.ShipModule.ThermalResistance) },
+            [new ModLabelFDName("ExplosiveResistance")] = new string[] { nameof(ItemData.ShipModule.ExplosiveResistance) },
+            [new ModLabelFDName("CausticResistance")] = new string[] { nameof(ItemData.ShipModule.CausticResistance) },
+            [new ModLabelFDName("FSDInterdictorRange")] = new string[] { nameof(ItemData.ShipModule.TargetMaxTime) },
+            [new ModLabelFDName("FSDInterdictorFacingLimit")] = new string[] { nameof(ItemData.ShipModule.Angle) },
+            [new ModLabelFDName("ScannerRange")] = new string[] { nameof(ItemData.ShipModule.Range) },
+            [new ModLabelFDName("DiscoveryScannerRange")] = new string[] { },
+            [new ModLabelFDName("DiscoveryScannerPassiveRange")] = new string[] { },
+            [new ModLabelFDName("MaxAngle")] = new string[] { nameof(ItemData.ShipModule.Angle) },
+            [new ModLabelFDName("ScannerTimeToScan")] = new string[] { nameof(ItemData.ShipModule.Time) },
+            [new ModLabelFDName("ChaffJamDuration")] = new string[] { nameof(ItemData.ShipModule.Time) },
+            [new ModLabelFDName("ECMRange")] = new string[] { nameof(ItemData.ShipModule.Range) },
+            [new ModLabelFDName("ECMTimeToCharge")] = new string[] { nameof(ItemData.ShipModule.Time) },
+            [new ModLabelFDName("ECMActivePowerConsumption")] = new string[] { nameof(ItemData.ShipModule.ActivePower) },
+            [new ModLabelFDName("ECMHeat")] = new string[] { nameof(ItemData.ShipModule.ThermalLoad) },
+            [new ModLabelFDName("ECMCooldown")] = new string[] { nameof(ItemData.ShipModule.ReloadTime) },
+            [new ModLabelFDName("HeatSinkDuration")] = new string[] { nameof(ItemData.ShipModule.Time) },
+            [new ModLabelFDName("ThermalDrain")] = new string[] { nameof(ItemData.ShipModule.ThermalDrain) },
+            [new ModLabelFDName("NumBuggySlots")] = new string[] { nameof(ItemData.ShipModule.Capacity) },
+            [new ModLabelFDName("CargoCapacity")] = new string[] { nameof(ItemData.ShipModule.Size) },
+            [new ModLabelFDName("MaxActiveDrones")] = new string[] { nameof(ItemData.ShipModule.Limpets) },
+            [new ModLabelFDName("DroneTargetRange")] = new string[] { nameof(ItemData.ShipModule.TargetRange) },
+            [new ModLabelFDName("DroneLifeTime")] = new string[] { nameof(ItemData.ShipModule.Time) },
+            [new ModLabelFDName("DroneSpeed")] = new string[] { nameof(ItemData.ShipModule.Speed) },
+            [new ModLabelFDName("DroneMultiTargetSpeed")] = new string[] { nameof(ItemData.ShipModule.MultiTargetSpeed) },
+            [new ModLabelFDName("DroneFuelCapacity")] = new string[] { nameof(ItemData.ShipModule.FuelTransfer) },
+            [new ModLabelFDName("DroneRepairCapacity")] = new string[] { nameof(ItemData.ShipModule.MaxRepairMaterialCapacity) },
+            [new ModLabelFDName("DroneHackingTime")] = new string[] { nameof(ItemData.ShipModule.HackTime) },
+            [new ModLabelFDName("DroneMinJettisonedCargo")] = new string[] { nameof(ItemData.ShipModule.MinCargo) },
+            [new ModLabelFDName("DroneMaxJettisonedCargo")] = new string[] { nameof(ItemData.ShipModule.MaxCargo) },
+            [new ModLabelFDName("FuelScoopRate")] = new string[] { nameof(ItemData.ShipModule.RefillRate) },
+            [new ModLabelFDName("FuelCapacity")] = new string[] { nameof(ItemData.ShipModule.Size) },
+            [new ModLabelFDName("OxygenTimeCapacity")] = new string[] { nameof(ItemData.ShipModule.Time) },
+            [new ModLabelFDName("RefineryBins")] = new string[] { nameof(ItemData.ShipModule.Capacity) },
+            [new ModLabelFDName("AFMRepairCapacity")] = new string[] { nameof(ItemData.ShipModule.Ammo) },
+            [new ModLabelFDName("AFMRepairConsumption")] = new string[] { nameof(ItemData.ShipModule.RateOfRepairConsumption) },
+            [new ModLabelFDName("AFMRepairPerAmmo")] = new string[] { nameof(ItemData.ShipModule.RepairCostPerMat) },
+            [new ModLabelFDName("MaxRange")] = new string[] { nameof(ItemData.ShipModule.Range) },
+            [new ModLabelFDName("SensorTargetScanAngle")] = new string[] { nameof(ItemData.ShipModule.Angle) },
+            [new ModLabelFDName("VehicleCargoCapacity")] = new string[] { },
+            [new ModLabelFDName("VehicleHullMass")] = new string[] { },
+            [new ModLabelFDName("VehicleFuelCapacity")] = new string[] { },
+            [new ModLabelFDName("VehicleArmourHealth")] = new string[] { },
+            [new ModLabelFDName("VehicleShieldHealth")] = new string[] { },
+            [new ModLabelFDName("FighterMaxSpeed")] = new string[] { },
+            [new ModLabelFDName("FighterBoostSpeed")] = new string[] { },
+            [new ModLabelFDName("FighterPitchRate")] = new string[] { },
+            [new ModLabelFDName("FighterDPS")] = new string[] { },
+            [new ModLabelFDName("FighterYawRate")] = new string[] { },
+            [new ModLabelFDName("FighterRollRate")] = new string[] { },
+            [new ModLabelFDName("CabinCapacity")] = new string[] { nameof(ItemData.ShipModule.Passengers) },
+            [new ModLabelFDName("CabinClass")] = new string[] { nameof(ItemData.ShipModule.CabinClass) },
+            [new ModLabelFDName("DisruptionBarrierRange")] = new string[] { nameof(ItemData.ShipModule.Range) },
+            [new ModLabelFDName("DisruptionBarrierChargeDuration")] = new string[] { nameof(ItemData.ShipModule.Time) },
+            [new ModLabelFDName("DisruptionBarrierActivePower")] = new string[] { nameof(ItemData.ShipModule.MWPerSec) },
+            [new ModLabelFDName("DisruptionBarrierCooldown")] = new string[] { nameof(ItemData.ShipModule.ReloadTime) },
+            [new ModLabelFDName("WingDamageReduction")] = new string[] { },
+            [new ModLabelFDName("WingMinDuration")] = new string[] { },
+            [new ModLabelFDName("WingMaxDuration")] = new string[] { },
+            [new ModLabelFDName("ShieldSacrificeAmountRemoved")] = new string[] { },
+            [new ModLabelFDName("ShieldSacrificeAmountGiven")] = new string[] { },
+            [new ModLabelFDName("FSDJumpRangeBoost")] = new string[] { nameof(ItemData.ShipModule.AdditionalRange) },
+            [new ModLabelFDName("FSDFuelUseIncrease")] = new string[] { },
+            [new ModLabelFDName("BoostSpeedMultiplier")] = new string[] { },
+            [new ModLabelFDName("BoostAugmenterPowerUse")] = new string[] { },
+            [new ModLabelFDName("ModuleDefenceAbsorption")] = new string[] { nameof(ItemData.ShipModule.Protection) },
+            [new ModLabelFDName("DSS_RangeMult")] = new string[] { },
+            [new ModLabelFDName("DSS_AngleMult")] = new string[] { },
+            [new ModLabelFDName("DSS_RateMult")] = new string[] { },
+            [new ModLabelFDName("DSS_PatchRadius")] = new string[] { nameof(ItemData.ShipModule.ProbeRadius) },
 
-            ["BurstRate"] = new string[] { nameof(ItemData.ShipModule.BurstRateOfFire) },
-            ["BurstSize"] = new string[] { nameof(ItemData.ShipModule.BurstSize) },
-            ["DamageFalloffRange"] = new string[] { nameof(ItemData.ShipModule.Falloff) },
+            [new ModLabelFDName("BurstRate")] = new string[] { nameof(ItemData.ShipModule.BurstRateOfFire) },
+            [new ModLabelFDName("BurstSize")] = new string[] { nameof(ItemData.ShipModule.BurstSize) },
+            [new ModLabelFDName("DamageFalloffRange")] = new string[] { nameof(ItemData.ShipModule.Falloff) },
 
-            ["GuardianModuleResistance"] = new string[] { nameof(ItemData.ShipModule.GuardianModuleResistance) },       // add in edsy aug 24 version. String, Active or ""
+            [new ModLabelFDName("GuardianModuleResistance")] = new string[] { nameof(ItemData.ShipModule.GuardianModuleResistance) },       // add in edsy aug 24 version. String, Active or ""
         };
 
-        static private Dictionary<string, ItemData.ShipModule> specialeffects = new Dictionary<string, ItemData.ShipModule>
+
+
+        static private Dictionary<RecipeFDName, ItemData.ShipModule> specialeffects = new Dictionary<RecipeFDName, ItemData.ShipModule>(new RecipeFDNameEqualityComparer())
         {
-            ["special_auto_loader"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Auto reload while firing") { },
-            ["special_concordant_sequence"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Wing shield regen increased") { ThermalLoad = 50 },
-            ["special_corrosive_shell"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target armor hardness reduced") { Ammo = -20 },
-            ["special_blinding_shell"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target sensor acuity reduced") { },
-            ["special_dispersal_field"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target gimbal/turret tracking reduced") { },
-            ["special_weapon_toughened"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
-            ["special_drag_munitions"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target speed reduced") { },
-            ["special_emissive_munitions"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target signature increased") { ThermalLoad = 100 },
-            ["special_feedback_cascade_cooled"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target shield cell disrupted") { Damage = -20, ThermalLoad = -40 },
-            ["special_weapon_efficient"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -10 },
-            ["special_force_shell"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target pushed off course") { Speed = -16.666666666666671 },
-            ["special_fsd_interrupt"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target FSD reboots") { Damage = -30, BurstInterval = 50 },
-            ["special_high_yield_shell"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target module damage") { Damage = -35, BurstInterval = 11.111111111111111, KineticProportionDamage = 50, ExplosiveProportionDamage = 50 },
-            ["special_incendiary_rounds"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { BurstInterval = 5.2631578947368416, ThermalLoad = 200, KineticProportionDamage = 10, ThermalProportionDamage = 90 },
-            ["special_distortion_field"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Damage = 50, KineticProportionDamage = 50, ThermalProportionDamage = 50, Jitter = 3 },
-            ["special_choke_canister"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target thrusters reboot") { },
-            ["special_mass_lock"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target FSD inhibited") { },
-            ["special_weapon_rateoffire"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 5, BurstInterval = -2.9126213592233 },
-            ["special_overload_munitions"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { ThermalProportionDamage = 50, ExplosiveProportionDamage = 50 },
-            ["special_weapon_damage"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 5, Damage = 3 },
-            ["special_penetrator_munitions"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target module damage") { },
-            ["special_deep_cut_payload"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target module damage") { },
-            ["special_phasing_sequence"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "10% of damage bypasses shields") { Damage = -10 },
-            ["special_plasma_slug"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Reload from ship fuel") { Damage = -10, Ammo = -100 },
-            ["special_plasma_slug_cooled"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Reload from ship fuel") { Damage = -10, ThermalLoad = -40, Ammo = -100 },
-            ["special_radiant_canister"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Area heat increased and sensors disrupted") { },
-            ["special_regeneration_sequence"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target wing shields regenerated") { Damage = -10 },
-            ["special_reverberating_cascade"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target shield generator damaged") { },
-            ["special_scramble_spectrum"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target modules malfunction") { BurstInterval = 11.111111111111111 },
-            ["special_screening_shell"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Effective against munitions") { ReloadTime = -50 },
-            ["special_shiftlock_canister"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Area FSDs reboot") { },
-            ["special_smart_rounds"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "No damage to untargeted ships") { },
-            ["special_weapon_lightweight"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
-            ["special_super_penetrator_cooled"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target module damage") { ThermalLoad = -40, ReloadTime = 50 },
-            ["special_lock_breaker"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target loses target lock") { },
-            ["special_thermal_cascade"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Shielded target heat increased") { },
-            ["special_thermal_conduit"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Damage increases with heat level") { },
-            ["special_thermalshock"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target heat increased") { },
-            ["special_thermal_vent"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Heat reduced when striking a target") { },
-            ["special_shieldbooster_explosive"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { ShieldReinforcement = -1, ExplosiveResistance = 2 },
-            ["special_shieldbooster_toughened"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
-            ["special_shieldbooster_efficient"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -10 },
-            ["special_shieldbooster_kinetic"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { ShieldReinforcement = -1, KineticResistance = 2 },
-            ["special_shieldbooster_chunky"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { ShieldReinforcement = 5, KineticResistance = -2, ThermalResistance = -2, ExplosiveResistance = -2 },
-            ["special_shieldbooster_thermic"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { ShieldReinforcement = -1, ThermalResistance = 2 },
-            ["special_armour_kinetic"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullStrengthBonus = -3, KineticResistance = 8 },
-            ["special_armour_chunky"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullStrengthBonus = 8, KineticResistance = -3, ThermalResistance = -3, ExplosiveResistance = -3 },
-            ["special_armour_explosive"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullStrengthBonus = -3, ExplosiveResistance = 8 },
-            ["special_armour_thermic"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullStrengthBonus = -3, ThermalResistance = 8 },
-            ["special_powerplant_toughened"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
-            ["special_powerplant_highcharge"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = 10, PowerGen = 5 },
-            ["special_powerplant_lightweight"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
-            ["special_powerplant_cooled"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HeatEfficiency = -10 },
-            ["special_engine_toughened"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
-            ["special_engine_overloaded"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { EngineOptMultiplier = 4, ThermalLoad = 10 },
-            ["special_engine_haulage"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { OptMass = 10 },
-            ["special_engine_lightweight"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
-            ["special_engine_cooled"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = 5, ThermalLoad = -10 },
-            ["special_fsd_fuelcapacity"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 5, MaxFuelPerJump = 10 },
-            ["special_fsd_toughened"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 25 },
-            ["special_fsd_heavy"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = -8, OptMass = 4 },
-            ["special_fsd_lightweight"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
-            ["special_fsd_cooled"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { ThermalLoad = -10 },
-            ["special_powerdistributor_capacity"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { WeaponsCapacity = 8, WeaponsRechargeRate = -2, EngineCapacity = 8, EngineRechargeRate = -2, SystemsCapacity = 8, SystemsRechargeRate = -2 },
-            ["special_powerdistributor_toughened"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
-            ["special_powerdistributor_efficient"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -10 },
-            ["special_powerdistributor_lightweight"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
-            ["special_powerdistributor_fast"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { WeaponsCapacity = -4, WeaponsRechargeRate = 4, EngineCapacity = -4, EngineRechargeRate = 4, SystemsCapacity = -4, SystemsRechargeRate = 4 },
-            ["special_hullreinforcement_kinetic"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullReinforcement = -5, KineticResistance = 2 },
-            ["special_hullreinforcement_chunky"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullReinforcement = 10, KineticResistance = -2, ThermalResistance = -2, ExplosiveResistance = -2 },
-            ["special_hullreinforcement_explosive"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullReinforcement = -5, ExplosiveResistance = 2 },
-            ["special_hullreinforcement_thermic"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullReinforcement = -5, ThermalResistance = 2 },
-            ["special_shieldcell_oversized"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { SCBSpinUp = 20, ShieldReinforcement = 5 },
-            ["special_shieldcell_toughened"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
-            ["special_shieldcell_efficient"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -10 },
-            ["special_shieldcell_gradual"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { SCBDuration = 10, ShieldReinforcement = -5 },
-            ["special_shieldcell_lightweight"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
-            ["special_shield_toughened"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
-            ["special_shield_regenerative"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { RegenRate = 15, BrokenRegenRate = 15, KineticResistance = -1.5, ThermalResistance = -1.5, ExplosiveResistance = -1.5 },
-            ["special_shield_kinetic"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { OptStrength = -3, KineticResistance = 8 },
-            ["special_shield_health"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 10, OptStrength = 6, MWPerUnit = 25 },
-            ["special_shield_efficient"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -20, OptStrength = -2, MWPerUnit = -20, KineticResistance = -1, ThermalResistance = -1, ExplosiveResistance = -1 },
-            ["special_shield_resistive"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 10, MWPerUnit = 25, KineticResistance = 3, ThermalResistance = 3, ExplosiveResistance = 3 },
-            ["special_shield_lightweight"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
-            ["special_shield_thermic"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { OptStrength = -3, ThermalResistance = 8 },
+            [new RecipeFDName("special_auto_loader")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Auto reload while firing") { },
+            [new RecipeFDName("special_concordant_sequence")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Wing shield regen increased") { ThermalLoad = 50 },
+            [new RecipeFDName("special_corrosive_shell")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target armor hardness reduced") { Ammo = -20 },
+            [new RecipeFDName("special_blinding_shell")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target sensor acuity reduced") { },
+            [new RecipeFDName("special_dispersal_field")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target gimbal/turret tracking reduced") { },
+            [new RecipeFDName("special_weapon_toughened")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
+            [new RecipeFDName("special_drag_munitions")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target speed reduced") { },
+            [new RecipeFDName("special_emissive_munitions")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target signature increased") { ThermalLoad = 100 },
+            [new RecipeFDName("special_feedback_cascade_cooled")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target shield cell disrupted") { Damage = -20, ThermalLoad = -40 },
+            [new RecipeFDName("special_weapon_efficient")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -10 },
+            [new RecipeFDName("special_force_shell")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target pushed off course") { Speed = -16.666666666666671 },
+            [new RecipeFDName("special_fsd_interrupt")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target FSD reboots") { Damage = -30, BurstInterval = 50 },
+            [new RecipeFDName("special_high_yield_shell")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target module damage") { Damage = -35, BurstInterval = 11.111111111111111, KineticProportionDamage = 50, ExplosiveProportionDamage = 50 },
+            [new RecipeFDName("special_incendiary_rounds")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { BurstInterval = 5.2631578947368416, ThermalLoad = 200, KineticProportionDamage = 10, ThermalProportionDamage = 90 },
+            [new RecipeFDName("special_distortion_field")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Damage = 50, KineticProportionDamage = 50, ThermalProportionDamage = 50, Jitter = 3 },
+            [new RecipeFDName("special_choke_canister")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target thrusters reboot") { },
+            [new RecipeFDName("special_mass_lock")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target FSD inhibited") { },
+            [new RecipeFDName("special_weapon_rateoffire")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 5, BurstInterval = -2.9126213592233 },
+            [new RecipeFDName("special_overload_munitions")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { ThermalProportionDamage = 50, ExplosiveProportionDamage = 50 },
+            [new RecipeFDName("special_weapon_damage")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 5, Damage = 3 },
+            [new RecipeFDName("special_penetrator_munitions")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target module damage") { },
+            [new RecipeFDName("special_deep_cut_payload")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target module damage") { },
+            [new RecipeFDName("special_phasing_sequence")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "10% of damage bypasses shields") { Damage = -10 },
+            [new RecipeFDName("special_plasma_slug")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Reload from ship fuel") { Damage = -10, Ammo = -100 },
+            [new RecipeFDName("special_plasma_slug_cooled")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Reload from ship fuel") { Damage = -10, ThermalLoad = -40, Ammo = -100 },
+            [new RecipeFDName("special_radiant_canister")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Area heat increased and sensors disrupted") { },
+            [new RecipeFDName("special_regeneration_sequence")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target wing shields regenerated") { Damage = -10 },
+            [new RecipeFDName("special_reverberating_cascade")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target shield generator damaged") { },
+            [new RecipeFDName("special_scramble_spectrum")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target modules malfunction") { BurstInterval = 11.111111111111111 },
+            [new RecipeFDName("special_screening_shell")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Effective against munitions") { ReloadTime = -50 },
+            [new RecipeFDName("special_shiftlock_canister")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Area FSDs reboot") { },
+            [new RecipeFDName("special_smart_rounds")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "No damage to untargeted ships") { },
+            [new RecipeFDName("special_weapon_lightweight")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
+            [new RecipeFDName("special_super_penetrator_cooled")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target module damage") { ThermalLoad = -40, ReloadTime = 50 },
+            [new RecipeFDName("special_lock_breaker")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target loses target lock") { },
+            [new RecipeFDName("special_thermal_cascade")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Shielded target heat increased") { },
+            [new RecipeFDName("special_thermal_conduit")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Damage increases with heat level") { },
+            [new RecipeFDName("special_thermalshock")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Target heat increased") { },
+            [new RecipeFDName("special_thermal_vent")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "Heat reduced when striking a target") { },
+            [new RecipeFDName("special_shieldbooster_explosive")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { ShieldReinforcement = -1, ExplosiveResistance = 2 },
+            [new RecipeFDName("special_shieldbooster_toughened")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
+            [new RecipeFDName("special_shieldbooster_efficient")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -10 },
+            [new RecipeFDName("special_shieldbooster_kinetic")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { ShieldReinforcement = -1, KineticResistance = 2 },
+            [new RecipeFDName("special_shieldbooster_chunky")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { ShieldReinforcement = 5, KineticResistance = -2, ThermalResistance = -2, ExplosiveResistance = -2 },
+            [new RecipeFDName("special_shieldbooster_thermic")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { ShieldReinforcement = -1, ThermalResistance = 2 },
+            [new RecipeFDName("special_armour_kinetic")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullStrengthBonus = -3, KineticResistance = 8 },
+            [new RecipeFDName("special_armour_chunky")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullStrengthBonus = 8, KineticResistance = -3, ThermalResistance = -3, ExplosiveResistance = -3 },
+            [new RecipeFDName("special_armour_explosive")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullStrengthBonus = -3, ExplosiveResistance = 8 },
+            [new RecipeFDName("special_armour_thermic")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullStrengthBonus = -3, ThermalResistance = 8 },
+            [new RecipeFDName("special_powerplant_toughened")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
+            [new RecipeFDName("special_powerplant_highcharge")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = 10, PowerGen = 5 },
+            [new RecipeFDName("special_powerplant_lightweight")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
+            [new RecipeFDName("special_powerplant_cooled")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HeatEfficiency = -10 },
+            [new RecipeFDName("special_engine_toughened")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
+            [new RecipeFDName("special_engine_overloaded")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { EngineOptMultiplier = 4, ThermalLoad = 10 },
+            [new RecipeFDName("special_engine_haulage")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { OptMass = 10 },
+            [new RecipeFDName("special_engine_lightweight")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
+            [new RecipeFDName("special_engine_cooled")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = 5, ThermalLoad = -10 },
+            [new RecipeFDName("special_fsd_fuelcapacity")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 5, MaxFuelPerJump = 10 },
+            [new RecipeFDName("special_fsd_toughened")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 25 },
+            [new RecipeFDName("special_fsd_heavy")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = -8, OptMass = 4 },
+            [new RecipeFDName("special_fsd_lightweight")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
+            [new RecipeFDName("special_fsd_cooled")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { ThermalLoad = -10 },
+            [new RecipeFDName("special_powerdistributor_capacity")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { WeaponsCapacity = 8, WeaponsRechargeRate = -2, EngineCapacity = 8, EngineRechargeRate = -2, SystemsCapacity = 8, SystemsRechargeRate = -2 },
+            [new RecipeFDName("special_powerdistributor_toughened")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
+            [new RecipeFDName("special_powerdistributor_efficient")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -10 },
+            [new RecipeFDName("special_powerdistributor_lightweight")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
+            [new RecipeFDName("special_powerdistributor_fast")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { WeaponsCapacity = -4, WeaponsRechargeRate = 4, EngineCapacity = -4, EngineRechargeRate = 4, SystemsCapacity = -4, SystemsRechargeRate = 4 },
+            [new RecipeFDName("special_hullreinforcement_kinetic")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullReinforcement = -5, KineticResistance = 2 },
+            [new RecipeFDName("special_hullreinforcement_chunky")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullReinforcement = 10, KineticResistance = -2, ThermalResistance = -2, ExplosiveResistance = -2 },
+            [new RecipeFDName("special_hullreinforcement_explosive")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullReinforcement = -5, ExplosiveResistance = 2 },
+            [new RecipeFDName("special_hullreinforcement_thermic")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { HullReinforcement = -5, ThermalResistance = 2 },
+            [new RecipeFDName("special_shieldcell_oversized")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { SCBSpinUp = 20, ShieldReinforcement = 5 },
+            [new RecipeFDName("special_shieldcell_toughened")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
+            [new RecipeFDName("special_shieldcell_efficient")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -10 },
+            [new RecipeFDName("special_shieldcell_gradual")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { SCBDuration = 10, ShieldReinforcement = -5 },
+            [new RecipeFDName("special_shieldcell_lightweight")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
+            [new RecipeFDName("special_shield_toughened")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Integrity = 15 },
+            [new RecipeFDName("special_shield_regenerative")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { RegenRate = 15, BrokenRegenRate = 15, KineticResistance = -1.5, ThermalResistance = -1.5, ExplosiveResistance = -1.5 },
+            [new RecipeFDName("special_shield_kinetic")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { OptStrength = -3, KineticResistance = 8 },
+            [new RecipeFDName("special_shield_health")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 10, OptStrength = 6, MWPerUnit = 25 },
+            [new RecipeFDName("special_shield_efficient")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = -20, OptStrength = -2, MWPerUnit = -20, KineticResistance = -1, ThermalResistance = -1, ExplosiveResistance = -1 },
+            [new RecipeFDName("special_shield_resistive")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { PowerDraw = 10, MWPerUnit = 25, KineticResistance = 3, ThermalResistance = 3, ExplosiveResistance = 3 },
+            [new RecipeFDName("special_shield_lightweight")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { Mass = -10 },
+            [new RecipeFDName("special_shield_thermic")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { OptStrength = -3, ThermalResistance = 8 },
 
             // added older no longer supported ones
-            ["special_feedback_cascade"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { },
-            ["special_super_penetrator"] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { },
+            [new RecipeFDName("special_feedback_cascade")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { },
+            [new RecipeFDName("special_super_penetrator")] = new ItemData.ShipModule(0, ItemData.ShipModule.ModuleTypes.SpecialEffect, "") { },
 
         };
 
         // for special effects, what to do..
         // 0 = set, 1 = add, 2 means mod 100 on primary value, else its modmod together in %
 
-        static private Dictionary<string, double> specialeffectmodcontrol = new Dictionary<string, double>
+        static private Dictionary<ModLabelFDName, double> specialeffectmodcontrol = new Dictionary<ModLabelFDName, double>(new ModLabelFDNameEqualityComparer())
         {
-            ["BurstRateOfFire"] = 0,
-            ["BurstSize"] = 0,
-            ["Rounds"] = 1,
-            ["Jitter"] = 1,
-            ["KineticProportionDamage"] = 0,
-            ["ThermalProportionDamage"] = 0,
-            ["ExplosiveProportionDamage"] = 0,
-            ["AbsoluteProportionDamage"] = 0,
-            ["CausticPorportionDamage"] = 0,
-            ["AXPorportionDamage"] = 0,
-            ["HullStrengthBonus"] = 100,
-            ["ShieldReinforcement"] = 100,
-            ["KineticResistance"] = -100,
-            ["ThermalResistance"] = -100,
-            ["ExplosiveResistance"] = -100,
-            ["CausticResistance"] = -100,
-            ["AXResistance"] = -100,
-            ["Capacity"] = 1,
-            ["Limpets"] = 1,
-            ["MinCargo"] = 1,
-            ["MaxCargo"] = 1,
-            ["Capacity"] = 1,
+            [new ModLabelFDName("BurstRateOfFire")] = 0,
+            [new ModLabelFDName("BurstSize")] = 0,
+            [new ModLabelFDName("Rounds")] = 1,
+            [new ModLabelFDName("Jitter")] = 1,
+            [new ModLabelFDName("KineticProportionDamage")] = 0,
+            [new ModLabelFDName("ThermalProportionDamage")] = 0,
+            [new ModLabelFDName("ExplosiveProportionDamage")] = 0,
+            [new ModLabelFDName("AbsoluteProportionDamage")] = 0,
+            [new ModLabelFDName("CausticPorportionDamage")] = 0,
+            [new ModLabelFDName("AXPorportionDamage")] = 0,
+            [new ModLabelFDName("HullStrengthBonus")] = 100,
+            [new ModLabelFDName("ShieldReinforcement")] = 100,
+            [new ModLabelFDName("KineticResistance")] = -100,
+            [new ModLabelFDName("ThermalResistance")] = -100,
+            [new ModLabelFDName("ExplosiveResistance")] = -100,
+            [new ModLabelFDName("CausticResistance")] = -100,
+            [new ModLabelFDName("AXResistance")] = -100,
+            [new ModLabelFDName("Capacity")] = 1,
+            [new ModLabelFDName("Limpets")] = 1,
+            [new ModLabelFDName("MinCargo")] = 1,
+            [new ModLabelFDName("MaxCargo")] = 1,
+            [new ModLabelFDName("Capacity")] = 1,
         };
-
-
     }
 
 }

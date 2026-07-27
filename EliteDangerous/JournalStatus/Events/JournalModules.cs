@@ -74,7 +74,7 @@ namespace EliteDangerousCore.JournalEvents
 
                     ShipSlots.Slot slotfdname = ShipSlots.ToEnum(jo["Slot"].Str());
 
-                    var itemfdname = FDNameHelpers.NormaliseModules(jo["Item"].Str(), out engname, this);
+                    var itemfdname = ModFDName.Normalise(jo["Item"].Str(), out engname, this);
 
                     if ( debugout ) System.Diagnostics.Debug.WriteLine($"  Modules {slotfdname} {itemfdname} = {engname} {itemfdname.GetForeignModuleName(null,slotfdname)}");
 
@@ -168,7 +168,7 @@ namespace EliteDangerousCore.JournalEvents
             SlotFD = ShipSlots.ToEnum(evt["Slot"].Str());
             Slot = ShipSlots.ToEnglish(SlotFD);
 
-            BuyItemFD = FDNameHelpers.NormaliseModules(evt["BuyItem"].Str(), out string engname, this);
+            BuyItemFD = ModFDName.Normalise(evt["BuyItem"].Str(), out string engname, this);
             BuyItem = engname;
             BuyItemLocalised = JournalFieldNaming.CheckLocalisation(evt["BuyItem_Localised"].Str(),BuyItem);
             BuyPrice = evt["BuyPrice"].Long();
@@ -177,7 +177,7 @@ namespace EliteDangerousCore.JournalEvents
             Ship = engname;
             ShipId = new ShipID(evt["ShipID"]);
 
-            SellItemFD = FDNameHelpers.NormaliseModules(evt["SellItem"].Str(), out engname, this, true);       // allowed null
+            SellItemFD = ModFDName.Normalise(evt["SellItem"].Str(), out engname, this, true);       // allowed null
             if (SellItemFD != null)
             {
                 SellItem = engname;
@@ -185,7 +185,7 @@ namespace EliteDangerousCore.JournalEvents
                 SellItemLocalised = JournalFieldNaming.CheckLocalisation(evt["SellItem_Localised"].Str(), SellItem);
             }
 
-            StoredItemFD = FDNameHelpers.NormaliseModules(evt["StoredItem"].Str(), out engname, this,true);       // allowed null
+            StoredItemFD = ModFDName.Normalise(evt["StoredItem"].Str(), out engname, this,true);       // allowed null
             if (StoredItemFD != null)
             {
                 StoredItem = engname;
@@ -203,16 +203,16 @@ namespace EliteDangerousCore.JournalEvents
         public ShipID ShipId { get; set; }
 
         public string BuyItem { get; set; }                     // english name
-        public FDName BuyItemFD { get; set; }
+        public ModFDName BuyItemFD { get; set; }
         public string BuyItemLocalised { get; set; }
         public long BuyPrice { get; set; }
 
-        public FDName SellItemFD { get; set; }                  // if sold previous one, else null
+        public ModFDName SellItemFD { get; set; }                  // if sold previous one, else null
         public string SellItem { get; set; }                    // if sold previous one, english name
         public string SellItemLocalised { get; set; }
         public long? SellPrice { get; set; }
 
-        public FDName StoredItemFD { get; set; }                // if stored previous one, else null
+        public ModFDName StoredItemFD { get; set; }                // if stored previous one, else null
         public string StoredItem { get; set; }                  // if stored previous one, english name
         public string StoredItemLocalised { get; set; }         // if stored previous one
 
@@ -261,7 +261,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalModuleBuyAndStore(JObject evt) : base(evt, JournalTypeEnum.ModuleBuyAndStore)
         {
-            BuyItemFD = FDNameHelpers.NormaliseModules(evt["BuyItem"].Str(), out string engname, this);
+            BuyItemFD = ModFDName.Normalise(evt["BuyItem"].Str(), out string engname, this);
             BuyItem = engname;
             BuyItemLocalised = JournalFieldNaming.CheckLocalisation(evt["BuyItem_Localised"].Str(), BuyItem);
 
@@ -274,7 +274,7 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public string BuyItem { get; set; }     // english name
-        public FDName BuyItemFD { get; set; }
+        public ModFDName BuyItemFD { get; set; }
         public string BuyItemLocalised { get; set; }
 
         public string Ship { get; set; }
@@ -311,7 +311,7 @@ namespace EliteDangerousCore.JournalEvents
             SlotFD = ShipSlots.ToEnum(evt["Slot"].Str());
             Slot = ShipSlots.ToEnglish(SlotFD);
 
-            SellItemFD = FDNameHelpers.NormaliseModules(evt["SellItem"].Str(), out string engname, this);
+            SellItemFD = ModFDName.Normalise(evt["SellItem"].Str(), out string engname, this);
             SellItem = engname;
             SellItemLocalised = JournalFieldNaming.CheckLocalisation(evt["SellItem_Localised"].Str(), SellItem);
 
@@ -327,7 +327,7 @@ namespace EliteDangerousCore.JournalEvents
         public string Slot { get; set; }
         public ShipSlots.Slot SlotFD { get; set; }
         public string SellItem { get; set; }    // english
-        public FDName SellItemFD { get; set; }
+        public ModFDName SellItemFD { get; set; }
         public string SellItemLocalised { get; set; }
         public long SellPrice { get; set; }
         public string Ship { get; set; }
@@ -363,7 +363,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             SlotNumber = evt["StorageSlot"].Int();
 
-            SellItemFD = FDNameHelpers.NormaliseModules(evt["SellItem"].Str(), out string engname, this);
+            SellItemFD = ModFDName.Normalise(evt["SellItem"].Str(), out string engname, this);
             SellItem = engname;
             SellItemLocalised = JournalFieldNaming.CheckLocalisation(evt["SellItem_Localised"].Str(), SellItem);
 
@@ -378,7 +378,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public int SlotNumber { get; set; }
         public string SellItem { get; set; }    // english
-        public FDName SellItemFD { get; set; }
+        public ModFDName SellItemFD { get; set; }
         public string SellItemLocalised { get; set; }
         public long SellPrice { get; set; }
         public VehicleFDName ShipFD { get; set; }
@@ -426,14 +426,14 @@ namespace EliteDangerousCore.JournalEvents
             ShipId = new ShipID(evt["ShipID"]);
 
             // early entries had this bust
-            RetrievedItemFD = FDNameHelpers.NormaliseModules(evt["RetrievedItem"].Str(), out string engname, this, true);
+            RetrievedItemFD = ModFDName.Normalise(evt["RetrievedItem"].Str(), out string engname, this, true);
             if (RetrievedItemFD != null)
             {
                 RetrievedItem = engname;
                 RetrievedItemLocalised = JournalFieldNaming.CheckLocalisation(evt["RetrievedItem_Localised"].Str(), RetrievedItem);
             }
 
-            SwapOutItemFD = FDNameHelpers.NormaliseModules(evt["SwapOutItem"].Str(), out engname, this, true); // allow null
+            SwapOutItemFD = ModFDName.Normalise(evt["SwapOutItem"].Str(), out engname, this, true); // allow null
             SwapOutItem = engname;
             if (SwapOutItemFD != null)
                 SwapOutItemLocalised = JournalFieldNaming.CheckLocalisation(evt["SwapOutItem_Localised"].Str(), SwapOutItem);
@@ -446,7 +446,7 @@ namespace EliteDangerousCore.JournalEvents
 
             MarketID = new MarketID(evt["MarketID"]);
 
-            FDEngineerModifications = FDNameHelpers.NormaliseBlueprint(evt["EngineerModifications"].Str(), out engname, this, true);
+            FDEngineerModifications = RecipeFDName.Normalise(evt["EngineerModifications"].Str(), out engname, this, true);
             if (FDEngineerModifications != null)
                 EngineerModifications = engname;
         }
@@ -458,14 +458,14 @@ namespace EliteDangerousCore.JournalEvents
         public VehicleFDName ShipFD { get; set; }
         public ShipID ShipId { get; set; }
 
-        public FDName RetrievedItemFD { get; set; }                 // may be null for busted first ones
+        public ModFDName RetrievedItemFD { get; set; }                 // may be null for busted first ones
         public string RetrievedItem { get; set; }                   // english
         public string RetrievedItemLocalised { get; set; }
 
-        public FDName FDEngineerModifications { get; set; }         // FDName, may be null
+        public RecipeFDName FDEngineerModifications { get; set; }         // FDName, may be null
         public string EngineerModifications { get; set; }           // Friendly, may be null
 
-        public FDName SwapOutItemFD { get; set; }                   // may be null
+        public ModFDName SwapOutItemFD { get; set; }                   // may be null
         public string SwapOutItem { get; set; }                     // may be null english
         public string SwapOutItemLocalised { get; set; }            // may be null
 
@@ -526,11 +526,11 @@ namespace EliteDangerousCore.JournalEvents
             Ship = shipname;
             ShipId = new ShipID(evt["ShipID"]);
 
-            StoredItemFD = FDNameHelpers.NormaliseModules(evt["StoredItem"].Str(), out string engname, this);
+            StoredItemFD = ModFDName.Normalise(evt["StoredItem"].Str(), out string engname, this);
             StoredItem = engname;
             StoredItemLocalised = JournalFieldNaming.CheckLocalisation(evt["StoredItem_Localised"].Str(), StoredItem);
 
-            ReplacementItemFD = FDNameHelpers.NormaliseModules(evt["ReplacementItem"].Str(), out engname, this, true);
+            ReplacementItemFD = ModFDName.Normalise(evt["ReplacementItem"].Str(), out engname, this, true);
             ReplacementItem = engname;
             if (ReplacementItemFD != null)
                 ReplacementItemLocalised = JournalFieldNaming.CheckLocalisation(evt["ReplacementItem_Localised"].Str(), ReplacementItem);
@@ -543,7 +543,7 @@ namespace EliteDangerousCore.JournalEvents
 
             MarketID = new MarketID(evt["MarketID"]);
 
-            FDEngineerModifications = FDNameHelpers.NormaliseBlueprint(evt["EngineerModifications"].Str(), out engname, this, true);
+            FDEngineerModifications = RecipeFDName.Normalise(evt["EngineerModifications"].Str(), out engname, this, true);
             if (FDEngineerModifications != null)
                 EngineerModifications = engname;
         }
@@ -554,11 +554,11 @@ namespace EliteDangerousCore.JournalEvents
         public VehicleFDName ShipFD { get; set; }
         public ShipID ShipId { get; set; }
         public string StoredItem { get; set; }  // english
-        public FDName StoredItemFD { get; set; }
+        public ModFDName StoredItemFD { get; set; }
         public string StoredItemLocalised { get; set; }
-        public FDName FDEngineerModifications { get; set; }     // may be null
+        public RecipeFDName FDEngineerModifications { get; set; }     // may be null
         public string EngineerModifications { get; set; }       // may be null
-        public FDName ReplacementItemFD { get; set; }           // null if not . In journal doc but july 26 no evidence of replacement items
+        public ModFDName ReplacementItemFD { get; set; }           // null if not . In journal doc but july 26 no evidence of replacement items
         public string ReplacementItem { get; set; }             // null if not english
         public string ReplacementItemLocalised { get; set; }    // null if not
         public long? Cost { get; set; }
@@ -614,19 +614,19 @@ namespace EliteDangerousCore.JournalEvents
             ToSlotFD = ShipSlots.ToEnum(evt["ToSlot"].Str());
             ToSlot = ShipSlots.ToEnglish(ToSlotFD);
 
-            FromItemFD = FDNameHelpers.NormaliseModules(evt["FromItem"].Str(), out string engname, this);
+            FromItemFD = ModFDName.Normalise(evt["FromItem"].Str(), out string engname, this);
             FromItem = engname;
             FromItemLocalised = JournalFieldNaming.CheckLocalisation(evt["FromItem_Localised"].Str(), FromItem);
 
             string s = evt["ToItem"].Str();
             if (s.EqualsIIC("null"))        // early bug, doing it this way stops NormaliseModules moan
             {
-                ToItemFD = FDName.Empty;
+                ToItemFD = ModFDName.Empty;
                 ToItem = ToItemFD.Str();
             }
             else
             {
-                ToItemFD = FDNameHelpers.NormaliseModules(s, out engname, this);
+                ToItemFD = ModFDName.Normalise(s, out engname, this);
                 ToItem = engname;
             }
             ToItemLocalised = JournalFieldNaming.CheckLocalisation(evt["ToItem_Localised"].Str(), ToItem);        // if ToItem is null or not there, this won't be
@@ -640,13 +640,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public ShipSlots.Slot FromSlotFD { get; set; }
         public string FromSlot { get; set; }    // english
-        public FDName FromItemFD { get; set; }
+        public ModFDName FromItemFD { get; set; }
         public string FromItem { get; set; }    // English
         public string FromItemLocalised { get; set; }
 
         public ShipSlots.Slot ToSlotFD { get; set; }   
         public string ToSlot { get; set; }              
-        public FDName ToItemFD { get; set; }        // will be set, may be invalid due to missing data
+        public ModFDName ToItemFD { get; set; }        // will be set, may be invalid due to missing data
         public string ToItem { get; set; }          // 
         public string ToItemLocalised { get; set; }
 
@@ -698,7 +698,7 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (JObject jo in jmodules)
                 {
                     ShipSlots.Slot SlotFDname = ShipSlots.ToEnum(jo["Slot"].Str());
-                    FDName itemfdname = FDNameHelpers.NormaliseModules(jo["Item"].Str(), out string engname, this);
+                    var itemfdname = ModFDName.Normalise(jo["Item"].Str(), out string engname, this);
 
                     ShipModule module = new ShipModule( ShipSlots.ToEnglish(SlotFDname),
                                                         SlotFDname,
@@ -831,7 +831,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     i.SlotFD = ShipSlots.ToEnum(i.Slot);
                     i.Slot = ShipSlots.ToEnglish(i.SlotFD);
-                    i.NameFD = FDNameHelpers.NormaliseModules(i.Name, out string bettername, this);
+                    i.NameFD = ModFDName.Normalise(i.Name, out string bettername, this);
                     i.Name = bettername;
                 }
             }
@@ -875,10 +875,10 @@ namespace EliteDangerousCore.JournalEvents
         {
             public ShipSlots.Slot SlotFD;       
             public string Slot;                 // json, english text afterwards
-            public FDName NameFD;               // fdname
+            public ModFDName NameFD;               // fdname
             public string Name;                 // english name
             public string Name_Localised;
-            public FDName EngineerModifications;    // may be null
+            public RecipeFDName EngineerModifications;    // may be null
             public double? Quality { get; set; }
             public int? Level { get; set; }
             public bool? Hot { get; set; }
@@ -892,7 +892,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             StorageSlot = evt["StorageSlot"].Str();          // Slot number, not a slot on our ship
 
-            StoredItemFD = FDNameHelpers.NormaliseModules(evt["StoredItem"].Str(), out string bettername, this);
+            StoredItemFD = ModFDName.Normalise(evt["StoredItem"].Str(), out string bettername, this);
             StoredItem = bettername;
             StoredItemLocalised = JournalFieldNaming.CheckLocalisation(evt["StoredItem_Localised"].Str(), StoredItem);
 
@@ -909,7 +909,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string StorageSlot { get; set; }
         public string StoredItem { get; set; }      // english name
-        public FDName StoredItemFD { get; set; }
+        public ModFDName StoredItemFD { get; set; }
         public string StoredItemLocalised { get; set; }
         public long TransferCost { get; set; }
         public VehicleFDName ShipFD { get; set; }

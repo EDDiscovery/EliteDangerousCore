@@ -43,8 +43,8 @@ namespace EliteDangerousCore
         public DateTime MarketUpdateUTC { get; set; }
         public double MarketAgeInDays { get { return DateTime.UtcNow.Subtract(MarketUpdateUTC).TotalDays; } }
         public string MarketStateString { get { if (HasMarket && Market != null) return $"\u2713 {MarketAgeInDays:N1}"; else if (HasMarket) return "\u2713 ND"; else return ""; } }
-        public CCommodities GetItem(FDName fdname) { return Market?.Find(x => x.fdname.Equals(fdname)); }
-        public string GetItemPriceString(FDName fdname, bool selltostation)
+        public CCommodities GetItem(MCFDName fdname) { return Market?.Find(x => x.fdname.Equals(fdname)); }
+        public string GetItemPriceString(MCFDName fdname, bool selltostation)
         {
             var entry = Market?.Find(x => x.fdname.Equals(fdname));
             if (entry != null)
@@ -52,7 +52,7 @@ namespace EliteDangerousCore
             else
                 return "";
         }
-        public string GetItemStockDemandString(FDName fdname, bool selltostation)
+        public string GetItemStockDemandString(MCFDName fdname, bool selltostation)
         {
             var entry = Market?.Find(x => x.fdname.Equals(fdname));
             if (entry != null)
@@ -61,7 +61,7 @@ namespace EliteDangerousCore
                 return "";
         }
 
-        public string GetItemString(FDName fdname)
+        public string GetItemString(MCFDName fdname)
         {
             var entry = Market?.Find(x => x.fdname.Equals(fdname));
             if (entry != null)
@@ -72,9 +72,9 @@ namespace EliteDangerousCore
         }
 
         // sync with journalcarrier..
-        public bool HasItem(FDName fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname)) >= 0; }
-        public bool HasItemInStock(FDName fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname) && x.HasStock) >= 0; }
-        public bool HasItemWithDemandAndPrice(FDName fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname) && x.HasDemandAndPrice) >= 0; }
+        public bool HasItem(MCFDName fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname)) >= 0; }
+        public bool HasItemInStock(MCFDName fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname) && x.HasStock) >= 0; }
+        public bool HasItemWithDemandAndPrice(MCFDName fdname) { return Market != null && Market.FindIndex(x => x.fdname.Equals(fdname) && x.HasDemandAndPrice) >= 0; }
 
         // go thru the market array, and see if any of the fdnames given matches that market entry
         public bool HasAnyItem(MCFDName[] fdnames) { return Market != null && Market.FindIndex(x => fdnames.IndexOf(x.fdname)>=0 ) >= 0; }
@@ -84,7 +84,7 @@ namespace EliteDangerousCore
         public bool HasOutfitting { get; set; }// see market
         public List<Outfitting.OutfittingItem> Outfitting { get; set; }     // may be null
         public DateTime OutfittingUpdateUTC { get; set; }
-        public bool HasAnyModuleTypes(FDName[] fdnames) { return Outfitting != null && Outfitting.FindIndex(x => fdnames.IndexOf(x.FDName) >= 0) >= 0; }
+        public bool HasAnyModuleTypes(ModFDName[] fdnames) { return Outfitting != null && Outfitting.FindIndex(x => fdnames.IndexOf(x.FDName) >= 0) >= 0; }
         public double OutfittingAgeInDays { get { return DateTime.UtcNow.Subtract(OutfittingUpdateUTC).TotalDays; } }
         public string OutfittingStateString { get { if (HasOutfitting && Outfitting != null) return $"\u2713 {OutfittingAgeInDays:N1}"; else if (HasOutfitting) return "\u2713 ND"; else return ""; } }
 

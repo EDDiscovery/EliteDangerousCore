@@ -42,14 +42,14 @@ namespace EliteDangerousCore
             [QuickJSON.JsonAlwaysCreate]
             public WeaponID SuitModuleID;
             [QuickJSON.JsonAlwaysCreate]
-            public FDName ModuleName;
+            public HandItemFDName ModuleName;
             public string ModuleName_Localised;
             public int Class;               // may be zero meaning not there
-            public FDName[] WeaponMods;     // may be empty/null
+            public RecipeFDName[] WeaponMods;     // may be empty/null
             public string FriendlyName;
 
             public LoadoutModule() { }
-            public LoadoutModule(SuitSlot slot, WeaponID suitmoduleid,FDName modulename, string locname, int cls, FDName[] weaponmods)
+            public LoadoutModule(SuitSlot slot, WeaponID suitmoduleid,HandItemFDName modulename, string locname, int cls, RecipeFDName[] weaponmods)
             {
                 SlotName = slot; SuitModuleID = suitmoduleid; ModuleName = modulename; ModuleName_Localised = locname;
                 Class = cls; WeaponMods = weaponmods;

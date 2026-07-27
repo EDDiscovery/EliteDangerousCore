@@ -34,13 +34,13 @@ namespace EliteDangerousCore.JournalEvents
 
         [JsonAlwaysCreate]
         public WeaponID SuitModuleID { get; set; }    // may be missing
-        public FDName Name { get; set; }                    // always there, force always there
+        public HandItemFDName Name { get; set; }                    // always there, force always there
         public string FriendlyName { get; set; }
         public string Name_Localised { get; set; }
 
         public long Price { get; set; }                     // always ther
         public int Class { get; set; } = 1;                 // missing early ones, presume
-        public FDName[] WeaponMods { get; set; }            // may be null/empty
+        public RecipeFDName[] WeaponMods { get; set; }            // may be null/empty
 
         public override string GetInfo()
         {
@@ -80,7 +80,7 @@ namespace EliteDangerousCore.JournalEvents
         public WeaponID SuitModuleID { get; set; }    // may be missing
 
         [JsonAlwaysCreate]
-        public FDName Name { get; set; }                // always there, force in case
+        public HandItemFDName Name { get; set; }                // always there, force in case
         public string FriendlyName { get; set; }
         public string Name_Localised { get; set; }
 
@@ -127,13 +127,13 @@ namespace EliteDangerousCore.JournalEvents
         public WeaponID SuitModuleID { get; set; }    // may be missing
 
         [JsonAlwaysCreate]
-        public FDName Name { get; set; }                    // always there, force in case
+        public HandItemFDName Name { get; set; }                    // always there, force in case
         public string FriendlyName { get; set; }
         public string Name_Localised { get; set; }
 
         public long Cost { get; set; }                  // always there
         public int Class { get; set; }                  // always there
-        public FDName[] WeaponMods { get; set; }        // may be null or empty
+        public RecipeFDName[] WeaponMods { get; set; }        // may be null or empty
 
         public override string GetInfo()
         {

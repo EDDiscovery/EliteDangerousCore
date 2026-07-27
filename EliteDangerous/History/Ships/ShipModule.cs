@@ -24,7 +24,7 @@ namespace EliteDangerousCore
         public string Slot { get; private set; }        // never null       - english name
         public ShipSlots.Slot SlotFD { get; private set; }    // never null    
         public string Item { get; private set; }        // never null       - nice name, used to track, english
-        public FDName ItemFD { get; private set; }      // never null     - FD normalised ID name
+        public ModFDName ItemFD { get; private set; }      // never null     - FD normalised ID name
         public string LocalisedItem { get; set; }       // Modulex events only supply this. so it may be null if we have not seen one of them pass by with this Item name
 
         public bool? Enabled { get; private set; }      // Loadout events, may be null
@@ -110,7 +110,7 @@ namespace EliteDangerousCore
         public ShipModule()
         { }
 
-        public ShipModule(string slotname, ShipSlots.Slot slotfdname, string itemname, FDName itemfdname,
+        public ShipModule(string slotname, ShipSlots.Slot slotfdname, string itemname, ModFDName itemfdname,
                         bool? enabled, int? priority, 
                         int? ammoclip, int? ammohopper, 
                         double? health, long? value,
@@ -145,7 +145,7 @@ namespace EliteDangerousCore
             Engineering = other.Engineering;
         }
 
-        public ShipModule(string s, ShipSlots.Slot sfd, string i, FDName ifd, string l)
+        public ShipModule(string s, ShipSlots.Slot sfd, string i, ModFDName ifd, string l)
         {
             Slot = s; SlotFD = sfd; Item = i; ItemFD = ifd; LocalisedItem = l;
         }

@@ -87,7 +87,7 @@ namespace EliteDangerousCore.JournalEvents
             public MissionID MissionID { get; set; }
 
             [JsonAlwaysCreate]
-            public FDName Name { get; set; }                 
+            public MissionFDName Name { get; set; }                 
             public string Name_Localised { get; set; }       // new '25
             public bool PassengerMission { get; set; }
             public int Expires { get; set; }
@@ -97,7 +97,7 @@ namespace EliteDangerousCore.JournalEvents
             public void Normalise(DateTime utcnow)
             {
                 ExpiryTimeUTC = utcnow.AddSeconds(Expires);
-                Name = FDNameHelpers.NormaliseMissionName(Name.Str(), out string engname);
+                Name = MissionFDName.Normalise(Name.Str(), out string engname, null);
                 Name_Localised = Name_Localised ?? engname;
             }
 
@@ -115,7 +115,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalMissionAccepted(JObject evt) : base(evt, JournalTypeEnum.MissionAccepted)
         {
             Faction = evt["Faction"].Str();
-            FDName =  FDNameHelpers.NormaliseMissionName(evt["Name"].Str(),out string engname);
+            FDName =  MissionFDName.Normalise(evt["Name"].Str(),out string engname, this);
             Name = engname;
             LocalisedName = JournalFieldNaming.CheckLocalisation(evt["LocalisedName"].Str(), Name);
 
@@ -162,7 +162,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public MissionID MissionID { get; private set; }
 
-        public FDName FDName { get; private set; }                  // original
+        public MissionFDName FDName { get; private set; }                  // original
         public string Name { get; private set; }                    // english
         public string LocalisedName { get; private set; }           // always set
 
@@ -289,7 +289,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMissionCompleted(JObject evt) : base(evt, JournalTypeEnum.MissionCompleted)
         {
-            FDName = FDNameHelpers.NormaliseMissionName(evt["Name"].Str(), out string engname);
+            FDName = MissionFDName.Normalise(evt["Name"].Str(), out string engname, this);
             Name = engname;
 
             Faction = evt["Faction"].Str();
@@ -371,7 +371,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public FDName FDName { get; set; }      
+        public MissionFDName FDName { get; set; }      
         public string Name { get; set; }
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public string Faction { get; set; }
@@ -583,7 +583,7 @@ namespace EliteDangerousCore.JournalEvents
             return detailed;
         }
 
-        public bool HasReceivedReward(FDName fdname)
+        public bool HasReceivedReward(MCFDName fdname)
         {
             var m = MaterialsReward != null && Array.Find(MaterialsReward, (x) => x.Name.Equals(fdname)) != null;
             var c = CommodityReward != null && Array.Find(CommodityReward, (x) => x.Name.Equals(fdname)) != null;
@@ -660,13 +660,13 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMissionFailed(JObject evt) : base(evt, JournalTypeEnum.MissionFailed)
         {
-            FDName = FDNameHelpers.NormaliseMissionName(evt["Name"].Str(), out string engname);
+            FDName = MissionFDName.Normalise(evt["Name"].Str(), out string engname, this);
             Name = engname;
             MissionID = new MissionID(evt["MissionID"]);
             Fine = evt["Fine"].LongNull();
         }
 
-        public FDName FDName { get; set; }
+        public MissionFDName FDName { get; set; }
         public string Name { get; set; }
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public MissionID MissionID { get; set; }
@@ -698,7 +698,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMissionRedirected(JObject evt) : base(evt, JournalTypeEnum.MissionRedirected)
         {
-            FDName = FDNameHelpers.NormaliseMissionName(evt["Name"].Str(), out string engname);
+            FDName = MissionFDName.Normalise(evt["Name"].Str(), out string engname, this);
             Name = LocalisedName = engname;
             MissionID = new MissionID(evt["MissionID"]);
             NewDestinationStation = evt["NewDestinationStation"].Str();
@@ -707,7 +707,7 @@ namespace EliteDangerousCore.JournalEvents
             OldDestinationSystem = evt["OldDestinationSystem"].Str();
         }
 
-        public FDName FDName { get; set; }
+        public MissionFDName FDName { get; set; }
         public string Name { get; set; }
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public string NewDestinationStation { get; set; }
@@ -739,13 +739,13 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMissionAbandoned(JObject evt) : base(evt, JournalTypeEnum.MissionAbandoned)
         {
-            FDName = FDNameHelpers.NormaliseMissionName(evt["Name"].Str(), out string engname);
+            FDName = MissionFDName.Normalise(evt["Name"].Str(), out string engname, this);
             Name = engname;
             MissionID = new MissionID(evt["MissionID"]);
             Fine = evt["Fine"].LongNull();
         }
 
-        public FDName FDName { get; set; }
+        public MissionFDName FDName { get; set; }
         public string Name { get; set; }
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public MissionID MissionID { get; set; }
