@@ -33,13 +33,13 @@ namespace EliteDangerousCore
         {
         }
 
-        public static SignalFDName NormaliseSAAFSSSignals(string fdname)
+        public static SignalFDName NormaliseSAAFSSSignals(string fdname, JournalEntry ev)
         {
             if (fdname.HasChars())
                 return new SignalFDName(fdname.Replace("$SAA_SignalType_", "").Replace(";", "").SplitCapsWordFull());
             else
             {
-                BaseUtils.Debugger.TraceBreak("*** Missing Signals");
+                BaseUtils.Debugger.TraceBreak($"*** Missing Signals {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
                 return new SignalFDName("Error in Signal no data");
             }
         }
@@ -58,13 +58,13 @@ namespace EliteDangerousCore
         {
         }
 
-        public static GenusFDName Normalise(string fdname)
+        public static GenusFDName Normalise(string fdname, JournalEntry ev)
         {
             if (fdname.HasChars())
                 return new GenusFDName(fdname.Replace("$Codex_Ent_", "").Replace("_Name;", "").Replace(";", "").Replace("$Codex_", "").SplitCapsWordFull());
             else
             {
-                BaseUtils.Debugger.TraceBreak("*** Missing Genus");
+                BaseUtils.Debugger.TraceBreak($"*** Missing Genus {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
                 return new GenusFDName("Error in Genus no data");
             }
         }

@@ -186,7 +186,7 @@ namespace EliteDangerousCore
                         this.CreditsAssets[j.EventTimeUTC] = new Tuple<long,long>(j.Credits,0);                 // we get loadgame first, we store credits
                         this.targetted.Clear(); // loadgame clears target cache
 
-                        if (j.ShipFD.VehicleType == VehicleFDName.VehicleTypeEnum.Ship)       // if in ship
+                        if (j.ShipFD.Type == VehicleFDName.VehicleType.Ship)       // if in ship
                         {
                             this.currentshipid = j.ShipType + ":" + j.ShipId.ToString();
                             // System.Diagnostics.Debug.WriteLine("Stats Loadgame ship details {0} {1} {2} {3}", j.EventTimeUTC, j.ShipFD, j.ShipName, j.ShipIdent);

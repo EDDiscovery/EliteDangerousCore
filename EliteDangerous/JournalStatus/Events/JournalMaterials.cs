@@ -326,10 +326,12 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSynthesis(JObject evt) : base(evt, JournalTypeEnum.Synthesis)
         {
-            Materials = null;
-
-            FDName = MCFDName.Normalise(evt["Name"].Str(), out string engname, this);
+            string name = evt["Name"].Str().Replace("Guass", "Gauss");      // fix typo
+            FDName = SynthesisRecipeFDName.Normalise(name, out string engname, out Recipes.SynthesisRecipe.SynthesisLevel level, this);
             Name = engname;
+            Level = level;
+
+            Materials = null;
             JToken mats = (JToken)evt["Materials"];
 
             if (mats != null)
@@ -359,18 +361,61 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
+#if false
+            // this looks at the materials list and tries to find the recipe from it
+
+            if (EventTimeUTC > new DateTime(2016, 1, 1, 0, 0, 0))
+            {
+                bool disagree = false;
+
+                var rplist = Recipes.FindSynthesis(Materials);
+                var rp = Recipes.FindSynthesis(FDName);
+
+                if ( rp == null )
+                {
+                    System.Diagnostics.Debug.WriteLine($"{EventTimeUTC.ToStringZulu()} No FDNAME for name `{FDName?.Str()}`");
+                    disagree = true;
+                }
+
+                if (rplist.Count > 0)
+                {
+                    var namematch = rplist.Find(x => x.FDName == FDName);
+
+                    if (namematch == null)
+                    {
+                        foreach (var x in rplist)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"{EventTimeUTC.ToStringZulu()} Matched ingrediants for {x.Name} with id `{x.FDName.Str()}` vs `{FDName?.Str()}`");
+                        }
+                    }
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"{EventTimeUTC.ToStringZulu()} *** NO Materials Match `{FDName.Str()}`");
+                    disagree = true;
+                }
+
+                if (disagree)
+                {
+                    foreach (var m in Materials)
+                        System.Diagnostics.Debug.WriteLine($" mat {m.Key.Str()} = {m.Value}");
+                }
+            }
+#endif
+
             // for quick use, work out some extra info for jet cone boosts
 
-            if (Name.Contains("FSD Basic", StringComparison.InvariantCultureIgnoreCase))
+            if (FDName.Equals("FSD Basic"))
                 FSDBoostValue = 1.25;
-            else if (Name.Contains("FSD Standard", StringComparison.InvariantCultureIgnoreCase))
+            else if (FDName.Equals("FSD Standard"))
                 FSDBoostValue = 1.5;
-            else if (Name.Contains("FSD Premium", StringComparison.InvariantCultureIgnoreCase))
+            else if (FDName.Equals("FSD Premium"))
                 FSDBoostValue = 2;
 
         }
         public string Name { get; set; }        // Friendly name
-        public MCFDName FDName { get; set; }        // FDName
+        public SynthesisRecipeFDName FDName { get; set; }        // FDName
+        public Recipes.SynthesisRecipe.SynthesisLevel Level { get; set; }
         public Dictionary<MCFDName, int> Materials { get; set; }
 
         public double FSDBoostValue { get; set; }           // set non zero if its a FSD injection
@@ -393,6 +438,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             var sb = new System.Text.StringBuilder(256);
             sb.Append(Name);
+            sb.AppendSPC();
+            sb.Append(Level.ToString());
 
             if (Materials != null)
             {

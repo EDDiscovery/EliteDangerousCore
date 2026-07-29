@@ -96,12 +96,12 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     string kstr = "";
 
-                    if (k.Ship.VehicleType == VehicleFDName.VehicleTypeEnum.Suit)
+                    if (k.Ship.Type == VehicleFDName.VehicleType.Suit)
                     {
                         string type = k.Ship.Contains("citizen") ? k.FriendlyShip.Replace("Suit ", "") : k.FriendlyShip.Replace("Suit", "Trooper");
                         kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", type);
                     }
-                    else if (k.Ship.VehicleType == VehicleFDName.VehicleTypeEnum.Ship)
+                    else if (k.Ship.Type == VehicleFDName.VehicleType.Ship)
                     {
                         kstr = string.Format("{0} in ship type {1} rank {2}".Tx(), k.Name_Localised, k.FriendlyShip, k.Rank.ToString());
                     }

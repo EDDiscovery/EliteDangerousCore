@@ -325,7 +325,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var s in Signals)      // some don't have localisation
                 {
-                    s.Type = SignalFDName.NormaliseSAAFSSSignals(s.Type.Str());
+                    s.Type = SignalFDName.NormaliseSAAFSSSignals(s.Type.Str() , this);
                     s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.Str());
                 }
             }
@@ -334,7 +334,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var g in Genuses)      // some don't have localisation
                 {
-                    g.Genus = GenusFDName.Normalise(g.Genus.Str());
+                    g.Genus = GenusFDName.Normalise(g.Genus.Str(), this);
                     g.Genus_Localised = JournalFieldNaming.CheckLocalisation(g.Genus_Localised, g.Genus.Str());
                 }
             }
@@ -548,7 +548,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var s in Signals)      // some don't have localisation
                 {
-                    s.Type = SignalFDName.NormaliseSAAFSSSignals(s.Type.Str());
+                    s.Type = SignalFDName.NormaliseSAAFSSSignals(s.Type.Str(), this);
                     s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.Str());
                 }
             }

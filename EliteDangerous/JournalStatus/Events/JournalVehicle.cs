@@ -130,7 +130,7 @@ namespace EliteDangerousCore.JournalEvents
         public long Cost { get; set; }
         public int Count { get; set; }
         public ShipID ID { get; set; }                        // since 2023 ish.
-        public bool IsLander => TypeFD.VehicleType == VehicleFDName.VehicleTypeEnum.Lander;
+        public bool IsLander => TypeFD.Type == VehicleFDName.VehicleType.Lander;
 
         public void Ledger(Ledger mcl)
         {
@@ -145,7 +145,7 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        protected override JournalTypeEnum IconEventType { get { return TypeFD.VehicleType == VehicleFDName.VehicleTypeEnum.SRV ? JournalTypeEnum.RestockVehicle_SRV : JournalTypeEnum.RestockVehicle_Fighter; } }
+        protected override JournalTypeEnum IconEventType { get { return TypeFD.Type == VehicleFDName.VehicleType.SRV ? JournalTypeEnum.RestockVehicle_SRV : JournalTypeEnum.RestockVehicle_Fighter; } }
 
         public override string GetInfo()
         {
@@ -187,7 +187,8 @@ namespace EliteDangerousCore.JournalEvents
             Loadout = evt["Loadout"].Str();
             PlayerControlled = evt["PlayerControlled"].Bool(true);
             ID = evt["ID"].IntNull();
-            SRVType = VehicleFDName.Normalise(evt["SRVType"].Str(), out string engname, this);
+            // if SRVType is missing, its early ones which only could be scarab
+            SRVType = VehicleFDName.Normalise(evt["SRVType"].Str(ItemData.SRV_ScarabFDName), out string engname, this);
             SRVType_Localised = JournalFieldNaming.CheckLocalisation(evt["SRVType_Localised"].StrNull(), engname);
         }
         public string Loadout { get; set; }
@@ -216,12 +217,13 @@ namespace EliteDangerousCore.JournalEvents
         public int? ID { get; set; }
         public VehicleFDName SRVType;          // new odyssey 9, dec 21, may be null
         public string SRVType_Localised; // new odyssey 9, dec 21, may be null
-        public bool IsLander => SRVType.VehicleType == VehicleFDName.VehicleTypeEnum.Lander;
+        public bool IsLander => SRVType.Type == VehicleFDName.VehicleType.Lander;
 
         public JournalDockSRV(JObject evt) : base(evt, JournalTypeEnum.DockSRV)
         {
             ID = evt["ID"].IntNull();
-            SRVType = VehicleFDName.Normalise(evt["SRVType"].Str(), out string engname, this);
+            // if SRVType is missing, its early ones which only could be scarab
+            SRVType = VehicleFDName.Normalise(evt["SRVType"].Str(ItemData.SRV_ScarabFDName), out string engname, this);
             SRVType_Localised = JournalFieldNaming.CheckLocalisation(evt["SRVType_Localised"].StrNull(), engname);
         }
 
@@ -252,12 +254,13 @@ namespace EliteDangerousCore.JournalEvents
 
         public VehicleFDName SRVType;          // new odyssey 9, dec 21, may be null
         public string SRVType_Localised; // new odyssey 9, dec 21, may be null
-        public bool IsLander => SRVType.VehicleType == VehicleFDName.VehicleTypeEnum.Lander;
+        public bool IsLander => SRVType.Type == VehicleFDName.VehicleType.Lander;
 
         public JournalSRVDestroyed(JObject evt) : base(evt, JournalTypeEnum.SRVDestroyed)
         {
             ID = evt["ID"].IntNull();
-            SRVType = VehicleFDName.Normalise(evt["SRVType"].Str(), out string engname, this);
+            // if SRVType is missing, its early ones which only could be scarab
+            SRVType = VehicleFDName.Normalise(evt["SRVType"].Str(ItemData.SRV_ScarabFDName), out string engname, this);
             SRVType_Localised = JournalFieldNaming.CheckLocalisation(evt["SRVType_Localised"].StrNull(), engname);
         }
 

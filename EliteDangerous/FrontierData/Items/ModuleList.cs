@@ -22,7 +22,7 @@ namespace EliteDangerousCore
         {
             //System.Diagnostics.Debug.WriteLine("Creating mods");
 
-            shipmodules = new Dictionary<ModFDName, ShipModule>(new ModFDNameEqualityComparer())
+            shipmodules = new Dictionary<ModFDName, ShipModule>()
             {
                 // Armour, in ID order
                 // Raw Value of armour = ship.armour * (1+HullStrengthBonus/100)
@@ -1534,7 +1534,7 @@ namespace EliteDangerousCore
                 { new ModFDName("hpt_xenoscanner_advanced_tiny"), new ShipModule(129022952,ShipModule.ModuleTypes.EnhancedXenoScanner,"Pulse Wave Xeno Scanner"){ Cost = 850000, Class = 0, Rating = "C", Mass = 3, Integrity = 100, PowerDraw = 1, BootTime = 2, Range = 1000, Angle = 23, Time = 10 } },
             };
 
-            othershipmodules = new Dictionary<ModFDName, ShipModule>(new ModFDNameEqualityComparer())
+            othershipmodules = new Dictionary<ModFDName, ShipModule>()
             {
                 { new ModFDName("adder_cockpit"), new ShipModule(999999913,ShipModule.ModuleTypes.CockpitType,"Adder Cockpit" ) },
                 { new ModFDName("typex_3_cockpit"), new ShipModule(999999945,ShipModule.ModuleTypes.CockpitType,"Alliance Challenger Cockpit" ) },
@@ -1613,7 +1613,7 @@ namespace EliteDangerousCore
 
             };
 
-            fightermodules = new Dictionary<ModFDName, ShipModule>(new ModFDNameEqualityComparer())
+            fightermodules = new Dictionary<ModFDName, ShipModule>()
             {
                 { new ModFDName("hpt_guardiangauss_fixed_gdn_fighter"), new ShipModule(899990050,ShipModule.ModuleTypes.FighterWeapon,"Guardian Gauss Fixed GDN Fighter")   { PowerDraw = 1 }},
                 { new ModFDName("hpt_guardianplasma_fixed_gdn_fighter"), new ShipModule(899990050,ShipModule.ModuleTypes.FighterWeapon,"Guardian Plasma Fixed GDN Fighter")  { PowerDraw = 1 }},
@@ -1668,7 +1668,7 @@ namespace EliteDangerousCore
                 { new ModFDName("lander01_cockpit"), new ShipModule(-1,ShipModule.ModuleTypes.UnknownType,"Nomad Cockpit") },
             };
 
-            srvmodules = new Dictionary<ModFDName, ShipModule>(new ModFDNameEqualityComparer())
+            srvmodules = new Dictionary<ModFDName, ShipModule>()
             {
                 { new ModFDName("buggycargobaydoor"), new ShipModule(-1,ShipModule.ModuleTypes.CargoBayDoorType,"SRV Cargo Bay Door") },
                 { new ModFDName("int_fueltank_size0_class3"), new ShipModule(-1,ShipModule.ModuleTypes.FuelTank,"SRV Scarab Fuel Tank") },
@@ -1704,7 +1704,7 @@ namespace EliteDangerousCore
 
 
 
-            vanitymodules = new Dictionary<ModFDName, ShipModule>(new ModFDNameEqualityComparer())
+            vanitymodules = new Dictionary<ModFDName, ShipModule>()
             {
                 {new ModFDName("adder_shipkit1_bumper1"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Adder Shipkit 1 Bumper 1") },
                 {new ModFDName("adder_shipkit1_bumper2"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Adder Shipkit 1 Bumper 2") },
@@ -9374,7 +9374,7 @@ namespace EliteDangerousCore
         }
 
         static private Dictionary<ModFDName, ShipModule> shipmodules;
-        static private Dictionary<ModFDName, ShipModule> synthesisedmodules = new Dictionary<ModFDName, ShipModule>(new ModFDNameEqualityComparer());
+        static private Dictionary<ModFDName, ShipModule> synthesisedmodules = new Dictionary<ModFDName, ShipModule>();
         static private Dictionary<ModFDName, ShipModule> vanitymodules;
         static private Dictionary<ModFDName, ShipModule> srvmodules;
         static private Dictionary<ModFDName, ShipModule> fightermodules;

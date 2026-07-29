@@ -52,7 +52,7 @@ namespace EliteDangerousCore
                 else
                 {
                     modulename = "Unknown Module";
-                    BaseUtils.Debugger.TraceBreak("*** Missing Module");
+                    BaseUtils.Debugger.TraceBreak($"*** Missing Module {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
                     return new ModFDName("Unknown Module");
                 }
             }
@@ -68,7 +68,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    BaseUtils.Debugger.TraceBreak("*** Unknown Module `{fdname}`");
+                    BaseUtils.Debugger.TraceBreak("*** Unknown Module `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
                     modulename = "Unknown Module " + fdname;
                 }
 
@@ -83,6 +83,7 @@ namespace EliteDangerousCore
             else
                 return loc ?? Str();
         }
+
         public string GetForeignModuleType(string loc = null, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
         {
             if (ItemData.TryGetShipModule(this, out ItemData.ShipModule item, true, slot))
@@ -98,17 +99,4 @@ namespace EliteDangerousCore
                                             ToLower().Contains("_armour_", StringComparison.InvariantCultureIgnoreCase);
         }
     }
-
-    //public class ModFDNameEqualityComparer : IEqualityComparer<ModFDName>
-    //{
-    //    public bool Equals(ModFDName left, ModFDName right)
-    //    {
-    //        return left.Equals(right);
-    //    }
-
-    //    public int GetHashCode(ModFDName obj)
-    //    {
-    //        return obj.GetHashCode();
-    //    }
-    //}
 }

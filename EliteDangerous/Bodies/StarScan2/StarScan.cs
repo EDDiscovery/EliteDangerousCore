@@ -276,7 +276,7 @@ namespace EliteDangerousCore.StarScan2
                                 {
                                     if (p.Barycentre == null)
                                     {
-                                        string s = $"StarScan Barycentre not set in scan for {bn.Scan.EventTimeUTC} {bn.Scan.BodyName} {bn.Scan.BodyID} bid {bn.BodyID} {bn.Scan.ParentList()} {p.BodyID} {p.Type} {EDCommander.Current.Name}";
+                                        string s = $"StarScan Barycentre not set in scan for {bn.Scan.EventTimeUTC} {bn.Scan.BodyName} {bn.Scan.BodyID} bid {bn.BodyID} {bn.Scan.ParentList()} {p.BodyID} {p.Type} {EDCommander.Current?.Name}";
                                         System.Diagnostics.Trace.WriteLine(s);
                                     }
                                 }

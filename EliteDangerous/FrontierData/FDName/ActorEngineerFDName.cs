@@ -12,10 +12,6 @@
  * governing permissions and limitations under the License.
  */
 
-using QuickJSON;
-using System;
-using System.Collections.Generic;
-
 namespace EliteDangerousCore
 {
 
@@ -34,20 +30,6 @@ namespace EliteDangerousCore
         }
     }
 
-    //public class ActorFDNameEqualityComparer : IEqualityComparer<ActorFDName>
-    //{
-    //    public bool Equals(ActorFDName left, ActorFDName right)
-    //    {
-    //        return left.Equals(right);
-    //    }
-
-    //    public int GetHashCode(ActorFDName obj)
-    //    {
-    //        return obj.GetHashCode();
-    //    }
-    //}
-
-
     public class EngineerFDName : FDName
     {
         public EngineerFDName() : base()
@@ -59,6 +41,21 @@ namespace EliteDangerousCore
         }
 
         public EngineerFDName(QuickJSON.JToken token) : base(token)
+        {
+        }
+    }
+
+    public class ModLabelFDName : FDName
+    {
+        public ModLabelFDName() : base()
+        {
+        }
+
+        public ModLabelFDName(string fdname) : base(fdname)
+        {
+        }
+
+        public ModLabelFDName(QuickJSON.JToken token) : base(token)
         {
         }
     }

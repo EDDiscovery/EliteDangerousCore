@@ -28,19 +28,19 @@ namespace EliteDangerousCore.JournalEvents
             Engineer = new EngineerFDName(evt["Engineer"].Str());
             Level = evt["Level"].Int();
 
-            FDOverride = RecipeFDName.Normalise(evt["Override"].Str(), out string engname, this, true);      // may not be present
+            FDOverride = EngineeringRecipeFDName.Normalise(evt["Override"].Str(), out string engname, this, true);      // may not be present
             if (FDOverride != null)
                 Override = engname;
 
-            FDBlueprint = RecipeFDName.Normalise(evt["Blueprint"].Str(), out engname, this);
+            FDBlueprint = EngineeringRecipeFDName.Normalise(evt["Blueprint"].Str(), out engname, this);
             Blueprint = engname;
         }
 
         public EngineerFDName Engineer { get; set; }
-        public RecipeFDName FDBlueprint { get; set; }        // fdname
+        public EngineeringRecipeFDName FDBlueprint { get; set; }        // fdname
         public string Blueprint { get; set; }           // friendly not fdev
         public int Level { get; set; }
-        public RecipeFDName FDOverride { get; set; }        // may be null
+        public EngineeringRecipeFDName FDOverride { get; set; }        // may be null
         public string Override { get; set; }        // may be null
 
         public override string GetInfo()

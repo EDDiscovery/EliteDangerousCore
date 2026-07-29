@@ -664,7 +664,7 @@ namespace EliteDangerousCore.JournalEvents
                 JToken mats = evt["Materials"];
                 if (mats != null)
                 {
-                    Materials = new Dictionary<MCFDName, double>(new MCFDNameEqualityComparer());
+                    Materials = new Dictionary<MCFDName, double>();
 
                     if (mats.IsObject)
                     {

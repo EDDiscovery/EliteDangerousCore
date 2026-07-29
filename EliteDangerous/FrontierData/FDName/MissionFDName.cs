@@ -43,22 +43,9 @@ namespace EliteDangerousCore
             else
             {
                 engname = "Missing Mission Name";
-                BaseUtils.Debugger.TraceBreak("*** Missing Mission Name");
+                BaseUtils.Debugger.TraceBreak($"*** Missing Mission Name {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
                 return new MissionFDName(engname);
             }
         }
     }
-
-    //public class MissionFDNameEqualityComparer : IEqualityComparer<MissionFDName>
-    //{
-    //    public bool Equals(MissionFDName left, MissionFDName right)
-    //    {
-    //        return left.Equals(right);
-    //    }
-
-    //    public int GetHashCode(MissionFDName obj)
-    //    {
-    //        return obj.GetHashCode();
-    //    }
-    //}
 }

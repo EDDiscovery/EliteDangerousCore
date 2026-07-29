@@ -446,7 +446,7 @@ namespace EliteDangerousCore.JournalEvents
 
             MarketID = new MarketID(evt["MarketID"]);
 
-            FDEngineerModifications = RecipeFDName.Normalise(evt["EngineerModifications"].Str(), out engname, this, true);
+            FDEngineerModifications = EngineeringRecipeFDName.Normalise(evt["EngineerModifications"].Str(), out engname, this, true);
             if (FDEngineerModifications != null)
                 EngineerModifications = engname;
         }
@@ -462,7 +462,7 @@ namespace EliteDangerousCore.JournalEvents
         public string RetrievedItem { get; set; }                   // english
         public string RetrievedItemLocalised { get; set; }
 
-        public RecipeFDName FDEngineerModifications { get; set; }         // FDName, may be null
+        public EngineeringRecipeFDName FDEngineerModifications { get; set; }         // FDName, may be null
         public string EngineerModifications { get; set; }           // Friendly, may be null
 
         public ModFDName SwapOutItemFD { get; set; }                   // may be null
@@ -543,7 +543,7 @@ namespace EliteDangerousCore.JournalEvents
 
             MarketID = new MarketID(evt["MarketID"]);
 
-            FDEngineerModifications = RecipeFDName.Normalise(evt["EngineerModifications"].Str(), out engname, this, true);
+            FDEngineerModifications = EngineeringRecipeFDName.Normalise(evt["EngineerModifications"].Str(), out engname, this, true);
             if (FDEngineerModifications != null)
                 EngineerModifications = engname;
         }
@@ -556,7 +556,7 @@ namespace EliteDangerousCore.JournalEvents
         public string StoredItem { get; set; }  // english
         public ModFDName StoredItemFD { get; set; }
         public string StoredItemLocalised { get; set; }
-        public RecipeFDName FDEngineerModifications { get; set; }     // may be null
+        public EngineeringRecipeFDName FDEngineerModifications { get; set; }     // may be null
         public string EngineerModifications { get; set; }       // may be null
         public ModFDName ReplacementItemFD { get; set; }           // null if not . In journal doc but july 26 no evidence of replacement items
         public string ReplacementItem { get; set; }             // null if not english
@@ -878,7 +878,7 @@ namespace EliteDangerousCore.JournalEvents
             public ModFDName NameFD;               // fdname
             public string Name;                 // english name
             public string Name_Localised;
-            public RecipeFDName EngineerModifications;    // may be null
+            public EngineeringRecipeFDName EngineerModifications;    // may be null
             public double? Quality { get; set; }
             public int? Level { get; set; }
             public bool? Hot { get; set; }

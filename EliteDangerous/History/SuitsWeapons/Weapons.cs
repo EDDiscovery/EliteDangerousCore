@@ -30,9 +30,9 @@ namespace EliteDangerousCore
         public long Price { get; private set; }
         public bool Sold { get; private set; }
         public int Class { get; private set; }
-        public RecipeFDName[] WeaponMods { get; private set; }
+        public EngineeringRecipeFDName[] WeaponMods { get; private set; }
 
-        public SuitWeapon(DateTime time, WeaponID id, HandItemFDName fdname, string namelocalised, long price, int cls, RecipeFDName[] weaponmods, bool sold)
+        public SuitWeapon(DateTime time, WeaponID id, HandItemFDName fdname, string namelocalised, long price, int cls, EngineeringRecipeFDName[] weaponmods, bool sold)
         {
             EventTime = time; ID = id;FDName = fdname; Name_Localised = namelocalised; Price = price; Sold = sold; Class = cls; WeaponMods = weaponmods;
             FriendlyName = ItemData.GetWeapon(fdname, Name_Localised)?.Name ?? Name_Localised;
@@ -47,12 +47,12 @@ namespace EliteDangerousCore
         {
         }
 
-        public void Buy(DateTime time, WeaponID id, HandItemFDName fdname, string namelocalised, long price, int cls, RecipeFDName[] weaponmods)
+        public void Buy(DateTime time, WeaponID id, HandItemFDName fdname, string namelocalised, long price, int cls, EngineeringRecipeFDName[] weaponmods)
         {
             weapons[id] = new SuitWeapon(time, id, fdname, namelocalised, price, cls, weaponmods, false);
         }
 
-        public bool VerifyPresence(DateTime time, WeaponID id, HandItemFDName fdname, string namelocalised, long price, int cls, RecipeFDName[] weaponmods)
+        public bool VerifyPresence(DateTime time, WeaponID id, HandItemFDName fdname, string namelocalised, long price, int cls, EngineeringRecipeFDName[] weaponmods)
         {
             if (id.IsValid)     // early entries did not have weapon IDs
             {
@@ -95,7 +95,7 @@ namespace EliteDangerousCore
                 Debugger.DP("SW","Weapons sold a weapon not seen " + id);
         }
 
-        public void Upgrade(DateTime time, WeaponID id, int cls, RecipeFDName[] weaponmods)
+        public void Upgrade(DateTime time, WeaponID id, int cls, EngineeringRecipeFDName[] weaponmods)
         {
             if (weapons.ContainsKey(id))
             {

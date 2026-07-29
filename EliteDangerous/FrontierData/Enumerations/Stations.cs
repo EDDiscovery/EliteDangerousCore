@@ -198,6 +198,7 @@ namespace EliteDangerousCore
             Dodec,
 
             Station,        // Location has it as this, when on foot on station, or when outside an orbiting station
+            OutpostScientific,      // little used only in certain alpha files
         }
 
         public static bool IsPlanetaryPort(StarportTypes t)

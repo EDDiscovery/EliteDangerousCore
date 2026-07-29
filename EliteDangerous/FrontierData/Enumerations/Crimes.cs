@@ -21,7 +21,7 @@ namespace EliteDangerousCore
     {
         // from EDCD 
 
-        private static Dictionary<CrimesFDName, string> crimesFDToEnglish = new Dictionary<CrimesFDName, string>(new CrimesFDNameEqualityComparer())
+        private static Dictionary<CrimesFDName, string> crimesFDToEnglish = new Dictionary<CrimesFDName, string>()
         {
             [new CrimesFDName("assault")] = "Assault",
             [new CrimesFDName("collidedatspeedinnofirezone")] = "Collided at speed in a no fire zone",

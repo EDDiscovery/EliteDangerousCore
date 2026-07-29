@@ -14,12 +14,9 @@
 
 using QuickJSON;
 using System;
-using System.Collections.Generic;
 
 namespace EliteDangerousCore
 {
-    // purposely not doing auto conversion to/from string so the use of FDName can be found easier
-
     [System.Diagnostics.DebuggerDisplay("FD {fdname}")]
     public abstract class FDName : IEquatable<FDName>, IComparable<FDName>, IEquatable
     {

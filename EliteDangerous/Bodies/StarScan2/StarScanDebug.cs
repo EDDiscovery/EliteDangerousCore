@@ -31,7 +31,7 @@ namespace EliteDangerousCore.StarScan2
         // all systems, produce a display of them in folder or just generate them if outputdir = null
         public void DrawAllSystemsToFolder(string outputdir)
         {
-            System.Diagnostics.Debug.WriteLine($"Draw {systemNodesByName.Count} systems for Cmdr {EDCommander.Current.Name}");
+            System.Diagnostics.Debug.WriteLine($"Draw {systemNodesByName.Count} systems for Cmdr {EDCommander.Current?.Name}");
             int threads = 1;
             List<SystemNode> nodes = systemNodesByName.Values.Take(5000).ToList();
             CountdownEvent cd = new CountdownEvent(threads);
@@ -44,7 +44,7 @@ namespace EliteDangerousCore.StarScan2
             }
 
             cd.Wait();
-            System.Diagnostics.Debug.WriteLine($"Draw {systemNodesByName.Count} systems for Cmdr {EDCommander.Current.Name} DONE DONE DONE");
+            System.Diagnostics.Debug.WriteLine($"Draw {systemNodesByName.Count} systems for Cmdr {EDCommander.Current?.Name} DONE DONE DONE");
         }
 
         static void DrawIt(Object o)

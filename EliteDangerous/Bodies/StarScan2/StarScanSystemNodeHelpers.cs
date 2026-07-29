@@ -296,7 +296,7 @@ namespace EliteDangerousCore.StarScan2
                         List<BodyNode> repeats = bodylist.Where(y => y.CanonicalName == x.CanonicalName && y.BodyType == x.BodyType).ToList();
                         if (repeats.Count > 1)
                         {
-                            global::System.Diagnostics.Trace.WriteLine($"Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} is repeated in {System.Name} for {EDCommander.Current.Name}");
+                            global::System.Diagnostics.Trace.WriteLine($"Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} is repeated in {System.Name} for {EDCommander.Current?.Name}");
                         }
                     }
                     cnames.Add(x.CanonicalName);
@@ -304,10 +304,10 @@ namespace EliteDangerousCore.StarScan2
                 
                 // these are classification errors
                 if (x.BodyType == BodyDefinitions.BodyType.AsteroidCluster && x.Parent.BodyType != BodyDefinitions.BodyType.StellarRing)
-                    global::System.Diagnostics.Trace.WriteLine($"**** Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} asteroid not under stellar ring {System.Name} for {EDCommander.Current.Name}");
+                    global::System.Diagnostics.Trace.WriteLine($"**** Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} asteroid not under stellar ring {System.Name} for {EDCommander.Current?.Name}");
                 
                 if (x.BodyType == BodyDefinitions.BodyType.PlanetaryRing && !(x.Parent.BodyType == BodyDefinitions.BodyType.Planet || x.Parent.BodyType == BodyDefinitions.BodyType.Star))
-                    global::System.Diagnostics.Trace.WriteLine($"**** Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} planetary ring not under star/planet ring {System.Name} for {EDCommander.Current.Name}");
+                    global::System.Diagnostics.Trace.WriteLine($"**** Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} planetary ring not under star/planet ring {System.Name} for {EDCommander.Current?.Name}");
             }
 
             (totalbodieswithids == bodybyid.Count).Assert($"StarScan {System.Name} Not the same number of bodyids as nodes {totalbodieswithids} with Ids in bodybyid {bodybyid.Count}", () => { global::System.Diagnostics.Debug.WriteLine(PrintTree().ToString()); });

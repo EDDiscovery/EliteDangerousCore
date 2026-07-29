@@ -166,7 +166,7 @@ namespace EliteDangerousCore
                                                                     bool includefighter = false, bool includevanity = false, bool addunknowntype = false,
                                                                     bool compressarmourtosidewinderonly = false)
         {
-            Dictionary<ModFDName, ShipModule> ml = new Dictionary<ModFDName, ShipModule>(new ModFDNameEqualityComparer());
+            Dictionary<ModFDName, ShipModule> ml = new Dictionary<ModFDName, ShipModule>();
 
             if (includebuyable)
             {

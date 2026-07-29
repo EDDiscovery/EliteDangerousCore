@@ -19,21 +19,21 @@ using System.Collections.Generic;
 namespace EliteDangerousCore
 {
 
-    public class RecipeFDName : FDName
+    public class EngineeringRecipeFDName : FDName
     {
-        public RecipeFDName(): base()
+        public EngineeringRecipeFDName() : base()
         {
         }
 
-        public RecipeFDName(string fdname) : base(fdname) 
+        public EngineeringRecipeFDName(string fdname) : base(fdname)
         {
         }
 
-        public RecipeFDName(QuickJSON.JToken token) : base(token)
+        public EngineeringRecipeFDName(QuickJSON.JToken token) : base(token)
         {
         }
 
-        public static RecipeFDName Normalise(string fdname, out string engname, JournalEntry ev, bool allownull = false)
+        public static EngineeringRecipeFDName Normalise(string fdname, out string engname, JournalEntry ev, bool allownull = false)
         {
             if (fdname.IsEmpty())
             {
@@ -47,16 +47,16 @@ namespace EliteDangerousCore
                     engname = "Unknown Recipe";
 
                     if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
-                        BaseUtils.Debugger.TraceBreak($"*** Missing blueprint {ev?.EventTimeUTC} {ev?.EventTypeStr}");
+                        BaseUtils.Debugger.TraceBreak($"*** Missing engineering recipe name {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
 
-                    return new RecipeFDName("Unknown Recipe");
+                    return new EngineeringRecipeFDName("Unknown Recipe");
                 }
             }
             else
             {
-                var fd = new RecipeFDName(fdname);
+                var fd = new EngineeringRecipeFDName(fdname);
 
-                var rp = Recipes.FindRecipe(fd);
+                var rp = Recipes.FindEngineering(fd);
 
                 if (rp != null)
                 {
@@ -66,7 +66,7 @@ namespace EliteDangerousCore
                 else
                 {
                     if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
-                        BaseUtils.Debugger.TraceBreak($"*** Unknown Recipe name `{fdname}` {ev?.EventTimeUTC} {ev?.EventTypeStr}");
+                        BaseUtils.Debugger.TraceBreak($"*** Unknown Engineering Recipe name `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
 
                     engname = fdname.SplitCapsWordFull();
                 }
@@ -75,16 +75,64 @@ namespace EliteDangerousCore
         }
     }
 
-    //public class RecipeFDNameEqualityComparer : IEqualityComparer<RecipeFDName>
-    //{
-    //    public bool Equals(RecipeFDName left, RecipeFDName right)
-    //    {
-    //        return left.Equals(right);
-    //    }
+    public class SynthesisRecipeFDName : FDName
+    {
+        public SynthesisRecipeFDName() : base()
+        {
+        }
 
-    //    public int GetHashCode(RecipeFDName obj)
-    //    {
-    //        return obj.GetHashCode();
-    //    }
-    //}
+        public SynthesisRecipeFDName(string fdname) : base(fdname)
+        {
+        }
+
+        public SynthesisRecipeFDName(QuickJSON.JToken token) : base(token)
+        {
+        }
+
+        public static SynthesisRecipeFDName Normalise(string fdname, out string engname, out Recipes.SynthesisRecipe.SynthesisLevel level, JournalEntry ev, bool allownull = false)
+        {
+            level = Recipes.SynthesisRecipe.SynthesisLevel.Basic;
+
+            if (fdname.IsEmpty())
+            {
+                if (allownull)
+                {
+                    engname = null;
+                    return null;
+                }
+                else
+                {
+                    engname = "Unknown Recipe";
+
+                    if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
+                        BaseUtils.Debugger.TraceBreak($"*** Missing synthesis recipe name {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+
+                    return new SynthesisRecipeFDName("Unknown Recipe");
+                }
+            }
+            else
+            {
+                var fd = new SynthesisRecipeFDName(fdname);
+
+                var rp = Recipes.FindSynthesis(fd);
+
+                if (rp != null)
+                {
+                    engname = rp.Name;
+                    level = rp.Level;
+                    //   System.Diagnostics.Debug.WriteLine($"known blueprint name {ev?.EventTimeUTC} {ev?.EventTypeStr} : {fdname}");
+                }
+                else
+                {
+                    if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
+                        BaseUtils.Debugger.TraceBreak($"*** Unknown Synthesis Recipe name `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+
+                    engname = fdname.SplitCapsWordFull();
+                }
+                return fd;
+            }
+        }
+    }
+
+
 }

@@ -58,7 +58,7 @@ namespace EliteDangerousCore
         }
 
         // DO NOT USE DIRECTLY - public is for checking only
-        public static Dictionary<ActorFDName, Actor> actors = new Dictionary<ActorFDName, Actor>(new ActorFDNameEqualityComparer())
+        public static Dictionary<ActorFDName, Actor> actors = new Dictionary<ActorFDName, Actor>()
         {
              { new ActorFDName("skimmerdrone"), new Actor("Skimmer Drone") },
              { new ActorFDName("bombskimmerdrone"), new Actor("Bomb Skimmer Drone") },

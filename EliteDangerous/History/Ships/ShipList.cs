@@ -25,8 +25,8 @@ namespace EliteDangerousCore
     {
         public int Count => ships.Count;
         public Ship this[int n] => ships.Values.ToArray()[n];
-        public IEnumerable<Ship> OwnedSpaceShips() { return ships.Where(x => x.Value.State == Ship.ShipState.Owned && x.Value.ShipFD.VehicleType == VehicleFDName.VehicleTypeEnum.Ship).Select(x => x.Value); }
-        public IEnumerable<Ship> SoldDestroyedSpaceShips() { return ships.Where(x => x.Value.State != Ship.ShipState.Owned && x.Value.ShipFD.VehicleType == VehicleFDName.VehicleTypeEnum.Ship).Select(x => x.Value); }
+        public IEnumerable<Ship> OwnedSpaceShips() { return ships.Where(x => x.Value.State == Ship.ShipState.Owned && x.Value.ShipFD.Type == VehicleFDName.VehicleType.Ship).Select(x => x.Value); }
+        public IEnumerable<Ship> SoldDestroyedSpaceShips() { return ships.Where(x => x.Value.State != Ship.ShipState.Owned && x.Value.ShipFD.Type == VehicleFDName.VehicleType.Ship).Select(x => x.Value); }
 
         public ShipModulesInStore StoredModules { get; private set; }       // stored modules
 
@@ -78,7 +78,7 @@ namespace EliteDangerousCore
         {
             ships = new Dictionary<string, Ship>();
             StoredModules = new ShipModulesInStore();
-            itemlocalisation = new Dictionary<ModFDName, string>(new ModFDNameEqualityComparer());
+            itemlocalisation = new Dictionary<ModFDName, string>();
             currentid = null;
         }
 
@@ -176,7 +176,7 @@ namespace EliteDangerousCore
 
             //DebuggerHelpers.DP("SL","Load Game " + sid);
 
-            if (shipfd.VehicleType == VehicleFDName.VehicleTypeEnum.Ship)
+            if (shipfd.Type == VehicleFDName.VehicleType.Ship)
                 currentid = sid;
             VerifyList();
         }

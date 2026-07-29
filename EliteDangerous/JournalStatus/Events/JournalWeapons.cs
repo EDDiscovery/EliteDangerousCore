@@ -40,7 +40,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public long Price { get; set; }                     // always ther
         public int Class { get; set; } = 1;                 // missing early ones, presume
-        public RecipeFDName[] WeaponMods { get; set; }            // may be null/empty
+        public EngineeringRecipeFDName[] WeaponMods { get; set; }            // may be null/empty
 
         public override string GetInfo()
         {
@@ -133,7 +133,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public long Cost { get; set; }                  // always there
         public int Class { get; set; }                  // always there
-        public RecipeFDName[] WeaponMods { get; set; }        // may be null or empty
+        public EngineeringRecipeFDName[] WeaponMods { get; set; }        // may be null or empty
 
         public override string GetInfo()
         {

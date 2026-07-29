@@ -12,13 +12,8 @@
  * governing permissions and limitations under the License.
  */
 
-using QuickJSON;
-using System;
-using System.Collections.Generic;
-
 namespace EliteDangerousCore
 {
-
     public class CrimesFDName : FDName
     {
         public CrimesFDName(): base()
@@ -33,20 +28,6 @@ namespace EliteDangerousCore
         {
         }
     }
-
-    //public class CrimesFDNameEqualityComparer : IEqualityComparer<CrimesFDName>
-    //{
-    //    public bool Equals(CrimesFDName left, CrimesFDName right)
-    //    {
-    //        return left.Equals(right);
-    //    }
-
-    //    public int GetHashCode(CrimesFDName obj)
-    //    {
-    //        return obj.GetHashCode();
-    //    }
-    //}
-
 
     public class DockingFDName : FDName
     {

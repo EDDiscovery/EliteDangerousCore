@@ -564,7 +564,7 @@ namespace EliteDangerousCore
 
         public static void Initialise()
         {
-            mcmrlist = new Dictionary<MCFDName, MaterialCommodityMicroResourceType>(new MCFDNameEqualityComparer());
+            mcmrlist = new Dictionary<MCFDName, MaterialCommodityMicroResourceType>();
 
             #region Commodity
 

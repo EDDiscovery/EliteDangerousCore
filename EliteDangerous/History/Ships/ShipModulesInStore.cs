@@ -32,7 +32,7 @@ namespace EliteDangerousCore
             public MarketID MarketID{ get; set; }       // not while in transit
             public long TransferCost{ get; set; }   // not while in transit
             public int TransferTime{ get; set; }    // not while in transit
-            public RecipeFDName EngineerModifications{ get; set; }    // null if none present
+            public EngineeringRecipeFDName EngineerModifications{ get; set; }    // null if none present
             public double Quality{ get; set; }      // may not be there
             public int Level{ get; set; }           // may not be there
             public bool Hot{ get; set; }
@@ -61,7 +61,7 @@ namespace EliteDangerousCore
                 //System.Diagnostics.Debug.WriteLine($"SD Normalise '{NameFD}' '{Name}' '{Name_Localised}'");
             }
 
-            public StoredModule(ModFDName fdname, string englishname, string item_localised, string system, RecipeFDName engmod, int? level , double? quality, bool? hot)
+            public StoredModule(ModFDName fdname, string englishname, string item_localised, string system, EngineeringRecipeFDName engmod, int? level , double? quality, bool? hot)
             {
                 NameFD = fdname;
                 Name = englishname;

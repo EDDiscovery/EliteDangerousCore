@@ -60,17 +60,4 @@ namespace EliteDangerousCore
             return s;
         }
     }
-
-    //public class HandItemFDNameEqualityComparer : IEqualityComparer<HandItemFDName>
-    //{
-    //    public bool Equals(HandItemFDName left, HandItemFDName right)
-    //    {
-    //        return left.Equals(right);
-    //    }
-
-    //    public int GetHashCode(HandItemFDName obj)
-    //    {
-    //        return obj.GetHashCode();
-    //    }
-    //}
 }

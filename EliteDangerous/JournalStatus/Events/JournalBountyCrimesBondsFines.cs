@@ -438,11 +438,17 @@ namespace EliteDangerousCore.JournalEvents
 
         public JournalRedeemVoucher(JObject evt) : base(evt, JournalTypeEnum.RedeemVoucher)
         {
-            FDType = Enum.TryParse(evt["Type"].Str(), true, out RedeemTypes s) ? s : RedeemTypes.Unknown;
-            if (FDType == RedeemTypes.Unknown)
+            var voucher = evt["Type"].Str();
+            if (voucher.HasChars())     // a few have empty fields
             {
-                BaseUtils.Debugger.TraceBreak($"*** Unknown Redeemvoucher `{(evt["Type"].Str())}` {EventTimeUTC}");
+                FDType = Enum.TryParse(voucher, true, out RedeemTypes s) ? s : RedeemTypes.Unknown;
+                if (FDType == RedeemTypes.Unknown)
+                {
+                    BaseUtils.Debugger.TraceBreak($"*** Unknown Redeemvoucher `{(evt["Type"].Str())}` {EventTimeUTC}");
+                }
             }
+            else
+                FDType = RedeemTypes.Unknown;
 
             Type = FDType.ToString().SplitCapsWordFull();
             Amount = evt["Amount"].Long();

@@ -55,7 +55,7 @@ namespace EliteDangerousCore
                 else
                 {
                     matname = "Unknown Material/Commodity";
-                    BaseUtils.Debugger.TraceBreak($"*** Missing Material {ev?.EventTimeUTC} {ev?.EventTypeStr}");
+                    BaseUtils.Debugger.TraceBreak($"*** Missing Material {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
                     return new MCFDName("Unknown Material/Commodity");
                 }
             }
@@ -73,7 +73,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    BaseUtils.Debugger.TraceBreak($"*** Unknown Mat/Commod `{fdname}` {ev?.EventTimeUTC} {ev?.EventTypeStr}");
+                    BaseUtils.Debugger.TraceBreak($"*** Unknown Mat/Commod `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
                     matname = fdname.SplitCapsWordFull();
                 }
 
@@ -134,17 +134,4 @@ namespace EliteDangerousCore
         };
 
     }
-
-    //public class MCFDNameEqualityComparer : IEqualityComparer<MCFDName>
-    //{
-    //    public bool Equals(MCFDName left, MCFDName right)
-    //    {
-    //        return left.Equals(right);
-    //    }
-
-    //    public int GetHashCode(MCFDName obj)
-    //    {
-    //        return obj.GetHashCode();
-    //    }
-    //}
 }

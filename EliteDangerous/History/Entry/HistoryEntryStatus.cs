@@ -470,12 +470,12 @@ namespace EliteDangerousCore
                         LastLoadGame = jlg,
                         OnCrewWithCaptain = null,    // can't be in a crew at this point
 
-                        TravelState = jlg.ShipFD.VehicleType == VehicleFDName.VehicleTypeEnum.Suit ? (TravelState) :
-                                         jlg.ShipFD.VehicleType == VehicleFDName.VehicleTypeEnum.Taxi ? TravelStateType.TaxiNormalSpace :
-                                             jlg.ShipFD.VehicleType == VehicleFDName.VehicleTypeEnum.SRV ? TravelStateType.SRV :
+                        TravelState = jlg.ShipFD.Type == VehicleFDName.VehicleType.Suit ? (TravelState) :
+                                         jlg.ShipFD.Type == VehicleFDName.VehicleType.Taxi ? TravelStateType.TaxiNormalSpace :
+                                             jlg.ShipFD.Type == VehicleFDName.VehicleType.SRV ? TravelStateType.SRV :
                                                     TravelState != TravelStateType.Unknown ? TravelState :
                                                         TravelStateType.Docked,
-                        CurrentShip = jlg.ShipFD.VehicleType == VehicleFDName.VehicleTypeEnum.Ship ? jlg : CurrentShip,
+                        CurrentShip = jlg.ShipFD.Type == VehicleFDName.VehicleType.Ship ? jlg : CurrentShip,
                         LastTaxiDropship = null,
                         CurrentBoost = 1,
                         LastDockingGranted = null,
@@ -628,7 +628,7 @@ namespace EliteDangerousCore
 
                 case JournalTypeEnum.Loadout:
                     var jloadout = (JournalLoadout)je;
-                    if (jloadout.ShipFD.VehicleType == VehicleFDName.VehicleTypeEnum.Ship)     // if ship, make a new entry
+                    if (jloadout.ShipFD.Type == VehicleFDName.VehicleType.Ship)     // if ship, make a new entry
                     {
                         hes = new HistoryEntryStatus(this)
                         {

@@ -55,7 +55,7 @@ namespace EliteDangerousCore
 
     public class MaterialCommoditiesMicroResourceList
     {
-        private GenerationalDictionary<MCFDName, MaterialCommodityMicroResource> items = new GenerationalDictionary<MCFDName, MaterialCommodityMicroResource>(new MCFDNameEqualityComparer());
+        private GenerationalDictionary<MCFDName, MaterialCommodityMicroResource> items = new GenerationalDictionary<MCFDName, MaterialCommodityMicroResource>();
 
         public MaterialCommoditiesMicroResourceList()
         {

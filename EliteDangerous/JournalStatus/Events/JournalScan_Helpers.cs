@@ -185,12 +185,13 @@ namespace EliteDangerousCore.JournalEvents
 
                     StringBuilder jumpLevel = new StringBuilder();
 
+                    SynthesisRecipeFDName fsd = new SynthesisRecipeFDName("FSD");
                     if (basic != 0)
-                        jumpLevel.AppendPrePad(basic + "/" + Recipes.FindSynthesis("FSD", "Basic").Count + " Basic".Tx(), ", ");
+                        jumpLevel.AppendPrePad(basic + "/" + Recipes.FindSynthesis(fsd, Recipes.SynthesisRecipe.SynthesisLevel.Basic).Count + " Basic".Tx(), ", ");
                     if (standard != 0)
-                        jumpLevel.AppendPrePad(standard + "/" + Recipes.FindSynthesis("FSD", "Standard").Count + " Standard".Tx(), ", ");
+                        jumpLevel.AppendPrePad(standard + "/" + Recipes.FindSynthesis(fsd, Recipes.SynthesisRecipe.SynthesisLevel.Standard).Count + " Standard".Tx(), ", ");
                     if (premium != 0)
-                        jumpLevel.AppendPrePad(premium + "/" + Recipes.FindSynthesis("FSD", "Premium").Count + " Premium".Tx(), ", ");
+                        jumpLevel.AppendPrePad(premium + "/" + Recipes.FindSynthesis(fsd, Recipes.SynthesisRecipe.SynthesisLevel.Premium).Count + " Premium".Tx(), ", ");
 
                     jumponium = jumponium.AppendPrePad(string.Format("{0} has {1} level elements.".Tx(), BodyName, jumpLevel), Environment.NewLine);
                 }

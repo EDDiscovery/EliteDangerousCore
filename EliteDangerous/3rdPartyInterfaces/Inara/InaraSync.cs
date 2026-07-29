@@ -132,7 +132,7 @@ namespace EliteDangerousCore.Inara
                 for( int i = 0; i < history.ShipInformationList.Count; i++)
                 {
                     Ship si = history.ShipInformationList[i];
-                    if ( si.State == Ship.ShipState.Owned && si.ShipFD.VehicleType == VehicleFDName.VehicleTypeEnum.Ship)
+                    if ( si.State == Ship.ShipState.Owned && si.ShipFD.Type == VehicleFDName.VehicleType.Ship)
                     {
                         // loadout may be null if nothing in it.
                         eventstosend.Add(InaraClass.setCommanderShipLoadout(si.ShipFD, si.ID, si.Modules.Values, tb.AddSeconds(sendno++)));
@@ -208,7 +208,7 @@ namespace EliteDangerousCore.Inara
                     {
                         var je = he.journalEntry as JournalLoadout;
                         var si = he.ShipInformation;
-                        if (si != null && je.ShipFD.IsValid && je.ShipFD.VehicleType == VehicleFDName.VehicleTypeEnum.Ship) // if it has an FDname (defensive) and is not SRV/Fighter
+                        if (si != null && je.ShipFD.IsValid && je.ShipFD.Type == VehicleFDName.VehicleType.Ship) // if it has an FDname (defensive) and is not SRV/Fighter
                         {
                             if (je.ShipId == si.ID)
                             {

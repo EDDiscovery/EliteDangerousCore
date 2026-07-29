@@ -125,7 +125,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public static Dictionary<HandItemFDName, HandItem> onfoothanditems = new Dictionary<HandItemFDName, HandItem>(new HandItemFDNameEqualityComparer())   // DO NOT USE DIRECTLY - public is for checking only
+        public static Dictionary<HandItemFDName, HandItem> onfoothanditems = new Dictionary<HandItemFDName, HandItem>()   // DO NOT USE DIRECTLY - public is for checking only
         {
             { new HandItemFDName("humanoid_fists"), new HandItem("Fists", HandItem.HandItemClass.Fists) },
             { new HandItemFDName("humanoid_rechargetool"), new HandItem("Recharger", HandItem.HandItemClass.Utility) },
@@ -134,7 +134,7 @@ namespace EliteDangerousCore
             { new HandItemFDName("humanoid_repairtool"), new HandItem("Arc Cutter", HandItem.HandItemClass.Utility) },
         };
 
-        public static Dictionary<HandItemFDName, Weapon> weapons = new Dictionary<HandItemFDName, Weapon>(new HandItemFDNameEqualityComparer())   // DO NOT USE DIRECTLY - public is for checking only
+        public static Dictionary<HandItemFDName, Weapon> weapons = new Dictionary<HandItemFDName, Weapon>()   // DO NOT USE DIRECTLY - public is for checking only
         {
              { new HandItemFDName("wpn_m_assaultrifle_kinetic_fauto"), new Weapon("Karma AR-50", true, Weapon.WeaponDamageType.Kinetic, Weapon.HandItemClass.LongRangeRifle, Weapon.WeaponFireMode.Automatic,new WeaponStats[] {
                     new WeaponStats(0.9,10,40,240,50,2.0),      // game wiki https://elite-dangerous.fandom.com/wiki/Karma_AR-50

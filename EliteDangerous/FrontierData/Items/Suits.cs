@@ -117,7 +117,7 @@ namespace EliteDangerousCore
 
         // rob checked 20/8/21 for all suits to class 3 in game, class 4/5 according to wiki
 
-        public static Dictionary<SuitFDName, Suit> suit = new Dictionary<SuitFDName, Suit>(new SuitFDNameEqualityComparer())   // DO NOT USE DIRECTLY - public is for checking only
+        public static Dictionary<SuitFDName, Suit> suit = new Dictionary<SuitFDName, Suit>()   // DO NOT USE DIRECTLY - public is for checking only
         {
                  { new SuitFDName("flightsuit"), new Suit( "Flight Suit", 0, 0, 1, "Energylink", "Profile Analyser", "",
                 new SuitStats( 1.7, 0.6, 1.2, 1, // health kinetic, thermal, plasma, explosive                  Greater is WORSE, so 1.7 is 70% worse

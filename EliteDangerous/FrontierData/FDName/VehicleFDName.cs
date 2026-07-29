@@ -32,9 +32,9 @@ namespace EliteDangerousCore
         {
             SetVT();
         }
-        public VehicleFDName(string fdname, VehicleTypeEnum vh) : base(fdname)
+        public VehicleFDName(string fdname, VehicleType vh) : base(fdname)
         {
-            VehicleType = vh;
+            Type = vh;
         }
 
         public VehicleFDName(QuickJSON.JToken token) : base(token)
@@ -42,29 +42,12 @@ namespace EliteDangerousCore
             SetVT();
         }
 
-        public enum VehicleTypeEnum { Unknown, Ship, Taxi, SRV, Fighter, Lander, Suit, Actor }    // Actor is not a vehicle, but class derives from it
+        public enum VehicleType { Unknown, Ship, Taxi, SRV, Fighter, Lander, Suit, Actor }    // Actor is not a vehicle, but class derives from it
 
-        public VehicleTypeEnum VehicleType { get; protected set; }
+        public VehicleType Type { get; protected set; }
 
-        public bool IsSRVOrFighterOrLander => VehicleType == VehicleTypeEnum.SRV || VehicleType == VehicleTypeEnum.Fighter || VehicleType == VehicleTypeEnum.Lander;
-        public bool IsShipSRVFighterLander => VehicleType == VehicleTypeEnum.Ship || VehicleType == VehicleTypeEnum.Fighter || VehicleType == VehicleTypeEnum.SRV || VehicleType == VehicleTypeEnum.Lander;
-
-        private void SetVT()
-        {
-            string str = Str();
-            if (str.ContainsIIC("_taxi"))
-                VehicleType = VehicleTypeEnum.Taxi;
-            else if (str.EqualsIIC("testbuggy") || str.ContainsIIC("_SRV"))
-                VehicleType = VehicleTypeEnum.SRV;
-            else if (str.ContainsIIC("suit"))
-                VehicleType = VehicleTypeEnum.Suit;
-            else if (str.ContainsIIC("lander"))
-                VehicleType = VehicleTypeEnum.Lander;
-            else if (str.ContainsIIC("_fighter"))
-                VehicleType = VehicleTypeEnum.Fighter;
-            else
-                VehicleType = VehicleTypeEnum.Ship;
-        }
+        public bool IsSRVOrFighterOrLander => Type == VehicleType.SRV || Type == VehicleType.Fighter || Type == VehicleType.Lander;
+        public bool IsShipSRVFighterLander => Type == VehicleType.Ship || Type == VehicleType.Fighter || Type == VehicleType.SRV || Type == VehicleType.Lander;
 
         public string StrLowerNoTaxi()
         {
@@ -88,7 +71,7 @@ namespace EliteDangerousCore
                 else
                 {
                     name = "Unknown Ship";
-                    BaseUtils.Debugger.TraceBreak($"*** Missing Ship {ev?.EventTimeUTC} {ev?.EventTypeStr}");
+                    BaseUtils.Debugger.TraceBreak($"*** Missing Ship {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
                     return new VehicleFDName("Unknown Ship");
                 }
             }
@@ -96,7 +79,7 @@ namespace EliteDangerousCore
             {
                 var ret = new VehicleFDName(fdname);
 
-                if ( ret.VehicleType == VehicleTypeEnum.Suit)
+                if ( ret.Type == VehicleType.Suit)
                 { 
                     var suit = ItemData.GetSuit(new SuitFDName(ret.Str()));
                     name = suit?.Name ?? ("Unknown Suit " + fdname);
@@ -106,7 +89,7 @@ namespace EliteDangerousCore
                     var ship = ItemData.GetShipProperties(ret);
                     if (ship == null)
                     {
-                        BaseUtils.Debugger.TraceBreak($"*** Unknown ship: `{fdname}` {ev?.EventTimeUTC} {ev?.EventTypeStr}");
+                        BaseUtils.Debugger.TraceBreak($"*** Unknown ship: `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
                         name = "Unknown Ship " + fdname;
                     }
                     else
@@ -116,6 +99,24 @@ namespace EliteDangerousCore
                 return ret;
             }
         }
+
+        private void SetVT()
+        {
+            string str = Str();
+            if (str.ContainsIIC(ItemData.Taxi_Postfix))
+                Type = VehicleType.Taxi;
+            else if (str.EqualsIIC(ItemData.SRV_ScarabFDName) || str.ContainsIIC(ItemData.SRV_Postfix))
+                Type = VehicleType.SRV;
+            else if (str.ContainsIIC(ItemData.LANDER_Prefix))
+                Type = VehicleType.Lander;
+            else if (str.ContainsIIC(ItemData.Fighter_Postfix))
+                Type = VehicleType.Fighter;
+            else if (str.ContainsIIC(ItemData.Suit_Postfix))
+                Type = VehicleType.Suit;
+            else
+                Type = VehicleType.Ship;
+        }
+
     }
 
     //public class ShipFDNameEqualityComparer : IEqualityComparer<VehicleFDName>
@@ -138,7 +139,7 @@ namespace EliteDangerousCore
         {
         }
 
-        public SuitFDName(string fdname) : base(fdname, VehicleTypeEnum.Suit)
+        public SuitFDName(string fdname) : base(fdname, VehicleType.Suit)
         {
         }
 
@@ -149,7 +150,7 @@ namespace EliteDangerousCore
         public static new SuitFDName Normalise(string fdname, out string name, JournalEntry ev, bool allownull = false)
         {
             var ret = VehicleFDName.Normalise(fdname, out name, ev, allownull);
-            if (ret.VehicleType != VehicleTypeEnum.Suit)
+            if (ret.Type != VehicleType.Suit)
                 System.Diagnostics.Debug.WriteLine($"*** Suit not recognised properly {fdname}");
             return new SuitFDName(ret.Str());
         }
@@ -182,9 +183,9 @@ namespace EliteDangerousCore
         public VehicleActorSuitFDName() : base()
         {
         }
-        public VehicleActorSuitFDName(string fdname, VehicleTypeEnum e) : base(fdname)
+        public VehicleActorSuitFDName(string fdname, VehicleType e) : base(fdname)
         {
-            VehicleType = e;
+            Type = e;
         }
 
         public VehicleActorSuitFDName(QuickJSON.JToken token) : base(token)
@@ -192,7 +193,7 @@ namespace EliteDangerousCore
             var ac = ItemData.GetActor(new ActorFDName(Str()));
             if (ac != null)
             {
-                VehicleType = VehicleTypeEnum.Actor;
+                Type = VehicleType.Actor;
             }
         }
 
@@ -218,16 +219,16 @@ namespace EliteDangerousCore
                 if (ac != null)
                 {
                     name = ac.Name;
-                    return new VehicleActorSuitFDName(fdname, VehicleTypeEnum.Actor);
+                    return new VehicleActorSuitFDName(fdname, VehicleType.Actor);
                 }
                 else
                 {
                     var ret = VehicleFDName.Normalise(fdname, out name, ev);
-                    return new VehicleActorSuitFDName(ret.Str(), ret.VehicleType);
+                    return new VehicleActorSuitFDName(ret.Str(), ret.Type);
                 }
             }
         }
 
-        public static VehicleActorSuitFDName Empty => new VehicleActorSuitFDName("", VehicleTypeEnum.Unknown);
+        public static VehicleActorSuitFDName Empty => new VehicleActorSuitFDName("", VehicleType.Unknown);
     }
 }
