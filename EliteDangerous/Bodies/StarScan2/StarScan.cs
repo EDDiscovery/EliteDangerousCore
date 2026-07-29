@@ -155,7 +155,7 @@ namespace EliteDangerousCore.StarScan2
         {
             lock (masterlock)
             {
-                if (sys.SystemAddress.IsValid && systemNodesByAddress.TryGetValue(sys.SystemAddress.Value, out var systemNode))
+                if (sys.SystemAddress.IsValid && systemNodesByAddress.TryGetValue(sys.SystemAddress, out var systemNode))
                 {
                     return systemNode;
                 }
@@ -173,7 +173,7 @@ namespace EliteDangerousCore.StarScan2
         {
             lock (masterlock)
             {
-                return systemNodesByAddress.TryGetValue(addr.Value, out sn);
+                return systemNodesByAddress.TryGetValue(addr, out sn);
             }
         }
 
@@ -197,7 +197,7 @@ namespace EliteDangerousCore.StarScan2
         {
             lock (masterlock)
             {
-                return systemNodesByAddress.TryGetValue(addr.Value, out var node) ? node.System : null;
+                return systemNodesByAddress.TryGetValue(addr, out var node) ? node.System : null;
             }
         }
 
@@ -206,7 +206,7 @@ namespace EliteDangerousCore.StarScan2
         {
             lock (masterlock)
             {
-                if (systemNodesByAddress.TryGetValue(addr.Value, out var node) )
+                if (systemNodesByAddress.TryGetValue(addr, out var node) )
                     return node.System;
                 else
                     return SystemCache.FindSystem(addr, lookup);
@@ -226,7 +226,7 @@ namespace EliteDangerousCore.StarScan2
         {
             lock (masterlock)
             {
-                List<ulong> todeletesys = new List<ulong>();
+                List<SystemAddress> todeletesys = new List<SystemAddress>();
 
                 foreach (var kvp in pendingsystemaddressevents)
                 {

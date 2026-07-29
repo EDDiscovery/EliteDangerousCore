@@ -38,7 +38,7 @@ namespace EliteDangerousCore.StarScan2
 
                     // find system node by address, 
 
-                    if (!systemNodesByAddress.TryGetValue(sys.SystemAddress.Value, out SystemNode node))
+                    if (!systemNodesByAddress.TryGetValue(sys.SystemAddress, out SystemNode node))
                     {
                         // if not found an address, check name
                         if (systemNodesByName.TryGetValue(sys.Name, out node))      // if we have a name
@@ -47,7 +47,7 @@ namespace EliteDangerousCore.StarScan2
 
                             if ( !node.System.HasAddress || sys.SystemAddress == node.System.SystemAddress)   
                             {
-                                systemNodesByAddress.Add(sys.SystemAddress.Value, node);        // add the new address into the node tree also
+                                systemNodesByAddress.Add(sys.SystemAddress, node);        // add the new address into the node tree also
                             }
                             else
                             {
@@ -59,7 +59,7 @@ namespace EliteDangerousCore.StarScan2
                                 systemNodesByName.Add(node.System.NameAddress, node);
 
                                 node = new SystemNode(sys);
-                                systemNodesByAddress.Add(sys.SystemAddress.Value, node);    // make a new node
+                                systemNodesByAddress.Add(sys.SystemAddress, node);    // make a new node
                                 systemNodesByName[sys.NameAddress] = node;                  // store as name address pair
 
                                 systemNodesByNameDuplicated.Add(node.System.Name, node);    // the new node, add to the duplicate list, bare without repeats, so it can be found by name only
@@ -69,7 +69,7 @@ namespace EliteDangerousCore.StarScan2
                         { 
                             // no address found, and no name, no name:address, new node
                             node = new SystemNode(sys);
-                            systemNodesByAddress.Add(sys.SystemAddress.Value, node);        // make a new node
+                            systemNodesByAddress.Add(sys.SystemAddress, node);        // make a new node
                             systemNodesByName[sys.Name] = node;                             // point name node to our new node
                         }
                     }
@@ -193,7 +193,7 @@ namespace EliteDangerousCore.StarScan2
             lock (masterlock)
             {
                 // first try system address from the scan to find the entry.
-                if (!sc.SystemAddress.IsValid || !systemNodesByAddress.TryGetValue(sc.SystemAddress.Value, out sn))
+                if (!sc.SystemAddress.IsValid || !systemNodesByAddress.TryGetValue(sc.SystemAddress, out sn))
                 {
                     // failed, lets use the get/add system method as it does more extensive checks on this
                     if (sc.StarSystem.HasChars() || sc.SystemAddress.IsValid)
@@ -555,11 +555,11 @@ namespace EliteDangerousCore.StarScan2
         {
             lock(masterlock)
             {
-                if (!pendingsystemaddressevents.TryGetValue(systemaddress.Value, out List<JournalEntry> jelist))
+                if (!pendingsystemaddressevents.TryGetValue(systemaddress, out List<JournalEntry> jelist))
                 {
-                    pendingsystemaddressevents[systemaddress.Value] = new List<JournalEntry>();
+                    pendingsystemaddressevents[systemaddress] = new List<JournalEntry>();
                 }
-                pendingsystemaddressevents[systemaddress.Value].Add(sc);
+                pendingsystemaddressevents[systemaddress].Add(sc);
             }
 
         }
@@ -568,11 +568,11 @@ namespace EliteDangerousCore.StarScan2
 
 
         #region vars
-        private Dictionary<ulong, SystemNode> systemNodesByAddress { get; set; } = new Dictionary<ulong, SystemNode>();       // by address (we don't use SystemAddress as they would be unique as of coding)
+        private Dictionary<SystemAddress, SystemNode> systemNodesByAddress { get; set; } = new Dictionary<SystemAddress, SystemNode>();       // by address (we don't use SystemAddress as they would be unique as of coding)
         private Dictionary<string, SystemNode> systemNodesByName { get; set; } = new Dictionary<string, SystemNode>(StringComparer.InvariantCultureIgnoreCase);       // by name.
         private Dictionary<string, SystemNode> systemNodesByNameDuplicated { get; set; } = new Dictionary<string, SystemNode>(StringComparer.InvariantCultureIgnoreCase);       // by name in duplication list
 
-        private Dictionary<ulong, List<JournalEntry>> pendingsystemaddressevents = new Dictionary<ulong, List<JournalEntry>>();   // list of pending entries because their bodies are not yet available
+        private Dictionary<SystemAddress, List<JournalEntry>> pendingsystemaddressevents = new Dictionary<SystemAddress, List<JournalEntry>>();   // list of pending entries because their bodies are not yet available
 
         private object masterlock = new object();
 
