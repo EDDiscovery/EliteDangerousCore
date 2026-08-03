@@ -106,6 +106,10 @@ namespace EliteDangerousCore
             "Concourse Bar".Tx(),
             "Vista Genomics".Tx(),
             "Pioneer Supplies".Tx(),
+
+            "Captain",      // not shown, not translating
+            "CarrierFuel",
+            "Commodities",
             "Unknown",
         };
         static public int GetServiceCount() { var entries = Enum.GetValues(typeof(ServiceType)); return entries.Length - 1; }      // ignore Unknown

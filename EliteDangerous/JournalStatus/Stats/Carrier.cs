@@ -258,7 +258,7 @@ namespace EliteDangerousCore
                 // if no last jump, or different system on top of stack
                 if (jh == null || jh.StarSystem.Name != j.StarSystem || jh.Body != j.Body || jh.BodyID != j.BodyID)
                 {
-                    StarSystem = new SystemClass(j.StarSystem, j.SystemAddress, j.StarPos.X, j.StarPos.Y, j.StarPos.Z);                  // set new location with position
+                    StarSystem = new SystemClass(j.StarPos.X, j.StarPos.Y, j.StarPos.Z, j.SystemAddress, j.StarSystem);                  // set new location with position
                     SystemAddress = j.SystemAddress;
                     Body = NextBody ?? j.Body ?? j.StarSystem;        // you should always have a nextbody, but if debugging.. 
                     BodyID = NextBodyID;

@@ -18,20 +18,10 @@ using BaseUtils;
 
 namespace EliteDangerousCore
 {
-    // For when you need a minimal version and don't want to mess up the database. 
-    // Useful for creation of test doubles
-    public class SystemClassBase : ISystemBase
+
+    [DebuggerDisplay("System `{Name}`:{SystemAddress.Value} ({X,nq},{Y,nq},{Z,nq}) {MainStarType} {Source}")]
+    public class SystemClass : ISystem
     {
-        public bool HasName => Name.HasChars() && Name != "UnKnown";
-        public bool HasAddress => SystemAddress.IsValid;
-
-        public const float XYZScalar = 128.0F;     // scaling between DB stored values and floats
-
-        static public float IntToFloat(int pos) { return (float)pos / XYZScalar; }
-        static public double IntToDouble(int pos) { return (double)pos / XYZScalar; }
-        static public int DoubleToInt(double pos) { return (int)(pos * XYZScalar); }
-        static public double IntToDoubleSq(int pos) { double p = (float)pos / XYZScalar; return p * p; }
-
         public string Name { get; set; }
 
         [QuickJSON.JsonIgnore()]
@@ -61,26 +51,30 @@ namespace EliteDangerousCore
         [QuickJSON.JsonIgnore()]
         public string NameAddress { get { return Name.ToLowerInvariant() + ":" + (SystemAddress.IsValid ? SystemAddress.ToString() : ""); } }
 
-        public SystemClassBase()
+        public SystemSource Source { get; set; }        // default source is Sythesised
+        public EDStar MainStarType { get; set; }
+
+        [QuickJSON.JsonIgnore()]
+        public bool HasName => Name.HasChars() && Name != "UnKnown";
+        [QuickJSON.JsonIgnore()]
+        public bool HasAddress => SystemAddress.IsValid;
+        public bool HasInvalidAddress => !SystemAddress.IsValid;
+
+        public const float XYZScalar = 128.0F;     // scaling between DB stored values and floats
+
+        static public float IntToFloat(int pos) { return (float)pos / XYZScalar; }
+        static public double IntToDouble(int pos) { return (double)pos / XYZScalar; }
+        static public int DoubleToInt(double pos) { return (int)(pos * XYZScalar); }
+        static public double IntToDoubleSq(int pos) { double p = (float)pos / XYZScalar; return p * p; }
+
+        public SystemClass()
         {
+            Name = "";
+            SystemAddress = new SystemAddress();
             Xi = int.MinValue;
         }
 
-        public SystemClassBase(string name, double vx, double vy, double vz)
-        {
-            Name = name;
-            X = vx; Y = vy; Z = vz;
-            GridID = EliteDangerousCore.DB.GridId.Id128(Xi, Zi);
-        }
-
-        public SystemClassBase(string name, int xi, int yi, int zi, int gridid = -1)
-        {
-            Name = name;
-            Xi = xi; Yi = yi; Zi = zi;
-            GridID = gridid == -1 ? EliteDangerousCore.DB.GridId.Id128(Xi,Zi) : gridid;
-        }
-
-        public SystemClassBase(ISystemBase sys)
+        public SystemClass(ISystem sys)
         {
             this.Name = sys.Name;
             this.Xi = sys.Xi;
@@ -89,9 +83,82 @@ namespace EliteDangerousCore
             this.GridID = sys.GridID;
             this.SystemAddress = new SystemAddress(sys.SystemAddress.Value);
             this.EDSMID = sys.EDSMID;
+            this.Source = sys.Source;
+            this.MainStarType = sys.MainStarType;
         }
 
-        public bool Equals(ISystemBase other)
+        public SystemClass(string name)
+        {
+            Name = name;
+            SystemAddress = new SystemAddress();
+            Xi = int.MinValue;
+        }
+
+        public SystemClass(SystemAddress systemaddress)
+        {
+            Name = "";
+            System.Diagnostics.Debug.Assert(systemaddress != null);
+            SystemAddress = systemaddress;
+            Xi = int.MinValue;
+        }
+        public SystemClass(string name, SystemAddress systemaddress, SystemSource src = SystemSource.Synthesised, EDStar starclass = EDStar.Unknown)
+        {
+            System.Diagnostics.Debug.Assert(systemaddress != null);
+            Name = name;
+            SystemAddress = systemaddress;
+            Source = src;
+            Xi = int.MinValue;
+            MainStarType = starclass;
+        }
+
+        // with co-ords and optional name
+        public SystemClass(double vx, double vy, double vz, string name = "Unknown", SystemSource src = SystemSource.Synthesised, EDStar starclass = EDStar.Unknown)
+        {
+            Name = name;
+            SystemAddress = new SystemAddress();
+            X = vx; Y = vy; Z = vz;
+            GridID = EliteDangerousCore.DB.GridId.Id128(Xi, Zi);
+            Source = src;
+            MainStarType = starclass;
+        }
+
+        // with co-ords
+        public SystemClass(double vx, double vy, double vz, SystemAddress systemaddress, string name = "Unknown", SystemSource src = SystemSource.Synthesised, EDStar starclass = EDStar.Unknown)
+        {
+            Name = name;
+            System.Diagnostics.Debug.Assert(systemaddress != null);
+            SystemAddress = systemaddress;
+            X = vx; Y = vy; Z = vz;
+            GridID = EliteDangerousCore.DB.GridId.Id128(Xi, Zi);
+            Source = src;
+            MainStarType = starclass;
+        }
+
+        // SA May be null, vx/vy/vz may be null
+        public static SystemClass Create(double? vx, double? vy, double? vz, SystemAddress systemaddress, string name = "Unknown", SystemSource src = SystemSource.Synthesised, EDStar starclass = EDStar.Unknown)
+        {
+            if ( vx!=null && vy!=null && vz != null)
+                return new SystemClass(vx.Value, vy.Value, vz.Value, systemaddress ?? new SystemAddress(), name, src, starclass);
+            else
+                return new SystemClass(name, systemaddress ?? new SystemAddress(), src, starclass);
+        }
+
+        // used by StoreDB
+        public SystemClass(string name, int xi, int yi, int zi, SystemAddress systemaddress, long? edsmid, int gridid, EDStar startype, SystemSource src) 
+        {
+            Name = name;
+            Xi = xi;
+            Yi = yi;
+            Zi = zi;
+            System.Diagnostics.Debug.Assert(systemaddress != null);
+            SystemAddress = systemaddress;
+            EDSMID = edsmid;
+            GridID = gridid;
+            MainStarType = startype;
+            Source = src;
+        }
+
+        public bool Equals(ISystem other)
         {
             return other != null &&
                    other.Name.Equals(this.Name, StringComparison.InvariantCultureIgnoreCase) &&
@@ -101,7 +168,7 @@ namespace EliteDangerousCore
                      Math.Abs(this.Z - other.Z) < 0.125));
         }
 
-        public double Distance(ISystemBase s2)
+        public double Distance(ISystem s2)
         {
             if (s2 != null && HasCoordinate && s2.HasCoordinate)
                 return Math.Sqrt((X - s2.X) * (X - s2.X) + (Y - s2.Y) * (Y - s2.Y) + (Z - s2.Z) * (Z - s2.Z));
@@ -109,7 +176,7 @@ namespace EliteDangerousCore
                 return -1;
         }
 
-        public bool Distance(ISystemBase s2, double min, double max)
+        public bool Distance(ISystem s2, double min, double max)
         {
             if (s2 != null && HasCoordinate && s2.HasCoordinate)
             {
@@ -136,7 +203,7 @@ namespace EliteDangerousCore
                 return -1;
         }
 
-        public bool Cuboid(ISystemBase s2, double min, double max)
+        public bool Cuboid(ISystem s2, double min, double max)
         {
             if (s2 != null && HasCoordinate && s2.HasCoordinate)
             {
@@ -148,73 +215,15 @@ namespace EliteDangerousCore
             else
                 return false;
         }
-    }
 
-    [DebuggerDisplay("System `{Name}`:{SystemAddress.Value} ({X,nq},{Y,nq},{Z,nq}) {MainStarType} {Source}")]
-    public class SystemClass : SystemClassBase, ISystem
-    {
-        public SystemClass() : base()
+        public override string ToString()
         {
-            SystemAddress = new SystemAddress();
-        }
-
-        public SystemClass(ISystem sys) : base(sys)
-        {
-            this.Source = sys.Source;
-            this.MainStarType = sys.MainStarType;
-        }
-
-        public SystemClass(string name) : base()
-        {
-            Name = name;
-            SystemAddress = new SystemAddress();
-        }
-        public SystemClass(SystemAddress addr) : base()
-        {
-            Name = "";
-            SystemAddress = addr;
-        }
-
-        // with no co-ords
-        public SystemClass(string name, SystemAddress systemaddress, SystemSource src = SystemSource.Synthesised) : base()
-        {
-            Name = name;
-            SystemAddress = systemaddress;
-            Source = src;
-        }
-
-        // with co-ords
-        public SystemClass(string name, SystemAddress systemaddress, double vx, double vy, double vz, SystemSource src = SystemSource.Synthesised, EDStar starclass = EDStar.Unknown) : base(name, vx, vy, vz)
-        {
-            SystemAddress = systemaddress;
-            Source = src;
-            MainStarType = starclass;
-        }
-
-        // used by EDSMClass
-        public SystemClass(string name, long edsmid, SystemAddress systemaddress, SystemSource src) : base()
-        {
-            Name = name;
-            EDSMID = edsmid;
-            SystemAddress = systemaddress;
-            Source = src;
-        }
-
-        // used by EDSMClass
-        public SystemClass(string name, long edsmid, SystemAddress systemaddress, double vx, double vy, double vz, SystemSource src) : base(name, vx, vy, vz)
-        {
-            EDSMID = edsmid;
-            SystemAddress = systemaddress;
-            Source = src;
-        }
-
-        // used by StoreDB
-        public SystemClass(string name, int xi, int yi, int zi, SystemAddress sysaddress, long? edsmid, int gridid, EDStar startype, SystemSource src) : base(name, xi, yi, zi, gridid)
-        {
-            SystemAddress = sysaddress;
-            EDSMID = edsmid;
-            MainStarType = startype;
-            Source = src;
+            if (SystemAddress.IsValid && EDSMID != null)
+                return string.Format($"{Name} @ {X:N3},{Y:N3},{Z:N3}: {EDSMID}, {SystemAddress}");
+            else if (SystemAddress != null)
+                return string.Format($"{Name} @ {X:N3},{Y:N3},{Z:N3}: {SystemAddress}");
+            else
+                return string.Format($"{Name} @ {X:N3},{Y:N3},{Z:N3}");
         }
 
         // added oct 23 since edsm has faulty data
@@ -240,19 +249,5 @@ namespace EliteDangerousCore
             return true;
 
         }
-
-        public SystemSource Source { get; set; }        // default source is Sythesised
-        public EDStar MainStarType { get; set; }
-
-        public override string ToString()
-        {
-            if (SystemAddress.IsValid && EDSMID != null)
-                return string.Format($"{Name} @ {X:N3},{Y:N3},{Z:N3}: {EDSMID}, {SystemAddress}");
-            else if (SystemAddress != null)
-                return string.Format($"{Name} @ {X:N3},{Y:N3},{Z:N3}: {SystemAddress}");
-            else
-                return string.Format($"{Name} @ {X:N3},{Y:N3},{Z:N3}");
-        }
-
     }
 }

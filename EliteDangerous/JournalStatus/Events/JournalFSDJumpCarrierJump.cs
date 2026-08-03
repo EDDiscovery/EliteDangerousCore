@@ -62,7 +62,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".Tx(), StarSystem); }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
-            s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
+            s.GetOrAddSystem(new SystemClass(StarPos.X, StarPos.Y, StarPos.Z, SystemAddress, StarSystem));     // we use our data to fill in 
         }
 
         public override string GetInfo()        // fsdjump
@@ -265,7 +265,7 @@ namespace EliteDangerousCore.JournalEvents
         }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
-            s.GetOrAddSystem(new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z));     // we use our data to fill in 
+            s.GetOrAddSystem(new SystemClass(StarPos.X, StarPos.Y, StarPos.Z, SystemAddress, StarSystem));     // we use our data to fill in 
         }
 
         public override string GetInfo()        // carrier jump

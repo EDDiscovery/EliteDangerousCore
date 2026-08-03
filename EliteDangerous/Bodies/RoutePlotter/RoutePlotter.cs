@@ -56,7 +56,7 @@ namespace EliteDangerousCore
             List<ISystem> routeSystems = new List<ISystem>();
             System.Diagnostics.Debug.WriteLine("From " + FromSystem + " to  " + ToSystem + ", using metric " + RouteMethod.ToString());
 
-            ISystem startsystem = new SystemClass(FromSystem, null, Coordsfrom.X, Coordsfrom.Y, Coordsfrom.Z);
+            ISystem startsystem = new SystemClass(Coordsfrom.X, Coordsfrom.Y, Coordsfrom.Z, FromSystem);
             ISystem startfromdb = SystemCache.FindSystem(startsystem, WebLookup); // see if the cache knows more about it, if so, use that..
             if (startfromdb != null)
                 startsystem = startfromdb;
@@ -146,7 +146,7 @@ namespace EliteDangerousCore
 
             } while ( !StopPlotter);
 
-            ISystem endsystem = new SystemClass(ToSystem, null, Coordsto.X, Coordsto.Y, Coordsto.Z);
+            ISystem endsystem = new SystemClass(Coordsto.X, Coordsto.Y, Coordsto.Z, ToSystem);
             ISystem endfromdb = SystemCache.FindSystem(endsystem, WebLookup); // see if the cache knows more about it, if so, use that..
             if (endfromdb != null)
                 endsystem = endfromdb;

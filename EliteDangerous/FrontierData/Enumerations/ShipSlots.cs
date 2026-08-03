@@ -285,7 +285,7 @@ namespace EliteDangerousCore
             [Slot.PlanetaryApproachSuite] = "Planetary Approach Suite",
             [Slot.PowerDistributor] = "Power Distributor",
             [Slot.PowerPlant] = "Power Plant",
-            [Slot.Radar] = "Sensors",
+            [Slot.Radar] = "Sensor",
             [Slot.ShieldGenerator] = "Shield Generator",
             [Slot.ShipCockpit] = "Ship Cockpit",
             [Slot.ShipID0] = "Ship ID Right",

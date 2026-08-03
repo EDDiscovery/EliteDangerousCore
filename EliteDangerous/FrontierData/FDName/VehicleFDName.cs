@@ -119,19 +119,6 @@ namespace EliteDangerousCore
 
     }
 
-    //public class ShipFDNameEqualityComparer : IEqualityComparer<VehicleFDName>
-    //{
-    //    public bool Equals(VehicleFDName left, VehicleFDName right)
-    //    {
-    //        return left.Equals(right);
-    //    }
-
-    //    public int GetHashCode(VehicleFDName obj)
-    //    {
-    //        return obj.GetHashCode();
-    //    }
-    //}
-
     // Suit only
     public class SuitFDName : VehicleFDName
     {
@@ -163,19 +150,6 @@ namespace EliteDangerousCore
         }
 
     }
-
-    //public class SuitFDNameEqualityComparer : IEqualityComparer<VehicleFDName>
-    //{
-    //    public bool Equals(VehicleFDName left, VehicleFDName right)
-    //    {
-    //        return left.Equals(right);
-    //    }
-
-    //    public int GetHashCode(VehicleFDName obj)
-    //    {
-    //        return obj.GetHashCode();
-    //    }
-    //}
 
     // Vehicles, ship/lander/srv/fighter/suit and Actors
     public class VehicleActorSuitFDName : SuitFDName

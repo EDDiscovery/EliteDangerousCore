@@ -74,7 +74,8 @@ namespace EliteDangerousCore
 
         public int Visits { get; private set; }                                     // set by Historylist, visits up to this point in time
 
-        public BodySystemAddress FullBodyID => (System.SystemAddress.IsValid && Status.HasBodyID) ? new BodySystemAddress(System.SystemAddress, Status.BodyID.Value) : null;
+        // may be null if not got a bodyID
+        public BodySystemAddress FullBodyID => (System.HasAddress && Status.HasBodyID) ? new BodySystemAddress(System.SystemAddress, Status.BodyID.Value) : null;
            
         public string GetNoteText() { return journalEntry.SNC?.Note ?? ""; }      // get SNC note text or empty string
 
@@ -137,7 +138,7 @@ namespace EliteDangerousCore
                 {
                     EDStar starclass = EDStar.Unknown;
                     starclasses?.TryGetValue(jl.StarSystem, out starclass);     // see if its there, and star classes is defined
-                    newsys = new SystemClass(jl.StarSystem, jl.SystemAddress, jl.StarPos.X, jl.StarPos.Y, jl.StarPos.Z, jl.DataSource, starclass);
+                    newsys = new SystemClass(jl.StarPos.X, jl.StarPos.Y, jl.StarPos.Z, jl.SystemAddress, jl.StarSystem, jl.DataSource, starclass);
                     SystemCache.AddSystemToCache(newsys);        // this puts it in the cache
 
                     // If it was a new system, pass the coords back to the StartJump

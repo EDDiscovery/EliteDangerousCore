@@ -56,7 +56,7 @@ namespace EliteDangerousCore
             {
                 var fd = new EngineeringRecipeFDName(fdname);
 
-                var rp = Recipes.FindEngineering(fd);
+                var rp = EngineeringRecipe.FindEngineeringFDName(fd);
 
                 if (rp != null)
                 {
@@ -72,6 +72,15 @@ namespace EliteDangerousCore
                 }
                 return fd;
             }
+        }
+
+        public EngineeringRecipe GetRecipe()
+        {
+            return EngineeringRecipe.FindEngineeringFDName(this);
+        }
+        public string NameAndLevel()
+        {
+            return EngineeringRecipe.FindEngineeringFDName(this)?.NameAndLevel ?? "";
         }
     }
 
@@ -89,9 +98,9 @@ namespace EliteDangerousCore
         {
         }
 
-        public static SynthesisRecipeFDName Normalise(string fdname, out string engname, out Recipes.SynthesisRecipe.SynthesisLevel level, JournalEntry ev, bool allownull = false)
+        public static SynthesisRecipeFDName Normalise(string fdname, out string engname, out SynthesisRecipe.SynthesisLevel level, JournalEntry ev, bool allownull = false)
         {
-            level = Recipes.SynthesisRecipe.SynthesisLevel.Basic;
+            level = SynthesisRecipe.SynthesisLevel.Basic;
 
             if (fdname.IsEmpty())
             {
@@ -114,7 +123,7 @@ namespace EliteDangerousCore
             {
                 var fd = new SynthesisRecipeFDName(fdname);
 
-                var rp = Recipes.FindSynthesis(fd);
+                var rp = SynthesisRecipe.FindSynthesisFDName(fd);
 
                 if (rp != null)
                 {

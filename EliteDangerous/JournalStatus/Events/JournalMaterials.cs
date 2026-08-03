@@ -327,7 +327,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalSynthesis(JObject evt) : base(evt, JournalTypeEnum.Synthesis)
         {
             string name = evt["Name"].Str().Replace("Guass", "Gauss");      // fix typo
-            FDName = SynthesisRecipeFDName.Normalise(name, out string engname, out Recipes.SynthesisRecipe.SynthesisLevel level, this);
+            FDName = SynthesisRecipeFDName.Normalise(name, out string engname, out SynthesisRecipe.SynthesisLevel level, this);
             Name = engname;
             Level = level;
 
@@ -415,7 +415,7 @@ namespace EliteDangerousCore.JournalEvents
         }
         public string Name { get; set; }        // Friendly name
         public SynthesisRecipeFDName FDName { get; set; }        // FDName
-        public Recipes.SynthesisRecipe.SynthesisLevel Level { get; set; }
+        public SynthesisRecipe.SynthesisLevel Level { get; set; }
         public Dictionary<MCFDName, int> Materials { get; set; }
 
         public double FSDBoostValue { get; set; }           // set non zero if its a FSD injection

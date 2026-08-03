@@ -364,14 +364,14 @@ namespace EliteDangerousCore.JournalEvents
                 return null;
         }
 
-        public string[] ApplyProgress(EngineerFDName[] engineers)
+        public string[] ApplyProgress(string[] engineers)
         {
             string[] ret = new string[engineers.Length];
             for (int i = 0; i < engineers.Length; i++)
             {
-                ret[i] = engineers[i].Str();
+                ret[i] = engineers[i];
 
-                int found = Array.FindIndex(Engineers, x => x.Engineer == engineers[i]);
+                int found = Array.FindIndex(Engineers, x => x.Engineer.Equals(engineers[i]));
                 if (found >= 0)
                 {
                     if (Engineers[found].Progress == ProgressType.Unlocked)

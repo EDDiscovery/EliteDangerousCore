@@ -384,7 +384,7 @@ namespace EliteDangerousCore.Spansh
 
                             station.DistanceRefSystem = evt["distance"].Double();      // system info at base of object
                             var sysaddr = new SystemAddress(evt["system_id64"]);
-                            station.System = new SystemClass(evt["system_name"].Str(),sysaddr, evt["system_x"].Double(), evt["system_y"].Double(), evt["system_z"].Double(), SystemSource.FromSpansh);
+                            station.System = new SystemClass(evt["system_x"].Double(), evt["system_y"].Double(), evt["system_z"].Double(), sysaddr, evt["system_name"].Str(), SystemSource.FromSpansh);
 
                             station.BodyName = evt["body_name"].StrNull();
                             station.BodyType = BodyDefinitions.GetBodyType(evt["body_type"].Str());

@@ -83,16 +83,16 @@ namespace EliteDangerousCore
             return "$MissionUtil_FactionTag_" + al.ToString();
         }
 
-        public static string ToLocalisedLanguage(TargetType al)
-        {
-            return ToEnglish(al).Tx();
-        }
+        //public static string ToLocalisedLanguage(TargetType al)
+        //{
+        //    return ToEnglish(al).Tx();
+        //}
 
-        public static void OutputLocalised()
-        {
-            foreach (TargetType x in Enum.GetValues(typeof(TargetType)))
-                ToLocalisedLanguage(x);
-        }
+        //public static void OutputLocalised()
+        //{
+        //    foreach (TargetType x in Enum.GetValues(typeof(TargetType)))
+        //        ToLocalisedLanguage(x);
+        //}
     }
 
 }

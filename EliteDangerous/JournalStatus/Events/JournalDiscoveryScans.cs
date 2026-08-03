@@ -286,7 +286,7 @@ namespace EliteDangerousCore.JournalEvents
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             StarSystem = system.Name;
-            if (SystemAddress.IsNotValid)
+            if (!SystemAddress.IsValid)
                 SystemAddress = system.SystemAddress;
             s.AddSAAScanComplete(this, system);
         }
@@ -480,22 +480,22 @@ namespace EliteDangerousCore.JournalEvents
             return sb.ToString();
         }
 
-        public int Contains(SignalFDName fdname)      // give count if contains fdname, else zero
+        public int Contains(FDName fdname)      // give count if contains fdname, else zero. Works for Signals (SignalsFDName) and materials (MCFDName)
         {
             int index = Signals?.FindIndex((x) => x.Type.Equals(fdname)) ?? -1;
             return (index >= 0) ? Signals[index].Count : 0;
         }
 
-        public object ContainsStr(SignalFDName fdname, bool showit = true)      // give count if contains fdname, else empty string
+        public object ContainsStr(string fdname, bool showit = true)            // give count if contains fdname, else empty string, used in history grid excel 
         {
-            int contains = Contains(fdname);
+            int contains = Contains(new SignalFDName(fdname));
             return showit && contains > 0 ? (object)contains : "";
         }
 
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             StarSystem = system.Name;
-            if (SystemAddress.IsNotValid)
+            if (!SystemAddress.IsValid)
                 SystemAddress = system.SystemAddress;
             s.AddSAASignalsFound(this, system);
         }
@@ -658,7 +658,7 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(this.GetType(), true, 
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: this,
-                process:(t,x)=> {
+                process:(t,t2,x)=> {
                             return (ScanTypeEnum)Enum.Parse(typeof(ScanTypeEnum),x,true);       // only enum, and we just use Parse
                         }
                 );        // read fields named in this structure matching JSON names

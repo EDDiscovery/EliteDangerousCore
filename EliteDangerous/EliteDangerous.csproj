@@ -74,8 +74,8 @@
     <Compile Include="FrontierData\FDName\MCFDName.cs" />
     <Compile Include="FrontierData\Enumerations\IEquatable.cs" />
     <Compile Include="Bodies\Systems\SystemAddress.cs" />
-    <Compile Include="FrontierData\Enumerations\MarketID.cs" />
-    <Compile Include="FrontierData\Enumerations\ShipID.cs" />
+    <Compile Include="FrontierData\IDs\MarketID.cs" />
+    <Compile Include="FrontierData\IDs\ShipID.cs" />
     <Compile Include="FrontierData\Enumerations\Missions.cs" />
     <Compile Include="FrontierData\Enumerations\BodyParents.cs" />
     <Compile Include="FrontierData\Enumerations\Rings.cs" />
@@ -93,7 +93,9 @@
     <Compile Include="FrontierData\Enumerations\Carrier.cs" />
     <Compile Include="FrontierData\FDName\FDName.cs" />
     <Compile Include="FrontierData\Items\ModuleList.cs" />
-    <Compile Include="FrontierData\Enumerations\MissionID.cs" />
+    <Compile Include="FrontierData\IDs\MissionID.cs" />
+    <Compile Include="FrontierData\Items\RecipesEngineering.cs" />
+    <Compile Include="FrontierData\Items\RecipesSynthesis.cs" />
     <Compile Include="History\Ships\ShipModuleDisplay.cs" />
     <Compile Include="History\SuitsWeapons\SuitWeaponLoadoutID.cs" />
     <Compile Include="JournalStatus\Computers\FactionsStatsComputer.cs" />
@@ -133,7 +135,6 @@
     <Compile Include="FrontierData\Engineering\EngineeringUnitTest.cs" />
     <Compile Include="FrontierData\Enumerations\ShipSlots.cs" />
     <Compile Include="FrontierData\Enumerations\PowerPlay.cs" />
-    <Compile Include="FrontierData\Enumerations\Crimes.cs" />
     <Compile Include="FrontierData\Enumerations\Passengers.cs" />
     <Compile Include="FrontierData\Enumerations\Signals.cs" />
     <Compile Include="FrontierData\Enumerations\Factions.cs" />

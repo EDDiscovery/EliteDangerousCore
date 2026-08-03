@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
+            string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x => EngineeringRecipe.GetBetterNameForEngineeringRecipeFDName(x))) : null;
             return BaseUtils.FieldBuilder.Build("", FriendlyName, "Class".Tx()+": ", Class, "Mods".Tx()+": ", wmod, "Cost: ; cr;N0".Tx(), Price);
         }
 
@@ -137,7 +137,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x => Recipes.GetBetterNameForEngineeringRecipe(x))) : null;
+            string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x => EngineeringRecipe.GetBetterNameForEngineeringRecipeFDName(x))) : null;
             long? p = Cost > 0 ? Cost : default(long?);
             return BaseUtils.FieldBuilder.Build("", FriendlyName, "< => " + "Class".Tx()+": ", Class, "Mods".Tx()+": ", wmod, "Cost: ; cr;N0".Tx(), p);
         }

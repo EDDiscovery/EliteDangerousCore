@@ -244,7 +244,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Crimes.ToLocalisedLanguage(FDCrimeType), "< on faction ".Tx(), Faction, 
+            return BaseUtils.FieldBuilder.Build("", CrimesFDName.ToLocalisedLanguage(FDCrimeType), "< on faction ".Tx(), Faction, 
                         "Against ".Tx(), VictimLocalised, "Cost: ; cr;N0".Tx(), Fine, "Bounty: ; cr;N0".Tx(), Bounty);
         }
     }
@@ -268,7 +268,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Crimes.ToLocalisedLanguage(FDCrimeType), "Offender ".Tx(), OffenderLocalised, "Bounty: ; cr;N0".Tx(), Bounty);
+            return BaseUtils.FieldBuilder.Build("", CrimesFDName.ToLocalisedLanguage(FDCrimeType), "Offender ".Tx(), OffenderLocalised, "Bounty: ; cr;N0".Tx(), Bounty);
         }
     }
 

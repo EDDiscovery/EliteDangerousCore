@@ -67,7 +67,7 @@ namespace EliteDangerousCore.JournalEvents
                         };
                         routeents.Add(nr);
 
-                        SystemClass s = new SystemClass(routeents.Last().StarSystem, nr.SystemAddress, starpos.X, starpos.Y, starpos.Z, SystemSource.FromJournal, sedsc);
+                        SystemClass s = new SystemClass(starpos.X, starpos.Y, starpos.Z, nr.SystemAddress, routeents.Last().StarSystem, SystemSource.FromJournal, sedsc);
                         SystemCache.AddSystemToCache(s);     // inform cache of this known system
                     }
                 }
@@ -182,7 +182,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             foreach (var star in Route.EmptyIfNull())
             {
-                var sys = s.GetOrAddSystem(new SystemClass(star.StarSystem, star.SystemAddress, star.StarPos.X, star.StarPos.Y, star.StarPos.Z));     // we use our data to fill in 
+                var sys = s.GetOrAddSystem(new SystemClass(star.StarPos.X, star.StarPos.Y, star.StarPos.Z, star.SystemAddress, star.StarSystem ));     // we use our data to fill in 
                 sys?.SetStarClass(star.EDStarClass);
             }
         }

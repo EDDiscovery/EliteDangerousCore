@@ -73,8 +73,8 @@ namespace EliteDangerousCore
 
         #region Compare
 
-        public static bool operator ==(FDName left, FDName right) { return left is null && right is null ? true : right is null ? false : left.Equals(right); }
-        public static bool operator !=(FDName left, FDName right) { return left is null && right is null ? false : left is null ? true : !left.Equals(right); }
+        public static bool operator ==(FDName left, FDName right) { return left is null && right is null ? true : right is null || left is null ? false : left.Equals(right); }
+        public static bool operator !=(FDName left, FDName right) { return left is null && right is null ? false : left is null || right is null ? true : !left.Equals(right); }
 
         public override bool Equals(Object obj)        // other may be null
         {

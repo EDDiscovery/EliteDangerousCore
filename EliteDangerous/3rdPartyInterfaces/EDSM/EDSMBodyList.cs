@@ -109,7 +109,7 @@ namespace EliteDangerousCore.EDSM
 
                         EDSMClass edsm = new EDSMClass();
 
-                        if (sys.SystemAddress.IsValid)
+                        if (sys.HasAddress)
                             jobj = edsm.GetBodiesByID64(sys.SystemAddress);
                         else if (sys.Name != null)
                             jobj = edsm.GetBodies(sys.Name);
@@ -161,7 +161,7 @@ namespace EliteDangerousCore.EDSM
                         var cdata = new BodiesResults(sys, bodies);
                         if (sys.Name.HasChars())
                             BodyCache[sys.Name.ToLowerInvariant()] = cdata;
-                        if (sys.SystemAddress.IsValid)
+                        if (sys.HasAddress)
                             BodyCache[sys.SystemAddress.ToString()] = cdata;
 
                         System.Diagnostics.Debug.WriteLine($"EDSM Lookup complete {sys.Name} {sys.SystemAddress} {bodies.Count} cache {fromcache}");
@@ -172,7 +172,7 @@ namespace EliteDangerousCore.EDSM
                         //System.Diagnostics.Debug.WriteLine($"EDSM Web Lookup complete no info {sys.Name}");
                         if (sys.Name.HasChars())
                             BodyCache[sys.Name.ToLowerInvariant()] = null;
-                        if (sys.SystemAddress.IsValid)
+                        if (sys.HasAddress)
                             BodyCache[sys.SystemAddress.ToString()] = null;
                     }
                 }

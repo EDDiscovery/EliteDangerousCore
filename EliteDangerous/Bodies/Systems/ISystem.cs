@@ -35,7 +35,7 @@ namespace EliteDangerousCore
         All
     };
 
-    public interface ISystemBase : IEquatable<ISystemBase>
+    public interface ISystem
     {
         string Name { get; set; }
         double X { get; set; }
@@ -44,29 +44,24 @@ namespace EliteDangerousCore
         int Yi { get; set; }
         double Z { get; set; }
         int Zi { get; set; }
-        bool HasCoordinate { get; }
         int GridID { get; set; }
         SystemAddress SystemAddress { get; set; }       // may be invalid
         long? EDSMID { get; set; }      // if sourced from EDSM DB or web
+        SystemSource Source { get; set; }        // Who made this entry, where did the info come from?
+        EDStar MainStarType { get; set; }        // some DB hold main star type..  will be EDStar.Unknown if not known
         object Tag { get; set; }        // Aux data on this isystem. Normally a string containing information on it
 
         string Key { get; }             // Primary Key for looking up an Isystem .  Systemaddress is preferred
         string NameAddress { get; }     // Name address key
-        double Distance(ISystemBase other);
+        double Distance(ISystem other);
         double Distance(double x, double y, double z);
         double DistanceSq(double x, double y, double z);
-        bool Distance(ISystemBase other, double min, double max);
-        bool Cuboid(ISystemBase other, double min, double max);
+        bool Distance(ISystem other, double min, double max);
+        bool Cuboid(ISystem other, double min, double max);
 
         bool HasName { get; }
         bool HasAddress { get; }
-    }
-
-    public interface ISystem : ISystemBase
-    {
-        SystemSource Source { get; set; }        // Who made this entry, where did the info come from?
-        EDStar MainStarType { get; set; }        // some DB hold main star type..  will be EDStar.Unknown if not known
-
+        bool HasCoordinate { get; }
         string ToString();
     }
 

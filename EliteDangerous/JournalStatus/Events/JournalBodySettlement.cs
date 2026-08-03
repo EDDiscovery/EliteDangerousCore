@@ -63,7 +63,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (StarSystem == null)
                 StarSystem = system.Name;
-            if (SystemAddress.IsNotValid)
+            if (!SystemAddress.IsValid)
                 SystemAddress = system.SystemAddress;
             s.AddLocation(this, system);
         }
@@ -216,7 +216,7 @@ namespace EliteDangerousCore.JournalEvents
         public void AddStarScan(StarScan s, ISystem system)
         {
             StarSystem = system.Name;
-            if (SystemAddress.IsNotValid)
+            if (!SystemAddress.IsValid)
                 SystemAddress = system.SystemAddress;
             s.AddApproachSettlement(this, system);
         }

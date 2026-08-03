@@ -170,7 +170,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 foreach (var mat in Materials)
                 {
-                    string usedin = Recipes.UsedInSythesisByFDName(mat.Key);
+                    string usedin = SynthesisRecipe.UsedInSythesisByFDName(mat.Key);
                     if (usedin.Contains("FSD-Basic"))
                         basic++;
                     if (usedin.Contains("FSD-Standard"))
@@ -185,13 +185,12 @@ namespace EliteDangerousCore.JournalEvents
 
                     StringBuilder jumpLevel = new StringBuilder();
 
-                    SynthesisRecipeFDName fsd = new SynthesisRecipeFDName("FSD");
                     if (basic != 0)
-                        jumpLevel.AppendPrePad(basic + "/" + Recipes.FindSynthesis(fsd, Recipes.SynthesisRecipe.SynthesisLevel.Basic).Count + " Basic".Tx(), ", ");
+                        jumpLevel.AppendPrePad(basic + "/" + SynthesisRecipe.FindSynthesisFDName(new SynthesisRecipeFDName("FSD Basic")).Count + " Basic".Tx(), ", ");
                     if (standard != 0)
-                        jumpLevel.AppendPrePad(standard + "/" + Recipes.FindSynthesis(fsd, Recipes.SynthesisRecipe.SynthesisLevel.Standard).Count + " Standard".Tx(), ", ");
+                        jumpLevel.AppendPrePad(standard + "/" + SynthesisRecipe.FindSynthesisFDName(new SynthesisRecipeFDName("FSD Standard")).Count + " Standard".Tx(), ", ");
                     if (premium != 0)
-                        jumpLevel.AppendPrePad(premium + "/" + Recipes.FindSynthesis(fsd, Recipes.SynthesisRecipe.SynthesisLevel.Premium).Count + " Premium".Tx(), ", ");
+                        jumpLevel.AppendPrePad(premium + "/" + SynthesisRecipe.FindSynthesisFDName(new SynthesisRecipeFDName("FSD Premium")).Count + " Premium".Tx(), ", ");
 
                     jumponium = jumponium.AppendPrePad(string.Format("{0} has {1} level elements.".Tx(), BodyName, jumpLevel), Environment.NewLine);
                 }

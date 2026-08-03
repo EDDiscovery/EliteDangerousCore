@@ -219,7 +219,7 @@ namespace EliteDangerousCore.DB
                     foreach (var sys in systems)
                     {
                         // so we need coords, and if edsm db, we need an edsm id, or for spansh we need a system address 
-                        if (sys.HasCoordinate && ((!spansh && sys.EDSMID.HasValue) || (spansh && sys.SystemAddress.IsValid)))
+                        if (sys.HasCoordinate && ((!spansh && sys.EDSMID.HasValue) || (spansh && sys.HasAddress)))
                         {
                             JObject jo = new JObject
                             {

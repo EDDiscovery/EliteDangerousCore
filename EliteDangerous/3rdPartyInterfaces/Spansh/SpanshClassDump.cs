@@ -242,7 +242,7 @@ namespace EliteDangerousCore.Spansh
 
             // find by name and address, using the pattern of naming to pick out the right parts
             int iname = cachefiles.FindIndex(x => x.Contains($"{prefix}__{searchsystem.Name.ToLowerInvariant().SafeFileString()}__"));     // by name, making sure we use the safe file string chars
-            int iaddr = searchsystem.SystemAddress.IsValid ? cachefiles.FindIndex(x => x.Contains($"__{searchsystem.SystemAddress.Value.ToStringInvariant()}.json")) : -1;
+            int iaddr = searchsystem.HasAddress ? cachefiles.FindIndex(x => x.Contains($"__{searchsystem.SystemAddress.Value.ToStringInvariant()}.json")) : -1;
 
             string cachefile = iaddr >= 0 ? cachefiles[iaddr] : iname >= 0 ? cachefiles[iname] : null;       // prefer address, else use name
             if (cachefile != null)

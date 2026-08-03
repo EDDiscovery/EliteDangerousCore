@@ -444,7 +444,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from JSON Cloned
         public JObject CreateEDDNMessage(JournalFSDJump journal)
         {
-            if (!journal.HasCoordinate || journal.DataSource != SystemSource.FromJournal || journal.SystemAddress.IsNotValid)
+            if (!journal.HasCoordinate || journal.DataSource != SystemSource.FromJournal || !journal.SystemAddress.IsValid)
                 return null;
 
             JObject msg = new JObject();
@@ -484,7 +484,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from JSON Cloned
         public JObject CreateEDDNMessage(JournalLocation journal)
         {
-            if (!journal.HasCoordinate || journal.DataSource != SystemSource.FromJournal || journal.SystemAddress.IsNotValid)
+            if (!journal.HasCoordinate || journal.DataSource != SystemSource.FromJournal || !journal.SystemAddress.IsValid)
                 return null;
 
             JObject msg = new JObject();
@@ -520,7 +520,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message for journal from JSON Cloned
         public JObject CreateEDDNMessage(JournalCarrierJump journal)
         {
-            if (!journal.HasCoordinate || journal.DataSource != SystemSource.FromJournal|| journal.SystemAddress.IsNotValid)
+            if (!journal.HasCoordinate || journal.DataSource != SystemSource.FromJournal|| !journal.SystemAddress.IsValid)
                 return null;
 
             JObject msg = new JObject();
@@ -559,10 +559,10 @@ namespace EliteDangerousCore.EDDN
             if (!String.Equals(system.Name, journal.StarSystem, StringComparison.InvariantCultureIgnoreCase))
                 return null;
 
-            if (system.SystemAddress.IsNotValid || !system.HasCoordinate)  // don't have a valid system..
+            if (!system.HasAddress || !system.HasCoordinate)  // don't have a valid system..
                 return null;
 
-            if (journal.SystemAddress.IsNotValid || system.SystemAddress != journal.SystemAddress )    // can't agree where we are from the journal 
+            if (!journal.SystemAddress.IsValid || system.SystemAddress != journal.SystemAddress )    // can't agree where we are from the journal 
                 return null;
 
             JObject msg = new JObject();
@@ -666,7 +666,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from JSON Cloned
         public JObject CreateEDDNMessage(JournalScan journal, ISystem system)
         {
-            if (system.SystemAddress.IsNotValid || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
+            if (!system.HasAddress || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             // Reject scan if system doesn't match scan system
@@ -712,7 +712,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from JSON Cloned
         public JObject CreateEDDNMessage(JournalSAASignalsFound journal, ISystem system)
         {
-            if (system.SystemAddress.IsNotValid || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
+            if (!system.HasAddress || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             // Reject scan if system doesn't match scan system
@@ -757,7 +757,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from JSON Cloned
         public JObject CreateEDDNFSSDiscoveryScan(JournalFSSDiscoveryScan journal, ISystem system)
         {
-            if (system.SystemAddress.IsNotValid || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
+            if (!system.HasAddress || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             JObject msg = new JObject();
@@ -784,7 +784,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from JSON Cloned
         public JObject CreateEDDNNavBeaconScan( JournalNavBeaconScan journal, ISystem system)
         {
-            if (system.SystemAddress.IsNotValid || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
+            if (!system.HasAddress || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             JObject msg = new JObject();
@@ -809,7 +809,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from JSON Cloned
         public JObject CreateEDDNCodexEntry(JournalCodexEntry journal, ISystem system)
         {
-            if (system.SystemAddress.IsNotValid || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
+            if (!system.HasAddress || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             JObject msg = new JObject();
@@ -872,7 +872,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from JSON Cloned
         public JObject CreateEDDNScanBaryCentre(JournalScanBaryCentre journal, ISystem system)
         {
-            if (system.SystemAddress.IsNotValid || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
+            if (!system.HasAddress || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             JObject msg = new JObject();
@@ -898,7 +898,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from JSON Cloned
         public JObject CreateEDDNFSSAllBodiesFound(JournalFSSAllBodiesFound journal, ISystem system)
         {
-            if (system.SystemAddress.IsNotValid || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
+            if (!system.HasAddress || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             JObject msg = new JObject();
@@ -924,7 +924,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from JSON Cloned
         public JObject CreateEDDNApproachSettlement(JournalApproachSettlement journal, ISystem system)
         {
-            if (system.SystemAddress.IsNotValid || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
+            if (!system.HasAddress || !system.HasCoordinate || system.SystemAddress != journal.SystemAddress)
                 return null;
 
             // sometimes these are missing, so ignore these. 
@@ -1019,7 +1019,7 @@ namespace EliteDangerousCore.EDDN
         // Create EDDN message from journal
         public JObject CreateEDDNFSSSignalDiscovered(JournalFSSSignalDiscovered journal, ISystem system)
         {
-            if (system.SystemAddress.IsNotValid || !system.HasCoordinate || journal.Signals == null || journal.Signals.Count == 0 || system.SystemAddress != journal.Signals[0].SystemAddress)
+            if (!system.HasAddress || !system.HasCoordinate || journal.Signals == null || journal.Signals.Count == 0 || system.SystemAddress != journal.Signals[0].SystemAddress)
                 return null;
 
             JObject msg = new JObject();

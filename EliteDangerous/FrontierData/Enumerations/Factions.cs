@@ -242,7 +242,7 @@ namespace EliteDangerousCore
             // handle reading from JSON this field
             public static FactionInformation[] ReadJSON(JArray evt, DateTime utc, ISystem sys)
             {
-                var Factions = evt.ToObject<FactionInformation[]>(false, process: (t, x) =>
+                var Factions = evt.ToObject<FactionInformation[]>(false, process: (t, t2, x) =>
                 {
                     if (t.Name.Contains("Happiness"))
                     {
@@ -315,7 +315,7 @@ namespace EliteDangerousCore
 
             public static ConflictInfo[] ReadJSON(JArray evt, DateTime utc)
             {
-                var Conflicts = evt.ToObject<ConflictInfo[]>(false, process: (t, x) =>
+                var Conflicts = evt.ToObject<ConflictInfo[]>(false, process: (t, t2, x) =>
                     {
                         if ( t == typeof(WarTypeState))
                             return x.Length > 0 ? (WarTypeState)Enum.Parse(typeof(WarTypeState), x, true) : ConflictInfo.WarTypeState.Unknown;

@@ -103,7 +103,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public ISystem HomeSystemIOrSol { get { return HomeSystemI ?? new SystemClass("Sol", new SystemAddress(10477373803), 0, 0, 0); } }
+        public ISystem HomeSystemIOrSol { get { return HomeSystemI ?? new SystemClass(0, 0, 0, new SystemAddress(10477373803), "Sol"); } }
 
         public int MapColour { set; get; } = System.Drawing.Color.Red.ToArgb();
 

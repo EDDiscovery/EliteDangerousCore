@@ -32,7 +32,7 @@ namespace EliteDangerousCore
         // return maximum can make, how many made, needed string, needed string long format, and the % to having one recipe
         // select if totals is reduced by the making
         static public Tuple<int, int, string, string,double> HowManyLeft(
-                            Recipes.Recipe r,       // the receipe to do..
+                            RecipeBase r,       // the receipe to do..
                             int tomake,         // how many to make..
                             List<MaterialCommodityMicroResource> currentcontents,   
                             Dictionary<MCFDName, int> available,     // current available totals, started at what we have, then decreased if required as you process 
@@ -121,20 +121,20 @@ namespace EliteDangerousCore
                 neededstrverbose.Append("Used: " + Environment.NewLine + usedstrlong.ToString());
             }
 
-            return new Tuple<int, int, string, string,double>(max, made, neededstr.ToNullSafeString(), neededstrverbose.ToNullSafeString(),itemsavailable*100.0/r.Amounts);
+            return new Tuple<int, int, string, string,double>(max, made, neededstr.ToNullSafeString(), neededstrverbose.ToNullSafeString(),itemsavailable*100.0/r.TotalItems);
         }
 
         // return shopping list/count given receipe list, list of current materials.
         // get rid of..
 
-        static public List<Tuple<MaterialCommodityMicroResource,int>> GetShoppingList(List<Tuple<Recipes.Recipe, int>> wantedrecipes, List<MaterialCommodityMicroResource> list)
+        static public List<Tuple<MaterialCommodityMicroResource,int>> GetShoppingList(List<Tuple<RecipeBase, int>> wantedrecipes, List<MaterialCommodityMicroResource> list)
         {
             var shoppingList = new List<Tuple<MaterialCommodityMicroResource, int>>();
             var totals = TotalList(list);
 
-            foreach (Tuple<Recipes.Recipe, int> want in wantedrecipes)
+            foreach (Tuple<RecipeBase, int> want in wantedrecipes)
             {
-                Recipes.Recipe r = want.Item1;
+                RecipeBase r = want.Item1;
                 int wanted = want.Item2;
 
                 for (int i = 0; i < r.Ingredients.Length; i++)

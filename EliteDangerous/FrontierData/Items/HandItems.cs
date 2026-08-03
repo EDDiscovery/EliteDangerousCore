@@ -103,7 +103,7 @@ namespace EliteDangerousCore
             // headshot  Weapon_HeadshotDamage https://elite-dangerous.fandom.com/wiki/Headshot_Damage 1.5x
             // Applied at suit level Suit_IncreasedAmmoReserves https://elite-dangerous.fandom.com/wiki/Extra_Ammo_Capacity 1.5x
 
-            public WeaponStats ApplyEngineering(HandItemFDName[] mods)
+            public WeaponStats ApplyEngineering(EngineeringRecipeFDName[] mods)
             {
                 if (mods.Length > 0)
                 {

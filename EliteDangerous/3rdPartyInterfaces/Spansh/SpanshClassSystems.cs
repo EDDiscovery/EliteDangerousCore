@@ -186,7 +186,7 @@ namespace EliteDangerousCore.Spansh
                                     }
                                 }
 
-                                SystemClass sy = new SystemClass(name, sysaddr, xr, yr, zr, SystemSource.FromSpansh, startype);
+                                SystemClass sy = new SystemClass(xr, yr, zr, sysaddr, name, SystemSource.FromSpansh, startype);
 
                                 if (sy.Triage())
                                 {

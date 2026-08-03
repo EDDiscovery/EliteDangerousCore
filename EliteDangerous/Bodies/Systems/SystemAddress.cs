@@ -35,9 +35,17 @@ namespace EliteDangerousCore
             return new JToken(ID);
         }
 
+        public SystemAddress(long mid)          // backwards compatible with DB reader
+        {
+            ID = (ulong)mid;
+        }
         public SystemAddress(ulong mid)
         {
             ID = mid;
+        }
+        public SystemAddress(ulong? mid)
+        {
+            ID = mid.HasValue ? mid.Value : 0;
         }
         public SystemAddress()
         {
@@ -76,7 +84,6 @@ namespace EliteDangerousCore
         public static bool operator !=(SystemAddress left, SystemAddress right) { return left is null && right is null ? false : left is null ? true : !left.Equals(right); }
 
         public bool IsValid => ID != 0;
-        public bool IsNotValid => ID == 0;
         public ulong Value => ID;
     }
 

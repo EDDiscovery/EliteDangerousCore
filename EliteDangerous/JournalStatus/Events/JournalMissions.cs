@@ -119,14 +119,14 @@ namespace EliteDangerousCore.JournalEvents
             Name = engname;
             LocalisedName = JournalFieldNaming.CheckLocalisation(evt["LocalisedName"].Str(), Name);
 
-            Target = evt["Target"].Str();
-            TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), TargetFriendly);        // copied from Accepted.. no evidence
-
-            TargetType = MissionDefinitions.ToEnum(evt["TargetType"].Str());
-            TargetTypeFriendly = MissionDefinitions.ToEnglish(TargetType);
-            TargetTypeLocalised = MissionDefinitions.ToLocalisedLanguage(TargetType);
-
-            TargetFaction = evt["TargetFaction"].Str();
+            Target = evt["Target"].StrNull();
+            if (Target != null)
+            {
+                TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), Target);        // copied from Accepted.. no evidence
+                TargetType = MissionDefinitions.ToEnum(evt["TargetType"].Str());
+                TargetTypeFriendly = MissionDefinitions.ToEnglish(TargetType);
+                TargetFaction = evt["TargetFaction"].Str();
+            }
 
             KillCount = evt["KillCount"].IntNull();
 
@@ -172,14 +172,11 @@ namespace EliteDangerousCore.JournalEvents
         public string DestinationStation { get; private set; }
         public string DestinationSettlement { get; private set; }   // Odyssey 4.0r13 August 22
 
-        public string Target { get; private set; }
-        public string TargetFriendly => Target;
-        public string TargetLocalised { get; private set; }     // not all.. only for radars etc.
-        public MissionDefinitions.TargetType TargetType { get; private set; }
-        public string TargetTypeFriendly { get; private set; }
-        public string TargetTypeLocalised { get; private set; }
-
-        public string TargetFaction { get; private set; }
+        public string Target { get; private set; }                  // may be null
+        public string TargetLocalised { get; private set; }          // may be null
+        public MissionDefinitions.TargetType TargetType { get; private set; } = MissionDefinitions.TargetType.NotGiven;
+        public string TargetTypeFriendly { get; private set; }      // may be null
+        public string TargetFaction { get; private set; }           // may be null
 
         public int? KillCount { get; private set; }
 
@@ -235,9 +232,8 @@ namespace EliteDangerousCore.JournalEvents
                                            "Deliver".Tx(translate)+": ", CommodityLocalised,
                                            "Count".Tx(translate)+": ", Count,
                                            "Target".Tx(translate)+": ", TargetLocalised,
-                                           "Type".Tx(translate)+": ", TargetTypeFriendly,
+                                           "Type".Tx() + ": ", TargetTypeFriendly,
                                            "Target Faction".Tx(translate)+": ", TargetFaction,
-                                           "Target Type".Tx(translate)+": ", TargetTypeLocalised,
                                            "Kill Count".Tx(translate)+": ", KillCount,
                                            "Passengers".Tx(translate)+": ", PassengerCount);
         }
@@ -249,9 +245,8 @@ namespace EliteDangerousCore.JournalEvents
                                         "Reputation".Tx()+": ", Reputation,
                                         "Deliver".Tx()+": ", FriendlyCommodity,
                                         "Target".Tx()+": ", TargetLocalised,
-                                        "Type".Tx()+": ", TargetTypeFriendly,
                                         "Target Faction".Tx()+": ", TargetFaction,
-                                        "Target Type".Tx()+": ", TargetTypeLocalised,
+                                        "Target Type".Tx()+": ", TargetTypeFriendly,
                                         "Passengers".Tx()+": ", PassengerCount,
                                         "Count".Tx()+": ", Count);
 
@@ -303,15 +298,14 @@ namespace EliteDangerousCore.JournalEvents
 
             Count = evt["Count"].IntNull();
 
-            Target = evt["Target"].Str();
-            TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), TargetFriendly);        // copied from Accepted.. no evidence
-
-            TargetType = MissionDefinitions.ToEnum(evt["TargetType"].Str());
-            TargetTypeFriendly = MissionDefinitions.ToEnglish(TargetType);
-            TargetTypeLocalised = MissionDefinitions.ToLocalisedLanguage(TargetType);
-
-            TargetFaction = evt["TargetFaction"].Str();
-
+            Target = evt["Target"].StrNull();
+            if (Target != null)
+            {
+                TargetLocalised = JournalFieldNaming.CheckLocalisation(evt["Target_Localised"].Str(), Target);        // copied from Accepted.. no evidence
+                TargetType = MissionDefinitions.ToEnum(evt["TargetType"].Str());
+                TargetTypeFriendly = MissionDefinitions.ToEnglish(TargetType);
+                TargetFaction = evt["TargetFaction"].Str();
+            }
 
             Reward = evt["Reward"].LongNull();
             JToken dtk = evt["Donation"];
@@ -381,14 +375,12 @@ namespace EliteDangerousCore.JournalEvents
         public string FriendlyCommodity { get; set; }
         public int? Count { get; set; }
 
-        public string Target { get; set; }
-        public string TargetFriendly => Target;
-        public string TargetLocalised { get;set; }
-        public MissionDefinitions.TargetType TargetType { get; set; }
-        public string TargetTypeLocalised { get; set; }
-        public string TargetTypeFriendly { get; set; }
+        public string Target { get; private set; }                  // may be null
+        public string TargetLocalised { get; private set; }          // may be null
+        public MissionDefinitions.TargetType TargetType { get; private set; } = MissionDefinitions.TargetType.NotGiven;
+        public string TargetTypeFriendly { get; private set; }      // may be null
+        public string TargetFaction { get; private set; }           // may be null
 
-        public string TargetFaction { get; set; }
 
         public string DestinationSystem { get; set; }       // not in doc but logs as per aug 22
         public string DestinationStation { get; set; }      // not in doc but logs as per aug 22
@@ -467,7 +459,7 @@ namespace EliteDangerousCore.JournalEvents
             sb.Build( "Commodity".Tx()+": ", CommodityLocalised,
                                             "Count".Tx()+": ", Count,
                                             "Target".Tx()+": ", TargetLocalised,
-                                            "Type".Tx()+": ", TargetTypeLocalised,
+                                            "Type".Tx() + ": ", TargetTypeFriendly,
                                             "Target Faction".Tx()+": ", TargetFaction);
 
             sb.AppendPrePad(RewardInformation(true),Environment.NewLine);

@@ -137,7 +137,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalRebootRepair(JObject evt) : base(evt, JournalTypeEnum.RebootRepair)
         {
-            Slots = evt["Modules"]?.ToObject<ShipSlots.Slot[]>(false,process:(t,x)=> 
+            Slots = evt["Modules"]?.ToObject<ShipSlots.Slot[]>(false,process:(t,t2, x)=> 
             {
                 return ShipSlots.ToEnum(x);
             });

@@ -116,7 +116,7 @@ namespace EliteDangerousCore
         {
             if (evt != null)
             {
-                var ret = evt?.ToObject<Economies[]>(false, process: (t, x) => {
+                var ret = evt?.ToObject<Economies[]>(false, process: (t,t2, x) => {
                     return EconomyDefinitions.ToEnum(x);      // for enums, we need to process them ourselves
                 });
 

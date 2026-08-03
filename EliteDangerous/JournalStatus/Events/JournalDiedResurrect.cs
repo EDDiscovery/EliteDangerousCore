@@ -45,7 +45,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (evt.Contains("Killers"))
             {
-                Killers = evt["Killers"].ToObject<Killer[]>(process: (type, str) => Enum.TryParse<RankDefinitions.CombatRank>(str, true, out RankDefinitions.CombatRank cr) ? cr : RankDefinitions.CombatRank.Unknown);
+                Killers = evt["Killers"].ToObject<Killer[]>(process: (type, t2, str) => Enum.TryParse<RankDefinitions.CombatRank>(str, true, out RankDefinitions.CombatRank cr) ? cr : RankDefinitions.CombatRank.Unknown);
                 foreach (var x in Killers.EmptyIfNull())
                 {
                     x.Ship = VehicleActorSuitFDName.Normalise(x.Ship.Str(), out string engname, this);

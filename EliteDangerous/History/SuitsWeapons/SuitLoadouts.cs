@@ -58,7 +58,7 @@ namespace EliteDangerousCore
 
             public string WeaponModList() // nice names
             {
-                return (WeaponMods != null) ? string.Join(", ", WeaponMods.Select(x=>Recipes.GetBetterNameForEngineeringRecipe(x))) : "";
+                return (WeaponMods != null) ? string.Join(", ", WeaponMods.Select(x=> EngineeringRecipe.GetBetterNameForEngineeringRecipeFDName(x))) : "";
             }
         }
 

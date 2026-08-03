@@ -918,6 +918,7 @@ FDCDA739585356: "Thargoid Capital Ship Data" @
 9F0A7BE43C6581: "Search and Rescue Voucher" @
 F958260588E1AF: "Steel" @
 4A1B391ED87F19: "Haematite" @
+922D5AFF6174D5: "Curated Commodity Package" @
 
 SECTION EngineeringData
 
@@ -1169,6 +1170,7 @@ E2407F2BA86D9F: "Space Construction Depot" @
 2D68CF109D6809: "Dockable Planet Station" @
 D089EF39D4EA65: "Construction POI" @
 39A76A40856116: "Dodec" @
+9267B3634807D3: "Outpost Scientific" @
 
 SECTION PowerPlayStates
 
@@ -1215,6 +1217,9 @@ EB702E354D4040: "Fighter Weapon" @
 86B9B261DED066: "Vanity Type" @
 352374D32CCD3B: "Unknown Type" @
 036F587DDBE3AB: "Lightweight Alloy (Default)" @
+7F3C61AC8B0BA8: "Fighter" @
+EAD533685E262E: "Weapon" @
+F69654FCE2BE39: "Suit" @
 
 SECTION ModulePartNames
 
@@ -1252,6 +1257,7 @@ C72CB5EAFA5795: "Electronic Countermeasure" @
 46169139E4459B: "Point Defence" @
 9C8CE66481B70F: "Kill Warrant Scanner" @
 6D14E5FC0B7237: "Detailed Surface Scanner" @
+E89383A3EAE0FE: "Surface Scanner" @
 1E150F53516D41: "Standard Docking Computer" @
 300DCF505B20B3: "Advanced Docking Computer" @
 70523AB707ECE7: "Fighter Hangar" @
@@ -1273,6 +1279,7 @@ C63B1C1BCFD89F: "Guardian Hybrid Power Plant" @
 286E5F17D2DFFE: "Frame Shift Drive" @
 BC7C4D39E10588: "Frame Shift Drive (SCO)" @
 7E102B2176905C: "Frame Shift Wake Scanner" @
+23F2C43DDC4C99: "Wake Scanner" @
 9275CA7358B155: "Life Support" @
 A65DF936BCD66F: "Collector Limpet Controller" @
 010A01796C54DA: "Fuel Transfer Limpet Controller" @
@@ -1328,7 +1335,7 @@ B274BC2A7429E0: "Pulse Laser" @
 7809B2B30F59B4: "Pulse Wave Analyser" @
 5BB7DBB8683EC3: "Rail Gun" @
 EAC52E34209313: "Imperial Hammer Rail Gun" @
-711BF3598846F8: "Sensors" @
+9101FC1744AB27: "Sensor" @
 0F094935AF23BE: "Shield Booster" @
 13AFA94574C563: "Shield Cell Bank" @
 7278A03C01494A: "Shield Generator" @
@@ -1349,6 +1356,8 @@ FFE926B9A1E06C: "Concord Cannon" @
 492166ECE113AD: "Colonisation Module" @
 0DB27EBBF41345: "Large Cargo Rack" @
 80C6C2BEA1E3BF: "Mining Volley Repeater" @
+14727AE1418827: "MKII Vessel Hangar (Free)" @
+01CE358DB16568: "MKII Vessel Hangar" @
 
 SECTION ShipSlots
 

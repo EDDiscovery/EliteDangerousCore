@@ -259,7 +259,7 @@ namespace EliteDangerousCore
         }
 
         // for JSON converter
-        public static Object ToCategory(Type t, string text)
+        public static Object ToCategory(Type t, Type dictt, string text)
         {
             return ToCategory(text);
         }

@@ -201,7 +201,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
-            var sys = new SystemClass(StarSystem, SystemAddress, StarPos.X, StarPos.Y, StarPos.Z);
+            var sys = new SystemClass(StarPos.X, StarPos.Y, StarPos.Z, SystemAddress, StarSystem);
             s.GetOrAddSystem( sys);     // we use our data to fill in 
             s.AddLocation(this, sys);
         }

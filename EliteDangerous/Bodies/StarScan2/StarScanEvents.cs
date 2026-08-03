@@ -275,7 +275,7 @@ namespace EliteDangerousCore.StarScan2
         
         public void AddBarycentre(JournalScanBaryCentre sc, ISystem sys, bool saveit = true)
         {
-            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress)     // if we have basic info
+            if (sys.HasAddress && sc.SystemAddress == sys.SystemAddress)     // if we have basic info
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -289,7 +289,7 @@ namespace EliteDangerousCore.StarScan2
 
         public void AddCodexEntryToSystem(JournalCodexEntry sc, ISystem sys)
         {
-            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. 
+            if (sys.HasAddress && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. 
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -304,7 +304,7 @@ namespace EliteDangerousCore.StarScan2
 
         public void SetFSSDiscoveryScan(int? bodycount, int? nonbodycount, ISystem sys)
         {
-            if (sys.SystemAddress.IsValid )     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
+            if (sys.HasAddress )     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -336,7 +336,7 @@ namespace EliteDangerousCore.StarScan2
 
         public void AddScanOrganic(JournalScanOrganic sc, ISystem sys)
         {
-            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
+            if (sys.HasAddress && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -351,7 +351,7 @@ namespace EliteDangerousCore.StarScan2
         // we get this for a planet
         public void AddTouchdown(JournalTouchdown sc, ISystem sys)
         {
-            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress && sc.BodyID != null)     // if we have basic info. First ones did not have body ID
+            if (sys.HasAddress && sc.SystemAddress == sys.SystemAddress && sc.BodyID != null)     // if we have basic info. First ones did not have body ID
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -369,7 +369,7 @@ namespace EliteDangerousCore.StarScan2
         // we get this for a planet
         public void AddApproachSettlement(JournalApproachSettlement sc, ISystem sys)
         {
-            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress && sc.BodyID != null)     // if we have basic info. First ones did not have body ID
+            if (sys.HasAddress && sc.SystemAddress == sys.SystemAddress && sc.BodyID != null)     // if we have basic info. First ones did not have body ID
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -387,7 +387,7 @@ namespace EliteDangerousCore.StarScan2
         // from planets only
         public void AddFSSBodySignalsToBody(JournalFSSBodySignals sc, ISystem sys)
         {
-            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
+            if (sys.HasAddress && sc.SystemAddress == sys.SystemAddress)     // if we have basic info. If we don't have a system  address it pointless trying because we won't have bodyid
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -406,7 +406,7 @@ namespace EliteDangerousCore.StarScan2
         // SAASignalsFound always had bodyid and system
         public void AddSAASignalsFound(JournalSAASignalsFound sc, ISystem sys)
         {
-            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress)     // if we have filled in basic info
+            if (sys.HasAddress && sc.SystemAddress == sys.SystemAddress)     // if we have filled in basic info
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -425,7 +425,7 @@ namespace EliteDangerousCore.StarScan2
         // we can get this for a body HIP 17403 A 4 a, or a ring Borann A 2 B Ring
         public void AddSAAScanComplete(JournalSAAScanComplete sc, ISystem sys)
         {
-            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress )     // if we have basic info. 
+            if (sys.HasAddress && sc.SystemAddress == sys.SystemAddress )     // if we have basic info. 
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -445,7 +445,7 @@ namespace EliteDangerousCore.StarScan2
         // we have augmented the information with BodyID/Body due to HistoryEntryStatus or Spansh provides it for planet stations
         public void AddDocking(JournalDocked sc, ISystem sys)
         {
-            if (sys.SystemAddress.IsValid && sc.SystemAddress == sys.SystemAddress )     // if we have basic info. 
+            if (sys.HasAddress && sc.SystemAddress == sys.SystemAddress )     // if we have basic info. 
             {
                 SystemNode sn = GetOrAddSystem(sys);
                 System.Diagnostics.Debug.Assert(sn != null);
@@ -459,7 +459,7 @@ namespace EliteDangerousCore.StarScan2
 
         public void AddDestinationSelected(JournalEDDDestinationSelected sc, ISystem sys)
         {
-            if (sys.SystemAddress.IsValid )
+            if (sys.HasAddress )
             {
                 //System.Diagnostics.Debug.WriteLine($"StarScan got call to add EDD Destination Selected {sc.TargetName_Localised ?? sc.TargetName}");
             }

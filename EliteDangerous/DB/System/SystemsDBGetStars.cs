@@ -334,7 +334,7 @@ namespace EliteDangerousCore.DB
 
             return new SystemClass(ec.ToString(),
                                         reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2),         // xyz
-                                        isspansh ? new SystemAddress((ulong)reader.GetInt64(3)) : new SystemAddress(),     // for spansh carries in s.edsmid the system address
+                                        isspansh ? new SystemAddress(reader.GetInt64(3)) : new SystemAddress(),     // for spansh carries in s.edsmid the system address
                                         isspansh ? default(long?) : reader.GetInt64(3),     // for edsm carriers in s.edsmid the edsmid
                                         reader.GetInt32(5),
                                         isspansh ? (EDStar)reader.GetInt32(6) : EDStar.Unknown, // spansh records have star set
@@ -357,7 +357,7 @@ namespace EliteDangerousCore.DB
 
             return new SystemClass(ec.ToString(),
                                         reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2),     // xyz
-                                        isspansh ? new SystemAddress((ulong)reader.GetInt64(3)) : new SystemAddress(),     // for spansh carries in s.edsmid the system address
+                                        isspansh ? new SystemAddress(reader.GetInt64(3)) : new SystemAddress(),     // for spansh carries in s.edsmid the system address
                                         isspansh ? default(long?) : reader.GetInt64(3),     // for edsm carriers in s.edsmid the edsmid
                                         reader.GetInt32(5),
                                         isspansh ? (EDStar)reader.GetInt32(8) : EDStar.Unknown, // for spansh, presence of s.info signals that its a spansh record

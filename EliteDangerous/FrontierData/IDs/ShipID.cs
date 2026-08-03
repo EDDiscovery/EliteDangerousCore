@@ -17,11 +17,13 @@ using System;
 
 namespace EliteDangerousCore
 {
-    public class MissionID : IEquatable<MissionID>, IComparable<MissionID>, IEquatable
+
+    [System.Diagnostics.DebuggerDisplay("SID{ID}")]
+    public class ShipID : IEquatable<ShipID>, IComparable<ShipID>, IEquatable
     {
         private ulong ID;
 
-        public MissionID(JToken tk)
+        public ShipID(JToken tk)
         {
             if (tk == null)
                 ID = 0;
@@ -34,11 +36,11 @@ namespace EliteDangerousCore
             return new JToken(ID);
         }
 
-        public MissionID(ulong mid)
+        public ShipID(ulong mid)
         {
             ID = mid;
         }
-        public MissionID()
+        public ShipID()
         {
             ID = 0;
         }
@@ -51,17 +53,17 @@ namespace EliteDangerousCore
                 return ID.ToStringInvariant();
         }
 
-        public bool Equals(MissionID other)
+        public bool Equals(ShipID other)
         {
             return other != null ? this.ID == other.ID : false;
         }
 
         public override bool Equals(Object obj)        // other may be null
         {
-            return obj is MissionID other ? other.ID == this.ID : false;
+            return obj is ShipID other ? other.ID == this.ID : false;
         }
 
-        public int CompareTo(MissionID other)
+        public int CompareTo(ShipID other)
         {
             return this.ID.CompareTo(other.ID);
         }
@@ -71,11 +73,10 @@ namespace EliteDangerousCore
             return ID.GetHashCode();
         }
 
-        public static bool operator ==(MissionID left, MissionID right) { return left is null && right is null ? true : right is null ? false : left.Equals(right); }
-        public static bool operator !=(MissionID left, MissionID right) { return left is null && right is null ? false : left is null ? true : !left.Equals(right); }
+        public static bool operator ==(ShipID left, ShipID right) { return left is null && right is null ? true : right is null ? false : left.Equals(right); }
+        public static bool operator !=(ShipID left, ShipID right) { return left is null && right is null ? false : left is null ? true : !left.Equals(right); }
 
         public bool IsValid => ID != 0;
-        public bool IsNotValid => ID == 0;
         public ulong Value => ID;
     }
 

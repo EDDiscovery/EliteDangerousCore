@@ -135,7 +135,7 @@ namespace EliteDangerousCore.Spansh
                         double y = source["y"].Double();
                         double z = source["z"].Double();
 
-                        SystemClass sy = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                        SystemClass sy = new SystemClass(x, y, z, id64, name, SystemSource.FromSpansh);
                         sy.Tag = notes;
                         syslist.Add(sy);
                     }
@@ -149,7 +149,7 @@ namespace EliteDangerousCore.Spansh
                         double y = destination["y"].Double();
                         double z = destination["z"].Double();
 
-                        SystemClass sy = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                        SystemClass sy = new SystemClass(x, y, z, id64, name, SystemSource.FromSpansh);
                         sy.Tag = $"Fly to {destination["station"].Str()} and sell all";
                         syslist.Add(sy);
                     }
@@ -208,7 +208,7 @@ namespace EliteDangerousCore.Spansh
                         if (distancejumped > 0)
                             notes = notes.AppendPrePad("Distance: " + distancejumped.ToString("N1"), Environment.NewLine);
 
-                        var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                        var sc = new SystemClass(x, y, z, id64, name, SystemSource.FromSpansh);
                         sc.Tag = notes;
                         syslist.Add(sc);
 
@@ -279,7 +279,7 @@ namespace EliteDangerousCore.Spansh
 
                         //                        notes = notes.AppendPrePad($"Total fuel used {totalused:N0} available {fuelcurrent:N0}", Environment.NewLine);
 
-                        var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                        var sc = new SystemClass(x, y, z, id64, name, SystemSource.FromSpansh);
                         sc.Tag = notes;
                         syslist.Add(sc);
                     }
@@ -362,7 +362,7 @@ namespace EliteDangerousCore.Spansh
                         if (must_refuel)
                             notes = notes.AppendPrePad("Must refuel", Environment.NewLine);
 
-                        var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                        var sc = new SystemClass(x, y, z, id64, name, SystemSource.FromSpansh);
                         sc.Tag = notes;
                         syslist.Add(sc);
                     }
@@ -458,7 +458,7 @@ namespace EliteDangerousCore.Spansh
                                                            "Possible maximum: ; cr;N0", totalmapping + totallandmarks);
                         notes = notes.AppendPrePad(totals, Environment.NewLine);
 
-                        var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                        var sc = new SystemClass(x, y, z, id64, name, SystemSource.FromSpansh);
                         sc.Tag = notes;
                         syslist.Add(sc);
                     }
@@ -559,7 +559,7 @@ namespace EliteDangerousCore.Spansh
                                                        "Total scan: ; cr;N0", totalscan);
                     notes = notes.AppendPrePad(totals, Environment.NewLine);
 
-                    var sc = new SystemClass(name, id64, x, y, z, SystemSource.FromSpansh);
+                    var sc = new SystemClass(x, y, z, id64, name, SystemSource.FromSpansh);
                     sc.Tag = notes;
                     syslist.Add(sc);
                 }

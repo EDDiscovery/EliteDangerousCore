@@ -62,7 +62,7 @@ namespace EliteDangerousCore.Spansh
 
         static public bool LaunchBrowserForSystem(ISystem sys)
         {
-            if (sys.SystemAddress.IsValid)
+            if (sys.HasAddress)
             {
                 return LaunchBrowserForSystem(sys.SystemAddress);
             }
@@ -106,7 +106,7 @@ namespace EliteDangerousCore.Spansh
                 {
                     string rname = body["name"].Str();
 
-                    var sys = new SystemClass(rname, new SystemAddress(body["id64"]), body["x"].Double(), body["y"].Double(), body["z"].Double(), SystemSource.FromSpansh);
+                    var sys = new SystemClass( body["x"].Double(), body["y"].Double(), body["z"].Double(), new SystemAddress(body["id64"]), rname, SystemSource.FromSpansh);
 
                     if (rname.Equals(name, StringComparison.InvariantCultureIgnoreCase) && sys.Triage())
                     {
@@ -141,15 +141,15 @@ namespace EliteDangerousCore.Spansh
         // ensure we have a valid system address from a sys, null if can't
         public ISystem EnsureSystemAddressAndName(ISystem sys)
         {
-            if (sys.SystemAddress == null)
+            if (sys.HasAddress == false)
             {
                 SpanshClass sp = new SpanshClass();
-                sys = sp.GetSystem(sys.Name);       // name and system address filled
+                sys = sp.GetSystem(sys.Name);       // name only
             }
             else if ( sys.Name.IsEmpty())
             {
                 SpanshClass sp = new SpanshClass();
-                sys = sp.GetSystem(sys.SystemAddress);       // name and system address filled
+                sys = sp.GetSystem(sys.SystemAddress);       // address only 
             }
 
             return sys;

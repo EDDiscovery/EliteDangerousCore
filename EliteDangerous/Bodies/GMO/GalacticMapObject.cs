@@ -62,7 +62,7 @@ namespace EliteDangerousCore.GMO
             GalMapTypes = new List<GalMapType>() { GetGalMapTypeFromTypeName(type) };
             DescriptiveNames = new List<string> { gmoname };
             Description = descriptivetext;
-            StarSystem = new SystemClass(starname,null,pos.X,pos.Y,pos.Z);
+            StarSystem = new SystemClass(pos.X,pos.Y,pos.Z,starname);
             GalMapUrl = "";
             Points = new List<Vector3>() { pos };
 
@@ -138,7 +138,7 @@ namespace EliteDangerousCore.GMO
 
             string name = jo["galMapSearch"].Str("");       // see if the star name is there, if so, and its 1 point, store
             if (name.HasChars() && Points.Count == 1)
-                StarSystem = new SystemClass(name, null, Points[0].X, Points[0].Y, Points[0].Z);
+                StarSystem = new SystemClass(Points[0].X, Points[0].Y, Points[0].Z,name);
 
            // System.Diagnostics.Debug.Assert(GalMapType.VisibleType == null || StarSystem != null);  // check for all visible markers have a StarSystem
            // System.Diagnostics.Debug.WriteLine($"GMO {DescriptiveNames[0]} : {GalMapType.Group} : {GalMapType.VisibleType} : ss `{StarSystem}`");

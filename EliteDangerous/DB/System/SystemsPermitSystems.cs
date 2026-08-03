@@ -31,7 +31,7 @@ namespace EliteDangerousCore.DB
                     {
                         while (reader.Read())
                         {
-                            ret.Add((ulong)reader[0]);
+                            ret.Add((ulong)reader.GetInt64(0));
                         }
                     };
                 };

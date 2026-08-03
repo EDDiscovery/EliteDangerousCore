@@ -501,12 +501,14 @@ namespace EliteDangerousCore
             public bool IsPowerDistributor { get { return ModType == ModuleTypes.PowerDistributor; } }
             public bool IsHardpoint { get { return Damage.HasValue && ModuleID != 128049522; } }        // Damage, but not point defense
             public bool IsMiningEquipment { get { return ModType == ModuleTypes.AbrasionBlaster || ModType == ModuleTypes.MiningLance || ModType == ModuleTypes.Sub_SurfaceDisplacementMissile || ModType == ModuleTypes.SeismicChargeLauncher ||
-                                            ModType == ModuleTypes.MiningLaser || ModType == ModuleTypes.MiningLance; } }       
+                                            ModType == ModuleTypes.MiningLaser || ModType == ModuleTypes.MiningLance; } }
 
             // string should be in spansh/EDCD csv compatible format, in english, as it it fed into Spansh
-            public string EnglishModTypeString() { return ModType.ToString().Replace("AX", "AX ").Replace("_", "-").SplitCapsWordFull(); }
+            public static string EnglishModTypeString(ModuleTypes t) { return t.ToString().Replace("AX", "AX ").Replace("_", "-").SplitCapsWordFull(); }
+            public string EnglishModTypeString() { return EnglishModTypeString(ModType); }
 
-            public string TranslatedModTypeString() { return EnglishModTypeString().Tx(); }
+            public static string TranslatedModTypeString(ModuleTypes t) { return EnglishModTypeString(t).Tx(); }
+            public string TranslatedModTypeString() { return EnglishModTypeString(ModType).Tx(); }
 
             // printed in this order
 

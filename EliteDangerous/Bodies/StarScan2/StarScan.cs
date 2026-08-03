@@ -155,7 +155,7 @@ namespace EliteDangerousCore.StarScan2
         {
             lock (masterlock)
             {
-                if (sys.SystemAddress.IsValid && systemNodesByAddress.TryGetValue(sys.SystemAddress, out var systemNode))
+                if (sys.HasAddress && systemNodesByAddress.TryGetValue(sys.SystemAddress, out var systemNode))
                 {
                     return systemNode;
                 }
