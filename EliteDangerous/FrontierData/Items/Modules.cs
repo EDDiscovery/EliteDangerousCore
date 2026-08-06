@@ -52,10 +52,10 @@ namespace EliteDangerousCore
                 {
                     ModFDName candidatename = GenerateCandidateModuleName(fdid);
 
-                    var newmodule = new ShipModule(-1, IsVanity(candidatename) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType, candidatename.Str());
+                    var newmodule = new ShipModule(-1, IsVanity(candidatename) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType, candidatename.ID);
                     string futilemessage = " - this is item unknown to EDD, but IT WILL not affect operation of the program. It would be nice to report it to us so we can add it to known module lists";
 
-                    BaseUtils.Debugger.TraceBreak($"*** Unknown Module in slot {ShipSlots.ToEnglish(slot)} : {{\"{candidatename.ToLower()}\", new ShipModule(-1,{(IsVanity(candidatename) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename.Str()}\") }}," + futilemessage);
+                    BaseUtils.Debugger.TraceBreak($"*** Unknown Module in slot {ShipSlots.ToEnglish(slot)} : {{\"{candidatename.ToLower()}\", new ShipModule(-1,{(IsVanity(candidatename) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename.ID}\") }}," + futilemessage);
 
                     synthesisedmodules[candidatename] = m = newmodule;                   // lets cache them for completeness..
                  
@@ -67,7 +67,7 @@ namespace EliteDangerousCore
 
         internal static ModFDName GenerateCandidateModuleName(ModFDName unknown)
         {
-            string candidatename = unknown.Str();
+            string candidatename = unknown.ID;
 
             candidatename = candidatename.Replace("weaponcustomisation", "WeaponCustomisation").Replace("testbuggy", "SRV").
                                     Replace("enginecustomisation", "EngineCustomisation");
@@ -236,7 +236,7 @@ namespace EliteDangerousCore
                     foreach (var kvp in shipmodules)
                     {
                         if (kvp.Key.EndsWith(grade))
-                            ret.Add(kvp.Key.Str());
+                            ret.Add(kvp.Key.ID);
                     }
                 }
                 else

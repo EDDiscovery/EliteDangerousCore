@@ -288,12 +288,12 @@ namespace EliteDangerousCore
         public double FuelWarningPercent
         {
             get { return fuelwarningpercent; }
-            set { fuelwarningpercent = value; EliteDangerousCore.DB.UserDatabase.Instance.PutSetting("ShipInformation:" + ShipFD.Str() + ID.ToString() + "Warninglevel", value); }
+            set { fuelwarningpercent = value; EliteDangerousCore.DB.UserDatabase.Instance.PutSetting("ShipInformation:" + ShipFD.ID + ID.ToString() + "Warninglevel", value); }
         }
         public void UpdateFuelWarningPercent()
         {
             if ( fuelwarningpercent == -999 )
-                fuelwarningpercent = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ShipInformation:" + ShipFD.Str() + ID.ToString() + "Warninglevel", 0);
+                fuelwarningpercent = EliteDangerousCore.DB.UserDatabase.Instance.GetSetting("ShipInformation:" + ShipFD.ID + ID.ToString() + "Warninglevel", 0);
         }
 
         public bool HasWeapons()
@@ -1103,7 +1103,7 @@ namespace EliteDangerousCore
             JObject jo = new JObject();
 
             jo["event"] = "Loadout";
-            jo["Ship"] = ShipFD.Str();
+            jo["Ship"] = ShipFD.ID;
 
             JArray mlist = new JArray();
             foreach (ShipModule sm in Modules.Values)
@@ -1112,7 +1112,7 @@ namespace EliteDangerousCore
 
                 if (ItemData.TryGetShipModule(sm.ItemFD, out ItemData.ShipModule si, false) && si.ModuleID != 0)   // don't synth it
                 {
-                    module["Item"] = sm.ItemFD.Str();
+                    module["Item"] = sm.ItemFD.ID;
                     module["Slot"] = sm.SlotFD.ToString();
                     module["On"] = sm.Enabled.HasValue ? sm.Enabled : true;
                     module["Priority"] = sm.Priority.HasValue ? sm.Priority : 0;
@@ -1138,7 +1138,7 @@ namespace EliteDangerousCore
             JObject engineering = new JObject();
 
             engineering["BlueprintID"] = module.Engineering.BlueprintID;
-            engineering["BlueprintName"] = module.Engineering.BlueprintName.Str();
+            engineering["BlueprintName"] = module.Engineering.BlueprintName.ID;
             engineering["Level"] = module.Engineering.Level;
             engineering["Quality"] = module.Engineering.Quality;
 
@@ -1148,7 +1148,7 @@ namespace EliteDangerousCore
                 foreach (EngineeringModifiers modifier in module.Engineering.Modifiers)
                 {
                     JObject jmodifier = new JObject();
-                    jmodifier["Label"] = modifier.Label.Str();
+                    jmodifier["Label"] = modifier.Label.ID;
                     jmodifier["Value"] = modifier.Value;
                     jmodifier["OriginalValue"] = modifier.OriginalValue;
                     jmodifier["LessIsGood"] = modifier.LessIsGood;
@@ -1159,7 +1159,7 @@ namespace EliteDangerousCore
             }
 
             if (module.Engineering.ExperimentalEffect != null)
-                engineering["ExperimentalEffect"] = module.Engineering.ExperimentalEffect.Str();
+                engineering["ExperimentalEffect"] = module.Engineering.ExperimentalEffect.ID;
 
             return engineering;
         }
@@ -1170,7 +1170,7 @@ namespace EliteDangerousCore
 
             jo["timestamp"] = DateTime.UtcNow.ToStringZuluInvariant();
             jo["event"] = "Loadout";
-            jo["Ship"] = ShipFD.Str();
+            jo["Ship"] = ShipFD.ID;
             jo["ShipID"] = ID.Value;
             if (!string.IsNullOrEmpty(ShipUserName))
                 jo["ShipName"] = ShipUserName;

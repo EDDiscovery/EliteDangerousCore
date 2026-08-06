@@ -60,7 +60,7 @@ namespace EliteDangerousCore
                     m_Watcher.Created += new FileSystemEventHandler(OnNewFile);
                     m_Watcher.EnableRaisingEvents = true;
 
-                    System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Start Monitor on `{m_Watcher.Path}` incl {IncludeSubfolders}");
+                   // System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Start Monitor on `{m_Watcher.Path}` incl {IncludeSubfolders}");
                 }
                 catch (Exception ex)
                 {
@@ -79,7 +79,7 @@ namespace EliteDangerousCore
                 m_Watcher.Dispose();
                 m_Watcher = null;
 
-                System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Stop Monitor on {Folder} incl {IncludeSubfolders}");
+                //System.Diagnostics.Trace.WriteLine($"{BaseUtils.AppTicks.TickCount} Stop Monitor on {Folder} incl {IncludeSubfolders}");
             }
         }
 
@@ -239,7 +239,7 @@ namespace EliteDangerousCore
             FileInfo[] allFiles = Directory.EnumerateFiles(Folder, journalfilematch, IncludeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).
                                         Select(f => new FileInfo(f)).Where(g=>g.LastWriteTime >= minjournaldateutc).OrderBy(p => p.LastWriteTime).ToArray();
             
-            System.Diagnostics.Debug.WriteLine($"ScanJournalFiles {Folder}  {journalfilematch} Found {allFiles.Length}");
+            //System.Diagnostics.Debug.WriteLine($"ScanJournalFiles {Folder}  {journalfilematch} Found {allFiles.Length}");
 
             List<EDJournalReader> readersToUpdate = new List<EDJournalReader>();
 
@@ -272,7 +272,7 @@ namespace EliteDangerousCore
 
             if ( tlutoadd.Count > 0 )                      // now, on spinning rust, this takes ages for 600+ log files first time, so transaction it
             {
-                System.Diagnostics.Debug.WriteLine($"ScanJournalFiles Commit {tlutoadd.Count} TLUs");
+                //System.Diagnostics.Debug.WriteLine($"ScanJournalFiles Commit {tlutoadd.Count} TLUs");
 
                 UserDatabase.Instance.DBWrite(cn => 
                     {

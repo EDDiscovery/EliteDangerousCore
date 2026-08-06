@@ -123,7 +123,7 @@ namespace EliteDangerousCore.JournalEvents
                 foreach( var m in ShipModules )
                 {
                     if (!shipproperties.HasSlot(m.SlotFD))
-                        BaseUtils.Debugger.TraceBreak($"*** Ship data missing slot {m.SlotFD} for {ShipFD.Str()} : error in EDD ship data");
+                        BaseUtils.Debugger.TraceBreak($"*** Ship data missing slot {m.SlotFD} for {ShipFD.ID} : error in EDD ship data");
                 }
             }
 
@@ -151,7 +151,7 @@ namespace EliteDangerousCore.JournalEvents
                             "", m.PE(),
                             "Blueprint".Tx()+": ", m.Engineering?.FriendlyBlueprintName, 
                             "<+", m.Engineering?.ExperimentalEffect_Localised, 
-                            "< ", m.Engineering?.Engineer.Str());
+                            "< ", m.Engineering?.Engineer.ID);
             }
 
             return sb.ToString();
@@ -622,7 +622,7 @@ namespace EliteDangerousCore.JournalEvents
             if (s.EqualsIIC("null"))        // early bug, doing it this way stops NormaliseModules moan
             {
                 ToItemFD = ModFDName.Empty;
-                ToItem = ToItemFD.Str();
+                ToItem = ToItemFD.ID;
             }
             else
             {

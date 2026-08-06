@@ -36,7 +36,7 @@ namespace EliteDangerousCore
 
             public void Normalise()
             {
-                ShipType = VehicleFDName.Normalise(ShipType.Str(), out string bettername, null);
+                ShipType = VehicleFDName.Normalise(ShipType.ID, out string bettername, null);
                 FriendlyShipType = bettername;
                 ShipType_Localised = JournalFieldNaming.CheckLocalisation(ShipType_Localised,FriendlyShipType);
             }

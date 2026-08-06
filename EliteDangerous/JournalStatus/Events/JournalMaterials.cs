@@ -36,7 +36,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = MCFDName.Normalise(Name.Str(), out string engname, ev);
+                Name = MCFDName.Normalise(Name.ID, out string engname, ev);
                 FriendlyName = engname;
             }
         }
@@ -278,7 +278,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Material = MCFDName.Normalise(Material.Str(), out string engname,ev);
+                Material = MCFDName.Normalise(Material.ID, out string engname,ev);
                 FriendlyMaterial = engname;
                 Material_Localised = JournalFieldNaming.CheckLocalisationTranslation(Material_Localised ?? "", FriendlyMaterial);       // ensure.
 

@@ -38,7 +38,9 @@ namespace EliteDangerousCore
         public static DateTime Ascendency {get; } =  new DateTime(2024, 10, 22, 12, 0, 0, DateTimeKind.Utc);         // power play 2.0
         public static DateTime Trailblazers {get; } =  new DateTime(2025, 2, 26, 12, 0, 0, DateTimeKind.Utc);        // colonisation
         public static DateTime Vanguards {get; } =  new DateTime(2025, 8, 19, 12, 0, 0,DateTimeKind.Utc);            //squadron overhaul
-        public static DateTime GameEndTime {get; } =  new DateTime(2999, 12, 14, 23, 59, 59, DateTimeKind.Utc);      // not according to the forums, its already dead!
+        public static DateTime GameEndTime { get; } = new DateTime(2999, 12, 14, 23, 59, 59, DateTimeKind.Utc);      // not according to the forums, its already dead!
+        public static DateTime ComplainTime { get; } = new DateTime(2016, 1, 1, 0, 0, 0, DateTimeKind.Utc);         // time to complain missing items
+        public static DateTime RecipeComplainTime { get; } = Odyssey1;                                              // time to complain missing items
 
         public static bool IsBeta(string GameVersion, string Build, DateTime EventTimeUTC)
         {

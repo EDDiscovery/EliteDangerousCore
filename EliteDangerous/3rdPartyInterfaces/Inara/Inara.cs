@@ -221,7 +221,7 @@ namespace EliteDangerousCore.Inara
           static public JToken setCommanderInventoryItem(MaterialCommodityMicroResource x, DateTime dt, int cn = 0 , string loc = null)
         {
             JObject eventData = new JObject();
-            eventData["itemName"] = x.Details.FDName.Str();
+            eventData["itemName"] = x.Details.FDName.ID;
             eventData["itemCount"] = x.Counts[cn];
             eventData["itemType"] = x.Details.Category.ToString();
             if (loc != null)
@@ -240,7 +240,7 @@ namespace EliteDangerousCore.Inara
                 foreach (var x in mats)
                 {
                     JObject data = new JObject();
-                    data["itemName"] = x.Details.FDName.Str();
+                    data["itemName"] = x.Details.FDName.ID;
                     data["itemCount"] = x.Counts[cn];
                     data["itemType"] = x.Details.Category.ToString();
                     if (loc != null)
@@ -259,7 +259,7 @@ namespace EliteDangerousCore.Inara
             foreach (var x in list)
             {
                 JObject data = new JObject();
-                data["itemName"] = x.NameFD.Str();
+                data["itemName"] = x.NameFD.ID;
                 data["itemValue"] = x.BuyPrice;
                 data["isHot"] = x.Hot;
                 data["starsystemName"] = x.StarSystem;
@@ -267,7 +267,7 @@ namespace EliteDangerousCore.Inara
                 if (x.EngineerModifications != null)
                 {
                     JObject eng = new JObject();
-                    eng["blueprintName"] = x.EngineerModifications.Str();
+                    eng["blueprintName"] = x.EngineerModifications.ID;
                     eng["blueprintLevel"] = x.Level;
                     eng["blueprintQuality"] = x.Quality;
                     eng["experimentalEffect"] = "";
@@ -282,7 +282,7 @@ namespace EliteDangerousCore.Inara
         static public JToken addCommanderShip(VehicleFDName fdname, ulong id, string starsystem, string station, DateTime dt)
         {
             JObject eventData = new JObject();
-            eventData["shipType"] = fdname.Str();
+            eventData["shipType"] = fdname.ID;
             eventData["shipGameID"] = id;
             eventData["starsystemName"] = starsystem;
             eventData["stationName"] = station;
@@ -292,7 +292,7 @@ namespace EliteDangerousCore.Inara
         static public JToken delCommanderShip(VehicleFDName fdname, ShipID id, DateTime dt)
         {
             JObject eventData = new JObject();
-            eventData["shipType"] = fdname.Str();
+            eventData["shipType"] = fdname.ID;
             eventData["shipGameID"] = id.Value;
             return Event("delCommanderShip", dt, eventData);
         }
@@ -304,7 +304,7 @@ namespace EliteDangerousCore.Inara
                                               string starsystemName = null, string stationName = null, MarketID MarketID = null)
         {
             JObject eventData = new JObject();
-            eventData["shipType"] = fdname.Str();
+            eventData["shipType"] = fdname.ID;
             eventData["shipGameID"] = id.Value;
             if ( username.HasChars())
                 eventData["shipName"] = username;
@@ -336,7 +336,7 @@ namespace EliteDangerousCore.Inara
                 return null;
 
             JObject eventData = new JObject();
-            eventData["shipType"] = fdname.Str();
+            eventData["shipType"] = fdname.ID;
             eventData["shipGameID"] = id.Value;
 
             JArray items = new JArray();
@@ -344,7 +344,7 @@ namespace EliteDangerousCore.Inara
             {
                 JObject data = new JObject();
                 data["slotName"] = x.SlotFD.ToString();
-                data["itemName"] = x.ItemFD.Str();
+                data["itemName"] = x.ItemFD.ID;
                 if ( x.Value.HasValue )
                     data["itemValue"] = x.Value.Value;
                 if ( x.Health.HasValue)
@@ -360,10 +360,10 @@ namespace EliteDangerousCore.Inara
                 if (x.Engineering != null )
                 {
                     JObject eng = new JObject();
-                    eng["blueprintName"] = x.Engineering.BlueprintName.Str() ?? "";
+                    eng["blueprintName"] = x.Engineering.BlueprintName.ID ?? "";
                     eng["blueprintLevel"] = x.Engineering.Level;
                     eng["blueprintQuality"] = x.Engineering.Quality;
-                    eng["experimentalEffect"] = x.Engineering.ExperimentalEffect?.Str() ?? "";
+                    eng["experimentalEffect"] = x.Engineering.ExperimentalEffect?.ID ?? "";
 
                     if ( x.Engineering.Modifiers != null )
                     {
@@ -372,7 +372,7 @@ namespace EliteDangerousCore.Inara
                         foreach( var y in x.Engineering.Modifiers )
                         {
                             JObject mod = new JObject();
-                            mod["name"] = y.Label.Str();
+                            mod["name"] = y.Label.ID;
                             if (y.ValueStr.HasChars())
                                 mod["value"] = y.ValueStr;
                             else
@@ -401,7 +401,7 @@ namespace EliteDangerousCore.Inara
         static public JToken setCommanderShipTransfer(VehicleFDName fdname, ShipID id, string starsystem, string station, MarketID marketid, int transfertimesec, DateTime dt)
         {
             JObject eventData = new JObject();
-            eventData["shipType"] = fdname.Str();
+            eventData["shipType"] = fdname.ID;
             eventData["shipGameID"] = id.Value;
             eventData["starsystemName"] = starsystem;
             eventData["stationName"] = station;
@@ -415,7 +415,7 @@ namespace EliteDangerousCore.Inara
         static public JToken addCommanderTravelDock(VehicleFDName fdname, ShipID id, string starsystem, string station, MarketID marketid, DateTime dt)
         {
             JObject eventData = new JObject();
-            eventData["shipType"] = fdname.Str();
+            eventData["shipType"] = fdname.ID;
             eventData["shipGameID"] = id.Value;
             eventData["starsystemName"] = starsystem;
             eventData["stationName"] = station;
@@ -427,7 +427,7 @@ namespace EliteDangerousCore.Inara
         static public JToken addCommanderTravelFSDJump(VehicleFDName fdname, ShipID id, string starsystem, double distance, DateTime dt)
         {
             JObject eventData = new JObject();
-            eventData["shipType"] = fdname.Str();
+            eventData["shipType"] = fdname.ID;
             eventData["shipGameID"] = id.Value;
             eventData["starsystemName"] = starsystem;
             eventData["jumpDistance"] = distance;
@@ -437,7 +437,7 @@ namespace EliteDangerousCore.Inara
         static public JToken addCommanderTravelCarrierJump(VehicleFDName fdname, ShipID id, string starsystem, DateTime dt)
         {
             JObject eventData = new JObject();
-            eventData["shipType"] = fdname.Str();
+            eventData["shipType"] = fdname.ID;
             eventData["shipGameID"] = id.Value;
             eventData["starsystemName"] = starsystem;
             return Event("addCommanderTravelCarrierJump", dt, eventData);
@@ -457,7 +457,7 @@ namespace EliteDangerousCore.Inara
         static public JToken addCommanderMission(JournalMissionAccepted mission, DateTime dt, string starsystem, string station)
         {
             JObject eventData = new JObject();
-            eventData["missionName"] = mission.FDName.Str();
+            eventData["missionName"] = mission.FDName.ID;
             eventData["missionGameID"] = mission.MissionID.Value;
             eventData["missionExpiry"] = mission.Expiry.ToStringZuluInvariant();
 
@@ -483,7 +483,7 @@ namespace EliteDangerousCore.Inara
                 eventData["minorfactionNameTarget"] = mission.TargetFaction;
 
             if (mission.Commodity != null)
-                eventData["commodityName"] = mission.Commodity.Str();
+                eventData["commodityName"] = mission.Commodity.ID;
             if ( mission.Count != null)
                 eventData["commodityCount"] = mission.Count.Value;
 
@@ -541,7 +541,7 @@ namespace EliteDangerousCore.Inara
                 foreach (var p in mission.CommodityReward)
                 {
                     JObject o = new JObject();
-                    o["itemName"] = p.Name.Str();
+                    o["itemName"] = p.Name.ID;
                     o["itemCount"] = p.Count;
                     ent.Add(o);
                 }
@@ -554,7 +554,7 @@ namespace EliteDangerousCore.Inara
                 foreach (var p in mission.MaterialsReward)
                 {
                     JObject o = new JObject();
-                    o["itemName"] = p.Name.Str();
+                    o["itemName"] = p.Name.ID;
                     o["itemCount"] = p.Count;
                     ent.Add(o);
                 }

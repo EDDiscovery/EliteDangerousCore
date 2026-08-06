@@ -480,8 +480,8 @@ namespace EliteDangerousCore
                     // assign it to MGT NA. prev code cat == CatType.Raw ? MaterialGroupType.RawCategory1 : cat == CatType.Encoded ? MaterialGroupType.EncodedDataArchives : cat == CatType.Manufactured ? MaterialGroupType.ManufacturedChemical : MaterialGroupType.NA;
                     MaterialGroupType mgt = MaterialGroupType.NA;
 
-                    Add(cat, it, mgt, (MCMR)fakeid, fdname.Str(), locname ?? fdname.SplitCapsWordFull(), fakeid.ToStringInvariant(), false);
-                    BaseUtils.Debugger.TraceBreak($"*** Unknown Material/Commodity/Microresource: {fdname.Str()}, {cat}, {locname} -> {cat}, {it}, {mgt}");
+                    Add(cat, it, mgt, (MCMR)fakeid, fdname.ID, locname ?? fdname.SplitCapsWordFull(), fakeid.ToStringInvariant(), false);
+                    BaseUtils.Debugger.TraceBreak($"*** Unknown Material/Commodity/Microresource: {fdname.ID}, {cat}, {locname} -> {cat}, {it}, {mgt}");
                     fakeid++;
                 }
 

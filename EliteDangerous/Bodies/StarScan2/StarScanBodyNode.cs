@@ -871,7 +871,7 @@ namespace EliteDangerousCore.StarScan2
             }
             foreach (var x in Signals.EmptyIfNull())
             {
-                sp.Append($"{pad}S:{x.Type_Localised ?? x.Type.Str()} {x.Count}");
+                sp.Append($"{pad}S:{x.Type_Localised ?? x.Type.ID} {x.Count}");
                 sp.AppendCR();
             }
             foreach (var x in Organics.EmptyIfNull())
@@ -881,12 +881,12 @@ namespace EliteDangerousCore.StarScan2
             }
             foreach (var x in Genuses.EmptyIfNull())
             {
-                sp.Append($"{pad}G:{x.Genus_Localised ?? x.Genus.Str()}");
+                sp.Append($"{pad}G:{x.Genus_Localised ?? x.Genus.ID}");
                 sp.AppendCR();
             }
             foreach (var x in FSSSignalList.EmptyIfNull())
             {
-                sp.Append($"{pad}FSS:{x.SignalName_Localised ?? x.SignalName.Str()} {x.USSType}");
+                sp.Append($"{pad}FSS:{x.SignalName_Localised ?? x.SignalName.ID} {x.USSType}");
                 sp.AppendCR();
             }
             foreach (var x in Features.EmptyIfNull())

@@ -618,7 +618,7 @@ namespace EliteDangerousCore.EDDN
                 ["marketId"] = journal.MarketID.Value,
                 ["modules"] = new JArray(journal.YardInfo.Items
                                 .Where(m => m.FDName.IsWeaponArmour())      // Use FDName here note
-                                .Select(m => m.FDName.Str())
+                                .Select(m => m.FDName.ID)
                                 .Distinct()
                                 )
                                 
@@ -989,7 +989,7 @@ namespace EliteDangerousCore.EDDN
 
                 JObject jo = new JObject();
 
-                jo["name"] = commodity.fdname.Str();
+                jo["name"] = commodity.fdname.ID;
                 jo["meanPrice"] = commodity.meanPrice;
                 jo["buyPrice"] = commodity.buyPrice;
                 jo["stock"] = commodity.stock;
@@ -1051,7 +1051,7 @@ namespace EliteDangerousCore.EDDN
                     JObject sj = new JObject();
 
                     sj["timestamp"] = sig.RecordedUTC.ToStringZuluInvariant();
-                    sj["SignalName"] = sig.SignalName.Str();
+                    sj["SignalName"] = sig.SignalName.ID;
                     if (sig.SignalType.HasChars())
                         sj["SignalType"] = sig.SignalType;
                     if (sig.IsStation.HasValue)
@@ -1108,7 +1108,7 @@ namespace EliteDangerousCore.EDDN
             {
                 JObject sj = new JObject();
                 sj["id"] = commodity.id;
-                sj["Name"] = commodity.fdname_unnormalised.Str();
+                sj["Name"] = commodity.fdname_unnormalised.ID;
                 sj["Price"] = commodity.buyPrice;
                 sj["Stock"] = commodity.stock;
                 sj["Demand"] = commodity.demand;
@@ -1139,7 +1139,7 @@ namespace EliteDangerousCore.EDDN
             message["MarketID"] = journal.MarketID.Value;
             message["StationName"] = journal.StationName;
             message["StationType"] = journal.FDStationType.ToString();
-            message["Reason"] = journal.FDReason.Str();
+            message["Reason"] = journal.FDReason.ID;
 
             msg["message"] = message;
 

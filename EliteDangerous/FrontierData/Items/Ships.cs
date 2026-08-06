@@ -196,7 +196,7 @@ namespace EliteDangerousCore
                 foreach (var kvp in spaceships)     // check spaceships array for image and missing manu
                 {
                     if ( GetShipImage(kvp.Key) == null)
-                        System.Diagnostics.Debug.Assert(false, $"Missing ship image {kvp.Key.Str()}");
+                        System.Diagnostics.Debug.Assert(false, $"Missing ship image {kvp.Key.ID}");
                 }
             }
         }

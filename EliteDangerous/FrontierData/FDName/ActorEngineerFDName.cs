@@ -28,6 +28,8 @@ namespace EliteDangerousCore
         public ActorFDName(QuickJSON.JToken token) : base(token)
         {
         }
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
+
     }
 
     public class EngineerFDName : FDName
@@ -43,6 +45,7 @@ namespace EliteDangerousCore
         public EngineerFDName(QuickJSON.JToken token) : base(token)
         {
         }
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
     }
 
     public class ModLabelFDName : FDName
@@ -58,6 +61,7 @@ namespace EliteDangerousCore
         public ModLabelFDName(QuickJSON.JToken token) : base(token)
         {
         }
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
     }
 
 }

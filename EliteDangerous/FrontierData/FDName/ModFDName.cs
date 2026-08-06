@@ -12,9 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
-using QuickJSON;
 using System;
-using System.Collections.Generic;
 
 namespace EliteDangerousCore
 {
@@ -35,9 +33,10 @@ namespace EliteDangerousCore
 
         public ModFDName Clone()
         {
-            return new ModFDName(Str());
+            return new ModFDName(ID);
         }
 
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
         public static ModFDName Empty => new ModFDName();
 
         public static ModFDName Normalise(string fdname, out string modulename, JournalEntry ev, bool allownull = false)
@@ -52,7 +51,10 @@ namespace EliteDangerousCore
                 else
                 {
                     modulename = "Unknown Module";
-                    BaseUtils.Debugger.TraceBreak($"*** Missing Module {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+
+                    if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
+                        BaseUtils.Debugger.TraceBreak($"*** Missing Module {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+
                     return new ModFDName("Unknown Module");
                 }
             }
@@ -68,7 +70,9 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    BaseUtils.Debugger.TraceBreak("*** Unknown Module `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                    if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
+                        BaseUtils.Debugger.TraceBreak($"*** Unknown Module `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+
                     modulename = "Unknown Module " + fdname;
                 }
 
@@ -81,7 +85,7 @@ namespace EliteDangerousCore
             if (ItemData.TryGetShipModule(this, out ItemData.ShipModule item, true, slot))
                 return item.TranslatedModTypeString();
             else
-                return loc ?? Str();
+                return loc ?? ID;
         }
 
         public string GetForeignModuleType(string loc = null, ShipSlots.Slot slot = ShipSlots.Slot.Unknown)
@@ -89,7 +93,7 @@ namespace EliteDangerousCore
             if (ItemData.TryGetShipModule(this, out ItemData.ShipModule item, true, slot))
                 return item.TranslatedModTypeString();
             else
-                return loc ?? Str();
+                return loc ?? ID;
         }
 
         public bool IsWeaponArmour()
@@ -98,5 +102,6 @@ namespace EliteDangerousCore
                                             ToLower().StartsWith("Int_", StringComparison.InvariantCultureIgnoreCase) ||
                                             ToLower().Contains("_armour_", StringComparison.InvariantCultureIgnoreCase);
         }
+
     }
 }

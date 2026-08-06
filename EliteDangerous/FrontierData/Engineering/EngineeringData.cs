@@ -91,16 +91,16 @@ namespace EliteDangerousCore
         public JObject ToJSONLoadout()  // reproduce the loadout format..
         {
             var jo = new JObject();
-            jo["Engineer"] = Engineer.Str();
+            jo["Engineer"] = Engineer.ID;
             jo["EngineerID"] = EngineerID;
             jo["BlueprintID"] = BlueprintID;
-            jo["BlueprintName"] = BlueprintName.Str();
+            jo["BlueprintName"] = BlueprintName.ID;
             jo["Level"] = Level;
             jo["Quality"] = Quality;
 
             if (ExperimentalEffect != null)      // not always present..
             {
-                jo["ExperimentalEffect"] = ExperimentalEffect.Str();
+                jo["ExperimentalEffect"] = ExperimentalEffect.ID;
                 jo["ExperimentalEffect_Localised"] = ExperimentalEffect_Localised;
             }
 
@@ -110,7 +110,7 @@ namespace EliteDangerousCore
                 foreach (EngineeringModifiers m in Modifiers)
                 {
                     JObject mod = new JObject();
-                    mod["Label"] = m.Label.Str();
+                    mod["Label"] = m.Label.ID;
                     if (m.ValueStr.HasChars())      // if set, its just a string value
                     {
                         mod["ValueStr"] = m.ValueStr;
@@ -134,7 +134,7 @@ namespace EliteDangerousCore
         public void Build(System.Text.StringBuilder sb)
         {
             sb.BuildSetPad(Environment.NewLine,
-                    "Engineer".Tx()+": "+ " ", Engineer.Str(),
+                    "Engineer".Tx()+": "+ " ", Engineer.ID,
                     "Blueprint".Tx()+": "+ " ", FriendlyBlueprintName,
                     "Level".Tx()+": "+ " ", Level,
                     "Quality".Tx()+": "+ " ", Quality,
@@ -289,9 +289,9 @@ namespace EliteDangerousCore
                             bool negativecheck = exceptiontype[0] == '-';
                             string exceptiontext = exceptiontype.Substring(1);
 
-                            bool anyfound = Array.Find(Modifiers, x => x.Label.Str().EqualsIIC(exceptiontext)) != null ||
-                                          modulefdname.Str().WildCardMatch(exceptiontext, true) == true ||
-                                          BlueprintName.Str().EqualsIIC(exceptiontext);
+                            bool anyfound = Array.Find(Modifiers, x => x.Label.ID.EqualsIIC(exceptiontext)) != null ||
+                                          modulefdname.ID.WildCardMatch(exceptiontext, true) == true ||
+                                          BlueprintName.ID.EqualsIIC(exceptiontext);
 
                             if (negativecheck ? anyfound == true : anyfound == false)        // negative check means can't have any, position check means must have something
                             {

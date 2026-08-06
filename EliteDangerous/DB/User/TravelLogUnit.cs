@@ -87,7 +87,6 @@ namespace EliteDangerousCore.DB
 
         internal bool Add(SQLiteConnectionUser cn, DbTransaction txn)
         {
-            Initialise();
             System.Diagnostics.Debug.WriteLine($"Add TLU {Path} {filename}");
 
             using (DbCommand cmd = cn.CreateCommand(
@@ -145,25 +144,28 @@ namespace EliteDangerousCore.DB
 
         public static void Initialise()
         {
-            cacheid = new Dictionary<long, TravelLogUnit>();
-            cachepath = new Dictionary<string, TravelLogUnit>();
-
-            UserDatabase.Instance.DBRead(cn =>
+            if (cacheid == null)        // prevent double init
             {
-                using (DbCommand cmd = cn.CreateCommand("select * from TravelLogUnit Order By id"))
+                cacheid = new Dictionary<long, TravelLogUnit>();
+                cachepath = new Dictionary<string, TravelLogUnit>();
+
+                UserDatabase.Instance.DBRead(cn =>
                 {
-                    using (DbDataReader rdr = cmd.ExecuteReader())
+                    using (DbCommand cmd = cn.CreateCommand("select * from TravelLogUnit Order By id"))
                     {
-                        while (rdr.Read())
+                        using (DbDataReader rdr = cmd.ExecuteReader())
                         {
-                            TravelLogUnit sys = new TravelLogUnit(rdr);
-                            System.Diagnostics.Debug.Assert(!cacheid.ContainsKey(sys.ID));
-                            cacheid[sys.ID] = sys;
-                            cachepath[sys.FullName] = sys;       // name is v.important for speed.  Keep case of filename for linux
+                            while (rdr.Read())
+                            {
+                                TravelLogUnit sys = new TravelLogUnit(rdr);
+                                System.Diagnostics.Debug.Assert(!cacheid.ContainsKey(sys.ID));
+                                cacheid[sys.ID] = sys;
+                                cachepath[sys.FullName] = sys;       // name is v.important for speed.  Keep case of filename for linux
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         }
 
         public static List<string> GetAllNames()

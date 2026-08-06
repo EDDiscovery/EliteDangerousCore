@@ -26,7 +26,8 @@ namespace EliteDangerousCore
         public ItemData.ShipModule.ModuleTypes[] ModuleType { get; private set; }       // as types
         public string[] ModulesTranslated => ModuleType.Select(x => ItemData.ShipModule.TranslatedModTypeString(x)).ToArray();
         public string ModuleListSplitCaps => string.Join(",", ModuleType.Select(x => ItemData.ShipModule.EnglishModTypeString(x)));
-        public string[] Engineers { get; private set; }     // may be nempty
+        public EngineerFDName[] Engineers { get; private set; }     // may be zero length
+        public IEnumerable<string> EngineersNames => Engineers.Select(x => x.ID);        // lots of them use strings for legacy reasons
         public int MercCoins { get; set; }              // future use
         public string LevelAsString => Level?.ToString() ?? "NA";
         public string NameAndLevel => Name + (Level != null ? (":" + Level.ToString()) : "");
@@ -40,10 +41,9 @@ namespace EliteDangerousCore
             Level = lvl;
             ModuleType = new ItemData.ShipModule.ModuleTypes[] { moduletype };
             if (engnrs.HasChars())
-                Engineers = engnrs.Split(',');
+                Engineers = engnrs.Split(',').Select(x=>new EngineerFDName(x)).ToArray();
             else
-                Engineers = new string[0];
-
+                Engineers = new EngineerFDName[0];
             MercCoins = merccoins;
         }
 
@@ -52,7 +52,7 @@ namespace EliteDangerousCore
         {
             this.FDName = new EngineeringRecipeFDName(fdname);
             ModuleType = new ItemData.ShipModule.ModuleTypes[] { moduletype };
-            Engineers = type.Split(',');
+            Engineers = type.Split(',').Select(x => new EngineerFDName(x)).ToArray();
             System.Diagnostics.Debug.Assert(Ingredients.Length > 0, name + fdname);
         }
 
@@ -68,7 +68,7 @@ namespace EliteDangerousCore
                 System.Diagnostics.Debug.Assert(t != ItemData.ShipModule.ModuleTypes.UnknownType);
                 ModuleType[i] = t;
             }
-            Engineers = new string[] { "Special Effect" };
+            Engineers = new EngineerFDName[] { new EngineerFDName("Special Effect") };
             System.Diagnostics.Debug.Assert(Ingredients.Length > 0, name + fdname);
         }
 
@@ -77,7 +77,7 @@ namespace EliteDangerousCore
         {
             this.FDName = new EngineeringRecipeFDName(fdname);
             ModuleType = new ItemData.ShipModule.ModuleTypes[] { moduletype };
-            Engineers = new string[] { "Special Effect" };
+            Engineers = new EngineerFDName[] { new EngineerFDName("Special Effect") };
             System.Diagnostics.Debug.Assert(Ingredients.Length > 0, name + fdname);
         }
 
@@ -86,7 +86,7 @@ namespace EliteDangerousCore
         {
             Level = lvl;
             ModuleType = new ItemData.ShipModule.ModuleTypes[] { moduletype };
-            Engineers = new string[] { moduletype.ToString() };
+            Engineers = new EngineerFDName[] { new EngineerFDName( moduletype.ToString()) };
             System.Diagnostics.Debug.Assert(Ingredients.Length > 0, moduletype.ToString());
         }
 
@@ -95,7 +95,7 @@ namespace EliteDangerousCore
         {
             ModuleType = new ItemData.ShipModule.ModuleTypes[] { moduletype };
             this.FDName = new EngineeringRecipeFDName(fdname);
-            Engineers = eng.Split(',');
+            Engineers = eng.Split(',').Select(x => new EngineerFDName(x)).ToArray();
             System.Diagnostics.Debug.Assert(Ingredients.Length > 0, moduletype.ToString());
         }
 
@@ -106,7 +106,7 @@ namespace EliteDangerousCore
             MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(fdname);
             if (mc != null && EngineeringRecipesByMaterial.ContainsKey(mc))
             {
-                string str = String.Join(join, EngineeringRecipesByMaterial[mc].Select(x => x.ModuleListSplitCaps + " " + x.Name + (x.LevelAsString != "NA" ? ("-" + x.LevelAsString) : "") + ": " + x.IngredientsStringLong + " @ " + string.Join(",", x.Engineers)));
+                string str = String.Join(join, EngineeringRecipesByMaterial[mc].Select(x => x.ModuleListSplitCaps + " " + x.Name + (x.LevelAsString != "NA" ? ("-" + x.LevelAsString) : "") + ": " + x.IngredientsStringLong + " @ " + string.Join(",", x.EngineersNames)));
                 return str;
             }
             else
@@ -141,12 +141,12 @@ namespace EliteDangerousCore
                                 // System.Diagnostics.Debug.WriteLine($"Add {x.FDName.Str()} {i}");
                             }
 
-                            int underscore = x.FDName.Str().LastIndexOf('_');
+                            int underscore = x.FDName.ID.LastIndexOf('_');
 
                             if (x.ModuleType.Length > 0 && underscore > 0)
                             {
-                                string first = x.FDName.Str().Substring(0, underscore);
-                                string last = x.FDName.Str().Substring(underscore);
+                                string first = x.FDName.ID.Substring(0, underscore);
+                                string last = x.FDName.ID.Substring(underscore);
                                 string modname = x.ModuleType[0].ToString();
 
                                 EngineeringRecipeFDName composite = new EngineeringRecipeFDName(first + "_" + modname + last);            // Sensor_sensor_lightweight

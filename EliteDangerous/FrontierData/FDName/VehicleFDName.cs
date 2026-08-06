@@ -42,6 +42,8 @@ namespace EliteDangerousCore
             SetVT();
         }
 
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
+
         public enum VehicleType { Unknown, Ship, Taxi, SRV, Fighter, Lander, Suit, Actor }    // Actor is not a vehicle, but class derives from it
 
         public VehicleType Type { get; protected set; }
@@ -56,7 +58,7 @@ namespace EliteDangerousCore
 
         public VehicleFDName Clone()
         {
-            return new VehicleFDName(this.Str());
+            return new VehicleFDName(this.ID);
         }
 
         public static VehicleFDName Normalise(string fdname, out string name, JournalEntry ev, bool allownull = false)
@@ -71,7 +73,8 @@ namespace EliteDangerousCore
                 else
                 {
                     name = "Unknown Ship";
-                    BaseUtils.Debugger.TraceBreak($"*** Missing Ship {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                    if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
+                        BaseUtils.Debugger.TraceBreak($"*** Missing Ship {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
                     return new VehicleFDName("Unknown Ship");
                 }
             }
@@ -81,7 +84,7 @@ namespace EliteDangerousCore
 
                 if ( ret.Type == VehicleType.Suit)
                 { 
-                    var suit = ItemData.GetSuit(new SuitFDName(ret.Str()));
+                    var suit = ItemData.GetSuit(new SuitFDName(ret.ID));
                     name = suit?.Name ?? ("Unknown Suit " + fdname);
                 }
                 else
@@ -89,7 +92,8 @@ namespace EliteDangerousCore
                     var ship = ItemData.GetShipProperties(ret);
                     if (ship == null)
                     {
-                        BaseUtils.Debugger.TraceBreak($"*** Unknown ship: `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                        if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
+                            BaseUtils.Debugger.TraceBreak($"*** Unknown ship: `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
                         name = "Unknown Ship " + fdname;
                     }
                     else
@@ -102,7 +106,7 @@ namespace EliteDangerousCore
 
         private void SetVT()
         {
-            string str = Str();
+            string str = ID;
             if (str.ContainsIIC(ItemData.Taxi_Postfix))
                 Type = VehicleType.Taxi;
             else if (str.EqualsIIC(ItemData.SRV_ScarabFDName) || str.ContainsIIC(ItemData.SRV_Postfix))
@@ -134,12 +138,14 @@ namespace EliteDangerousCore
         {
         }
 
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
+
         public static new SuitFDName Normalise(string fdname, out string name, JournalEntry ev, bool allownull = false)
         {
             var ret = VehicleFDName.Normalise(fdname, out name, ev, allownull);
             if (ret.Type != VehicleType.Suit)
                 System.Diagnostics.Debug.WriteLine($"*** Suit not recognised properly {fdname}");
-            return new SuitFDName(ret.Str());
+            return new SuitFDName(ret.ID);
         }
 
         public int GetClass()
@@ -164,12 +170,13 @@ namespace EliteDangerousCore
 
         public VehicleActorSuitFDName(QuickJSON.JToken token) : base(token)
         {
-            var ac = ItemData.GetActor(new ActorFDName(Str()));
+            var ac = ItemData.GetActor(new ActorFDName(ID));
             if (ac != null)
             {
                 Type = VehicleType.Actor;
             }
         }
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
 
         public static new VehicleActorSuitFDName Normalise(string fdname, out string name, JournalEntry ev, bool allownull = false)
         {
@@ -183,7 +190,8 @@ namespace EliteDangerousCore
                 else
                 {
                     name = "Unknown Ship/Actor/Suit";
-                    BaseUtils.Debugger.TraceBreak($"*** Missing Ship/Actor/Suit {ev?.EventTimeUTC} {ev?.EventTypeStr}");
+                    if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
+                        BaseUtils.Debugger.TraceBreak($"*** Missing Ship/Actor/Suit {ev?.EventTimeUTC} {ev?.EventTypeStr}");
                     return new VehicleActorSuitFDName(name);
                 }
             }
@@ -198,7 +206,7 @@ namespace EliteDangerousCore
                 else
                 {
                     var ret = VehicleFDName.Normalise(fdname, out name, ev);
-                    return new VehicleActorSuitFDName(ret.Str(), ret.Type);
+                    return new VehicleActorSuitFDName(ret.ID, ret.Type);
                 }
             }
         }

@@ -97,7 +97,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (Material m in Materials)
                 {
-                    m.Name = MCFDName.Normalise(m.Name.Str(), out engname, this);
+                    m.Name = MCFDName.Normalise(m.Name.ID, out engname, this);
                     m.FriendlyName = engname;
                 }
             }

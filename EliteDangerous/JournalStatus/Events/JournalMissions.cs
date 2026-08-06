@@ -97,7 +97,7 @@ namespace EliteDangerousCore.JournalEvents
             public void Normalise(DateTime utcnow)
             {
                 ExpiryTimeUTC = utcnow.AddSeconds(Expires);
-                Name = MissionFDName.Normalise(Name.Str(), out string engname, null);
+                Name = MissionFDName.Normalise(Name.ID, out string engname, null);
                 Name_Localised = Name_Localised ?? engname;
             }
 
@@ -267,7 +267,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Commodity != null && Count != null && EventTimeUTC < EliteReleaseDates.Release_3_2)           // after this we will rely on Cargo to update us, only safe way to know if something has been stowed
             {
-                if (DeliveryMissions.StartsWith(FDName.Str(), StringComparison.InvariantCultureIgnoreCase)>=0 )   // before, we accept only these as mission deliveries
+                if (DeliveryMissions.StartsWith(FDName.ID, StringComparison.InvariantCultureIgnoreCase)>=0 )   // before, we accept only these as mission deliveries
                 {
                     mc.ChangeCommd(EventTimeUTC, Commodity, (int)Count, 0);
                 }
@@ -597,7 +597,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = MCFDName.Normalise(Name.Str(), out string engname, ev);
+                Name = MCFDName.Normalise(Name.ID, out string engname, ev);
                 FriendlyName = engname;
                 Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(Name_Localised ?? "", FriendlyName);
 
@@ -618,7 +618,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = MCFDName.Normalise(Name.Str(), out string engname, ev);
+                Name = MCFDName.Normalise(Name.ID, out string engname, ev);
                 FriendlyName = engname;
                 Name_Localised = Name_Localised.Alt(FriendlyName);
             }

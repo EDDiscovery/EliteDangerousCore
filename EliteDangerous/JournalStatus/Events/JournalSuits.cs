@@ -28,7 +28,7 @@ namespace EliteDangerousCore.JournalEvents
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     initialobject: this);        // read fields named in this structure matching JSON names
 
-            Name = SuitFDName.Normalise(Name.Str(), out string engname, this);
+            Name = SuitFDName.Normalise(Name.ID, out string engname, this);
             FriendlyName = engname;
             Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
         }
@@ -74,7 +74,7 @@ namespace EliteDangerousCore.JournalEvents
                     membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                     initialobject: this);        // read fields named in this structure matching JSON names
 
-            Name = SuitFDName.Normalise(Name.Str(), out string engname, this);
+            Name = SuitFDName.Normalise(Name.ID, out string engname, this);
             FriendlyName = engname;
             Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
         }
@@ -126,7 +126,7 @@ namespace EliteDangerousCore.JournalEvents
             evt["timestamp"] = EventTimeUTC;
             evt["event"] = EventTypeStr;
             evt["SuitID"] = SuitID.Value;
-            evt["Name"] = Name.Str();
+            evt["Name"] = Name.ID;
             evt["Name_Localised"] = Name_Localised;
             evt["Price"] = Price;
             return evt;
@@ -146,7 +146,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (SuitName != null)           // early records has this missing
             {
-                SuitName = SuitFDName.Normalise(SuitName.Str(), out string engname, this);
+                SuitName = SuitFDName.Normalise(SuitName.ID, out string engname, this);
                 SuitFriendlyName = engname;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
             }
@@ -208,7 +208,7 @@ namespace EliteDangerousCore.JournalEvents
                 membersearchflags:System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
                 initialobject: this);        // read fields named in this structure matching JSON names
 
-            SuitName = SuitFDName.Normalise(SuitName.Str(), out string engname, this);
+            SuitName = SuitFDName.Normalise(SuitName.ID, out string engname, this);
             SuitFriendlyName = engname;
             SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
             SuitLoadout.NormaliseModules(Modules);
@@ -273,7 +273,7 @@ namespace EliteDangerousCore.JournalEvents
             
             if (SuitName != null)
             {
-                SuitName = SuitFDName.Normalise(SuitName.Str(), out string engname, this);
+                SuitName = SuitFDName.Normalise(SuitName.ID, out string engname, this);
                 SuitFriendlyName = engname;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
             }
@@ -317,7 +317,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (SuitName != null)
             {
-                SuitName = SuitFDName.Normalise(SuitName.Str(), out string engname, this);
+                SuitName = SuitFDName.Normalise(SuitName.ID, out string engname, this);
                 SuitFriendlyName = engname;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
             }
@@ -350,7 +350,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x=>x.Str()).ToArray()) : null;
+            string wmod = WeaponMods != null ? string.Join(", ", WeaponMods.Select(x=>x.ID).ToArray()) : null;
             return BaseUtils.FieldBuilder.Build("", SuitID.Value % 10000, "", LoadoutID.Value %10000, "", SuitFriendlyName, "<: ", LoadoutName, "<: ", SlotFriendlyName, "< ++> ", ModuleNameFriendly, "Class".Tx()+": ", Class, "Mods".Tx()+": ", wmod);
             
         }
@@ -395,7 +395,7 @@ namespace EliteDangerousCore.JournalEvents
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: this);        // read fields named in this structure matching JSON names
 
-            SuitName = SuitFDName.Normalise(SuitName.Str(), out string engname, this);
+            SuitName = SuitFDName.Normalise(SuitName.ID, out string engname, this);
             SuitFriendlyName = engname;
             SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
 
@@ -464,7 +464,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (SuitName != null)
             {
-                SuitName = SuitFDName.Normalise(SuitName.Str(), out string engname, this);
+                SuitName = SuitFDName.Normalise(SuitName.ID, out string engname, this);
                 SuitFriendlyName = engname;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
             }
@@ -509,7 +509,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (SuitName != null)
             {
-                SuitName = SuitFDName.Normalise(SuitName.Str(), out string engname, this);
+                SuitName = SuitFDName.Normalise(SuitName.ID, out string engname, this);
                 SuitFriendlyName = engname;
                 SuitName_Localised = JournalFieldNaming.CheckLocalisation(SuitName_Localised, SuitFriendlyName);
             }
@@ -564,7 +564,7 @@ namespace EliteDangerousCore.JournalEvents
             evt.ToObjectProtected(this.GetType(), true, 
                 membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly,
                 initialobject: this);        // read fields named in this structure matching JSON names
-            Name = SuitFDName.Normalise(Name.Str(), out string engname, this);
+            Name = SuitFDName.Normalise(Name.ID, out string engname, this);
             FriendlyName = engname;
             Name_Localised = JournalFieldNaming.CheckLocalisation(Name_Localised, FriendlyName);
         }

@@ -264,7 +264,7 @@ namespace EliteDangerousCore
                         this.Bounties.Add(j);
                         
                         // look up if we have stashed target info
-                        string key = ((j.Target?.Str()??"Unknown") + ":" + j.VictimFaction).ToLowerInvariant();
+                        string key = ((j.Target?.ID??"Unknown") + ":" + j.VictimFaction).ToLowerInvariant();
 
                         if (targetted.TryGetValue(key, out JournalShipTargeted st)) // if so, we can associate a bounty with a shiptargetted to get more info
                         {
@@ -285,7 +285,7 @@ namespace EliteDangerousCore
                         if (j.ScanStage == 3 && j.Faction.HasChars() && j.ShipFD != null)           // note you may be targetting a commander, in which case no faction
                         {
                           //  System.Diagnostics.Debug.WriteLine($"Journal Stats Target {j.EventTimeUTC} {j.ScanStage} {j.ShipFD}:{j.Faction}");
-                            string key = (j.ShipFD.Str() + ":" + j.Faction).ToLowerInvariant();
+                            string key = (j.ShipFD.ID + ":" + j.Faction).ToLowerInvariant();
                             this.targetted[key] = j;
                         }
                         break;

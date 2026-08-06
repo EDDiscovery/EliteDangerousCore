@@ -58,7 +58,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = MCFDName.Normalise(Name.Str(), out string engname, ev);
+                Name = MCFDName.Normalise(Name.ID, out string engname, ev);
                 FriendlyName = engname;
             }
         }
@@ -123,7 +123,7 @@ namespace EliteDangerousCore.JournalEvents
             public int Amount { get; set; }
             public void Normalise(JournalEntry ev)
             {
-                Name = MCFDName.Normalise(Name.Str(), out string engname, ev);
+                Name = MCFDName.Normalise(Name.ID, out string engname, ev);
                 FriendlyName = engname;
             }
         }

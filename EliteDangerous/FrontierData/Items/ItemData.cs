@@ -31,7 +31,7 @@ namespace EliteDangerousCore
 
 
 #if DEBUG
-            foreach (var m in GetShipModules(true, true, true, true, true)) { string s = $"{m.Key.Str()} = {m.Value.TranslatedModName} {m.Value.TranslatedModTypeString()}"; }
+            foreach (var m in GetShipModules(true, true, true, true, true)) { string s = $"{m.Key.ID} = {m.Value.TranslatedModName} {m.Value.TranslatedModTypeString()}"; }
             foreach (ShipSlots.Slot x in Enum.GetValues(typeof(ShipSlots.Slot))) { var p = ShipSlots.ToEnglish(x).AlwaysQuoteString(); }
             foreach (GovernmentDefinitions.Government x in Enum.GetValues(typeof(GovernmentDefinitions.Government))) { var p = GovernmentDefinitions.ToLocalisedLanguage(x); }
 
@@ -68,7 +68,7 @@ namespace EliteDangerousCore
 
                                 ShipModule.ModuleTypes modtype = (ShipModule.ModuleTypes)Enum.Parse(typeof(ShipModule.ModuleTypes), type.Substring(type.LastIndexOf(".") + 1));
 
-                                ShipModule sm = new ShipModule(fid.Value, modtype, GenerateCandidateModuleName(new ModFDName(text)).Str());
+                                ShipModule sm = new ShipModule(fid.Value, modtype, GenerateCandidateModuleName(new ModFDName(text)).ID);
 
                                 ModFDName id = new ModFDName(idn);
                                 if (!vanitymodules.ContainsKey(id) && !shipmodules.ContainsKey(id) && !othershipmodules.ContainsKey(id))

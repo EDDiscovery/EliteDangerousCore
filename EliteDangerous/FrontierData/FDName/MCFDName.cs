@@ -12,8 +12,6 @@
  * governing permissions and limitations under the License.
  */
 
-using QuickJSON;
-using System;
 using System.Collections.Generic;
 
 namespace EliteDangerousCore
@@ -35,8 +33,9 @@ namespace EliteDangerousCore
 
         public MCFDName Clone()
         {
-            return new MCFDName(Str());
+            return new MCFDName(ID);
         }
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
 
         public int CompareTo(MCFDName other)
         {
@@ -55,7 +54,10 @@ namespace EliteDangerousCore
                 else
                 {
                     matname = "Unknown Material/Commodity";
-                    BaseUtils.Debugger.TraceBreak($"*** Missing Material {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+
+                    if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
+                        BaseUtils.Debugger.TraceBreak($"*** Missing Material {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+
                     return new MCFDName("Unknown Material/Commodity");
                 }
             }
@@ -73,7 +75,9 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    BaseUtils.Debugger.TraceBreak($"*** Unknown Mat/Commod `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                    if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
+                        BaseUtils.Debugger.TraceBreak($"*** Unknown Mat/Commod `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}", true);
+
                     matname = fdname.SplitCapsWordFull();
                 }
 
@@ -81,7 +85,7 @@ namespace EliteDangerousCore
             }
         }
 
-        public static Dictionary<string, string> fdnamemangling = new Dictionary<string, string>() // Key: old_identifier, Value: new_identifier
+        private static Dictionary<string, string> fdnamemangling = new Dictionary<string, string>() // Key: old_identifier, Value: new_identifier
         {
             //2.2 to 2.3 changed some of the identifier names.. change the 2.2 ones to 2.3!  Anthor data from his materials db file
 

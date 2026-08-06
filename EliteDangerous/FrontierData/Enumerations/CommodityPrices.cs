@@ -167,7 +167,7 @@ namespace EliteDangerousCore
             {
                 id = jo["id"].Long();
                 fdname_unnormalised = new MCFDName(jo["name"].Str());
-                fdname = MCFDName.Normalise(fdname_unnormalised.Str(), out _, null);
+                fdname = MCFDName.Normalise(fdname_unnormalised.ID, out _, null);
 
                 locName = jo["locName"].Str();
                 locName = locName.Alt(fdname.SplitCapsWordFull());      // use locname, if not there, make best loc name possible
@@ -222,7 +222,7 @@ namespace EliteDangerousCore
             {
                 id = jo["id"].Long();
                 fdname_unnormalised = new MCFDName(jo["Name"].Str());
-                fdname = MCFDName.Normalise(fdname_unnormalised.Str(), out _, null);
+                fdname = MCFDName.Normalise(fdname_unnormalised.ID, out _, null);
                 locName = jo["Name_Localised"].Str();
                 if (locName.IsEmpty())
                     locName = fdname.SplitCapsWordFull();
@@ -268,7 +268,7 @@ namespace EliteDangerousCore
             {
                 id = jo["id"].Long();
                 fdname_unnormalised = new MCFDName(jo["Name"].Str());
-                fdname = MCFDName.Normalise(fdname_unnormalised.Str(), out _, null);
+                fdname = MCFDName.Normalise(fdname_unnormalised.ID, out _, null);
                 locName = jo["Name_Localised"].Str();
                 if (locName.IsEmpty())
                     locName = fdname.SplitCapsWordFull();
@@ -312,7 +312,7 @@ namespace EliteDangerousCore
                 else
                 {
                     fdname = fdname_unnormalised = new MCFDName(spanshname);
-                    locName = fdname.Str();
+                    locName = fdname.ID;
                     loccategory = category = jo["category"].Str();
                 }
 

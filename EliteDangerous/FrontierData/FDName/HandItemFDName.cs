@@ -32,6 +32,7 @@ namespace EliteDangerousCore
         public HandItemFDName(QuickJSON.JToken token) : base(token)
         {
         }
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
 
         public static string Normalise(string fdname)
         {

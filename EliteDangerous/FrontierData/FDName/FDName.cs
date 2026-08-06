@@ -42,11 +42,8 @@ namespace EliteDangerousCore
         }
 
         public bool IsValid => !this.fdname.Equals("Unknown");
+        public string ID => fdname;
 
-        public string Str()
-        {
-            return fdname;
-        }
         public string WithQuotes()
         {
             return fdname.AlwaysQuoteString();
@@ -63,12 +60,6 @@ namespace EliteDangerousCore
         public QuickJSON.JToken ToJToken()      // new July26 converter for JTOKEN
         {
             return new JToken(fdname);
-        }
-
-        public override string ToString()
-        {
-            BaseUtils.Debugger.TraceBreak($"*** !!! YOUR USING FNAME Using ToString() {Environment.StackTrace}");
-            return fdname;
         }
 
         #region Compare

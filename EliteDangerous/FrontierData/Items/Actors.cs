@@ -39,12 +39,12 @@ namespace EliteDangerousCore
         // copes with $...;data actors found in NPC messages with semi colon seperated ID text
         static public Actor GetActorNPC(ActorFDName fdname)
         {
-            int semi = fdname.Str().IndexOf(';');
+            int semi = fdname.ID.IndexOf(';');
             ActorFDName nosemi = new ActorFDName(semi > 0 ? fdname.ToLower().Substring(0, semi) : fdname.ToLower());
 
             if (actors.TryGetValue(nosemi, out Actor var))
             {
-                return new Actor(var.Name + (semi > 0 ? ": " + fdname.Str().Substring(semi + 1).Trim() : ""));
+                return new Actor(var.Name + (semi > 0 ? ": " + fdname.ID.Substring(semi + 1).Trim() : ""));
             }
             else
                 return null;

@@ -25,8 +25,9 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalTechnologyBroker(JObject evt) : base(evt, JournalTypeEnum.TechnologyBroker)
         {
-            BrokerType = Enum.TryParse<BrokerTypes>(evt["BrokerType"].Str(""),true,out BrokerTypes res) ? res : BrokerTypes.Unknown;
-            if (BrokerType == BrokerTypes.Unknown)
+            string bt = evt["BrokerType"].Str("");
+            BrokerType = Enum.TryParse<BrokerTypes>(bt,true,out BrokerTypes res) ? res : BrokerTypes.Unknown;
+            if (bt.HasChars() && BrokerType == BrokerTypes.Unknown)
             {
                 BaseUtils.Debugger.TraceBreak($"*** Unknown broker type `{evt["BrokerType"].Str()}` {EventTimeUTC}");
             }
@@ -40,7 +41,7 @@ namespace EliteDangerousCore.JournalEvents
             if (ItemsUnlocked != null)
             {
                 foreach (Unlocked u in ItemsUnlocked)
-                    u.Name_Localised = JournalFieldNaming.CheckLocalisation(u.Name_Localised ?? "", u.Name.Str());
+                    u.Name_Localised = JournalFieldNaming.CheckLocalisation(u.Name_Localised ?? "", u.Name.ID);
             }
 
             if (CommodityList != null)

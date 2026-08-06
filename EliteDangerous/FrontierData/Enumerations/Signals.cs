@@ -83,7 +83,7 @@ namespace EliteDangerousCore
         {
             SignalName = new SignalFDName(evt["SignalName"].Str());
             string signalnamelocalised = evt["SignalName_Localised"].Str();     // not present for stations/installations
-            SignalName_Localised = signalnamelocalised.Alt(SignalName.Str());         // don't mangle if no localisation, its prob not there because its a proper name
+            SignalName_Localised = signalnamelocalised.Alt(SignalName.ID);         // don't mangle if no localisation, its prob not there because its a proper name
             SignalType = evt["SignalType"].Str();
 
             SpawningState = evt["SpawningState"].Str();          // USS only, checked

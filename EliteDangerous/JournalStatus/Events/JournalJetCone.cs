@@ -48,7 +48,7 @@ namespace EliteDangerousCore.JournalEvents
             else
             {
                 ModuleFD = ModFDName.Empty;
-                Module = ModuleFD.Str();
+                Module = ModuleFD.ID;
             }
 
             ModuleLocalised = JournalFieldNaming.CheckLocalisation(evt["Module_Localised"].Str(), Module);

@@ -33,6 +33,8 @@ namespace EliteDangerousCore
         {
         }
 
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
+
         public static EngineeringRecipeFDName Normalise(string fdname, out string engname, JournalEntry ev, bool allownull = false)
         {
             if (fdname.IsEmpty())
@@ -46,7 +48,7 @@ namespace EliteDangerousCore
                 {
                     engname = "Unknown Recipe";
 
-                    if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
+                    if (ev?.EventTimeUTC > EliteReleaseDates.RecipeComplainTime)
                         BaseUtils.Debugger.TraceBreak($"*** Missing engineering recipe name {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
 
                     return new EngineeringRecipeFDName("Unknown Recipe");
@@ -65,7 +67,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
+                    if (ev?.EventTimeUTC > EliteReleaseDates.RecipeComplainTime)
                         BaseUtils.Debugger.TraceBreak($"*** Unknown Engineering Recipe name `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
 
                     engname = fdname.SplitCapsWordFull();
@@ -82,6 +84,7 @@ namespace EliteDangerousCore
         {
             return EngineeringRecipe.FindEngineeringFDName(this)?.NameAndLevel ?? "";
         }
+
     }
 
     public class SynthesisRecipeFDName : FDName
@@ -98,6 +101,8 @@ namespace EliteDangerousCore
         {
         }
 
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
+
         public static SynthesisRecipeFDName Normalise(string fdname, out string engname, out SynthesisRecipe.SynthesisLevel level, JournalEntry ev, bool allownull = false)
         {
             level = SynthesisRecipe.SynthesisLevel.Basic;
@@ -113,7 +118,7 @@ namespace EliteDangerousCore
                 {
                     engname = "Unknown Recipe";
 
-                    if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
+                    if (ev?.EventTimeUTC > EliteReleaseDates.RecipeComplainTime)
                         BaseUtils.Debugger.TraceBreak($"*** Missing synthesis recipe name {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
 
                     return new SynthesisRecipeFDName("Unknown Recipe");
@@ -133,7 +138,7 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    if (ev?.EventTimeUTC > EliteReleaseDates.Odyssey1)
+                    if (ev?.EventTimeUTC > EliteReleaseDates.RecipeComplainTime)
                         BaseUtils.Debugger.TraceBreak($"*** Unknown Synthesis Recipe name `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
 
                     engname = fdname.SplitCapsWordFull();

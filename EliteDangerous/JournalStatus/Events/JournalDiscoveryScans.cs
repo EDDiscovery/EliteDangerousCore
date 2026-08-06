@@ -220,7 +220,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if ( s.SignalName.IsValid && s.SignalName_Localised.HasChars() )
                 {
-                    Identifiers.Add(s.SignalName.Str(), s.SignalName_Localised);
+                    Identifiers.Add(s.SignalName.ID, s.SignalName_Localised);
                 }
             }
         }
@@ -325,8 +325,8 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var s in Signals)      // some don't have localisation
                 {
-                    s.Type = SignalFDName.NormaliseSAAFSSSignals(s.Type.Str() , this);
-                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.Str());
+                    s.Type = SignalFDName.NormaliseSAAFSSSignals(s.Type.ID , this);
+                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.ID);
                 }
             }
             Genuses = evt["Genuses"].ToObjectQ<List<SAAGenus>>();
@@ -334,8 +334,8 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var g in Genuses)      // some don't have localisation
                 {
-                    g.Genus = GenusFDName.Normalise(g.Genus.Str(), this);
-                    g.Genus_Localised = JournalFieldNaming.CheckLocalisation(g.Genus_Localised, g.Genus.Str());
+                    g.Genus = GenusFDName.Normalise(g.Genus.ID, this);
+                    g.Genus_Localised = JournalFieldNaming.CheckLocalisation(g.Genus_Localised, g.Genus.ID);
                 }
             }
         }
@@ -416,7 +416,7 @@ namespace EliteDangerousCore.JournalEvents
                     if (indent > 0 && (index > 0 || indentfirst))       // if indent, and its either not first or allowed to indent first
                         sb.Append(inds);
 
-                    sb.Append(logtype ? x.Type.Str() : x.Type_Localised.Alt(x.Type.Str()));
+                    sb.Append(logtype ? x.Type.ID : x.Type_Localised.Alt(x.Type.ID));
                     sb.Append(": ");
                     sb.Append(x.Count.ToString("N0"));
 
@@ -445,7 +445,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     if (indent > 0 && (index > 0 || indentfirst))       // if indent, and its either not first or allowed to indent first
                         sb.Append(inds);
-                    sb.AppendPrePad(logtype ? x.Genus.Str() : x.Genus_Localised.Alt(x.Genus.Str()));
+                    sb.AppendPrePad(logtype ? x.Genus.ID : x.Genus_Localised.Alt(x.Genus.ID));
 
                     if (index++ < list.Count - 1)     // if another to go, separ
                         sb.Append(separ);
@@ -506,7 +506,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (s.Type.IsValid && s.Type_Localised.HasChars())
                 {
-                    Identifiers.Add(s.Type.Str(), s.Type_Localised);
+                    Identifiers.Add(s.Type.ID, s.Type_Localised);
                 }
             }
         }
@@ -548,8 +548,8 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var s in Signals)      // some don't have localisation
                 {
-                    s.Type = SignalFDName.NormaliseSAAFSSSignals(s.Type.Str(), this);
-                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.Str());
+                    s.Type = SignalFDName.NormaliseSAAFSSSignals(s.Type.ID, this);
+                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.ID);
                 }
             }
         }

@@ -161,7 +161,7 @@ namespace EliteDangerousCore
                         }
 
                         sm.SetPriority(shipModule.Priority.Value);
-                        Debugger.DP("SL",$"Module Info reset ship priority {sm.ItemFD.Str()} to {shipModule.Priority.Value}");
+                        Debugger.DP("SL",$"Module Info reset ship priority {sm.ItemFD.ID} to {shipModule.Priority.Value}");
                     }
                 }
             }
@@ -296,12 +296,12 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    Debugger.DP("SL",e.StoreOldShipFD.Str() + " Cant find to swap");
+                    Debugger.DP("SL",e.StoreOldShipFD.ID + " Cant find to swap");
                 }
             }
             else
             {
-                Debugger.DP("SL",e.StoreOldShipFD.Str() + " Cant find to swap");
+                Debugger.DP("SL",e.StoreOldShipFD.ID + " Cant find to swap");
             }
 
             string sid = Key(e.ShipFD, e.ShipId);           //swap to new ship

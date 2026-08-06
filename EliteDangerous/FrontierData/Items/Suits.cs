@@ -29,7 +29,7 @@ namespace EliteDangerousCore
             else
             {
                 int classn = fdname.GetClass();
-                System.Diagnostics.Debug.WriteLine($"Unknown Suit: {{ \"{fdname.Str()}\", new Suit(\"{locname??fdname.SplitCapsWordFull()}\",{classn},0,0,\"\",\"\",\"\",null) }},");
+                System.Diagnostics.Debug.WriteLine($"Unknown Suit: {{ \"{fdname.ID}\", new Suit(\"{locname??fdname.SplitCapsWordFull()}\",{classn},0,0,\"\",\"\",\"\",null) }},");
                 Debugger.Break();
                 return null;
             }
@@ -37,10 +37,10 @@ namespace EliteDangerousCore
 
         static public Tuple<SuitFDName,Suit> GetNextSuit(SuitFDName fdname, int newclass, string locname = null)         // given a suit, return next suit
         {
-            string name = fdname.Str();
+            string name = fdname.ID;
             if (name.Length > 0 )
             {
-                fdname = new SuitFDName(name.Substring(0, fdname.Str().Length - 1) + newclass.ToStringInvariant());
+                fdname = new SuitFDName(name.Substring(0, fdname.ID.Length - 1) + newclass.ToStringInvariant());
 
                 if (suit.TryGetValue(fdname, out Suit var))
                     return new Tuple<SuitFDName,Suit>(fdname,var);

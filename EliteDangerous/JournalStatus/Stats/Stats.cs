@@ -102,12 +102,12 @@ namespace EliteDangerousCore
 
         public void UpdateEngineerMaterial(ISystem system, EngineerFDName engname, MCFDName namematcom, int amount)
         {
-            UpdateMaterial(system,namematcom, amount, engname.Str());
+            UpdateMaterial(system,namematcom, amount, engname.ID);
         }
 
         public void UpdateEngineerCommodity(ISystem system, EngineerFDName engname, MCFDName namematcom, int amount)
         {
-            UpdateCommodity(system,namematcom, amount, 0, engname.Str());
+            UpdateCommodity(system,namematcom, amount, 0, engname.ID);
         }
 
         public void BountyKill(ISystem system, string victimfaction)

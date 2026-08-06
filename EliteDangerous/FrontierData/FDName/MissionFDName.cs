@@ -33,6 +33,8 @@ namespace EliteDangerousCore
         {
         }
 
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
+
         public static MissionFDName Normalise(string fdname, out string engname, JournalEntry ev, bool allownull = false)
         {
             if (fdname.HasChars())
@@ -43,9 +45,12 @@ namespace EliteDangerousCore
             else
             {
                 engname = "Missing Mission Name";
-                BaseUtils.Debugger.TraceBreak($"*** Missing Mission Name {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
+                    BaseUtils.Debugger.TraceBreak($"*** Missing Mission Name {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
                 return new MissionFDName(engname);
             }
         }
+
+
     }
 }

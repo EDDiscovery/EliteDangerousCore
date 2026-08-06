@@ -60,7 +60,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public JObject CreateJSON()
         {
-            JArray itemlist = new JArray(Yard.Ships.Select(x => new JObject() { { "id", x.id.Value }, { "ShipType", x.ShipType.Str() }, 
+            JArray itemlist = new JArray(Yard.Ships.Select(x => new JObject() { { "id", x.id.Value }, { "ShipType", x.ShipType.ID }, 
                                     { "ShipType_Localised", x.ShipType_Localised }, { "ShipPrice", x.ShipPrice } }));
 
             JObject j = new JObject()
@@ -285,7 +285,7 @@ namespace EliteDangerousCore.JournalEvents
             evt["event"] = EventTypeStr;
             if (MarketID.HasValue)
                 evt["MarketID"] = MarketID.Value;
-            evt["ShipType"] = ShipTypeFD.Str();
+            evt["ShipType"] = ShipTypeFD.ID;
             evt["SellShipID"] = SellShipId.Value;
             evt["ShipPrice"] = ShipPrice;
             if (System.HasChars())

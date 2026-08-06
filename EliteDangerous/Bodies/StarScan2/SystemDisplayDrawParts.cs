@@ -43,7 +43,7 @@ namespace EliteDangerousCore.StarScan2
             foreach (KeyValuePair<MCFDName, double> sd in sn.Materials)
             {
                 Color fillc = Color.Yellow;
-                string abv = sd.Key.Str().Substring(0, 1);
+                string abv = sd.Key.ID.Substring(0, 1);
 
                 MaterialCommodityMicroResourceType mc = MaterialCommodityMicroResourceType.GetByFDName(sd.Key);
 
@@ -83,7 +83,7 @@ namespace EliteDangerousCore.StarScan2
 
                 ExtendedControls.ImageElement.Element ie = new ExtendedControls.ImageElement.Element(
                                 new Rectangle(matpos.X, matpos.Y, matsize.Width, matsize.Height), mat, tooltip + "\n\n" + "All " + matclicktext.ToString(), tooltip.ToString());
-                ie.Name = sd.Key.Str();
+                ie.Name = sd.Key.ID;
                 ie.ContextMenuStrip = rightclickmenu;
                 images.Add(ie);
 

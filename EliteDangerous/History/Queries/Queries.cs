@@ -547,8 +547,7 @@ namespace EliteDangerousCore
                 //foreach (var v in varsbodies) System.Diagnostics.Debug.WriteLine($"Search Bodies Var {v}");
                 //foreach (var v in varsstarbodies) System.Diagnostics.Debug.WriteLine($"Search Star Bodies Var {v}");
 
-                Type[] ignoretypes = new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) };
-
+                HashSet<Type> ignoretypes = new HashSet<Type> { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) };
 
                 //foreach (var he in helist.GetRange(helist.Count-100,100))
                 foreach (var he in helist)
@@ -650,9 +649,7 @@ namespace EliteDangerousCore
                                 {
                                     //System.Diagnostics.Debug.WriteLine($"{scandata.BodyName} is the Star parent");
 
-                                    scandatavars.AddPropertiesFieldsOfClass(parentstarjs, "Star.",
-                                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                            varsstar, ensuredoublerep: true, classsepar: ".");
+                                    scandatavars.AddPropertiesFieldsOfClass(parentstarjs, "Star.", ignoretypes, 5, varsstar, ensuredoublerep: true, classsepar: ".");
                                 }
                             }
 
@@ -664,9 +661,7 @@ namespace EliteDangerousCore
                                 {
                                     //System.Diagnostics.Debug.WriteLine($"{scandata.BodyName} is the Star Star parent");
 
-                                    scandatavars.AddPropertiesFieldsOfClass(grandfatherjs, "Star.Star.",
-                                            new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                            varsstarstar, ensuredoublerep: true, classsepar: ".");
+                                    scandatavars.AddPropertiesFieldsOfClass(grandfatherjs, "Star.Star.", ignoretypes, 5,  varsstarstar, ensuredoublerep: true, classsepar: ".");
                                 }
                             }
 
@@ -685,9 +680,7 @@ namespace EliteDangerousCore
                                 {
                                     if (bn != he.BodyNode && bn.Scan != null)        // if not ours and has a scan
                                     {
-                                        scandatavars.AddPropertiesFieldsOfClass(bn.Scan, $"Sibling[{cno}].",
-                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                                varssiblings, ensuredoublerep: true, classsepar: ".");
+                                        scandatavars.AddPropertiesFieldsOfClass(bn.Scan, $"Sibling[{cno}].", ignoretypes, 5, varssiblings, ensuredoublerep: true, classsepar: ".");
                                         cno++;
                                     }
                                 }
@@ -709,9 +702,7 @@ namespace EliteDangerousCore
                                     {
                                         int cc = scandatavars.Count;
 
-                                        scandatavars.AddPropertiesFieldsOfClass(sn.Scan, $"Child[{cno}].",
-                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                                varschildren, ensuredoublerep: true, classsepar: ".");
+                                        scandatavars.AddPropertiesFieldsOfClass(sn.Scan, $"Child[{cno}].", ignoretypes, 5, varschildren, ensuredoublerep: true, classsepar: ".");
 
                                         cno++;
                                     }
@@ -725,9 +716,7 @@ namespace EliteDangerousCore
                                 {
                                     if (varsbodies.Count > 0 && sn.Scan != null)
                                     {
-                                        scandatavars.AddPropertiesFieldsOfClass(sn.Scan, $"Bodies[{count + 1}].",
-                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                                varsbodies, ensuredoublerep: true, classsepar: ".");
+                                        scandatavars.AddPropertiesFieldsOfClass(sn.Scan, $"Bodies[{count + 1}].", ignoretypes, 5, varsbodies, ensuredoublerep: true, classsepar: ".");
 
                                     }
                                     count++;
@@ -745,9 +734,7 @@ namespace EliteDangerousCore
                                 {
                                     if (varsstarbodies.Count >0)
                                     {
-                                        scandatavars.AddPropertiesFieldsOfClass(sn.Scan, $"StarBodies[{count + 1}].",
-                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                                varsstarbodies, ensuredoublerep: true, classsepar: ".");
+                                        scandatavars.AddPropertiesFieldsOfClass(sn.Scan, $"StarBodies[{count + 1}].", ignoretypes, 5, varsstarbodies, ensuredoublerep: true, classsepar: ".");
 
                                     }
                                     count++;
@@ -1015,6 +1002,8 @@ namespace EliteDangerousCore
                             {
                                 var bodies = name == "BodiesExprCount" ? SystemNode.Bodies() : ParentStar.Bodies();
 
+                                HashSet<Type> ignoretypes = new HashSet<Type> { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) };
+
                                 foreach (var b in bodies)
                                 {
                                     if (b.Scan != null)
@@ -1023,9 +1012,7 @@ namespace EliteDangerousCore
 
                                         // enumerate this scan data into variable set
 
-                                        scandatavars.AddPropertiesFieldsOfClass(b.Scan, "",
-                                                new Type[] { typeof(System.Drawing.Icon), typeof(System.Drawing.Image), typeof(System.Drawing.Bitmap), typeof(QuickJSON.JObject) }, 5,
-                                                allvars, ensuredoublerep: true, classsepar: ".");
+                                        scandatavars.AddPropertiesFieldsOfClass(b.Scan, "", ignoretypes, 5, allvars, ensuredoublerep: true, classsepar: ".");
 
                                         neweval.ReturnSymbolValue = scandatavars;        // redirect symbols to gathered scandatavars
 

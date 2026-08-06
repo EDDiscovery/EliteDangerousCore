@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = MCFDName.Normalise(Name.Str(), out string engname, ev);
+                Name = MCFDName.Normalise(Name.ID, out string engname, ev);
                 FriendlyName = engname;
                 FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
             }
@@ -318,7 +318,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Transfers != null)
             {
                 foreach (var t in Transfers)
-                    t.Type_Localised = JournalFieldNaming.CheckLocalisation(t.Type_Localised, t.Type.Str());
+                    t.Type_Localised = JournalFieldNaming.CheckLocalisation(t.Type_Localised, t.Type.ID);
             }
         }
 

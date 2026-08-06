@@ -39,10 +39,13 @@ namespace EliteDangerousCore
                 return new SignalFDName(fdname.Replace("$SAA_SignalType_", "").Replace(";", "").SplitCapsWordFull());
             else
             {
-                BaseUtils.Debugger.TraceBreak($"*** Missing Signals {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
+                    BaseUtils.Debugger.TraceBreak($"*** Missing Signals {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+
                 return new SignalFDName("Error in Signal no data");
             }
         }
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
     }
     public class GenusFDName : FDName
     {
@@ -64,10 +67,14 @@ namespace EliteDangerousCore
                 return new GenusFDName(fdname.Replace("$Codex_Ent_", "").Replace("_Name;", "").Replace(";", "").Replace("$Codex_", "").SplitCapsWordFull());
             else
             {
-                BaseUtils.Debugger.TraceBreak($"*** Missing Genus {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
+                    BaseUtils.Debugger.TraceBreak($"*** Missing Genus {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+
                 return new GenusFDName("Error in Genus no data");
             }
         }
+
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
     }
 
 }

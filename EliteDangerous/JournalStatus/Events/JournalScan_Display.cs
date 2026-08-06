@@ -386,7 +386,7 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((js.CanBeTerraformable) ? @"terraformable ".Tx() : null);
             information.Append((js.IsPlanet) ? Planets.PlanetNameTranslated(js.PlanetTypeID) + "." : null);
             information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? @" Is tiny ".Tx() + "(" + RadiusText + ")." : null);
-            information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? @" Is large ".Tx() + "(" + RadiusText + ")." : null);
+            information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? @" Is large.".Tx() + "(" + RadiusText + ")." : null);
             information.Append((js.IsLandable) ? @" Is landable.".Tx() : null);
             information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? @" (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)" : null);
             information.Append((js.HasAtmosphere && showAtmos) ? @" Atmosphere".Tx() + ": " + js.AtmosphereTranslated : null);

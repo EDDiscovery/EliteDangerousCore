@@ -49,7 +49,7 @@ namespace EliteDangerousCore
         // as per frontier CrewRole Entry
         public enum ServiceType
         {
-            BridgeCrew, CommodityTrading, TritiumDepot,        // not acrew services, but core items. UserControlCarrier iterates along this list and we use this to guide it
+            BridgeCrew, CommodityTrading, TritiumDepot,        // not a crew services, but core items. UserControlCarrier iterates along this list and we use this to guide it
 
             // searching logs for CarrierStats and CarrierCrewServices gave these july 26
             Refuel,
@@ -64,12 +64,11 @@ namespace EliteDangerousCore
             VistaGenomics,
             PioneerSupplies,
 
-            // added july 26
+            // added july 26 - these are not displayed but can be present in data
+            Unknown,
             Captain,
             CarrierFuel,
             Commodities,
-
-            Unknown,
 
             // originally before july 26 Refuel, Repair, Rearm, VoucherRedemption, Shipyard, Outfitting, BlackMarket, Exploration, VistaGenomics, PioneerSupplies,
         };
@@ -89,7 +88,7 @@ namespace EliteDangerousCore
 
         static public string GetTranslatedServiceName(ServiceType t) { return translatedname[(int)t]; }
         static public bool IsOptionalService(ServiceType t) { return t >= ServiceType.Refuel && t != ServiceType.Unknown; }
-        static public bool IsValidService(ServiceType t) { return t != ServiceType.Unknown; }
+        static public bool IsValidService(ServiceType t) { return t < ServiceType.Unknown; }
 
         private static string[] translatedname = new string[] {
             "Bridge Crew".Tx(),

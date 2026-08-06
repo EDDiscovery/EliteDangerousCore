@@ -318,7 +318,7 @@ namespace EliteDangerousCore.JournalEvents
         public Dictionary<MCFDName, double> Materials { get; private set; }       // fdname and name is the same for materials on planets.  name is lower case
         public bool HasMaterial(MCFDName name) { return Materials != null && Materials.ContainsKey(name); }
         [PropertyNameAttribute("List of materials, comma separated")]
-        public string MaterialList { get { if (Materials != null) { var na = (from x in Materials select x.Key.Str()).ToArray(); return String.Join(",", na); } else return null; } }
+        public string MaterialList { get { if (Materials != null) { var na = (from x in Materials select x.Key.ID).ToArray(); return String.Join(",", na); } else return null; } }
 
         [PropertyNameAttribute("What is the reserve level of the ring")]
         public EDReserve ReserveLevel { get; private set; }

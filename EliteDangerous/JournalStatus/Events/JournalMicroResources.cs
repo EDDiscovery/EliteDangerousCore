@@ -47,7 +47,7 @@ namespace EliteDangerousCore.JournalEvents
         // if cat is set, cat is forced to this value
         public void Normalise(MaterialCommodityMicroResourceType.CatType? cat, JournalEntry ev)
         {
-            Name = MCFDName.Normalise(Name.Str(), out string engname, ev);
+            Name = MCFDName.Normalise(Name.ID, out string engname, ev);
             if (Name_Localised.IsEmpty())
                 Name_Localised = engname;
             if (cat != null)
@@ -55,7 +55,7 @@ namespace EliteDangerousCore.JournalEvents
             else if (Category == null)
             {
                 Category = MaterialCommodityMicroResourceType.CatType.Data;
-                BaseUtils.Debugger.TraceBreak($"*** Missing Category in MR for {Name.Str()}");
+                BaseUtils.Debugger.TraceBreak($"*** Missing Category in MR for {Name.ID}");
             }
         }
 

@@ -29,6 +29,7 @@ namespace EliteDangerousCore
         public CrimesFDName(QuickJSON.JToken token) : base(token)
         {
         }
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
 
         private static Dictionary<CrimesFDName, string> crimesFDToEnglish = new Dictionary<CrimesFDName, string>()
         {
@@ -118,6 +119,8 @@ namespace EliteDangerousCore
         {
         }
 
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
+
         public static DockingFDName Normalise(string fdname, out string engname)
         {
             engname = fdname.SplitCapsWordFull();
@@ -138,6 +141,7 @@ namespace EliteDangerousCore
         public DataScannedFDName(QuickJSON.JToken token) : base(token)
         {
         }
+        public override string ToString() => ID;    // we override (but prefer to use the explicit ID) so that the variable enumeration will work
 
         public static DataScannedFDName Normalise(string fdname, out string engname)
         {
