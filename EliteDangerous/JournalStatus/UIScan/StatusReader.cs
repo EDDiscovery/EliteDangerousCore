@@ -266,15 +266,17 @@ namespace EliteDangerousCore
                     if (destination != null)
                     {
                         string newdestination = destination["Name"].StrNull();
-                        string newdestinationloc = destination["Name_Localised"].StrNull();
+                        string newdestinationloc = destination["Name_Localised"].StrNull();     // may not be there, therefore null
                         int? newbody = destination["Body"].IntNull();
                         SystemAddress newsys = new SystemAddress(destination["System"]);        
 
                         // present.. if changed
-                        if (newdestination != DestinationName || newdestinationloc != DestinationNameLoc || newbody != DestinationBodyID || newsys != DestinationSystemAddress) 
+                        if (newdestination != DestinationName || 
+                                    (newdestinationloc != null && newdestinationloc != DestinationNameLoc)
+                                    || newbody != DestinationBodyID || newsys != DestinationSystemAddress) 
                         {
                             DestinationName = newdestination;
-                            DestinationNameLoc = newdestinationloc.Alt(newdestination);
+                            DestinationNameLoc = newdestinationloc.Alt(newdestination);     // always set
                             DestinationBodyID = newbody;
                             DestinationSystemAddress = newsys;
                             uievents.Add(new UIEvents.UIDestination(DestinationName, DestinationNameLoc, DestinationBodyID, DestinationSystemAddress, EventTimeUTC, changedmajormode));
