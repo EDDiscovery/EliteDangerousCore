@@ -85,7 +85,7 @@ namespace EliteDangerousCore.StarScan2
 
   
         // run these history entries thru the star scanner
-        public void ProcessFromHistory(List<Tuple<int,HistoryEntry>> mhs, Action<StarScan,Tuple<int,HistoryEntry>> perstep = null)
+        public void ProcessFromHistory(List<Tuple<int,HistoryEntry>> mhs, Action<StarScan,Tuple<int,HistoryEntry>> perstep = null, bool outputtreestate = false)
         {
             foreach (var mhe in mhs)
             {
@@ -95,18 +95,23 @@ namespace EliteDangerousCore.StarScan2
                 {
                     if (he.journalEntry is JournalScan js)
                     {
-                        System.Diagnostics.Debug.WriteLine($"\r\n{mhe.Item1} {he.EventTimeUTC} {he.EntryType}: `{js.BodyName}` ID: {js.BodyID} - {js.ParentList()};  in `{he.System.Name}`:{he.System.SystemAddress}");
+                        $"\r\n{mhe.Item1} {he.EventTimeUTC} {he.EntryType}: `{js.BodyName}` ID: {js.BodyID} - {js.ParentList()};  in `{he.System.Name}`:{he.System.SystemAddress}".DO("StarScan");
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine($"\r\n{mhe.Item1} {he.EventTimeUTC} {he.EntryType}: in `{he.System.Name}`:{he.System.SystemAddress}");
+                        $"\r\n{mhe.Item1} {he.EventTimeUTC} {he.EntryType}: in `{he.System.Name}`:{he.System.SystemAddress}".DO("StarScan");
                     }
 
                     (he.journalEntry as IStarScan).AddStarScan(this, he.System);
+                    
                     perstep?.Invoke(this, mhe);
-                    foreach (var kvp in systemNodesByName)
+
+                    if (outputtreestate)
                     {
-                        System.Diagnostics.Debug.WriteLine(kvp.Value.PrintTree());
+                        foreach (var kvp in systemNodesByName)
+                        {
+                            System.Diagnostics.Debug.WriteLine(kvp.Value.PrintTree());
+                        }
                     }
                 }
             }

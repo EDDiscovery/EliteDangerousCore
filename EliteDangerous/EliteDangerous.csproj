@@ -88,7 +88,6 @@
     <Compile Include="Bodies\StarScan2\SystemDisplay.cs" />
     <Compile Include="Bodies\StarScan2\SystemDisplayDrawParts.cs" />
     <Compile Include="Bodies\StarScan2\SystemDisplayDrawNode.cs" />
-    <Compile Include="Bodies\StarScan2\tests\Tests.cs" />
     <Compile Include="FrontierData\Enumerations\Carrier.cs" />
     <Compile Include="FrontierData\FDName\FDName.cs" />
     <Compile Include="FrontierData\Items\ModuleList.cs" />
@@ -131,7 +130,6 @@
     <Compile Include="3rdPartyInterfaces\EDSM\EDSMLogFetcher.cs" />
     <Compile Include="FrontierData\Enumerations\Thargoids.cs" />
     <Compile Include="FrontierData\Engineering\EngineeringData.cs" />
-    <Compile Include="FrontierData\Engineering\EngineeringUnitTest.cs" />
     <Compile Include="FrontierData\Enumerations\ShipSlots.cs" />
     <Compile Include="FrontierData\Enumerations\PowerPlay.cs" />
     <Compile Include="FrontierData\Enumerations\Passengers.cs" />
