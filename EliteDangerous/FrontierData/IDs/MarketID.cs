@@ -37,10 +37,7 @@ namespace EliteDangerousCore
 
         public override string ToString()
         {
-            if (ID == 0)
-                return null;
-            else
-                return ID.ToStringInvariant();
+            return ID.ToStringInvariant();
         }
 
         public bool Equals(MarketID other)

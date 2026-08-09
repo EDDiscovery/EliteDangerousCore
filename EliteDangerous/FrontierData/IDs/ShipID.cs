@@ -45,12 +45,9 @@ namespace EliteDangerousCore
             ID = 0;
         }
 
-        public override string ToString()       // null if not defined
+        public override string ToString()      
         {
-            if (ID == 0)
-                return null;
-            else
-                return ID.ToStringInvariant();
+            return ID.ToStringInvariant();
         }
 
         public bool Equals(ShipID other)
