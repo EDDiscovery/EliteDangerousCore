@@ -62,6 +62,8 @@
     <Compile Include="Bodies\StarScan2\StarScanNodePtr.cs" />
     <Compile Include="Bodies\StarScan2\StarScanSystemNodeEvents.cs" />
     <Compile Include="Bodies\StarScan2\SystemDisplayPlanetTree.cs" />
+    <Compile Include="FrontierData\Bindings\BindingsFileAssignmentDevice.cs" />
+    <Compile Include="FrontierData\Bindings\FrontierKeyClassification.cs" />
     <Compile Include="FrontierData\FDName\CrimesDataScannedDockingFDName.cs" />
     <Compile Include="FrontierData\FDName\SignalsGenusFDName.cs" />
     <Compile Include="FrontierData\FDName\ActorEngineerFDName.cs" />

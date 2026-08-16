@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2016 EDDiscovery development team
+ * Copyright 2016-2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,400 +10,320 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
- 
+
+using BaseUtils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace EliteDangerousCore
 {
-    public class BindingsFile : IEnumerable<BindingsFile.Device>
+    public partial class BindingsFile 
     {
-        public bool Loaded { get { return devices.Count > 0; } }
-        public string FileLoaded { get; private set; }
-        public string ErrorList { get; private set; } = "";
+        public bool IsLoaded => FileName != null;
+        public string FileName { get; private set; }
+        public string PresetName { get { return RootAttributes.TryGetValue("PresetName", out string s) ? s : "Unknown"; } set { RootAttributes["PresetName"] = value; } }
 
-        public HashSet<string> AxisNames { get; private set; } = new HashSet<string>();        // from Bindings in frontier file - all names even if not assigned
-        public HashSet<string> KeyNames { get; private set; } = new HashSet<string>();         // from Primary or Secondary in frontier file - all names even if not assigned
+        // which have a binding or key assignement
+        public IEnumerable<BindingEntry> Assignments => Elements.Where(x => x.Value.HasKeys || x.Value.HasBinding).Select(x => x.Value);
+        // which have values in attributes
+        public IEnumerable<BindingEntry> Values => Elements.Where(x => x.Value.Attributes.Count>0).Select(x => x.Value);
+        public List<string> DeviceList => Devices.ToList();
+        public List<string> DeviceListNoKeyboardMouse => Devices.Where(x => x != "Keyboard" && x != "Mouse").ToList();
+        public List<string> DeviceListNoKeyboardMouseDevice => Devices.Where(x => x != "Keyboard" && x != "Mouse" && x != "{NoDevice}").ToList();
 
-        // assignedfunc to device and assignment, may be many
-        public Dictionary<string, List<Tuple<Device, Assignment>>> AssignedNames { get; private set; } = new Dictionary<string, List<Tuple<Device, Assignment>>>();
-
-        private Dictionary<string, Device> devices = new Dictionary<string, Device>();
-        private Dictionary<string, string> values = new Dictionary<string, string>();
-
-        public const string KeyboardDeviceName = "Keyboard";     // frontier name for keyboard device
-
-        [System.Diagnostics.DebuggerDisplay("DKP {Device.Name} {Key}")]
-        public class DeviceKeyPair
+        // Frontier only allows one preset file, referenced in startpreset*.start, which is normally Custom*
+        // logically its only one custom file allowed.
+        // users may change that name
+        // return file name of preset file and the index number assigned. null if not found
+        public static Tuple<string,int> FindStartPreset(string path, bool odyssey)
         {
-            public Device Device;
-            public string Key;          // Keyboard: in Keys naming convention - converted from Frontier on input.
-        }
-
-        [System.Diagnostics.DebuggerDisplay("Assignment {assignedfunc} Keys {keys.Count}" )]
-        public class Assignment
-        {
-            public List<DeviceKeyPair> keys;  // first is always the primary one
-            public string assignedfunc;
-
-            public override string ToString()
-            {
-                StringBuilder s = new StringBuilder(64);
-                if (keys.Count > 1)
-                    s.Append("(");
-
-                for (int i = 0; i < keys.Count; i++)
-                {
-                    if (i >= 1)
-                        s.Append(",");
-
-                    s.AppendFormat(keys[i].Device.Name + ":" + keys[i].Key);
-                }
-
-                if (keys.Count > 1)
-                    s.Append(")");
-
-                s.Append("=" + assignedfunc);
-
-                return s.ToNullSafeString();
-            }
-
-            public string ToString(string devicename)
-            {
-                StringBuilder s = new StringBuilder(64);
-                if (keys.Count > 1)
-                    s.Append("(");
-
-                for (int i = 0; i < keys.Count; i++)
-                {
-                    if (i >= 1)
-                        s.Append(",");
-
-                    if (keys[i].Device.Name!=devicename)
-                        s.Append(keys[i].Device.Name + ":" );
-
-                    s.Append(keys[i].Key);
-                }
-
-                if (keys.Count > 1)
-                    s.Append(")");
-
-                s.Append("=" + assignedfunc);
-
-                return s.ToNullSafeString();
-            }
-
-            public bool HasKeyAssignment(string key)        // is key in this list (Keys naming convention)
-            {
-                foreach (DeviceKeyPair k in keys)
-                {
-                    if (k.Key.Equals(key))
-                        return true;
-                }
-
-                return false;
-            }
-
-            public bool HasKeyAssignment(Assignment other)      // do the keys in other clash with our keys
-            {
-                foreach (DeviceKeyPair o in other.keys)
-                {
-                    foreach (DeviceKeyPair k in keys)
-                    {
-                        if (k.Key.Equals(o.Key))
-                            return true;
-                    }
-                }
-
-                return false;
-            }
-
-            public bool KeyAssignementLongerThan(List<BindingsFile.Assignment> others)  // is ours the best keylist (based on length)
-            {
-                foreach (BindingsFile.Assignment a in others)
-                {
-                    if (a != this)  // in case we are in the list
-                    {
-                        if (a.HasKeyAssignment(a))        // do we have a clash of keys, other has keys in our key list..
-                        {
-                            if (keys.Count < a.keys.Count)  // yes, is our key length less.. then its the others.
-                                return false;
-                        }
-                    }
-                }
-                return true;
-            }
-
-            public int NumberOfKeysWithDevice(string name)
-            {
-                return (from x in keys where x.Device.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) select x).Count();
-            }
-
-            public bool AllOfDevice(string name)
-            {
-                return NumberOfKeysWithDevice(name) == keys.Count;
-            }
-        }
-
-        [System.Diagnostics.DebuggerDisplay("Device {Name} {Assignments.Count}")]
-        public class Device
-        {
-            public string Name;
-            public Dictionary<string, List<Assignment>> Assignments;     // given a primary key, give a list of assignments on it.
-
-            public List<Assignment> Find(string name, bool partialmatch)
-            {
-                if (partialmatch)
-                {
-                    var filtered = Assignments.Where(d => d.Key.Contains(name)).Select(k => k.Value);
-                    var singlelist = filtered.SelectMany(x => x).ToList();
-                    return singlelist;
-                }
-                else
-                    return Assignments.ContainsKey(name) ? Assignments[name] : null;
-            }
-        }
-
-        public IEnumerator<Device> GetEnumerator()
-        {
-            foreach (string e in devices.Keys)
-                yield return devices[e];
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        private Device FindOrMakeDevice(string name)
-        {
-            if (devices.ContainsKey(name))
-                return devices[name];
-            else
-            {
-                Device d = new Device() { Name = name, Assignments = new Dictionary<string, List<Assignment>>() };
-                devices[name] = d;
-                return d;
-            }
-        }
-
-        private void AssignToDevice(XElement d, XElement map)
-        {
-            XAttribute xdevice = map.Attribute("Device");
-            XAttribute xkey = map.Attribute("Key");
-            if (xdevice != null && xkey != null && xkey.Value.Length > 0)
-            {
-                string key = xkey.Value;
-                if ( xdevice.Value == KeyboardDeviceName)
-                {
-                    key = FrontierKeyConversion.FrontierToKeys(key);
-                    if (key.StartsWith("!"))
-                    {
-                        ErrorList = ErrorList.AppendPrePad(key.Substring(1), Environment.NewLine);
-                        return;
-                    }
-                }
-
-                int povindex = key.IndexOf("POV");    // pov evil.. frontier code these as primary (l/r/u/d) and modifier (l/r/u/d) in no particular order
-                string povroot = (povindex > 0) ? key.Truncate(0, povindex + 4) : null;
-
-                List<DeviceKeyPair> dvp = new List<DeviceKeyPair>();
-
-                foreach (XElement y in map.Descendants())
-                {
-                    if (y.Name == "Modifier")
-                    {
-                        string km = y.Attribute("Device").Value;
-                        string vm = y.Attribute("Key").Value;
-
-                        if (povroot != null && vm.Truncate(0, povroot.Length).Equals(povroot))       // POV pair..  lets adjust so its just the major entry.. makes it easier
-                        {
-                            if (key.Contains("Left") || vm.Contains("Left"))
-                                key = povroot + ((key.Contains("Up") || vm.Contains("Up")) ? "UpLeft" : "DownLeft");
-                            else if (key.Contains("Right") || vm.Contains("Right"))
-                                key = povroot + ((key.Contains("Up") || vm.Contains("Up")) ? "UpRight" : "DownRight");
-                        }
-                        else
-                        {
-                            if ( km == KeyboardDeviceName)
-                            {
-                                vm = FrontierKeyConversion.FrontierToKeys(vm);
-                                if (vm.StartsWith("!"))
-                                {
-                                    ErrorList = ErrorList.AppendPrePad(vm.Substring(1), Environment.NewLine);
-                                    return;
-                                }
-                            }
-
-                            dvp.Add(new DeviceKeyPair() { Device = FindOrMakeDevice(km), Key = vm });
-                        }
-                    }
-                }
-
-                dvp.Insert(0, new DeviceKeyPair() { Device = FindOrMakeDevice(xdevice.Value), Key = key });
-
-                Assignment a = new Assignment() { assignedfunc = d.Name.ToString(), keys = dvp };
-
-                if (!AssignedNames.ContainsKey(a.assignedfunc))
-                    AssignedNames[a.assignedfunc] = new List<Tuple<Device, Assignment>>();
-
-                AssignedNames[a.assignedfunc].Add(new Tuple<Device, Assignment>(dvp[0].Device, a));
-
-                foreach (DeviceKeyPair dkp in dvp)      // all keys mentioned need adding
-                {
-                    //System.Diagnostics.Debug.WriteLine("{0} {1}", dkp.Device.Name, a.assignedfunc);
-
-                    if (!dkp.Device.Assignments.ContainsKey(dkp.Key))
-                        dkp.Device.Assignments[dkp.Key] = new List<Assignment>();
-
-                    dkp.Device.Assignments[dkp.Key].Add(a);
-                }
-            }
-        }
-
-        private string ChkValue(string s)
-        {
-            return (s == "Value") ? "" : ("." + s);
-        }
-
-        // We can indicate if we prefer odyssey
-        public bool LoadBindingsFile(string path, bool odyssey)
-        {
-            devices = new Dictionary<string, Device>();     // clear
-            values = new Dictionary<string, string>();
-            FileLoaded = null;
-            ErrorList = "";
-
-            if (!Directory.Exists(path))
-                return false;
-
-            try
+            if (Directory.Exists(path))
             {
                 FileInfo[] allStarts = Directory.EnumerateFiles(path, odyssey ? "StartPreset.*.start" : "StartPreset.start", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
 
                 if (allStarts.Length == 0)
                     allStarts = Directory.EnumerateFiles(path, "StartPreset.start", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
-                string sfile = allStarts[0].FullName;
-                
-                // new startpreset.X.start files from odyssey 11 onwards.. isolate the number, 0 if not found
-                int i1 = sfile.IndexOf(".");
-                int i2 = sfile.IndexOf(".", i1 + 1);
-                int index = 0;
-                if (i1 >= 0 && i2 >= 0)
-                    index = sfile.Substring(i1 + 1, i2 - i1 - 1).InvariantParseInt(0);
 
-                string[] bindlist = System.IO.File.ReadAllLines(sfile);
-                System.Diagnostics.Trace.WriteLine($"Bindings preset file {sfile} contents {string.Join(";", bindlist)} index {index}");
-
-                foreach (string selline in bindlist)
+                if (allStarts.Length > 0)       // if there, may not be due to user not creating at least one key
                 {
-                  FileInfo[] allFiles = null;
+                    string sfile = allStarts[0].FullName;
 
-                    // prefer files called with same index                     
-                    if ( index > 0 )
-                        allFiles = Directory.EnumerateFiles(path, selline + "." + index.ToStringInvariant() + ".*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
+                    // new startpreset.X.start files from odyssey 11 onwards.. isolate the number, 0 if not found
+                    int i1 = sfile.IndexOf(".");
+                    int i2 = sfile.IndexOf(".", i1 + 1);
+                    int index = 0;
+                    if (i1 >= 0 && i2 >= 0)
+                        index = sfile.Substring(i1 + 1, i2 - i1 - 1).InvariantParseInt(0);
 
-                    // else any files with this prefix
-                    if ( allFiles == null || allFiles.Length == 0)
-                        allFiles = Directory.EnumerateFiles(path, selline + "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
+                    return Tuple.Create(sfile, index);
+                }
+            }
 
-                    if (allFiles.Length >= 1)
+            return null;
+        }
+
+        // get preset file name currently selected, null if start preset or the file is not there
+        public static string FindPresetFileName(string path, bool odyssey)
+        {
+            var presetfile = FindStartPreset(path, odyssey);
+
+            if (presetfile!=null)
+            {
+                string[] bindlist = FileHelpers.TryReadAllLinesFromFile(presetfile.Item1);
+
+                if (bindlist != null)
+                {
+                    System.Diagnostics.Trace.WriteLine($"Bindings preset file {presetfile.Item1} contents {string.Join(";", bindlist)} index {presetfile.Item2}");
+
+                    List<string> files = new List<string>();
+
+                    foreach (string selline in bindlist)    // find first entry with name..
                     {
-                        System.Diagnostics.Debug.WriteLine($"Bindings Read {allFiles[0].FullName}");
+                        FileInfo[] allFiles = null;
 
-                        XElement bindings = XElement.Load(allFiles[0].FullName);
+                        // prefer files called with same index                     
+                        if (presetfile.Item2 > 0)
+                            allFiles = Directory.EnumerateFiles(path, selline + "." + presetfile.Item2.ToStringInvariant() + ".*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
 
-                        foreach (XElement x in bindings.Elements())
-                        {
-                            //System.Diagnostics.Debug.WriteLine("Reader " + x.NodeType + " " + x.Name);
+                        // else any files with this prefix
+                        if (allFiles == null || allFiles.Length == 0)
+                            allFiles = Directory.EnumerateFiles(path, selline + "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
 
-                            if (x.HasElements)
-                            {
-                                foreach (XElement y in x.Descendants())
-                                {
-                                    if (y.Name == "Binding")
-                                    {
-                                        AxisNames.Add(x.Name.LocalName);
-                                        AssignToDevice(x, y);
-                                    }
-                                    else if (y.Name == "Primary" || y.Name == "Secondary")
-                                    {
-                                        //System.Diagnostics.Debug.WriteLine("Binding Point " + x.NodeType + " " + x.Name + " Element " + y.Name);
-                                        KeyNames.Add(x.Name.LocalName);
-                                        AssignToDevice(x, y);
-                                    }
-                                    else
-                                    {
-                                        foreach (XAttribute z in y.Attributes())
-                                        {
-                                            values[x.Name + "." + y.Name + ChkValue(z.Name.ToString())] = z.Value;
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (x.HasAttributes)
-                            {
-                                foreach (XAttribute y in x.Attributes())
-                                {
-                                    values[x.Name + ChkValue(y.Name.ToString())] = y.Value;
-                                }
-                            }
-                        }
-
-                        FileLoaded = allFiles[0].FullName;
-                        return true;
+                        if (allFiles.Length > 0)
+                            return allFiles[0].FullName;
                     }
                 }
             }
-            catch (Exception ex)
+
+            return null;
+        }
+
+        // load file
+        // give null if required since FindPresetFileName gives null if not set. This would occur for a user which never set a key
+        // returns null if happy and loaded or error string
+        public string Read(string filetoload)
+        {
+            Devices.Add("{NoDevice}");
+
+            FileName = null;
+
+            if ( filetoload  == null || !File.Exists(filetoload))
             {
-                ErrorList = "Bindings exception " + ex;
-                System.Diagnostics.Trace.WriteLine("Bindings exception " + ex);
+                return "File not found";
             }
 
-            return false;
+            try  // XML crap excepts everywhere, catch all
+            {
+
+                XElement bindings = XElement.Load(filetoload);
+
+                // here we store the root attributes in case we want to write the XML back out
+
+                if (bindings.HasAttributes)
+                {
+                    foreach (XAttribute y in bindings.Attributes())
+                    {
+                        string attr = y.Name.ToString();
+                        //System.Diagnostics.Debug.WriteLine($"Root {y.NodeType} {y.Name}");
+                        RootAttributes[attr] = y.Value;
+
+                    }
+                }
+
+                // for all top level elements
+
+                foreach (XElement rootelement in bindings.Elements())
+                {
+                    BindingEntry entry = new BindingEntry()
+                    {
+                        Name = rootelement.Name.ToString(),
+                        Value = rootelement.Value.ToString(),
+                    };
+
+                    if (rootelement.HasElements)
+                    {
+                        foreach (XElement subelement in rootelement.Elements())
+                        {
+                            if (subelement.Name == "Binding")
+                            {
+                                //System.Diagnostics.Debug.WriteLine($"    {subelement.Name} `{rootelement.Name.LocalName}`");
+                                //AxisNames.Add(rootelement.Name.LocalName);
+                                entry.Binding = AssignToDevice(rootelement.Name.ToString(), subelement)[0];
+                            }
+                            else if (subelement.Name == "Primary")
+                            {
+                                //System.Diagnostics.Debug.WriteLine($"   {rootelement.Name.LocalName}:{subelement.Name}  = `{subelement.Value}`");
+                                //KeyNames.Add(rootelement.Name.LocalName);
+                                entry.PrimaryKeys = AssignToDevice(rootelement.Name.ToString(), subelement);
+                            }
+                            else if (subelement.Name == "Secondary")
+                            {
+                                //System.Diagnostics.Debug.WriteLine($"   {rootelement.Name.LocalName}:{subelement.Name}  = `{subelement.Value}`");
+                                //KeyNames.Add(rootelement.Name.LocalName);
+                                entry.SecondaryKeys = AssignToDevice(rootelement.Name.ToString(), subelement);
+                            }
+                            else 
+                            {
+                                var se = subelement.Attributes().ToArray();
+
+                                if (se.Length == 1 && se[0].Name == "Value")
+                                {
+                                    entry.Values.Add(subelement.Name.ToString(), se[0].Value);
+                                }
+                                else
+                                {
+                                    System.Diagnostics.Trace.WriteLine($"Binding File Rejected Storing {rootelement.Name}: {subelement.Name}:{se[0].Name} = {se[0].Value}");
+                                }
+
+                            }
+                        }
+                    }
+
+                    if (rootelement.HasAttributes)
+                    {
+                        foreach (XAttribute y in rootelement.Attributes())
+                        {
+                            entry.Attributes.Add(y.Name.ToString(), y.Value);
+                        }
+                    }
+
+                    Elements[rootelement.Name.ToString()] = entry;
+                }
+
+                FileName = filetoload;
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine("Bindings exception " + ex);
+                return "Bindings exception " + ex;
+            }
         }
 
-        public Device GetDevice(string name)
+        public string ToXML()
         {
-            return devices.ContainsKey(name) ? devices[name] : null;
+            XElement root = new XElement("Root");
+
+            // all root attributes
+            foreach (var kvp in RootAttributes)
+            {
+                XAttribute attr = new XAttribute(kvp.Key, kvp.Value);
+                root.Add(attr);
+            }
+
+            // all elements in order of reading
+            foreach (var kvp in Elements)
+            {
+                BindingEntry entry = kvp.Value;
+                XElement elm = new XElement(kvp.Key);
+                if (entry.Value.HasChars())
+                    elm.Value = entry.Value;
+
+                foreach (var k3 in entry.Attributes)
+                {
+                    XAttribute attr = new XAttribute(k3.Key, k3.Value);
+                    elm.Add(attr);
+                }
+
+                if (entry.Binding != null)
+                {
+                    XElement elem1 = new XElement("Binding");
+                    elem1.Add(new XAttribute("Device", entry.Binding.Device));
+                    elem1.Add(new XAttribute("Key", entry.Binding.FrontierKeyName));
+                    elm.Add(elem1);
+                }
+
+                if (entry.PrimaryKeys != null)
+                {
+                    XElement elem1 = new XElement("Primary");
+                    elem1.Add(new XAttribute("Device", entry.PrimaryKeys[0].Device));
+                    elem1.Add(new XAttribute("Key", entry.PrimaryKeys[0].FrontierKeyName));
+
+                    for (int i = 1; i < entry.PrimaryKeys.Count; i++)
+                    {
+                        XElement mod = new XElement("Modifier");
+                        mod.Add(new XAttribute("Device", entry.PrimaryKeys[i].Device));
+                        mod.Add(new XAttribute("Key", entry.PrimaryKeys[i].FrontierKeyName));
+                        elem1.Add(mod);
+                    }
+                    elm.Add(elem1);
+                }
+
+                if (entry.SecondaryKeys != null)
+                {
+                    XElement elem1 = new XElement("Secondary");
+                    elem1.Add(new XAttribute("Device", entry.SecondaryKeys[0].Device));
+                    elem1.Add(new XAttribute("Key", entry.SecondaryKeys[0].FrontierKeyName));
+
+                    for (int i = 1; i < entry.SecondaryKeys.Count; i++)
+                    {
+                        XElement mod = new XElement("Modifier");
+                        mod.Add(new XAttribute("Device", entry.SecondaryKeys[i].Device));
+                        mod.Add(new XAttribute("Key", entry.SecondaryKeys[i].FrontierKeyName));
+                        elem1.Add(mod);
+                    }
+                    elm.Add(elem1);
+                }
+
+                entry.AssignKeys();
+
+                foreach (var element in entry.Values)
+                {
+                    var elem1 = new XElement(element.Key);
+                    elem1.Add(new XAttribute("Value", element.Value));
+                    elm.Add(elem1);
+                }
+
+                root.Add(elm);
+            }
+
+            string header = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + Environment.NewLine;
+            string xml = root.ToString();
+            //System.Diagnostics.Debug.WriteLine($"XML = {xml}");
+            return header + xml;
         }
 
-        public Device FindDevice(string name, Guid instanceguid, Guid productguid, int productid, int vendorid)    // best match of physical device info to our binding devices
+        public void Rename(string presetname)
         {
-            Device bestmatch = null;
+            int lastpos = FileName.IndexOfIIC(PresetName);
+            if (lastpos>=0)
+            {
+                FileName = FileName.Substring(0, lastpos) + presetname + FileName.Substring(lastpos + PresetName.Length);
+                PresetName = presetname;
+            }
+        }
+
+        public string FindDevice(string name, Guid instanceguid, Guid productguid, int productid, int vendorid)    // best match of physical device info to our binding devices
+        {
+            string bestmatch = null;
             int besttotal = 0;
 
             string frontiername = devicemapping.ContainsKey(new Tuple<int, int>(productid, vendorid)) ? devicemapping[new Tuple<int, int>(productid, vendorid)] : null;
 
-            foreach (Device dv in devices.Values)
+            foreach (string dv in Devices)
             {
-                if (dv.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))      // exact match
+                if (dv.Equals(name, StringComparison.InvariantCultureIgnoreCase))      // exact match
                     return dv;
 
-                if (frontiername != null && dv.Name.Equals(frontiername, StringComparison.InvariantCultureIgnoreCase))
+                if (frontiername != null && dv.Equals(frontiername, StringComparison.InvariantCultureIgnoreCase))
                     return dv;
 
-                if (dv.Name.Equals(GuidExtract(instanceguid, false), StringComparison.InvariantCultureIgnoreCase))
+                if (dv.Equals(GuidExtract(instanceguid, false), StringComparison.InvariantCultureIgnoreCase))
                     return dv;
-                if (dv.Name.Equals(GuidExtract(instanceguid, true), StringComparison.InvariantCultureIgnoreCase))
+                if (dv.Equals(GuidExtract(instanceguid, true), StringComparison.InvariantCultureIgnoreCase))
                     return dv;
-                if (dv.Name.Equals(GuidExtract(productguid, false), StringComparison.InvariantCultureIgnoreCase))
+                if (dv.Equals(GuidExtract(productguid, false), StringComparison.InvariantCultureIgnoreCase))
                     return dv;
-                if (dv.Name.Equals(GuidExtract(productguid, true), StringComparison.InvariantCultureIgnoreCase))
+                if (dv.Equals(GuidExtract(productguid, true), StringComparison.InvariantCultureIgnoreCase))
                     return dv;
 
-                int total = dv.Name.SplitCapsWord().ToLowerInvariant().ApproxMatch(name.ToLowerInvariant(), 4);
+                int total = dv.SplitCapsWord().ToLowerInvariant().ApproxMatch(name.ToLowerInvariant(), 4);
                 if (total > besttotal)
                 {
                     besttotal = total;
@@ -417,25 +337,136 @@ namespace EliteDangerousCore
             return null;
         }
 
-        public List<Tuple<Device, Assignment>> FindAssignedFunc(string name, string preferreddevice=null)       // NULL if no match found 
+        public void AddDevice(string name)
         {
-            if (AssignedNames.ContainsKey(name))
-            {
-                List<Tuple<Device, Assignment>> ret = new List<Tuple<Device, Assignment>>();
-
-                foreach (Tuple<Device, Assignment> a in AssignedNames[name])        // search assignments under this name
-                {
-                    if ( preferreddevice == null || a.Item2.AllOfDevice(preferreddevice) )      // if null, or all of this device.. return
-                        ret.Add(new Tuple<Device, Assignment>(a.Item1, a.Item2));
-                }
-
-                return ret.Count > 0 ? ret : null;
-            }
-
-            return null;
+            Devices.Add(name);
         }
 
-        string GuidExtract(Guid g, bool rev)
+        public void RemoveDevice(string name)
+        {
+            foreach (var element in Elements)
+                element.Value.RemoveDevice(name);
+            Devices.Remove(name);
+        }
+        public void RenameDevice(string oldname, string newname)
+        {
+            foreach (var element in Elements)
+                element.Value.RenameDevice(oldname,newname);
+            Devices.Remove(oldname);
+            Devices.Add(newname);
+        }
+
+        public void Clear()
+        {
+            foreach (var element in Elements)
+                element.Value.ClearAllKeys();
+        }
+
+        // given a action name, return a list of assigned keys/devices
+
+        public BindingEntry FindAction(string name)
+        {
+            return Elements.TryGetValue(name,out var action) ? action : null;   
+        }
+
+        // used to find the keys associated with an logical action name in ActionKeyED and web pressed logical function
+        // NULL if no match found 
+
+        //public List<FrontierActionToKeys> FindAction(string actionname, string preferreddevice = null)
+        //{
+        //    if (AssignedActions.ContainsKey(actionname))
+        //    {
+        //        List<FrontierActionToKeys> ret = new List<FrontierActionToKeys>();
+
+        //        foreach (var a in AssignedActions[actionname])        // search assignments under this name
+        //        {
+        //            if (preferreddevice == null || a.AllOfDevice(preferreddevice))      // if null, or all of this device.. return
+        //                ret.Add(a);
+        //        }
+
+        //        return ret.Count > 0 ? ret : null;
+        //    }
+
+        //    return null;
+        //}
+
+        //public Dictionary<string, string> FindActionValues(string actionname)
+        //{
+        //    return AssignedActionsValues.TryGetValue(actionname, out Dictionary<string, string> v) ? v : null;
+        //}
+
+        // given a key name, find the list of assignments of FrontierActionToKeys for it
+        //public List<FrontierActionToKeys> Find(string keyname, bool partialmatch)       
+        //{
+        //    List<FrontierActionToKeys> ret = new List<FrontierActionToKeys>();
+
+        //    foreach (Device dv in Devices.Values)   // all devices..
+        //    {
+        //        List<FrontierActionToKeys> f = dv.Find(keyname, partialmatch);
+        //        if (f != null)
+        //            ret.AddRange(f);
+        //    }
+
+        //    return ret;
+        //}
+
+        //public string ListBindings()
+        //{
+        //    string ret = "";
+        //    foreach (string s in Devices.Keys)
+        //    {
+        //        ret += s + Environment.NewLine + Mappings(s, "  ") + Environment.NewLine;
+        //    }
+        //    return ret;
+        //}
+
+        //public string ListKeyNames(string prefix = "", string postfix = "")
+        //{
+        //    return String.Join(Environment.NewLine, (from x in KeyNames select prefix + x + postfix));
+        //}
+
+
+
+        #region private
+
+
+        // assign to mapping
+        private List<DeviceKeyPair> AssignToDevice(string actionname, XElement mapping)
+        {
+            XAttribute xdevice = mapping.Attribute("Device");       // always Device/Key even if axis
+            XAttribute xkey = mapping.Attribute("Key");
+
+            if (xdevice != null && xkey != null)
+            {
+                string assignmentxml = mapping.Name.ToString();         // 'Primary' 'Secondary' 'Binding'
+                string frontierkeyname = xkey.Value;
+
+                List<DeviceKeyPair> dvp = new List<DeviceKeyPair>();
+
+                foreach (XElement y in mapping.Descendants())
+                {
+                    if (y.Name == "Modifier")
+                    {
+                        string km = y.Attribute("Device").Value;
+                        string vm = y.Attribute("Key").Value;
+
+                        Devices.Add(km);
+
+                        dvp.Add(new DeviceKeyPair(km, y.Attribute("Key").Value));
+                    }
+                }
+
+                Devices.Add(xdevice.Value);
+                // push as first key
+                dvp.Insert(0, new DeviceKeyPair(xdevice.Value, frontierkeyname));
+
+                return dvp;
+            }
+            else
+                return null;
+        }
+
+        private string GuidExtract(Guid g, bool rev)
         {
             string s = g.ToString();
             int slash = s.IndexOf('-');
@@ -450,69 +481,33 @@ namespace EliteDangerousCore
             return s;
         }
 
-        public List<Assignment> Find(string name, bool partialmatch)        // given a key name, find the list of assignments for it
+
+        //private string Mappings(string devicename, string prefix)
+        //{
+        //    StringBuilder s = new StringBuilder(128);
+        //    if (Devices.ContainsKey(devicename))
+        //    {
+        //        foreach (string keyname in Devices[devicename].Assignments.Keys)
+        //        {
+        //            foreach (FrontierActionToKeys a in Devices[devicename].Assignments[keyname])
+        //            {
+        //                s.Append(prefix + a.ToString(devicename));
+        //                s.AppendLine();
+        //            }
+        //        }
+        //    }
+        //    return s.ToString();
+        //}
+
+
+        private string ChkValue(string s)
         {
-            List<Assignment> ret = new List<Assignment>();
-
-            foreach (Device dv in devices.Values)
-            {
-                List<Assignment> f = dv.Find(name, partialmatch);
-                if (f != null)
-                    ret.AddRange(f);
-            }
-
-            return ret;
+            return (s == "Value") ? "" : ("." + s);
         }
 
-        public Dictionary<string,string> BindingValue(string s,bool partial)    // given a value name, with partial match flag, find the binding values
-        {
-            if ( partial )
-                return (from v in values where v.Key.Contains(s) select v).ToDictionary(x => x.Key, x => x.Value);
-            else
-                return (from v in values where v.Key.Equals(s) select v).ToDictionary(x => x.Key, x => x.Value);
-        }
-
-
-        private string Mappings(string devicename, string prefix)
-        {
-            StringBuilder s = new StringBuilder(128);
-            if (devices.ContainsKey(devicename))
-            {
-                foreach (string keyname in devices[devicename].Assignments.Keys)
-                {
-                    foreach (Assignment a in devices[devicename].Assignments[keyname])
-                    {
-                        s.Append(prefix + a.ToString(devicename));
-                        s.AppendLine();
-                    }
-                }
-            }
-            return s.ToString();
-        }
-
-        public string ListBindings()
-        {
-            string ret = "";
-            foreach (string s in devices.Keys)
-            {
-                ret += s + Environment.NewLine + Mappings(s,"  ") + Environment.NewLine;
-            }
-            return ret;
-
-        }
-
-        public string ListValues()
-        {
-            return String.Join(Environment.NewLine, (from x in values.Keys select x));
-        }
-
-        public string ListKeyNames(string prefix = "", string postfix = "")
-        {
-            return String.Join(Environment.NewLine, (from x in KeyNames select prefix + x + postfix));
-        }
 
         // From frontier DeviceMapping.xml table using EDDTest devicemappings import, 8/4/22
-        Dictionary<Tuple<int, int>, string> devicemapping = new Dictionary<Tuple<int, int>, string>()
+        private Dictionary<Tuple<int, int>, string> devicemapping = new Dictionary<Tuple<int, int>, string>()
         {
           {  new Tuple<int,int>(0x28E, 0x45E), "GamePad" },
         {  new Tuple<int,int>(0x28F, 0x45E), "GamePad" },
@@ -648,5 +643,16 @@ namespace EliteDangerousCore
         {  new Tuple<int,int>(0x9CC, 0x54C), "DualShock4" },
 
         };
+
+
+        // all root attributes
+        private Dictionary<string, string> RootAttributes { get; set; } = new Dictionary<string, string>();
+
+        private Dictionary<string, BindingEntry> Elements { get; set; } = new Dictionary<string, BindingEntry>();
+
+        // device list
+        private HashSet<string> Devices { get; set; } = new HashSet<string>();
+
+        #endregion
     }
 }

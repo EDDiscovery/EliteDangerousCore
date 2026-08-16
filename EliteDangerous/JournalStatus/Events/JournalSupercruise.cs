@@ -129,7 +129,7 @@ namespace EliteDangerousCore.JournalEvents
             else
                 info = "At ".Tx();
 
-            info += BaseUtils.FieldBuilder.Build("",Body, "< in ".Tx(), StarSystem, "Type".Tx()+": ", BodyType);
+            info += BaseUtils.FieldBuilder.Build("",Body, "< in ".Tx(), StarSystem, "Type".Tx()+":;;;;SCF", BodyType);
             return info;
         }
 

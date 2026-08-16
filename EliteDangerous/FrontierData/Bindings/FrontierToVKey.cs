@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2016 - 2022 EDDiscovery development team
+ * Copyright 2016 - 2026 EDDiscovery development team
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- * 
- * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
 using System;
@@ -22,6 +20,29 @@ namespace EliteDangerousCore
 {
     static public class FrontierKeyConversion
     {
+        static public List<string> FrontierKeyNames()
+        {
+            var ret = new List<string>();
+            for (int i = 0; i < 26; i++)
+                ret.Add("Key_" + new string(new char[] { (char)(i + 'A') }));
+            for (int i = 0; i < 10; i++)
+                ret.Add("Key_" + new string(new char[] { (char)(i + '0') }));
+            ret.AddRange(new string[] { "Key_ё", "Key_ґ", "Key_į", "Key_“", "Key_ų", "Key_ė", "Key_č", "Key_š", "Key_ę", "Key_¸", "Key_ş", "Key_ţ" });
+            ret.Add("Key_Umlaut");
+            ret.Add("Key_Ampersand");
+            ret.Add("Key_Acute");
+            ret.Add("Key_Apostrophe");
+            foreach (var x in frontiertovkeyname)
+                ret.Add("Key_" + x.Item2);
+            for (int i = 0; i < 10; i++)
+                ret.Add("Key_Numpad_" + new string(new char[] { (char)(i + '0') }));
+            for (int i = 0; i < 24; i++)
+                ret.Add($"Key_F{i}");
+            foreach (var x in frontiernameforcharacters)
+                ret.Add("Key_" + x.Item1);
+            return ret;
+        }
+
         // Translate strange frontier name to vkeys name used by baseutils
         // tested on multiple languages.
         // function returns ! as first character if error occurred
@@ -209,7 +230,7 @@ namespace EliteDangerousCore
 
         // in frontier devices help.txt file inside controlschemes
 
-        static Tuple<string, string>[] frontiertovkeyname = new Tuple<string, string>[]     
+        static private Tuple<string, string>[] frontiertovkeyname = new Tuple<string, string>[]     
         {
             new Tuple<string,string>(Keys.Escape.VKeyToString()      ,"Escape"),
             // 1-0 handled, minus, equals, 
