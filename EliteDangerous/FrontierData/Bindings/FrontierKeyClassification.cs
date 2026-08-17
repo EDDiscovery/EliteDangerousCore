@@ -41,7 +41,7 @@ namespace EliteDangerousCore
 
         public enum Mode
         {
-            Ship, UIPanel, GalaxyMap, Camera, OnFoot, SRV, All, FSS, SAA, HoloMe, Store, Colonisation
+            Ship, Landing, UIPanel, GalaxyMap, Camera, FreeCamera, OnFoot, OnFootWheel, SRV, SRVTurret, All, FSS, SAA, HoloMe, Store, Colonisation, ColonisationSuite
         }
 
         // given a action name, what section in frontiers menu is it in? Higly breakable this.
@@ -56,14 +56,14 @@ namespace EliteDangerousCore
             if (ActionName.StartsWith("UI") || (ActionName.StartsWith("Cycle") && (ActionName.EndsWith("Panel") || ActionName.EndsWith("Page"))))
                 return new Tuple<Classification, Mode>(Classification.InterfaceMode, Mode.UIPanel);
             else if (ActionName.StartsWith("Cam"))
-                return new Tuple<Classification, Mode>(Classification.GalaxyMap, Mode.Camera);
-            else if (ActionName.StartsWith("PhotoCameraToggle") || ActionName.StartsWith("VanityCamera"))
+                return new Tuple<Classification, Mode>(Classification.GalaxyMap, Mode.GalaxyMap);
+            else if (ActionName.StartsWith("VanityCamera"))
                 return new Tuple<Classification, Mode>(Classification.CameraSuite, Mode.Camera);
             else if (ActionName.Contains("FreeCam") || ActionName.StartsWith("PitchCamera") || ActionName.StartsWith("YawCamera") || ActionName.StartsWith("RollCamera")
                         || ActionName == "ToggleRotationLock" || ActionName.StartsWith("FixCamera") || ActionName == "QuitCamera" || ActionName == "ToggleAdvanceMode"
                         || ActionName.StartsWith("FStop")
                 )
-                return new Tuple<Classification, Mode>(Classification.FreeCam, Mode.Camera);
+                return new Tuple<Classification, Mode>(Classification.FreeCam, Mode.FreeCamera);
             else if (ActionName.StartsWith("CommanderCreat"))
                 return new Tuple<Classification, Mode>(Classification.HoloMe, Mode.HoloMe);
             else if (ActionName.StartsWith("GalnetAudio"))
@@ -78,7 +78,7 @@ namespace EliteDangerousCore
             else if (ActionName.Contains("Alternate"))      // must be in front
                 return new Tuple<Classification, Mode>(Classification.AlternateFlightControls, Mode.Ship);
             else if (ActionName.Contains("Landing"))        // must be in front
-                return new Tuple<Classification, Mode>(Classification.FlightLandingOverrides, Mode.Ship);
+                return new Tuple<Classification, Mode>(Classification.FlightLandingOverrides, Mode.Landing);
             else if (ActionName.StartsWith("Yaw") || ActionName.StartsWith("Roll") || ActionName.StartsWith("Pitch"))
                 return new Tuple<Classification, Mode>(Classification.FlightRotation, Mode.Ship);
             else if (ActionName.Contains("Thrust"))
@@ -107,7 +107,7 @@ namespace EliteDangerousCore
             // page 3
 
             else if (ActionName.StartsWith("BuggyTurret"))
-                return new Tuple<Classification, Mode>(Classification.DrivingTurretControls, Mode.SRV);
+                return new Tuple<Classification, Mode>(Classification.DrivingTurretControls, Mode.SRVTurret);
             else if (ActionName.StartsWith("IncreaseSpeed") || ActionName.StartsWith("DecreaseSpeed"))
                 return new Tuple<Classification, Mode>(Classification.DriveThrottle, Mode.SRV);
             else if (ActionName.StartsWith("Steer") || ActionName.StartsWith("Buggy"))
@@ -121,14 +121,19 @@ namespace EliteDangerousCore
                 return new Tuple<Classification, Mode>(Classification.OnFootModeSwitches, Mode.OnFoot);
             else if (ActionName.StartsWith("HumanoidEmote"))
                 return new Tuple<Classification, Mode>(Classification.OnFootEmotes, Mode.OnFoot);
-            else if (ActionName.StartsWith("Humanoid"))     // rest are OnFoot
-                return new Tuple<Classification, Mode>(Classification.OnFoot, Mode.OnFoot);
+            else if (ActionName.StartsWith("Humanoid"))     // rest are Onfoot
+            {
+                if ( ActionName.Contains("WheelButton"))
+                    return new Tuple<Classification, Mode>(Classification.OnFoot, Mode.OnFootWheel);
+                else
+                    return new Tuple<Classification, Mode>(Classification.OnFoot, Mode.OnFoot);
+            }
 
-            System.Diagnostics.Debug.WriteLine($"Frontier Key new Tuple<Classification,Mode>(Classification Unknown ID {ActionName}");
+            System.Diagnostics.Debug.WriteLine($"Frontier Key Classification Unknown ID {ActionName}");
             return new Tuple<Classification,Mode>(Classification.Misc, Mode.All);
         }
 
-        static Dictionary<string, Tuple<Classification,Mode>> discrete = new Dictionary<string, Tuple<Classification,Mode>>
+        static Dictionary<string, Tuple<Classification, Mode>> discrete = new Dictionary<string, Tuple<Classification, Mode>>
         {
             { "GalaxyMapHome", new Tuple<Classification,Mode>(Classification.GalaxyMap , Mode.GalaxyMap) },
             { "ToggleFreeCam", new Tuple<Classification,Mode>(Classification.CameraSuite, Mode.Camera) },
@@ -166,6 +171,7 @@ namespace EliteDangerousCore
             {"PlayerHUDModeToggle", new Tuple<Classification,Mode>(Classification.ModeSwitches, Mode.Ship) },
             {"ExplorationFSSEnter", new Tuple<Classification,Mode>(Classification.ModeSwitches, Mode.Ship) },
             {"ShowPGScoreSummaryInput" , new Tuple<Classification,Mode>(Classification.ModeSwitches, Mode.Ship) },
+            {"OpenOrders", new Tuple<Classification,Mode>(Classification.FightersOrders, Mode.Ship) },
 
             {"ToggleDriveAssist" , new Tuple<Classification,Mode>(Classification.Driving, Mode.SRV) },
             {"VerticalThrustersButton" , new Tuple<Classification,Mode>(Classification.Driving, Mode.SRV) },
@@ -188,13 +194,21 @@ namespace EliteDangerousCore
 
             {"ExplorationFSSTarget" , new Tuple<Classification,Mode>(Classification.FSS, Mode.FSS) },
 
-            { "HumanoidOpenAccessPanelButton", new Tuple<Classification,Mode>(Classification.OnFootModeSwitches , Mode.OnFoot) },
+            {"HumanoidOpenAccessPanelButton", new Tuple<Classification,Mode>(Classification.OnFootModeSwitches , Mode.OnFoot) },
             {"HumanoidConflictContextualUIButton", new Tuple<Classification,Mode>(Classification.OnFootModeSwitches , Mode.OnFoot) },
+
             {"MouseReset", new Tuple<Classification,Mode>(Classification.MouseControls, Mode.All) },
             {"BlockMouseDecay", new Tuple<Classification,Mode>(Classification.MouseControls, Mode.All) },
-            {"OpenOrders", new Tuple<Classification,Mode>(Classification.FightersOrders, Mode.Ship) },
+
+            {"PhotoCameraToggle", new Tuple<Classification,Mode>(Classification.CameraSuite, Mode.Ship) },
+            {"PhotoCameraToggle_Buggy", new Tuple<Classification,Mode>(Classification.CameraSuite, Mode.SRV) },
+            {"PhotoCameraToggle_Humanoid", new Tuple<Classification,Mode>(Classification.CameraSuite, Mode.OnFoot) },
+
+            {"HumanoidItemWheelButton", new Tuple<Classification,Mode>(Classification.OnFoot, Mode.OnFoot) },       // here to intercept WheenButton others
+            {"HumanoidEmoteWheelButton", new Tuple<Classification,Mode>(Classification.OnFoot, Mode.OnFoot) },
+
+            {"HumanoidUtilityWheelCycleMode", new Tuple<Classification,Mode>(Classification.OnFoot, Mode.OnFootWheel) },
+            {"PlaceSettlement", new Tuple<Classification,Mode>(Classification.SystemColonisation, Mode.ColonisationSuite) },        // presuming its only valid when colonisation suite is fired
         };
-
     }
-
 }

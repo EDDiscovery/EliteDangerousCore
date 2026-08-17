@@ -30,7 +30,7 @@ namespace EliteDangerousCore
         public string PresetName { get { return RootAttributes.TryGetValue("PresetName", out string s) ? s : "Unknown"; } set { RootAttributes["PresetName"] = value; } }
 
         // which have a binding or key assignement
-        public IEnumerable<BindingEntry> Assignments => Elements.Where(x => x.Value.HasKeys || x.Value.HasBinding).Select(x => x.Value);
+        public IEnumerable<BindingEntry> Assignments => Elements.Where(x => x.Value.HasAnyKeys).Select(x => x.Value);
         // which have values in attributes
         public IEnumerable<BindingEntry> Values => Elements.Where(x => x.Value.Attributes.Count>0).Select(x => x.Value);
         public List<string> DeviceList => Devices.ToList();
@@ -140,11 +140,7 @@ namespace EliteDangerousCore
 
                 foreach (XElement rootelement in bindings.Elements())
                 {
-                    BindingEntry entry = new BindingEntry()
-                    {
-                        Name = rootelement.Name.ToString(),
-                        Value = rootelement.Value.ToString(),
-                    };
+                    BindingEntry entry = new BindingEntry(rootelement.Name.ToString(), rootelement.Value.ToString());
 
                     if (rootelement.HasElements)
                     {
@@ -154,7 +150,8 @@ namespace EliteDangerousCore
                             {
                                 //System.Diagnostics.Debug.WriteLine($"    {subelement.Name} `{rootelement.Name.LocalName}`");
                                 //AxisNames.Add(rootelement.Name.LocalName);
-                                entry.Binding = AssignToDevice(rootelement.Name.ToString(), subelement)[0];
+                                entry.PrimaryKeys = AssignToDevice(rootelement.Name.ToString(), subelement);
+                                entry.Binding = true;
                             }
                             else if (subelement.Name == "Primary")
                             {
@@ -183,6 +180,9 @@ namespace EliteDangerousCore
 
                             }
                         }
+
+                        if ( entry.PrimaryKeys != null )
+                            entry.ClassMode = FrontierKeyClassification.GetClass(entry.Name);
                     }
 
                     if (rootelement.HasAttributes)
@@ -231,47 +231,47 @@ namespace EliteDangerousCore
                     elm.Add(attr);
                 }
 
-                if (entry.Binding != null)
-                {
-                    XElement elem1 = new XElement("Binding");
-                    elem1.Add(new XAttribute("Device", entry.Binding.Device));
-                    elem1.Add(new XAttribute("Key", entry.Binding.FrontierKeyName));
-                    elm.Add(elem1);
-                }
-
                 if (entry.PrimaryKeys != null)
                 {
-                    XElement elem1 = new XElement("Primary");
-                    elem1.Add(new XAttribute("Device", entry.PrimaryKeys[0].Device));
-                    elem1.Add(new XAttribute("Key", entry.PrimaryKeys[0].FrontierKeyName));
-
-                    for (int i = 1; i < entry.PrimaryKeys.Count; i++)
+                    if (entry.Binding)
                     {
-                        XElement mod = new XElement("Modifier");
-                        mod.Add(new XAttribute("Device", entry.PrimaryKeys[i].Device));
-                        mod.Add(new XAttribute("Key", entry.PrimaryKeys[i].FrontierKeyName));
-                        elem1.Add(mod);
+                        XElement elem1 = new XElement("Binding");
+                        elem1.Add(new XAttribute("Device", entry.PrimaryKeys[0].Device));
+                        elem1.Add(new XAttribute("Key", entry.PrimaryKeys[0].FrontierKeyName));
+                        elm.Add(elem1);
                     }
-                    elm.Add(elem1);
-                }
-
-                if (entry.SecondaryKeys != null)
-                {
-                    XElement elem1 = new XElement("Secondary");
-                    elem1.Add(new XAttribute("Device", entry.SecondaryKeys[0].Device));
-                    elem1.Add(new XAttribute("Key", entry.SecondaryKeys[0].FrontierKeyName));
-
-                    for (int i = 1; i < entry.SecondaryKeys.Count; i++)
+                    else
                     {
-                        XElement mod = new XElement("Modifier");
-                        mod.Add(new XAttribute("Device", entry.SecondaryKeys[i].Device));
-                        mod.Add(new XAttribute("Key", entry.SecondaryKeys[i].FrontierKeyName));
-                        elem1.Add(mod);
-                    }
-                    elm.Add(elem1);
-                }
+                        XElement elem1 = new XElement("Primary");
+                        elem1.Add(new XAttribute("Device", entry.PrimaryKeys[0].Device));
+                        elem1.Add(new XAttribute("Key", entry.PrimaryKeys[0].FrontierKeyName));
 
-                entry.AssignKeys();
+                        for (int i = 1; i < entry.PrimaryKeys.Count; i++)
+                        {
+                            XElement mod = new XElement("Modifier");
+                            mod.Add(new XAttribute("Device", entry.PrimaryKeys[i].Device));
+                            mod.Add(new XAttribute("Key", entry.PrimaryKeys[i].FrontierKeyName));
+                            elem1.Add(mod);
+                        }
+                        elm.Add(elem1);
+
+                        if (entry.SecondaryKeys != null)
+                        {
+                            XElement elemsecondary = new XElement("Secondary");
+                            elemsecondary.Add(new XAttribute("Device", entry.SecondaryKeys[0].Device));
+                            elemsecondary.Add(new XAttribute("Key", entry.SecondaryKeys[0].FrontierKeyName));
+
+                            for (int i = 1; i < entry.SecondaryKeys.Count; i++)
+                            {
+                                XElement mod = new XElement("Modifier");
+                                mod.Add(new XAttribute("Device", entry.SecondaryKeys[i].Device));
+                                mod.Add(new XAttribute("Key", entry.SecondaryKeys[i].FrontierKeyName));
+                                elemsecondary.Add(mod);
+                            }
+                            elm.Add(elemsecondary);
+                        }
+                    }
+                }
 
                 foreach (var element in entry.Values)
                 {

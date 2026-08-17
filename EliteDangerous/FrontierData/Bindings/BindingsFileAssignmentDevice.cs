@@ -21,30 +21,28 @@ namespace EliteDangerousCore
 {
     public partial class BindingsFile 
     {
+        [System.Diagnostics.DebuggerDisplay("{Name} {Value} B:{Binding}")]
         public class BindingEntry
         {
+            public BindingEntry(string name, string value)
+            {
+                Name = name;
+                Value = value;
+            }
+
             public string Name { get; set; }                        // xml element which made the mapping
             public string Value { get; set; }                       // if a value entry
-            public DeviceKeyPair Binding { get; set; }              // may be null
+            public Tuple<FrontierKeyClassification.Classification,FrontierKeyClassification.Mode> ClassMode { get; set; }   // null for non key entries
+
+            public bool Binding { get; set; }                       // is it a joystick binding? 
             public List<DeviceKeyPair> PrimaryKeys { get; set; }    // first is key, second is mod, may be null
             public List<DeviceKeyPair> SecondaryKeys { get; set; }  // first is key, second is mod, may be null
             public Dictionary<string, string> Values { get; set; } = new Dictionary<string, string>();
             public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
 
-            public bool HasKeys => PrimaryKeys != null;
-            public bool HasBinding => Binding != null;
+            public bool HasAnyKeys => PrimaryKeys != null;
 
-            public string ValuesAsList()
-            {
-                string vlist = "";
-                foreach (var kvp in Values.EmptyIfNull())
-                {
-                    vlist = vlist.AppendPrePad(kvp.Key + "=" + kvp.Value, Environment.NewLine);
-                }
-                return vlist;
-            }
-
-            // See if either of these are keyboard pairs for use
+            // See if either of these are keyboard pairs for use, prefer PrimaryKeys
             public List<DeviceKeyPair> FindKeyAssignment()
             {
                 if (PrimaryKeys != null && PrimaryKeys[0].IsKeyboard && (PrimaryKeys.Count == 1 || PrimaryKeys[1].IsKeyboard))
@@ -54,13 +52,42 @@ namespace EliteDangerousCore
                 return null;
             }
 
+            public string PrimaryKeyAssignment()
+            {
+                return PrimaryKeys == null || PrimaryKeys[0].IsNoDevice ? "" : (PrimaryKeys[0].Device + ":" + PrimaryKeys[0].FrontierKeyName) + (PrimaryKeys.Count > 1 ? "+" + PrimaryKeys[1].Device + ":" + PrimaryKeys[1].FrontierKeyName : "");
+            }
+            public string SecondaryKeyAssignment()
+            {
+                return SecondaryKeys == null || SecondaryKeys[0].IsNoDevice ? "" : (SecondaryKeys[0].Device + ":" + SecondaryKeys[0].FrontierKeyName) + (SecondaryKeys.Count > 1 ? "+" + SecondaryKeys[1].Device + ":" + SecondaryKeys[1].FrontierKeyName : "");
+            }
+
+            // do the 'keys' in other clash with our keys
+            public Tuple<int, int> HasAnyKeysInCommon(BindingEntry other)
+            {
+                string pk = PrimaryKeyAssignment();
+                string sk = SecondaryKeyAssignment();
+                string opk = other.PrimaryKeyAssignment();
+                string osk = other.SecondaryKeyAssignment();
+                if (pk.IsEmpty())       // no keys, can't clash, can't have secondary
+                    return null;
+                else if (pk == opk)
+                    return Tuple.Create(1, 1);
+                else if (pk == osk)
+                    return Tuple.Create(1, 2);
+                else if (sk.IsEmpty())
+                    return null;
+                else if (sk == opk)
+                    return Tuple.Create(2, 1);
+                else if (sk == osk)
+                    return Tuple.Create(2, 2);
+                else
+                    return null;
+            }
+
+            // remove assignments using this device
             public void RemoveDevice(string device)
             {
-                if ( Binding!=null && Binding.Device == device )
-                {
-                    ClearAllKeys();
-                }
-                else if ( PrimaryKeys != null)
+                if ( PrimaryKeys != null)
                 {
                     bool primarymatch = PrimaryKeys[0].Device == device || (PrimaryKeys.Count > 1 && PrimaryKeys[1].Device == device);
                     bool secondarymatch = SecondaryKeys != null && (SecondaryKeys[0].Device == device || (SecondaryKeys.Count > 1 && SecondaryKeys[1].Device == device));
@@ -80,57 +107,39 @@ namespace EliteDangerousCore
                 }
             }
 
+            // rename device
             public void RenameDevice(string oldname, string newname)
             {
-                if (Binding?.Device == oldname)
-                {
-                    Binding.Device = newname;
-                }
-
-                foreach (var x in PrimaryKeys.EmptyIfNull())
-                {
-                    if (x.Device == oldname)
-                        x.Device = newname;
-                }
-                foreach (var x in SecondaryKeys.EmptyIfNull())
-                {
-                    if (x.Device == oldname)
-                        x.Device = newname;
-                }
+                foreach (var x in PrimaryKeys.EmptyIfNull().Where(x => x.Device == oldname))
+                    x.Device = newname;
+                foreach (var x in SecondaryKeys.EmptyIfNull().Where(x => x.Device == oldname))
+                    x.Device = newname;
             }
 
             public void ClearAllKeys()
             {
-                if (Binding != null)
+                if (PrimaryKeys != null)
                 {
-                    Binding.Reset();
-                }
-                else
-                {
-                    if (PrimaryKeys != null)
-                    {
-                        PrimaryKeys.Clear();
-                        PrimaryKeys.Add(new DeviceKeyPair());
-                        ClearSecondaryKeys();
-                    }
+                    PrimaryKeys.Clear();
+                    PrimaryKeys.Add(new DeviceKeyPair());
+                    ClearSecondaryKeys();
                 }
             }
 
             public void ClearSecondaryKeys()
             {
-                SecondaryKeys.Clear();
-                SecondaryKeys.Add(new DeviceKeyPair());
+                if ( !Binding ) // bindings do not have secondary keys set
+                {
+                    SecondaryKeys = new List<DeviceKeyPair> { new DeviceKeyPair() };
+                }
             }
 
             public void SetPrimary(string device, string key)
             {
-                if (Binding != null)
-                    Binding = new DeviceKeyPair(device, key);
-                else
-                    PrimaryKeys[0] = new DeviceKeyPair(device, key);
-
+                PrimaryKeys[0] = new DeviceKeyPair(device, key);
                 AssignKeys();
             }
+
             public void SetPrimaryMod(string device, string key)
             {
                 if (PrimaryKeys.Count == 1)
@@ -146,6 +155,7 @@ namespace EliteDangerousCore
                 SecondaryKeys[0] = new DeviceKeyPair(device, key);
                 AssignKeys();
             }
+
             public void SetSecondaryMod(string device, string key)
             {
                 if (SecondaryKeys.Count == 1)
@@ -157,13 +167,13 @@ namespace EliteDangerousCore
 
             public void AssignKeys()
             {
-                if (Binding != null)
-                    Binding.Key = Binding.FrontierKeyName;
                 if (PrimaryKeys != null)
                     AssignKeyNames(PrimaryKeys);
                 if (SecondaryKeys != null)
                     AssignKeyNames(SecondaryKeys);
             }
+
+            // convert the frontier name for POV's and keyboard keys to our naming and store in Key
 
             private static string AssignKeyNames(List<DeviceKeyPair> key)
             {
@@ -208,6 +218,16 @@ namespace EliteDangerousCore
                 return ErrorList;
             }
 
+            public static string ValuesAsList(Dictionary<string, string> v, bool displayname)
+            {
+                string vlist = "";
+                foreach (var kvp in v.EmptyIfNull())
+                {
+                    vlist = vlist.AppendPrePad((displayname ? (kvp.Key + "=") : "") + kvp.Value, Environment.NewLine);
+                }
+                return vlist;
+            }
+
         }
 
         // Device vs Key/Frontier Key Name
@@ -221,10 +241,9 @@ namespace EliteDangerousCore
             public bool IsNoDevice => Device == "{NoDevice}";
             public bool IsKeyboard => Device == "Keyboard";
             public bool IsMouse => Device == "Mouse";
-
             public static bool NoDevice(string device) { return device == "{NoDevice}"; }
             public static bool KeyboardDevice(string device) { return device == "Keyboard"; }
-
+            public bool Assigned => FrontierKeyName.HasChars();
             public DeviceKeyPair()
             {
                 Reset();
