@@ -62,8 +62,14 @@
     <Compile Include="Bodies\StarScan2\StarScanNodePtr.cs" />
     <Compile Include="Bodies\StarScan2\StarScanSystemNodeEvents.cs" />
     <Compile Include="Bodies\StarScan2\SystemDisplayPlanetTree.cs" />
+    <Compile Include="FrontierData\Bindings\BindingsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FrontierData\Bindings\BindingsEditor.Designer.cs">
+      <DependentUpon>BindingsEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrontierData\Bindings\BindingsFileAssignmentDevice.cs" />
-    <Compile Include="FrontierData\Bindings\FrontierKeyClassification.cs" />
+    <Compile Include="FrontierData\Bindings\FrontierBindingClassification.cs" />
     <Compile Include="FrontierData\FDName\CrimesDataScannedDockingFDName.cs" />
     <Compile Include="FrontierData\FDName\SignalsGenusFDName.cs" />
     <Compile Include="FrontierData\FDName\ActorEngineerFDName.cs" />
@@ -379,6 +385,9 @@
     <EmbeddedResource Include="DB\User\CommanderForm.resx">
       <DependentUpon>CommanderForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrontierData\Bindings\BindingsEditor.resx">
+      <DependentUpon>BindingsEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -423,6 +432,10 @@
     <ProjectReference Include="..\..\ExtendedControls\ExtendedControls\ExtendedControls.csproj">
       <Project>{2049403f-f4c7-45e6-b777-6390c78e4d2b}</Project>
       <Name>ExtendedControls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ExtendedControls\ExtendedForms\ExtendedForms.csproj">
+      <Project>{298c11c9-b58f-415c-8458-1cae3c6cab62}</Project>
+      <Name>ExtendedForms</Name>
     </ProjectReference>
     <ProjectReference Include="..\EDDDLLInterfaces\EDDDLLInterfaces.csproj">
       <Project>{829041b1-d4a5-48d9-8260-b5eeff28bcd8}</Project>

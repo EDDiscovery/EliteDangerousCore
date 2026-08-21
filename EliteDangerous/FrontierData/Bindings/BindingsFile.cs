@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Xml.Linq;
 
 namespace EliteDangerousCore
@@ -27,6 +28,8 @@ namespace EliteDangerousCore
     {
         public bool IsLoaded => FileName != null;
         public string FileName { get; private set; }
+        public DateTime FileWriteTime { get; private set; }
+        public bool IsOutOfDate() => IsLoaded && File.GetLastWriteTimeUtc(FileName) > FileWriteTime;        // is our copy behind the one on the diskette?      
         public string PresetName { get { return RootAttributes.TryGetValue("PresetName", out string s) ? s : "Unknown"; } set { RootAttributes["PresetName"] = value; } }
 
         // which have a binding or key assignement
@@ -34,14 +37,16 @@ namespace EliteDangerousCore
         // which have values in attributes
         public IEnumerable<BindingEntry> Values => Elements.Where(x => x.Value.Attributes.Count>0).Select(x => x.Value);
         public List<string> DeviceList => Devices.ToList();
-        public List<string> DeviceListNoKeyboardMouse => Devices.Where(x => x != "Keyboard" && x != "Mouse").ToList();
-        public List<string> DeviceListNoKeyboardMouseDevice => Devices.Where(x => x != "Keyboard" && x != "Mouse" && x != "{NoDevice}").ToList();
+        public List<string> DeviceListNoDevice => Devices.Where(x=>x!=DeviceKeyPair.NoDeviceName).ToList();
+        public List<string> DeviceListNoKeyboardMouse => Devices.Where(x => x != DeviceKeyPair.KeyboardDeviceName && x != DeviceKeyPair.MouseDeviceName).ToList();
+        public List<string> DeviceListNoKeyboardMouseDevice => Devices.Where(x => x != DeviceKeyPair.KeyboardDeviceName && x != DeviceKeyPair.MouseDeviceName &&
+                                                                                x != DeviceKeyPair.NoDeviceName).ToList();
 
         // Frontier only allows one preset file, referenced in startpreset*.start, which is normally Custom*
         // logically its only one custom file allowed.
         // users may change that name
         // return file name of preset file and the index number assigned. null if not found
-        public static Tuple<string,int> FindStartPreset(string path, bool odyssey)
+        public static Tuple<string, DateTime, int> FindStartPreset(string path, bool odyssey)
         {
             if (Directory.Exists(path))
             {
@@ -61,43 +66,48 @@ namespace EliteDangerousCore
                     if (i1 >= 0 && i2 >= 0)
                         index = sfile.Substring(i1 + 1, i2 - i1 - 1).InvariantParseInt(0);
 
-                    return Tuple.Create(sfile, index);
+                    return Tuple.Create(sfile, File.GetLastWriteTimeUtc(sfile), index);
                 }
             }
 
             return null;
         }
 
-        // get preset file name currently selected, null if start preset or the file is not there
-        public static string FindPresetFileName(string path, bool odyssey)
+        // get bindings file name from path and odyssey
+        public static string FindBindingsFile(string path, bool odyssey)
         {
             var presetfile = FindStartPreset(path, odyssey);
+            if (presetfile != null)
+                return FindBindingsFile(presetfile);
+            else
+                return null;
+        }
 
-            if (presetfile!=null)
+        public static string FindBindingsFile(Tuple<string, DateTime, int> presetfile )
+        {
+            string[] bindlist = FileHelpers.TryReadAllLinesFromFile(presetfile.Item1);
+
+            if (bindlist != null)
             {
-                string[] bindlist = FileHelpers.TryReadAllLinesFromFile(presetfile.Item1);
+                System.Diagnostics.Trace.WriteLine($"Bindings preset file {presetfile.Item1} contents {string.Join(";", bindlist)} index {presetfile.Item2}");
 
-                if (bindlist != null)
+                List<string> files = new List<string>();
+
+                foreach (string selline in bindlist)    // find first entry with name..
                 {
-                    System.Diagnostics.Trace.WriteLine($"Bindings preset file {presetfile.Item1} contents {string.Join(";", bindlist)} index {presetfile.Item2}");
+                    FileInfo[] allFiles = null;
 
-                    List<string> files = new List<string>();
+                    string folder = Path.GetDirectoryName(presetfile.Item1);
+                    // prefer files called with same index                     
+                    if (presetfile.Item3 > 0)
+                        allFiles = Directory.EnumerateFiles(folder, selline + "." + presetfile.Item3.ToStringInvariant() + ".*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
 
-                    foreach (string selline in bindlist)    // find first entry with name..
-                    {
-                        FileInfo[] allFiles = null;
+                    // else any files with this prefix
+                    if (allFiles == null || allFiles.Length == 0)
+                        allFiles = Directory.EnumerateFiles(folder, selline + "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
 
-                        // prefer files called with same index                     
-                        if (presetfile.Item2 > 0)
-                            allFiles = Directory.EnumerateFiles(path, selline + "." + presetfile.Item2.ToStringInvariant() + ".*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
-
-                        // else any files with this prefix
-                        if (allFiles == null || allFiles.Length == 0)
-                            allFiles = Directory.EnumerateFiles(path, selline + "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToArray();
-
-                        if (allFiles.Length > 0)
-                            return allFiles[0].FullName;
-                    }
+                    if (allFiles.Length > 0)
+                        return allFiles[0].FullName;
                 }
             }
 
@@ -109,9 +119,10 @@ namespace EliteDangerousCore
         // returns null if happy and loaded or error string
         public string Read(string filetoload)
         {
-            Devices.Add("{NoDevice}");
+            Devices.Add(DeviceKeyPair.NoDeviceName);
 
             FileName = null;
+            FileWriteTime = DateTime.MinValue;
 
             if ( filetoload  == null || !File.Exists(filetoload))
             {
@@ -177,13 +188,16 @@ namespace EliteDangerousCore
                                 {
                                     System.Diagnostics.Trace.WriteLine($"Binding File Rejected Storing {rootelement.Name}: {subelement.Name}:{se[0].Name} = {se[0].Value}");
                                 }
-
                             }
                         }
 
+                        entry.AssignKeys();
+
                         if ( entry.PrimaryKeys != null )
-                            entry.ClassMode = FrontierKeyClassification.GetClass(entry.Name);
+                            entry.ClassMode = FrontierBindingClassification.GetKeyClass(entry.Name);
                     }
+                    else
+                        entry.ClassMode = FrontierBindingClassification.GetValueClass(entry.Name);
 
                     if (rootelement.HasAttributes)
                     {
@@ -197,6 +211,7 @@ namespace EliteDangerousCore
                 }
 
                 FileName = filetoload;
+                FileWriteTime = File.GetLastWriteTimeUtc(FileName);
                 return null;
             }
             catch (Exception ex)
@@ -236,20 +251,20 @@ namespace EliteDangerousCore
                     if (entry.Binding)
                     {
                         XElement elem1 = new XElement("Binding");
-                        elem1.Add(new XAttribute("Device", entry.PrimaryKeys[0].Device));
+                        elem1.Add(new XAttribute("Device", entry.PrimaryKeys[0].ExternalDeviceName));
                         elem1.Add(new XAttribute("Key", entry.PrimaryKeys[0].FrontierKeyName));
                         elm.Add(elem1);
                     }
                     else
                     {
                         XElement elem1 = new XElement("Primary");
-                        elem1.Add(new XAttribute("Device", entry.PrimaryKeys[0].Device));
+                        elem1.Add(new XAttribute("Device", entry.PrimaryKeys[0].ExternalDeviceName));
                         elem1.Add(new XAttribute("Key", entry.PrimaryKeys[0].FrontierKeyName));
 
                         for (int i = 1; i < entry.PrimaryKeys.Count; i++)
                         {
                             XElement mod = new XElement("Modifier");
-                            mod.Add(new XAttribute("Device", entry.PrimaryKeys[i].Device));
+                            mod.Add(new XAttribute("Device", entry.PrimaryKeys[i].ExternalDeviceName));
                             mod.Add(new XAttribute("Key", entry.PrimaryKeys[i].FrontierKeyName));
                             elem1.Add(mod);
                         }
@@ -258,13 +273,13 @@ namespace EliteDangerousCore
                         if (entry.SecondaryKeys != null)
                         {
                             XElement elemsecondary = new XElement("Secondary");
-                            elemsecondary.Add(new XAttribute("Device", entry.SecondaryKeys[0].Device));
+                            elemsecondary.Add(new XAttribute("Device", entry.SecondaryKeys[0].ExternalDeviceName));
                             elemsecondary.Add(new XAttribute("Key", entry.SecondaryKeys[0].FrontierKeyName));
 
                             for (int i = 1; i < entry.SecondaryKeys.Count; i++)
                             {
                                 XElement mod = new XElement("Modifier");
-                                mod.Add(new XAttribute("Device", entry.SecondaryKeys[i].Device));
+                                mod.Add(new XAttribute("Device", entry.SecondaryKeys[i].ExternalDeviceName));
                                 mod.Add(new XAttribute("Key", entry.SecondaryKeys[i].FrontierKeyName));
                                 elemsecondary.Add(mod);
                             }
@@ -289,6 +304,28 @@ namespace EliteDangerousCore
             return header + xml;
         }
 
+        // Save current setting to file
+        public bool Save(bool createbackup) 
+        {
+            if ( createbackup )
+            {
+                int i = 1;
+                while (File.Exists(FileName + $".{i}.bak"))     // determine back up
+                    i++;
+                BaseUtils.FileHelpers.TryCopy(FileName, FileName + $".{i}.bak", true);        // copy to a backup X.bak file
+            }
+
+            string xml = ToXML();
+
+            if (BaseUtils.FileHelpers.TryWriteToFile(FileName, xml))
+            {
+                FileWriteTime = File.GetLastAccessTimeUtc(FileName);
+                return true;
+            }
+            else
+                return false;
+        }
+
         public void Rename(string presetname)
         {
             int lastpos = FileName.IndexOfIIC(PresetName);
@@ -299,7 +336,8 @@ namespace EliteDangerousCore
             }
         }
 
-        public string FindDevice(string name, Guid instanceguid, Guid productguid, int productid, int vendorid)    // best match of physical device info to our binding devices
+        // best match of device name from Devices to a device given by name/guid,usb ids
+        public string FindDevice(string name, Guid instanceguid, Guid productguid, int productid, int vendorid)    
         {
             string bestmatch = null;
             int besttotal = 0;
@@ -337,6 +375,50 @@ namespace EliteDangerousCore
             return null;
         }
 
+        // used to report on entry and key set associated with a found device/keyname
+        public class DeviceKeySet
+        {
+            public BindingEntry Entry { get; set; }
+            public List<DeviceKeyPair> Keys { get; set; }   
+            public bool Primary { get; set; }
+            public DeviceKeySet(BindingEntry entry, List<DeviceKeyPair> keys, bool primary )
+            {
+                Entry = entry;
+                Keys = keys;
+                Primary = primary;
+            }
+        }
+
+        // return information on all keys/mods which match devicename/keyname. Keyname is the physical key, not the frontier name
+        // if devicename = null just keynames are considered
+        // if keyname = null just devices are considered
+        // partial match allows for StartsWith
+        // all device key pairs even mod ones are returned..
+        public List<DeviceKeySet> FindDeviceKey(string devicename, string keyname, bool partialmatch)
+        {
+            var ret = new List<DeviceKeySet>();
+            foreach (var kvp in Elements)
+            {
+                foreach (var kp in kvp.Value.PrimaryKeys.EmptyIfNull())
+                {
+                    if ((devicename == null || kp.Device.EqualsIIC(devicename)) && (keyname == null || (partialmatch ? kp.Key.StartsWithIIC(keyname) : kp.Key.EqualsIIC(keyname))))
+                        ret.Add(new DeviceKeySet(kvp.Value, kvp.Value.PrimaryKeys, true));
+                }
+                foreach (var kp in kvp.Value.SecondaryKeys.EmptyIfNull())
+                {
+                    if ((devicename == null || kp.Device.EqualsIIC(devicename)) && (keyname == null || (partialmatch ? kp.Key.StartsWithIIC(keyname) : kp.Key.EqualsIIC(keyname))))
+                        ret.Add(new DeviceKeySet(kvp.Value, kvp.Value.SecondaryKeys, false));
+                }
+            }
+
+            return ret;
+        }
+
+        public BindingEntry FindAction(string name, bool withkeys = true)
+        {
+            return Elements.TryGetValue(name,out var action) ? (withkeys ? (action.HasAnyKeys ? action : null) : null) : null;   
+        }
+
         public void AddDevice(string name)
         {
             Devices.Add(name);
@@ -362,73 +444,33 @@ namespace EliteDangerousCore
                 element.Value.ClearAllKeys();
         }
 
-        // given a action name, return a list of assigned keys/devices
-
-        public BindingEntry FindAction(string name)
+        public string ListBindings()
         {
-            return Elements.TryGetValue(name,out var action) ? action : null;   
+            string ret = "";
+            foreach (var device in DeviceListNoDevice)
+            {
+                ret += device + Environment.NewLine;
+                var dks = FindDeviceKey(device, null, false);
+                foreach (var x in dks)
+                    ret += "  " + DeviceKeyPair.KeyDescription(x.Keys, true) + "=" + x.Entry.Name + Environment.NewLine;
+            }
+            return ret;
+        }
+        public string ListValues()
+        {
+            string ret = "";
+            foreach (var kvp in Elements.Where(x=>x.Value.Values.Count>0 || x.Value.Attributes.Count>0))
+            {
+                foreach (var x in kvp.Value.Values)
+                    ret += kvp.Value.Name + "." + x.Key + "=" + x.Value + Environment.NewLine;
+                foreach (var x in kvp.Value.Attributes)
+                    ret += kvp.Value.Name + "." + x.Key + "=" + x.Value + Environment.NewLine;
+            }
+
+            return ret;
         }
 
-        // used to find the keys associated with an logical action name in ActionKeyED and web pressed logical function
-        // NULL if no match found 
-
-        //public List<FrontierActionToKeys> FindAction(string actionname, string preferreddevice = null)
-        //{
-        //    if (AssignedActions.ContainsKey(actionname))
-        //    {
-        //        List<FrontierActionToKeys> ret = new List<FrontierActionToKeys>();
-
-        //        foreach (var a in AssignedActions[actionname])        // search assignments under this name
-        //        {
-        //            if (preferreddevice == null || a.AllOfDevice(preferreddevice))      // if null, or all of this device.. return
-        //                ret.Add(a);
-        //        }
-
-        //        return ret.Count > 0 ? ret : null;
-        //    }
-
-        //    return null;
-        //}
-
-        //public Dictionary<string, string> FindActionValues(string actionname)
-        //{
-        //    return AssignedActionsValues.TryGetValue(actionname, out Dictionary<string, string> v) ? v : null;
-        //}
-
-        // given a key name, find the list of assignments of FrontierActionToKeys for it
-        //public List<FrontierActionToKeys> Find(string keyname, bool partialmatch)       
-        //{
-        //    List<FrontierActionToKeys> ret = new List<FrontierActionToKeys>();
-
-        //    foreach (Device dv in Devices.Values)   // all devices..
-        //    {
-        //        List<FrontierActionToKeys> f = dv.Find(keyname, partialmatch);
-        //        if (f != null)
-        //            ret.AddRange(f);
-        //    }
-
-        //    return ret;
-        //}
-
-        //public string ListBindings()
-        //{
-        //    string ret = "";
-        //    foreach (string s in Devices.Keys)
-        //    {
-        //        ret += s + Environment.NewLine + Mappings(s, "  ") + Environment.NewLine;
-        //    }
-        //    return ret;
-        //}
-
-        //public string ListKeyNames(string prefix = "", string postfix = "")
-        //{
-        //    return String.Join(Environment.NewLine, (from x in KeyNames select prefix + x + postfix));
-        //}
-
-
-
         #region private
-
 
         // assign to mapping
         private List<DeviceKeyPair> AssignToDevice(string actionname, XElement mapping)
@@ -447,7 +489,7 @@ namespace EliteDangerousCore
                 {
                     if (y.Name == "Modifier")
                     {
-                        string km = y.Attribute("Device").Value;
+                        string km = DeviceKeyPair.ConvertDeviceName(y.Attribute("Device").Value);
                         string vm = y.Attribute("Key").Value;
 
                         Devices.Add(km);
@@ -456,9 +498,10 @@ namespace EliteDangerousCore
                     }
                 }
 
-                Devices.Add(xdevice.Value);
-                // push as first key
-                dvp.Insert(0, new DeviceKeyPair(xdevice.Value, frontierkeyname));
+                string dm = DeviceKeyPair.ConvertDeviceName(xdevice.Value);
+                Devices.Add(dm);
+                
+                dvp.Insert(0, new DeviceKeyPair(dm, frontierkeyname));      // push as first key
 
                 return dvp;
             }
@@ -481,35 +524,10 @@ namespace EliteDangerousCore
             return s;
         }
 
-
-        //private string Mappings(string devicename, string prefix)
-        //{
-        //    StringBuilder s = new StringBuilder(128);
-        //    if (Devices.ContainsKey(devicename))
-        //    {
-        //        foreach (string keyname in Devices[devicename].Assignments.Keys)
-        //        {
-        //            foreach (FrontierActionToKeys a in Devices[devicename].Assignments[keyname])
-        //            {
-        //                s.Append(prefix + a.ToString(devicename));
-        //                s.AppendLine();
-        //            }
-        //        }
-        //    }
-        //    return s.ToString();
-        //}
-
-
-        private string ChkValue(string s)
-        {
-            return (s == "Value") ? "" : ("." + s);
-        }
-
-
         // From frontier DeviceMapping.xml table using EDDTest devicemappings import, 8/4/22
         private Dictionary<Tuple<int, int>, string> devicemapping = new Dictionary<Tuple<int, int>, string>()
         {
-          {  new Tuple<int,int>(0x28E, 0x45E), "GamePad" },
+        {  new Tuple<int,int>(0x28E, 0x45E), "GamePad" },
         {  new Tuple<int,int>(0x28F, 0x45E), "GamePad" },
         {  new Tuple<int,int>(0x2FF, 0x45E), "GamePad" },
         {  new Tuple<int,int>(0x5D04, 0x24C6), "GamePad" },
