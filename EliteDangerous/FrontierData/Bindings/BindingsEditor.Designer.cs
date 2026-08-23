@@ -44,6 +44,12 @@
             this.ColSecondaryKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.ColSecondaryModDevice = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.ColSecondaryModKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.swapPrimaryAndSecondaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearSecondaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showFrontierNamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vScrollBarCustomMC = new ExtendedControls.ExtScrollBar();
             this.extPanelTop = new ExtendedControls.ExtPanelGradientFill();
             this.extButtonDeviceRename = new ExtendedControls.ExtButton();
@@ -56,8 +62,10 @@
             this.extButtonSave = new ExtendedControls.ExtButton();
             this.extComboBoxBindFiles = new ExtendedControls.ExtComboBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.clearPrimaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataViewScrollerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.contextMenuStrip.SuspendLayout();
             this.extPanelTop.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -97,6 +105,7 @@
             this.ColSecondaryKey,
             this.ColSecondaryModDevice,
             this.ColSecondaryModKey});
+            this.dataGridView.ContextMenuStrip = this.contextMenuStrip;
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
             this.dataGridView.Name = "dataGridView";
@@ -104,12 +113,12 @@
             this.dataGridView.RowHeaderMenuStrip = null;
             this.dataGridView.RowHeadersVisible = false;
             this.dataGridView.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.SingleRowSelect = true;
             this.dataGridView.Size = new System.Drawing.Size(1502, 715);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView_CellBeginEdit);
             this.dataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellClick);
-            this.dataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellDoubleClick);
             this.dataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellEndEdit);
             this.dataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView_EditingControlShowing);
             this.dataGridView.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.dataGridView_SortCompare);
@@ -191,6 +200,56 @@
             this.ColSecondaryModKey.DisplayStyleForCurrentCellOnly = true;
             this.ColSecondaryModKey.HeaderText = "Key";
             this.ColSecondaryModKey.Name = "ColSecondaryModKey";
+            // 
+            // contextMenuStrip
+            // 
+            this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.swapPrimaryAndSecondaryToolStripMenuItem,
+            this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem,
+            this.clearPrimaryToolStripMenuItem,
+            this.clearSecondaryToolStripMenuItem,
+            this.clearAllToolStripMenuItem,
+            this.showFrontierNamesToolStripMenuItem});
+            this.contextMenuStrip.Name = "contextMenuStrip";
+            this.contextMenuStrip.Size = new System.Drawing.Size(244, 158);
+            this.contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_Opening);
+            // 
+            // swapPrimaryAndSecondaryToolStripMenuItem
+            // 
+            this.swapPrimaryAndSecondaryToolStripMenuItem.Name = "swapPrimaryAndSecondaryToolStripMenuItem";
+            this.swapPrimaryAndSecondaryToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.swapPrimaryAndSecondaryToolStripMenuItem.Text = "Swap primary and secondary";
+            this.swapPrimaryAndSecondaryToolStripMenuItem.Click += new System.EventHandler(this.swapPrimaryAndSecondaryToolStripMenuItem_Click);
+            // 
+            // moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem
+            // 
+            this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem.Name = "moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem";
+            this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem.Text = "Move joystick entries to primary";
+            this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem.Click += new System.EventHandler(this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem_Click);
+            // 
+            // clearSecondaryToolStripMenuItem
+            // 
+            this.clearSecondaryToolStripMenuItem.Name = "clearSecondaryToolStripMenuItem";
+            this.clearSecondaryToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.clearSecondaryToolStripMenuItem.Text = "Clear secondary";
+            this.clearSecondaryToolStripMenuItem.Click += new System.EventHandler(this.clearSecondaryToolStripMenuItem_Click);
+            // 
+            // clearAllToolStripMenuItem
+            // 
+            this.clearAllToolStripMenuItem.Name = "clearAllToolStripMenuItem";
+            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.clearAllToolStripMenuItem.Text = "Clear All";
+            this.clearAllToolStripMenuItem.Click += new System.EventHandler(this.clearAllToolStripMenuItem_Click);
+            // 
+            // showFrontierNamesToolStripMenuItem
+            // 
+            this.showFrontierNamesToolStripMenuItem.Checked = true;
+            this.showFrontierNamesToolStripMenuItem.CheckOnClick = true;
+            this.showFrontierNamesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showFrontierNamesToolStripMenuItem.Name = "showFrontierNamesToolStripMenuItem";
+            this.showFrontierNamesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.showFrontierNamesToolStripMenuItem.Text = "Show Frontier Names";
             // 
             // vScrollBarCustomMC
             // 
@@ -313,7 +372,7 @@
             this.extButtonEmpty.Name = "extButtonEmpty";
             this.extButtonEmpty.Size = new System.Drawing.Size(75, 23);
             this.extButtonEmpty.TabIndex = 2;
-            this.extButtonEmpty.Text = "Empty";
+            this.extButtonEmpty.Text = "Clear";
             this.toolTip.SetToolTip(this.extButtonEmpty, "Remove all assignments");
             this.extButtonEmpty.UseVisualStyleBackColor = true;
             this.extButtonEmpty.Click += new System.EventHandler(this.extButtonEmpty_Click);
@@ -408,6 +467,13 @@
             // 
             this.toolTip.ShowAlways = true;
             // 
+            // clearPrimaryToolStripMenuItem
+            // 
+            this.clearPrimaryToolStripMenuItem.Name = "clearPrimaryToolStripMenuItem";
+            this.clearPrimaryToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.clearPrimaryToolStripMenuItem.Text = "Clear Primary";
+            this.clearPrimaryToolStripMenuItem.Click += new System.EventHandler(this.clearPrimaryToolStripMenuItem_Click);
+            // 
             // BindingsEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -418,6 +484,7 @@
             this.Size = new System.Drawing.Size(1526, 751);
             this.dataViewScrollerPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.contextMenuStrip.ResumeLayout(false);
             this.extPanelTop.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -451,5 +518,12 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn ColSecondaryKey;
         private System.Windows.Forms.DataGridViewComboBoxColumn ColSecondaryModDevice;
         private System.Windows.Forms.DataGridViewComboBoxColumn ColSecondaryModKey;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem swapPrimaryAndSecondaryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearSecondaryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showFrontierNamesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearPrimaryToolStripMenuItem;
     }
 }

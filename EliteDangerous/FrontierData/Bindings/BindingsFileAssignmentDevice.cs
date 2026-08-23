@@ -40,6 +40,8 @@ namespace EliteDangerousCore
             public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();  // attributes of the binding 
 
             public bool HasAnyKeys => PrimaryKeys != null;
+            public bool HasPrimaryAndSecondary => PrimaryKeys != null && PrimaryKeys[0].IsDevice && SecondaryKeys != null && SecondaryKeys[0].IsDevice;
+            public string PrimaryDevice => PrimaryKeys != null ? PrimaryKeys[0].Device : null;
 
             // return either Device:Key or (Device:Key,Device:Key) Key is either Frontier or Internal. 
             // empty string if KeyPair is null or NoDevice
@@ -163,6 +165,19 @@ namespace EliteDangerousCore
                 AssignKeys();
             }
 
+            public bool SwapPrimarySecondary()
+            {
+                if (HasPrimaryAndSecondary && PrimaryKeys[0].IsDevice && SecondaryKeys[0].IsDevice)
+                {
+                    var swap = new List<DeviceKeyPair>(SecondaryKeys);
+                    SecondaryKeys = PrimaryKeys;
+                    PrimaryKeys = swap;
+                    return true;
+                }
+                else
+                    return false;
+            }
+
             public void AssignKeys()
             {
                 if (PrimaryKeys != null)
@@ -255,9 +270,11 @@ namespace EliteDangerousCore
 
             public bool Assigned => FrontierKeyName.HasChars();
             public string ExternalDeviceName => Device == NoDeviceName ? ExternalNoDeviceName : Device;
+            public bool IsDevice => !NoDevice(Device);
             public bool IsNoDevice => NoDevice(Device);
             public bool IsKeyboard => KeyboardDevice(Device);
             public bool IsMouse => MouseDevice(Device);
+            public bool IsJoystick => IsDevice && !IsKeyboard && !IsMouse;
             public static bool NoDevice(string device) { return device == NoDeviceName; }
             public static bool KeyboardDevice(string device) { return device == KeyboardDeviceName; }
             public static bool MouseDevice(string device) { return device == MouseDeviceName; }

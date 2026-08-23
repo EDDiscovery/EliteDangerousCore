@@ -68,6 +68,7 @@
     <Compile Include="FrontierData\Bindings\BindingsEditor.Designer.cs">
       <DependentUpon>BindingsEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrontierData\Bindings\BindingsFileDevicesNames.cs" />
     <Compile Include="FrontierData\Bindings\BindingsFileAssignmentDevice.cs" />
     <Compile Include="FrontierData\Bindings\FrontierBindingClassification.cs" />
     <Compile Include="FrontierData\FDName\CrimesDataScannedDockingFDName.cs" />

@@ -31,13 +31,16 @@ namespace EliteDangerousCore
         public bool IsDirty => extButtonSave.Enabled;
         public Action<string> ChangedBindings { get; set; }           // saved this load
         public Action<string> ChangedDefault { get; set; }            // changed the start preset file
-
+        public List<string> KnownDevices { get; set; } = null;        // set to known device name (comment) list 
         public BindingsEditor()
         {
             InitializeComponent();
             ColValues.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
             dataGridView.MakeDoubleBuffered();
+
+            showFrontierNamesToolStripMenuItem.Checked = false;
+            showFrontierNamesToolStripMenuItem.Click += new System.EventHandler(this.showFrontierNamesToolStripMenuItem_Click);
         }
 
 
@@ -80,102 +83,85 @@ namespace EliteDangerousCore
 
             int orderno = 0;
 
-            foreach (var entry in bf.Assignments)
+            foreach (var entry in bf.Entries)
             {
-                //if (entry.Values.Count == 0)
-                //    continue;
                 var row = dataGridView.RowTemplate.Clone() as DataGridViewRow;
 
-                row.Cells.Add(new DataGridViewTextBoxCell());       // 0 group
-                row.Cells.Add(new DataGridViewTextBoxCell());       // 1 ui
-                row.Cells.Add(new DataGridViewTextBoxCell());       // 2 name
-                row.Cells.Add(new DataGridViewTextBoxCell());       // 3 values
-
-                row.Cells.Add(new DataGridViewComboBoxCell());      // 4 primary device
-                row.Cells.Add(new DataGridViewComboBoxCell());      // 5 primary key
-
-                if (entry.Binding)
+                if ( entry.HasAnyKeys )
                 {
-                    row.Cells.Add(new DataGridViewTextBoxCell());
-                    row.Cells.Add(new DataGridViewTextBoxCell());
-                    row.Cells.Add(new DataGridViewTextBoxCell());
-                    row.Cells.Add(new DataGridViewTextBoxCell());
-                    row.Cells.Add(new DataGridViewTextBoxCell());
-                    row.Cells.Add(new DataGridViewTextBoxCell());
+                    row.Cells.Add(new DataGridViewTextBoxCell());       // 0 group
+                    row.Cells.Add(new DataGridViewTextBoxCell());       // 1 ui
+                    row.Cells.Add(new DataGridViewTextBoxCell());       // 2 name
+                    row.Cells.Add(new DataGridViewTextBoxCell());       // 3 values
+
+                    row.Cells.Add(new DataGridViewComboBoxCell());      // 4 primary device
+                    row.Cells.Add(new DataGridViewComboBoxCell());      // 5 primary key
+
+                    if (entry.Binding)
+                    {
+                        row.Cells.Add(new DataGridViewTextBoxCell());
+                        row.Cells.Add(new DataGridViewTextBoxCell());
+                        row.Cells.Add(new DataGridViewTextBoxCell());
+                        row.Cells.Add(new DataGridViewTextBoxCell());
+                        row.Cells.Add(new DataGridViewTextBoxCell());
+                        row.Cells.Add(new DataGridViewTextBoxCell());
+                    }
+                    else
+                    {
+                        row.Cells.Add(new DataGridViewComboBoxCell());
+                        row.Cells.Add(new DataGridViewComboBoxCell());
+                        row.Cells.Add(new DataGridViewComboBoxCell());
+                        row.Cells.Add(new DataGridViewComboBoxCell());
+                        row.Cells.Add(new DataGridViewComboBoxCell());
+                        row.Cells.Add(new DataGridViewComboBoxCell());
+                    }
+
+                    row.Tag = entry;
+                    row.Cells[0].Value = entry.ClassMode.Item1.ToString().SplitCapsWordFull();
+                    row.Cells[0].Tag = (int)entry.ClassMode.Item1;     // tag 0 gets class, first sort, tag 1 gets order this is in the file
+                    row.Cells[1].Value = entry.ClassMode.Item2.ToString().SplitCapsWordFull();
+                    row.Cells[2].Value = BetterName(entry.Name) + (FrontierBindingClassification.HoldButton(entry.Name) ? " (Hold)" : "");
+                    row.Cells[2].Tag = orderno;
+
+                    if (!showFrontierNamesToolStripMenuItem.Checked)
+                        row.Cells[2].ToolTipText = "Assignment " + entry.Name;
+
+                    row.Cells[3].Value = BindingEntry.ValuesAsList(entry.Name, entry.Values, true);
+
+                    SetUpCells(row, entry);
+
+                    dataGridView.Rows.Add(row);
+
+                    if (entry.Binding)
+                    {
+                        for (int i = ColPrimaryModDevice.Index; i <= ColSecondaryModKey.Index; i++)
+                            row.Cells[i].ReadOnly = true;
+                    }
                 }
                 else
                 {
-                    row.Cells.Add(new DataGridViewComboBoxCell());
-                    row.Cells.Add(new DataGridViewComboBoxCell());
-                    row.Cells.Add(new DataGridViewComboBoxCell());
-                    row.Cells.Add(new DataGridViewComboBoxCell());
-                    row.Cells.Add(new DataGridViewComboBoxCell());
-                    row.Cells.Add(new DataGridViewComboBoxCell());
-                }
-
-                row.Tag = entry;
-                row.Cells[0].Value = entry.ClassMode.Item1.ToString().SplitCapsWordFull();
-                row.Cells[0].Tag = (int)entry.ClassMode.Item1;     // tag 0 gets class, first sort, tag 1 gets order this is in the file
-                row.Cells[1].Value = entry.ClassMode.Item2.ToString().SplitCapsWordFull();
-                row.Cells[2].Value = BetterName(entry.Name) + (FrontierBindingClassification.HoldButton(entry.Name) ? " (Hold)":""); 
-                row.Cells[2].Tag = orderno;
-
-                if (!showrealnames)
-                    row.Cells[2].ToolTipText = "Assignment " + entry.Name + Environment.NewLine + "Double click to show Frontier names";
-
-                row.Cells[3].Value = BindingEntry.ValuesAsList(entry.Name, entry.Values, true);
-
-                if (entry.Binding)
-                {
-                    SetUpCells(row, true, false, bf.DeviceListNoKeyboardMouse, 4, entry.PrimaryKeys[0]);
-                }
-                else
-                {
-                    bool primaryisnodevice = DeviceKeyPair.NoDevice(entry.PrimaryKeys[0].Device);
-
-                    SetUpCells(row, false, false, bf.DeviceList, 4, entry.PrimaryKeys[0]);
-                    SetUpCells(row, false, primaryisnodevice , bf.DeviceList, 6, entry.PrimaryKeys.Count > 1 ? entry.PrimaryKeys[1] : null);
-                    SetUpCells(row, false, entry.SecondaryKeys[0].IsNoDevice || primaryisnodevice, bf.DeviceList, 8, entry.SecondaryKeys.Count > 0 ? entry.SecondaryKeys[0] : null);
-                    SetUpCells(row, false, entry.SecondaryKeys[0].IsNoDevice || primaryisnodevice, bf.DeviceList, 10, entry.SecondaryKeys.Count > 1 ? entry.SecondaryKeys[1] : null);
-                }
-
-
-                dataGridView.Rows.Add(row);
-
-                if ( entry.Binding)
-                {
-                    for (int i = ColPrimaryModDevice.Index; i <= ColSecondaryModKey.Index; i++)
+                    for (int i = 0; i <= ColSecondaryModKey.Index; i++)
+                        row.Cells.Add(new DataGridViewTextBoxCell());       // group
+                    row.Tag = entry;
+                    row.Cells[0].Value = entry.ClassMode.Item1.ToString().SplitCapsWordFull();
+                    row.Cells[0].Tag = (int)entry.ClassMode.Item1;     // tag 0 gets class, first sort, tag 1 gets order this is in the file
+                    row.Cells[1].Value = entry.ClassMode.Item2.ToString().SplitCapsWordFull();
+                    row.Cells[2].Value = BetterName(entry.Name);
+                    if (!showFrontierNamesToolStripMenuItem.Checked)
+                        row.Cells[2].ToolTipText = "Value entry " + entry.Name;
+                    row.Cells[3].Value = BindingEntry.ValuesAsList(entry.Name, entry.Attributes, false);
+                    // row.Cells[4].Value = entry.Attributes["Value"]; //debug
+                    row.Cells[2].Tag = orderno;
+                    dataGridView.Rows.Add(row);
+                    for (int i = 4; i <= ColSecondaryModKey.Index; i++)
                         row.Cells[i].ReadOnly = true;
                 }
+
                 orderno++;
             }
 
-            orderno = 0;            
-            foreach (var entry in bf.Values)
-            {
-                //continue;
-
-                var row = dataGridView.RowTemplate.Clone() as DataGridViewRow;
-                for (int i = 0; i <= ColSecondaryModKey.Index; i++)
-                    row.Cells.Add(new DataGridViewTextBoxCell());       // group
-                row.Tag = entry;
-                row.Cells[0].Value = entry.ClassMode.Item1.ToString().SplitCapsWordFull();
-                row.Cells[0].Tag = (int)entry.ClassMode.Item1;     // tag 0 gets class, first sort, tag 1 gets order this is in the file
-                row.Cells[1].Value = entry.ClassMode.Item2.ToString().SplitCapsWordFull();
-                row.Cells[2].Value = BetterName(entry.Name);
-                if (!showrealnames)
-                    row.Cells[2].ToolTipText = "Value entry " + entry.Name + Environment.NewLine + "Double click to show Frontier names";
-                row.Cells[3].Value = BindingEntry.ValuesAsList( entry.Name, entry.Attributes,false);
-                // row.Cells[4].Value = entry.Attributes["Value"]; //debug
-                row.Cells[2].Tag = orderno;
-                dataGridView.Rows.Add(row);
-                for (int i = 4; i <= ColSecondaryModKey.Index; i++)
-                    row.Cells[i].ReadOnly = true;
-                orderno++;
-            }
 
             dataGridView.Sort(ColGroup, ListSortDirection.Ascending );
-
 
             // seems you have to apply after add
             ColPrimaryDevice.DisplayStyleForCurrentCellOnly = ColPrimaryKey.DisplayStyleForCurrentCellOnly =
@@ -186,8 +172,7 @@ namespace EliteDangerousCore
             IndicateErrors();
         }
 
-
-        #region UI
+        #region UI Cell
         private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex != ColValues.Index)
@@ -238,21 +223,10 @@ namespace EliteDangerousCore
             }
         }
 
-        private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0 && e.ColumnIndex == ColName.Index)
-            {
-                showrealnames = !showrealnames;
-                Display();
-            }
-        }
 
         #endregion
 
         #region Editing comboboxes
-
-        DataGridViewCellCancelEventArgs editingcell;
-        DataGridViewComboBoxEditingControl edc;
 
         private void dataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
@@ -288,7 +262,7 @@ namespace EliteDangerousCore
                 row.Cells[ci + 1].ErrorText = nodevice ? null : "Invalid - enter a value";
                 row.Cells[ci + 1].ReadOnly = nodevice;
 
-                AddKeys(selected, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
+                AddKeyOptions(entry.Binding, selected, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
 
                 if ( nodevice)                  // no device clears everything to the right for primary
                 {
@@ -319,7 +293,7 @@ namespace EliteDangerousCore
                 row.Cells[ci + 1].Value = "";
                 row.Cells[ci + 1].ReadOnly = nodevice;
                 row.Cells[ci + 1].ErrorText = nodevice ? null : "Invalid - enter a value";
-                AddKeys(selected, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
+                AddKeyOptions(entry.Binding, selected, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
             }
             else if (ci == ColPrimaryModKey.Index)
             {
@@ -333,7 +307,7 @@ namespace EliteDangerousCore
                 row.Cells[ci + 1].ErrorText = nodevice ? null : "Invalid - enter a value";
                 row.Cells[ci + 1].ReadOnly = nodevice;
 
-                AddKeys(selected, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
+                AddKeyOptions(entry.Binding, selected, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
 
                 if (nodevice)                  // no device clears everything to the right for primary
                 {
@@ -363,7 +337,7 @@ namespace EliteDangerousCore
                 row.Cells[ci + 1].Value = "";
                 row.Cells[ci + 1].ReadOnly = nodevice;
                 row.Cells[ci + 1].ErrorText = nodevice ? null : "Invalid - enter a value";
-                AddKeys(selected, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
+                AddKeyOptions(entry.Binding, selected, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
             }
             else if (ci == ColSecondaryModKey.Index)
             {
@@ -392,14 +366,157 @@ namespace EliteDangerousCore
 
         #endregion
 
-        #region UI
+        #region UI Bar
+
+        private void ExtComboBoxBindFiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            extComboBoxBindFiles.SelectedIndexChanged -= ExtComboBoxBindFiles_SelectedIndexChanged;
+            var list = extComboBoxBindFiles.Tag as List<string>;
+
+            if (CheckAskDirty())
+            {
+                string fullpathnewfile = list[extComboBoxBindFiles.SelectedIndex];
+
+                if (!File.Exists(bf.FileName))     // remove if not saved and does not exist on file
+                {
+                    extComboBoxBindFiles.Items.Remove(Path.GetFileName(bf.FileName));
+                    list.Remove(bf.FileName);
+                }
+
+                bf = new BindingsFile();
+                bf.Read(fullpathnewfile);
+
+                extComboBoxBindFiles.SelectedIndex = list.IndexOf(fullpathnewfile);
+                SetEnables(true, false);
+                Display();
+
+                updatecheck.Start();        // start the clock in case it was stopped
+            }
+            else
+            {
+                extComboBoxBindFiles.SelectedIndex = list.IndexOf(bf.FileName);
+            }
+
+            extComboBoxBindFiles.SelectedIndexChanged += ExtComboBoxBindFiles_SelectedIndexChanged;
+        }
+
+        private void extButtonSave_Click(object sender, EventArgs e)
+        {
+            if (ExtendedControls.MessageBoxTheme.Show(this, $"{bf.PresetName} overwrite (a .Bak will be created), please confirm", "Replace bindings", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+            {
+                if (bf.Save(true))
+                {
+                    ClearDirty();
+                    ChangedBindings?.Invoke(bf.FileName);           // tell someone we edited the bindings
+                    updatecheck.Start();                        // start the update check again if it was paused because a user did not want to write
+                }
+                else
+                {
+                    ExtendedControls.MessageBoxTheme.Show(this, $"{bf.FileName} cannot be written to", "Failed to write file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void extButtonDuplicate_Click(object sender, EventArgs e)
+        {
+            if (CheckAskDirty())
+            {
+                string newname = ExtendedControls.PromptSingleLine.ShowDialog(this, "Name:", "", "Enter new binds name", this.FindForm().Icon);
+                if (newname != null)
+                {
+                    extComboBoxBindFiles.SelectedIndexChanged -= ExtComboBoxBindFiles_SelectedIndexChanged;
+                    var list = extComboBoxBindFiles.Tag as List<string>;
+                    int index = list.IndexOf(bf.FileName);
+                    bf.Rename(newname);
+                    list.Add(bf.FileName);
+                    extComboBoxBindFiles.Items.Add(Path.GetFileName(bf.FileName));      // add to list in memory and in control at end
+                    extComboBoxBindFiles.SelectedIndex = extComboBoxBindFiles.Items.Count - 1;
+                    SetDirty();
+                    extComboBoxBindFiles.SelectedIndexChanged += ExtComboBoxBindFiles_SelectedIndexChanged;
+                }
+            }
+        }
+
+        private void extButtonSetDefault_Click(object sender, EventArgs e)
+        {
+            if (bf.IsLoaded)
+            {
+                if (ExtendedControls.MessageBoxTheme.Show(this, $"{bf.PresetName} will become the default for all sections\r\nConfirm Selection", "Set Default binding file", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                {
+                    string folder = Path.GetDirectoryName(bf.FileName);
+                    var presetfile = BindingsFile.FindStartPreset(folder, true);
+
+                    if (presetfile == null)
+                    {
+                        ExtendedControls.MessageBoxTheme.Show(this, $"No StartPreset file present, creating new file", "Set Default binding file", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        presetfile = Tuple.Create(Path.Combine(folder, "StartPreset.4.start"), DateTime.UtcNow, 4);
+                    }
+
+                    if (!BaseUtils.FileHelpers.TryWriteToFile(presetfile.Item1, string.Format("{0}\r\n{0}\r\n{0}\r\n{0}\r\n", bf.PresetName)))
+                    {
+                        ExtendedControls.MessageBoxTheme.Show(this, $"Could not write to preset file {presetfile.Item1}", "Set Default binding file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    ChangedDefault?.Invoke(bf.FileName);           // tell someone we edited the bindings
+                }
+            }
+            else
+                ExtendedControls.MessageBoxTheme.Show(this, $"Bindings not loaded", "Set Default binding file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+        }
+
+        private void extButtonFolder_Click(object sender, EventArgs e)
+        {
+            Processes.Explorer(Path.GetDirectoryName(bf.FileName));
+        }
+
         private void buttonNewDevice_Click(object sender, EventArgs e)
         {
-            string s = ExtendedControls.PromptSingleLine.ShowDialog(this, "Device:", "", "Enter new device name", this.FindForm().Icon);
-            if ( s!=null)
+            ExtendedControls.CheckedIconNewListBoxForm displayfilter = new CheckedIconNewListBoxForm();
+            foreach (var x in KnownDevices.EmptyIfNull())
             {
-                bf.AddDevice(s);
-                Display();
+                string tag = x;
+                int bracket = x.IndexOf("(");               // if list is id (explanation) then the tag is id, the 
+                if (bracket >= 0)
+                    tag = x.Substring(0, bracket).Trim();
+
+                if (!bf.DeviceList.Contains(tag))
+                    displayfilter.UC.AddButton(tag, x);       // tag is same as name
+            }
+
+
+            if (displayfilter.UC.Count>0)
+            {
+                displayfilter.UC.AddButton("new-dev", "Add user named device");
+                displayfilter.CloseBoundaryRegion = new Size(32, extButtonDeviceNew.Height);
+                displayfilter.UC.ImageSize = new Size(24, 24);
+                displayfilter.UC.ScreenMargin = new Size(0, 0);
+                displayfilter.PositionBelow(extButtonDeviceNew);
+                displayfilter.UC.ButtonPressed += (i, s1, s2, o, m) =>      // called on click of button
+                {
+                    if (s1 == "new-dev")
+                    {
+                        string s = ExtendedControls.PromptSingleLine.ShowDialog(this, "Device:", "", "Enter new device name", this.FindForm().Icon);
+                        if (s != null)
+                            bf.AddDevice(s);
+                    }
+                    else
+                        bf.AddDevice(s1);
+
+                    Display();
+                    displayfilter.Close();
+                };
+
+                displayfilter.Show(this);
+            }
+            else
+            {
+                string s = ExtendedControls.PromptSingleLine.ShowDialog(this, "Device:", "", "Enter new device name", this.FindForm().Icon);
+                if (s != null)
+                {
+                    bf.AddDevice(s);
+                    Display();
+                }
             }
         }
 
@@ -417,6 +534,7 @@ namespace EliteDangerousCore
         {
             ExtendedControls.CheckedIconNewListBoxForm displayfilter = new CheckedIconNewListBoxForm();
             var items = bf.DeviceListNoKeyboardMouseDevice;
+
             if (items.Count > 0)
             {
                 foreach (var x in items)
@@ -457,120 +575,134 @@ namespace EliteDangerousCore
             }
         }
 
-        private void extButtonSave_Click(object sender, EventArgs e)
+        #endregion
+
+        #region CMS
+        private void contextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
-            if (ExtendedControls.MessageBoxTheme.Show(this, $"{bf.PresetName} overwrite (a .Bak will be created), please confirm", "Replace bindings", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+            bool doeshaveanykeys = false, doeshavesecondary = false;
+            foreach (DataGridViewRow row in dataGridView.SelectedRows)
             {
-                if ( bf.Save(true))
-                {
-                    ClearDirty();
-                    ChangedBindings?.Invoke(bf.FileName);           // tell someone we edited the bindings
-                    updatecheck.Start();                        // start the update check again if it was paused because a user did not want to write
-                }
-                else
-                {
-                    ExtendedControls.MessageBoxTheme.Show(this, $"{bf.FileName} cannot be written to", "Failed to write file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                var entry = (BindingEntry)row.Tag;
+                doeshaveanykeys |= entry.HasAnyKeys;
+                doeshavesecondary |= entry.HasPrimaryAndSecondary;
             }
+
+            clearPrimaryToolStripMenuItem.Enabled = 
+            clearAllToolStripMenuItem.Enabled =  doeshaveanykeys;
+
+            moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem.Enabled =
+            clearSecondaryToolStripMenuItem.Enabled =
+            swapPrimaryAndSecondaryToolStripMenuItem.Enabled = doeshavesecondary;
         }
 
-        private void extButtonSetDefault_Click(object sender, EventArgs e)
+        private void swapPrimaryAndSecondaryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (bf.IsLoaded)
+            foreach (DataGridViewRow row in dataGridView.SelectedRows)
             {
-                if (ExtendedControls.MessageBoxTheme.Show(this, $"{bf.PresetName} will become the default for all sections\r\nConfirm Selection", "Set Default binding file", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                var entry = (BindingEntry)row.Tag;
+                if (entry.SwapPrimarySecondary())
                 {
-                    string folder = Path.GetDirectoryName(bf.FileName);
-                    var presetfile = BindingsFile.FindStartPreset(folder, true);
-
-                    if (presetfile == null)
-                    {
-                        ExtendedControls.MessageBoxTheme.Show(this, $"No StartPreset file present, creating new file", "Set Default binding file", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        presetfile = Tuple.Create(Path.Combine(folder, "StartPreset.4.start"), DateTime.UtcNow, 4);
-                    }
-
-                    if (!BaseUtils.FileHelpers.TryWriteToFile(presetfile.Item1, string.Format("{0}\r\n{0}\r\n{0}\r\n{0}\r\n", bf.PresetName)))
-                    {
-                        ExtendedControls.MessageBoxTheme.Show(this, $"Could not write to preset file {presetfile.Item1}", "Set Default binding file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-
-                    ChangedDefault?.Invoke(bf.FileName);           // tell someone we edited the bindings
-                }
-            }
-            else
-                ExtendedControls.MessageBoxTheme.Show(this, $"Bindings not loaded", "Set Default binding file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-        }
-
-        private void extButtonDuplicate_Click(object sender, EventArgs e)
-        {
-            if (CheckAskDirty())
-            {
-                string newname = ExtendedControls.PromptSingleLine.ShowDialog(this, "Name:", "", "Enter new binds name", this.FindForm().Icon);
-                if (newname != null)
-                {
-                    extComboBoxBindFiles.SelectedIndexChanged -= ExtComboBoxBindFiles_SelectedIndexChanged;
-                    var list = extComboBoxBindFiles.Tag as List<string>;
-                    int index = list.IndexOf(bf.FileName);
-                    bf.Rename(newname);
-                    list.Add(bf.FileName);
-                    extComboBoxBindFiles.Items.Add(Path.GetFileName(bf.FileName));      // add to list in memory and in control at end
-                    extComboBoxBindFiles.SelectedIndex = extComboBoxBindFiles.Items.Count - 1;
+                    SetUpCells(row, entry);
                     SetDirty();
-                    extComboBoxBindFiles.SelectedIndexChanged += ExtComboBoxBindFiles_SelectedIndexChanged;
                 }
             }
         }
 
-
-        private void ExtComboBoxBindFiles_SelectedIndexChanged(object sender, EventArgs e)
+        private void clearPrimaryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            extComboBoxBindFiles.SelectedIndexChanged -= ExtComboBoxBindFiles_SelectedIndexChanged;
-            var list = extComboBoxBindFiles.Tag as List<string>;
-
-            if (CheckAskDirty())
+            foreach (DataGridViewRow row in dataGridView.SelectedRows)
             {
-                string fullpathnewfile = list[extComboBoxBindFiles.SelectedIndex];
-
-                if ( !File.Exists(bf.FileName))     // remove if not saved and does not exist on file
+                var entry = (BindingEntry)row.Tag;
+                if (entry.HasAnyKeys)
                 {
-                    extComboBoxBindFiles.Items.Remove(Path.GetFileName(bf.FileName));
-                    list.Remove(bf.FileName);
+                    if (entry.HasPrimaryAndSecondary)
+                        entry.SwapPrimarySecondary();
+                    entry.ClearSecondaryKeys();
+                    SetUpCells(row, entry);
+                    SetDirty();
                 }
-
-                bf = new BindingsFile();
-                bf.Read(fullpathnewfile);
-
-                extComboBoxBindFiles.SelectedIndex = list.IndexOf(fullpathnewfile);
-                SetEnables(true, false);
-                Display();
-
-                updatecheck.Start();        // start the clock in case it was stopped
             }
-            else
-            {
-                extComboBoxBindFiles.SelectedIndex = list.IndexOf(bf.FileName);
-            }
-
-            extComboBoxBindFiles.SelectedIndexChanged += ExtComboBoxBindFiles_SelectedIndexChanged;
         }
 
-        private void extButtonFolder_Click(object sender, EventArgs e)
+        private void clearSecondaryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Processes.Explorer(Path.GetDirectoryName(bf.FileName));
+            foreach (DataGridViewRow row in dataGridView.SelectedRows)
+            {
+                var entry = (BindingEntry)row.Tag;
+                if (entry.HasPrimaryAndSecondary)
+                {
+                    entry.ClearSecondaryKeys();
+                    SetUpCells(row, entry);
+                    SetDirty();
+                }
+            }
+        }
+
+        private void moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridView.SelectedRows)
+            {
+                var entry = (BindingEntry)row.Tag;
+                if ( entry.HasPrimaryAndSecondary && !entry.PrimaryKeys[0].IsJoystick)
+                {
+                    entry.SwapPrimarySecondary();
+                    SetUpCells(row, entry);
+                    SetDirty();
+                }
+            }
+        }
+
+        private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridView.SelectedRows)
+            {
+                var entry = (BindingEntry)row.Tag;
+                if (entry.HasAnyKeys)
+                {
+                    entry.ClearAllKeys();
+                    SetUpCells(row, entry);
+                    SetDirty();
+                }
+            }
+        }
+        private void showFrontierNamesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Display();
         }
 
         #endregion
 
         #region Helpers
 
+        void SetUpCells(DataGridViewRow row, BindingEntry entry)
+        {
+            if (entry.Binding)
+            {
+                SetUpCells(row, true, false, bf.DeviceListNoKeyboardMouse, 4, entry.PrimaryKeys[0]);
+            }
+            else
+            {
+                bool primaryisnodevice = DeviceKeyPair.NoDevice(entry.PrimaryKeys[0].Device);
+
+                SetUpCells(row, false, false, bf.DeviceList, 4, entry.PrimaryKeys[0]);
+                SetUpCells(row, false, primaryisnodevice, bf.DeviceList, 6, entry.PrimaryKeys.Count > 1 ? entry.PrimaryKeys[1] : null);
+                SetUpCells(row, false, entry.SecondaryKeys[0].IsNoDevice || primaryisnodevice, bf.DeviceList, 8, entry.SecondaryKeys.Count > 0 ? entry.SecondaryKeys[0] : null);
+                SetUpCells(row, false, entry.SecondaryKeys[0].IsNoDevice || primaryisnodevice, bf.DeviceList, 10, entry.SecondaryKeys.Count > 1 ? entry.SecondaryKeys[1] : null);
+            }
+        }
+
         void SetUpCells(DataGridViewRow row, bool binding, bool disableit, List<string> devices, int index, BindingsFile.DeviceKeyPair dkp)
         {
             var dc = row.Cells[index] as DataGridViewComboBoxCell;
             var dk = row.Cells[index + 1] as DataGridViewComboBoxCell;
 
+            dc.Value = null;
+            dk.Value = null;
+
             dc.Items.Clear();
-            foreach (var device in devices) dc.Items.Add(device);           // always add the device list in
+            foreach (var device in devices) 
+                dc.Items.Add(device);           // always add the device list in
 
             if (disableit)
             {
@@ -579,20 +711,16 @@ namespace EliteDangerousCore
             else if (dkp != null)
             {
                 row.Cells[index].Tag = dkp;
+                SetValue(row.Cells[index], dkp.Device);     // set up device value
 
-                SetValue(row.Cells[index], dkp.Device);
-                if (DeviceKeyPair.NoDevice(dkp.Device))
+                if (DeviceKeyPair.NoDevice(dkp.Device))     // if no device, cell is clear
                 {
                     row.Cells[index + 1].Value = "";
                     row.Cells[index + 1].ReadOnly = true;
                 }
                 else
                 {
-                    if (binding)
-                        AddJoyAxis(dk);
-                    else
-                        AddKeys(dkp.Device, dk);
-
+                    AddKeyOptions(binding, dkp.Device, dk);
                     SetValue(row.Cells[index + 1], dkp.FrontierKeyName);
                 }
             }
@@ -601,15 +729,24 @@ namespace EliteDangerousCore
                 row.Cells[index + 1].ReadOnly = true;
             }
         }
+        private void SetValue(DataGridViewCell cell, string value)
+        {
+            var c = cell as DataGridViewComboBoxCell;
+            if (!c.Items.Contains(value))
+                c.Items.Add(value);
+            c.Value = value;
+        }
 
-        private void AddKeys(string name, DataGridViewComboBoxCell c)
+        private void AddKeyOptions(bool binding, string devicename, DataGridViewComboBoxCell c)
         {
             c.Items.Clear();
-            if (name == "Keyboard")
+            if (binding)
+                AddJoyAxis(c);
+            else if (devicename == "Keyboard")
                 AddButtons(c);
-            else if (name == "Mouse")
+            else if (devicename == "Mouse")
                 AddMouse(c);
-            else if (name != DeviceKeyPair.NoDeviceName)
+            else if (devicename != DeviceKeyPair.NoDeviceName)
                 AddJoyKeys(c);
         }
 
@@ -657,13 +794,6 @@ namespace EliteDangerousCore
             c.Items.Add($"Pos_Mouse_ZAxis");
         }
 
-        private void SetValue(DataGridViewCell cell, string value)
-        {
-            var c = cell as DataGridViewComboBoxCell;
-            if (!c.Items.Contains(value))
-                c.Items.Add(value);
-            c.Value = value;
-        }
 
         private bool CheckAskDirty()
         {
@@ -757,7 +887,7 @@ namespace EliteDangerousCore
 
         public string BetterName(string name)
         {
-            return showrealnames ? name : name.SplitCapsWordFull().Replace("Buggy", "SRV").Replace("Turret", "SRV Turret").Replace("Humanoid", "On Foot");
+            return showFrontierNamesToolStripMenuItem.Checked ? name : name.SplitCapsWordFull().Replace("Buggy", "SRV").Replace("Turret", "SRV Turret").Replace("Humanoid", "On Foot");
         }
 
         private void Updatecheck_Tick(object sender, EventArgs e)
@@ -783,9 +913,10 @@ namespace EliteDangerousCore
 
 
         private BindingsFile bf;
-        private bool showrealnames = false;
         private Timer updatecheck = new Timer() { Interval = 1000 };
 
+        private DataGridViewCellCancelEventArgs editingcell;
+        private DataGridViewComboBoxEditingControl edc;
 
     }
 }
