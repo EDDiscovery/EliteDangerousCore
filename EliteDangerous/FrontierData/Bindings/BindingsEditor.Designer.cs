@@ -47,6 +47,7 @@
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.swapPrimaryAndSecondaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearPrimaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearSecondaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showFrontierNamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,7 +63,6 @@
             this.extButtonSave = new ExtendedControls.ExtButton();
             this.extComboBoxBindFiles = new ExtendedControls.ExtComboBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.clearPrimaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataViewScrollerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
@@ -211,7 +211,7 @@
             this.clearAllToolStripMenuItem,
             this.showFrontierNamesToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(244, 158);
+            this.contextMenuStrip.Size = new System.Drawing.Size(244, 136);
             this.contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_Opening);
             // 
             // swapPrimaryAndSecondaryToolStripMenuItem
@@ -227,6 +227,13 @@
             this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem.Text = "Move joystick entries to primary";
             this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem.Click += new System.EventHandler(this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem_Click);
+            // 
+            // clearPrimaryToolStripMenuItem
+            // 
+            this.clearPrimaryToolStripMenuItem.Name = "clearPrimaryToolStripMenuItem";
+            this.clearPrimaryToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.clearPrimaryToolStripMenuItem.Text = "Clear Primary";
+            this.clearPrimaryToolStripMenuItem.Click += new System.EventHandler(this.clearPrimaryToolStripMenuItem_Click);
             // 
             // clearSecondaryToolStripMenuItem
             // 
@@ -466,13 +473,6 @@
             // toolTip
             // 
             this.toolTip.ShowAlways = true;
-            // 
-            // clearPrimaryToolStripMenuItem
-            // 
-            this.clearPrimaryToolStripMenuItem.Name = "clearPrimaryToolStripMenuItem";
-            this.clearPrimaryToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.clearPrimaryToolStripMenuItem.Text = "Clear Primary";
-            this.clearPrimaryToolStripMenuItem.Click += new System.EventHandler(this.clearPrimaryToolStripMenuItem_Click);
             // 
             // BindingsEditor
             // 
