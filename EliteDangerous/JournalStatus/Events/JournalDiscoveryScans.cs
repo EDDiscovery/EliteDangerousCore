@@ -722,11 +722,7 @@ namespace EliteDangerousCore.JournalEvents
             //System.Diagnostics.Debug.WriteLine($"Add ScanOrganic {ScanType} {Genus_Localised} {Species_Localised}");
             s.AddScanOrganic(this, system);
 
-            if (StarSystem == null)
-                StarSystem = system.Name;
-            if (!SystemAddress.IsValid)
-                SystemAddress = system.SystemAddress;
-            SystemNode sys = s.FindSystemSynchronous(system, false);
+            SystemNode sys = s.FindSystemSynchronous(new SystemClass(SystemAddress), false);
             var bd = sys.FindBody(Body);
             if (bd != null)
             {
