@@ -730,8 +730,7 @@ namespace EliteDangerousCore.JournalEvents
             var bd = sys.FindBody(Body);
             if (bd != null)
             {
-                BodyName = null;
-                //BodyName = bd.CanonicalNameOrOwnName;
+                BodyName = bd.CanonicalNameOrOwnName;
             }
         }
 
