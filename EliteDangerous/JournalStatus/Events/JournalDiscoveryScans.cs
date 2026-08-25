@@ -13,6 +13,7 @@
  *
  *
  */
+using EliteDangerousCore.StarScan2;
 using QuickJSON;
 using System;
 using System.Collections.Generic;
@@ -685,6 +686,8 @@ namespace EliteDangerousCore.JournalEvents
         public SystemAddress SystemAddress { get; set; }
         [PropertyNameAttribute("Internal Frontier ID")]
         public int Body { get; set; }
+        [PropertyNameAttribute("Body Name from FindBody")]
+        public string BodyName { get; set; }
         [PropertyNameAttribute("Frontier Genus ID")]
         public string Genus { get; set; }                       // never null
         [PropertyNameAttribute("Genus in localised text")]
@@ -712,18 +715,31 @@ namespace EliteDangerousCore.JournalEvents
         public int? PotentialEstimatedValue { get; set; }  // set on non analyse
         [PropertyNameAttribute("Estimated or potential value cr")]
         public int Value { get { return EstimatedValue.HasValue ? EstimatedValue.Value : PotentialEstimatedValue.HasValue ? PotentialEstimatedValue.Value : 0; } }
+        public string StarSystem { get; set; }
 
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             //System.Diagnostics.Debug.WriteLine($"Add ScanOrganic {ScanType} {Genus_Localised} {Species_Localised}");
             s.AddScanOrganic(this, system);
+
+            if (StarSystem == null)
+                StarSystem = system.Name;
+            if (!SystemAddress.IsValid)
+                SystemAddress = system.SystemAddress;
+            SystemNode sys = s.FindSystemSynchronous(system, false);
+            var bd = sys.FindBody(Body);
+            if (bd != null)
+            {
+                BodyName = null;
+                //BodyName = bd.CanonicalNameOrOwnName;
+            }
         }
 
         public override string GetInfo(FillInformationData fid)
         {
             int? ev = ScanType == ScanTypeEnum.Analyse ? EstimatedValue : null;     // if analyse, its estimated value
             int? pev = ev == null ? PotentialEstimatedValue : null;                 // if not at analyse, its potential value
-            return BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "", WasLogged == null ? "" : WasLogged == false ? "Was not logged".Tx() : "Was logged".Tx(), "< @ ", fid.WhereAmI);
+            return BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "", WasLogged == null ? "" : WasLogged == false ? "Was not logged".Tx() : "Was logged".Tx(), "< @ ", BodyName); return BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "", WasLogged == null ? "" : WasLogged == false ? "Was not logged".Tx() : "Was logged".Tx(), "< @ ", fid.WhereAmI);
         }
 
         // this sorts the list by date/time, then runs the algorithm that returns only the latest sample state for each key
