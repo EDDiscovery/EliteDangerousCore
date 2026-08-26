@@ -21,44 +21,45 @@ namespace EliteDangerousCore
 {
     public partial class BindingsFile 
     {
-        [System.Diagnostics.DebuggerDisplay("{Name} {Value} B:{Binding}")]
+        [System.Diagnostics.DebuggerDisplay("{ToString()} : {Value}")]
         public class BindingEntry
         {
-            public BindingEntry(string name, string value, string nodevicename)
+            public BindingEntry(string name, string value)
             {
                 Name = name;
                 Value = value;
-                NoDeviceName = nodevicename;            // we keep this so we know how to cancel stuff
             }
 
             public string Name { get; set; }                        // xml element which made the mapping
             public string Value { get; set; }                       // if a value entry
-            public string NoDeviceName { get; set; }                // so we know how to cancel
 
-            public Tuple<FrontierBindingClassification.Classification,FrontierBindingClassification.Mode> ClassMode { get; set; }   // null for non key entries
             public bool Binding { get; set; }                       // is it a joystick binding? 
-            public List<DeviceKeyPair> PrimaryKeys { get; set; }    // first is key, second is mod, may be null
-            public List<DeviceKeyPair> SecondaryKeys { get; set; }  // first is key, second is mod, may be null
+            public bool KeyOrBinding => PrimaryKeys != null;        // is it a key or binding entry?
+            public bool Assigned => PrimaryKeys?.Assigned == true;  // does we have any assignments? Primary must be defined
+            public bool HasPrimaryAndSecondaryAssigned => PrimaryKeys != null && PrimaryKeys.Assigned && SecondaryKeys != null && SecondaryKeys.Assigned;
+
+            public DeviceKeyPairList PrimaryKeys { get; set; }      // May be null
+            public DeviceKeyPairList SecondaryKeys { get; set; }    // May be null
             public Dictionary<string, string> Values { get; set; } = new Dictionary<string, string>();      // any elements with values
             public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();  // attributes of the binding 
-
-            public bool HasAnyKeys => PrimaryKeys != null;
-            public bool HasPrimaryAndSecondary => PrimaryKeys != null && PrimaryKeys[0].Assigned && SecondaryKeys != null && SecondaryKeys[0].Assigned;
-            public string PrimaryDevice => PrimaryKeys != null ? PrimaryKeys[0].Device : null;
+            public Tuple<FrontierBindingClassification.Classification, FrontierBindingClassification.Mode> ClassMode { get; set; }   // null for non key entries
 
             // return either Device:Key or (Device:Key,Device:Key) Key is either Frontier or Internal. 
             // empty string if KeyPair is null or NoDevice
-            public string PrimaryFrontierKeyList() => DeviceKeyPair.KeyDescription(PrimaryKeys, false);
-            public string SecondaryFrontierKeyList() => DeviceKeyPair.KeyDescription(SecondaryKeys, false);
-            public string PrimaryKeyList() => DeviceKeyPair.KeyDescription(PrimaryKeys, true);
-            public string SecondaryKeyList() => DeviceKeyPair.KeyDescription(SecondaryKeys, true);
+            public string PrimaryFrontierKeyList() => PrimaryKeys?.KeyDescription(false) ?? "";
+            public string SecondaryFrontierKeyList() => SecondaryKeys?.KeyDescription(false) ??"";
+            public string PrimaryKeyList() => PrimaryKeys?.KeyDescription(true) ?? "";
+            public string SecondaryKeyList() => SecondaryKeys?.KeyDescription(true) ?? "";
+
+            public override string ToString() => $"{Name} : {Binding} : Prim `{PrimaryKeys?.KeyDescription(false)}` sec `{SecondaryKeys?.KeyDescription(false)}`";
+            public string ToString(bool intnal) => $"{Name} : {Binding} : Prim `{PrimaryKeys?.KeyDescription(intnal)}` sec `{SecondaryKeys?.KeyDescription(intnal)}`";
 
             // See if either of these are keyboard pairs for use, prefer PrimaryKeys
-            public List<DeviceKeyPair> FindKeyboardAssignment()
+            public DeviceKeyPairList FindKeyboardAssignment()
             {
-                if (PrimaryKeys != null && PrimaryKeys[0].IsKeyboard && (PrimaryKeys.Count == 1 || PrimaryKeys[1].IsKeyboard))
+                if (PrimaryKeys?.IsKeyboard == true)
                     return PrimaryKeys;
-                if (SecondaryKeys != null && SecondaryKeys[0].IsKeyboard && (SecondaryKeys.Count == 1 || SecondaryKeys[1].IsKeyboard))
+                if (SecondaryKeys?.IsKeyboard == true)
                     return SecondaryKeys;
                 return null;
             }
@@ -67,143 +68,78 @@ namespace EliteDangerousCore
             // return 1/2 in tuple position to indicate primary or secondary clash for us and other
             public Tuple<int, int> HasAnyKeysInCommon(BindingEntry other)
             {
-                string pk = PrimaryFrontierKeyList();
-                string sk = SecondaryFrontierKeyList();
-                string opk = other.PrimaryFrontierKeyList();
-                string osk = other.SecondaryFrontierKeyList();
-                if (pk.IsEmpty())       // no keys, can't clash, can't have secondary
-                    return null;
-                else if (pk == opk)
-                    return Tuple.Create(1, 1);
-                else if (pk == osk)
-                    return Tuple.Create(1, 2);
-                else if (sk.IsEmpty())
-                    return null;
-                else if (sk == opk)
-                    return Tuple.Create(2, 1);
-                else if (sk == osk)
-                    return Tuple.Create(2, 2);
-                else
-                    return null;
+                if (PrimaryKeys != null)
+                {
+                    if (PrimaryKeys.Equals(other.PrimaryKeys) == true)
+                        return Tuple.Create(1, 1);
+                    if (PrimaryKeys.Equals(other.SecondaryKeys) == true)
+                        return Tuple.Create(1, 2);
+                }
+
+                if (SecondaryKeys != null)
+                {
+                    if (SecondaryKeys.Equals(other.PrimaryKeys) == true)
+                        return Tuple.Create(2, 1);
+                    if (SecondaryKeys.Equals(other.SecondaryKeys) == true)
+                        return Tuple.Create(2, 2);
+                }
+                return null;
             }
 
             // remove assignments using this device
-            public void RemoveDevice(string device)
+            public void RemoveDevice(string device, string NoDeviceName)
             {
-                if ( PrimaryKeys != null)
-                {
-                    bool primarymatch = PrimaryKeys[0].Device == device || (PrimaryKeys.Count > 1 && PrimaryKeys[1].Device == device);
-                    bool secondarymatch = SecondaryKeys != null && (SecondaryKeys[0].Device == device || (SecondaryKeys.Count > 1 && SecondaryKeys[1].Device == device));
+                bool primarymatch = PrimaryKeys?.IsDevice(device) == true;
+                bool secondarymatch = SecondaryKeys?.IsDevice(device) == true;
 
-                    if (primarymatch)
+                if (primarymatch)
+                {
+                    if (secondarymatch)
                     {
-                        if (secondarymatch)
-                        {
-                            ClearAll();
-                        }
-                        else
-                        {
-                            PrimaryKeys = SecondaryKeys;        // move secondary to primary
-                            ClearSecondary();
-                        }
+                        ClearAll(NoDeviceName);
                     }
-                    else if (secondarymatch)
+                    else if ( SecondaryKeys?.Assigned == true) // if secondary is assigned
                     {
-                        ClearSecondary();
+                        PrimaryKeys = SecondaryKeys;        // move secondary to primary
+                        SecondaryKeys = new DeviceKeyPairList(NoDeviceName);
                     }
+                }
+                else if (secondarymatch)
+                {
+                    SecondaryKeys.Clear(NoDeviceName);
                 }
             }
 
             // rename device
             public void RenameDevice(string oldname, string newname)
             {
-                foreach (var x in PrimaryKeys.EmptyIfNull().Where(x => x.Device == oldname))
-                    x.Device = newname;
-                foreach (var x in SecondaryKeys.EmptyIfNull().Where(x => x.Device == oldname))
-                    x.Device = newname;
-            }
-
-            public void ClearAll()
-            {
-                ClearPrimary();
-                ClearSecondary();
-            }
-
-            public void ClearPrimary()
-            {
-                PrimaryKeys = new List<DeviceKeyPair> { new DeviceKeyPair(NoDeviceName, "") };
-            }
-            public void ClearSecondary()
-            {
-                if (!Binding) // bindings do not have secondary keys set
-                {
-                    SecondaryKeys = new List<DeviceKeyPair> { new DeviceKeyPair(NoDeviceName, "") };
-                }
-            }
-
-            public void ClearPrimaryMod()
-            {
-                if (PrimaryKeys?.Count > 1)
-                    PrimaryKeys.RemoveAt(1);
-            }
-
-            public void SetPrimary(string device, string key)
-            {
-                PrimaryKeys[0] = new DeviceKeyPair(device, key);
-                AssignKeys();
-            }
-
-            public void SetPrimaryMod(string device, string key)
-            {
-                if (PrimaryKeys.Count == 1)
-                    PrimaryKeys.Add(new DeviceKeyPair(device, key));
-                else
-                    PrimaryKeys[1] = new DeviceKeyPair(device, key);
-
-                AssignKeys();
-            }
-
-            public void ClearSecondaryMod()
-            {
-                if (SecondaryKeys?.Count > 1)
-                    SecondaryKeys.RemoveAt(1);
-            }
-
-            public void SetSecondary(string device, string key)
-            {
-                SecondaryKeys[0] = new DeviceKeyPair(device, key);
-                AssignKeys();
-            }
-
-            public void SetSecondaryMod(string device, string key)
-            {
-                if (SecondaryKeys.Count == 1)
-                    SecondaryKeys.Add(new DeviceKeyPair(device, key));
-                else
-                    SecondaryKeys[1] = new DeviceKeyPair(device, key);
-                AssignKeys();
+                PrimaryKeys?.RenameDevice(oldname, newname);
+                SecondaryKeys?.RenameDevice(oldname, newname);
             }
 
             public bool SwapPrimarySecondary()
             {
-                if (HasPrimaryAndSecondary && PrimaryKeys[0].Assigned && SecondaryKeys[0].Assigned)
+                if (HasPrimaryAndSecondaryAssigned)
                 {
-                    var swap = new List<DeviceKeyPair>(SecondaryKeys);
+                    var swap = new List<DeviceKeyPair>(SecondaryKeys.Keys);     // copy key list into temp array
                     SecondaryKeys = PrimaryKeys;
-                    PrimaryKeys = swap;
+                    PrimaryKeys = new DeviceKeyPairList(swap);
                     return true;
                 }
                 else
                     return false;
             }
 
-            public void AssignKeys()
+            public void ClearAll(string NoDeviceName)
             {
-                if (PrimaryKeys != null)
-                    AssignKeyNames(PrimaryKeys);
-                if (SecondaryKeys != null)
-                    AssignKeyNames(SecondaryKeys);
+                if ( KeyOrBinding)
+                { 
+                    PrimaryKeys = new DeviceKeyPairList(NoDeviceName);
+                    if ( !Binding )
+                        SecondaryKeys = new DeviceKeyPairList(NoDeviceName);
+                }
             }
+
 
             // format up values for display
             public static string ValuesAsList(string entryname, Dictionary<string, string> v, bool displaykeyname)
@@ -230,11 +166,103 @@ namespace EliteDangerousCore
                 }
                 return vlist;
             }
+        }
+
+
+        [System.Diagnostics.DebuggerDisplay("Ext {KeyDescription(false)} Int {KeyDescription(true)}")]
+
+        public class DeviceKeyPairList
+        {
+            public List<DeviceKeyPair> Keys { get; set; }     // first is key, second is mod, always non null
+
+            public int Count => Keys.Count;
+            public bool Assigned => Keys.Count > 0 && Keys[0].Assigned;
+            public bool IsKeyboard => Keys.Count > 0 && Keys[0].IsKeyboard && (Keys.Count == 1 || Keys[1].IsKeyboard);
+            public bool IsJoystick(string nodevicename) => Assigned == true && Keys[0].Device != nodevicename && !Keys[0].IsKeyboard && !Keys[0].IsMouse;
+            public bool IsDevice(string device) => Keys.Count > 0 && (Keys[0].Device == device || (Keys.Count > 1 && Keys[1].Device == device));
+
+            public DeviceKeyPairList() { Keys = new List<DeviceKeyPair>(); }
+            public DeviceKeyPairList(string nodevicename) { Keys = new List<DeviceKeyPair> { new DeviceKeyPair(nodevicename, "") }; }
+            public DeviceKeyPairList(List<DeviceKeyPair> keylist) { Keys = keylist; }
+
+            public void Add(DeviceKeyPair key) => Keys.Add(key);
+
+            public void Clear(string nodevicename)
+            {
+                Keys = new List<DeviceKeyPair> { new DeviceKeyPair(nodevicename, "") };
+            }
+
+            public void ClearMod()
+            {
+                if (Keys.Count >= 2)
+                    Keys.RemoveAt(1);
+            }
+
+            public void SetMod(string device, string key)
+            {
+                if (Keys.Count == 1)
+                    Keys.Add(new DeviceKeyPair(device, key));
+                else
+                    Keys[0] = new DeviceKeyPair(device, key);
+            }
+
+            public void RenameDevice(string oldname, string newname)
+            {
+                foreach (var x in Keys.EmptyIfNull().Where(x => x.Device == oldname))
+                    x.Device = newname;
+            }
+
+            // do we have keys in common, other can be null
+            public bool HasInternalKeyInCommon(DeviceKeyPairList other)
+            {
+                if (other != null)
+                {
+                    foreach (var o in other.Keys.EmptyIfNull())
+                    {
+                        foreach (DeviceKeyPair k in Keys.EmptyIfNull())
+                        {
+                            if (k.Key.Equals(o.Key))
+                                return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+
+            // do the key set including modifier in the other one match with our keys
+            // other may be null
+            public bool Equals(DeviceKeyPairList other)
+            {
+                if ( other != null && other.Keys.Count == Keys.Count && Keys[0].Assigned)
+                {
+                    if (Keys[0].Equals(other.Keys[0]) && (Keys.Count == 1 || (Keys[1].Assigned && Keys[1].Equals(other.Keys[1]))))      // use Equals, which is overloaded
+                        return true;
+                }
+                return false;
+            }
+
+            // produce a key description string in the format Device:Key or (Device:Key,Device:Key)
+            // use either the internal key name or frontier name
+            public string KeyDescription(bool internalkeyname)
+            {
+                if (Keys?.Count < 1 )
+                    return "";
+                if ( !Keys[0].Assigned)
+                    return "---";
+
+                string part = Keys[0].Device + ":" + (internalkeyname ? Keys[0].Key : Keys[0].FrontierKeyName);
+                if (Keys.Count > 1)
+                    return "(" + part + "," + Keys[1].Device + ":" + (internalkeyname ? Keys[1].Key : Keys[1].FrontierKeyName) + ")";
+                else
+                    return part;
+            }
+
 
             // convert the frontier name for POV's and keyboard keys to our naming and store in Key
-            private static string AssignKeyNames(List<DeviceKeyPair> key)
+            public string AssignKeyNames()
             {
-                string firstname = key[0].FrontierKeyName;
+                string firstname = Keys[0].FrontierKeyName;
                 string ErrorList = "";
 
                 if (firstname.HasChars())       // empty frontier entries get null
@@ -242,10 +270,10 @@ namespace EliteDangerousCore
                     // pov evil.. frontier code these as primary (l/r/u/d) and modifier (l/r/u/d) in no particular order.  If POV, only the first entry gets a Key name, the second entry is null
 
                     int povindex = firstname.IndexOf("POV");
-                    if (povindex >= 0 && key.Count > 1)       // if first and possibly second POV entries
+                    if (povindex >= 0 && Keys.Count > 1)       // if first and possibly second POV entries
                     {
-                        string povroot = key[0].FrontierKeyName.Truncate(0, povindex + 4);
-                        string secondname = key[1].FrontierKeyName;
+                        string povroot = Keys[0].FrontierKeyName.Truncate(0, povindex + 4);
+                        string secondname = Keys[1].FrontierKeyName;
                         if (secondname.Truncate(0, povroot.Length).Equals(povroot))       // POV pair..  lets adjust so its just the major entry.. makes it easier
                         {
                             if (firstname.Contains("Left") || secondname.Contains("Left"))
@@ -254,16 +282,16 @@ namespace EliteDangerousCore
                                 firstname = povroot + ((firstname.Contains("Up") || secondname.Contains("Up")) ? "UpRight" : "DownRight");
                         }
 
-                        key[0].Key = firstname;     // only the first entry get our key name
-                        key[1].Key = "POV-KEY-IGNORE";      // gets a text marker so its not null
+                        Keys[0].Key = firstname;     // only the first entry get our key name
+                        Keys[1].Key = "POV-KEY-IGNORE";      // gets a text marker so its not null
                     }
                     else
                     {
-                        foreach (var x in key)
+                        foreach (var x in Keys)
                         {
                             x.Key = x.FrontierKeyName;      // always set key name
 
-                            if (x.Device == "Keyboard")
+                            if (x.Device == DeviceKeyPair.KeyboardDeviceName)
                             {
                                 string ourkeyname = FrontierKeyConversion.FrontierToKeys(x.FrontierKeyName);
                                 if (ourkeyname.StartsWith("!"))
@@ -294,45 +322,22 @@ namespace EliteDangerousCore
             public static bool KeyboardDevice(string device) { return device == KeyboardDeviceName; }
             public static bool MouseDevice(string device) { return device == MouseDeviceName; }
 
-
             public DeviceKeyPair(string internaldevicename, string frontierkeyname)
             {
-                Device = internaldevicename; 
+                Device = internaldevicename;
                 FrontierKeyName = frontierkeyname;
             }
 
-              // do ours have a key assignment in common with other. Based on internal Key
-            public static bool HasInternalKeyInCommon(List<DeviceKeyPair> ours, List<DeviceKeyPair> other)
+            public DeviceKeyPair(string nodevicename)
             {
-                foreach (DeviceKeyPair o in other)
-                {
-                    foreach (DeviceKeyPair k in ours)
-                    {
-                        if (k.Key.Equals(o.Key))
-                            return true;
-                    }
-                }
-
-                return false;
+                Device = nodevicename;
+                FrontierKeyName = "";
             }
 
-            // produce a key description string in the format Device:Key or (Device:Key,Device:Key)
-            // use either the internal key name or frontier name
-            public static string KeyDescription(List<DeviceKeyPair> keyPair, bool internalkeyname)
-            {
-                if (keyPair == null || keyPair.Count < 1 || !keyPair[0].Assigned)
-                    return "";
-                string part = keyPair[0].Device + ":" + (internalkeyname ? keyPair[0].Key : keyPair[0].FrontierKeyName);
-                if (keyPair.Count > 1)
-                    return "(" + part + "," + keyPair[1].Device + ":" + (internalkeyname ? keyPair[1].Key : keyPair[1].FrontierKeyName) + ")";
-                else
-                    return part;
-            }
-
+            public bool Equals(DeviceKeyPair other) => Device == other.Device && FrontierKeyName == other.FrontierKeyName;
 
             public const string KeyboardDeviceName = "Keyboard";
             public const string MouseDeviceName = "Mouse";
         }
-
     }
 }

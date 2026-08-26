@@ -45,6 +45,7 @@
             this.ColSecondaryModDevice = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.ColSecondaryModKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.defineByKeyJoystickToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.swapPrimaryAndSecondaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearPrimaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -113,7 +114,7 @@
             this.dataGridView.RowHeaderMenuStrip = null;
             this.dataGridView.RowHeadersVisible = false;
             this.dataGridView.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGridView.SingleRowSelect = true;
             this.dataGridView.Size = new System.Drawing.Size(1502, 715);
             this.dataGridView.TabIndex = 1;
@@ -122,6 +123,7 @@
             this.dataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellEndEdit);
             this.dataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView_EditingControlShowing);
             this.dataGridView.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.dataGridView_SortCompare);
+            this.dataGridView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView_KeyDown);
             // 
             // ColGroup
             // 
@@ -204,6 +206,7 @@
             // contextMenuStrip
             // 
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defineByKeyJoystickToolStripMenuItem,
             this.swapPrimaryAndSecondaryToolStripMenuItem,
             this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem,
             this.clearPrimaryToolStripMenuItem,
@@ -211,8 +214,15 @@
             this.clearAllToolStripMenuItem,
             this.showFrontierNamesToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(244, 136);
+            this.contextMenuStrip.Size = new System.Drawing.Size(244, 158);
             this.contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_Opening);
+            // 
+            // defineByKeyJoystickToolStripMenuItem
+            // 
+            this.defineByKeyJoystickToolStripMenuItem.Name = "defineByKeyJoystickToolStripMenuItem";
+            this.defineByKeyJoystickToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.defineByKeyJoystickToolStripMenuItem.Text = "Define by Device Input";
+            this.defineByKeyJoystickToolStripMenuItem.Click += new System.EventHandler(this.defineByKeyJoystickToolStripMenuItem_Click);
             // 
             // swapPrimaryAndSecondaryToolStripMenuItem
             // 
@@ -525,5 +535,6 @@
         private System.Windows.Forms.ToolStripMenuItem clearAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showFrontierNamesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearPrimaryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defineByKeyJoystickToolStripMenuItem;
     }
 }

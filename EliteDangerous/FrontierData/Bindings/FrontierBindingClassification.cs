@@ -43,7 +43,8 @@ namespace EliteDangerousCore
         // modal state
         public enum Mode
         {
-            Ship, Landing, UIPanel, GalaxyMap, Camera, FreeCamera, OnFoot, OnFootWheel, SRV, SRVTurret, All, FSS, SAA, HoloMe, Store, Colonisation, ColonisationSuite, MultiCrew
+            Ship, Landing, UIPanel, GalaxyMap, Camera, FreeCamera, OnFoot, OnFootWheel, 
+            SRV, SRVTurret, All, FSS, SAA, HoloMe, Store, Colonisation, ColonisationSuite, MultiCrew
         }
 
         // get class and mode of an action
@@ -230,7 +231,6 @@ namespace EliteDangerousCore
         }
 
         // is the button a Hold button, which stops it clashing with other buttons assigned to it
-
         public static bool HoldButton(string ActionName)
         {
             return ActionName == "HumanoidEmoteWheelButton" || ActionName == "HumanoidItemWheelButton" ||
