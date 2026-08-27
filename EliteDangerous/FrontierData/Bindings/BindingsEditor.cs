@@ -64,8 +64,12 @@ namespace EliteDangerousCore
             foreach (var kvp in ConvertDeviceNameList)              // update its device name convert list
                 bf.ConvertDeviceNameList[kvp.Key] = kvp.Value;
 
-            if ( preferredbindfile != null) // if preferred bind file
+            if (preferredbindfile != null) // if preferred bind file
+            {
                 bf.Read(preferredbindfile);
+                if (bf.IsLoaded)
+                    System.Diagnostics.Debug.WriteLine($"Read file {bf.FileName} `{bf.KeyboardCulture}` `{bf.KeyboardLayout}`");
+            }
 
             int index = bindfiles.FindIndex(x => x.FullName == preferredbindfile);
             if (index >= 0)
@@ -159,7 +163,10 @@ namespace EliteDangerousCore
                     row.Cells[2].Value = BetterName(entry.Name);
                     if (!showFrontierNamesToolStripMenuItem.Checked)
                         row.Cells[2].ToolTipText = "Value entry " + entry.Name;
-                    row.Cells[3].Value = BindingEntry.ValuesAsList(entry.Name, entry.Attributes, false);
+                    if (entry.Attributes.Count == 0)
+                        row.Cells[3].Value = entry.Value;
+                    else
+                        row.Cells[3].Value = BindingEntry.ValuesAsList(entry.Name, entry.Attributes, false);
                     // row.Cells[4].Value = entry.Attributes["Value"]; //debug
                     row.Cells[2].Tag = orderno;
                     dataGridView.Rows.Add(row);
@@ -887,7 +894,7 @@ namespace EliteDangerousCore
             }
             else if (devicename == "Keyboard")
             {
-                foreach (var x in FrontierKeyConversion.FrontierKeyNames())
+                foreach (var x in FrontierKeyConversion.FrontierKeyNames(bf.KeyboardLayout))
                     c.Items.Add(x);
             }
             else if (devicename == "Mouse")

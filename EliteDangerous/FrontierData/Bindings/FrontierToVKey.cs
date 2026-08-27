@@ -19,18 +19,45 @@ using System.Windows.Forms;
 
 namespace EliteDangerousCore
 {
-    /// <summary>
-    /// This works in the current locale 
-    /// working in other locales is dependent on the user installing the language packs, you just can't order up a locale and use the WIN32 api on it
-    /// the pack needs to be installed.
-    /// Hence its not possible to send in an arbitary locale to use
-    /// </summary>
     static public class FrontierKeyConversion
     {
-        // extracted frontier key names for key languages
-        static public List<string> FrontierKeyNames(bool inclalphanumbersfkeys = true)
+        // list of layouts vs cultures supported
+
+        static public Tuple<string, string>[] SupportedLayoutCultures = new Tuple<string, string>[]
         {
-            var ret = new List<string>();
+            Tuple.Create("United Kingdom","en-GB"),Tuple.Create("Czech","cs-CZ"),Tuple.Create("Danish","da-DK"),Tuple.Create("German","de-DE"),Tuple.Create("Greek","el-GR"),
+            Tuple.Create("US","en-US"),Tuple.Create("Finnish","fi-FI"),Tuple.Create("French (Legacy, AZERTY)","fr-FR"),
+            Tuple.Create("Italian","it-IT"),Tuple.Create("Polish (Programmers)","pl-PL"),Tuple.Create("Portuguese (Brazil ABNT)","pt-BR"),
+            Tuple.Create("Romanian (Standard)","ro-RO"),Tuple.Create("Slovak","sk-SK"),Tuple.Create("Swedish","sv-SE"),
+            Tuple.Create("Turkish Q","tr-TR"),Tuple.Create("Ukrainian (Enhanced)","uk-UA"),Tuple.Create("Slovenian","sl-SI"),
+            Tuple.Create("Lithuanian","lt-LT"),Tuple.Create("Norwegian","nn-NO"),Tuple.Create("Portuguese","pt-PT"),Tuple.Create("US","en-AU"),Tuple.Create("Spanish","es-ES"),
+            Tuple.Create("Belgium French","fr-BE")
+
+            // canada french legacy/new
+            // dutch
+            // estonian
+            // hungarian
+            // slovak
+
+
+
+        };
+
+        // will return null if not supported
+        public static string GetSupportedLayout(string cultureid)
+        {
+            return Array.Find(SupportedLayoutCultures, x => x.Item2.EqualsIIC(cultureid))?.Item1 ?? null;
+        }
+
+        private static Dictionary<string,HashSet<string>> CachedLayouts = new Dictionary<string, HashSet<string>>();
+
+        // extracted frontier key names for key languages
+        static public HashSet<string> FrontierKeyNames(string layoutname, bool inclalphanumbersfkeys = true)
+        {
+            if (CachedLayouts.TryGetValue(layoutname,out HashSet<string> result))      // if already computed, return
+                return result;
+
+            var ret = new HashSet<string>();
             if (inclalphanumbersfkeys)
             {
                 for (int i = 0; i < 26; i++)
@@ -40,7 +67,7 @@ namespace EliteDangerousCore
             }
 
             foreach (var x in frontiertovkeyname)
-                ret.Add("Key_" + x.Item2);
+                ret.Add("Key_" + x.Key);
 
             for (int i = 0; i < 10; i++)
                 ret.Add("Key_Numpad_" + new string(new char[] { (char)(i + '0') }));
@@ -51,125 +78,67 @@ namespace EliteDangerousCore
                     ret.Add($"Key_F{i}");
             }
 
-            string layoutname = InputLanguage.CurrentInputLanguage.LayoutName;
+            // look at our translation table and add appropriate layout ids
 
-            // worked out from unittests binding checks in UnitTestFrontierKeys.cs - it collated a list of missing keys from the tests performed by the script
-
-            if (layoutname == "United Kingdom")
+            foreach(var kvp in vkeylookup)
             {
-                ret.AddRange(new string[] { "Key_Grave", "Key_Minus", "Key_Equals", "Key_LeftBracket", "Key_RightBracket", "Key_SemiColon", "Key_Apostrophe", "Key_Hash", "Key_BackSlash", "Key_Comma", "Key_Period", "Key_Slash", });
-            }
-            else if (layoutname == "Czech")     
-            {
-                ret.AddRange(new string[] { "Key_ú", "Key_ů", "Key_§" , "Key_SemiColon", "Key_Equals", "Key_Acute", "Key_RightParenthesis",
-                "Key_Umlaut","Key_BackSlash","Key_Comma", "Key_Period","Key_Minus"
-                });
+                if ( kvp.Key.Item1 == layoutname)
+                {
+                    ret.Add(kvp.Key.Item2);
+                   // System.Diagnostics.Debug.WriteLine($"Add special key {kvp.Key.Item2}");
+                }
             }
 
-            if (layoutname.Contains("Portuguese (Brazil ABNT)"))
-            {
-                ret.AddRange(new string[] { "Key_Apostrophe", "Key_Minus", "Key_Equals", "Key_Acute", "Key_LeftBracket", "Key_ç", "Key_Tilde", "Key_RightBracket", "Key_BackSlash", "Key_Comma", "Key_Period", "Key_SemiColon", });
-            }
-            else if (layoutname.Contains("Portuguese"))
-            {
-                ret.AddRange(new string[] { "Key_BackSlash", "Key_Apostrophe", "Key_«", "Key_Plus", "Key_Acute", "Key_ç", "Key_º", "Key_Tilde", "Key_LessThan", "Key_Comma", "Key_Period", "Key_Minus", });
-            }
-            else if (layoutname.Contains("Danish"))
-            {
-                ret.AddRange(new string[] { "Key_Half", "Key_Plus", "Key_Acute", "Key_å", "Key_Umlaut", "Key_æ", "Key_ø", "Key_Apostrophe", "Key_BackSlash", "Key_Comma", "Key_Period", "Key_Minus", });
-            }
-            else if (layoutname.Contains("German"))
-            {
-                ret.AddRange(new string[] { "Key_Circumflex", "Key_ß", "Key_Acute", "Key_ü", "Key_Plus", "Key_ö", "Key_ä", "Key_Hash", "Key_LessThan", "Key_Comma", "Key_Period", "Key_Minus", });
-            }
-            else if (layoutname.Contains("Greek"))
-            {
-                ret.AddRange(new string[] { "Key_Grave", "Key_Minus", "Key_Equals", "Key_LeftBracket", "Key_RightBracket", "Key_΄", "Key_Apostrophe", "Key_BackSlash", "Key_LessThan", "Key_Comma", "Key_Period", "Key_Slash", });
-            }
-            else if (layoutname.Contains("US"))
-            {
-                ret.AddRange(new string[] { "Key_Grave", "Key_Minus", "Key_Equals", "Key_LeftBracket", "Key_RightBracket", "Key_SemiColon", "Key_Apostrophe", "Key_BackSlash", "Key_Comma", "Key_Period", "Key_Slash", });
-            }
-            else if (layoutname.Contains("Finnish"))
-            {
-                ret.AddRange(new string[] { "Key_§", "Key_Plus", "Key_Acute", "Key_å", "Key_Umlaut", "Key_ö", "Key_ä", "Key_Apostrophe", "Key_LessThan", "Key_Comma", "Key_Period", "Key_Minus", });
-            }
-            else if (layoutname.Contains("French"))
-            {
-                ret.AddRange(new string[] { "Key_SuperscriptTwo", "Key_RightParenthesis", "Key_Equals", "Key_Circumflex", "Key_Dollar", "Key_ù", "Key_Asterisk", "Key_LessThan", "Key_Comma", "Key_SemiColon", "Key_Colon", "Key_ExclamationPoint", });
-            }
-            else if (layoutname.Contains("Italian"))
-            {
-                ret.AddRange(new string[] { "Key_BackSlash", "Key_Apostrophe", "Key_ì", "Key_è", "Key_Plus", "Key_ò", "Key_à", "Key_ù", "Key_LessThan", "Key_Comma", "Key_Period", "Key_Minus", });
-            }
-            else if (layoutname.Contains("Polish"))
-            {
-                ret.AddRange(new string[] { "Key_Grave", "Key_Minus", "Key_Equals", "Key_LeftBracket", "Key_RightBracket", "Key_SemiColon", "Key_Apostrophe", "Key_Hash", "Key_BackSlash", "Key_Comma", "Key_Period", "Key_Slash", });
-            }
-            else if (layoutname.Contains("Romanian"))
-            {
-                ret.AddRange(new string[] { "Key_RightBracket", "Key_Plus", "Key_Apostrophe", "Key_ă", "Key_î", "Key_ş", "Key_ţ", "Key_â", "Key_LessThan", "Key_Comma", "Key_Period", "Key_Minus", });
-            }
-            else if (layoutname.Contains("Slovak"))
-            {
-                ret.AddRange(new string[] { "Key_SemiColon", "Key_Equals", "Key_Acute", "Key_ú", "Key_ä", "Key_ô", "Key_§", "Key_ň", "Key_Ampersand", "Key_Comma", "Key_Period", "Key_Minus", });
-            }
-            else if (layoutname.Contains("Swedish"))
-            {
-                ret.AddRange(new string[] { "Key_§", "Key_Plus", "Key_Acute", "Key_å", "Key_Umlaut", "Key_ö", "Key_ä", "Key_Apostrophe", "Key_LessThan", "Key_Comma", "Key_Period", "Key_Minus", });
-            }
-            else if (layoutname.Contains("Turkish"))
-            {
-                ret.AddRange(new string[] { "Key_DoubleQuote", "Key_Asterisk", "Key_Minus", "Key_ğ", "Key_ü", "Key_ş", "Key_Comma", "Key_LessThan", "Key_ö", "Key_ç", "Key_Period", });
-            }
-            else if (layoutname.Contains("Ukrainian"))
-            {
-                ret.AddRange(new string[] { "Key_ё", "Key_Minus", "Key_Equals", "Key_х", "Key_ї", "Key_ж", "Key_є", "Key_BackSlash", "Key_ґ", "Key_б", "Key_ю", "Key_Period", });
-            }
-            else if (layoutname.Contains("Slovenian"))
-            {
-                ret.AddRange(new string[] { "Key_¸", "Key_Apostrophe", "Key_Plus", "Key_š", "Key_đ", "Key_č", "Key_ć", "Key_ž", "Key_LessThan", "Key_Comma", "Key_Period", "Key_Minus", });
-            }
-            else if (layoutname.Contains("Lithuanian"))
-            {
-                ret.AddRange(new string[] { "Key_Grave", "Key_Underline", "Key_Plus", "Key_į", "Key_“", "Key_ų", "Key_ė", "Key_|", "Key_BackSlash", "Key_č", "Key_š", "Key_ę", });
-            }
-            else if (layoutname.Contains("Norwegian"))
-            {
-                ret.AddRange(new string[] { "Key_|", "Key_Plus", "Key_BackSlash", "Key_å", "Key_Umlaut", "Key_ø", "Key_æ", "Key_Apostrophe", "Key_LessThan", "Key_Comma", "Key_Period", "Key_Minus", });
-            }
-            else if (layoutname.Contains("Spanish"))
-            {
-                ret.AddRange(new string[] { "Key_Grave", "Key_Minus", "Key_Equals", "Key_LeftBracket", "Key_RightBracket", "Key_SemiColon", "Key_Apostrophe", "Key_Hash", "Key_BackSlash", "Key_Comma", "Key_Period", "Key_Slash", });
-            }
-            else
-            {
-                // default set might not work
-                ret.AddRange(new string[] { "Key_Grave", "Key_Minus", "Key_Equals", "Key_LeftBracket", "Key_RightBracket", "Key_SemiColon", "Key_Apostrophe", "Key_BackSlash", "Key_Comma", "Key_Period", "Key_Slash", });
-            }
+            // default all
+            string[] additional = new string[] { "Key_Grave", "Key_Minus", "Key_Equals", "Key_LeftBracket", "Key_RightBracket", "Key_Apostrophe", "Key_Comma", "Key_Period", "Key_Slash", };
 
+            // additional ones found needed above the ones given above
+
+            if (layoutname.EqualsIIC("Czech")) additional = new string[] { "Key_Grave", "Key_Minus", "Key_Equals", "Key_LeftBracket", "Key_RightBracket", "Key_Apostrophe", "Key_Comma", "Key_Period", "Key_Slash", };
+
+            else if (layoutname.EqualsIIC("Danish") ||layoutname.EqualsIIC("German") ||layoutname.EqualsIIC("Finnish") ||layoutname.EqualsIIC("Italian")
+                            ||layoutname.EqualsIIC("Slovak") ||layoutname.EqualsIIC("Swedish") ||layoutname.EqualsIIC("Norwegian") ||layoutname.EqualsIIC("Portuguese")
+                                ||layoutname.EqualsIIC("Slovenian") )
+                additional = new string[] { "Key_Comma", "Key_Period", "Key_Minus", };
+
+
+            else if ( layoutname.EqualsIIC("United Kingdom") ||layoutname.EqualsIIC("US") ||layoutname.EqualsIIC("Greek") ||layoutname.EqualsIIC("Polish (Programmers)")
+                                ||layoutname.EqualsIIC("Portuguese (Brazil ABNT)")) 
+                additional = new string[] { "Key_Minus", "Key_Equals", "Key_Comma", "Key_Period", };
+
+            else if (layoutname.EqualsIIC("French (Legacy, AZERTY)")) additional = new string[] { "Key_Equals", "Key_Comma", };
+
+            else if (layoutname.EqualsIIC("Romanian (Standard)")) additional = new string[] { "Key_Comma", "Key_Period", };
+            else if (layoutname.EqualsIIC("Spanish")) additional = new string[] { "Key_Comma", "Key_Period", };
+            else if (layoutname.EqualsIIC("Ukrainian (Enhanced)")) additional = new string[] { "Key_Minus", "Key_Equals", };
+            else if (layoutname.EqualsIIC("Turkish Q")) additional = new string[] { "Key_Minus", "Key_Comma", "Key_Period", };
+
+            foreach( var x in additional.EmptyIfNull())
+                ret.Add(x);
+
+            CachedLayouts[layoutname] = ret;
             return ret;
         }
 
         // try and translate from vkeyname to frontier.
-        static public string KeysToFrontier(string vkeyname)
+        static public string KeysToFrontier(string layoutname, string vkeyname)
         {
             if (vkeyname.Length == 1)
             {
                 if (char.IsLetter(vkeyname[0]) || char.IsDigit(vkeyname[0]))
                     return "Key_" + vkeyname[0];
             }
-            else if ( vkeyname.StartsWith("F") && int.TryParse(vkeyname.Substring(1), out int num))
+            else if (vkeyname.StartsWith("F") && int.TryParse(vkeyname.Substring(1), out int num))
             {
                 return "Key_F" + num.ToStringInvariant();
             }
             else
             {
-                var list = FrontierKeyNames(false);     // language specific, not A-Z 0-9 or F1-F24
+                var list = FrontierKeyNames(layoutname, false);     // language specific, not A-Z 0-9 or F1-F24
 
-                foreach (var x in list )       // manual search reverse lookup
+                foreach (var x in list)       // manual search reverse lookup
                 {
-                    string vn = FrontierKeyConversion.FrontierToKeys(x);
+                    string vn = FrontierKeyConversion.FrontierToKeys(layoutname, x);
                     if (vn == vkeyname)
                         return x;
                 }
@@ -178,382 +147,336 @@ namespace EliteDangerousCore
             return "!No mapping from Frontier name to vkey name for " + vkeyname;
         }
 
-        public static Dictionary<string, string> vkeytable = new Dictionary<string, string>();
 
-        // Translate strange frontier name to vkeys name used by baseutils/winforms keys
-        // tested on multiple languages.
-        // function returns ! as first character if error occurred
-        static public string FrontierToKeys(string frontiername)
+        static public string FrontierToKeys(string layoutname, string frontiername)
         {
-            string output;
-            var y = InputLanguage.CurrentInputLanguage;
-            string layoutname = InputLanguage.CurrentInputLanguage.LayoutName;
-
             if (frontiername.StartsWith("Key_"))
             {
-                output = frontiername.Substring(4);
+                string name = frontiername.Substring(4);
 
                 int num;
 
                 // these two languages appear by frontier to use standard names, instead of localised names!
                 bool usestdnames = layoutname.Contains("Spanish") || layoutname.Contains("Polish");
-             //   usestdnames = true;
+                //   usestdnames = true;
 
                 // first simple keys
-                if (output.Length == 1 && ((output[0] >= '0' && output[0] <= '9') || (output[0] >= 'A' && output[0] <= 'Z')))
+                if (name.Length == 1 && ((name[0] >= '0' && name[0] <= '9') || (name[0] >= 'A' && name[0] <= 'Z')))
                 {
-                    // no action - output same as input
+                    return name;
                 }
-                else if (output.StartsWith("Numpad_") && output.Length == 8 && char.IsDigit(output[7]))   // numpad 0-9
+                else if (name.StartsWith("Numpad_") && name.Length == 8 && char.IsDigit(name[7]))   // numpad 0-9
                 {
-                    output = "NumPad" + output[7];
+                    return "NumPad" + name[7];
                 }
-                else if (output.StartsWith("F") && int.TryParse(output.Substring(1), out num))      // F keys
+                else if (name.StartsWith("F") && int.TryParse(name.Substring(1), out num))      // F keys
                 {
-                    output = "F" + num.ToStringInvariant();
+                    return "F" + num.ToStringInvariant();
                 }
-                else if (output.Length == 1) // single chars
-                {
-                    IntPtr layout = BaseUtils.Win32.UnsafeNativeMethods.GetKeyboardLayout(0);
-                    short vkey = BaseUtils.Win32.UnsafeNativeMethods.VkKeyScanExW(output[0], layout);        // look up char->vkey
-
-                    if (layoutname == "Ukrainian (Enhanced)")
-                    {
-                        if (output == "ё")      // frontier is writing this for oem3, which is Ukranian non enhanced, which is not what it is at http://kbdlayout.info/kbdur1 or in real life, fix
-                            vkey = (short)Keys.Oem3;
-                        else if (output == "ґ") // VKeyScanW does not seem to work with this value
-                            vkey = (short)Keys.Oem102;
-                    }
-                    else if (layoutname == "Lithuanian")
-                    {
-                        // Frontier are writing out these for the Lithuanian keyboard, even though http://kbdlayout.info/kbdlt1/scancodes and the real keys do not match these
-                        // so mangle
-
-                        if (output == "į")
-                            vkey = (short)Keys.Oem4;
-                        else if (output == "“")
-                            vkey = (short)Keys.Oem6;
-                        else if (output == "ų")
-                            vkey = (short)Keys.Oem1;
-                        else if (output == "ė")
-                            vkey = (short)Keys.Oem7;
-                        else if (output == "č")
-                            vkey = (short)Keys.Oemcomma;
-                        else if (output == "š")
-                            vkey = (short)Keys.OemPeriod;
-                        else if (output == "ę")
-                            vkey = (short)Keys.Oem2;
-                    }
-                    else if (layoutname == "Slovenian")
-                    {
-                        if (output == "¸")
-                            vkey = (short)Keys.Oem3;
-                    }
-                    else if (layoutname == "Romanian (Standard)")
-                    {
-                        if (output == "ş")
-                            vkey = (short)Keys.Oem1;
-                        if (output == "ţ")
-                            vkey = (short)Keys.Oem7;
-                    }
-
-                    if (vkey != -1)
-                    {
-                        Keys k = (Keys)(vkey & 0xff);
-                        // System.Diagnostics.Debug.WriteLine($"Translated thru VkKeyScanEx '{output}' -> {(int)output[0]:x} -> vkey {vkey:x} -> {k} -> {KeyObjectExtensions.VKeyToString(k)}");
-                        output = KeyObjectExtensions.VKeyToString(k);
-                    }
-                    else
-                        output = null;
-                }
-
-                // is it a standard frontier name for a key
-                else if ((num = Array.FindIndex(frontiertovkeyname, x => x.Item2.Equals(output))) >= 0)   
+                else if ( frontiertovkeyname.TryGetValue(name, out string fname))
                 {
                     //System.Diagnostics.Debug.WriteLine($"Translated thru frontiertovkeyname {output} -> {frontiertovkeyname[num].Item1}");
-                    output = frontiertovkeyname[num].Item1;
+                    return fname;
                 }
-
-                // some languages uses standard name mode, try that.
-                else if (usestdnames && (num = Array.FindIndex(defaultnamestoscancodes, x => x.Item1.Equals(output))) >= 0)
+                else if (vkeylookup.TryGetValue(Tuple.Create(layoutname, frontiername), out string vkeyname))
                 {
-                    //System.Diagnostics.Debug.WriteLine($"Needed to use function on {layoutname} {output}");
-
-                    uint scancode = defaultnamestoscancodes[num].Item2;
-                    System.Diagnostics.Debug.WriteLine($"Translated thru defaultnames {output} -> scancode {scancode:x}");
-
-                    uint v = BaseUtils.Win32.UnsafeNativeMethods.MapVirtualKey(scancode, 3);
-
-                    if (v != 0)
-                    {
-                        //System.Diagnostics.Debug.WriteLine("        .. {0} -> VK {1:x} {2}", scancode, v, ((Keys)v).VKeyToString());
-                        output = ((Keys)v).VKeyToString();
-                    }
-                    else
-                        output = null;
+                    return vkeyname;
                 }
- 
-                // try a logical name for a character
-                else if ((num = Array.FindIndex(frontiernameforcharacters, x => x.Item1.Equals(output, StringComparison.InvariantCultureIgnoreCase))) >= 0) 
+                else if ( name.Length == 1 )        
                 {
-                    char ch = frontiernameforcharacters[num].Item2;
+                    // emergency single char, should not be needed for supported languages.
+                    // This uses the current locale not the layout name,
+                    // its not easy in win32 to get to the locale.
+
                     IntPtr layout = BaseUtils.Win32.UnsafeNativeMethods.GetKeyboardLayout(0);
-                    short vkey = BaseUtils.Win32.UnsafeNativeMethods.VkKeyScanExW(ch, layout);
-
-                    if (layoutname == "Czech")     // above seems to fail with Czech, manually fix
-                    {
-                        if (output == "BackSlash")
-                            vkey = (short)Keys.Oem102;
-                        else if (output == "Acute")
-                            vkey = (short)Keys.Oem2;
-                        else if (output == "Equals")
-                            vkey = (short)Keys.Oemplus;
-                        else if (output == "Umlaut")
-                            vkey = (short)Keys.Oem5;
-                    }
-                    else if (layoutname == "Turkish Q")
-                    {
-                        if (output == "LessThan")
-                            vkey = (short)Keys.Oem102;
-                    }
-                    else if (layoutname == "Slovak")
-                    {
-                        if (output == "Ampersand")
-                            vkey = (short)Keys.Oem102;
-                        else if (output == "Acute")
-                            vkey = (short)Keys.Oem8;
-                    }
-                    else if (layoutname == "Lithuanian")
-                    {
-                        if (output == "BackSlash")
-                            vkey = (short)Keys.Oem102;
-                    }
-                    else if (layoutname == "Slovenian")
-                    {
-                        if (output == "LessThan")
-                            vkey = (short)Keys.Oem102;
-                    }
-                    else if (layoutname == "Romanian (Standard)")
-                    {
-                        if (output == "RightBracket")       // keys produced in romanian standard match the website, the oem codes do, yet frontier produces this strange set
-                            vkey = (short)Keys.Oem3;
-                        else if (output == "Plus")
-                            vkey = (short)Keys.OemMinus;
-                        else if (output == "Apostrophe")
-                            vkey = (short)Keys.Oemplus;
-                        else if (output == "LessThan")
-                            vkey = (short)Keys.Oem102;
-                        else if (output == "Minus")
-                            vkey = (short)Keys.Oem2;
-                    }
-
-                    if (vkey != -1)
-                    {
-                        Keys k = (Keys)(vkey & 0xff);
-                        if (k == Keys.Decimal)              // italian returned this, instead of oem period. UK returns period
-                            k = Keys.OemPeriod;
-                        //System.Diagnostics.Debug.WriteLine($"Translated thru frontiernameforchars VkKeyScanEx {output} -> '{ch}' -> vkey {vkey:x} {k} -> {KeyObjectExtensions.VKeyToString(k)}");
-                        output = KeyObjectExtensions.VKeyToString(k);
-                    }
-                    else
-                        output = null;
+                    short vkey = BaseUtils.Win32.UnsafeNativeMethods.VkKeyScanExW(name[0], layout);        // look up char->vkey
+                    Keys k = (Keys)(vkey & 0xff);
+                    return vkey != -1 ? KeyObjectExtensions.VKeyToString(k) : name;
                 }
                 else
-                    output = null;
+                    return name;    // else its just the name truncated
             }
-            else
-                output = null;
-
-            if (output == null)
-            {
-                //System.Diagnostics.Trace.WriteLine($"FrontierToVKey Failed to convert {frontiername} binding key in lang {layoutname}");
-                output = "!Unknown Frontier Key " + frontiername + " in key layout " + layoutname;
-            }
-            else
-            {
-                vkeytable[frontiername] = output;
-            }
-
-            return output;
+            return null;
         }
 
-        // in frontier devices help.txt file inside controlschemes
+        // special language handling of OEM keys, language/frontier name to vkey name
+        // to add a new language you need to go into Elite with the locale selected in windows
+        // and manually add all the OEM keys and look at the binding file to see the resultant key
+        // also use Keylogger to work out the OEM key assigned to that physical key since OEM keys move around physically
+        // https://kbdlayout.info/kbdlt1/scancodes
+        // this has scancode/layout->vkeys
+        // you need to check what frontier calls it
 
-        static private Tuple<string, string>[] frontiertovkeyname = new Tuple<string, string>[]     
+        static Dictionary<Tuple<string, string>, string> vkeylookup = new Dictionary<Tuple<string, string>, string>
         {
-            new Tuple<string,string>(Keys.Escape.VKeyToString()      ,"Escape"),
-            // 1-0 handled, minus, equals, 
-            new Tuple<string,string>(Keys.Back.VKeyToString(),"Backspace"),
-            new Tuple<string,string>(Keys.Tab.VKeyToString(), "Tab"),
-            // q-p handled, leftbracket, rightbracket handled
-            new Tuple<string,string>(Keys.Return.VKeyToString()      ,"Enter"),
-            new Tuple<string,string>(Keys.LControlKey.VKeyToString(),"LeftControl"),
-            // a-l, semicolon, apost, grave handled
-            new Tuple<string,string>(Keys.LShiftKey.VKeyToString(),"LeftShift"),
-            // backslash handled
-            // z-m, comma, period, slash handled
-            new Tuple<string,string>(Keys.RShiftKey.VKeyToString(),"RightShift"),
-            new Tuple<string,string>(Keys.Multiply.VKeyToString()    ,"Numpad_Multiply"),
-            new Tuple<string,string>(Keys.LMenu.VKeyToString(),"LeftAlt"),
-            new Tuple<string,string>(Keys.Space.VKeyToString(), "Space"),
-            new Tuple<string,string>(Keys.Capital.VKeyToString()     ,"CapsLock"),
-            // F1-F10 handled
-            new Tuple<string,string>(Keys.NumLock.VKeyToString()     ,"NumLock"),
-            new Tuple<string,string>(Keys.Scroll.VKeyToString(),"ScrollLock"),
-            // numpad 7-9 handled
-            new Tuple<string,string>(Keys.Subtract.VKeyToString()    ,"Numpad_Subtract"),
-            // numpad 4-6
-            new Tuple<string,string>(Keys.Add.VKeyToString()         ,"Numpad_Add"),
-            // numpad 1-0
-            new Tuple<string,string>(Keys.Decimal.VKeyToString()     ,"Numpad_Decimal"),
-/// not used           new Tuple<string,string>(Keys.Oem102.VKeyToString(),"OEM_102"),
-            // F11-F15
-            new Tuple<string,string>(Keys.KanaMode.VKeyToString(),"Kana"),
-            // ? ABNT_C1
-            new Tuple<string,string>(Keys.IMEConvert.VKeyToString(),"Convert"),
-            new Tuple<string,string>(Keys.IMENonconvert.VKeyToString(),"NoConvert"),
-            // ? Yen
-            // ? ABNT_C2
-            // ? Numpad_Equals
-            new Tuple<string,string>(Keys.MediaPreviousTrack.VKeyToString()      ,"PrevTrack"),
-            // ? AT
-            // Colon, Underline handled
-            new Tuple<string,string>(Keys.KanjiMode.VKeyToString(),"Kanji"),
-            // ? Stop
-            // ? AX
-            new Tuple<string,string>(Keys.NoName.VKeyToString()      ,"Unlabeled"),
-            new Tuple<string,string>(Keys.MediaNextTrack.VKeyToString()      ,"NextTrack"),
-            new Tuple<string,string>("NumEnter", "Numpad_Enter"),
-            new Tuple<string,string>(Keys.RControlKey.VKeyToString(),"RightControl"),
-            new Tuple<string,string>(Keys.VolumeMute.VKeyToString(),"Mute"),
-            // ? Calculator
-            new Tuple<string,string>(Keys.MediaPlayPause.VKeyToString(),"PlayPause"),
-            new Tuple<string,string>(Keys.MediaStop.VKeyToString(),"MediaStop"),
-            new Tuple<string,string>(Keys.VolumeDown.VKeyToString(),"VolumeDown"),
-            new Tuple<string,string>(Keys.VolumeUp.VKeyToString(),"VolumeUp"),
-            new Tuple<string,string>(Keys.BrowserHome.VKeyToString(),"WebHome"),
-            // ? Numpad_Comma
-            new Tuple<string,string>(Keys.Divide.VKeyToString()      ,"Numpad_Divide"),
-            new Tuple<string,string>(Keys.PrintScreen.VKeyToString()      ,"SYSRQ"),
-            new Tuple<string,string>(Keys.RMenu.VKeyToString(),"RightAlt"),
-            new Tuple<string,string>(Keys.Pause.VKeyToString(),"Pause"),
-            new Tuple<string,string>(Keys.Home.VKeyToString()     ,"Home"),
-            new Tuple<string,string>(Keys.Up.VKeyToString()          ,"UpArrow"),
-            new Tuple<string,string>(Keys.PageUp.VKeyToString()     ,"PageUp"),
-            new Tuple<string,string>(Keys.Left.VKeyToString()        ,"LeftArrow"),
-            new Tuple<string,string>(Keys.Right.VKeyToString()       ,"RightArrow"),
-            new Tuple<string,string>(Keys.End.VKeyToString()     ,"End"),
-            new Tuple<string,string>(Keys.Down.VKeyToString()        ,"DownArrow"),
-            new Tuple<string,string>(Keys.PageDown.VKeyToString()     ,"PageDown"),
-            new Tuple<string,string>(Keys.Insert.VKeyToString()     ,"Insert"),
-            new Tuple<string,string>(Keys.Delete.VKeyToString()     ,"Delete"),
-            new Tuple<string,string>(Keys.LWin.VKeyToString(),"LeftWin"),
-            new Tuple<string,string>(Keys.RWin.VKeyToString(),"RightWin"),
-            new Tuple<string,string>(Keys.Apps.VKeyToString(),"Apps"),
-            // ?Power
-            new Tuple<string,string>(Keys.Sleep.VKeyToString(),"Sleep"),
-            // ?Wake
-            new Tuple<string,string>(Keys.BrowserSearch.VKeyToString(),"WebSearch"),
-            new Tuple<string,string>(Keys.BrowserFavorites.VKeyToString(),"WebFavourites"),
-            new Tuple<string,string>(Keys.BrowserRefresh.VKeyToString(),"WebRefresh"),
-            new Tuple<string,string>(Keys.BrowserStop.VKeyToString(),"WebStop"),
-            new Tuple<string,string>(Keys.BrowserForward.VKeyToString(),"WebForward"),
-            new Tuple<string,string>(Keys.BrowserBack.VKeyToString(),"WebBack"),
-            // ?MyComputer
-            new Tuple<string,string>(Keys.LaunchMail.VKeyToString(),"Mail"),
-            new Tuple<string,string>(Keys.SelectMedia.VKeyToString(),"MediaSelect"),
-            // ?green modifier
-            // ?orange modifer
-         };
+            [Tuple.Create("United Kingdom", "Key_RightBracket")] = "CloseBrackets",
+            [Tuple.Create("United Kingdom", "Key_LeftBracket")] = "OpenBrackets",
+            [Tuple.Create("United Kingdom", "Key_SemiColon")] = "Semicolon",
+            [Tuple.Create("United Kingdom", "Key_Apostrophe")] = "Tilde",
+            [Tuple.Create("United Kingdom", "Key_Grave")] = "Backquote",
+            [Tuple.Create("United Kingdom", "Key_Hash")] = "Quotes",
+            [Tuple.Create("United Kingdom", "Key_BackSlash")] = "Pipe",
+            [Tuple.Create("United Kingdom", "Key_Slash")] = "Question",
+            [Tuple.Create("Czech", "Key_SemiColon")] = "Tilde",
+            [Tuple.Create("Czech", "Key_ú")] = "OpenBrackets",
+            [Tuple.Create("Czech", "Key_ů")] = "Semicolon",
+            [Tuple.Create("Czech", "Key_§")] = "Quotes",
+            [Tuple.Create("Czech", "Key_Acute")] = "Question",
+            [Tuple.Create("Czech", "Key_RightParenthesis")] = "CloseBrackets",
+            [Tuple.Create("Czech", "Key_Umlaut")] = "Pipe",
+            [Tuple.Create("Czech", "Key_BackSlash")] = "Backslash",
+            [Tuple.Create("Danish", "Key_Half")] = "Pipe",
+            [Tuple.Create("Danish", "Key_Plus")] = "Equals",
+            [Tuple.Create("Danish", "Key_Acute")] = "OpenBrackets",
+            [Tuple.Create("Danish", "Key_å")] = "CloseBrackets",
+            [Tuple.Create("Danish", "Key_Umlaut")] = "Semicolon",
+            [Tuple.Create("Danish", "Key_æ")] = "Tilde",
+            [Tuple.Create("Danish", "Key_ø")] = "Quotes",
+            [Tuple.Create("Danish", "Key_Apostrophe")] = "Question",
+            [Tuple.Create("Danish", "Key_BackSlash")] = "Backslash",
+            [Tuple.Create("German", "Key_Circumflex")] = "Pipe",
+            [Tuple.Create("German", "Key_ß")] = "OpenBrackets",
+            [Tuple.Create("German", "Key_Acute")] = "CloseBrackets",
+            [Tuple.Create("German", "Key_ü")] = "Semicolon",
+            [Tuple.Create("German", "Key_Plus")] = "Equals",
+            [Tuple.Create("German", "Key_ö")] = "Tilde",
+            [Tuple.Create("German", "Key_ä")] = "Quotes",
+            [Tuple.Create("German", "Key_Hash")] = "Question",
+            [Tuple.Create("German", "Key_LessThan")] = "Backslash",
+            [Tuple.Create("Greek", "Key_Grave")] = "Tilde",
+            [Tuple.Create("Greek", "Key_LeftBracket")] = "OpenBrackets",
+            [Tuple.Create("Greek", "Key_RightBracket")] = "CloseBrackets",
+            [Tuple.Create("Greek", "Key_΄")] = "Semicolon",
+            [Tuple.Create("Greek", "Key_Apostrophe")] = "Quotes",
+            [Tuple.Create("Greek", "Key_BackSlash")] = "Pipe",
+            [Tuple.Create("Greek", "Key_LessThan")] = "Backslash",
+            [Tuple.Create("Greek", "Key_Slash")] = "Question",
+            [Tuple.Create("US", "Key_Grave")] = "Tilde",
+            [Tuple.Create("US", "Key_LeftBracket")] = "OpenBrackets",
+            [Tuple.Create("US", "Key_RightBracket")] = "CloseBrackets",
+            [Tuple.Create("US", "Key_SemiColon")] = "Semicolon",
+            [Tuple.Create("US", "Key_Apostrophe")] = "Quotes",
+            [Tuple.Create("US", "Key_BackSlash")] = "Pipe",
+            [Tuple.Create("US", "Key_Slash")] = "Question",
+            [Tuple.Create("Finnish", "Key_§")] = "Pipe",
+            [Tuple.Create("Finnish", "Key_Plus")] = "Equals",
+            [Tuple.Create("Finnish", "Key_Acute")] = "OpenBrackets",
+            [Tuple.Create("Finnish", "Key_å")] = "CloseBrackets",
+            [Tuple.Create("Finnish", "Key_Umlaut")] = "Semicolon",
+            [Tuple.Create("Finnish", "Key_ö")] = "Tilde",
+            [Tuple.Create("Finnish", "Key_ä")] = "Quotes",
+            [Tuple.Create("Finnish", "Key_Apostrophe")] = "Question",
+            [Tuple.Create("Finnish", "Key_LessThan")] = "Backslash",
 
-        // used on some layouts instead of local names.. no idea how its chosen
+            [Tuple.Create("French (Legacy, AZERTY)", "Key_SuperscriptTwo")] = "Quotes",
+            [Tuple.Create("French (Legacy, AZERTY)", "Key_RightParenthesis")] = "OpenBrackets",
+            [Tuple.Create("French (Legacy, AZERTY)", "Key_Circumflex")] = "CloseBrackets",
+            [Tuple.Create("French (Legacy, AZERTY)", "Key_Dollar")] = "Semicolon",
+            [Tuple.Create("French (Legacy, AZERTY)", "Key_ù")] = "Tilde",
+            [Tuple.Create("French (Legacy, AZERTY)", "Key_Asterisk")] = "Pipe",
+            [Tuple.Create("French (Legacy, AZERTY)", "Key_LessThan")] = "Backslash",
+            [Tuple.Create("French (Legacy, AZERTY)", "Key_SemiColon")] = "Period",
+            [Tuple.Create("French (Legacy, AZERTY)", "Key_Colon")] = "Question",
+            [Tuple.Create("French (Legacy, AZERTY)", "Key_ExclamationPoint")] = "Backquote",
 
-        static Tuple<string, uint>[] defaultnamestoscancodes = new Tuple<string, uint>[]
-        {
-            Tuple.Create("Grave",0x29u),   // uk oem8 
+            [Tuple.Create("Belgium French", "Key_SuperscriptTwo")] = "Quotes",      
+            [Tuple.Create("Belgium French", "Key_RightParenthesis")] = "OpenBrackets",
+            [Tuple.Create("Belgium French", "Key_Minus")] = "Minus",
+            [Tuple.Create("Belgium French", "Key_Circumflex")] = "CloseBrackets",
+            [Tuple.Create("Belgium French", "Key_Dollar")] = "Semicolon",
+            [Tuple.Create("Belgium French", "Key_ù")] = "Tilde",
+            [Tuple.Create("Belgium French", "Key_µ")] = "Pipe",
+            [Tuple.Create("Belgium French", "Key_LessThan")] = "Backslash",         
+            [Tuple.Create("Belgium French", "Key_Comma")] = "Comma",        
+            [Tuple.Create("Belgium French", "Key_SemiColon")] = "Period",
+            [Tuple.Create("Belgium French", "Key_Colon")] = "Question",
+            [Tuple.Create("Belgium French", "Key_Equals")] = "Plus",
 
-            Tuple.Create("Minus",0x0cu),   // uk oemminus
-            Tuple.Create("Equals",0x0du),  // uk oemplus
-
-            Tuple.Create("LeftBracket",0x1au), // uk oem4
-            Tuple.Create("RightBracket",0x1bu),    // uk oem6
-
-            Tuple.Create("SemiColon",0x27u),   // uk oem1
-            Tuple.Create("Apostrophe",0x28u),  // uk oem3
-            Tuple.Create("Hash",0x2bu),        // uk oem7
-
-            Tuple.Create("BackSlash",0x56u),   // uk oem5
-            Tuple.Create("Comma",0x33u),       // uk oemcomma
-            Tuple.Create("Period",0x34u),      // uk oemperiod
-            Tuple.Create("Slash",0x35u),       // uk oem2
+            [Tuple.Create("Italian", "Key_BackSlash")] = "Pipe",
+            [Tuple.Create("Italian", "Key_Apostrophe")] = "OpenBrackets",
+            [Tuple.Create("Italian", "Key_ì")] = "CloseBrackets",
+            [Tuple.Create("Italian", "Key_è")] = "Semicolon",
+            [Tuple.Create("Italian", "Key_Plus")] = "Equals",
+            [Tuple.Create("Italian", "Key_ò")] = "Tilde",
+            [Tuple.Create("Italian", "Key_à")] = "Quotes",
+            [Tuple.Create("Italian", "Key_ù")] = "Question",
+            [Tuple.Create("Italian", "Key_LessThan")] = "Backslash",
+            [Tuple.Create("Polish (Programmers)", "Key_Grave")] = "Tilde",
+            [Tuple.Create("Polish (Programmers)", "Key_LeftBracket")] = "OpenBrackets",
+            [Tuple.Create("Polish (Programmers)", "Key_RightBracket")] = "CloseBrackets",
+            [Tuple.Create("Polish (Programmers)", "Key_SemiColon")] = "Semicolon",
+            [Tuple.Create("Polish (Programmers)", "Key_Apostrophe")] = "Quotes",
+            [Tuple.Create("Polish (Programmers)", "Key_Hash")] = "Pipe",
+            [Tuple.Create("Polish (Programmers)", "Key_BackSlash")] = "Backslash",
+            [Tuple.Create("Polish (Programmers)", "Key_Slash")] = "Question",
+            [Tuple.Create("Portuguese (Brazil ABNT)", "Key_Apostrophe")] = "Tilde",
+            [Tuple.Create("Portuguese (Brazil ABNT)", "Key_Acute")] = "OpenBrackets",
+            [Tuple.Create("Portuguese (Brazil ABNT)", "Key_LeftBracket")] = "CloseBrackets",
+            [Tuple.Create("Portuguese (Brazil ABNT)", "Key_ç")] = "Semicolon",
+            [Tuple.Create("Portuguese (Brazil ABNT)", "Key_Tilde")] = "Quotes",
+            [Tuple.Create("Portuguese (Brazil ABNT)", "Key_RightBracket")] = "Pipe",
+            [Tuple.Create("Portuguese (Brazil ABNT)", "Key_BackSlash")] = "Backslash",
+            [Tuple.Create("Portuguese (Brazil ABNT)", "Key_SemiColon")] = "Question",
+            [Tuple.Create("Romanian (Standard)", "Key_RightBracket")] = "Tilde",
+            [Tuple.Create("Romanian (Standard)", "Key_Plus")] = "Minus",
+            [Tuple.Create("Romanian (Standard)", "Key_Apostrophe")] = "Equals",
+            [Tuple.Create("Romanian (Standard)", "Key_ă")] = "OpenBrackets",
+            [Tuple.Create("Romanian (Standard)", "Key_î")] = "CloseBrackets",
+            [Tuple.Create("Romanian (Standard)", "Key_ş")] = "Semicolon",
+            [Tuple.Create("Romanian (Standard)", "Key_ţ")] = "Quotes",
+            [Tuple.Create("Romanian (Standard)", "Key_â")] = "Pipe",
+            [Tuple.Create("Romanian (Standard)", "Key_LessThan")] = "Backslash",
+            [Tuple.Create("Romanian (Standard)", "Key_Minus")] = "Question",
+            [Tuple.Create("Slovak", "Key_SemiColon")] = "Tilde",
+            [Tuple.Create("Slovak", "Key_Equals")] = "Question",
+            [Tuple.Create("Slovak", "Key_Acute")] = "Backquote",
+            [Tuple.Create("Slovak", "Key_ú")] = "OpenBrackets",
+            [Tuple.Create("Slovak", "Key_ä")] = "CloseBrackets",
+            [Tuple.Create("Slovak", "Key_ô")] = "Semicolon",
+            [Tuple.Create("Slovak", "Key_§")] = "Quotes",
+            [Tuple.Create("Slovak", "Key_ň")] = "Pipe",
+            [Tuple.Create("Slovak", "Key_Ampersand")] = "Backslash",
+            [Tuple.Create("Swedish", "Key_§")] = "Pipe",
+            [Tuple.Create("Swedish", "Key_Plus")] = "Equals",
+            [Tuple.Create("Swedish", "Key_Acute")] = "OpenBrackets",
+            [Tuple.Create("Swedish", "Key_å")] = "CloseBrackets",
+            [Tuple.Create("Swedish", "Key_Umlaut")] = "Semicolon",
+            [Tuple.Create("Swedish", "Key_ö")] = "Tilde",
+            [Tuple.Create("Swedish", "Key_ä")] = "Quotes",
+            [Tuple.Create("Swedish", "Key_Apostrophe")] = "Question",
+            [Tuple.Create("Swedish", "Key_LessThan")] = "Backslash",
+            [Tuple.Create("Turkish Q", "Key_DoubleQuote")] = "Tilde",
+            [Tuple.Create("Turkish Q", "Key_Asterisk")] = "Backquote",
+            [Tuple.Create("Turkish Q", "Key_ğ")] = "OpenBrackets",
+            [Tuple.Create("Turkish Q", "Key_ü")] = "CloseBrackets",
+            [Tuple.Create("Turkish Q", "Key_ş")] = "Semicolon",
+            [Tuple.Create("Turkish Q", "Key_LessThan")] = "Backslash",
+            [Tuple.Create("Turkish Q", "Key_ö")] = "Question",
+            [Tuple.Create("Turkish Q", "Key_ç")] = "Pipe",
+            [Tuple.Create("Ukrainian (Enhanced)", "Key_ё")] = "Tilde",
+            [Tuple.Create("Ukrainian (Enhanced)", "Key_х")] = "OpenBrackets",
+            [Tuple.Create("Ukrainian (Enhanced)", "Key_ї")] = "CloseBrackets",
+            [Tuple.Create("Ukrainian (Enhanced)", "Key_ж")] = "Semicolon",
+            [Tuple.Create("Ukrainian (Enhanced)", "Key_є")] = "Quotes",
+            [Tuple.Create("Ukrainian (Enhanced)", "Key_BackSlash")] = "Pipe",
+            [Tuple.Create("Ukrainian (Enhanced)", "Key_ґ")] = "Backslash",
+            [Tuple.Create("Ukrainian (Enhanced)", "Key_б")] = "Comma",
+            [Tuple.Create("Ukrainian (Enhanced)", "Key_ю")] = "Period",
+            [Tuple.Create("Ukrainian (Enhanced)", "Key_Period")] = "Question",
+            [Tuple.Create("Slovenian", "Key_¸")] = "Tilde",
+            [Tuple.Create("Slovenian", "Key_Apostrophe")] = "Question",
+            [Tuple.Create("Slovenian", "Key_Plus")] = "Equals",
+            [Tuple.Create("Slovenian", "Key_š")] = "OpenBrackets",
+            [Tuple.Create("Slovenian", "Key_đ")] = "CloseBrackets",
+            [Tuple.Create("Slovenian", "Key_č")] = "Semicolon",
+            [Tuple.Create("Slovenian", "Key_ć")] = "Quotes",
+            [Tuple.Create("Slovenian", "Key_ž")] = "Pipe",
+            [Tuple.Create("Slovenian", "Key_LessThan")] = "Backslash",
+            [Tuple.Create("Lithuanian", "Key_Grave")] = "Tilde",
+            [Tuple.Create("Lithuanian", "Key_Underline")] = "Minus",
+            [Tuple.Create("Lithuanian", "Key_Plus")] = "Equals",
+            [Tuple.Create("Lithuanian", "Key_į")] = "OpenBrackets",
+            [Tuple.Create("Lithuanian", "Key_“")] = "CloseBrackets",
+            [Tuple.Create("Lithuanian", "Key_ų")] = "Semicolon",
+            [Tuple.Create("Lithuanian", "Key_ė")] = "Quotes",
+            [Tuple.Create("Lithuanian", "Key_|")] = "Pipe",
+            [Tuple.Create("Lithuanian", "Key_BackSlash")] = "Backslash",
+            [Tuple.Create("Lithuanian", "Key_č")] = "Comma",
+            [Tuple.Create("Lithuanian", "Key_š")] = "Period",
+            [Tuple.Create("Lithuanian", "Key_ę")] = "Question",
+            [Tuple.Create("Norwegian", "Key_|")] = "Pipe",
+            [Tuple.Create("Norwegian", "Key_Plus")] = "Equals",
+            [Tuple.Create("Norwegian", "Key_BackSlash")] = "OpenBrackets",
+            [Tuple.Create("Norwegian", "Key_å")] = "CloseBrackets",
+            [Tuple.Create("Norwegian", "Key_Umlaut")] = "Semicolon",
+            [Tuple.Create("Norwegian", "Key_ø")] = "Tilde",
+            [Tuple.Create("Norwegian", "Key_æ")] = "Quotes",
+            [Tuple.Create("Norwegian", "Key_Apostrophe")] = "Question",
+            [Tuple.Create("Norwegian", "Key_LessThan")] = "Backslash",
+            [Tuple.Create("Portuguese", "Key_BackSlash")] = "Pipe",
+            [Tuple.Create("Portuguese", "Key_Apostrophe")] = "OpenBrackets",
+            [Tuple.Create("Portuguese", "Key_«")] = "CloseBrackets",
+            [Tuple.Create("Portuguese", "Key_Plus")] = "Equals",
+            [Tuple.Create("Portuguese", "Key_Acute")] = "Semicolon",
+            [Tuple.Create("Portuguese", "Key_ç")] = "Tilde",
+            [Tuple.Create("Portuguese", "Key_º")] = "Quotes",
+            [Tuple.Create("Portuguese", "Key_Tilde")] = "Question",
+            [Tuple.Create("Portuguese", "Key_LessThan")] = "Backslash",
+            [Tuple.Create("Spanish", "Key_Grave")] = "Pipe",
+            [Tuple.Create("Spanish", "Key_Minus")] = "OpenBrackets",
+            [Tuple.Create("Spanish", "Key_Equals")] = "CloseBrackets",
+            [Tuple.Create("Spanish", "Key_LeftBracket")] = "Semicolon",
+            [Tuple.Create("Spanish", "Key_RightBracket")] = "Equals",
+            [Tuple.Create("Spanish", "Key_SemiColon")] = "Tilde",
+            [Tuple.Create("Spanish", "Key_Apostrophe")] = "Quotes",
+            [Tuple.Create("Spanish", "Key_Hash")] = "Question",
+            [Tuple.Create("Spanish", "Key_BackSlash")] = "Backslash",
+            [Tuple.Create("Spanish", "Key_Slash")] = "Minus",
         };
 
-        static Tuple<string, Keys>[] defaultnamestovkey = new Tuple<string, Keys>[]
+        // standard key name conversion between frontier and vkey
+
+        static private Dictionary<string, string> frontiertovkeyname = new Dictionary<string, string>
         {
-            Tuple.Create("Grave",Keys.Oem8),   // uk oem8 
+            ["Escape"] = Keys.Escape.VKeyToString(),
+            ["Backspace"] = Keys.Back.VKeyToString(),
+            ["Tab"] = Keys.Tab.VKeyToString(),
+            ["Enter"] = Keys.Return.VKeyToString(),
+            ["LeftControl"] = Keys.LControlKey.VKeyToString(),
+            ["LeftShift"] = Keys.LShiftKey.VKeyToString(),
+            ["RightShift"] = Keys.RShiftKey.VKeyToString(),
+            ["Numpad_Multiply"] = Keys.Multiply.VKeyToString(),
+            ["LeftAlt"] = Keys.LMenu.VKeyToString(),
+            ["Space"] = Keys.Space.VKeyToString(),
+            ["CapsLock"] = Keys.Capital.VKeyToString(),
+            ["NumLock"] = Keys.NumLock.VKeyToString(),
+            ["ScrollLock"] = Keys.Scroll.VKeyToString(),
+            ["Numpad_Subtract"] = Keys.Subtract.VKeyToString(),
+            ["Numpad_Add"] = Keys.Add.VKeyToString(),
+            ["Numpad_Decimal"] = Keys.Decimal.VKeyToString(),
+            ["Kana"] = Keys.KanaMode.VKeyToString(),
+            ["Convert"] = Keys.IMEConvert.VKeyToString(),
+            ["NoConvert"] = Keys.IMENonconvert.VKeyToString(),
+            ["PrevTrack"] = Keys.MediaPreviousTrack.VKeyToString(),
+            ["Kanji"] = Keys.HanjaMode.VKeyToString(),
+            ["Unlabeled"] = Keys.NoName.VKeyToString(),
+            ["NextTrack"] = Keys.MediaNextTrack.VKeyToString(),
+            ["Numpad_Enter"] = "NumEnter",
+            ["RightControl"] = Keys.RControlKey.VKeyToString(),
+            ["Mute"] = Keys.VolumeMute.VKeyToString(),
+            ["PlayPause"] = Keys.MediaPlayPause.VKeyToString(),
+            ["MediaStop"] = Keys.MediaStop.VKeyToString(),
+            ["VolumeDown"] = Keys.VolumeDown.VKeyToString(),
+            ["VolumeUp"] = Keys.VolumeUp.VKeyToString(),
+            ["WebHome"] = Keys.BrowserHome.VKeyToString(),
+            ["Numpad_Divide"] = Keys.Divide.VKeyToString(),
+            ["SYSRQ"] = Keys.PrintScreen.VKeyToString(),
+            ["RightAlt"] = Keys.RMenu.VKeyToString(),
+            ["Pause"] = Keys.Pause.VKeyToString(),
+            ["Home"] = Keys.Home.VKeyToString(),
+            ["UpArrow"] = Keys.Up.VKeyToString(),
+            ["PageUp"] = Keys.PageUp.VKeyToString(),
+            ["LeftArrow"] = Keys.Left.VKeyToString(),
+            ["RightArrow"] = Keys.Right.VKeyToString(),
+            ["End"] = Keys.End.VKeyToString(),
+            ["DownArrow"] = Keys.Down.VKeyToString(),
+            ["PageDown"] = Keys.PageDown.VKeyToString(),
+            ["Insert"] = Keys.Insert.VKeyToString(),
+            ["Delete"] = Keys.Delete.VKeyToString(),
+            ["LeftWin"] = Keys.LWin.VKeyToString(),
+            ["RightWin"] = Keys.RWin.VKeyToString(),
+            ["Apps"] = Keys.Apps.VKeyToString(),
+            ["Sleep"] = Keys.Sleep.VKeyToString(),
+            ["WebSearch"] = Keys.BrowserSearch.VKeyToString(),
+            ["WebFavourites"] = Keys.BrowserFavorites.VKeyToString(),
+            ["WebRefresh"] = Keys.BrowserRefresh.VKeyToString(),
+            ["WebStop"] = Keys.BrowserStop.VKeyToString(),
+            ["WebForward"] = Keys.BrowserForward.VKeyToString(),
+            ["WebBack"] = Keys.BrowserBack.VKeyToString(),
+            ["Mail"] = Keys.LaunchMail.VKeyToString(),
+            ["MediaSelect"] = Keys.SelectMedia.VKeyToString(),
 
-            Tuple.Create("Minus",Keys.OemMinus),   // uk oemminus
-            Tuple.Create("Equals",Keys.Oemplus),  // uk oemplus
-
-            Tuple.Create("LeftBracket",Keys.Oem4), // uk oem4
-            Tuple.Create("RightBracket",Keys.Oem6),    // uk oem6
-
-            Tuple.Create("SemiColon",Keys.Oem1),   // uk oem1
-            Tuple.Create("Apostrophe",Keys.Oem3),  // uk oem3
-            Tuple.Create("Hash",Keys.Oem7),        // uk oem7
-
-            Tuple.Create("BackSlash",Keys.Oem5),   // uk oem5
-            Tuple.Create("Comma",Keys.Oemcomma),       // uk oemcomma
-            Tuple.Create("Period",Keys.OemPeriod),      // uk oemperiod
-            Tuple.Create("Slash",Keys.Oem2),       // uk oem2
         };
-
-        // logical name frontier uses for characters.. all found by trial and error
-        static Tuple<string, char>[] frontiernameforcharacters = new Tuple<string, char>[]      
-        {
-            Tuple.Create("SuperscriptTwo",'²'),
-            Tuple.Create("RightParenthesis",')'),
-            Tuple.Create("Circumflex",'^'),
-            Tuple.Create("Dollar",'$'),
-            Tuple.Create("Asterisk",'*'),
-            Tuple.Create("Comma",','),
-            Tuple.Create("SemiColon",';'),
-            Tuple.Create("Colon",':'),
-            Tuple.Create("ExclamationPoint",'!'),
-            Tuple.Create("LessThan",'<'),
-            Tuple.Create("Minus",'-'),
-            Tuple.Create("Period",'.'),
-            Tuple.Create("Hash",'#'),
-            Tuple.Create("Acute",'´'),
-            Tuple.Create("Plus",'+'),
-            Tuple.Create("Grave",'`'),
-            Tuple.Create("Equals",'='),
-            Tuple.Create("LeftBracket",'['),
-            Tuple.Create("RightBracket",']'),
-            Tuple.Create("Apostrophe",'\''),
-            Tuple.Create("BackSlash",'\\'),
-            Tuple.Create("Slash",'/'),
-            Tuple.Create("Tilde",'~'),
-            Tuple.Create("DoubleQuote",'"'),
-            Tuple.Create("LessThan",'<'),
-            Tuple.Create("Umlaut",'¨'),
-            Tuple.Create("Half",'½'),
-            Tuple.Create("Underline",'_'),
-            Tuple.Create("Ampersand",'&'),
-        };
-
-#if false
-        static private void DumpVK()
-        {
-            for (int i = 0x20; i < 0x500; i++)        // char->vkey
-            {
-                IntPtr layout = BaseUtils.Win32.UnsafeNativeMethods.GetKeyboardLayout(0);
-                short vkey = BaseUtils.Win32.UnsafeNativeMethods.VkKeyScanExW((char)i, layout);        // look up char->vkey
-                System.Diagnostics.Debug.WriteLine($"{i:x} {(char)i} = {vkey:x}");
-            }
-        }
-#endif
 
     }
-
 }

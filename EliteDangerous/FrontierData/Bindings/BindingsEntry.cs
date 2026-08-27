@@ -293,7 +293,7 @@ namespace EliteDangerousCore
 
                             if (x.Device == DeviceKeyPair.KeyboardDeviceName)
                             {
-                                string ourkeyname = FrontierKeyConversion.FrontierToKeys(x.FrontierKeyName);
+                                string ourkeyname = FrontierKeyConversion.FrontierToKeys("TBD",x.FrontierKeyName);
                                 if (ourkeyname.StartsWith("!"))
                                     ErrorList = ErrorList.AppendPrePad(ourkeyname.Substring(1), Environment.NewLine);
                                 else

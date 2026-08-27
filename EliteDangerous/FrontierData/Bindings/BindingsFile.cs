@@ -31,6 +31,8 @@ namespace EliteDangerousCore
         public DateTime FileWriteTime { get; private set; }
         public bool IsOutOfDate() => IsLoaded && File.GetLastWriteTimeUtc(FileName) > FileWriteTime;        // is our copy behind the one on the diskette?      
         public string PresetName { get { return RootAttributes.TryGetValue("PresetName", out string s) ? s : "Unknown"; } set { RootAttributes["PresetName"] = value; } }
+        public string KeyboardCulture { get { return Elements.TryGetValue("KeyboardLayout", out BindingEntry v) ? v.Value : "en-GB"; } }
+        public string KeyboardLayout { get { return FrontierKeyConversion.GetSupportedLayout(KeyboardCulture); } }      // if NULL, we do not know the keyboard layout
 
         // element lists
         public IEnumerable<BindingEntry> Entries => Elements.Values;
