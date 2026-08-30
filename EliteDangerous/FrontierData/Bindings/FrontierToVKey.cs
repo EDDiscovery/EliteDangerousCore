@@ -21,27 +21,6 @@ namespace EliteDangerousCore
 {
     static public class FrontierKeyConversion
     {
-        // list of layouts vs cultures supported
-
-        static public Tuple<string, string>[] SupportedLayoutCultures = new Tuple<string, string>[]
-        {
-            Tuple.Create("United Kingdom","en-GB"),Tuple.Create("Czech","cs-CZ"),Tuple.Create("Danish","da-DK"),Tuple.Create("German","de-DE"),Tuple.Create("Greek","el-GR"),
-            Tuple.Create("US","en-US"),Tuple.Create("Finnish","fi-FI"),Tuple.Create("French (Legacy, AZERTY)","fr-FR"),
-            Tuple.Create("Italian","it-IT"),Tuple.Create("Polish (Programmers)","pl-PL"),Tuple.Create("Portuguese (Brazil ABNT)","pt-BR"),
-            Tuple.Create("Romanian (Standard)","ro-RO"),Tuple.Create("Slovak","sk-SK"),Tuple.Create("Swedish","sv-SE"),
-            Tuple.Create("Turkish Q","tr-TR"),Tuple.Create("Ukrainian (Enhanced)","uk-UA"),Tuple.Create("Slovenian","sl-SI"),
-            Tuple.Create("Lithuanian","lt-LT"),Tuple.Create("Norwegian","nn-NO"),Tuple.Create("Portuguese","pt-PT"),Tuple.Create("US","en-AU"),Tuple.Create("Spanish","es-ES"),
-            Tuple.Create("Belgium French","fr-BE")
-
-            // canada french legacy/new
-            // dutch
-            // estonian
-            // hungarian
-            // slovak
-
-
-
-        };
 
         // will return null if not supported
         public static string GetSupportedLayout(string cultureid)
@@ -156,10 +135,6 @@ namespace EliteDangerousCore
 
                 int num;
 
-                // these two languages appear by frontier to use standard names, instead of localised names!
-                bool usestdnames = layoutname.Contains("Spanish") || layoutname.Contains("Polish");
-                //   usestdnames = true;
-
                 // first simple keys
                 if (name.Length == 1 && ((name[0] >= '0' && name[0] <= '9') || (name[0] >= 'A' && name[0] <= 'Z')))
                 {
@@ -173,7 +148,7 @@ namespace EliteDangerousCore
                 {
                     return "F" + num.ToStringInvariant();
                 }
-                else if ( frontiertovkeyname.TryGetValue(name, out string fname))
+                else if (frontiertovkeyname.TryGetValue(name, out string fname))
                 {
                     //System.Diagnostics.Debug.WriteLine($"Translated thru frontiertovkeyname {output} -> {frontiertovkeyname[num].Item1}");
                     return fname;
@@ -182,7 +157,7 @@ namespace EliteDangerousCore
                 {
                     return vkeyname;
                 }
-                else if ( name.Length == 1 )        
+                else if (name.Length == 1)
                 {
                     // emergency single char, should not be needed for supported languages.
                     // This uses the current locale not the layout name,
@@ -191,6 +166,7 @@ namespace EliteDangerousCore
                     IntPtr layout = BaseUtils.Win32.UnsafeNativeMethods.GetKeyboardLayout(0);
                     short vkey = BaseUtils.Win32.UnsafeNativeMethods.VkKeyScanExW(name[0], layout);        // look up char->vkey
                     Keys k = (Keys)(vkey & 0xff);
+                    System.Diagnostics.Debug.WriteLine($"FrontierKeys Emergency `{name}` -> {k}");
                     return vkey != -1 ? KeyObjectExtensions.VKeyToString(k) : name;
                 }
                 else
@@ -198,34 +174,63 @@ namespace EliteDangerousCore
             }
             return null;
         }
+        
+        // list of layouts vs frontier culture name in the bindings file
+
+        static public Tuple<string, string>[] SupportedLayoutCultures = new Tuple<string, string>[]
+        {
+            Tuple.Create("United Kingdom","en-GB"),Tuple.Create("Czech","cs-CZ"),Tuple.Create("Danish","da-DK"),
+            Tuple.Create("German","de-DE"),Tuple.Create("Greek","el-GR"),
+            Tuple.Create("US","en-US"),Tuple.Create("Finnish","fi-FI"),Tuple.Create("French (Legacy, AZERTY)","fr-FR"),
+            Tuple.Create("Italian","it-IT"),Tuple.Create("Polish (Programmers)","pl-PL"),Tuple.Create("Portuguese (Brazil ABNT)","pt-BR"),
+            Tuple.Create("Romanian (Standard)","ro-RO"),Tuple.Create("Slovak","sk-SK"),Tuple.Create("Swedish","sv-SE"),
+            Tuple.Create("Turkish Q","tr-TR"),Tuple.Create("Ukrainian (Enhanced)","uk-UA"),Tuple.Create("Slovenian","sl-SI"),
+            Tuple.Create("Lithuanian","lt-LT"),Tuple.Create("Norwegian","nn-NO"),
+            Tuple.Create("Portuguese","pt-PT"),Tuple.Create("US","en-AU"),Tuple.Create("Spanish","es-ES"),
+            Tuple.Create("Belgium French","fr-BE"),
+            Tuple.Create("Austria","de-AT"),
+            Tuple.Create("Canadian French","fr-CA")
+
+            // canada french legacy/new
+            // dutch
+            // estonian
+            // hungarian
+            // slovak
+            // de-AT
+        };
+
 
         // special language handling of OEM keys, language/frontier name to vkey name
-        // to add a new language you need to go into Elite with the locale selected in windows
-        // and manually add all the OEM keys and look at the binding file to see the resultant key
-        // also use Keylogger to work out the OEM key assigned to that physical key since OEM keys move around physically
-        // https://kbdlayout.info/kbdlt1/scancodes
-        // this has scancode/layout->vkeys
-        // you need to check what frontier calls it
+        // use the special bindings file in this folder which has UI* and others mapped to the OEM Keys
+        // Operation:
+        // 1. Use this custom bindings file in the frontier bindings folder
+        // 2. Select language on language toolbar
+        // 3. go into elite and edit controls - back out and the bindings file will have the updated key strokes and the updated keyboard culture - check - but with the same keys
+        //      it seems dynamic and does not change the physical binding but does change the frontier key names in the file
+        // 4. load up the bindings into the BindingsFile and run OemListKeys - it will print out the below entries
+        // usedful https://kbdlayout.info/kbdlt1/scancodes this has scancode/layout->vkeys
 
         static Dictionary<Tuple<string, string>, string> vkeylookup = new Dictionary<Tuple<string, string>, string>
         {
-            [Tuple.Create("United Kingdom", "Key_RightBracket")] = "CloseBrackets",
+            [Tuple.Create("United Kingdom", "Key_Grave")] = "Backquote",                //30/8/26
             [Tuple.Create("United Kingdom", "Key_LeftBracket")] = "OpenBrackets",
+            [Tuple.Create("United Kingdom", "Key_RightBracket")] = "CloseBrackets",
             [Tuple.Create("United Kingdom", "Key_SemiColon")] = "Semicolon",
             [Tuple.Create("United Kingdom", "Key_Apostrophe")] = "Tilde",
-            [Tuple.Create("United Kingdom", "Key_Grave")] = "Backquote",
             [Tuple.Create("United Kingdom", "Key_Hash")] = "Quotes",
             [Tuple.Create("United Kingdom", "Key_BackSlash")] = "Pipe",
             [Tuple.Create("United Kingdom", "Key_Slash")] = "Question",
-            [Tuple.Create("Czech", "Key_SemiColon")] = "Tilde",
+
+            [Tuple.Create("Czech", "Key_SemiColon")] = "Tilde",     //30/8/26
+            [Tuple.Create("Czech", "Key_Acute")] = "Question",
             [Tuple.Create("Czech", "Key_ú")] = "OpenBrackets",
+            [Tuple.Create("Czech", "Key_RightParenthesis")] = "CloseBrackets",
             [Tuple.Create("Czech", "Key_ů")] = "Semicolon",
             [Tuple.Create("Czech", "Key_§")] = "Quotes",
-            [Tuple.Create("Czech", "Key_Acute")] = "Question",
-            [Tuple.Create("Czech", "Key_RightParenthesis")] = "CloseBrackets",
             [Tuple.Create("Czech", "Key_Umlaut")] = "Pipe",
             [Tuple.Create("Czech", "Key_BackSlash")] = "Backslash",
-            [Tuple.Create("Danish", "Key_Half")] = "Pipe",
+
+            [Tuple.Create("Danish", "Key_Half")] = "Pipe",                  //30/8/26
             [Tuple.Create("Danish", "Key_Plus")] = "Equals",
             [Tuple.Create("Danish", "Key_Acute")] = "OpenBrackets",
             [Tuple.Create("Danish", "Key_å")] = "CloseBrackets",
@@ -233,8 +238,9 @@ namespace EliteDangerousCore
             [Tuple.Create("Danish", "Key_æ")] = "Tilde",
             [Tuple.Create("Danish", "Key_ø")] = "Quotes",
             [Tuple.Create("Danish", "Key_Apostrophe")] = "Question",
-            [Tuple.Create("Danish", "Key_BackSlash")] = "Backslash",
-            [Tuple.Create("German", "Key_Circumflex")] = "Pipe",
+            [Tuple.Create("Danish", "Key_LessThan")] = "Backslash",
+
+            [Tuple.Create("German", "Key_Circumflex")] = "Pipe", //30/8/26
             [Tuple.Create("German", "Key_ß")] = "OpenBrackets",
             [Tuple.Create("German", "Key_Acute")] = "CloseBrackets",
             [Tuple.Create("German", "Key_ü")] = "Semicolon",
@@ -243,7 +249,9 @@ namespace EliteDangerousCore
             [Tuple.Create("German", "Key_ä")] = "Quotes",
             [Tuple.Create("German", "Key_Hash")] = "Question",
             [Tuple.Create("German", "Key_LessThan")] = "Backslash",
-            [Tuple.Create("Greek", "Key_Grave")] = "Tilde",
+
+
+            [Tuple.Create("Greek", "Key_Grave")] = "Tilde",  //30/8/26
             [Tuple.Create("Greek", "Key_LeftBracket")] = "OpenBrackets",
             [Tuple.Create("Greek", "Key_RightBracket")] = "CloseBrackets",
             [Tuple.Create("Greek", "Key_΄")] = "Semicolon",
@@ -251,6 +259,7 @@ namespace EliteDangerousCore
             [Tuple.Create("Greek", "Key_BackSlash")] = "Pipe",
             [Tuple.Create("Greek", "Key_LessThan")] = "Backslash",
             [Tuple.Create("Greek", "Key_Slash")] = "Question",
+
             [Tuple.Create("US", "Key_Grave")] = "Tilde",
             [Tuple.Create("US", "Key_LeftBracket")] = "OpenBrackets",
             [Tuple.Create("US", "Key_RightBracket")] = "CloseBrackets",
@@ -258,6 +267,7 @@ namespace EliteDangerousCore
             [Tuple.Create("US", "Key_Apostrophe")] = "Quotes",
             [Tuple.Create("US", "Key_BackSlash")] = "Pipe",
             [Tuple.Create("US", "Key_Slash")] = "Question",
+
             [Tuple.Create("Finnish", "Key_§")] = "Pipe",
             [Tuple.Create("Finnish", "Key_Plus")] = "Equals",
             [Tuple.Create("Finnish", "Key_Acute")] = "OpenBrackets",
@@ -301,6 +311,7 @@ namespace EliteDangerousCore
             [Tuple.Create("Italian", "Key_à")] = "Quotes",
             [Tuple.Create("Italian", "Key_ù")] = "Question",
             [Tuple.Create("Italian", "Key_LessThan")] = "Backslash",
+
             [Tuple.Create("Polish (Programmers)", "Key_Grave")] = "Tilde",
             [Tuple.Create("Polish (Programmers)", "Key_LeftBracket")] = "OpenBrackets",
             [Tuple.Create("Polish (Programmers)", "Key_RightBracket")] = "CloseBrackets",
@@ -317,7 +328,8 @@ namespace EliteDangerousCore
             [Tuple.Create("Portuguese (Brazil ABNT)", "Key_RightBracket")] = "Pipe",
             [Tuple.Create("Portuguese (Brazil ABNT)", "Key_BackSlash")] = "Backslash",
             [Tuple.Create("Portuguese (Brazil ABNT)", "Key_SemiColon")] = "Question",
-            [Tuple.Create("Romanian (Standard)", "Key_RightBracket")] = "Tilde",
+
+            [Tuple.Create("Romanian (Standard)", "Key_RightBracket")] = "Tilde",        //30/8/26
             [Tuple.Create("Romanian (Standard)", "Key_Plus")] = "Minus",
             [Tuple.Create("Romanian (Standard)", "Key_Apostrophe")] = "Equals",
             [Tuple.Create("Romanian (Standard)", "Key_ă")] = "OpenBrackets",
@@ -327,6 +339,7 @@ namespace EliteDangerousCore
             [Tuple.Create("Romanian (Standard)", "Key_â")] = "Pipe",
             [Tuple.Create("Romanian (Standard)", "Key_LessThan")] = "Backslash",
             [Tuple.Create("Romanian (Standard)", "Key_Minus")] = "Question",
+            
             [Tuple.Create("Slovak", "Key_SemiColon")] = "Tilde",
             [Tuple.Create("Slovak", "Key_Equals")] = "Question",
             [Tuple.Create("Slovak", "Key_Acute")] = "Backquote",
@@ -336,6 +349,7 @@ namespace EliteDangerousCore
             [Tuple.Create("Slovak", "Key_§")] = "Quotes",
             [Tuple.Create("Slovak", "Key_ň")] = "Pipe",
             [Tuple.Create("Slovak", "Key_Ampersand")] = "Backslash",
+
             [Tuple.Create("Swedish", "Key_§")] = "Pipe",
             [Tuple.Create("Swedish", "Key_Plus")] = "Equals",
             [Tuple.Create("Swedish", "Key_Acute")] = "OpenBrackets",
@@ -345,6 +359,7 @@ namespace EliteDangerousCore
             [Tuple.Create("Swedish", "Key_ä")] = "Quotes",
             [Tuple.Create("Swedish", "Key_Apostrophe")] = "Question",
             [Tuple.Create("Swedish", "Key_LessThan")] = "Backslash",
+
             [Tuple.Create("Turkish Q", "Key_DoubleQuote")] = "Tilde",
             [Tuple.Create("Turkish Q", "Key_Asterisk")] = "Backquote",
             [Tuple.Create("Turkish Q", "Key_ğ")] = "OpenBrackets",
@@ -353,6 +368,7 @@ namespace EliteDangerousCore
             [Tuple.Create("Turkish Q", "Key_LessThan")] = "Backslash",
             [Tuple.Create("Turkish Q", "Key_ö")] = "Question",
             [Tuple.Create("Turkish Q", "Key_ç")] = "Pipe",
+
             [Tuple.Create("Ukrainian (Enhanced)", "Key_ё")] = "Tilde",
             [Tuple.Create("Ukrainian (Enhanced)", "Key_х")] = "OpenBrackets",
             [Tuple.Create("Ukrainian (Enhanced)", "Key_ї")] = "CloseBrackets",
@@ -363,6 +379,7 @@ namespace EliteDangerousCore
             [Tuple.Create("Ukrainian (Enhanced)", "Key_б")] = "Comma",
             [Tuple.Create("Ukrainian (Enhanced)", "Key_ю")] = "Period",
             [Tuple.Create("Ukrainian (Enhanced)", "Key_Period")] = "Question",
+
             [Tuple.Create("Slovenian", "Key_¸")] = "Tilde",
             [Tuple.Create("Slovenian", "Key_Apostrophe")] = "Question",
             [Tuple.Create("Slovenian", "Key_Plus")] = "Equals",
@@ -372,7 +389,8 @@ namespace EliteDangerousCore
             [Tuple.Create("Slovenian", "Key_ć")] = "Quotes",
             [Tuple.Create("Slovenian", "Key_ž")] = "Pipe",
             [Tuple.Create("Slovenian", "Key_LessThan")] = "Backslash",
-            [Tuple.Create("Lithuanian", "Key_Grave")] = "Tilde",
+
+            [Tuple.Create("Lithuanian", "Key_Grave")] = "Tilde",        // 30/8/26
             [Tuple.Create("Lithuanian", "Key_Underline")] = "Minus",
             [Tuple.Create("Lithuanian", "Key_Plus")] = "Equals",
             [Tuple.Create("Lithuanian", "Key_į")] = "OpenBrackets",
@@ -384,15 +402,18 @@ namespace EliteDangerousCore
             [Tuple.Create("Lithuanian", "Key_č")] = "Comma",
             [Tuple.Create("Lithuanian", "Key_š")] = "Period",
             [Tuple.Create("Lithuanian", "Key_ę")] = "Question",
-            [Tuple.Create("Norwegian", "Key_|")] = "Pipe",
-            [Tuple.Create("Norwegian", "Key_Plus")] = "Equals",
-            [Tuple.Create("Norwegian", "Key_BackSlash")] = "OpenBrackets",
-            [Tuple.Create("Norwegian", "Key_å")] = "CloseBrackets",
-            [Tuple.Create("Norwegian", "Key_Umlaut")] = "Semicolon",
-            [Tuple.Create("Norwegian", "Key_ø")] = "Tilde",
-            [Tuple.Create("Norwegian", "Key_æ")] = "Quotes",
-            [Tuple.Create("Norwegian", "Key_Apostrophe")] = "Question",
-            [Tuple.Create("Norwegian", "Key_LessThan")] = "Backslash",
+
+            [Tuple.Create("Norwegian", "Key_Grave")] = "Pipe",          // 30/8/26 rewritten
+            [Tuple.Create("Norwegian", "Key_Minus")] = "Equals",
+            [Tuple.Create("Norwegian", "Key_Equals")] = "OpenBrackets",
+            [Tuple.Create("Norwegian", "Key_LeftBracket")] = "CloseBrackets",
+            [Tuple.Create("Norwegian", "Key_RightBracket")] = "Semicolon",
+            [Tuple.Create("Norwegian", "Key_SemiColon")] = "Tilde",
+            [Tuple.Create("Norwegian", "Key_Apostrophe")] = "Quotes",
+            [Tuple.Create("Norwegian", "Key_BackSlash")] = "Question",
+            [Tuple.Create("Norwegian", "Key_BackSlash")] = "Backslash",
+            [Tuple.Create("Norwegian", "Key_Slash")] = "Minus",
+
             [Tuple.Create("Portuguese", "Key_BackSlash")] = "Pipe",
             [Tuple.Create("Portuguese", "Key_Apostrophe")] = "OpenBrackets",
             [Tuple.Create("Portuguese", "Key_«")] = "CloseBrackets",
@@ -412,6 +433,26 @@ namespace EliteDangerousCore
             [Tuple.Create("Spanish", "Key_Hash")] = "Question",
             [Tuple.Create("Spanish", "Key_BackSlash")] = "Backslash",
             [Tuple.Create("Spanish", "Key_Slash")] = "Minus",
+
+            [Tuple.Create("Austria", "Key_Grave")] = "Pipe",            // added, note frontier has a problem with scan code 28/2B and calls them the same
+            [Tuple.Create("Austria", "Key_Minus")] = "OpenBrackets",
+            [Tuple.Create("Austria", "Key_Equals")] = "CloseBrackets",
+            [Tuple.Create("Austria", "Key_LeftBracket")] = "Semicolon",
+            [Tuple.Create("Austria", "Key_RightBracket")] = "Equals",
+            [Tuple.Create("Austria", "Key_SemiColon")] = "Tilde",
+            [Tuple.Create("Austria", "Key_Apostrophe")] = "Quotes",
+            [Tuple.Create("Austria", "Key_BackSlash")] = "Question",
+            //[Tuple.Create("Austria", "Key_BackSlash")] = "Backslash",
+            [Tuple.Create("Austria", "Key_Slash")] = "Minus",
+
+            [Tuple.Create("Canadian French", "Key_Ring")] = "Quotes",
+            [Tuple.Create("Canadian French", "Key_Circumflex")] = "OpenBrackets",
+            [Tuple.Create("Canadian French", "Key_ç")] = "CloseBrackets",
+            [Tuple.Create("Canadian French", "Key_SemiColon")] = "Semicolon",
+            [Tuple.Create("Canadian French", "Key_è")] = "Tilde",
+            [Tuple.Create("Canadian French", "Key_à")] = "Pipe",
+            [Tuple.Create("Canadian French", "Key_ù")] = "Backslash",
+            [Tuple.Create("Canadian French", "Key_é")] = "Question",
         };
 
         // standard key name conversion between frontier and vkey

@@ -62,7 +62,13 @@
     <Compile Include="Bodies\StarScan2\StarScanNodePtr.cs" />
     <Compile Include="Bodies\StarScan2\StarScanSystemNodeEvents.cs" />
     <Compile Include="Bodies\StarScan2\SystemDisplayPlanetTree.cs" />
-    <Compile Include="FrontierData\Bindings\BindingsEditorUI.cs">
+    <Compile Include="FrontierData\Bindings\BindingsEditorUIRightClick.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FrontierData\Bindings\BindingsEditorUIToolbar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FrontierData\Bindings\BindingsEditorUICell.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="FrontierData\Bindings\BindingsEditor.cs">

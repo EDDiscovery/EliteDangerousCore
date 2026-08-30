@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace EliteDangerousCore
 {
@@ -44,15 +43,7 @@ namespace EliteDangerousCore
             public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();  // attributes of the binding 
             public Tuple<FrontierBindingClassification.Classification, FrontierBindingClassification.Mode> ClassMode { get; set; }   // null for non key entries
 
-            // return either Device:Key or (Device:Key,Device:Key) Key is either Frontier or Internal. 
-            // empty string if KeyPair is null or NoDevice
-            public string PrimaryFrontierKeyList() => PrimaryKeys?.KeyDescription(false) ?? "";
-            public string SecondaryFrontierKeyList() => SecondaryKeys?.KeyDescription(false) ??"";
-            public string PrimaryKeyList() => PrimaryKeys?.KeyDescription(true) ?? "";
-            public string SecondaryKeyList() => SecondaryKeys?.KeyDescription(true) ?? "";
-
-            public override string ToString() => $"{Name} : {Binding} : Prim `{PrimaryKeys?.KeyDescription(false)}` sec `{SecondaryKeys?.KeyDescription(false)}`";
-            public string ToString(bool intnal) => $"{Name} : {Binding} : Prim `{PrimaryKeys?.KeyDescription(intnal)}` sec `{SecondaryKeys?.KeyDescription(intnal)}`";
+            public override string ToString() => $"{Name} : {Binding} : Prim `{PrimaryKeys?.KeyDescription()}` sec `{SecondaryKeys?.KeyDescription()}`";
 
             // See if either of these are keyboard pairs for use, prefer PrimaryKeys
             public DeviceKeyPairList FindKeyboardAssignment()
@@ -169,7 +160,7 @@ namespace EliteDangerousCore
         }
 
 
-        [System.Diagnostics.DebuggerDisplay("Ext {KeyDescription(false)} Int {KeyDescription(true)}")]
+        [System.Diagnostics.DebuggerDisplay("DKPL {KeyDescription()}")]
 
         public class DeviceKeyPairList
         {
@@ -212,29 +203,12 @@ namespace EliteDangerousCore
                     x.Device = newname;
             }
 
-            // do we have keys in common, other can be null
-            public bool HasInternalKeyInCommon(DeviceKeyPairList other)
-            {
-                if (other != null)
-                {
-                    foreach (var o in other.Keys.EmptyIfNull())
-                    {
-                        foreach (DeviceKeyPair k in Keys.EmptyIfNull())
-                        {
-                            if (k.Key.Equals(o.Key))
-                                return true;
-                        }
-                    }
-                }
-
-                return false;
-            }
 
             // do the key set including modifier in the other one match with our keys
             // other may be null
             public bool Equals(DeviceKeyPairList other)
             {
-                if ( other != null && other.Keys.Count == Keys.Count && Keys[0].Assigned)
+                if (other != null && other.Keys.Count == Keys.Count && Keys[0].Assigned)
                 {
                     if (Keys[0].Equals(other.Keys[0]) && (Keys.Count == 1 || (Keys[1].Assigned && Keys[1].Equals(other.Keys[1]))))      // use Equals, which is overloaded
                         return true;
@@ -244,23 +218,39 @@ namespace EliteDangerousCore
 
             // produce a key description string in the format Device:Key or (Device:Key,Device:Key)
             // use either the internal key name or frontier name
-            public string KeyDescription(bool internalkeyname)
+            public string KeyDescription()
             {
-                if (Keys?.Count < 1 )
+                if (Keys?.Count < 1)
                     return "";
-                if ( !Keys[0].Assigned)
+                if (!Keys[0].Assigned)
                     return "---";
 
-                string part = Keys[0].Device + ":" + (internalkeyname ? Keys[0].Key : Keys[0].FrontierKeyName);
+                string part = Keys[0].Device + ":" +  Keys[0].FrontierKeyName;
                 if (Keys.Count > 1)
-                    return "(" + part + "," + Keys[1].Device + ":" + (internalkeyname ? Keys[1].Key : Keys[1].FrontierKeyName) + ")";
+                    return "(" + part + "," + Keys[1].Device + ":" + Keys[1].FrontierKeyName+ ")";
                 else
                     return part;
             }
 
+            // do we have keys in common, other can be null
+            public bool HasVKeyInCommon(DeviceKeyPairList other)        // TBD why vkeys?
+            {
+                if (other != null)
+                {
+                    foreach (var o in other.Keys.EmptyIfNull())
+                    {
+                        foreach (DeviceKeyPair k in Keys.EmptyIfNull())
+                        {
+                            if (k.VKeyName.Equals(o.VKeyName))
+                                return true;
+                        }
+                    }
+                }
 
-            // convert the frontier name for POV's and keyboard keys to our naming and store in Key
-            public string AssignKeyNames()
+                return false;
+            }
+
+            public string AssignVKeyNames(string layoutname)
             {
                 string firstname = Keys[0].FrontierKeyName;
                 string ErrorList = "";
@@ -282,22 +272,22 @@ namespace EliteDangerousCore
                                 firstname = povroot + ((firstname.Contains("Up") || secondname.Contains("Up")) ? "UpRight" : "DownRight");
                         }
 
-                        Keys[0].Key = firstname;     // only the first entry get our key name
-                        Keys[1].Key = "POV-KEY-IGNORE";      // gets a text marker so its not null
+                        Keys[0].VKeyName = firstname;     // only the first entry get our key name
+                        Keys[1].VKeyName = "POV-KEY-IGNORE";      // gets a text marker so its not null
                     }
                     else
                     {
                         foreach (var x in Keys)
                         {
-                            x.Key = x.FrontierKeyName;      // always set key name
+                            x.VKeyName = x.FrontierKeyName;      // always set key name
 
                             if (x.Device == DeviceKeyPair.KeyboardDeviceName)
                             {
-                                string ourkeyname = FrontierKeyConversion.FrontierToKeys("TBD",x.FrontierKeyName);
+                                string ourkeyname = FrontierKeyConversion.FrontierToKeys(layoutname, x.FrontierKeyName);
                                 if (ourkeyname.StartsWith("!"))
                                     ErrorList = ErrorList.AppendPrePad(ourkeyname.Substring(1), Environment.NewLine);
                                 else
-                                    x.Key = ourkeyname;
+                                    x.VKeyName = ourkeyname;
                             }
                         }
                     }
@@ -306,14 +296,17 @@ namespace EliteDangerousCore
             }
         }
 
+        // convert the frontier name for POV's and keyboard keys to our naming and store in Key
+
         // Device vs Key/Frontier Key Name
 
-        [System.Diagnostics.DebuggerDisplay("DKP {Device} : {FrontierKeyName} : {Key}")]        
+        [System.Diagnostics.DebuggerDisplay("DKP {Device}:{FrontierKeyName}")]        
         public class DeviceKeyPair
         {
-            public string Device { get; set; }                   // internal name of device
-            public string FrontierKeyName { get; set; }          // original frontier name
-            public string Key { get; set; }                      // Keyboard: in Keys naming convention - converted from Frontier on input.
+            public string Device { get; set; }                  // internal name of device
+            public string FrontierKeyName { get; set; }         // frontier name
+            public string VKeyName { get; set; }                // not part of bindings editor, but can be set up using bindindfile set vkey names
+
             public bool Assigned => FrontierKeyName.HasChars();
 
             // these are fixed names at this level, the other names have to be handled at bindingfile level

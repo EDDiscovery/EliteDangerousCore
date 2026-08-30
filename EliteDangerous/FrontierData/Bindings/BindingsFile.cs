@@ -13,13 +13,12 @@
  */
 
 using BaseUtils;
+using BaseUtils.Win32;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
+using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace EliteDangerousCore
@@ -31,8 +30,9 @@ namespace EliteDangerousCore
         public DateTime FileWriteTime { get; private set; }
         public bool IsOutOfDate() => IsLoaded && File.GetLastWriteTimeUtc(FileName) > FileWriteTime;        // is our copy behind the one on the diskette?      
         public string PresetName { get { return RootAttributes.TryGetValue("PresetName", out string s) ? s : "Unknown"; } set { RootAttributes["PresetName"] = value; } }
-        public string KeyboardCulture { get { return Elements.TryGetValue("KeyboardLayout", out BindingEntry v) ? v.Value : "en-GB"; } }
+        public string KeyboardCulture { get { return Elements.TryGetValue("KeyboardLayout", out BindingEntry v) ? v.Value : "Unknown"; } }
         public string KeyboardLayout { get { return FrontierKeyConversion.GetSupportedLayout(KeyboardCulture); } }      // if NULL, we do not know the keyboard layout
+        public bool IsEditable => KeyboardLayout != null;       // we can edit it
 
         // element lists
         public IEnumerable<BindingEntry> Entries => Elements.Values;
@@ -41,7 +41,7 @@ namespace EliteDangerousCore
         // which have values in attributes
         public IEnumerable<BindingEntry> Values => Elements.Where(x => x.Value.Attributes.Count>0).Select(x => x.Value);
 
-        // allows user to define translations between external frontier device names and ones use in here and bindings editor
+        // allows user to define translations between external frontier device names and ones use internally in here (and therefore the bindings editor)
         // add to this to handle other specialise device names.
         // There must be a ExternalNoDeviceName
         private const string ExternalNoDeviceName = "{NoDevice}";
@@ -49,11 +49,17 @@ namespace EliteDangerousCore
         public string NoDeviceName => ConvertDeviceNameList[ExternalNoDeviceName];      // this is the internal NoDeviceName
         public bool IsNoDevice(string device) => device == NoDeviceName;
 
-        public List<string> DeviceList => Devices.ToList();
-        public List<string> DeviceListNoDevice => Devices.Where(x => x != NoDeviceName).ToList();
-        public List<string> DeviceListNoKeyboardMouse => Devices.Where(x => x != DeviceKeyPair.KeyboardDeviceName && x != DeviceKeyPair.MouseDeviceName).ToList();
-        public List<string> DeviceListNoKeyboardMouseDevice => Devices.Where(x => x != DeviceKeyPair.KeyboardDeviceName && x != DeviceKeyPair.MouseDeviceName &&
+        public List<string> DeviceList => devices.ToList();
+        public List<string> DeviceListNoDevice => devices.Where(x => x != NoDeviceName).ToList();
+        public List<string> DeviceListNoKeyboardMouse => devices.Where(x => x != DeviceKeyPair.KeyboardDeviceName && x != DeviceKeyPair.MouseDeviceName).ToList();
+        public List<string> DeviceListNoKeyboardMouseDevice => devices.Where(x => x != DeviceKeyPair.KeyboardDeviceName && x != DeviceKeyPair.MouseDeviceName &&
                                                                                 x != NoDeviceName).ToList();
+
+        // creation
+        public BindingsFile()
+        {
+            devices.Add(NoDeviceName);
+        }
 
         // get bindings file name from path and odyssey
         public static string FindBindingsFile(string path, bool odyssey)
@@ -127,13 +133,12 @@ namespace EliteDangerousCore
             return null;
         }
 
+
         // load file
         // give null if required since FindPresetFileName gives null if not set. This would occur for a user which never set a key
         // returns null if happy and loaded or error string
         public string Read(string filetoload)
         {
-            Devices.Add(NoDeviceName);
-
             FileName = null;
             FileWriteTime = DateTime.MinValue;
 
@@ -201,6 +206,13 @@ namespace EliteDangerousCore
                             }
                         }
 
+                        // if not binding, have primary, must have secondary
+                        if (!entry.Binding && entry.PrimaryKeys.Count > 0 && entry.SecondaryKeys == null)       
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Primary defined not secondary {entry.ToString()}");
+                            entry.SecondaryKeys = new DeviceKeyPairList(NoDeviceName);
+                        }
+
                         // fix any fuck ups by moving secondary back to primary if primary is empty
                         if ( entry?.PrimaryKeys?.Assigned == false && entry?.SecondaryKeys?.Assigned == true )      
                         {
@@ -209,10 +221,6 @@ namespace EliteDangerousCore
                             entry.SecondaryKeys = new DeviceKeyPairList(NoDeviceName);
                             System.Diagnostics.Debug.WriteLine($" ->  {entry.ToString()}");
                         }
-
-                        // assign our names to the keys
-                        entry.PrimaryKeys?.AssignKeyNames();
-                        entry.SecondaryKeys?.AssignKeyNames();
 
                         if ( entry.PrimaryKeys != null )
                             entry.ClassMode = FrontierBindingClassification.GetKeyClass(entry.Name);
@@ -359,6 +367,21 @@ namespace EliteDangerousCore
             }
         }
 
+        // call to assign vkeys to all bindings and keys given the layout name of the file
+        public bool AssignVKeys()
+        {
+            if (KeyboardLayout != null)
+            {
+                foreach (var entry in Elements.Values)
+                {
+                    entry.PrimaryKeys?.AssignVKeyNames(KeyboardLayout);
+                    entry.SecondaryKeys?.AssignVKeyNames(KeyboardLayout);
+                }
+                return true;
+            }
+            return false;
+        }
+
 
         // used to report on entry and key set associated with a found device/keyname
         public class DeviceKeySet
@@ -374,25 +397,33 @@ namespace EliteDangerousCore
             }
         }
 
-        // return information on all keys/mods which match devicename/keyname. Keyname is the physical key, not the frontier name
+        // return information on all keys/mods which match devicename/keyname.
+        // Keyname is the vkey name, not the frontier name. Must have called AssignVKey
         // if devicename = null just keynames are considered
         // if keyname = null just devices are considered
         // partial match allows for StartsWith
         // all device key pairs even mod ones are returned..
-        public List<DeviceKeySet> FindDeviceKey(string devicename, string keyname, bool partialmatch)
+        public List<DeviceKeySet> FindDeviceVKey(string devicename, string vkeyname, bool partialmatch)
         {
             var ret = new List<DeviceKeySet>();
-            foreach (var kvp in Elements)
+            foreach (var entry in Assignments)
             {
-                foreach (var kp in kvp.Value.PrimaryKeys.Keys.EmptyIfNull())
+                if (entry.PrimaryKeys != null)
                 {
-                    if ((devicename == null || kp.Device.EqualsIIC(devicename)) && (keyname == null || (partialmatch ? kp.Key.StartsWithIIC(keyname) : kp.Key.EqualsIIC(keyname))))
-                        ret.Add(new DeviceKeySet(kvp.Value, kvp.Value.PrimaryKeys, true));
+                    foreach (var kp in entry.PrimaryKeys.Keys)
+                    {
+                        if ((devicename == null || kp.Device.EqualsIIC(devicename)) && (vkeyname == null || (partialmatch ? kp.VKeyName.StartsWithIIC(vkeyname) : kp.VKeyName.EqualsIIC(vkeyname))))
+                            ret.Add(new DeviceKeySet(entry, entry.PrimaryKeys, true));
+                    }
                 }
-                foreach (var kp in kvp.Value.SecondaryKeys.Keys.EmptyIfNull())
+
+                if (entry.SecondaryKeys != null)
                 {
-                    if ((devicename == null || kp.Device.EqualsIIC(devicename)) && (keyname == null || (partialmatch ? kp.Key.StartsWithIIC(keyname) : kp.Key.EqualsIIC(keyname))))
-                        ret.Add(new DeviceKeySet(kvp.Value, kvp.Value.SecondaryKeys, false));
+                    foreach (var kp in entry.SecondaryKeys.Keys)
+                    {
+                        if ((devicename == null || kp.Device.EqualsIIC(devicename)) && (vkeyname == null || (partialmatch ? kp.VKeyName.StartsWithIIC(vkeyname) : kp.VKeyName.EqualsIIC(vkeyname))))
+                            ret.Add(new DeviceKeySet(entry, entry.SecondaryKeys, false));
+                    }
                 }
             }
 
@@ -404,24 +435,25 @@ namespace EliteDangerousCore
             return Elements.TryGetValue(name,out var action) ? (withkeys ? (action.KeyOrBinding ? action : null) : null) : null;   
         }
 
+
         public void AddDevice(string name)
         {
-            Devices.Add(name);
+            devices.Add(name);
         }
 
         public void RemoveDevice(string name, string nodevicename )
         {
             foreach (var element in Elements)
                 element.Value.RemoveDevice(name, nodevicename);
-            Devices.Remove(name);
+            devices.Remove(name);
         }
 
         public void RenameDevice(string oldname, string newname)
         {
             foreach (var element in Elements)
                 element.Value.RenameDevice(oldname,newname);
-            Devices.Remove(oldname);
-            Devices.Add(newname);
+            devices.Remove(oldname);
+            devices.Add(newname);
         }
 
         public void Clear()
@@ -436,9 +468,9 @@ namespace EliteDangerousCore
             foreach (var device in DeviceListNoDevice)
             {
                 ret += device + Environment.NewLine;
-                var dks = FindDeviceKey(device, null, false);
+                var dks = FindDeviceVKey(device, null, false);
                 foreach (var x in dks)
-                    ret += "  " + x.Keys.KeyDescription(true) + "=" + x.Entry.Name + Environment.NewLine;
+                    ret += "  " + x.Keys.KeyDescription() + "=" + x.Entry.Name + Environment.NewLine;
             }
             return ret;
         }
@@ -474,7 +506,7 @@ namespace EliteDangerousCore
                 string devname = ConvertDeviceNameList.TryGetValue(extname, out string intname) ? intname : extname;
                 string frontierkeyname = xkey.Value;
 
-                Devices.Add(devname);
+                devices.Add(devname);
                 dvp.Add(new DeviceKeyPair(devname, frontierkeyname));      // push as first key
 
                 foreach (XElement y in mapping.Descendants())
@@ -485,7 +517,7 @@ namespace EliteDangerousCore
                         devname = ConvertDeviceNameList.TryGetValue(extname, out intname) ? intname : extname;
                         frontierkeyname = y.Attribute("Key").Value;
 
-                        Devices.Add(devname);
+                        devices.Add(devname);
                         dvp.Add(new DeviceKeyPair(devname, frontierkeyname));
                     }
                 }
@@ -504,7 +536,54 @@ namespace EliteDangerousCore
         private Dictionary<string, BindingEntry> Elements { get; set; } = new Dictionary<string, BindingEntry>();
 
         // device list
-        private HashSet<string> Devices { get; set; } = new HashSet<string>();
+        private HashSet<string> devices { get; set; } = new HashSet<string>();
+
+        // This prints out the vkeys associated with the OEM codes and using the custom binds file with those OEMs
+        // keys assigned to frontier functions listed below shows you and builds the translation entries for frontiertovkey
+
+        public void OemListKeys()
+        {
+            Dictionary<uint, string> scancodetoui = new Dictionary<uint, string>()
+            {
+                [0x29] = "UI_Up",       // `-=
+                [0x0C] = "UI_Down",
+                [0x0D] = "UI_Left",
+                
+                [0x1a] = "UI_Right",       // []
+                [0x1b] = "UI_Select",
+
+                [0x26] = "UI_Back",       // l;'#
+                [0x27] = "UI_Toggle",
+                [0x28] = "CycleNextPanel",
+                [0x2B] = "CyclePreviousPanel",
+
+                [0x56] = "CycleNextPage",       // \m,./
+                [0x32] = "CyclePreviousPage",
+                [0x33] = "CamPitchUp",
+                [0x34] = "CamPitchDown",
+                [0x35] = "CamYawLeft",
+            };
+
+            System.Diagnostics.Debug.WriteLine($"LName {InputLanguage.CurrentInputLanguage.LayoutName} Bindings Culture {KeyboardCulture} Bindings Name {KeyboardLayout}");
+            foreach( var kvp in scancodetoui)
+            {
+                Keys vkey = (Keys)UnsafeNativeMethods.MapVirtualKey(kvp.Key, 1);
+                string vkeyname = KeyObjectExtensions.VKeyToString(vkey);
+
+                BindingEntry entry = Entries.Where(x => x.Name == kvp.Value).FirstOrDefault();
+                string fname = entry.PrimaryKeys.Keys[0].FrontierKeyName;
+
+                 if (fname.Substring(4) != vkeyname )
+                {
+                    //    System.Diagnostics.Debug.WriteLine($"Scan code {kvp.Key:X2} vkey {(int)vkey:X2} {vkeyname} = {entry.Name} = {entry.PrimaryKeys.Keys[0].FrontierKeyName}");
+                    System.Diagnostics.Debug.WriteLine($"[Tuple.Create(\"{KeyboardLayout}\", \"{fname}\")] = \"{vkeyname}\",");
+                }
+
+                var vk = FrontierKeyConversion.FrontierToKeys(KeyboardLayout, fname);
+                if ( vk != vkeyname) System.Diagnostics.Debug.WriteLine($"Error with [Tuple.Create(\"{KeyboardLayout}\", \"{fname}\")] = \"{vkeyname}\" {kvp.Value} Back with {vk}");
+
+            }
+        }
 
         #endregion
     }

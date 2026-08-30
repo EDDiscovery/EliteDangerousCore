@@ -37,7 +37,9 @@ namespace EliteDangerousCore
         public static DateTime OdysseyType8 {get; } =  new DateTime(2024, 8, 7, 12, 0, 0, DateTimeKind.Utc);
         public static DateTime Ascendency {get; } =  new DateTime(2024, 10, 22, 12, 0, 0, DateTimeKind.Utc);         // power play 2.0
         public static DateTime Trailblazers {get; } =  new DateTime(2025, 2, 26, 12, 0, 0, DateTimeKind.Utc);        // colonisation
-        public static DateTime Vanguards {get; } =  new DateTime(2025, 8, 19, 12, 0, 0,DateTimeKind.Utc);            //squadron overhaul
+        public static DateTime Vanguards { get; } = new DateTime(2025, 8, 19, 12, 0, 0, DateTimeKind.Utc);            //squadron overhaul
+        public static DateTime RhinoAlpha { get; } = new DateTime(2026, 8, 28, 12, 0, 0, DateTimeKind.Utc);            // Rhino SRV alpha
+        public static DateTime Rhino { get; } = new DateTime(2026, 9, 2, 12, 0, 0, DateTimeKind.Utc);            // Rhino SRV TBC
         public static DateTime GameEndTime { get; } = new DateTime(2999, 12, 14, 23, 59, 59, DateTimeKind.Utc);      // not according to the forums, its already dead!
         public static DateTime ComplainTime { get; } = new DateTime(2016, 1, 1, 0, 0, 0, DateTimeKind.Utc);         // time to complain missing items
         public static DateTime RecipeComplainTime { get; } = Odyssey1;                                              // time to complain missing items
@@ -79,6 +81,8 @@ namespace EliteDangerousCore
                 return true;
 
             if (GameVersion.Equals("4.4.0.0") && (Build.Contains("r329880/r0") || Build.Contains("STUPID FRONTIER REUSING THIS ID FOR RELEASE r330116/r0")))        // beta for nomad June 26
+                return true;
+            if (GameVersion.Equals("4.4.1.0") && (Build.Contains("r332668/r0") ))        // beta for rhino aug 2026
                 return true;
 
             return false;

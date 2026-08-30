@@ -12,15 +12,8 @@
  * governing permissions and limitations under the License.
  */
 
-using BaseUtils;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Xml.Linq;
 
 namespace EliteDangerousCore
 {
@@ -35,7 +28,7 @@ namespace EliteDangerousCore
             // try the frontier device naming table
             string frontiername = usbvendorproductidtofrontier.ContainsKey(new Tuple<int, int>(productid, vendorid)) ? usbvendorproductidtofrontier[new Tuple<int, int>(productid, vendorid)] : null;
 
-            foreach (string dv in Devices)
+            foreach (string dv in devices)
             {
                 if (dv.Equals(name, StringComparison.InvariantCultureIgnoreCase))      // exact match
                     return dv;
