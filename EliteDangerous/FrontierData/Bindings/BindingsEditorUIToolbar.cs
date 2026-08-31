@@ -41,17 +41,13 @@ namespace EliteDangerousCore
                     list.Remove(bf.FileName);
                 }
 
-                bf = new BindingsFile();
-
-                foreach (var kvp in ConvertDeviceNameList)
-                    bf.ConvertDeviceNameList[kvp.Key] = kvp.Value;
-
+                bf = new BindingsFile(otherdevicesknown);
                 bf.Read(fullpathnewfile);
 
                 extComboBoxBindFiles.SelectedIndex = list.IndexOf(fullpathnewfile);
                 SetEnables(true, false);
                 Display();
-
+                ClearDirty();
                 updatecheck.Start();        // start the clock in case it was stopped
             }
             else
@@ -65,6 +61,19 @@ namespace EliteDangerousCore
         private void ExtComboBoxFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             ApplyFilter();
+        }
+
+        private void extButtonReload_Click(object sender, EventArgs e)
+        {
+            if (CheckAskDirty())
+            {
+                string curfile = bf.FileName;
+                bf = new BindingsFile(otherdevicesknown);
+                bf.Read(curfile);
+                Display();
+                ClearDirty();
+
+            }
         }
 
         private void ApplyFilter()
@@ -93,21 +102,18 @@ namespace EliteDangerousCore
 
         private void extButtonDuplicate_Click(object sender, EventArgs e)
         {
-            if (CheckAskDirty())
+            string newname = ExtendedControls.PromptSingleLine.ShowDialog(this, "Name:", "", "Duplicate", this.FindForm().Icon);
+            if (newname != null)
             {
-                string newname = ExtendedControls.PromptSingleLine.ShowDialog(this, "Name:", "", "Enter new binds name", this.FindForm().Icon);
-                if (newname != null)
-                {
-                    extComboBoxBindFiles.SelectedIndexChanged -= ExtComboBoxBindFiles_SelectedIndexChanged;
-                    var list = extComboBoxBindFiles.Tag as List<string>;
-                    int index = list.IndexOf(bf.FileName);
-                    bf.Rename(newname);
-                    list.Add(bf.FileName);
-                    extComboBoxBindFiles.Items.Add(Path.GetFileName(bf.FileName));      // add to list in memory and in control at end
-                    extComboBoxBindFiles.SelectedIndex = extComboBoxBindFiles.Items.Count - 1;
-                    SetDirty();
-                    extComboBoxBindFiles.SelectedIndexChanged += ExtComboBoxBindFiles_SelectedIndexChanged;
-                }
+                extComboBoxBindFiles.SelectedIndexChanged -= ExtComboBoxBindFiles_SelectedIndexChanged;
+                var list = extComboBoxBindFiles.Tag as List<string>;
+                int index = list.IndexOf(bf.FileName);
+                bf.Rename(newname);
+                list.Add(bf.FileName);
+                extComboBoxBindFiles.Items.Add(Path.GetFileName(bf.FileName));      // add to list in memory and in control at end
+                extComboBoxBindFiles.SelectedIndex = extComboBoxBindFiles.Items.Count - 1;
+                SetDirty();
+                extComboBoxBindFiles.SelectedIndexChanged += ExtComboBoxBindFiles_SelectedIndexChanged;
             }
         }
 
@@ -146,65 +152,15 @@ namespace EliteDangerousCore
 
         private void buttonNewDevice_Click(object sender, EventArgs e)
         {
-           // ExtendedControls.CheckedIconNewListBoxForm displayfilter = new CheckedIconNewListBoxForm();
-            //foreach (var x in KnownDevices)
-            //{
-            //    string tag = x;
-            //    int bracket = x.IndexOf("(");               // if list is id (explanation) then the tag is id, the 
-            //    if (bracket >= 0)
-            //        tag = x.Substring(0, bracket).Trim();
-
-            //    if (!bf.DeviceList.Contains(tag))
-            //        displayfilter.UC.AddButton(tag, x);       // tag is same as name
-            //}
-
-
-            //if (displayfilter.UC.Count > 0)
-            //{
-            //    displayfilter.UC.AddButton("new-dev", "Add user named device");
-            //    displayfilter.CloseBoundaryRegion = new Size(32, extButtonDeviceNew.Height);
-            //    displayfilter.UC.ImageSize = new Size(24, 24);
-            //    displayfilter.UC.ScreenMargin = new Size(0, 0);
-            //    displayfilter.PositionBelow(extButtonDeviceNew);
-            //    displayfilter.UC.ButtonPressed += (i, s1, s2, o, m) =>      // called on click of button
-            //    {
-            //        if (s1 == "new-dev")
-            //        {
-            //            string s = ExtendedControls.PromptSingleLine.ShowDialog(this, "Device:", "", "Enter new device name", this.FindForm().Icon);
-            //            if (s != null)
-            //                bf.AddDevice(s);
-            //        }
-            //        else
-            //            bf.AddDevice(s1);
-
-            //        Display();
-            //        displayfilter.Close();
-            //    };
-
-            //    displayfilter.Show(this);
-            //}
-            //else
+            string s = ExtendedControls.PromptSingleLine.ShowDialog(this, "Device:", "", "Enter new device name", this.FindForm().Icon);
+            if (s != null)
             {
-                string s = ExtendedControls.PromptSingleLine.ShowDialog(this, "Device:", "", "Enter new device name", this.FindForm().Icon);
-                if (s != null)
-                {
-                    bf.AddDevice(s);
-                    Display();
-                }
+                bf.AddDevice(s);
+                Display();
             }
         }
 
-        private void buttonRemoveDevice_Click(object sender, EventArgs e)
-        {
-            RemoveRenameDevice(extButtonDeviceRemove);
-        }
-
         private void buttonDeviceRename_Click(object sender, EventArgs e)
-        {
-            RemoveRenameDevice(extButtonDeviceRemove, true);
-        }
-
-        private void RemoveRenameDevice(Control c, bool rename = false)
         {
             ExtendedControls.CheckedIconNewListBoxForm displayfilter = new CheckedIconNewListBoxForm();
             var items = bf.DeviceListNoKeyboardMouseDevice;
@@ -212,24 +168,17 @@ namespace EliteDangerousCore
             if (items.Count > 0)
             {
                 foreach (var x in items)
-                    displayfilter.UC.AddButton(x, x);       // tag is same as name
+                    displayfilter.UC.AddButton(x, BetterDevice(x));       // tag is internal name, text is rename
 
-                displayfilter.CloseBoundaryRegion = new Size(32, c.Height);
+                displayfilter.CloseBoundaryRegion = new Size(32, extButtonDeviceRename.Height);
                 displayfilter.UC.ImageSize = new Size(24, 24);
                 displayfilter.UC.ScreenMargin = new Size(0, 0);
-                displayfilter.PositionBelow(c);
+                displayfilter.PositionBelow(extButtonDeviceRename);
                 displayfilter.UC.ButtonPressed += (i, s1, s2, o, m) =>      // called on click of button
                 {
-                    if (rename)
-                    {
-                        string newname = ExtendedControls.PromptSingleLine.ShowDialog(this, "Device:", "", $"Enter new device name for {s1}", this.FindForm().Icon);
-                        if (newname != null)
-                            bf.RenameDevice(s1, newname);
-                    }
-                    else
-                    {
-                        bf.RemoveDevice(s1, bf.NoDeviceName);
-                    }
+                    string newname = ExtendedControls.PromptSingleLine.ShowDialog(this, "Device:", "", $"Enter new device name for {s1}", this.FindForm().Icon);
+                    if (newname != null)
+                        bf.RenameDevice(s1, newname);
 
                     SetDirty();
                     Display();
@@ -237,19 +186,8 @@ namespace EliteDangerousCore
                 };
                 displayfilter.Show(this);
             }
-
-        }
-        private void extButtonEmpty_Click(object sender, EventArgs e)
-        {
-            if (ExtendedControls.MessageBoxTheme.Show(this, $"{bf.PresetName} clear all entries, please confirm", "Remove all bindings", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
-            {
-                bf.Clear();
-                SetDirty();
-                Display();
-            }
         }
 
         #endregion
-
     }
 }

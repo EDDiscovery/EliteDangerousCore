@@ -47,29 +47,30 @@
             this.vScrollBarCustomMC = new ExtendedControls.ExtScrollBar();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.defineByKeyJoystickToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.swapPrimaryAndSecondaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearPrimaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearSecondaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showFrontierNamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.extPanelTop = new ExtendedControls.ExtPanelGradientFill();
             this.extComboBoxFilter = new ExtendedControls.ExtComboBox();
             this.labelWarning = new System.Windows.Forms.Label();
             this.extButtonDeviceRename = new ExtendedControls.ExtButton();
-            this.extButtonDeviceRemove = new ExtendedControls.ExtButton();
+            this.extButtonReload = new ExtendedControls.ExtButton();
             this.extButtonDeviceNew = new ExtendedControls.ExtButton();
-            this.extButtonEmpty = new ExtendedControls.ExtButton();
             this.extButtonFolder = new ExtendedControls.ExtButton();
             this.extButtonSetDefault = new ExtendedControls.ExtButton();
             this.extButtonDuplicate = new ExtendedControls.ExtButton();
             this.extButtonSave = new ExtendedControls.ExtButton();
             this.extComboBoxBindFiles = new ExtendedControls.ExtComboBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.extFlowLayoutPanelTop = new ExtendedControls.ExtFlowLayoutPanel();
             this.dataViewScrollerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
-            this.extPanelTop.SuspendLayout();
+            this.extFlowLayoutPanelTop.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataViewScrollerPanel
@@ -78,10 +79,10 @@
             this.dataViewScrollerPanel.Controls.Add(this.vScrollBarCustomMC);
             this.dataViewScrollerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataViewScrollerPanel.InternalMargin = new System.Windows.Forms.Padding(0);
-            this.dataViewScrollerPanel.Location = new System.Drawing.Point(0, 36);
+            this.dataViewScrollerPanel.Location = new System.Drawing.Point(0, 34);
             this.dataViewScrollerPanel.Name = "dataViewScrollerPanel";
             this.dataViewScrollerPanel.ScrollBarWidth = 24;
-            this.dataViewScrollerPanel.Size = new System.Drawing.Size(1526, 715);
+            this.dataViewScrollerPanel.Size = new System.Drawing.Size(1526, 717);
             this.dataViewScrollerPanel.TabIndex = 1;
             this.dataViewScrollerPanel.VerticalScrollBarDockRight = true;
             // 
@@ -108,7 +109,6 @@
             this.ColSecondaryKey,
             this.ColSecondaryModDevice,
             this.ColSecondaryModKey});
-            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.PerColumnWordWrapControl = true;
@@ -117,7 +117,7 @@
             this.dataGridView.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGridView.SingleRowSelect = false;
-            this.dataGridView.Size = new System.Drawing.Size(1502, 715);
+            this.dataGridView.Size = new System.Drawing.Size(1502, 717);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView_CellBeginEdit);
             this.dataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellClick);
@@ -126,6 +126,7 @@
             this.dataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView_EditingControlShowing);
             this.dataGridView.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.dataGridView_SortCompare);
             this.dataGridView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView_KeyDown);
+            this.dataGridView.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dataGridView_KeyPress);
             // 
             // ColGroup
             // 
@@ -225,7 +226,7 @@
             this.vScrollBarCustomMC.MousePressedButtonColor = System.Drawing.Color.Red;
             this.vScrollBarCustomMC.MousePressedButtonColor2 = System.Drawing.Color.Red;
             this.vScrollBarCustomMC.Name = "vScrollBarCustomMC";
-            this.vScrollBarCustomMC.Size = new System.Drawing.Size(24, 715);
+            this.vScrollBarCustomMC.Size = new System.Drawing.Size(24, 717);
             this.vScrollBarCustomMC.SkinnyStyle = ExtendedControls.ExtScrollBar.ScrollStyle.Normal;
             this.vScrollBarCustomMC.SliderColor = System.Drawing.Color.DarkGray;
             this.vScrollBarCustomMC.SliderColor2 = System.Drawing.Color.DarkGray;
@@ -243,57 +244,72 @@
             // 
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.defineByKeyJoystickToolStripMenuItem,
+            this.selectAllToolStripMenuItem,
             this.swapPrimaryAndSecondaryToolStripMenuItem,
             this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem,
             this.clearPrimaryToolStripMenuItem,
             this.clearSecondaryToolStripMenuItem,
             this.clearAllToolStripMenuItem,
+            this.removeDeviceToolStripMenuItem,
             this.showFrontierNamesToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(244, 158);
+            this.contextMenuStrip.Size = new System.Drawing.Size(340, 202);
             this.contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_Opening);
             // 
             // defineByKeyJoystickToolStripMenuItem
             // 
             this.defineByKeyJoystickToolStripMenuItem.Name = "defineByKeyJoystickToolStripMenuItem";
-            this.defineByKeyJoystickToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.defineByKeyJoystickToolStripMenuItem.Text = "Define by Device Input";
+            this.defineByKeyJoystickToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
+            this.defineByKeyJoystickToolStripMenuItem.Text = "Define by Device Input (also Enter or Double Click)";
             this.defineByKeyJoystickToolStripMenuItem.Click += new System.EventHandler(this.defineByKeyJoystickToolStripMenuItem_Click);
+            // 
+            // selectAllToolStripMenuItem
+            // 
+            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
+            this.selectAllToolStripMenuItem.Text = "Select All";
+            this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
             // swapPrimaryAndSecondaryToolStripMenuItem
             // 
             this.swapPrimaryAndSecondaryToolStripMenuItem.Name = "swapPrimaryAndSecondaryToolStripMenuItem";
-            this.swapPrimaryAndSecondaryToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.swapPrimaryAndSecondaryToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
             this.swapPrimaryAndSecondaryToolStripMenuItem.Text = "Swap primary and secondary";
             this.swapPrimaryAndSecondaryToolStripMenuItem.Click += new System.EventHandler(this.swapPrimaryAndSecondaryToolStripMenuItem_Click);
             // 
             // moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem
             // 
             this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem.Name = "moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem";
-            this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
             this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem.Text = "Move joystick entries to primary";
             this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem.Click += new System.EventHandler(this.moveJoystickEntriesBeforeKeysAndMouseToolStripMenuItem_Click);
             // 
             // clearPrimaryToolStripMenuItem
             // 
             this.clearPrimaryToolStripMenuItem.Name = "clearPrimaryToolStripMenuItem";
-            this.clearPrimaryToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.clearPrimaryToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
             this.clearPrimaryToolStripMenuItem.Text = "Clear Primary";
             this.clearPrimaryToolStripMenuItem.Click += new System.EventHandler(this.clearPrimaryToolStripMenuItem_Click);
             // 
             // clearSecondaryToolStripMenuItem
             // 
             this.clearSecondaryToolStripMenuItem.Name = "clearSecondaryToolStripMenuItem";
-            this.clearSecondaryToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.clearSecondaryToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
             this.clearSecondaryToolStripMenuItem.Text = "Clear secondary";
             this.clearSecondaryToolStripMenuItem.Click += new System.EventHandler(this.clearSecondaryToolStripMenuItem_Click);
             // 
             // clearAllToolStripMenuItem
             // 
             this.clearAllToolStripMenuItem.Name = "clearAllToolStripMenuItem";
-            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
             this.clearAllToolStripMenuItem.Text = "Clear All";
             this.clearAllToolStripMenuItem.Click += new System.EventHandler(this.clearAllToolStripMenuItem_Click);
+            // 
+            // removeDeviceToolStripMenuItem
+            // 
+            this.removeDeviceToolStripMenuItem.Name = "removeDeviceToolStripMenuItem";
+            this.removeDeviceToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
+            this.removeDeviceToolStripMenuItem.Text = "Remove Device";
             // 
             // showFrontierNamesToolStripMenuItem
             // 
@@ -301,38 +317,8 @@
             this.showFrontierNamesToolStripMenuItem.CheckOnClick = true;
             this.showFrontierNamesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showFrontierNamesToolStripMenuItem.Name = "showFrontierNamesToolStripMenuItem";
-            this.showFrontierNamesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.showFrontierNamesToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
             this.showFrontierNamesToolStripMenuItem.Text = "Show Frontier Names";
-            // 
-            // extPanelTop
-            // 
-            this.extPanelTop.ChildrenThemed = true;
-            this.extPanelTop.Controls.Add(this.extComboBoxFilter);
-            this.extPanelTop.Controls.Add(this.labelWarning);
-            this.extPanelTop.Controls.Add(this.extButtonDeviceRename);
-            this.extPanelTop.Controls.Add(this.extButtonDeviceRemove);
-            this.extPanelTop.Controls.Add(this.extButtonDeviceNew);
-            this.extPanelTop.Controls.Add(this.extButtonEmpty);
-            this.extPanelTop.Controls.Add(this.extButtonFolder);
-            this.extPanelTop.Controls.Add(this.extButtonSetDefault);
-            this.extPanelTop.Controls.Add(this.extButtonDuplicate);
-            this.extPanelTop.Controls.Add(this.extButtonSave);
-            this.extPanelTop.Controls.Add(this.extComboBoxBindFiles);
-            this.extPanelTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.extPanelTop.FlowDirection = null;
-            this.extPanelTop.GradientDirection = 0F;
-            this.extPanelTop.Location = new System.Drawing.Point(0, 0);
-            this.extPanelTop.Name = "extPanelTop";
-            this.extPanelTop.PaintTransparentColor = System.Drawing.Color.Transparent;
-            this.extPanelTop.Size = new System.Drawing.Size(1526, 36);
-            this.extPanelTop.TabIndex = 2;
-            this.extPanelTop.ThemeColors = new System.Drawing.Color[] {
-        System.Drawing.SystemColors.Control,
-        System.Drawing.SystemColors.Control,
-        System.Drawing.SystemColors.Control,
-        System.Drawing.SystemColors.Control};
-            this.extPanelTop.ThemeColorSet = -1;
-            this.extPanelTop.ThisThemed = true;
             // 
             // extComboBoxFilter
             // 
@@ -345,7 +331,7 @@
             this.extComboBoxFilter.DisplayMember = "";
             this.extComboBoxFilter.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.extComboBoxFilter.GradientDirection = 90F;
-            this.extComboBoxFilter.Location = new System.Drawing.Point(259, 2);
+            this.extComboBoxFilter.Location = new System.Drawing.Point(242, 3);
             this.extComboBoxFilter.MouseOverScalingColor = 1.3F;
             this.extComboBoxFilter.Name = "extComboBoxFilter";
             this.extComboBoxFilter.SelectedIndex = -1;
@@ -359,7 +345,7 @@
             // labelWarning
             // 
             this.labelWarning.AutoSize = true;
-            this.labelWarning.Location = new System.Drawing.Point(711, 9);
+            this.labelWarning.Location = new System.Drawing.Point(765, 0);
             this.labelWarning.Name = "labelWarning";
             this.labelWarning.Size = new System.Drawing.Size(43, 13);
             this.labelWarning.TabIndex = 3;
@@ -370,7 +356,7 @@
             this.extButtonDeviceRename.BackColor2 = System.Drawing.Color.Red;
             this.extButtonDeviceRename.ButtonDisabledScaling = 0.5F;
             this.extButtonDeviceRename.GradientDirection = 90F;
-            this.extButtonDeviceRename.Location = new System.Drawing.Point(931, 3);
+            this.extButtonDeviceRename.Location = new System.Drawing.Point(895, 3);
             this.extButtonDeviceRename.MouseOverScaling = 1.3F;
             this.extButtonDeviceRename.MouseSelectedScaling = 1.3F;
             this.extButtonDeviceRename.Name = "extButtonDeviceRename";
@@ -381,28 +367,28 @@
             this.extButtonDeviceRename.UseVisualStyleBackColor = true;
             this.extButtonDeviceRename.Click += new System.EventHandler(this.buttonDeviceRename_Click);
             // 
-            // extButtonDeviceRemove
+            // extButtonReload
             // 
-            this.extButtonDeviceRemove.BackColor2 = System.Drawing.Color.Red;
-            this.extButtonDeviceRemove.ButtonDisabledScaling = 0.5F;
-            this.extButtonDeviceRemove.GradientDirection = 90F;
-            this.extButtonDeviceRemove.Location = new System.Drawing.Point(850, 3);
-            this.extButtonDeviceRemove.MouseOverScaling = 1.3F;
-            this.extButtonDeviceRemove.MouseSelectedScaling = 1.3F;
-            this.extButtonDeviceRemove.Name = "extButtonDeviceRemove";
-            this.extButtonDeviceRemove.Size = new System.Drawing.Size(75, 23);
-            this.extButtonDeviceRemove.TabIndex = 2;
-            this.extButtonDeviceRemove.Text = "Device -";
-            this.toolTip.SetToolTip(this.extButtonDeviceRemove, "Remove a device and all assignments");
-            this.extButtonDeviceRemove.UseVisualStyleBackColor = true;
-            this.extButtonDeviceRemove.Click += new System.EventHandler(this.buttonRemoveDevice_Click);
+            this.extButtonReload.BackColor2 = System.Drawing.Color.Red;
+            this.extButtonReload.ButtonDisabledScaling = 0.5F;
+            this.extButtonReload.GradientDirection = 90F;
+            this.extButtonReload.Location = new System.Drawing.Point(441, 3);
+            this.extButtonReload.MouseOverScaling = 1.3F;
+            this.extButtonReload.MouseSelectedScaling = 1.3F;
+            this.extButtonReload.Name = "extButtonReload";
+            this.extButtonReload.Size = new System.Drawing.Size(75, 23);
+            this.extButtonReload.TabIndex = 2;
+            this.extButtonReload.Text = "Reload";
+            this.toolTip.SetToolTip(this.extButtonReload, "Remove a device and all assignments");
+            this.extButtonReload.UseVisualStyleBackColor = true;
+            this.extButtonReload.Click += new System.EventHandler(this.extButtonReload_Click);
             // 
             // extButtonDeviceNew
             // 
             this.extButtonDeviceNew.BackColor2 = System.Drawing.Color.Red;
             this.extButtonDeviceNew.ButtonDisabledScaling = 0.5F;
             this.extButtonDeviceNew.GradientDirection = 90F;
-            this.extButtonDeviceNew.Location = new System.Drawing.Point(769, 3);
+            this.extButtonDeviceNew.Location = new System.Drawing.Point(814, 3);
             this.extButtonDeviceNew.MouseOverScaling = 1.3F;
             this.extButtonDeviceNew.MouseSelectedScaling = 1.3F;
             this.extButtonDeviceNew.Name = "extButtonDeviceNew";
@@ -413,28 +399,12 @@
             this.extButtonDeviceNew.UseVisualStyleBackColor = true;
             this.extButtonDeviceNew.Click += new System.EventHandler(this.buttonNewDevice_Click);
             // 
-            // extButtonEmpty
-            // 
-            this.extButtonEmpty.BackColor2 = System.Drawing.Color.Red;
-            this.extButtonEmpty.ButtonDisabledScaling = 0.5F;
-            this.extButtonEmpty.GradientDirection = 90F;
-            this.extButtonEmpty.Location = new System.Drawing.Point(1022, 3);
-            this.extButtonEmpty.MouseOverScaling = 1.3F;
-            this.extButtonEmpty.MouseSelectedScaling = 1.3F;
-            this.extButtonEmpty.Name = "extButtonEmpty";
-            this.extButtonEmpty.Size = new System.Drawing.Size(75, 23);
-            this.extButtonEmpty.TabIndex = 2;
-            this.extButtonEmpty.Text = "Clear";
-            this.toolTip.SetToolTip(this.extButtonEmpty, "Remove all assignments");
-            this.extButtonEmpty.UseVisualStyleBackColor = true;
-            this.extButtonEmpty.Click += new System.EventHandler(this.extButtonEmpty_Click);
-            // 
             // extButtonFolder
             // 
             this.extButtonFolder.BackColor2 = System.Drawing.Color.Red;
             this.extButtonFolder.ButtonDisabledScaling = 0.5F;
             this.extButtonFolder.GradientDirection = 90F;
-            this.extButtonFolder.Location = new System.Drawing.Point(620, 3);
+            this.extButtonFolder.Location = new System.Drawing.Point(684, 3);
             this.extButtonFolder.MouseOverScaling = 1.3F;
             this.extButtonFolder.MouseSelectedScaling = 1.3F;
             this.extButtonFolder.Name = "extButtonFolder";
@@ -450,7 +420,7 @@
             this.extButtonSetDefault.BackColor2 = System.Drawing.Color.Red;
             this.extButtonSetDefault.ButtonDisabledScaling = 0.5F;
             this.extButtonSetDefault.GradientDirection = 90F;
-            this.extButtonSetDefault.Location = new System.Drawing.Point(539, 3);
+            this.extButtonSetDefault.Location = new System.Drawing.Point(603, 3);
             this.extButtonSetDefault.MouseOverScaling = 1.3F;
             this.extButtonSetDefault.MouseSelectedScaling = 1.3F;
             this.extButtonSetDefault.Name = "extButtonSetDefault";
@@ -466,7 +436,7 @@
             this.extButtonDuplicate.BackColor2 = System.Drawing.Color.Red;
             this.extButtonDuplicate.ButtonDisabledScaling = 0.5F;
             this.extButtonDuplicate.GradientDirection = 90F;
-            this.extButtonDuplicate.Location = new System.Drawing.Point(458, 3);
+            this.extButtonDuplicate.Location = new System.Drawing.Point(522, 3);
             this.extButtonDuplicate.MouseOverScaling = 1.3F;
             this.extButtonDuplicate.MouseSelectedScaling = 1.3F;
             this.extButtonDuplicate.Name = "extButtonDuplicate";
@@ -482,7 +452,7 @@
             this.extButtonSave.BackColor2 = System.Drawing.Color.Red;
             this.extButtonSave.ButtonDisabledScaling = 0.5F;
             this.extButtonSave.GradientDirection = 90F;
-            this.extButtonSave.Location = new System.Drawing.Point(377, 3);
+            this.extButtonSave.Location = new System.Drawing.Point(360, 3);
             this.extButtonSave.MouseOverScaling = 1.3F;
             this.extButtonSave.MouseSelectedScaling = 1.3F;
             this.extButtonSave.Name = "extButtonSave";
@@ -504,7 +474,7 @@
             this.extComboBoxBindFiles.DisplayMember = "";
             this.extComboBoxBindFiles.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.extComboBoxBindFiles.GradientDirection = 90F;
-            this.extComboBoxBindFiles.Location = new System.Drawing.Point(4, 2);
+            this.extComboBoxBindFiles.Location = new System.Drawing.Point(3, 3);
             this.extComboBoxBindFiles.MouseOverScalingColor = 1.3F;
             this.extComboBoxBindFiles.Name = "extComboBoxBindFiles";
             this.extComboBoxBindFiles.SelectedIndex = -1;
@@ -519,19 +489,46 @@
             // 
             this.toolTip.ShowAlways = true;
             // 
+            // extFlowLayoutPanelTop
+            // 
+            this.extFlowLayoutPanelTop.ChildrenThemed = true;
+            this.extFlowLayoutPanelTop.Controls.Add(this.extComboBoxBindFiles);
+            this.extFlowLayoutPanelTop.Controls.Add(this.extComboBoxFilter);
+            this.extFlowLayoutPanelTop.Controls.Add(this.extButtonSave);
+            this.extFlowLayoutPanelTop.Controls.Add(this.extButtonReload);
+            this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDuplicate);
+            this.extFlowLayoutPanelTop.Controls.Add(this.extButtonSetDefault);
+            this.extFlowLayoutPanelTop.Controls.Add(this.extButtonFolder);
+            this.extFlowLayoutPanelTop.Controls.Add(this.labelWarning);
+            this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceNew);
+            this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceRename);
+            this.extFlowLayoutPanelTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.extFlowLayoutPanelTop.GradientDirection = 0F;
+            this.extFlowLayoutPanelTop.Location = new System.Drawing.Point(0, 0);
+            this.extFlowLayoutPanelTop.Name = "extFlowLayoutPanelTop";
+            this.extFlowLayoutPanelTop.PaintTransparentColor = System.Drawing.Color.Transparent;
+            this.extFlowLayoutPanelTop.Size = new System.Drawing.Size(1526, 34);
+            this.extFlowLayoutPanelTop.TabIndex = 3;
+            this.extFlowLayoutPanelTop.ThemeColors = new System.Drawing.Color[] {
+        System.Drawing.SystemColors.Control,
+        System.Drawing.SystemColors.Control,
+        System.Drawing.SystemColors.Control,
+        System.Drawing.SystemColors.Control};
+            this.extFlowLayoutPanelTop.ThemeColorSet = -1;
+            // 
             // BindingsEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.dataViewScrollerPanel);
-            this.Controls.Add(this.extPanelTop);
+            this.Controls.Add(this.extFlowLayoutPanelTop);
             this.Name = "BindingsEditor";
             this.Size = new System.Drawing.Size(1526, 751);
             this.dataViewScrollerPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.contextMenuStrip.ResumeLayout(false);
-            this.extPanelTop.ResumeLayout(false);
-            this.extPanelTop.PerformLayout();
+            this.extFlowLayoutPanelTop.ResumeLayout(false);
+            this.extFlowLayoutPanelTop.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -541,14 +538,12 @@
         private ExtendedControls.ExtPanelDataGridViewScroll dataViewScrollerPanel;
         private BaseUtils.DataGridViewColumnControl dataGridView;
         private ExtendedControls.ExtScrollBar vScrollBarCustomMC;
-        private ExtendedControls.ExtPanelGradientFill extPanelTop;
         private ExtendedControls.ExtComboBox extComboBoxBindFiles;
         private ExtendedControls.ExtButton extButtonDuplicate;
         private ExtendedControls.ExtButton extButtonSave;
-        private ExtendedControls.ExtButton extButtonEmpty;
         private ExtendedControls.ExtButton extButtonSetDefault;
         private ExtendedControls.ExtButton extButtonDeviceRename;
-        private ExtendedControls.ExtButton extButtonDeviceRemove;
+        private ExtendedControls.ExtButton extButtonReload;
         private ExtendedControls.ExtButton extButtonDeviceNew;
         private ExtendedControls.ExtButton extButtonFolder;
         private System.Windows.Forms.ToolTip toolTip;
@@ -574,5 +569,8 @@
         private System.Windows.Forms.ToolStripMenuItem defineByKeyJoystickToolStripMenuItem;
         private System.Windows.Forms.Label labelWarning;
         private ExtendedControls.ExtComboBox extComboBoxFilter;
+        private ExtendedControls.ExtFlowLayoutPanel extFlowLayoutPanelTop;
+        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeDeviceToolStripMenuItem;
     }
 }

@@ -37,28 +37,27 @@ namespace EliteDangerousCore
         // element lists
         public IEnumerable<BindingEntry> Entries => Elements.Values;
         // which are bindings or keys
-        public IEnumerable<BindingEntry> Assignments => Elements.Where(x => x.Value.KeyOrBinding).Select(x => x.Value);
+        public IEnumerable<BindingEntry> Assignments => Elements.Where(x => x.Value.IsKeyOrBinding).Select(x => x.Value);
         // which have values in attributes
         public IEnumerable<BindingEntry> Values => Elements.Where(x => x.Value.Attributes.Count>0).Select(x => x.Value);
 
-        // allows user to define translations between external frontier device names and ones use internally in here (and therefore the bindings editor)
-        // add to this to handle other specialise device names.
-        // There must be a ExternalNoDeviceName
-        private const string ExternalNoDeviceName = "{NoDevice}";
-        public Dictionary<string, string> ConvertDeviceNameList = new Dictionary<string, string>() { [ExternalNoDeviceName] = "---" };
-        public string NoDeviceName => ConvertDeviceNameList[ExternalNoDeviceName];      // this is the internal NoDeviceName
-        public bool IsNoDevice(string device) => device == NoDeviceName;
-
+       
         public List<string> DeviceList => devices.ToList();
-        public List<string> DeviceListNoDevice => devices.Where(x => x != NoDeviceName).ToList();
+        public List<string> DeviceListNoDevice => devices.Where(x => x != DeviceKeyPair.NoDeviceName).ToList();
         public List<string> DeviceListNoKeyboardMouse => devices.Where(x => x != DeviceKeyPair.KeyboardDeviceName && x != DeviceKeyPair.MouseDeviceName).ToList();
         public List<string> DeviceListNoKeyboardMouseDevice => devices.Where(x => x != DeviceKeyPair.KeyboardDeviceName && x != DeviceKeyPair.MouseDeviceName &&
-                                                                                x != NoDeviceName).ToList();
+                                                                                x != DeviceKeyPair.NoDeviceName).ToList();
 
         // creation
         public BindingsFile()
         {
-            devices.Add(NoDeviceName);
+            devices.Add(DeviceKeyPair.NoDeviceName);
+        }
+        public BindingsFile(List<string> otherdevicesknown)
+        {
+            devices.Add(DeviceKeyPair.NoDeviceName);
+            foreach( var d in otherdevicesknown)
+                devices.Add(d);
         }
 
         // get bindings file name from path and odyssey
@@ -179,7 +178,7 @@ namespace EliteDangerousCore
                             {
                                 //System.Diagnostics.Debug.WriteLine($"    {subelement.Name} `{rootelement.Name.LocalName}`");
                                 entry.PrimaryKeys = AssignToDevice(rootelement.Name.ToString(), subelement);
-                                entry.Binding = true;
+                                entry.IsBinding = true;
                             }
                             else if (subelement.Name == "Primary")
                             {
@@ -207,10 +206,10 @@ namespace EliteDangerousCore
                         }
 
                         // if not binding, have primary, must have secondary
-                        if (!entry.Binding && entry.PrimaryKeys.Count > 0 && entry.SecondaryKeys == null)       
+                        if (!entry.IsBinding && entry.PrimaryKeys.Count > 0 && entry.SecondaryKeys == null)       
                         {
                             System.Diagnostics.Debug.WriteLine($"Primary defined not secondary {entry.ToString()}");
-                            entry.SecondaryKeys = new DeviceKeyPairList(NoDeviceName);
+                            entry.SecondaryKeys = new DeviceKeyPairList();
                         }
 
                         // fix any fuck ups by moving secondary back to primary if primary is empty
@@ -218,7 +217,7 @@ namespace EliteDangerousCore
                         {
                             System.Diagnostics.Debug.WriteLine($"Primary not defined secondary is {entry.ToString()}");
                             entry.PrimaryKeys = entry.SecondaryKeys;
-                            entry.SecondaryKeys = new DeviceKeyPairList(NoDeviceName);
+                            entry.SecondaryKeys = new DeviceKeyPairList();
                             System.Diagnostics.Debug.WriteLine($" ->  {entry.ToString()}");
                         }
 
@@ -277,25 +276,23 @@ namespace EliteDangerousCore
 
                 if (entry.PrimaryKeys != null)
                 {
-                    var extdevname = ConvertDeviceNameList.FirstOrDefault(kk => kk.Value == entry.PrimaryKeys.Keys[0].Device).Key ?? entry.PrimaryKeys.Keys[0].Device;
-
-                    if (entry.Binding)
+                    if (entry.IsBinding)
                     {
                         XElement elem1 = new XElement("Binding");
-                        elem1.Add(new XAttribute("Device", extdevname));
+                        elem1.Add(new XAttribute("Device", entry.PrimaryKeys.Keys[0].Device));
                         elem1.Add(new XAttribute("Key", entry.PrimaryKeys.Keys[0].FrontierKeyName));
                         elm.Add(elem1);
                     }
                     else
                     {
                         XElement elem1 = new XElement("Primary");
-                        elem1.Add(new XAttribute("Device", extdevname));
+                        elem1.Add(new XAttribute("Device", entry.PrimaryKeys.Keys[0].Device));
                         elem1.Add(new XAttribute("Key", entry.PrimaryKeys.Keys[0].FrontierKeyName));
 
                         for (int i = 1; i < entry.PrimaryKeys.Keys.Count; i++)
                         {
                             XElement mod = new XElement("Modifier");
-                            mod.Add(new XAttribute("Device", ConvertDeviceNameList.FirstOrDefault(kk => kk.Value == entry.PrimaryKeys.Keys[i].Device).Key ?? entry.PrimaryKeys.Keys[i].Device));
+                            mod.Add(new XAttribute("Device", entry.PrimaryKeys.Keys[i].Device));
                             mod.Add(new XAttribute("Key", entry.PrimaryKeys.Keys[i].FrontierKeyName));
                             elem1.Add(mod);
                         }
@@ -304,13 +301,13 @@ namespace EliteDangerousCore
                         if (entry.SecondaryKeys != null)
                         {
                             XElement elemsecondary = new XElement("Secondary");
-                            elemsecondary.Add(new XAttribute("Device", ConvertDeviceNameList.FirstOrDefault(kk => kk.Value == entry.SecondaryKeys.Keys[0].Device).Key ?? entry.SecondaryKeys.Keys[0].Device));
+                            elemsecondary.Add(new XAttribute("Device", entry.SecondaryKeys.Keys[0].Device));
                             elemsecondary.Add(new XAttribute("Key", entry.SecondaryKeys.Keys[0].FrontierKeyName));
 
                             for (int i = 1; i < entry.SecondaryKeys.Keys.Count; i++)
                             {
                                 XElement mod = new XElement("Modifier");
-                                mod.Add(new XAttribute("Device", ConvertDeviceNameList.FirstOrDefault(kk => kk.Value == entry.SecondaryKeys.Keys[i].Device).Key ?? entry.SecondaryKeys.Keys[i].Device));
+                                mod.Add(new XAttribute("Device", entry.SecondaryKeys.Keys[i].Device));
                                 mod.Add(new XAttribute("Key", entry.SecondaryKeys.Keys[i].FrontierKeyName));
                                 elemsecondary.Add(mod);
                             }
@@ -410,19 +407,29 @@ namespace EliteDangerousCore
             {
                 if (entry.PrimaryKeys != null)
                 {
-                    foreach (var kp in entry.PrimaryKeys.Keys)
+                    foreach (var dkp in entry.PrimaryKeys.Keys)
                     {
-                        if ((devicename == null || kp.Device.EqualsIIC(devicename)) && (vkeyname == null || (partialmatch ? kp.VKeyName.StartsWithIIC(vkeyname) : kp.VKeyName.EqualsIIC(vkeyname))))
-                            ret.Add(new DeviceKeySet(entry, entry.PrimaryKeys, true));
+                        if (devicename == null || dkp.Device.EqualsIIC(devicename))
+                        { 
+                            if (vkeyname == null || (partialmatch ? dkp.VKeyName.StartsWithIIC(vkeyname) : dkp.VKeyName.EqualsIIC(vkeyname)))
+                            {
+                                ret.Add(new DeviceKeySet(entry, entry.PrimaryKeys, true));
+                            }
+                        }
                     }
                 }
 
                 if (entry.SecondaryKeys != null)
                 {
-                    foreach (var kp in entry.SecondaryKeys.Keys)
+                    foreach (var dkp in entry.SecondaryKeys.Keys)
                     {
-                        if ((devicename == null || kp.Device.EqualsIIC(devicename)) && (vkeyname == null || (partialmatch ? kp.VKeyName.StartsWithIIC(vkeyname) : kp.VKeyName.EqualsIIC(vkeyname))))
-                            ret.Add(new DeviceKeySet(entry, entry.SecondaryKeys, false));
+                        if (devicename == null || dkp.Device.EqualsIIC(devicename))
+                        {
+                            if (vkeyname == null || (partialmatch ? dkp.VKeyName.StartsWithIIC(vkeyname) : dkp.VKeyName.EqualsIIC(vkeyname)))
+                            { 
+                                ret.Add(new DeviceKeySet(entry, entry.SecondaryKeys, false));
+                            }
+                        }
                     }
                 }
             }
@@ -432,20 +439,12 @@ namespace EliteDangerousCore
 
         public BindingEntry FindAction(string name, bool withkeys = true)
         {
-            return Elements.TryGetValue(name,out var action) ? (withkeys ? (action.KeyOrBinding ? action : null) : null) : null;   
+            return Elements.TryGetValue(name,out var action) ? (withkeys ? (action.IsKeyOrBinding ? action : null) : null) : null;   
         }
-
 
         public void AddDevice(string name)
         {
             devices.Add(name);
-        }
-
-        public void RemoveDevice(string name, string nodevicename )
-        {
-            foreach (var element in Elements)
-                element.Value.RemoveDevice(name, nodevicename);
-            devices.Remove(name);
         }
 
         public void RenameDevice(string oldname, string newname)
@@ -459,7 +458,7 @@ namespace EliteDangerousCore
         public void Clear()
         {
             foreach (var element in Elements)
-                element.Value.ClearAll(NoDeviceName);
+                element.Value.ClearAll();
         }
 
         public string ListBindings()
@@ -500,25 +499,21 @@ namespace EliteDangerousCore
             {
                 string assignmentxml = mapping.Name.ToString();         // 'Primary' 'Secondary' 'Binding'
 
-                DeviceKeyPairList dvp = new DeviceKeyPairList();
-
                 string extname = xdevice.Value;
-                string devname = ConvertDeviceNameList.TryGetValue(extname, out string intname) ? intname : extname;
-                string frontierkeyname = xkey.Value;
+                devices.Add(extname);
 
-                devices.Add(devname);
-                dvp.Add(new DeviceKeyPair(devname, frontierkeyname));      // push as first key
+                string frontierkeyname = xkey.Value;
+                DeviceKeyPairList dvp = new DeviceKeyPairList(new DeviceKeyPair(extname, frontierkeyname));
 
                 foreach (XElement y in mapping.Descendants())
                 {
                     if (y.Name == "Modifier")
                     {
                         extname = y.Attribute("Device").Value;
-                        devname = ConvertDeviceNameList.TryGetValue(extname, out intname) ? intname : extname;
                         frontierkeyname = y.Attribute("Key").Value;
 
-                        devices.Add(devname);
-                        dvp.Add(new DeviceKeyPair(devname, frontierkeyname));
+                        devices.Add(extname);
+                        dvp.Add(new DeviceKeyPair(extname, frontierkeyname));
                     }
                 }
 

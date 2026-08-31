@@ -31,15 +31,15 @@ namespace EliteDangerousCore
         public bool IsDirty => extButtonSave.Enabled;
         public Action<string> ChangedBindings { get; set; }           // saved this load
         public Action<string> ChangedDefault { get; set; }            // changed the start preset file
-        public Func<BindingsFile, BindingEntry, DeviceKeyPair> DeviceInput { get; set; }   // called to pop up a way of the user pressing key/joystick
 
-        // allows user to define translations between external frontier device names and ones use in here and bindings editor
-        // add to this to handle other specialise device names.
+        // called to pop up a way of the user pressing key/joystick. Return DKP with the names as presented in the pop down list, ie. Via ConvertDeviceNameList
+        public Func<BindingsFile, BindingEntry, DeviceKeyPair> DeviceInput { get; set; }   
+
+        // allows user to define translations between external frontier device names and ones use in here
         public Dictionary<string, string> ConvertDeviceNameList = new Dictionary<string, string>();
 
-        public List<string> Devices => bf.DeviceList;   
+        public List<string> DevicesNamesConverted => bf.DeviceList.Select(x=>BetterDevice(x)).ToList();        
         
-
         public BindingsEditor()
         {
             InitializeComponent();
@@ -69,15 +69,9 @@ namespace EliteDangerousCore
                 extComboBoxBindFiles.Items.Add(x.Name);
             extComboBoxBindFiles.Tag = bindfiles.Select(x=>x.FullName).ToList();
 
-            bf = new BindingsFile();
-
-            foreach (var kvp in ConvertDeviceNameList)              // update its device name convert list
-                bf.ConvertDeviceNameList[kvp.Key] = kvp.Value;
-
             this.otherdevicesknown = otherdevicesknown;
 
-            foreach (var k in otherdevicesknown)                    // add full list of devices known
-                bf.AddDevice(k);
+            bf = new BindingsFile(otherdevicesknown);
 
             if (preferredbindfile != null) // if preferred bind file
             {
@@ -85,7 +79,6 @@ namespace EliteDangerousCore
                 if (bf.IsLoaded)
                 {
                     System.Diagnostics.Debug.WriteLine($"Read file {bf.FileName} `{bf.KeyboardCulture}` `{bf.KeyboardLayout}`");
-                    bf.OemListKeys();
                 }
             }
 
@@ -122,7 +115,7 @@ namespace EliteDangerousCore
 
                 var row = dataGridView.RowTemplate.Clone() as DataGridViewRow;
 
-                if ( entry.KeyOrBinding )
+                if ( entry.IsKeyOrBinding )
                 {
                     row.Cells.Add(new DataGridViewTextBoxCell());       // 0 group
                     row.Cells.Add(new DataGridViewTextBoxCell());       // 1 ui
@@ -132,7 +125,7 @@ namespace EliteDangerousCore
                     row.Cells.Add(new DataGridViewComboBoxCell());      // 4 primary device
                     row.Cells.Add(new DataGridViewComboBoxCell());      // 5 primary key
 
-                    if (entry.Binding)
+                    if (entry.IsBinding)
                     {
                         row.Cells.Add(new DataGridViewTextBoxCell());
                         row.Cells.Add(new DataGridViewTextBoxCell());
@@ -167,7 +160,7 @@ namespace EliteDangerousCore
 
                     dataGridView.Rows.Add(row);
 
-                    if (entry.Binding)
+                    if (entry.IsBinding)
                     {
                         for (int i = ColPrimaryModDevice.Index; i <= ColSecondaryModKey.Index; i++)
                             row.Cells[i].ReadOnly = true;
@@ -207,8 +200,8 @@ namespace EliteDangerousCore
             ColSecondaryDevice.DisplayStyleForCurrentCellOnly = ColSecondaryKey.DisplayStyleForCurrentCellOnly =
             ColSecondaryModDevice.DisplayStyleForCurrentCellOnly = ColSecondaryModKey.DisplayStyleForCurrentCellOnly = true;
 
-            extButtonDeviceNew.Visible = extButtonDeviceRemove.Visible = extButtonDeviceRename.Visible = extButtonEmpty.Visible = bf.IsEditable;
-            labelWarning.Text = bf.IsEditable ? "" : $"Unknown Keyboard Layout {bf.KeyboardCulture}. File is not editable";
+            extButtonDeviceNew.Visible = extButtonDeviceRename.Visible = bf.IsEditable;
+            labelWarning.Text = bf.IsEditable ? "" : $"Unknown Keyboard Layout {bf.KeyboardCulture} {InputLanguage.CurrentInputLanguage.LayoutName} {InputLanguage.CurrentInputLanguage.Culture.Name}. File is not editable";
 
             dataGridView.ContextMenuStrip = bf.IsEditable ? this.contextMenuStrip : null;
 
@@ -227,19 +220,19 @@ namespace EliteDangerousCore
 
         void SetUpCells(DataGridViewRow row, BindingEntry entry)
         {
-            if (entry.Binding)
+            if (entry.IsBinding)
             {
                 SetUpCells(row, bf.IsEditable, true, bf.DeviceListNoKeyboardMouse, 4, entry.PrimaryKeys.Keys[0]);
             }
             else
             {
-                bool primaryisdevice = !bf.IsNoDevice(entry.PrimaryKeys.Keys[0].Device);
-                bool secondaryisdevice = !bf.IsNoDevice(entry.SecondaryKeys.Keys[0].Device);
+                bool primaryisdevice = entry.PrimaryKeys.Keys[0].IsDevice;
+                bool secondaryisdevice = entry.SecondaryKeys.Keys[0].IsDevice;
 
                 SetUpCells(row, bf.IsEditable, false, bf.DeviceList, 4, entry.PrimaryKeys.Keys[0]);
                 SetUpCells(row, bf.IsEditable && primaryisdevice, false, bf.DeviceList, 6, primaryisdevice && entry.PrimaryKeys.Count > 1 ? entry.PrimaryKeys.Keys[1] : null);
                 SetUpCells(row, bf.IsEditable, false, bf.DeviceList, 8, primaryisdevice && entry.SecondaryKeys.Count > 0 ? entry.SecondaryKeys.Keys[0] : null);
-                SetUpCells(row, bf.IsEditable && secondaryisdevice, false, bf.DeviceList, 10, !bf.IsNoDevice(entry.SecondaryKeys.Keys[0].Device) && primaryisdevice && entry.SecondaryKeys.Count > 1 ? entry.SecondaryKeys.Keys[1] : null);
+                SetUpCells(row, bf.IsEditable && secondaryisdevice, false, bf.DeviceList, 10, secondaryisdevice && primaryisdevice && entry.SecondaryKeys.Count > 1 ? entry.SecondaryKeys.Keys[1] : null);
             }
         }
 
@@ -253,14 +246,14 @@ namespace EliteDangerousCore
 
             dc.Items.Clear();
             foreach (var device in devices) 
-                dc.Items.Add(device);           // always add the device list in
+                dc.Items.Add(BetterDevice(device));           // always add the device list in
 
             if (dkp != null)
             {
                 row.Cells[index].Tag = dkp;
-                SetValue(row.Cells[index], dkp.Device);     // set up device value
+                SetValue(row.Cells[index], BetterDevice(dkp.Device));     // set up device value
 
-                if (bf.IsNoDevice(dkp.Device))              // if no device, cell is clear
+                if (!dkp.IsDevice)              // if no device, cell is clear
                 {
                     row.Cells[index + 1].Value = null;
                     row.Cells[index + 1].ReadOnly = true;
@@ -289,7 +282,8 @@ namespace EliteDangerousCore
             c.Value = value;
         }
 
-        private void AddKeyOptions(bool binding, string devicename, DataGridViewComboBoxCell c)
+        // add options to key, based on binding, the bindings file external device name
+        private void AddKeyOptions(bool binding, string extdevicename, DataGridViewComboBoxCell c)
         {
             c.Items.Clear();
             if (binding)
@@ -303,7 +297,7 @@ namespace EliteDangerousCore
                 c.Items.Add($"Joy_UAxis");
                 c.Items.Add($"Joy_VAxis");
             }
-            else if (devicename == "Keyboard")
+            else if (extdevicename == "Keyboard")
             {
                 if (bf.IsEditable)
                 {
@@ -311,7 +305,7 @@ namespace EliteDangerousCore
                         c.Items.Add(x);
                 }
             }
-            else if (devicename == "Mouse")
+            else if (extdevicename == "Mouse")
             {
                 c.Items.Add($"Mouse_1");
                 c.Items.Add($"Mouse_2");
@@ -324,7 +318,7 @@ namespace EliteDangerousCore
                 c.Items.Add($"Neg_Mouse_ZAxis");
                 c.Items.Add($"Pos_Mouse_ZAxis");
             }
-            else if (!bf.IsNoDevice(devicename))
+            else if (extdevicename != DeviceKeyPair.NoDeviceName)
             {
                 for (int i = 1; i < 32; i++)
                     c.Items.Add($"Joy_{i}");
@@ -340,11 +334,11 @@ namespace EliteDangerousCore
             }
         }
 
-        private void SetPair(DataGridViewRow row, bool binding, int index, string device, string key)
+        private void SetPair(DataGridViewRow row, bool binding, int index, string bindingrenameddevice, string key)
         {
-            row.Cells[index].Value = device;
+            row.Cells[index].Value = bindingrenameddevice;
             row.Cells[index + 1].Value = null;
-            AddKeyOptions(binding, device, (DataGridViewComboBoxCell)row.Cells[index + 1]);
+            AddKeyOptions(binding, OriginalDeviceName(bindingrenameddevice), (DataGridViewComboBoxCell)row.Cells[index + 1]);
             row.Cells[index + 1].Value = key;
             row.Cells[index + 1].ErrorText = null;
             row.Cells[index + 1].ReadOnly = false;
@@ -358,18 +352,18 @@ namespace EliteDangerousCore
 
         private void SetDirty()
         {
-            extButtonSave.Enabled = true;
+            extButtonSave.Enabled = extButtonReload.Enabled = true;
         }
         private void ClearDirty()
         {
-            extButtonSave.Enabled = false;
+            extButtonSave.Enabled = extButtonReload.Enabled = false;
         }
 
-        private void SetEnables(bool dupit, bool saveit)
+        private void SetEnables(bool active, bool saveit)
         {
-            extButtonDuplicate.Enabled = extButtonSetDefault.Enabled = dupit;
-            extButtonDeviceNew.Enabled = extButtonDeviceRemove.Enabled = extButtonDeviceRename.Enabled = dupit;
-            extButtonSave.Enabled = saveit;
+            extButtonDuplicate.Enabled = extButtonSetDefault.Enabled = active;
+            extButtonDeviceNew.Enabled = extButtonReload.Enabled = extButtonDeviceRename.Enabled = active;
+            extButtonReload.Enabled = extButtonSave.Enabled = saveit;
         }
 
         private void IndicateErrors()
@@ -386,7 +380,7 @@ namespace EliteDangerousCore
             {
                 BindingsFile.BindingEntry entry1 = row.Tag as BindingsFile.BindingEntry;
 
-                if (entry1.KeyOrBinding)
+                if (entry1.IsKeyOrBinding)
                 {
 
                     for (int comparerowno = row.Index + 1; comparerowno < dataGridView.Rows.Count; comparerowno++)
@@ -438,7 +432,15 @@ namespace EliteDangerousCore
 
         public string BetterName(string name)
         {
-            return showFrontierNamesToolStripMenuItem.Checked ? name : name.SplitCapsWordFull().Replace("Buggy", "SRV").Replace("Turret", "SRV Turret").Replace("Humanoid", "On Foot");
+            return showFrontierNamesToolStripMenuItem.Checked ? name : name.SplitCapsWordFull().Replace("Buggy", "SRV").Replace("Turret", "SRV Turret").Replace("Humanoid", "On Foot").ReplaceIfStartsWith("Cam ", "Galaxy Map ");
+        }
+        public string BetterDevice(string name)
+        {
+            return ConvertDeviceNameList.TryGetValue(name, out var bettername) ? bettername : name;
+        }
+        public string OriginalDeviceName(string name)
+        {
+            return ConvertDeviceNameList.Where(kvp => kvp.Value == name).Select(x => x.Key).FirstOrDefault() ?? name;
         }
 
         private void Updatecheck_Tick(object sender, EventArgs e)
@@ -449,8 +451,8 @@ namespace EliteDangerousCore
                 if (ExtendedControls.MessageBoxTheme.Show(this, $"{bf.PresetName} has been changed externally, do you wish to update?", "Warning - Binding File changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
                 {
                     bf.Read(bf.FileName);       // does not change device list btw
+                    ClearDirty();
                     Display();
-                    
                     updatecheck.Start();        // start the clock in case it was stopped
                 }
                 else

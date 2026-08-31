@@ -52,21 +52,22 @@ namespace EliteDangerousCore
 
                 var row = dataGridView.Rows[editingcell.RowIndex];
 
-                bool nodevice = newcellvalue == bf.NoDeviceName;
-
                 System.Diagnostics.Debug.WriteLine($"Selected index changed {editingcell.RowIndex} {editingcell.ColumnIndex} = {newcellvalue}");
 
                 int ci = editingcell.ColumnIndex;
 
                 BindingsFile.BindingEntry entry = row.Tag as BindingsFile.BindingEntry;
-
+               
                 if (ci == ColPrimaryDevice.Index)
                 {
+                    string dev = OriginalDeviceName(newcellvalue);
+                    bool nodevice = newcellvalue == DeviceKeyPair.NoDeviceName;
+
                     row.Cells[ci + 1].Value = "";
                     row.Cells[ci + 1].ErrorText = nodevice ? null : "Invalid - enter a value";
                     row.Cells[ci + 1].ReadOnly = nodevice;
 
-                    AddKeyOptions(entry.Binding, newcellvalue, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
+                    AddKeyOptions(entry.IsBinding, dev, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
 
                     if (nodevice)                  // no device clears everything to the right for primary and sets it read only
                     {
@@ -77,13 +78,13 @@ namespace EliteDangerousCore
                             row.Cells[ci + i].ErrorText = "";
                         }
 
-                        entry.ClearAll(bf.NoDeviceName);
+                        entry.ClearAll();
                     }
                     else
                     {
                         // entry in BF is left alone, if you quit without setting the key it comes back
 
-                        if (entry.Binding == false)
+                        if (entry.IsBinding == false)
                         {
                             row.Cells[ci + 2].ReadOnly = false;    // else enable the mod device
                             row.Cells[ci + 4].ReadOnly = false;    // else enable the secondary device. Device will be already filled
@@ -94,34 +95,42 @@ namespace EliteDangerousCore
                 }
                 else if (ci == ColPrimaryKey.Index)
                 {
-                    entry.PrimaryKeys.Keys[0] = new DeviceKeyPair(row.Cells[ci - 1].Value.ToString(), newcellvalue);
+                    string dev = OriginalDeviceName(row.Cells[ci - 1].Value.ToString());
+                    entry.PrimaryKeys.Keys[0] = new DeviceKeyPair(dev,  newcellvalue);
                     row.Cells[ci].ErrorText = null;
                     SetDirty();
                 }
                 else if (ci == ColPrimaryModDevice.Index)
                 {
+                    string dev = OriginalDeviceName(newcellvalue);
+                    bool nodevice = newcellvalue == DeviceKeyPair.NoDeviceName;
+
                     if (nodevice)     // if no device, clear the mod
                         entry.PrimaryKeys.ClearMod();
 
                     row.Cells[ci + 1].Value = "";
                     row.Cells[ci + 1].ReadOnly = nodevice;
                     row.Cells[ci + 1].ErrorText = nodevice ? null : "Invalid - enter a value";
-                    AddKeyOptions(entry.Binding, newcellvalue, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
+                    AddKeyOptions(entry.IsBinding, dev, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
                     SetDirty();
                 }
                 else if (ci == ColPrimaryModKey.Index)
                 {
-                    entry.PrimaryKeys.SetMod(row.Cells[ci - 1].Value.ToString(), newcellvalue);     // either add mod or change current mod
+                    string dev = OriginalDeviceName(row.Cells[ci - 1].Value.ToString());
+                    entry.PrimaryKeys.SetMod(dev, newcellvalue);     // either add mod or change current mod
                     row.Cells[ci].ErrorText = null;
                     SetDirty();
                 }
                 else if (ci == ColSecondaryDevice.Index)
                 {
+                    string dev = OriginalDeviceName(newcellvalue);
+                    bool nodevice = newcellvalue == DeviceKeyPair.NoDeviceName;
+
                     row.Cells[ci + 1].Value = "";
                     row.Cells[ci + 1].ErrorText = nodevice ? null : "Invalid - enter a value";
                     row.Cells[ci + 1].ReadOnly = nodevice;
 
-                    AddKeyOptions(entry.Binding, newcellvalue, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
+                    AddKeyOptions(entry.IsBinding, dev, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
 
                     if (nodevice)                  // no device clears everything to the right for primary
                     {
@@ -132,7 +141,7 @@ namespace EliteDangerousCore
                             row.Cells[ci + i].ErrorText = "";
                         }
 
-                        entry.SecondaryKeys.Clear(bf.NoDeviceName);
+                        entry.SecondaryKeys.Clear();
                     }
                     else
                     {
@@ -143,24 +152,29 @@ namespace EliteDangerousCore
                 }
                 else if (ci == ColSecondaryKey.Index)
                 {
-                    entry.SecondaryKeys.Keys[0] = new DeviceKeyPair(row.Cells[ci - 1].Value.ToString(), newcellvalue);
+                    string dev = OriginalDeviceName(row.Cells[ci - 1].Value.ToString());
+                    entry.SecondaryKeys.Keys[0] = new DeviceKeyPair(dev, newcellvalue);
                     row.Cells[ci].ErrorText = null;
                     SetDirty();
                 }
                 else if (ci == ColSecondaryModDevice.Index)
                 {
+                    string dev = OriginalDeviceName(newcellvalue);
+                    bool nodevice = newcellvalue == DeviceKeyPair.NoDeviceName;
+
                     if (nodevice)     // if no device, clear the mod
                         entry.SecondaryKeys.ClearMod();
 
                     row.Cells[ci + 1].Value = "";
                     row.Cells[ci + 1].ReadOnly = nodevice;
                     row.Cells[ci + 1].ErrorText = nodevice ? null : "Invalid - enter a value";
-                    AddKeyOptions(entry.Binding, newcellvalue, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
+                    AddKeyOptions(entry.IsBinding, dev, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
                     SetDirty();
                 }
                 else if (ci == ColSecondaryModKey.Index)
                 {
-                    entry.SecondaryKeys.SetMod(row.Cells[ci - 1].Value.ToString(), newcellvalue);     // either add mod or change current mod
+                    string dev = OriginalDeviceName(row.Cells[ci - 1].Value.ToString());
+                    entry.SecondaryKeys.SetMod(dev, newcellvalue);     // either add mod or change current mod
                     row.Cells[ci].ErrorText = null;
                     SetDirty();
                 }
@@ -180,7 +194,7 @@ namespace EliteDangerousCore
             {
                 DataGridViewComboBoxCell c = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
                 string selected = c.Value as string;
-                bool nodevice = selected == bf.NoDeviceName;
+                bool nodevice = selected == DeviceKeyPair.NoDeviceName;
                 if (nodevice)
                     c.Value = "";       // this clears the cell here, can't do it in EDC selected index
             }
@@ -189,24 +203,115 @@ namespace EliteDangerousCore
         #endregion
 
 
-
-
-
         #region UI Cell
         private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || !bf.IsEditable)
-                return;
+            // unused for now
+        }
 
-            var row = dataGridView.Rows[e.RowIndex];
+        private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && bf.IsEditable)
+            {
+                var row = dataGridView.Rows[e.RowIndex];
+                int ci = e.ColumnIndex;
+
+                if (ci == ColValues.Index)
+                    ValueEdit(row);     // will reject non attribute entry
+                else
+                    DirectInput(row.Cells[ci]);     // will reject any not allowed
+            }
+        }
+
+        private void dataGridView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter )
+            {
+                e.Handled = true;       // stops normal DGV op
+            }
+        }
+
+        private void dataGridView_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13 && dataGridView.CurrentCell != null && bf.IsEditable)
+            {
+                int ci = dataGridView.CurrentCell.ColumnIndex;
+                if (ci == ColValues.Index)
+                    ValueEdit(dataGridView.Rows[dataGridView.CurrentCell.RowIndex]);     // will reject non attribute entry
+                else
+                    DirectInput(dataGridView.CurrentCell);     // will reject any not allowed
+                e.Handled = true;
+            }
+        }
+
+        // Direct Input of key/button/axis from controllers. Will reject if c is not compatible
+        private void DirectInput(DataGridViewCell c)
+        {
+            var row = dataGridView.Rows[c.RowIndex];
+            BindingEntry entry = row.Tag as BindingEntry;
+            int ci = c.ColumnIndex;
+
+            // need to have a key or binding, be either in primary position or be a key for further on
+
+            if (entry.IsKeyOrBinding && (ci == ColPrimaryDevice.Index || ci == ColPrimaryKey.Index || (ci >= ColPrimaryModDevice.Index && entry.IsKey)))
+            {
+                var dkp = DeviceInput?.Invoke(bf, entry);
+
+                if (dkp != null)
+                {
+                    // dkp contains converted device name, not the binding file name
+
+                    DeviceKeyPair extdkp = new DeviceKeyPair(OriginalDeviceName(dkp.Device), dkp.FrontierKeyName);
+
+                    System.Diagnostics.Debug.WriteLine($"Direct Input {c.RowIndex}: {ci} Key press returned {dkp.Device} {dkp.FrontierKeyName} -> {extdkp.Device} {extdkp.FrontierKeyName}");
+
+                    if (ci == ColPrimaryDevice.Index || ci == ColPrimaryKey.Index)
+                    {
+                        SetPair(row, entry.IsBinding, ColPrimaryDevice.Index, dkp.Device, dkp.FrontierKeyName);
+                        entry.PrimaryKeys.Keys[0] = extdkp;
+
+                        if (entry.IsBinding == false)
+                        {
+                            row.Cells[ci + 2].ReadOnly = false;    // else enable the mod device
+                            row.Cells[ci + 4].ReadOnly = false;    // else enable the secondary device. Device will be already filled
+                        }
+                    }
+                    else if (ci == ColPrimaryModDevice.Index || ci == ColPrimaryModKey.Index)
+                    {
+                        SetPair(row, false, ColPrimaryModDevice.Index, dkp.Device, dkp.FrontierKeyName);
+                        entry.PrimaryKeys.SetMod(extdkp.Device, extdkp.FrontierKeyName);
+                    }
+
+                    else if (ci == ColSecondaryDevice.Index || ci == ColSecondaryKey.Index)
+                    {
+                        SetPair(row, false, ColSecondaryDevice.Index, dkp.Device, dkp.FrontierKeyName);
+                        entry.SecondaryKeys.Keys[0] = extdkp;
+
+                        row.Cells[ColSecondaryModDevice.Index].ReadOnly = false;    // etheselse enable the mod device
+                    }
+                    else if (ci == ColSecondaryModDevice.Index || ci == ColSecondaryModKey.Index)
+                    {
+                        SetPair(row, false, ColSecondaryModDevice.Index, dkp.Device, dkp.FrontierKeyName);
+                        entry.SecondaryKeys.SetMod(extdkp.Device, extdkp.FrontierKeyName);
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.Assert(false);
+                    }
+
+                    SetDirty();
+                }
+
+                System.Diagnostics.Debug.WriteLine($"Entry {entry.ToString()}");
+
+                IndicateErrors();
+            }
+        }
+
+        // edit values in row. Will reject if does not have attributes
+        private void ValueEdit(DataGridViewRow row)
+        {
             BindingsFile.BindingEntry entry = row.Tag as BindingsFile.BindingEntry;
-
-            System.Diagnostics.Debug.WriteLine($"Entry {entry.ToString()}");
-
-            // we only operate on column index of values
-
-            if (e.ColumnIndex != ColValues.Index)
-                return;
 
             // pick values or attributes
             bool valuemode = entry.Values.Count > 0;
@@ -249,77 +354,8 @@ namespace EliteDangerousCore
                     }
                     row.Cells[ColValues.Index].Value = BindingEntry.ValuesAsList(entry.Name, dict, valuemode);
                 }
-                row.Selected = false;
-            }
-        }
-
-        private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if ( e.RowIndex>=0 && e.ColumnIndex>= ColPrimaryDevice.Index)
-            {
-                DirectInput(dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex]);
             }
 
-        }
-
-        private void dataGridView_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter && dataGridView.CurrentCell != null && bf.IsEditable)
-            {
-                DirectInput(dataGridView.CurrentCell);
-                e.Handled = true;
-            }
-        }
-
-        private void DirectInput(DataGridViewCell c)
-        {
-            var row = dataGridView.CurrentRow;
-            BindingsFile.BindingEntry entry = row.Tag as BindingsFile.BindingEntry;
-
-            var dkp = DeviceInput?.Invoke(bf,entry);
-
-            if (dkp != null)
-            {
-                System.Diagnostics.Debug.WriteLine($"Key press returned {dkp.Device} {dkp.FrontierKeyName}");
-
-                int ci = dataGridView.CurrentCell.ColumnIndex;
-
-                if (ci == ColPrimaryDevice.Index || ci == ColPrimaryKey.Index)
-                {
-                    SetPair(row, entry.Binding, ColPrimaryDevice.Index, dkp.Device, dkp.FrontierKeyName);
-                    entry.PrimaryKeys.Keys[0] = new DeviceKeyPair(dkp.Device, dkp.FrontierKeyName);
-
-                    if (entry.Binding == false)
-                    {
-                        row.Cells[ci + 2].ReadOnly = false;    // else enable the mod device
-                        row.Cells[ci + 4].ReadOnly = false;    // else enable the secondary device. Device will be already filled
-                    }
-                }
-                else if (ci == ColPrimaryModDevice.Index || ci == ColPrimaryModKey.Index)
-                {
-                    SetPair(row, false, ColPrimaryModDevice.Index, dkp.Device, dkp.FrontierKeyName);
-                    entry.PrimaryKeys.SetMod(dkp.Device, dkp.FrontierKeyName);
-                }
-
-                else if (ci == ColSecondaryDevice.Index || ci == ColSecondaryKey.Index)
-                {
-                    SetPair(row, false, ColSecondaryDevice.Index, dkp.Device, dkp.FrontierKeyName);
-                    entry.SecondaryKeys.Keys[0] = new DeviceKeyPair(dkp.Device, dkp.FrontierKeyName);
-
-                    row.Cells[ColSecondaryModDevice.Index].ReadOnly = false;    // etheselse enable the mod device
-                }
-                else if (ci == ColSecondaryModDevice.Index || ci == ColSecondaryModKey.Index)
-                {
-                    SetPair(row, false, ColSecondaryModDevice.Index, dkp.Device, dkp.FrontierKeyName);
-                    entry.SecondaryKeys.SetMod(dkp.Device, dkp.FrontierKeyName);
-                }
-
-                SetDirty();
-            }
-
-            System.Diagnostics.Debug.WriteLine($"Entry {entry.ToString()}");
-
-            IndicateErrors();
         }
 
         #endregion
