@@ -65,7 +65,9 @@ namespace EliteDangerousCore
 
         static public bool IsSRV(string shipfdname)
         {
-            return shipfdname.Equals("testbuggy", StringComparison.InvariantCultureIgnoreCase) || shipfdname.Contains("_SRV", StringComparison.InvariantCultureIgnoreCase);
+            return shipfdname.Equals("testbuggy", StringComparison.InvariantCultureIgnoreCase) ||
+                                shipfdname.Contains("_SRV", StringComparison.InvariantCultureIgnoreCase) ||
+                                shipfdname.Contains("MEV_", StringComparison.InvariantCultureIgnoreCase);
         }
 
         static public bool IsFighter(string shipfdname)
@@ -1616,6 +1618,18 @@ namespace EliteDangerousCore
             Class = 1,
         };
 
+        private static ShipProperties rhinosrv = new ShipProperties()
+        {
+            FDID = "MEV_Rhino",
+            HullMass = 0F,
+            Name = "Rhino MEV",
+            Manufacturer = "Vodel",
+            Speed = 32,
+            Boost = 32,
+            HullCost = 0,
+            Class = 1,
+        };
+
         private static Dictionary<string, ShipProperties> srvandfighters = new Dictionary<string, ShipProperties>
         {
             { "empire_fighter",  imperial_fighter},
@@ -1623,6 +1637,7 @@ namespace EliteDangerousCore
             { "independent_fighter",  taipan_fighter},       //EDDI evidence
             { "testbuggy",  srv},
             { "combat_multicrew_srv_01",  combatsrv},
+            { "mev_rhino",  rhinosrv},
             { "gdn_hybrid_fighter_v1",  GDN_Hybrid_v1_fighter},
             { "gdn_hybrid_fighter_v2",  GDN_Hybrid_v2_fighter},
             { "gdn_hybrid_fighter_v3",  GDN_Hybrid_v3_fighter},
