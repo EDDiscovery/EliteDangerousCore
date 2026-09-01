@@ -1983,7 +1983,7 @@ namespace EliteDangerousCore
 
         private static ShipProperties combatsrv = new ShipProperties()
         {
-            FDID = new VehicleFDName("Combat_Multicrew_SRV_01",VehicleFDName.VehicleType.SRV),
+            FDID = new VehicleFDName("Combat_Multicrew_SRV_01", VehicleFDName.VehicleType.SRV),
             HullMass = 0F,
             Name = "Scorpion Combat SRV",
             Manufacturer = "Vodel",
@@ -1996,13 +1996,32 @@ namespace EliteDangerousCore
             Component = new ShipSlots.SlotAndSize[] { },
             Internal = new ShipSlots.SlotAndSize[] { },
             Military = new ShipSlots.SlotAndSize[] { },
-            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.BuggyCargoHatch, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.SineWaveScanner, 0) , new ShipSlots.SlotAndSize(ShipSlots.Slot.Turret2, 0) },
+            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.BuggyCargoHatch, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.SineWaveScanner, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.Turret2, 0) },
+        };
+
+        private static ShipProperties mevrhino = new ShipProperties()
+        {
+            FDID = new VehicleFDName("MEV_Rhino", VehicleFDName.VehicleType.SRV),
+            HullMass = 0F,
+            Name = "Rhino MEV",
+            Manufacturer = "Vodel",
+            Speed = 32,
+            Boost = 32,
+            HullCost = 0,
+            Class = 1,
+            Hardpoints = new ShipSlots.SlotAndSize[] { },
+            Utility = new ShipSlots.SlotAndSize[] { },
+            Component = new ShipSlots.SlotAndSize[] { },
+            Internal = new ShipSlots.SlotAndSize[] { },
+            Military = new ShipSlots.SlotAndSize[] { },
+            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.BuggyCargoHatch, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.SineWaveScanner, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.Turret2, 0) },
         };
 
         // IDs used to identify non ships
 
         public const string SRV_ScarabFDName = "testbuggy";
         public const string SRV_Postfix = "_srv";
+        public const string MEV_Prefix = "mev_";
         public const string LANDER_Prefix = "lander";
         public const string Fighter_Postfix = "_fighter";
         public const string Taxi_Postfix = "_taxi";
@@ -2018,6 +2037,7 @@ namespace EliteDangerousCore
             { new VehicleFDName("gdn_hybrid_fighter_v3",VehicleFDName.VehicleType.Fighter),  GDN_Hybrid_v3_fighter},
             { new VehicleFDName(SRV_ScarabFDName,VehicleFDName.VehicleType.SRV),  srv},
             { new VehicleFDName("combat_multicrew_srv_01",VehicleFDName.VehicleType.SRV),  combatsrv},
+            { new VehicleFDName("mev_rhino",VehicleFDName.VehicleType.SRV),  mevrhino},
             { new VehicleFDName("lander01",VehicleFDName.VehicleType.Lander),nomad},
         };
 

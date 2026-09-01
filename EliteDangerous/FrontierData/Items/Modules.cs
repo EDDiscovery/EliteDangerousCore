@@ -55,7 +55,7 @@ namespace EliteDangerousCore
                     var newmodule = new ShipModule(-1, IsVanity(candidatename) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType, candidatename.ID);
                     string futilemessage = " - this is item unknown to EDD, but IT WILL not affect operation of the program. It would be nice to report it to us so we can add it to known module lists";
 
-                    BaseUtils.Debugger.TraceBreak($"*** Unknown Module in slot {ShipSlots.ToEnglish(slot)} : {{\"{candidatename.ToLower()}\", new ShipModule(-1,{(IsVanity(candidatename) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename.ID}\") }}," + futilemessage);
+                    BaseUtils.Debugger.TraceBreak($"*** Unknown Module in slot {ShipSlots.ToEnglish(slot)} : {{new ModFDName(\"{fdid.ToLower()}\"), new ShipModule(-1,{(IsVanity(candidatename) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename.ID}\") }}," + futilemessage);
 
                     synthesisedmodules[candidatename] = m = newmodule;                   // lets cache them for completeness..
                  

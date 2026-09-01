@@ -109,7 +109,7 @@ namespace EliteDangerousCore
             string str = ID;
             if (str.ContainsIIC(ItemData.Taxi_Postfix))
                 Type = VehicleType.Taxi;
-            else if (str.EqualsIIC(ItemData.SRV_ScarabFDName) || str.ContainsIIC(ItemData.SRV_Postfix))
+            else if (str.EqualsIIC(ItemData.SRV_ScarabFDName) || str.ContainsIIC(ItemData.SRV_Postfix) || str.ContainsIIC(ItemData.MEV_Prefix))
                 Type = VehicleType.SRV;
             else if (str.ContainsIIC(ItemData.LANDER_Prefix))
                 Type = VehicleType.Lander;

@@ -136,6 +136,10 @@ namespace EliteDangerousCore
             // new july 26 ish
             CuratedCommodity,
 
+            // Rhino sep 26
+            iridium, helium, helium3, bastnasite, deuterium, thortveitite, quartzpyroxenite, olivine, periclasedunite, sapphire,
+            diamond, ruby, magnesite,
+
             //---------------------------------------------------------- Raw
             Carbon = 1000, Iron, Lead, Nickel, Phosphorus, Rhenium, Sulphur, Arsenic,
             Chromium, Germanium, Manganese, Vanadium, Zinc, Zirconium, Boron, Cadmium,
@@ -587,6 +591,8 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.Chemicals, MCMR.SyntheticReagents, "Synthetic Reagents");
             Add(CatType.Commodity, ItemType.Chemicals, MCMR.Tritium, "Tritium");
             Add(CatType.Commodity, ItemType.Chemicals, MCMR.Water, "Water");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.helium, "Helium");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.helium3, "Helium-3");
             Add(CatType.Commodity, ItemType.Drones, MCMR.Drones, "Drones");
             Add(CatType.Commodity, ItemType.Foods, MCMR.Algae, "Algae");
             Add(CatType.Commodity, ItemType.Foods, MCMR.AnimalMeat, "Animal Meat");
@@ -667,6 +673,7 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.Metals, MCMR.Thorium, "Thorium");
             Add(CatType.Commodity, ItemType.Metals, MCMR.Titanium, "Titanium");
             Add(CatType.Commodity, ItemType.Metals, MCMR.Uranium, "Uranium");
+            Add(CatType.Commodity, ItemType.Metals, MCMR.iridium, "Iridium");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Alexandrite, "Alexandrite");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Bauxite, "Bauxite");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Benitoite, "Benitoite");
@@ -696,6 +703,16 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Serendibite, "Serendibite");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Taaffeite, "Taaffeite");
             Add(CatType.Commodity, ItemType.Minerals, MCMR.Uraninite, "Uraninite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.bastnasite, "Bastnasite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.deuterium, "Deuterium");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.thortveitite, "Thortveitite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.quartzpyroxenite, "Quartz Pyroxenite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.olivine, "Olivine");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.periclasedunite, "Periclase Dunite");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.sapphire, "Sapphire");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.diamond, "Diamond");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.ruby, "Ruby");
+            Add(CatType.Commodity, ItemType.Minerals, MCMR.magnesite, "Magnesite");
             Add(CatType.Commodity, ItemType.Narcotics, MCMR.BasicNarcotics, "Narcotics");
             Add(CatType.Commodity, ItemType.PowerPlay, MCMR.AislingMediaMaterials, "Aisling Media Materials");
             Add(CatType.Commodity, ItemType.PowerPlay, MCMR.AislingMediaResources, "Aisling Sealed Contracts");
