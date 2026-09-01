@@ -919,6 +919,19 @@ FDCDA739585356: "Thargoid Capital Ship Data" @
 F958260588E1AF: "Steel" @
 4A1B391ED87F19: "Haematite" @
 922D5AFF6174D5: "Curated Commodity Package" @
+0FA9BF602DF552: "Helium" @
+726649A6D4AAD6: "Helium-3" @
+30991C21BF4120: "Iridium" @
+6F47A8754E5985: "Bastnasite" @
+008DB8CEBD3D5E: "Deuterium" @
+9C89C256CA86B1: "Thortveitite" @
+11790189695FCD: "Quartz Pyroxenite" @
+5130CE9DCBCAD1: "Olivine" @
+6989B2A2928F3B: "Periclase Dunite" @
+52086129A3B5FC: "Sapphire" @
+B3850E04B5CC10: "Diamond" @
+B217E98C3BF70F: "Ruby" @
+9BA77EC5EFBA5A: "Magnesite" @
 
 SECTION EngineeringData
 
@@ -1261,6 +1274,8 @@ E89383A3EAE0FE: "Surface Scanner" @
 1E150F53516D41: "Standard Docking Computer" @
 300DCF505B20B3: "Advanced Docking Computer" @
 70523AB707ECE7: "Fighter Hangar" @
+A96D1886F17C53: "Large Planetary Vehicle Hangar" @
+27D1F4AD17F1C0: "MKII Large Planetary Vehicle Hangar" @
 F29E64CC9E04F3: "Remote Release Flak Launcher" @
 1080CBE65D9A1D: "Remote Release Flechette Launcher" @
 96D6DE2D0ECA17: "Frame Shift Drive Interdictor" @

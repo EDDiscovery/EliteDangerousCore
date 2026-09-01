@@ -344,11 +344,12 @@ namespace EliteDangerousCore
             public bool Assigned => FrontierKeyName.HasChars();
 
             // these are fixed names at this level, the other names have to be handled at bindingfile level
-            public bool IsKeyboard => KeyboardDevice(Device);
-            public bool IsMouse => MouseDevice(Device);
+            public bool IsKeyboard => IsKeyboardDevice(Device);
+            public bool IsMouse => IsMouseDevice(Device);
             public bool IsDevice => Device != NoDeviceName;
-            public static bool KeyboardDevice(string device) { return device == KeyboardDeviceName; }
-            public static bool MouseDevice(string device) { return device == MouseDeviceName; }
+            public static bool IsKeyboardDevice(string device) { return device == KeyboardDeviceName; }
+            public static bool IsMouseDevice(string device) { return device == MouseDeviceName; }
+            public static bool IsNoDevice(string device) { return device == NoDeviceName; }
 
             public DeviceKeyPair(string internaldevicename, string frontierkeyname)
             {

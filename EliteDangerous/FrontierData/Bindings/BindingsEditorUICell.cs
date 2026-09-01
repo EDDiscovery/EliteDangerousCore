@@ -57,12 +57,13 @@ namespace EliteDangerousCore
                 int ci = editingcell.ColumnIndex;
 
                 BindingsFile.BindingEntry entry = row.Tag as BindingsFile.BindingEntry;
-               
+
+                // get entry device name for frontier. This depends if we are editing a key or a device cell
+                string dev = OriginalDeviceName((ci-ColPrimaryDevice.Index)%2==0 ? newcellvalue : row.Cells[ci - 1].Value.ToString());
+                bool nodevice = DeviceKeyPair.IsNoDevice(dev);
+
                 if (ci == ColPrimaryDevice.Index)
                 {
-                    string dev = OriginalDeviceName(newcellvalue);
-                    bool nodevice = newcellvalue == DeviceKeyPair.NoDeviceName;
-
                     row.Cells[ci + 1].Value = "";
                     row.Cells[ci + 1].ErrorText = nodevice ? null : "Invalid - enter a value";
                     row.Cells[ci + 1].ReadOnly = nodevice;
@@ -95,16 +96,12 @@ namespace EliteDangerousCore
                 }
                 else if (ci == ColPrimaryKey.Index)
                 {
-                    string dev = OriginalDeviceName(row.Cells[ci - 1].Value.ToString());
                     entry.PrimaryKeys.Keys[0] = new DeviceKeyPair(dev,  newcellvalue);
                     row.Cells[ci].ErrorText = null;
                     SetDirty();
                 }
                 else if (ci == ColPrimaryModDevice.Index)
                 {
-                    string dev = OriginalDeviceName(newcellvalue);
-                    bool nodevice = newcellvalue == DeviceKeyPair.NoDeviceName;
-
                     if (nodevice)     // if no device, clear the mod
                         entry.PrimaryKeys.ClearMod();
 
@@ -116,16 +113,12 @@ namespace EliteDangerousCore
                 }
                 else if (ci == ColPrimaryModKey.Index)
                 {
-                    string dev = OriginalDeviceName(row.Cells[ci - 1].Value.ToString());
                     entry.PrimaryKeys.SetMod(dev, newcellvalue);     // either add mod or change current mod
                     row.Cells[ci].ErrorText = null;
                     SetDirty();
                 }
                 else if (ci == ColSecondaryDevice.Index)
                 {
-                    string dev = OriginalDeviceName(newcellvalue);
-                    bool nodevice = newcellvalue == DeviceKeyPair.NoDeviceName;
-
                     row.Cells[ci + 1].Value = "";
                     row.Cells[ci + 1].ErrorText = nodevice ? null : "Invalid - enter a value";
                     row.Cells[ci + 1].ReadOnly = nodevice;
@@ -152,16 +145,12 @@ namespace EliteDangerousCore
                 }
                 else if (ci == ColSecondaryKey.Index)
                 {
-                    string dev = OriginalDeviceName(row.Cells[ci - 1].Value.ToString());
                     entry.SecondaryKeys.Keys[0] = new DeviceKeyPair(dev, newcellvalue);
                     row.Cells[ci].ErrorText = null;
                     SetDirty();
                 }
                 else if (ci == ColSecondaryModDevice.Index)
                 {
-                    string dev = OriginalDeviceName(newcellvalue);
-                    bool nodevice = newcellvalue == DeviceKeyPair.NoDeviceName;
-
                     if (nodevice)     // if no device, clear the mod
                         entry.SecondaryKeys.ClearMod();
 
@@ -173,7 +162,6 @@ namespace EliteDangerousCore
                 }
                 else if (ci == ColSecondaryModKey.Index)
                 {
-                    string dev = OriginalDeviceName(row.Cells[ci - 1].Value.ToString());
                     entry.SecondaryKeys.SetMod(dev, newcellvalue);     // either add mod or change current mod
                     row.Cells[ci].ErrorText = null;
                     SetDirty();
