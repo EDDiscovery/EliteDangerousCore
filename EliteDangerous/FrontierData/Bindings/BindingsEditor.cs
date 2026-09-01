@@ -303,6 +303,8 @@ namespace EliteDangerousCore
                 {
                     foreach (var x in FrontierKeyConversion.FrontierKeyNames(bf.KeyboardLayout))
                         c.Items.Add(x);
+
+                    c.Items.Remove("Key_Escape");       // can't use this so remove from selection box. Keep it in the frontier name system though for safety
                 }
             }
             else if (extdevicename == "Mouse")
