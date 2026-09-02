@@ -936,6 +936,21 @@ SECTION MaterialCommodityMicroResourceType
 .steel: "Steel" @
 .haematite: "Haematite" @
 
+.helium: "Helium" @
+.helium3: "Helium-3" @
+.iridium: "Iridium" @
+.bastnasite: "Bastnasite" @
+.deuterium: "Deuterium" @
+.thortveitite: "Thortveitite" @
+.quartzpyroxenite: "Quartz Pyroxenite" @
+.olivine: "Olivine" @
+.periclasedunite: "Periclase Dunite" @
+.sapphire: "Sapphire" @
+.diamond: "Diamond" @
+.ruby: "Ruby" @
+.magnesite: "Magnesite" @
+
+
 SECTION EngineeringData
 
 .Engineer: "Engineer:" @
@@ -1278,6 +1293,8 @@ SECTION ModuleTypeNames
 .Unknown_Type: "Unknown Type" @
 
 SECTION ModulePartNames
+.Large_Planetary_Vehicle_Hangar: "Large Planetary Vehicle Hangar" @
+.MKII_Large_Planetary_Vehicle_Hangar: "MKII Large Planetary Vehicle Hangar" @
 
 .Class: "Class" @
 .Rating: "Rating" @

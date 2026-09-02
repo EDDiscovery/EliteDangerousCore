@@ -128,6 +128,7 @@ namespace EliteDangerousCore
         FSSDiscoveryScan = 306,
         FSSSignalDiscovered = 307,
         FSSBodySignals = 308,
+        GameModeChange = 309,
         HeatDamage = 310,
         HeatWarning = 320,
         HullDamage = 330,

@@ -1,6 +1,8 @@
 ﻿
 SECTION JournalTypeEnum
 
+.GameModeChange: "Game Mode Change" @
+
 .Unknown: "Unknown" @
 .AfmuRepairs: "Afmu Repairs" @
 .ApproachBody: "Approach Body" @

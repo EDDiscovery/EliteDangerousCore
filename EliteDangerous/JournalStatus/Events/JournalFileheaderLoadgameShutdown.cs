@@ -195,4 +195,20 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [JournalEntryType(JournalTypeEnum.GameModeChange)]
+    public class JournalGameModeChange : JournalEntry
+    {
+        public JournalGameModeChange(JObject evt) : base(evt, JournalTypeEnum.GameModeChange)
+        {
+            Mode = evt["GameMode"].Str();
+        }
+
+        public string Mode { get; set; }
+
+        public override string GetInfo()
+        {
+            return Mode.ToString();
+        }
+    }
+
 }
