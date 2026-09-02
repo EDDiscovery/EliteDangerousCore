@@ -1205,7 +1205,7 @@ SECTION StarportStates
 .Abandoned: "Abandoned" => "Verlassen"
 .UnderAttack: "Under Attack" => "Wird angegriffen"
 .Construction: "Construction" => "Konstruktion"
-.DamagedHuman: "Damaged Human" @
+.DamagedHuman: "Damaged Human" => "Beschädigt Mensch"
 
 SECTION StarportTypes
 
@@ -1306,16 +1306,16 @@ SECTION ModulePartNames
 .Fragment_Cannon: "Fragment Cannon" => "Splitterkanone"
 .Pacifier_Fragment_Cannon: "Pacifier Fragment Cannon" = ModuleTypeNames.Pacifier_Frag_Cannon
 .Cargo_Rack: "Cargo Rack" => "Frachtgestell"
-.Mk_II_Cargo_Rack: "Mk II Cargo Rack" @
+.Mk_II_Cargo_Rack: "Mk II Cargo Rack" => "Mk II Frachtgestell"
 .Corrosion_Resistant_Cargo_Rack: "Corrosion Resistant Cargo Rack" => "Korrosionsbeständiges Frachtgestell"
 .Manifest_Scanner: "Manifest Scanner" = ModuleTypeNames.Cargo_Scanner
-.Sub_surface_Extraction_Missile: "Sub surface Extraction Missile" @
-.Anti_Corrosion_Cargo_Rack: "Anti Corrosion Cargo Rack" @
+.Sub_surface_Extraction_Missile: "Sub surface Extraction Missile" => "Untergrund-Extraktionsrakete"
+.Anti_Corrosion_Cargo_Rack: "Anti Corrosion Cargo Rack" => "Antikorrosions-Frachtgestell"
 .Chaff_Launcher: "Chaff Launcher" => "Düpelwerfer"
-.Mk_II_Economy: "Mk II Economy" @
-.Mk_II_Business: "Mk II Business" @
-.Shock_Cannon_MK_II: "Shock Cannon MK II" @
-.Mk_II_Agile_Boost_Engine: "Mk II Agile Boost Engine" @
+.Mk_II_Economy: "Mk II Economy" => "Mk II Economy"
+.Mk_II_Business: "Mk II Business" => "Mk II Business"
+.Shock_Cannon_MK_II: "Shock Cannon MK II" => "Schockkanone Mk II"
+.Mk_II_Agile_Boost_Engine: "Mk II Agile Boost Engine" => "Mk II Agilitätssteigerungsantrieb"
 .Electronic_Countermeasure: "Electronic Countermeasure" => "Elektronische Gegenmaßnmahmen"
 .Heat_Sink_Launcher: "Heat Sink Launcher" => "Kühlkörperwerfer"
 .Caustic_Sink_Launcher: "Caustic Sink Launcher" => "Ätzbehälterwerfer"
@@ -1422,14 +1422,14 @@ SECTION ModulePartNames
 .Large_Cargo_Rack: "Large Cargo Rack" => "Großes Frachtgestell"
 .Mining_Volley_Repeater: "Mining Volley Repeater" => "Bergbau Salven-Repeater"
 .Lightweight_Alloy_(Default): "Lightweight Alloy (Default)" => "Leichte Legierung (Standard)"
-.MKII_Vessel_Hangar_(Free): "MKII Vessel Hangar (Free)" @
-.MKII_Vessel_Hangar: "MKII Vessel Hangar" @
+.MKII_Vessel_Hangar_(Free): "MKII Vessel Hangar (Free)" => "Mk II Schiffshangar (gratis)"
+.MKII_Vessel_Hangar: "MKII Vessel Hangar" => "Mk II Schiffshangar"
 
 SECTION ShipSlots
 
-.Passenger03: "Passenger Slot 3" @
-.Passenger02: "Passenger Slot 2" @
-.Passenger01: "Passenger Slot 1" @
+.Passenger03: "Passenger Slot 3" => "Passagierschacht 3"
+.Passenger02: "Passenger Slot 2" => "Passagierschacht 2"
+.Passenger01: "Passenger Slot 1" => "Passagierschacht 1"
 
 .Unknown: "Unknown" = Unknown
 .Armour: "Armour" => "Rumpfhülle"
