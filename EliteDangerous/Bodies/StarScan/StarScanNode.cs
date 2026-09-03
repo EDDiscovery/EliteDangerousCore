@@ -88,6 +88,7 @@ namespace EliteDangerousCore
             public int CountOtherSignals { get { return Signals?.Where(x => x.IsOther).Sum(y => y.Count) ?? 0; } }
             public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
             public int CountOrganicsScansAnalysed { get { return Organics?.Where(x => x.ScanType == JournalScanOrganic.ScanTypeEnum.Analyse).Count() ?? 0; } }
+            public int CountPlanetaryMiningSignals { get { return Signals?.Where(x => x.IsPlanetaryMining).Sum(y => y.Count) ?? 0; } }
 
             // which feature is nearby?  Handles no surface features
             public IBodyFeature FindSurfaceFeatureNear( double? latitude, double ?longitude, double delta = 0.1)
@@ -172,13 +173,14 @@ namespace EliteDangerousCore
                     bool hasguardiansignals = Signals?.Find(x => x.IsGuardian) != null && showsignals;
                     bool hashumansignals = Signals?.Find(x => x.IsHuman) != null && showsignals;
                     bool hasothersignals = Signals?.Find(x => x.IsOther) != null && showsignals;
+                    bool hasplanetaryminingsignals = Signals?.Find(x => x.IsPlanetaryMining) != null && showsignals;
                     bool hasminingsignals = Signals?.Find(x => x.IsUncategorised) != null && showsignals;
                     bool hasgeosignals = Signals?.Find(x => x.IsGeo) != null && showsignals;
                     bool hasbiosignals = Signals?.Find(x => x.IsBio) != null && showsignals;
                     bool hasscanorganics = Organics != null && showorganics;
 
                     return ScanData.SurveyorInfoLine(sys, hasminingsignals, hasgeosignals, hasbiosignals,
-                                hasthargoidsignals, hasguardiansignals, hashumansignals, hasothersignals, hasscanorganics,
+                                hasthargoidsignals, hasguardiansignals, hashumansignals, hasothersignals, hasscanorganics, hasplanetaryminingsignals,
                                 showvolcanism, showvalues, shortinfo, showGravity, showAtmos, showTemp, showRings,
                                 lowRadiusLimit,largeRadiusLimit, eccentricityLimit);
                 }
