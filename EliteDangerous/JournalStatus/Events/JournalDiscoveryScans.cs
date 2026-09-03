@@ -332,6 +332,8 @@ namespace EliteDangerousCore.JournalEvents
         public bool ContainsHumanSignals { get { return Signals?.Count(x => x.IsHuman) > 0 ? true : false; } }
         [PropertyNameAttribute("Does it have other signals")]
         public bool ContainsOtherSignals { get { return Signals?.Count(x => x.IsOther) > 0 ? true : false; } }
+        [PropertyNameAttribute("Does it have planetary mining signals")]
+        public bool ContainsPlanetaryMiningSignals { get { return Signals?.Count(x => x.IsPlanetaryMining) > 0 ? true : false; } }
         [PropertyNameAttribute("Does it have uncategorised signals")]
         public bool ContainsUncategorisedSignals { get { return Signals?.Count(x => x.IsUncategorised) > 0 ? true : false; } }
 
@@ -347,6 +349,8 @@ namespace EliteDangerousCore.JournalEvents
         public int CountHumanSignals { get { return Signals?.Where(x => x.IsHuman).Sum(y => y.Count) ?? 0; } }
         [PropertyNameAttribute("Count of other signals")]
         public int CountOtherSignals { get { return Signals?.Where(x => x.IsOther).Sum(y => y.Count) ?? 0; } }
+        [PropertyNameAttribute("Count of planetary mining signals")]
+        public int CountPlanetaryMiningSignals { get { return Signals?.Where(x => x.IsPlanetaryMining).Sum(y => y.Count) ?? 0; } }
         [PropertyNameAttribute("Count of uncategorised signals")]
         public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
 
@@ -380,9 +384,11 @@ namespace EliteDangerousCore.JournalEvents
             [JsonIgnore]
             [PropertyNameAttribute("Is other signal")]
             public bool IsOther { get { return Type.Contains("$SAA_SignalType_Other;"); } }
+            [PropertyNameAttribute("Is planetary mining signal")]
+            public bool IsPlanetaryMining { get { return Type.Contains("$PlanetaryMiningLocation_Name;"); } }
             [JsonIgnore]
             [PropertyNameAttribute("Is uncategorised signal")]
-            public bool IsUncategorised { get { return !Type.Contains("$SAA_SignalType"); } }       // probably a material, but you can never tell with FD
+            public bool IsUncategorised { get { return !Type.Contains("$SAA_SignalType") && !Type.Contains("$PlanetaryMiningLocation_Name;"); } }       // probably a material, but you can never tell with FD
         }
 
         [System.Diagnostics.DebuggerDisplay("{Genus} {Genus_Localised}")]
@@ -577,6 +583,8 @@ namespace EliteDangerousCore.JournalEvents
         [JsonIgnore]
         [PropertyNameAttribute("Does it have other signals")]
         public bool ContainsOtherSignals { get { return Signals?.Count(x => x.IsOther) > 0 ? true : false; } }
+        [PropertyNameAttribute("Does it have planetary mining signals")]
+        public bool ContainsPlanetaryMiningSignals { get { return Signals?.Count(x => x.IsPlanetaryMining) > 0 ? true : false; } }        
         [JsonIgnore]
         [PropertyNameAttribute("Does it have uncategorised signals")]
         public bool ContainsUncategorisedSignals { get { return Signals?.Count(x => x.IsUncategorised) > 0 ? true : false; } }
@@ -596,6 +604,8 @@ namespace EliteDangerousCore.JournalEvents
         [JsonIgnore]
         [PropertyNameAttribute("Count of human signals")]
         public int CountHumanSignals { get { return Signals?.Where(x => x.IsHuman).Sum(y => y.Count) ?? 0; } }
+        [PropertyNameAttribute("Count of planetary mining signals")]
+        public int CountPlanetaryMiningSignals { get { return Signals?.Where(x => x.IsPlanetaryMining).Sum(y => y.Count) ?? 0; } }
         [JsonIgnore]
         [PropertyNameAttribute("Count of other signals")]
         public int CountOtherSignals { get { return Signals?.Where(x => x.IsOther).Sum(y => y.Count) ?? 0; } }
