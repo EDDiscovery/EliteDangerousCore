@@ -163,6 +163,9 @@ namespace EliteDangerousCore.StarScan2
                 else if ( sc.BodyType == BodyDefinitions.BodyType.SmallBody)        // super rare on comets, { "timestamp":"2020-10-03T15:31:57Z", "event":"SupercruiseExit", "StarSystem":"Liu Beserka", "SystemAddress":18265019196857, "Body":"Liu Beserka Comet 2", "BodyID":7, "BodyType":"SmallBody" }
                 {
                 }
+                else if ( sc.BodyType == BodyDefinitions.BodyType.HyperbolicOrbiter)        // only seen with travelling maelstroms, { "timestamp":"2022-09-12T14:18:52Z", "event":"SupercruiseExit", "Taxi":false, "Multicrew":false, "StarSystem":"Oochost WU-S c6-0", "SystemAddress":83114168634, "Body":"", "BodyID":16, "BodyType":"HyperbolicOrbiter" }
+                {
+                }
                 else
                 {
                     System.Diagnostics.Debug.Assert(false);     // pick up missed types

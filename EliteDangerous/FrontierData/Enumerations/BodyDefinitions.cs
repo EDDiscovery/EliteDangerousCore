@@ -39,6 +39,7 @@ namespace EliteDangerousCore
             // Frontier Bodytype only
             Station,    // at a station (seen in Location "timestamp":"2022-05-13T12:25:14Z")
             SmallBody,  // saw for comets, very few
+            HyperbolicOrbiter,  // only seen dropping into travelling maelstroms in 2022
 
             // EDD Only
             System,          // top level SystemBodies object in SystemNode
