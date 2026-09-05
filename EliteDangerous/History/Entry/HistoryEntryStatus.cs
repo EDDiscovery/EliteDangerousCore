@@ -466,6 +466,18 @@ namespace EliteDangerousCore
                     break;
                 }
 
+                case JournalTypeEnum.LaunchVessel:
+                    var jlv = je as JournalLaunchVessel;
+                    if (jlv.PlayerControlled)
+                    {
+                        hes = new HistoryEntryStatus(prev)
+                        {
+                            TravelState = jlv.IsLander ? TravelStateType.Lander :
+                                          prev.TravelState == TravelStateType.MulticrewNormalSpace ? TravelStateType.MulticrewFighter : TravelStateType.Fighter,
+                        };
+                    }
+                    break;
+
                 case JournalTypeEnum.ApproachBody:
                     JournalApproachBody jappbody = (JournalApproachBody)je;
                     hes = new HistoryEntryStatus(prev)

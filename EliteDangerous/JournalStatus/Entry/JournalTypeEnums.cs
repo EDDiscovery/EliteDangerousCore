@@ -144,6 +144,7 @@ namespace EliteDangerousCore
         KickedFromSquadron = 358,
         LaunchDrone = 359,
         LaunchFighter = 360,
+        LaunchVessel = 361,
         LaunchSRV = 370,
         LeftSquadron = 371,
         LeaveBody = 375,
