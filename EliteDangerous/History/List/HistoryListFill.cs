@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace EliteDangerousCore
 {
@@ -80,6 +81,8 @@ namespace EliteDangerousCore
         private int lastfilled = 0;
         public void FillInScanNode()        
         {
+            System.Diagnostics.Debug.Assert(Application.MessageLoop);       // because FindSystemSynch
+
             while( lastfilled < historylist.Count)
             {
                 var he = historylist[lastfilled];

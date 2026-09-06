@@ -523,6 +523,7 @@ namespace EliteDangerousCore
             [new ModLabelFDName("DamageType")] = new string[] { },
             [new ModLabelFDName("$Thermic;")] = new string[] { },       // new june 26
             [new ModLabelFDName("$Kinetic;")] = new string[] { },       // new june 26
+            [new ModLabelFDName("$Explosive;")] = new string[] { },       // new june 26
             [new ModLabelFDName("ShieldGenMinimumMass")] = new string[] { nameof(ItemData.ShipModule.MinMass) },
             [new ModLabelFDName("ShieldGenMaximumMass")] = new string[] { nameof(ItemData.ShipModule.MaxMass) },
             [new ModLabelFDName("ShieldGenMinStrength")] = new string[] { nameof(ItemData.ShipModule.MinStrength) },

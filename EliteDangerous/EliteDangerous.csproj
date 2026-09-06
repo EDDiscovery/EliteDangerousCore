@@ -65,6 +65,9 @@
     <Compile Include="FrontierData\Bindings\BindingsEditorUIRightClick.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="FrontierData\Bindings\BindingsEditorBetterNames.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="FrontierData\Bindings\BindingsEditorUIToolbar.cs">
       <SubType>UserControl</SubType>
     </Compile>

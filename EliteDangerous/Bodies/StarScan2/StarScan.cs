@@ -30,7 +30,7 @@ namespace EliteDangerousCore.StarScan2
         // Sys can be an address, a name, or a name and address. address takes precedence
         public SystemNode FindSystemSynchronous(ISystem sys, bool checkweb)    
         {
-            //System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
+            System.Diagnostics.Debug.Assert(System.Windows.Forms.Application.MessageLoop);  // foreground only
             System.Diagnostics.Debug.Assert(sys != null);
 
             if (sys.HasAddress || sys.HasName)      // we have good enough data (should have)

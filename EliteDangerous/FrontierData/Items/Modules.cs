@@ -473,6 +473,7 @@ namespace EliteDangerousCore
                 StandardDockingComputer,
                 Sub_SurfaceDisplacementMissile,
                 SupercruiseAssist,
+                SurfaceMining,
                 Thrusters,
                 TorpedoPylon,
                 UniversalMultiLimpetController,

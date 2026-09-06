@@ -192,6 +192,9 @@ namespace EliteDangerousCore
             Turret, // MUST BE FIRST
             Turret2,        // reported by users
             SineWaveScanner,
+            MiningRigDeployment,    // rhino sep 26
+            Refinery, // rhino sep 26
+            DepositScanner, // rhino sep 26
             BuggyCargoHatch, // MUST BE LAST
 
             // fighters 
@@ -415,6 +418,9 @@ namespace EliteDangerousCore
             [Slot.FighterBay01] = "Fighter Bay 1",
             [Slot.Hologram] = "Hologram",
             [Slot.BiologicalScanner] = "Biological Scanner",
+            [Slot.MiningRigDeployment] = "Mining Rig",
+            [Slot.Refinery] = "Refinery",
+            [Slot.DepositScanner] = "Deposit Scanner",
         };
 
         // maps the slot fdname to an enum

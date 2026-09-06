@@ -188,6 +188,32 @@ namespace EliteDangerousCore
             }
         }
 
+
+        private void extButtonDeviceKeys_Click(object sender, EventArgs e)
+        {
+            ExtendedControls.CheckedIconNewListBoxForm displayfilter = new CheckedIconNewListBoxForm();
+            var items = bf.DeviceListNoKeyboardMouseDevice;
+
+            if (items.Count > 0)
+            {
+                foreach (var x in items)
+                    displayfilter.UC.AddButton(x, BetterDevice(x));       // tag is internal name, text is rename
+
+                displayfilter.CloseBoundaryRegion = new Size(32, extButtonDeviceRename.Height);
+                displayfilter.UC.ImageSize = new Size(24, 24);
+                displayfilter.UC.ScreenMargin = new Size(0, 0);
+                displayfilter.PositionBelow(extButtonDeviceRename);
+                displayfilter.UC.ButtonPressed += (i, s1, s2, o, m) =>      // called on click of button
+                {
+                    EditKeyConfigurationList(s1);
+                    Display();
+                    displayfilter.Close();
+                };
+                displayfilter.Show(this);
+            }
+
+        }
+
         #endregion
     }
 }

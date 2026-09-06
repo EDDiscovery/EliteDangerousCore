@@ -99,25 +99,23 @@ namespace EliteDangerousCore
 
                 }
 
-#if false // TBD
-                List<FDName> keylist = vanitymodules.Keys.ToList();
-                foreach (FDName kc in keylist)
+                List<ModFDName> keylist = vanitymodules.Keys.ToList();
+                foreach (ModFDName kc in keylist)
                     System.Diagnostics.Debug.Assert(!kc.Contains(" "));        // just check no spaces are in the IDs due to grep replace
 
-                blah
-                foreach (FDName id in keylist)
+                foreach (ModFDName mod in keylist)
                 {
                     // ids ending in _00 always seem to come in 6's so make sure all are there
 
-                    if (id.Length > 3 && id[id.Length - 3] == '_' && char.IsDigit(id[id.Length - 2]) && char.IsDigit(id[id.Length - 1]))
+                    if (mod.ID.Length > 3 && mod.ID[mod.ID.Length - 3] == '_' && char.IsDigit(mod.ID[mod.ID.Length - 2]) && char.IsDigit(mod.ID[mod.ID.Length - 1]))
                     {
                         for (int i = 1; i <= 6; i++)
                         {
-                            FDName newid = new FDName(id.Substring(0, id.Length - 1) + i.ToStringInvariant());
+                            ModFDName newid = new ModFDName(mod.ID.Substring(0, mod.ID.Length - 1) + i.ToStringInvariant());
                             if (!vanitymodules.ContainsKey(newid))
                             {
-                                string text = vanitymodules[id].EnglishModName;
-                                ShipModule sm2 = new ShipModule(vanitymodules[id].ModuleID, vanitymodules[newid].ModType, text.Substring(0, text.Length - 1) + i.ToStringInvariant());
+                                string text = vanitymodules[mod].EnglishModName;
+                                ShipModule sm2 = new ShipModule(vanitymodules[mod].ModuleID, vanitymodules[mod].ModType, text.Substring(0, text.Length - 1) + i.ToStringInvariant());
                                 System.Diagnostics.Debug.WriteLine($"Added estimated module {newid}");
                                 vanitymodules.Add(newid, sm2);
                                 changedvms = true;
@@ -130,17 +128,17 @@ namespace EliteDangerousCore
                     string[] checklist4 = new string[] { "_bumper", "_spoiler", "_tail", "_wings" };
                     foreach (var cl4 in checklist4)
                     {
-                        int pos = id.IndexOf(cl4);
-                        if (pos > 0 && pos+cl4.Length == id.Length-1)
+                        int pos = mod.ID.IndexOf(cl4);
+                        if (pos > 0 && pos+cl4.Length == mod.ID.Length-1)
                         {
                             for (int i = 1; i <= 4; i++)
                             {
-                                FDName newid = new FDName(id.Substring(0, id.Length - 1) + i.ToStringInvariant());
+                                ModFDName newid = new ModFDName(mod.ID.Substring(0, mod.ID.Length - 1) + i.ToStringInvariant());
 
                                 if (!vanitymodules.ContainsKey(newid))
                                 {
-                                    string text = vanitymodules[newid].EnglishModName;
-                                    ShipModule sm2 = new ShipModule(vanitymodules[id].ModuleID, vanitymodules[id].ModType, text.Substring(0, text.Length - 1) + i.ToStringInvariant());
+                                    string text = vanitymodules[mod].EnglishModName;
+                                    ShipModule sm2 = new ShipModule(vanitymodules[mod].ModuleID, vanitymodules[mod].ModType, text.Substring(0, text.Length - 1) + i.ToStringInvariant());
                                     System.Diagnostics.Debug.WriteLine($"Added estimated module {newid}");
                                     vanitymodules.Add(newid, sm2);
                                     changedvms = true;
@@ -154,15 +152,14 @@ namespace EliteDangerousCore
                 foreach( var vm in vanitymodules)
                 {
                     string org = vm.Value.EnglishModName;
-                    string text = GenerateCandidateModuleName(org);
-                    if (text != org)
+                    var text = GenerateCandidateModuleName(new ModFDName(org));
+                    if (text.ID != org)
                     {
-                        System.Diagnostics.Debug.WriteLine($"*** Want to modify {org} -> {text}");
-                        vm.Value.EnglishModName = text;
+                        System.Diagnostics.Debug.WriteLine($"*** Want to modify {org} -> {text.ID}");
+                        vm.Value.EnglishModName = text.ID;
                         changedvms = true;
                     }
                 }
-#endif
 
                 if (changedvms)
                 {
@@ -176,7 +173,7 @@ namespace EliteDangerousCore
 
                     string tout = "";
                     foreach (var key in vanitynames)
-                        tout += $"                {{new FDName({key.WithQuotes()}), new ShipModule({vanitymodules[key].ModuleID},ShipModule.ModuleTypes.{vanitymodules[key].ModType},{vanitymodules[key].EnglishModName.AlwaysQuoteString()}) }},\r\n";
+                        tout += $"                {{new ModFDName({key.WithQuotes()}), new ShipModule({vanitymodules[key].ModuleID},ShipModule.ModuleTypes.{vanitymodules[key].ModType},{vanitymodules[key].EnglishModName.AlwaysQuoteString()}) }},\r\n";
                     BaseUtils.FileHelpers.TryWriteToFile(outfile, tout);
 
                     // auto update cs file - this breaks the debugger note and causes it to notice text updates. Just ignore
@@ -194,7 +191,7 @@ namespace EliteDangerousCore
                                 newfile.Add(itemmodules[i]);
                                 newfile.Add("            {");
                                 foreach (var keya in vanitynames)
-                                    newfile.Add($"                {{new FDName({keya.WithQuotes()}), new ShipModule({vanitymodules[keya].ModuleID},ShipModule.ModuleTypes.{vanitymodules[keya].ModType},{vanitymodules[keya].EnglishModName.AlwaysQuoteString()}) }},");
+                                    newfile.Add($"                {{new ModFDName({keya.WithQuotes()}), new ShipModule({vanitymodules[keya].ModuleID},ShipModule.ModuleTypes.{vanitymodules[keya].ModType},{vanitymodules[keya].EnglishModName.AlwaysQuoteString()}) }},");
 
                                 while (!itemmodules[++i].Contains("};"))        // go to line with };
                                     ;

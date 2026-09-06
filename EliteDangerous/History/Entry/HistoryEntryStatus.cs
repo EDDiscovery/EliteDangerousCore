@@ -582,6 +582,20 @@ namespace EliteDangerousCore
                             ignored = true;
                         break;
                     }
+                case JournalTypeEnum.LaunchVessel:
+                    {
+                        var jlv = je as JournalLaunchVessel;
+                        if (jlv.PlayerControlled && jlv.IsLander)
+                        {
+                            hes = new HistoryEntryStatus(this)
+                            {
+                                TravelState = TravelStateType.Lander
+                            };
+                        }
+                        else
+                            ignored = true;
+                        break;
+                    }
 
                 case JournalTypeEnum.Died:
                     hes = new HistoryEntryStatus(this)

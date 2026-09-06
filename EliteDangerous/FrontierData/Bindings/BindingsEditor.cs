@@ -12,9 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
-using BaseUtils;
-using ExtendedConditionsForms;
-using ExtendedControls;
+using QuickJSON;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,9 +35,8 @@ namespace EliteDangerousCore
 
         // allows user to define translations between external frontier device names and ones use in here
         public Dictionary<string, string> ConvertDeviceNameList = new Dictionary<string, string>();
+        public List<string> DevicesNamesConverted => bf.DeviceList.Select(x=>BetterDevice(x)).ToList();
 
-        public List<string> DevicesNamesConverted => bf.DeviceList.Select(x=>BetterDevice(x)).ToList();        
-        
         public BindingsEditor()
         {
             InitializeComponent();
@@ -62,7 +59,7 @@ namespace EliteDangerousCore
 
        
         // folder and preferredbindfile (can be null)
-        public void Init(string folder, string preferredbindfile, List<string> otherdevicesknown)
+        public void Init(string folder, string preferredbindfile, List<string> otherdevicesknown, string jsondevicekeynames)
         {
             List<FileInfo> bindfiles = Directory.EnumerateFiles(folder, "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToList();
             foreach (var x in bindfiles)
@@ -96,6 +93,8 @@ namespace EliteDangerousCore
 
             extComboBoxBindFiles.SelectedIndexChanged += ExtComboBoxBindFiles_SelectedIndexChanged;
 
+            SetKeyConfigurationList(jsondevicekeynames);
+            System.Diagnostics.Debug.WriteLine($"Key list {GetKeyConfigurationList()}");
             Display();
 
             updatecheck.Tick += Updatecheck_Tick;
@@ -261,7 +260,7 @@ namespace EliteDangerousCore
                 else
                 {
                     AddKeyOptions(binding, dkp.Device, dk);
-                    SetValue(row.Cells[index + 1], dkp.FrontierKeyName);
+                    SetValue(row.Cells[index + 1], BetterKeyName(dkp.Device, dkp.FrontierKeyName));
                 }
             }
             else
@@ -274,6 +273,7 @@ namespace EliteDangerousCore
                 row.Cells[index].ReadOnly = row.Cells[index + 1].ReadOnly = true;
             }
         }
+
         private void SetValue(DataGridViewCell cell, string value)
         {
             var c = cell as DataGridViewComboBoxCell;
@@ -283,7 +283,7 @@ namespace EliteDangerousCore
         }
 
         // add options to key, based on binding, the bindings file external device name
-        private void AddKeyOptions(bool binding, string extdevicename, DataGridViewComboBoxCell c)
+        private void AddKeyOptions(bool binding, string bfdevname, DataGridViewComboBoxCell c)
         {
             c.Items.Clear();
             if (binding)
@@ -297,7 +297,7 @@ namespace EliteDangerousCore
                 c.Items.Add($"Joy_UAxis");
                 c.Items.Add($"Joy_VAxis");
             }
-            else if (extdevicename == "Keyboard")
+            else if (bfdevname == "Keyboard")
             {
                 if (bf.IsEditable)
                 {
@@ -307,7 +307,7 @@ namespace EliteDangerousCore
                     c.Items.Remove("Key_Escape");       // can't use this so remove from selection box. Keep it in the frontier name system though for safety
                 }
             }
-            else if (extdevicename == "Mouse")
+            else if (bfdevname == "Mouse")
             {
                 c.Items.Add($"Mouse_1");
                 c.Items.Add($"Mouse_2");
@@ -320,28 +320,29 @@ namespace EliteDangerousCore
                 c.Items.Add($"Neg_Mouse_ZAxis");
                 c.Items.Add($"Pos_Mouse_ZAxis");
             }
-            else if (extdevicename != DeviceKeyPair.NoDeviceName)
+            else if (bfdevname != DeviceKeyPair.NoDeviceName)
             {
                 for (int i = 1; i < 32; i++)
-                    c.Items.Add($"Joy_{i}");
-                c.Items.Add($"Joy_POV1Left");
-                c.Items.Add($"Joy_POV1Right");
-                c.Items.Add($"Joy_POV1Left");
-                c.Items.Add($"Joy_POV1Up");
-                c.Items.Add($"Joy_POV1Down");
-                c.Items.Add($"Joy_POV2Right");
-                c.Items.Add($"Joy_POV2Left");
-                c.Items.Add($"Joy_POV2Up");
-                c.Items.Add($"Joy_POV2Down");
+                    c.Items.Add(BetterKeyName(bfdevname, $"Joy_{i}"));
+                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV1Left"));
+                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV1Right"));
+                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV1Left"));
+                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV1Up"));
+                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV1Down"));
+                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV2Right"));
+                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV2Left"));
+                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV2Up"));
+                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV2Down"));
             }
         }
 
-        private void SetPair(DataGridViewRow row, bool binding, int index, string bindingrenameddevice, string key)
+        // use renamed device in here
+        private void SetPairR(DataGridViewRow row, bool binding, int index, string renameddevice, string renamedkey)
         {
-            row.Cells[index].Value = bindingrenameddevice;
+            row.Cells[index].Value = renameddevice;
             row.Cells[index + 1].Value = null;
-            AddKeyOptions(binding, OriginalDeviceName(bindingrenameddevice), (DataGridViewComboBoxCell)row.Cells[index + 1]);
-            row.Cells[index + 1].Value = key;
+            AddKeyOptions(binding, OriginalDeviceName(renameddevice), (DataGridViewComboBoxCell)row.Cells[index + 1]);
+            row.Cells[index + 1].Value = renamedkey;
             row.Cells[index + 1].ErrorText = null;
             row.Cells[index + 1].ReadOnly = false;
         }
@@ -432,18 +433,6 @@ namespace EliteDangerousCore
             }
         }
 
-        public string BetterName(string name)
-        {
-            return showFrontierNamesToolStripMenuItem.Checked ? name : name.SplitCapsWordFull().Replace("Buggy", "SRV").Replace("Turret", "SRV Turret").Replace("Humanoid", "On Foot").ReplaceIfStartsWith("Cam ", "Galaxy Map ");
-        }
-        public string BetterDevice(string name)
-        {
-            return ConvertDeviceNameList.TryGetValue(name, out var bettername) ? bettername : name;
-        }
-        public string OriginalDeviceName(string name)
-        {
-            return ConvertDeviceNameList.Where(kvp => kvp.Value == name).Select(x => x.Key).FirstOrDefault() ?? name;
-        }
 
         private void Updatecheck_Tick(object sender, EventArgs e)
         {
@@ -475,6 +464,7 @@ namespace EliteDangerousCore
         string initialcellvalue;
         private List<string> otherdevicesknown;
         private int filtercomboboxmodestart = 0;
+
 
     }
 }

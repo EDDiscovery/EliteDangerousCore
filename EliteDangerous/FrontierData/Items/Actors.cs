@@ -141,6 +141,8 @@ namespace EliteDangerousCore
              { new ActorFDName("asteroidbase"), new Actor("Asteroid Base") },
              { new ActorFDName("bernalsphere"), new Actor("Station") },
              { new ActorFDName("coriolis"), new Actor("Coriolis Station") },
+             { new ActorFDName("dodec"), new Actor("Dodec Station") },
+             { new ActorFDName("oneillcylinderjaques"), new Actor("O'Neill Cylinder Jaques") },
 
              { new ActorFDName("carrierdocka"), new Actor("Carrier Dock A") },
              { new ActorFDName("carrierdockb"), new Actor("Carrier Dock B") },

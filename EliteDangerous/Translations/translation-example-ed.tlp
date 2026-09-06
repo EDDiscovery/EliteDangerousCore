@@ -1200,7 +1200,7 @@ F6D3C9C3B20E15: "Stronghold" @
 // these are the ones which can't be satisfied from ModulePartNames
 
 SECTION ModuleTypeNames
-
+7B680AE998E654: "Surface Mining" @
 74C8CD195A9A7B: "Pacifier Frag Cannon" @
 84B8326146D262: "Cargo Scanner" @
 FF989D476F1F12: "Guardian Module Reinforcement" @
@@ -1375,6 +1375,8 @@ FFE926B9A1E06C: "Concord Cannon" @
 01CE358DB16568: "MKII Vessel Hangar" @
 
 SECTION ShipSlots
+4DC14EFAB1E6E6: "Mining Rig" @
+815B944A41FF1D: "Deposit Scanner" @
 
 F5B0EF731C022D: "Bobble Position 1" @
 7E3AF4B6256EFA: "Bobble Position 2" @

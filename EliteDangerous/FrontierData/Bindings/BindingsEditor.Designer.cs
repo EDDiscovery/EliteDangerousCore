@@ -32,6 +32,18 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BindingsEditor));
             this.dataViewScrollerPanel = new ExtendedControls.ExtPanelDataGridViewScroll();
             this.dataGridView = new BaseUtils.DataGridViewColumnControl();
+            this.ColGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColUI = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColValues = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColPrimaryDevice = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ColPrimaryKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ColPrimaryModDevice = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ColPrimaryModKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ColSecondaryDevice = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ColSecondaryKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ColSecondaryModDevice = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ColSecondaryModKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.vScrollBarCustomMC = new ExtendedControls.ExtScrollBar();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.defineByKeyJoystickToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,18 +67,7 @@
             this.extComboBoxBindFiles = new ExtendedControls.ExtComboBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.extFlowLayoutPanelTop = new ExtendedControls.ExtFlowLayoutPanel();
-            this.ColGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColUI = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColValues = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColPrimaryDevice = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ColPrimaryKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ColPrimaryModDevice = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ColPrimaryModKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ColSecondaryDevice = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ColSecondaryKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ColSecondaryModDevice = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ColSecondaryModKey = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.extButtonDeviceKeys = new ExtendedControls.ExtButton();
             this.dataViewScrollerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
@@ -127,6 +128,91 @@
             this.dataGridView.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.dataGridView_SortCompare);
             this.dataGridView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView_KeyDown);
             this.dataGridView.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dataGridView_KeyPress);
+            // 
+            // ColGroup
+            // 
+            this.ColGroup.FillWeight = 80F;
+            this.ColGroup.HeaderText = "Group";
+            this.ColGroup.Name = "ColGroup";
+            this.ColGroup.ReadOnly = true;
+            // 
+            // ColUI
+            // 
+            this.ColUI.FillWeight = 80F;
+            this.ColUI.HeaderText = "UI";
+            this.ColUI.Name = "ColUI";
+            this.ColUI.ReadOnly = true;
+            // 
+            // ColName
+            // 
+            this.ColName.FillWeight = 150F;
+            this.ColName.HeaderText = "Name";
+            this.ColName.MinimumWidth = 100;
+            this.ColName.Name = "ColName";
+            this.ColName.ReadOnly = true;
+            // 
+            // ColValues
+            // 
+            this.ColValues.HeaderText = "Values";
+            this.ColValues.Name = "ColValues";
+            this.ColValues.ReadOnly = true;
+            // 
+            // ColPrimaryDevice
+            // 
+            this.ColPrimaryDevice.DisplayStyleForCurrentCellOnly = true;
+            this.ColPrimaryDevice.HeaderText = "PrimaryDevice";
+            this.ColPrimaryDevice.Name = "ColPrimaryDevice";
+            this.ColPrimaryDevice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // ColPrimaryKey
+            // 
+            this.ColPrimaryKey.DisplayStyleForCurrentCellOnly = true;
+            this.ColPrimaryKey.HeaderText = "Key";
+            this.ColPrimaryKey.Name = "ColPrimaryKey";
+            this.ColPrimaryKey.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColPrimaryKey.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // ColPrimaryModDevice
+            // 
+            this.ColPrimaryModDevice.DisplayStyleForCurrentCellOnly = true;
+            this.ColPrimaryModDevice.HeaderText = "Mod Device";
+            this.ColPrimaryModDevice.Name = "ColPrimaryModDevice";
+            this.ColPrimaryModDevice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // ColPrimaryModKey
+            // 
+            this.ColPrimaryModKey.DisplayStyleForCurrentCellOnly = true;
+            this.ColPrimaryModKey.HeaderText = "Key";
+            this.ColPrimaryModKey.Name = "ColPrimaryModKey";
+            this.ColPrimaryModKey.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // ColSecondaryDevice
+            // 
+            this.ColSecondaryDevice.DisplayStyleForCurrentCellOnly = true;
+            this.ColSecondaryDevice.HeaderText = "Secondary Device";
+            this.ColSecondaryDevice.Name = "ColSecondaryDevice";
+            this.ColSecondaryDevice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // ColSecondaryKey
+            // 
+            this.ColSecondaryKey.DisplayStyleForCurrentCellOnly = true;
+            this.ColSecondaryKey.HeaderText = "Key";
+            this.ColSecondaryKey.Name = "ColSecondaryKey";
+            this.ColSecondaryKey.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // ColSecondaryModDevice
+            // 
+            this.ColSecondaryModDevice.DisplayStyleForCurrentCellOnly = true;
+            this.ColSecondaryModDevice.HeaderText = "Mod Device";
+            this.ColSecondaryModDevice.Name = "ColSecondaryModDevice";
+            this.ColSecondaryModDevice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // ColSecondaryModKey
+            // 
+            this.ColSecondaryModKey.DisplayStyleForCurrentCellOnly = true;
+            this.ColSecondaryModKey.HeaderText = "Key";
+            this.ColSecondaryModKey.Name = "ColSecondaryModKey";
+            this.ColSecondaryModKey.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // vScrollBarCustomMC
             // 
@@ -424,6 +510,7 @@
             this.extFlowLayoutPanelTop.Controls.Add(this.labelWarning);
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceNew);
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceRename);
+            this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceKeys);
             this.extFlowLayoutPanelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.extFlowLayoutPanelTop.GradientDirection = 0F;
             this.extFlowLayoutPanelTop.Location = new System.Drawing.Point(0, 0);
@@ -438,90 +525,20 @@
         System.Drawing.SystemColors.Control};
             this.extFlowLayoutPanelTop.ThemeColorSet = -1;
             // 
-            // ColGroup
+            // extButtonDeviceKeys
             // 
-            this.ColGroup.FillWeight = 80F;
-            this.ColGroup.HeaderText = "Group";
-            this.ColGroup.Name = "ColGroup";
-            this.ColGroup.ReadOnly = true;
-            // 
-            // ColUI
-            // 
-            this.ColUI.FillWeight = 80F;
-            this.ColUI.HeaderText = "UI";
-            this.ColUI.Name = "ColUI";
-            this.ColUI.ReadOnly = true;
-            // 
-            // ColName
-            // 
-            this.ColName.FillWeight = 150F;
-            this.ColName.HeaderText = "Name";
-            this.ColName.MinimumWidth = 100;
-            this.ColName.Name = "ColName";
-            this.ColName.ReadOnly = true;
-            // 
-            // ColValues
-            // 
-            this.ColValues.HeaderText = "Values";
-            this.ColValues.Name = "ColValues";
-            this.ColValues.ReadOnly = true;
-            // 
-            // ColPrimaryDevice
-            // 
-            this.ColPrimaryDevice.DisplayStyleForCurrentCellOnly = true;
-            this.ColPrimaryDevice.HeaderText = "PrimaryDevice";
-            this.ColPrimaryDevice.Name = "ColPrimaryDevice";
-            this.ColPrimaryDevice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // ColPrimaryKey
-            // 
-            this.ColPrimaryKey.DisplayStyleForCurrentCellOnly = true;
-            this.ColPrimaryKey.HeaderText = "Key";
-            this.ColPrimaryKey.Name = "ColPrimaryKey";
-            this.ColPrimaryKey.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.ColPrimaryKey.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // ColPrimaryModDevice
-            // 
-            this.ColPrimaryModDevice.DisplayStyleForCurrentCellOnly = true;
-            this.ColPrimaryModDevice.HeaderText = "Mod Device";
-            this.ColPrimaryModDevice.Name = "ColPrimaryModDevice";
-            this.ColPrimaryModDevice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // ColPrimaryModKey
-            // 
-            this.ColPrimaryModKey.DisplayStyleForCurrentCellOnly = true;
-            this.ColPrimaryModKey.HeaderText = "Key";
-            this.ColPrimaryModKey.Name = "ColPrimaryModKey";
-            this.ColPrimaryModKey.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // ColSecondaryDevice
-            // 
-            this.ColSecondaryDevice.DisplayStyleForCurrentCellOnly = true;
-            this.ColSecondaryDevice.HeaderText = "Secondary Device";
-            this.ColSecondaryDevice.Name = "ColSecondaryDevice";
-            this.ColSecondaryDevice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // ColSecondaryKey
-            // 
-            this.ColSecondaryKey.DisplayStyleForCurrentCellOnly = true;
-            this.ColSecondaryKey.HeaderText = "Key";
-            this.ColSecondaryKey.Name = "ColSecondaryKey";
-            this.ColSecondaryKey.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // ColSecondaryModDevice
-            // 
-            this.ColSecondaryModDevice.DisplayStyleForCurrentCellOnly = true;
-            this.ColSecondaryModDevice.HeaderText = "Mod Device";
-            this.ColSecondaryModDevice.Name = "ColSecondaryModDevice";
-            this.ColSecondaryModDevice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // ColSecondaryModKey
-            // 
-            this.ColSecondaryModKey.DisplayStyleForCurrentCellOnly = true;
-            this.ColSecondaryModKey.HeaderText = "Key";
-            this.ColSecondaryModKey.Name = "ColSecondaryModKey";
-            this.ColSecondaryModKey.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.extButtonDeviceKeys.BackColor2 = System.Drawing.Color.Red;
+            this.extButtonDeviceKeys.ButtonDisabledScaling = 0.5F;
+            this.extButtonDeviceKeys.GradientDirection = 90F;
+            this.extButtonDeviceKeys.Location = new System.Drawing.Point(976, 3);
+            this.extButtonDeviceKeys.MouseOverScaling = 1.3F;
+            this.extButtonDeviceKeys.MouseSelectedScaling = 1.3F;
+            this.extButtonDeviceKeys.Name = "extButtonDeviceKeys";
+            this.extButtonDeviceKeys.Size = new System.Drawing.Size(75, 23);
+            this.extButtonDeviceKeys.TabIndex = 2;
+            this.extButtonDeviceKeys.Text = "Device Keys";
+            this.extButtonDeviceKeys.UseVisualStyleBackColor = true;
+            this.extButtonDeviceKeys.Click += new System.EventHandler(this.extButtonDeviceKeys_Click);
             // 
             // BindingsEditor
             // 
@@ -579,5 +596,6 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn ColSecondaryKey;
         private System.Windows.Forms.DataGridViewComboBoxColumn ColSecondaryModDevice;
         private System.Windows.Forms.DataGridViewComboBoxColumn ColSecondaryModKey;
+        private ExtendedControls.ExtButton extButtonDeviceKeys;
     }
 }

@@ -53,6 +53,38 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    // Nomad
+    [JournalEntryType(JournalTypeEnum.LaunchVessel)]
+    public class JournalLaunchVessel : JournalEntry, IShipInformation
+    {
+        public JournalLaunchVessel(JObject evt) : base(evt, JournalTypeEnum.LaunchVessel)
+        {
+            VesselType = VehicleFDName.Normalise(evt["VesselType"].Str(), out string bettername, this);
+            VesselTypeLocalised = JournalFieldNaming.CheckLocalisation(evt["VesselTypeLocalised"].Str(), bettername);
+            Loadout = evt["Loadout"].Str();
+            ID = evt["ID"].Int();
+            PlayerControlled = evt["PlayerControlled"].Bool();
+        }
+        public VehicleFDName VesselType { get; set; }
+        public string VesselTypeLocalised { get; set; }
+        public string Loadout { get; set; }
+        public int ID { get; set; }
+        public bool PlayerControlled { get; set; }
+        public bool IsLander => VesselType.Type == VehicleFDName.VehicleType.Lander;
+
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
+        {
+            if (IsLander)
+                shp.LaunchLander();
+        }
+
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("Loadout".Tx() + ": ", Loadout, "NPC Controlled;".Tx(), PlayerControlled);
+        }
+    }
+
+
     // Fighter
     [JournalEntryType(JournalTypeEnum.DockFighter)]
     public class JournalDockFighter : JournalEntry, IShipInformation
