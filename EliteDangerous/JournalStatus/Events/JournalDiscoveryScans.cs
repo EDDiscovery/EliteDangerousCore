@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static BaseUtils.TypeHelpers;
+using static EliteDangerousCore.StarScan;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -670,6 +671,8 @@ namespace EliteDangerousCore.JournalEvents
         public long SystemAddress { get; set; }
         [PropertyNameAttribute("Internal Frontier ID")]
         public int Body { get; set; }
+        [PropertyNameAttribute("Body name from internal lookup")]
+        public string BodyName { get; set; }
         [PropertyNameAttribute("Frontier Genus ID")]
         public string Genus { get; set; }                       // never null
         [PropertyNameAttribute("Genus in localised text")]
@@ -700,13 +703,23 @@ namespace EliteDangerousCore.JournalEvents
         {
             //System.Diagnostics.Debug.WriteLine($"Add ScanOrganic {ScanType} {Genus_Localised} {Species_Localised}");
             s.AddScanOrganicToSystem(this,system);
+
+            if (s.TryGetSystemNode(SystemAddress, out SystemNode sys))
+                {
+                var BodyNode = sys.Bodies().ToList();
+                var bd = BodyNode.Find((x) => x.BodyID == Body);
+                if (bd != null)
+                {
+                    BodyName = bd.BodyDesignator;
+                }
+            }
         }
 
         public override string GetInfo(FillInformationData fid)
         {
             int? ev = ScanType == ScanTypeEnum.Analyse ? EstimatedValue : null;     // if analyse, its estimated value
             int? pev = ev == null ? PotentialEstimatedValue : null;                 // if not at analyse, its potential value
-            return BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "< @ ", fid.WhereAmI);
+            return BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "< @ ", BodyName);
         }
 
         // this sorts the list by date/time, then runs the algorithm that returns only the latest sample state for each key
