@@ -179,6 +179,9 @@ namespace EliteDangerousCore
             LimpetController01, // type 11 prospector sep 25
             FighterBay01, // type 11 prospector sep 25
             Hologram, // type 11 prospector sep 25
+            MiningRigDeployment,    // rhino sep 26
+            Refinery,
+            DepositScanner,
         }
 
 
@@ -362,6 +365,10 @@ namespace EliteDangerousCore
             [Slot.LimpetController01] = "Limpet Controller 1",
             [Slot.FighterBay01] = "Fighter Bay 1",
             [Slot.Hologram] = "Hologram",
+
+            [Slot.MiningRigDeployment] = "Mining Rig",
+            [Slot.Refinery] = "Refinery",
+            [Slot.DepositScanner] = "Deposit Scanner",
         };
 
         // maps the slot fdname to an enum

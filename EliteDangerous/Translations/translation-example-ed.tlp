@@ -1260,7 +1260,7 @@ SECTION PowerPlayStates
 // these are the ones which can't be satisfied from ModulePartNames
 
 SECTION ModuleTypeNames
-
+.Surface_Mining: "Surface Mining" @
 .Colonisation: "Colonisation" @
 .Pacifier_Frag_Cannon: "Pacifier Frag Cannon" @
 .Cargo_Scanner: "Cargo Scanner" @
@@ -1444,6 +1444,10 @@ SECTION ModulePartNames
 
 SECTION ShipSlots
 
+.MiningRigDeployment: "Mining Rig" @
+.Refinery: "Refinery" @
+.DepositScanner: "Deposit Scanner" @
+.BiologicalScanner: "Biological Scanner" @
 .Passenger03: "Passenger Slot 3" @
 .Passenger02: "Passenger Slot 2" @
 .Passenger01: "Passenger Slot 1" @

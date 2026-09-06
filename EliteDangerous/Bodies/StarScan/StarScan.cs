@@ -84,6 +84,11 @@ namespace EliteDangerousCore
                 ToProcess.Remove(je);
         }
 
+        public bool TryGetSystemNode(long addr, out SystemNode sn)
+        {
+                return ScanDataBySysaddr.TryGetValue(addr, out sn);
+        }
+
         // ONLY use this if you must because the async await won't work in the call stack.  
         // Sys can be an address, a name, or a name and address. address takes precedence
         public SystemNode FindSystemSynchronous(ISystem sys, WebExternalDataLookup weblookup = WebExternalDataLookup.None)    // Find the system. Optionally do a EDSM web lookup

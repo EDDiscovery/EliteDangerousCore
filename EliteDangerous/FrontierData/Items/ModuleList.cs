@@ -1140,12 +1140,19 @@ namespace EliteDangerousCore
                 { "int_buggybay_size6_class1", new ShipModule(128672292,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Planetary Vehicle Hangar Class 6 Rating H"){ Cost = 576000, Class = 6, Rating = "H", Mass = 34, Integrity = 30, PowerDraw = 0.6, BootTime = 5, Capacity = 4, Rebuilds = 1, AmmoCost = 1030 } },
                 { "int_buggybay_size6_class2", new ShipModule(128672293,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Planetary Vehicle Hangar Class 6 Rating G"){ Cost = 691200, Class = 6, Rating = "G", Mass = 17, Integrity = 30, PowerDraw = 1.8, BootTime = 5, Capacity = 4, Rebuilds = 1, AmmoCost = 1030 } },
 
-                { "int_largebuggybay_size2_class3", new ShipModule(129046055,ShipModule.ModuleTypes.UnknownType,"Large Planetary Vehicle Hangar Class 2 Rating F") { Cost = 28431, Class = 6, Rating = "F", Mass = 12, Integrity = 30, PowerDraw = 0.75, BootTime = 5, Capacity = 1, Rebuilds = 1, AmmoCost = 1030 } },
-                { "int_largebuggybay_size4_class3", new ShipModule(129046056,ShipModule.ModuleTypes.UnknownType,"Large Planetary Vehicle Hangar Class 4 Rating F") { Cost = 113724, Class = 4, Rating = "F", Mass = 20, Integrity = 30, PowerDraw = 1.2, BootTime = 5, Capacity = 2, Rebuilds = 1, AmmoCost = 1030 } },
-                { "int_largebuggybay_size6_class3", new ShipModule(129046057,ShipModule.ModuleTypes.UnknownType,"Large Planetary Vehicle Hangar Class 6 Rating F") { Cost = 909792, Class = 6, Rating = "F", Mass = 34, Integrity = 30, PowerDraw = 1.8, BootTime = 5, Capacity = 4, Rebuilds = 1, AmmoCost = 1030 } },
-                { "int_mkiilargebuggybay_size2_class3", new ShipModule(129046058,ShipModule.ModuleTypes.UnknownType,"MKII Large Planetary Vehicle Hangar Class 2 Rating F") { Cost = 28431, Class = 6, Rating = "F", Mass = 9, Integrity = 30, PowerDraw = 0.5, BootTime = 5, Capacity = 1, Rebuilds = 1, AmmoCost = 1030 } },
-                { "int_mkiilargebuggybay_size4_class3", new ShipModule(129046059,ShipModule.ModuleTypes.UnknownType,"MKII Large Planetary Vehicle Hangar Class 4 Rating F") { Cost = 113724, Class = 4, Rating = "F", Mass = 15, Integrity = 30, PowerDraw = 0.8, BootTime = 5, Capacity = 2, Rebuilds = 1, AmmoCost = 1030 } },  
-                { "int_mkiilargebuggybay_size6_class3", new ShipModule(129046060,ShipModule.ModuleTypes.UnknownType,"MKII Large Planetary Vehicle Hangar Class 6 Rating F") { Cost = 909792, Class = 6, Rating = "F", Mass = 25.5, Integrity = 30, PowerDraw = 1.2, BootTime = 5, Capacity = 4, Rebuilds = 1, AmmoCost = 1030 } }, 
+                { "int_largebuggybay_size2_class3", new ShipModule(129046055,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Large Planetary Vehicle Hangar Class 2 Rating F") { Cost = 28431, Class = 6, Rating = "F", Mass = 12, Integrity = 30, PowerDraw = 0.75, BootTime = 5, Capacity = 1, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_largebuggybay_size4_class3", new ShipModule(129046056,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Large Planetary Vehicle Hangar Class 4 Rating F") { Cost = 113724, Class = 4, Rating = "F", Mass = 20, Integrity = 30, PowerDraw = 1.2, BootTime = 5, Capacity = 2, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_largebuggybay_size6_class3", new ShipModule(129046057,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Large Planetary Vehicle Hangar Class 6 Rating F") { Cost = 909792, Class = 6, Rating = "F", Mass = 34, Integrity = 30, PowerDraw = 1.8, BootTime = 5, Capacity = 4, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_mkiilargebuggybay_size2_class3", new ShipModule(129046058,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"MKII Large Planetary Vehicle Hangar Class 2 Rating F") { Cost = 28431, Class = 6, Rating = "F", Mass = 9, Integrity = 30, PowerDraw = 0.5, BootTime = 5, Capacity = 1, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_mkiilargebuggybay_size4_class3", new ShipModule(129046059,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"MKII Large Planetary Vehicle Hangar Class 4 Rating F") { Cost = 113724, Class = 4, Rating = "F", Mass = 15, Integrity = 30, PowerDraw = 0.8, BootTime = 5, Capacity = 2, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_mkiilargebuggybay_size6_class3", new ShipModule(129046060,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"MKII Large Planetary Vehicle Hangar Class 6 Rating F") { Cost = 909792, Class = 6, Rating = "F", Mass = 25.5, Integrity = 30, PowerDraw = 1.2, BootTime = 5, Capacity = 4, Rebuilds = 1, AmmoCost = 1030 } },
+
+                { "int_largebuggybay_size2_class3_free", new ShipModule(129046181,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Large Planetary Vehicle Hangar Class 2 Rating F") { Cost = 0, Class = 6, Rating = "F", Mass = 12, Integrity = 30, PowerDraw = 0.75, BootTime = 5, Capacity = 1, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_largebuggybay_size4_class3_free", new ShipModule(129046182,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Large Planetary Vehicle Hangar Class 4 Rating F") { Cost = 0, Class = 4, Rating = "F", Mass = 20, Integrity = 30, PowerDraw = 1.2, BootTime = 5, Capacity = 2, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_largebuggybay_size6_class3_free", new ShipModule(129046183,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"Large Planetary Vehicle Hangar Class 6 Rating F") { Cost = 0, Class = 6, Rating = "F", Mass = 34, Integrity = 30, PowerDraw = 1.8, BootTime = 5, Capacity = 4, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_mkiilargebuggybay_size2_class3_free", new ShipModule(129046184,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"MKII Large Planetary Vehicle Hangar Class 2 Rating F") { Cost = 0, Class = 6, Rating = "F", Mass = 9, Integrity = 30, PowerDraw = 0.5, BootTime = 5, Capacity = 1, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_mkiilargebuggybay_size4_class3_free", new ShipModule(129046185,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"MKII Large Planetary Vehicle Hangar Class 4 Rating F") { Cost = 0, Class = 4, Rating = "F", Mass = 15, Integrity = 30, PowerDraw = 0.8, BootTime = 5, Capacity = 2, Rebuilds = 1, AmmoCost = 1030 } },
+                { "int_mkiilargebuggybay_size6_class3_free", new ShipModule(129046186,ShipModule.ModuleTypes.PlanetaryVehicleHangar,"MKII Large Planetary Vehicle Hangar Class 6 Rating F") { Cost = 0, Class = 6, Rating = "F", Mass = 25.5, Integrity = 30, PowerDraw = 1.2, BootTime = 5, Capacity = 4, Rebuilds = 1, AmmoCost = 1030 } }, 
 
 
                 // Plasmas
@@ -1678,27 +1685,40 @@ namespace EliteDangerousCore
 
             srvmodules = new Dictionary<string, ShipModule>
             {
-                { "buggycargobaydoor", new ShipModule(-1,ShipModule.ModuleTypes.CargoBayDoorType,"SRV Cargo Bay Door") },
-                { "int_fueltank_size0_class3", new ShipModule(-1,ShipModule.ModuleTypes.FuelTank,"SRV Scarab Fuel Tank") },
-                { "vehicle_scorpion_missilerack_lockon", new ShipModule(-1,ShipModule.ModuleTypes.MissileRack,"SRV Scorpion Missile Rack") },
                 { "int_powerdistributor_size0_class1", new ShipModule(-1,ShipModule.ModuleTypes.PowerDistributor,"SRV Scarab Power Distributor") },
+                { "int_powerdistributor_size0_class1_cms", new ShipModule(-1,ShipModule.ModuleTypes.PowerDistributor,"SRV Scorpion Power Distributor Size 0 Class 1 Cms") },
+                { "int_powerdistributor_size0_class1_rno", new ShipModule(-1,ShipModule.ModuleTypes.PowerDistributor,"MEV Rhino Power Distributor") },
+
+                { "int_fueltank_size0_class2", new ShipModule(-1,ShipModule.ModuleTypes.FuelTank,"SRV Scopion Fuel Tank Size 0 Class 2") },
+                { "int_fueltank_size0_class3", new ShipModule(-1,ShipModule.ModuleTypes.FuelTank,"SRV Scarab Fuel Tank") },
+                { "int_fueltank_size0_class4", new ShipModule(-1,ShipModule.ModuleTypes.FuelTank,"MEV Rhino Fuel Tank") },
+
                 { "int_powerplant_size0_class1", new ShipModule(-1,ShipModule.ModuleTypes.PowerPlant,"SRV Scarab Powerplant") },
-                { "vehicle_plasmaminigun_turretgun", new ShipModule(-1,ShipModule.ModuleTypes.PulseLaser,"SRV Scorpion Plasma Turret Gun") },
+                { "int_powerplant_size0_class1_cms", new ShipModule(-1,ShipModule.ModuleTypes.PowerPlant,"SRV Scorpion Powerplant Size 0 Class 1 Cms") },
 
                 { "testbuggy_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.CockpitType,"SRV Scarab Cockpit") },
-                { "scarab_armour_grade1", new ShipModule(-1,ShipModule.ModuleTypes.LightweightAlloy,"SRV Scarab Armour") },
-                { "int_fueltank_size0_class2", new ShipModule(-1,ShipModule.ModuleTypes.FuelTank,"SRV Scopion Fuel tank Size 0 Class 2") },
                 { "combat_multicrew_srv_01_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.CockpitType,"SRV Scorpion Cockpit") },
-                { "int_powerdistributor_size0_class1_cms", new ShipModule(-1,ShipModule.ModuleTypes.PowerDistributor,"SRV Scorpion Power Distributor Size 0 Class 1 Cms") },
-                { "int_powerplant_size0_class1_cms", new ShipModule(-1,ShipModule.ModuleTypes.PowerPlant,"SRV Scorpion Powerplant Size 0 Class 1 Cms") },
-                { "vehicle_turretgun", new ShipModule(-1,ShipModule.ModuleTypes.PulseLaser,"SRV Scarab Turret") },
+                { "mev_rhino_cockpit", new ShipModule(-1,ShipModule.ModuleTypes.CockpitType,"MEV Rhino Cockpit") },
+
+                { "scarab_armour_grade1", new ShipModule(-1,ShipModule.ModuleTypes.LightweightAlloy,"SRV Scarab Armour") },
+                { "mev_rhino_armour", new ShipModule(-1,ShipModule.ModuleTypes.LightweightAlloy,"MEV Rhino Armour") },
+
+                { "buggycargobaydoor", new ShipModule(-1,ShipModule.ModuleTypes.CargoBayDoorType,"SRV Cargo Bay Door") },
+
+                { "vehicle_plasmaminigun_turretgun", new ShipModule(-1,ShipModule.ModuleTypes.PulseLaser,"SRV Scorpion Plasma Turret Gun") },
+                { "vehicle_turretgun", new ShipModule(-1,ShipModule.ModuleTypes.PulseLaser,"SRV Scarab Turret Gun") },
+                { "vehicle_scorpion_missilerack_lockon", new ShipModule(-1,ShipModule.ModuleTypes.MissileRack,"SRV Scorpion Missile Rack") },
 
                 { "hpt_datalinkscanner", new ShipModule(-1,ShipModule.ModuleTypes.Sensors,"SRV Data Link Scanner") },
                 { "int_sinewavescanner_size1_class1", new ShipModule(-1,ShipModule.ModuleTypes.Sensors,"SRV Scarab Scanner") },
                 { "int_sensors_surface_size1_class1", new ShipModule(-1,ShipModule.ModuleTypes.Sensors,"SRV Sensors") },
+                { "hpt_mkii_planetaryminingdepositscanner_class1", new ShipModule(-1,ShipModule.ModuleTypes.Sensors,"Mk II Planetary Mining Deposit Scanner") },
 
                 { "int_lifesupport_size0_class1", new ShipModule(-1,ShipModule.ModuleTypes.LifeSupport,"SRV Life Support") },
                 { "int_shieldgenerator_size0_class3", new ShipModule(-1,ShipModule.ModuleTypes.ShieldGenerator,"SRV Shields") },
+
+                 { "int_miningrigdeployment", new ShipModule(-1,ShipModule.ModuleTypes.SurfaceMining,"MEV Rhino Mining Rig Deployment") },
+                 { "int_refinerysrv_size1_class3", new ShipModule(-1,ShipModule.ModuleTypes.Refinery,"MEV Rhino Refinery") },
             };
 
             // this array maps a special effect fdname to the effect that it has on module properties - see also material commodities for fdname to materials used

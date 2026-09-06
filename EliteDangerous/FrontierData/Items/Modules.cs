@@ -399,6 +399,7 @@ namespace EliteDangerousCore
                 MiningLance,
                 MiningLaser,
                 MiningMultiLimpetController,
+                SurfaceMining,
                 MirroredSurfaceComposite,
                 MissileRack,
                 ModuleReinforcementPackage,

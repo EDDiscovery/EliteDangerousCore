@@ -2,7 +2,7 @@
 SECTION JournalTypeEnum
 
 .GameModeChange: "Game Mode Change" @
-
+.LaunchVessel: "Launch Vessel" @
 .Unknown: "Unknown" @
 .AfmuRepairs: "Afmu Repairs" @
 .ApproachBody: "Approach Body" @
