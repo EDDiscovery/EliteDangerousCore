@@ -354,6 +354,9 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Does it contain other signals")]
         public bool ContainsOtherSignals { get { return Signals?.Count(x => x.IsOther) > 0 ? true : false; } }
         [JsonIgnore]
+        [PropertyNameAttribute("Does it have planetary mining signals")]
+        public bool ContainsPlanetaryMiningSignals { get { return Signals?.Count(x => x.IsPlanetaryMining) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Does it contain uncategorised signals")]
         public bool ContainsUncategorisedSignals { get { return Signals?.Count(x => x.IsUncategorised) > 0 ? true : false; } }
         [JsonIgnore]
@@ -374,6 +377,9 @@ namespace EliteDangerousCore.JournalEvents
         [JsonIgnore]
         [PropertyNameAttribute("Count of other signals")]
         public int CountOtherSignals { get { return Signals?.Where(x => x.IsOther).Sum(y => y.Count) ?? 0; } }
+        [JsonIgnore]
+        [PropertyNameAttribute("Count of planetary mining signals")]
+        public int CountPlanetaryMiningSignals { get { return Signals?.Where(x => x.IsPlanetaryMining).Sum(y => y.Count) ?? 0; } }
         [JsonIgnore]
         [PropertyNameAttribute("Count of uncategorised signals")]
         public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }

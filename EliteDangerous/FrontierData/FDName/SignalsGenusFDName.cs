@@ -33,15 +33,21 @@ namespace EliteDangerousCore
         {
         }
 
-        public static SignalFDName NormaliseSAAFSSSignals(string fdname, JournalEntry ev)
+        public static SignalFDName NormaliseSAAFSSSignals(string fdname, out string engname, JournalEntry ev)
         {
             if (fdname.HasChars())
-                return new SignalFDName(fdname.Replace("$SAA_SignalType_", "").Replace(";", "").SplitCapsWordFull());
+            {
+                string nodecoration = fdname.Replace("$SAA_SignalType_", "").Replace(";", "");
+                nodecoration = nodecoration.ReplaceIfStartsWith("$","").ReplaceIfEndsWith("_Name", "");
+                engname = nodecoration.SplitCapsWordFull();
+                return new SignalFDName(fdname);
+            }
             else
             {
                 if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
                     BaseUtils.Debugger.TraceBreak($"*** Missing Signals {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
 
+                engname = "Empty Signal";
                 return new SignalFDName("Error in Signal no data");
             }
         }

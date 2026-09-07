@@ -308,10 +308,11 @@ namespace EliteDangerousCore
         [PropertyNameAttribute("Is other signal")]
         public bool IsOther { get { return Type.Contains("$SAA_SignalType_Other;"); } }
         [JsonIgnore]
+        [PropertyNameAttribute("Is planetary mining signal")]
+        public bool IsPlanetaryMining { get { return Type.Contains("$PlanetaryMiningLocation_Name;"); } }
+        [JsonIgnore]
         [PropertyNameAttribute("Is uncategorised signal")]
-        public bool IsUncategorised { get { return !Type.Contains("$SAA_SignalType"); } }       // probably a material, but you can never tell with FD
-
-
+        public bool IsUncategorised { get { return !Type.Contains("$SAA_SignalType") && !IsPlanetaryMining; } }       // probably a material, but you can never tell with FD
     }
 
     [System.Diagnostics.DebuggerDisplay("{Genus} {Genus_Localised}")]

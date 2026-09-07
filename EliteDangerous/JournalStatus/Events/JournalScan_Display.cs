@@ -354,7 +354,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string SurveyorInfoLine(ISystem sys,
                                bool hasminingsignals, bool hasgeosignals, bool hasbiosignals, bool hasthargoidsignals, bool hasguardiansignals, bool hashumansignals, bool hasothersignals,
-                               bool hasscanorganics,
+                               bool hasscanorganics, bool hasplanetaryminingsignals,
                                bool showvolcanism, bool showvalues, bool shortinfo, bool showGravity, bool showAtmos, bool showTemp, bool showRings,
                                int lowRadiusLimit, int largeRadiusLimit, double eccentricityLimit)
         {
@@ -393,6 +393,7 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((js.IsLandable && js.nSurfaceTemperature.HasValue && showTemp) ? (string.Format(" Surface temperature: {0} K.".Tx(), Math.Round(js.nSurfaceTemperature.Value, 1, MidpointRounding.AwayFromZero))) : null);
             information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? @" Has ".Tx() + js.VolcanismTranslated + "." : null);
             information.Append((hasminingsignals) ? " Has mining signals.".Tx() : null);
+            information.Append((hasplanetaryminingsignals) ? (" " + "Has planetary mining signals.".Tx()) : null);
             information.Append((hasgeosignals) ? (string.Format(" Geological signals: {0}.".Tx(), js.CountGeoSignals)) : null);
             information.Append((hasbiosignals) ? (string.Format(" Biological signals: {0}.".Tx(), js.CountBioSignals)) : null);
             information.Append((hasthargoidsignals) ? (string.Format(" Thargoid signals: {0}.".Tx(), js.CountThargoidSignals)) : null);

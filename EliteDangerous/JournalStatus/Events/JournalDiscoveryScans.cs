@@ -326,8 +326,8 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var s in Signals)      // some don't have localisation
                 {
-                    s.Type = SignalFDName.NormaliseSAAFSSSignals(s.Type.ID , this);
-                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.ID);
+                    s.Type = SignalFDName.NormaliseSAAFSSSignals(s.Type.ID, out string engname, this);
+                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, engname);
                 }
             }
             Genuses = evt["Genuses"].ToObjectQ<List<SAAGenus>>();
@@ -363,6 +363,8 @@ namespace EliteDangerousCore.JournalEvents
         public bool ContainsHumanSignals { get { return Signals?.Count(x => x.IsHuman) > 0 ? true : false; } }
         [PropertyNameAttribute("Does it have other signals")]
         public bool ContainsOtherSignals { get { return Signals?.Count(x => x.IsOther) > 0 ? true : false; } }
+        [PropertyNameAttribute("Does it have planetary mining signals")]
+        public bool ContainsPlanetaryMiningSignals { get { return Signals?.Count(x => x.IsPlanetaryMining) > 0 ? true : false; } }
         [PropertyNameAttribute("Does it have uncategorised signals")]
         public bool ContainsUncategorisedSignals { get { return Signals?.Count(x => x.IsUncategorised) > 0 ? true : false; } }
 
@@ -376,6 +378,8 @@ namespace EliteDangerousCore.JournalEvents
         public int CountGuardianSignals { get { return Signals?.Where(x => x.IsGuardian).Sum(y => y.Count) ?? 0; } }
         [PropertyNameAttribute("Count of human signals")]
         public int CountHumanSignals { get { return Signals?.Where(x => x.IsHuman).Sum(y => y.Count) ?? 0; } }
+        [PropertyNameAttribute("Count of planetary mining signals")]
+        public int CountPlanetaryMiningSignals { get { return Signals?.Where(x => x.IsPlanetaryMining).Sum(y => y.Count) ?? 0; } }
         [PropertyNameAttribute("Count of other signals")]
         public int CountOtherSignals { get { return Signals?.Where(x => x.IsOther).Sum(y => y.Count) ?? 0; } }
         [PropertyNameAttribute("Count of uncategorised signals")]
@@ -549,8 +553,8 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (var s in Signals)      // some don't have localisation
                 {
-                    s.Type = SignalFDName.NormaliseSAAFSSSignals(s.Type.ID, this);
-                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, s.Type.ID);
+                    s.Type = SignalFDName.NormaliseSAAFSSSignals(s.Type.ID, out string engname, this);
+                    s.Type_Localised = JournalFieldNaming.CheckLocalisation(s.Type_Localised, engname);
                 }
             }
         }
@@ -587,6 +591,9 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Does it have other signals")]
         public bool ContainsOtherSignals { get { return Signals?.Count(x => x.IsOther) > 0 ? true : false; } }
         [JsonIgnore]
+        [PropertyNameAttribute("Does it have planetary mining signals")]
+        public bool ContainsPlanetaryMiningSignals { get { return Signals?.Count(x => x.IsPlanetaryMining) > 0 ? true : false; } }
+        [JsonIgnore]
         [PropertyNameAttribute("Does it have uncategorised signals")]
         public bool ContainsUncategorisedSignals { get { return Signals?.Count(x => x.IsUncategorised) > 0 ? true : false; } }
 
@@ -605,9 +612,13 @@ namespace EliteDangerousCore.JournalEvents
         [JsonIgnore]
         [PropertyNameAttribute("Count of human signals")]
         public int CountHumanSignals { get { return Signals?.Where(x => x.IsHuman).Sum(y => y.Count) ?? 0; } }
+
         [JsonIgnore]
         [PropertyNameAttribute("Count of other signals")]
         public int CountOtherSignals { get { return Signals?.Where(x => x.IsOther).Sum(y => y.Count) ?? 0; } }
+        [JsonIgnore]
+        [PropertyNameAttribute("Count of planetary mining signals")]
+        public int CountPlanetaryMiningSignals { get { return Signals?.Where(x => x.IsPlanetaryMining).Sum(y => y.Count) ?? 0; } }
         [JsonIgnore]
         [PropertyNameAttribute("Count of uncategorised signals")]
         public int CountUncategorisedSignals { get { return Signals?.Where(x => x.IsUncategorised).Sum(y => y.Count) ?? 0; } }
@@ -736,7 +747,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             int? ev = ScanType == ScanTypeEnum.Analyse ? EstimatedValue : null;     // if analyse, its estimated value
             int? pev = ev == null ? PotentialEstimatedValue : null;                 // if not at analyse, its potential value
-            return BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "", WasLogged == null ? "" : WasLogged == false ? "Was not logged".Tx() : "Was logged".Tx(), "< @ ", BodyName); return BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "", WasLogged == null ? "" : WasLogged == false ? "Was not logged".Tx() : "Was logged".Tx(), "< @ ", fid.WhereAmI);
+            return BaseUtils.FieldBuilder.Build("", ScanType.ToString(), "<: ", Genus_Localised, "", Species_Localised_Short, "", Variant_Localised_Short, "; cr;N0", ev, "(;) cr;N0", pev, "", WasLogged == null ? "" : WasLogged == false ? "Was not logged".Tx() : "Was logged".Tx(), "< @ ", BodyName);
         }
 
         // this sorts the list by date/time, then runs the algorithm that returns only the latest sample state for each key
