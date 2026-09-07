@@ -191,6 +191,7 @@ namespace EliteDangerousCore
 
         private void extButtonDeviceKeys_Click(object sender, EventArgs e)
         {
+            keyrenames.Edit(this.FindForm(), bf.KeyboardLayout, "231D0200");
             ExtendedControls.CheckedIconNewListBoxForm displayfilter = new CheckedIconNewListBoxForm();
             var items = bf.DeviceListNoKeyboardMouseDevice;
 
@@ -205,7 +206,7 @@ namespace EliteDangerousCore
                 displayfilter.PositionBelow(extButtonDeviceRename);
                 displayfilter.UC.ButtonPressed += (i, s1, s2, o, m) =>      // called on click of button
                 {
-                    EditKeyConfigurationList(s1);
+                    keyrenames.Edit(this.FindForm(), bf.KeyboardLayout, s1);
                     Display();
                     displayfilter.Close();
                 };

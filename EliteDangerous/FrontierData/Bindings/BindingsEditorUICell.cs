@@ -96,7 +96,7 @@ namespace EliteDangerousCore
                 }
                 else if (ci == ColPrimaryKey.Index)
                 {
-                    entry.PrimaryKeys.Keys[0] = new DeviceKeyPair(bfdev, OriginalKeyName(bfdev, newcellvalue));
+                    entry.PrimaryKeys.Keys[0] = new DeviceKeyPair(bfdev, keyrenames.OriginalName(bfdev, newcellvalue));
                     row.Cells[ci].ErrorText = null;
                     SetDirty();
                 }
@@ -113,7 +113,7 @@ namespace EliteDangerousCore
                 }
                 else if (ci == ColPrimaryModKey.Index)
                 {
-                    entry.PrimaryKeys.SetMod(bfdev, OriginalKeyName(bfdev, newcellvalue));      // either add mod or change current mod
+                    entry.PrimaryKeys.SetMod(bfdev, keyrenames.OriginalName(bfdev, newcellvalue));      // either add mod or change current mod
                     row.Cells[ci].ErrorText = null;
                     SetDirty();
                 }
@@ -145,7 +145,7 @@ namespace EliteDangerousCore
                 }
                 else if (ci == ColSecondaryKey.Index)
                 {
-                    entry.SecondaryKeys.Keys[0] = new DeviceKeyPair(bfdev, OriginalKeyName(bfdev, newcellvalue));
+                    entry.SecondaryKeys.Keys[0] = new DeviceKeyPair(bfdev, keyrenames.OriginalName(bfdev, newcellvalue));
                     row.Cells[ci].ErrorText = null;
                     SetDirty();
                 }
@@ -162,7 +162,7 @@ namespace EliteDangerousCore
                 }
                 else if (ci == ColSecondaryModKey.Index)
                 {
-                    entry.SecondaryKeys.SetMod(bfdev, OriginalKeyName(bfdev, newcellvalue));
+                    entry.SecondaryKeys.SetMod(bfdev, keyrenames.OriginalName(bfdev, newcellvalue));
                     row.Cells[ci].ErrorText = null;
                     SetDirty();
                 }
@@ -250,7 +250,7 @@ namespace EliteDangerousCore
                     // dkp contains converted device name, not the binding file name
 
                     string bfdevname = OriginalDeviceName(rdkp.Device);
-                    DeviceKeyPair extdkp = new DeviceKeyPair(bfdevname, BetterKeyName(bfdevname,rdkp.FrontierKeyName));     // we may rename it, so it works both for Joy_29 and renamed..
+                    DeviceKeyPair extdkp = new DeviceKeyPair(bfdevname, keyrenames.GetRename(bfdevname,rdkp.FrontierKeyName));     // we may rename it, so it works both for Joy_29 and renamed..
 
                     System.Diagnostics.Debug.WriteLine($"Direct Input {c.RowIndex}: {ci} Key press returned {rdkp.Device} {rdkp.FrontierKeyName} -> {extdkp.Device} {extdkp.FrontierKeyName}");
 

@@ -99,6 +99,69 @@ namespace EliteDangerousCore
             return ret;
         }
 
+        // Return list of standard frontier names for joystick axis, joystick buttons, mouse and keyboard
+        // each setting may be mixed freely
+        static public HashSet<string> FrontierKeyNames(string layoutname, bool binding, bool joystickbuttons, bool mouse, bool keyboard, bool inclalphanumbersfkeys = true)
+        {
+            HashSet<string> ret = new HashSet<string>();
+            
+            if (binding)
+            {
+                ret.Add($"Joy_XAxis");          // joy axis
+                ret.Add($"Joy_YAxis");
+                ret.Add($"Joy_ZAxis");
+                ret.Add($"Joy_RXAxis");
+                ret.Add($"Joy_RYAxis");
+                ret.Add($"Joy_RZAxis");
+                ret.Add($"Joy_UAxis");
+                ret.Add($"Joy_VAxis");
+            }
+            
+            if ( joystickbuttons )
+            {
+                for (int i = 1; i <= 32; i++)
+                    ret.Add($"Joy_{i}");
+                for (int i = 1; i <= 2; i++)
+                {
+                    ret.Add($"Joy_POV{i}Left");
+                    ret.Add($"Joy_POV{i}Right");
+                    ret.Add($"Joy_POV{i}Left");
+                    ret.Add($"Joy_POV{i}Up");
+                    ret.Add($"Joy_POV{i}Down");
+                    ret.Add($"Joy_POV{i}UpLeft");
+                    ret.Add($"Joy_POV{i}UpRight");
+                    ret.Add($"Joy_POV{i}DownLeft");
+                    ret.Add($"Joy_POV{i}DownRight");
+                }
+                for (int i = 32; i <= 128; i++)
+                    ret.Add($"Joy_{i}");
+            }
+
+            if ( mouse )
+            {
+                ret.Add("Mouse_1");
+                ret.Add("Mouse_2");
+                ret.Add("Mouse_3");
+                ret.Add("Mouse_4");
+                ret.Add("Mouse_5");
+                ret.Add("Mouse_6");
+                ret.Add("Mouse_7");
+                ret.Add("Mouse_8");
+                ret.Add("Neg_Mouse_ZAxis");
+                ret.Add("Pos_Mouse_ZAxis");
+            }
+            
+            if ( keyboard )
+            {
+                foreach (var x in FrontierKeyConversion.FrontierKeyNames(layoutname))
+                    ret.Add(x);
+
+                ret.Remove("Key_Escape");       // can't use this so remove from selection box. Keep it in the frontier name system though for safety
+            }
+
+            return ret;
+        }
+
         // try and translate from vkeyname to frontier.
         static public string KeysToFrontier(string layoutname, string vkeyname)
         {

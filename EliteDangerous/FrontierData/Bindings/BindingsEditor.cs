@@ -59,7 +59,7 @@ namespace EliteDangerousCore
 
        
         // folder and preferredbindfile (can be null)
-        public void Init(string folder, string preferredbindfile, List<string> otherdevicesknown, string jsondevicekeynames)
+        public void Init(string folder, string preferredbindfile, List<string> otherdevicesknown, string jsondevicekeynames, string defaultdevicekeynames = null)
         {
             List<FileInfo> bindfiles = Directory.EnumerateFiles(folder, "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToList();
             foreach (var x in bindfiles)
@@ -93,12 +93,35 @@ namespace EliteDangerousCore
 
             extComboBoxBindFiles.SelectedIndexChanged += ExtComboBoxBindFiles_SelectedIndexChanged;
 
-            SetKeyConfigurationList(jsondevicekeynames);
-            System.Diagnostics.Debug.WriteLine($"Key list {GetKeyConfigurationList()}");
+            // load stored key renames
+
+            if ( jsondevicekeynames!=null)
+                keyrenames.Set(jsondevicekeynames);
+
+            if ( defaultdevicekeynames!=null)           // if we have a default list, see if it needs to populate into standard list
+            {
+                KeyRenames defrenames = new KeyRenames();
+                defrenames.Set(defaultdevicekeynames);
+                foreach(KeyRenames.DeviceEntry key in defrenames)
+                {
+                    if ( keyrenames.Get(key.DeviceList) == null)
+                    {
+                        keyrenames.Add(key);
+                    }
+                }
+            }
+
+            System.Diagnostics.Debug.WriteLine($"Key list {keyrenames.Get()}");
+
             Display();
 
             updatecheck.Tick += Updatecheck_Tick;
             updatecheck.Start();
+        }
+
+        public string KeyNames()
+        {
+            return keyrenames.Get();
         }
 
         public void Display()
@@ -260,7 +283,8 @@ namespace EliteDangerousCore
                 else
                 {
                     AddKeyOptions(binding, dkp.Device, dk);
-                    SetValue(row.Cells[index + 1], BetterKeyName(dkp.Device, dkp.FrontierKeyName));
+                    SetValue(dk, keyrenames.GetRename(dkp.Device, dkp.FrontierKeyName));
+                    dk.ToolTipText = keyrenames.GetHint(dkp.Device, dkp.FrontierKeyName);
                 }
             }
             else
@@ -282,58 +306,14 @@ namespace EliteDangerousCore
             c.Value = value;
         }
 
+
         // add options to key, based on binding, the bindings file external device name
         private void AddKeyOptions(bool binding, string bfdevname, DataGridViewComboBoxCell c)
         {
+            var ret = FrontierKeyConversion.FrontierKeyNames(bf.KeyboardLayout, binding, DeviceKeyPair.IsJoystickDevice(bfdevname), DeviceKeyPair.IsMouseDevice(bfdevname), DeviceKeyPair.IsKeyboardDevice(bfdevname));
             c.Items.Clear();
-            if (binding)
-            {
-                c.Items.Add($"Joy_XAxis");          // joy axis
-                c.Items.Add($"Joy_YAxis");
-                c.Items.Add($"Joy_ZAxis");
-                c.Items.Add($"Joy_RXAxis");
-                c.Items.Add($"Joy_RYAxis");
-                c.Items.Add($"Joy_RZAxis");
-                c.Items.Add($"Joy_UAxis");
-                c.Items.Add($"Joy_VAxis");
-            }
-            else if (bfdevname == "Keyboard")
-            {
-                if (bf.IsEditable)
-                {
-                    foreach (var x in FrontierKeyConversion.FrontierKeyNames(bf.KeyboardLayout))
-                        c.Items.Add(x);
-
-                    c.Items.Remove("Key_Escape");       // can't use this so remove from selection box. Keep it in the frontier name system though for safety
-                }
-            }
-            else if (bfdevname == "Mouse")
-            {
-                c.Items.Add($"Mouse_1");
-                c.Items.Add($"Mouse_2");
-                c.Items.Add($"Mouse_3");
-                c.Items.Add($"Mouse_4");
-                c.Items.Add($"Mouse_5");
-                c.Items.Add($"Mouse_6");
-                c.Items.Add($"Mouse_7");
-                c.Items.Add($"Mouse_8");
-                c.Items.Add($"Neg_Mouse_ZAxis");
-                c.Items.Add($"Pos_Mouse_ZAxis");
-            }
-            else if (bfdevname != DeviceKeyPair.NoDeviceName)
-            {
-                for (int i = 1; i < 32; i++)
-                    c.Items.Add(BetterKeyName(bfdevname, $"Joy_{i}"));
-                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV1Left"));
-                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV1Right"));
-                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV1Left"));
-                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV1Up"));
-                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV1Down"));
-                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV2Right"));
-                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV2Left"));
-                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV2Up"));
-                c.Items.Add(BetterKeyName(bfdevname, $"Joy_POV2Down"));
-            }
+            foreach (var x in ret)
+                c.Items.Add( keyrenames.GetRename(bfdevname,x));
         }
 
         // use renamed device in here
@@ -371,12 +351,16 @@ namespace EliteDangerousCore
 
         private void IndicateErrors()
         {
+            string clash = "Keys clash with";
+
             foreach (DataGridViewRow row in dataGridView.Rows)
             {
                 row.Cells[ColPrimaryKey.Index].Style.BackColor = Color.Empty;       // reset
                 row.Cells[ColSecondaryKey.Index].Style.BackColor = Color.Empty;
-                row.Cells[ColPrimaryKey.Index].ToolTipText = null;
-                row.Cells[ColSecondaryKey.Index].ToolTipText = null;
+                if (row.Cells[ColPrimaryKey.Index].ToolTipText?.Contains(clash) == true)        // clear any clash tooltip
+                    row.Cells[ColPrimaryKey.Index].ToolTipText = null;
+                if (row.Cells[ColSecondaryKey.Index].ToolTipText?.Contains(clash) == true)
+                    row.Cells[ColSecondaryKey.Index].ToolTipText = null;
             }
 
             foreach (DataGridViewRow row in dataGridView.Rows)
@@ -399,13 +383,13 @@ namespace EliteDangerousCore
                             {
                                 if ( !FrontierBindingClassification.HoldButton(entry1.Name) && !FrontierBindingClassification.HoldButton(entry2.Name))
                                 { 
-                                    System.Diagnostics.Debug.WriteLine($"Checked Clash: `{entry1.ToString()}` vs `{entry2.ToString()}`");
+                                   // System.Diagnostics.Debug.WriteLine($"Checked Clash: `{entry1.ToString()}` vs `{entry2.ToString()}`");
                                     var cell1 = row.Cells[same.Item1 == 1 ? ColPrimaryKey.Index : ColSecondaryKey.Index];
                                     cell1.Style.BackColor = Color.DarkRed;
-                                    cell1.ToolTipText = $"Keys clash with {BetterName(entry2.Name)} {(same.Item2 == 1 ? "Primary" : "Secondary")}";
+                                    cell1.ToolTipText = clash + $" {BetterName(entry2.Name)} {(same.Item2 == 1 ? "Primary" : "Secondary")}";
                                     var cell2 = rowcompare.Cells[same.Item2 == 1 ? ColPrimaryKey.Index : ColSecondaryKey.Index];
                                     cell2.Style.BackColor = Color.DarkRed;
-                                    cell2.ToolTipText = $"Keys clash with {BetterName(entry1.Name)} {(same.Item1 == 1 ? "Primary" : "Secondary")}";
+                                    cell2.ToolTipText = clash + $" {BetterName(entry1.Name)} {(same.Item1 == 1 ? "Primary" : "Secondary")}";
                                 }
 
                             }
@@ -464,6 +448,8 @@ namespace EliteDangerousCore
         string initialcellvalue;
         private List<string> otherdevicesknown;
         private int filtercomboboxmodestart = 0;
+
+        private KeyRenames keyrenames = new KeyRenames();
 
 
     }
