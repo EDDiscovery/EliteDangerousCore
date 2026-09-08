@@ -35,7 +35,7 @@ namespace EliteDangerousCore
 
         // allows user to define translations between external frontier device names and ones use in here
         public Dictionary<string, string> ConvertDeviceNameList = new Dictionary<string, string>();
-        public List<string> DevicesNamesConverted => bf.DeviceList.Select(x=>BetterDevice(x)).ToList();
+        public List<string> DevicesNamesConverted => bf.DeviceList.Select(x=>BetterDeviceName(x)).ToList();
 
         public BindingsEditor()
         {
@@ -46,15 +46,6 @@ namespace EliteDangerousCore
 
             showFrontierNamesToolStripMenuItem.Checked = false;
             showFrontierNamesToolStripMenuItem.Click += new System.EventHandler(this.showFrontierNamesToolStripMenuItem_Click);
-
-            extComboBoxFilter.Items.Add("All");
-            foreach (var x in Enum.GetNames(typeof(FrontierBindingClassification.Classification)))
-                extComboBoxFilter.Items.Add(x.ToString().SplitCapsWordFull());
-            filtercomboboxmodestart = extComboBoxFilter.Items.Count;
-            foreach (var x in Enum.GetNames(typeof(FrontierBindingClassification.Mode)))
-                extComboBoxFilter.Items.Add(x.ToString().SplitCapsWordFull());
-            extComboBoxFilter.SelectedIndex = 0;
-            extComboBoxFilter.SelectedIndexChanged += ExtComboBoxFilter_SelectedIndexChanged;
         }
 
        
@@ -100,9 +91,9 @@ namespace EliteDangerousCore
 
             if ( defaultdevicekeynames!=null)           // if we have a default list, see if it needs to populate into standard list
             {
-                KeyRenames defrenames = new KeyRenames();
+                DeviceKeyNames defrenames = new DeviceKeyNames();
                 defrenames.Set(defaultdevicekeynames);
-                foreach(KeyRenames.DeviceEntry key in defrenames)
+                foreach(DeviceKeyNames.DeviceEntry key in defrenames)
                 {
                     if ( keyrenames.Get(key.DeviceList) == null)
                     {
@@ -111,8 +102,9 @@ namespace EliteDangerousCore
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine($"Key list {keyrenames.Get()}");
+            ComboBoxFilterFill();
 
+            System.Diagnostics.Debug.WriteLine($"Key list {keyrenames.Get()}");
             Display();
 
             updatecheck.Tick += Updatecheck_Tick;
@@ -267,35 +259,76 @@ namespace EliteDangerousCore
             dk.Value = null;
 
             dc.Items.Clear();
-            foreach (var device in devices) 
-                dc.Items.Add(BetterDevice(device));           // always add the device list in
+            foreach (var device in devices)
+                dc.Items.Add(BetterDeviceName(device));           // always add the device list in
 
             if (dkp != null)
             {
-                row.Cells[index].Tag = dkp;
-                SetValue(row.Cells[index], BetterDevice(dkp.Device));     // set up device value
+                dc.Tag = dkp;
+                SetDevice(dc, dkp.Device);
 
                 if (!dkp.IsDevice)              // if no device, cell is clear
                 {
-                    row.Cells[index + 1].Value = null;
-                    row.Cells[index + 1].ReadOnly = true;
+                    dk.Value = null;
+                    dk.ReadOnly = true;
                 }
                 else
                 {
-                    AddKeyOptions(binding, dkp.Device, dk);
-                    SetValue(dk, keyrenames.GetRename(dkp.Device, dkp.FrontierKeyName));
-                    dk.ToolTipText = keyrenames.GetHint(dkp.Device, dkp.FrontierKeyName);
+                    SetKey(dk, binding, dkp.Device, dkp.FrontierKeyName);
                 }
+
             }
             else
             {
-                row.Cells[index + 1].ReadOnly = true;
+                dk.ReadOnly = true;
             }
+
+            SetHint(row, index, dkp?.Device, dkp?.FrontierKeyName);
 
             if (!editable)
             {
-                row.Cells[index].ReadOnly = row.Cells[index + 1].ReadOnly = true;
+                dc.ReadOnly = dk.ReadOnly = true;
             }
+        }
+
+        // set up a device cell, with a better name than frontierdevice
+        private void SetDevice(DataGridViewCell dc, string frontierdevicename)
+        {
+            string bdn = BetterDeviceName(frontierdevicename);
+            SetValue(dc, bdn);     // set up device valu
+            //System.Diagnostics.Debug.WriteLine($"Changed Device {frontierdevicename}");
+        }
+
+        // set up a key cell, given the binding and frontier device name. 
+        private void SetKey(DataGridViewComboBoxCell dk, bool binding, string frontierdevicename, string frontierkeyname)
+        {
+            dk.Value = null;        // need to clear before clearing items
+            AddKeyOptions(binding, frontierdevicename, dk);
+            string bk = keyrenames.GetRename(frontierdevicename, frontierkeyname);
+            SetValue(dk, bk);
+            dk.ErrorText = null;
+            //System.Diagnostics.Debug.WriteLine($"Changed Key {binding} {frontierdevicename} {frontierkeyname}");
+        }
+
+        // set hints on device/key pair.  You may call with both nulls, or just device, or both
+        private void SetHint(DataGridViewRow row, int deviceindex, string frontierdevicename = null, string frontierkeyname = null)
+        {
+            row.Cells[deviceindex].ToolTipText = row.Cells[deviceindex + 1].ToolTipText = null;
+
+            if (frontierdevicename != null)
+            {
+                string nl = Environment.NewLine;    // for debugging change to "|"
+                string bdn = BetterDeviceName(frontierdevicename);
+                row.Cells[deviceindex].ToolTipText = DeviceKeyPair.IsJoystickDevice(frontierdevicename) && bdn != frontierdevicename ? (bdn + nl + "Frontier Name " + frontierdevicename) : null;
+
+                if (frontierkeyname != null)
+                {
+                    string bk = keyrenames.GetRename(frontierdevicename, frontierkeyname);
+                    string hint = keyrenames.GetHint(frontierdevicename, frontierkeyname);
+                    row.Cells[deviceindex + 1].ToolTipText = bk != frontierkeyname ? (hint + nl + frontierkeyname) : null;
+                }
+            }
+            //System.Diagnostics.Debug.WriteLine($"Changed Hint {row.Index} {deviceindex} : `{row.Cells[deviceindex].ToolTipText}` `{row.Cells[deviceindex + 1].ToolTipText}`");
         }
 
         private void SetValue(DataGridViewCell cell, string value)
@@ -306,26 +339,29 @@ namespace EliteDangerousCore
             c.Value = value;
         }
 
+        // use renamed device in here
+        private void SetPair(DataGridViewRow row, bool binding, int index, string frontierdevicename, string frontierkeyname)
+        {
+            SetDevice(row.Cells[index], frontierdevicename);
+            SetKey(row.Cells[index + 1] as DataGridViewComboBoxCell, binding, frontierdevicename, frontierkeyname);
+            SetHint(row,index,frontierdevicename,frontierkeyname);
+        }
 
         // add options to key, based on binding, the bindings file external device name
-        private void AddKeyOptions(bool binding, string bfdevname, DataGridViewComboBoxCell c)
+        private void AddKeyOptions(bool hasaxis, string frontierdevicename, DataGridViewComboBoxCell c)
         {
-            var ret = FrontierKeyConversion.FrontierKeyNames(bf.KeyboardLayout, binding, DeviceKeyPair.IsJoystickDevice(bfdevname), DeviceKeyPair.IsMouseDevice(bfdevname), DeviceKeyPair.IsKeyboardDevice(bfdevname));
+            // so we can use the device naming system to find 
+            bool isjoystick = DeviceKeyPair.IsJoystickDevice(frontierdevicename);
+            var devkname = keyrenames.Get(frontierdevicename);
+            int joystickbuttons = isjoystick ? devkname?.Buttons ?? 128 : 0;
+            int joystickpov = isjoystick ? devkname?.POV ?? 2 : 0;
+            string[] joystickaxis = isjoystick ? devkname?.Axis ?? DeviceKeyNames.DeviceEntry.DefaultAxis : null;
+            var ret = FrontierKeyConversion.FrontierKeyNames(bf.KeyboardLayout, joystickaxis , joystickbuttons, joystickpov, DeviceKeyPair.IsMouseDevice(frontierdevicename), DeviceKeyPair.IsKeyboardDevice(frontierdevicename));
             c.Items.Clear();
             foreach (var x in ret)
-                c.Items.Add( keyrenames.GetRename(bfdevname,x));
+                c.Items.Add( keyrenames.GetRename(frontierdevicename,x));
         }
 
-        // use renamed device in here
-        private void SetPairR(DataGridViewRow row, bool binding, int index, string renameddevice, string renamedkey)
-        {
-            row.Cells[index].Value = renameddevice;
-            row.Cells[index + 1].Value = null;
-            AddKeyOptions(binding, OriginalDeviceName(renameddevice), (DataGridViewComboBoxCell)row.Cells[index + 1]);
-            row.Cells[index + 1].Value = renamedkey;
-            row.Cells[index + 1].ErrorText = null;
-            row.Cells[index + 1].ReadOnly = false;
-        }
 
         private bool CheckAskDirty()
         {
@@ -437,6 +473,19 @@ namespace EliteDangerousCore
             }
         }
 
+        public string BetterName(string name)
+        {
+            return showFrontierNamesToolStripMenuItem.Checked ? name : name.SplitCapsWordFull().Replace("Buggy", "SRV").Replace("Turret", "SRV Turret").Replace("Humanoid", "On Foot").ReplaceIfStartsWith("Cam ", "Galaxy Map ");
+        }
+        public string BetterDeviceName(string name)
+        {
+            return ConvertDeviceNameList.TryGetValue(name, out var bettername) ? bettername : name;
+        }
+        public string OriginalDeviceName(string name)
+        {
+            return ConvertDeviceNameList.Where(kvp => kvp.Value == name).Select(x => x.Key).FirstOrDefault() ?? name;
+        }
+
         #endregion
 
 
@@ -447,10 +496,14 @@ namespace EliteDangerousCore
         private DataGridViewComboBoxEditingControl edc;
         string initialcellvalue;
         private List<string> otherdevicesknown;
+        private int filtercomboboxuistart = 0;
         private int filtercomboboxmodestart = 0;
 
-        private KeyRenames keyrenames = new KeyRenames();
+        private DeviceKeyNames keyrenames = new DeviceKeyNames();
 
+        private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
 
+        }
     }
 }

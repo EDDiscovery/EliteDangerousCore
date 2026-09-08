@@ -347,6 +347,7 @@ namespace EliteDangerousCore
             public bool IsKeyboard => IsKeyboardDevice(Device);
             public bool IsMouse => IsMouseDevice(Device);
             public bool IsDevice => Device != NoDeviceName;
+            public bool IsJoystick => IsJoystickDevice(Device);
             public static bool IsKeyboardDevice(string device) { return device == KeyboardDeviceName; }
             public static bool IsMouseDevice(string device) { return device == MouseDeviceName; }
             public static bool IsNoDevice(string device) { return device == NoDeviceName; }

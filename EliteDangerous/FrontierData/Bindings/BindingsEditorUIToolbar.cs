@@ -46,6 +46,7 @@ namespace EliteDangerousCore
 
                 extComboBoxBindFiles.SelectedIndex = list.IndexOf(fullpathnewfile);
                 SetEnables(true, false);
+                ComboBoxFilterFill();
                 Display();
                 ClearDirty();
                 updatecheck.Start();        // start the clock in case it was stopped
@@ -56,11 +57,6 @@ namespace EliteDangerousCore
             }
 
             extComboBoxBindFiles.SelectedIndexChanged += ExtComboBoxBindFiles_SelectedIndexChanged;
-        }
-
-        private void ExtComboBoxFilter_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ApplyFilter();
         }
 
         private void extButtonReload_Click(object sender, EventArgs e)
@@ -76,10 +72,54 @@ namespace EliteDangerousCore
             }
         }
 
+        private void ComboBoxFilterFill()
+        {
+            extComboBoxFilter.SelectedIndexChanged -= ExtComboBoxFilter_SelectedIndexChanged;
+
+            extComboBoxFilter.Items.Clear();
+
+            extComboBoxFilter.Items.Add("All");
+            foreach (var x in Enum.GetNames(typeof(FrontierBindingClassification.Classification)))
+                extComboBoxFilter.Items.Add(x.ToString().SplitCapsWordFull());
+            filtercomboboxuistart = extComboBoxFilter.Items.Count;
+            foreach (var x in Enum.GetNames(typeof(FrontierBindingClassification.Mode)))
+                extComboBoxFilter.Items.Add(x.ToString().SplitCapsWordFull());
+            filtercomboboxmodestart = extComboBoxFilter.Items.Count;      // tbd difficult
+            foreach (var x in bf.DeviceList)
+                extComboBoxFilter.Items.Add(BetterDeviceName(x));
+
+            extComboBoxFilter.SelectedIndex = 0;
+            extComboBoxFilter.SelectedIndexChanged += ExtComboBoxFilter_SelectedIndexChanged;
+        }
+
+        private void ExtComboBoxFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ApplyFilter();
+        }
+
         private void ApplyFilter()
         {
-            dataGridView.FilterGridView((r) => extComboBoxFilter.SelectedIndex == 0 || 
-                ((string)r.Cells[extComboBoxFilter.SelectedIndex >= filtercomboboxmodestart ? ColUI.Index : ColGroup.Index].Value) == (string)extComboBoxFilter.SelectedItem);
+            string sel = (string)extComboBoxFilter.SelectedItem;
+            if (extComboBoxFilter.SelectedIndex >= filtercomboboxmodestart)
+                sel = OriginalDeviceName(sel);
+
+            dataGridView.FilterGridView((r) =>
+            {
+                if (extComboBoxFilter.SelectedIndex == 0)
+                    return true;
+                else if (extComboBoxFilter.SelectedIndex >= filtercomboboxmodestart)
+                {
+                    bool match = r.Cells[ColPrimaryDevice.Index].Value?.ToString() == sel;
+                    match |= r.Cells[ColPrimaryModDevice.Index].Value?.ToString() == sel;
+                    match |= r.Cells[ColSecondaryDevice.Index].Value?.ToString() == sel;
+                    match |= r.Cells[ColSecondaryModDevice.Index].Value?.ToString() == sel;
+                    return match;
+                }
+                else if (extComboBoxFilter.SelectedIndex >= filtercomboboxuistart)
+                    return r.Cells[ColUI.Index].Value.ToString() == sel;
+                else
+                    return r.Cells[ColGroup.Index].Value.ToString() == sel;
+            });
         }
 
 
@@ -168,7 +208,7 @@ namespace EliteDangerousCore
             if (items.Count > 0)
             {
                 foreach (var x in items)
-                    displayfilter.UC.AddButton(x, BetterDevice(x));       // tag is internal name, text is rename
+                    displayfilter.UC.AddButton(x, BetterDeviceName(x));       // tag is internal name, text is rename
 
                 displayfilter.CloseBoundaryRegion = new Size(32, extButtonDeviceRename.Height);
                 displayfilter.UC.ImageSize = new Size(24, 24);
@@ -181,6 +221,7 @@ namespace EliteDangerousCore
                         bf.RenameDevice(s1, newname);
 
                     SetDirty();
+                    ComboBoxFilterFill();
                     Display();
                     displayfilter.Close();
                 };
@@ -191,14 +232,14 @@ namespace EliteDangerousCore
 
         private void extButtonDeviceKeys_Click(object sender, EventArgs e)
         {
-            keyrenames.Edit(this.FindForm(), bf.KeyboardLayout, "231D0200");
+            //keyrenames.Edit(this.FindForm(), bf.KeyboardLayout, "231D0200");
             ExtendedControls.CheckedIconNewListBoxForm displayfilter = new CheckedIconNewListBoxForm();
             var items = bf.DeviceListNoKeyboardMouseDevice;
 
             if (items.Count > 0)
             {
-                foreach (var x in items)
-                    displayfilter.UC.AddButton(x, BetterDevice(x));       // tag is internal name, text is rename
+                foreach (var frontierdevicename in items)
+                    displayfilter.UC.AddButton(frontierdevicename, BetterDeviceName(frontierdevicename));       // tag is internal name, text is rename
 
                 displayfilter.CloseBoundaryRegion = new Size(32, extButtonDeviceRename.Height);
                 displayfilter.UC.ImageSize = new Size(24, 24);

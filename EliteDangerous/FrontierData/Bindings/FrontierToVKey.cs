@@ -101,27 +101,18 @@ namespace EliteDangerousCore
 
         // Return list of standard frontier names for joystick axis, joystick buttons, mouse and keyboard
         // each setting may be mixed freely
-        static public HashSet<string> FrontierKeyNames(string layoutname, bool binding, bool joystickbuttons, bool mouse, bool keyboard, bool inclalphanumbersfkeys = true)
+        static public HashSet<string> FrontierKeyNames(string layoutname, string[] joyaxis, int joystickbuttons, int joypovs, bool mouse, bool keyboard, bool inclalphanumbersfkeys = true)
         {
             HashSet<string> ret = new HashSet<string>();
             
-            if (binding)
-            {
-                ret.Add($"Joy_XAxis");          // joy axis
-                ret.Add($"Joy_YAxis");
-                ret.Add($"Joy_ZAxis");
-                ret.Add($"Joy_RXAxis");
-                ret.Add($"Joy_RYAxis");
-                ret.Add($"Joy_RZAxis");
-                ret.Add($"Joy_UAxis");
-                ret.Add($"Joy_VAxis");
-            }
+            foreach( var x in joyaxis.EmptyIfNull())
+                ret.Add($"Joy_{x}Axis");          // joy axis
             
-            if ( joystickbuttons )
+            if ( joystickbuttons>0 )
             {
-                for (int i = 1; i <= 32; i++)
+                for (int i = 1; i <= Math.Min(32,joystickbuttons); i++)
                     ret.Add($"Joy_{i}");
-                for (int i = 1; i <= 2; i++)
+                for (int i = 1; i <= joypovs; i++)
                 {
                     ret.Add($"Joy_POV{i}Left");
                     ret.Add($"Joy_POV{i}Right");
@@ -133,7 +124,7 @@ namespace EliteDangerousCore
                     ret.Add($"Joy_POV{i}DownLeft");
                     ret.Add($"Joy_POV{i}DownRight");
                 }
-                for (int i = 32; i <= 128; i++)
+                for (int i = 32; i <= joystickbuttons; i++)
                     ret.Add($"Joy_{i}");
             }
 

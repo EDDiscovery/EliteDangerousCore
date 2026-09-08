@@ -75,7 +75,7 @@ namespace EliteDangerousCore
                 removeDeviceToolStripMenuItem.DropDownItems.Clear();
                 foreach (var x in devicespresent )
                 {
-                    ToolStripMenuItem tsi = new ToolStripMenuItem() { Name = x, Text = BetterDevice(x)};
+                    ToolStripMenuItem tsi = new ToolStripMenuItem() { Name = x, Text = BetterDeviceName(x)};
                     tsi.Click += (s1, e1) => {
                         foreach (DataGridViewRow row in rcrows)
                         {
