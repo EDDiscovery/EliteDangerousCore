@@ -1,4 +1,4 @@
-﻿namespace EliteDangerousCore
+﻿namespace EliteDangerousCore.Bindings
 { 
     partial class BindingsEditor
     {

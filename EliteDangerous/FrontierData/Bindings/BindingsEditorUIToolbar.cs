@@ -20,7 +20,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace EliteDangerousCore
+namespace EliteDangerousCore.Bindings
 {
     public partial class BindingsEditor : UserControl
     {
@@ -41,7 +41,7 @@ namespace EliteDangerousCore
                     list.Remove(bf.FileName);
                 }
 
-                bf = new BindingsFile(otherdevicesknown);
+                bf = new BindingsFile(deviceparas);
                 bf.Read(fullpathnewfile);
 
                 extComboBoxBindFiles.SelectedIndex = list.IndexOf(fullpathnewfile);
@@ -64,7 +64,7 @@ namespace EliteDangerousCore
             if (CheckAskDirty())
             {
                 string curfile = bf.FileName;
-                bf = new BindingsFile(otherdevicesknown);
+                bf = new BindingsFile(deviceparas);
                 bf.Read(curfile);
                 Display();
                 ClearDirty();
@@ -86,7 +86,7 @@ namespace EliteDangerousCore
                 extComboBoxFilter.Items.Add(x.ToString().SplitCapsWordFull());
             filtercomboboxmodestart = extComboBoxFilter.Items.Count;      // tbd difficult
             foreach (var x in bf.DeviceList)
-                extComboBoxFilter.Items.Add(BetterDeviceName(x));
+                extComboBoxFilter.Items.Add(x.BetterName);
 
             extComboBoxFilter.SelectedIndex = 0;
             extComboBoxFilter.SelectedIndexChanged += ExtComboBoxFilter_SelectedIndexChanged;
@@ -208,7 +208,7 @@ namespace EliteDangerousCore
             if (items.Count > 0)
             {
                 foreach (var x in items)
-                    displayfilter.UC.AddButton(x, BetterDeviceName(x));       // tag is internal name, text is rename
+                    displayfilter.UC.AddButton(x.FrontierName, x.BetterName);       // tag is internal name, text is rename
 
                 displayfilter.CloseBoundaryRegion = new Size(32, extButtonDeviceRename.Height);
                 displayfilter.UC.ImageSize = new Size(24, 24);
@@ -238,8 +238,8 @@ namespace EliteDangerousCore
 
             if (items.Count > 0)
             {
-                foreach (var frontierdevicename in items)
-                    displayfilter.UC.AddButton(frontierdevicename, BetterDeviceName(frontierdevicename));       // tag is internal name, text is rename
+                foreach (var x in items)
+                    displayfilter.UC.AddButton(x.FrontierName, x.BetterName);       // tag is internal name, text is rename
 
                 displayfilter.CloseBoundaryRegion = new Size(32, extButtonDeviceRename.Height);
                 displayfilter.UC.ImageSize = new Size(24, 24);
@@ -247,7 +247,7 @@ namespace EliteDangerousCore
                 displayfilter.PositionBelow(extButtonDeviceRename);
                 displayfilter.UC.ButtonPressed += (i, s1, s2, o, m) =>      // called on click of button
                 {
-                    keyrenames.Edit(this.FindForm(), bf.KeyboardLayout, s1);
+                    keynames.Edit(this.FindForm(), bf.KeyboardLayout, s1);
                     Display();
                     displayfilter.Close();
                 };

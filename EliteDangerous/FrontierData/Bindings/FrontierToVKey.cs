@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Web.Caching;
 using System.Windows.Forms;
 
-namespace EliteDangerousCore
+namespace EliteDangerousCore.Bindings
 {
     static public class FrontierKeyConversion
     {
@@ -98,37 +98,45 @@ namespace EliteDangerousCore
             CachedLayouts[layoutname] = ret;
             return ret;
         }
+ 
 
         // Return list of standard frontier names for joystick axis, joystick buttons, mouse and keyboard
         // each setting may be mixed freely
-        static public HashSet<string> FrontierKeyNames(string layoutname, string[] joyaxis, int joystickbuttons, int joypovs, bool mouse, bool keyboard, bool inclalphanumbersfkeys = true)
+        static public HashSet<string> FrontierKeyNames(string layoutname, bool axis, DeviceParameters para, bool inclalphanumbersfkeys = true)
         {
             HashSet<string> ret = new HashSet<string>();
-            
-            foreach( var x in joyaxis.EmptyIfNull())
-                ret.Add($"Joy_{x}Axis");          // joy axis
-            
-            if ( joystickbuttons>0 )
+
+            if (axis)
             {
-                for (int i = 1; i <= Math.Min(32,joystickbuttons); i++)
-                    ret.Add($"Joy_{i}");
-                for (int i = 1; i <= joypovs; i++)
+                foreach (var x in para.Axis.EmptyIfNull())
                 {
-                    ret.Add($"Joy_POV{i}Left");
-                    ret.Add($"Joy_POV{i}Right");
-                    ret.Add($"Joy_POV{i}Left");
-                    ret.Add($"Joy_POV{i}Up");
-                    ret.Add($"Joy_POV{i}Down");
-                    ret.Add($"Joy_POV{i}UpLeft");
-                    ret.Add($"Joy_POV{i}UpRight");
-                    ret.Add($"Joy_POV{i}DownLeft");
-                    ret.Add($"Joy_POV{i}DownRight");
+                    ret.Add($"Joy_{x}Axis");          // joy axis
                 }
-                for (int i = 32; i <= joystickbuttons; i++)
-                    ret.Add($"Joy_{i}");
+            }
+            else
+            {
+                if (para.Buttons > 0)
+                {
+                    for (int i = 1; i <= Math.Min(32, para.Buttons); i++)
+                        ret.Add($"Joy_{i}");
+                    for (int i = 1; i <= para.Pov; i++)
+                    {
+                        ret.Add($"Joy_POV{i}Left");
+                        ret.Add($"Joy_POV{i}Right");
+                        ret.Add($"Joy_POV{i}Left");
+                        ret.Add($"Joy_POV{i}Up");
+                        ret.Add($"Joy_POV{i}Down");
+                        ret.Add($"Joy_POV{i}UpLeft");
+                        ret.Add($"Joy_POV{i}UpRight");
+                        ret.Add($"Joy_POV{i}DownLeft");
+                        ret.Add($"Joy_POV{i}DownRight");
+                    }
+                    for (int i = 32; i <= para.Buttons; i++)
+                        ret.Add($"Joy_{i}");
+                }
             }
 
-            if ( mouse )
+            if ( para.Mouse )
             {
                 ret.Add("Mouse_1");
                 ret.Add("Mouse_2");
@@ -142,7 +150,7 @@ namespace EliteDangerousCore
                 ret.Add("Pos_Mouse_ZAxis");
             }
             
-            if ( keyboard )
+            if ( para.Keyboard )
             {
                 foreach (var x in FrontierKeyConversion.FrontierKeyNames(layoutname))
                     ret.Add(x);

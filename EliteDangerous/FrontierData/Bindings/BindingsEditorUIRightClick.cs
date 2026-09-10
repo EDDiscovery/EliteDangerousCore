@@ -17,9 +17,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
-using static EliteDangerousCore.BindingsFile;
+using static EliteDangerousCore.Bindings.BindingsFile;
 
-namespace EliteDangerousCore
+namespace EliteDangerousCore.Bindings
 {
     public partial class BindingsEditor : UserControl
     {

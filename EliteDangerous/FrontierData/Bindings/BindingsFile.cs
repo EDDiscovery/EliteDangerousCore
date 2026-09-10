@@ -21,7 +21,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
-namespace EliteDangerousCore
+namespace EliteDangerousCore.Bindings
 {
     public partial class BindingsFile 
     {
@@ -41,23 +41,22 @@ namespace EliteDangerousCore
         // which have values in attributes
         public IEnumerable<BindingEntry> Values => Elements.Where(x => x.Value.Attributes.Count>0).Select(x => x.Value);
 
-       
-        public List<string> DeviceList => devices.ToList();
-        public List<string> DeviceListNoDevice => devices.Where(x => x != DeviceKeyPair.NoDeviceName).ToList();
-        public List<string> DeviceListNoKeyboardMouse => devices.Where(x => x != DeviceKeyPair.KeyboardDeviceName && x != DeviceKeyPair.MouseDeviceName).ToList();
-        public List<string> DeviceListNoKeyboardMouseDevice => devices.Where(x => x != DeviceKeyPair.KeyboardDeviceName && x != DeviceKeyPair.MouseDeviceName &&
-                                                                                x != DeviceKeyPair.NoDeviceName).ToList();
+        public List<DeviceParameters> DeviceList => devices;
+        public List<DeviceParameters> DeviceListNoKeyboardMouse => devices.Where(x => x.FrontierName != DeviceKeyPair.KeyboardDeviceName && x.FrontierName != DeviceKeyPair.MouseDeviceName 
+                                                                                ).ToList();
+        public List<DeviceParameters> DeviceListNoKeyboardMouseDevice => devices.Where(x => x.FrontierName != DeviceKeyPair.KeyboardDeviceName && x.FrontierName != DeviceKeyPair.MouseDeviceName &&
+                                                                                x.FrontierName != DeviceKeyPair.NoDeviceName).ToList();
+
+        public DeviceParameters Get(string frontierdevicename) => devices.Find(x => x.FrontierName == frontierdevicename);
+        public DeviceParameters GetBetterName(string bettername) => devices.Find(x => x.BetterName == bettername);
 
         // creation
         public BindingsFile()
         {
-            devices.Add(DeviceKeyPair.NoDeviceName);
         }
-        public BindingsFile(List<string> otherdevicesknown)
+        public BindingsFile(List<DeviceParameters> knowndevices)
         {
-            devices.Add(DeviceKeyPair.NoDeviceName);
-            foreach( var d in otherdevicesknown)
-                devices.Add(d);
+            devices = knowndevices;
         }
 
         // get bindings file name from path and odyssey
@@ -444,15 +443,19 @@ namespace EliteDangerousCore
 
         public void AddDevice(string name)
         {
-            devices.Add(name);
+            if (devices.Find(x => x.FrontierName == name) == null)
+                devices.Add(new DeviceParameters(name,name,DeviceParameters.DefaultAxis,2,128));
         }
 
         public void RenameDevice(string oldname, string newname)
         {
             foreach (var element in Elements)
                 element.Value.RenameDevice(oldname,newname);
-            devices.Remove(oldname);
-            devices.Add(newname);
+
+            AddDevice(newname);
+            int i = devices.FindIndex(x=>x.FrontierName== oldname);
+            if (i >= 0)
+                devices.RemoveAt(i);
         }
 
         public void Clear()
@@ -464,10 +467,10 @@ namespace EliteDangerousCore
         public string ListBindings()
         {
             string ret = "";
-            foreach (var device in DeviceListNoDevice)
+            foreach (var device in DeviceList)
             {
                 ret += device + Environment.NewLine;
-                var dks = FindDeviceVKey(device, null, false);
+                var dks = FindDeviceVKey(device.FrontierName, null, false);
                 foreach (var x in dks)
                     ret += "  " + x.Keys.KeyDescription() + "=" + x.Entry.Name + Environment.NewLine;
             }
@@ -500,7 +503,8 @@ namespace EliteDangerousCore
                 string assignmentxml = mapping.Name.ToString();         // 'Primary' 'Secondary' 'Binding'
 
                 string extname = xdevice.Value;
-                devices.Add(extname);
+
+                AddDevice(extname);
 
                 string frontierkeyname = xkey.Value;
                 DeviceKeyPairList dvp = new DeviceKeyPairList(new DeviceKeyPair(extname, frontierkeyname));
@@ -512,7 +516,7 @@ namespace EliteDangerousCore
                         extname = y.Attribute("Device").Value;
                         frontierkeyname = y.Attribute("Key").Value;
 
-                        devices.Add(extname);
+                        AddDevice(extname);
                         dvp.Add(new DeviceKeyPair(extname, frontierkeyname));
                     }
                 }
@@ -531,7 +535,7 @@ namespace EliteDangerousCore
         private Dictionary<string, BindingEntry> Elements { get; set; } = new Dictionary<string, BindingEntry>();
 
         // device list
-        private HashSet<string> devices { get; set; } = new HashSet<string>();
+        private List<DeviceParameters> devices { get; set; } = new List<DeviceParameters>();
 
         // This prints out the vkeys associated with the OEM codes and using the custom binds file with those OEMs
         // keys assigned to frontier functions listed below shows you and builds the translation entries for frontiertovkey

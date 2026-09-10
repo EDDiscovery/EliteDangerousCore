@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EliteDangerousCore
+namespace EliteDangerousCore.Bindings
 {
     public partial class BindingsFile 
     {

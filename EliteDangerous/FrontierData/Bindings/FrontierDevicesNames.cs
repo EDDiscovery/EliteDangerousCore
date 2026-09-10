@@ -15,12 +15,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace EliteDangerousCore
+namespace EliteDangerousCore.Bindings
 {
-    public partial class BindingsFile 
+    public class FrontierDeviceNames 
     {
         // best match of device name from Devices to a device given by name/guid,usb ids
-        public string FindDevice(string name, Guid instanceguid, Guid productguid, int productid, int vendorid)
+
+        public static string Find(string name, Guid instanceguid, Guid productguid, int productid, int vendorid, List<string> frontierdeviceslist)
         {
             string bestmatch = null;
             int besttotal = 0;
@@ -28,7 +29,7 @@ namespace EliteDangerousCore
             // try the frontier device naming table
             string frontiername = usbvendorproductidtofrontier.ContainsKey(new Tuple<int, int>(productid, vendorid)) ? usbvendorproductidtofrontier[new Tuple<int, int>(productid, vendorid)] : null;
 
-            foreach (string dv in devices)
+            foreach (string dv in frontierdeviceslist)
             {
                 if (dv.Equals(name, StringComparison.InvariantCultureIgnoreCase))      // exact match
                     return dv;
@@ -60,12 +61,12 @@ namespace EliteDangerousCore
         }
 
         // The frontier table, what is its name if its there, or null
-        public static string FrontierDeviceName(int productid, int vendorid)
+        public static string DeviceName(int productid, int vendorid)
         {
             return usbvendorproductidtofrontier.TryGetValue(Tuple.Create(productid, vendorid), out string name) ? name : null;
         }
 
-        private string GuidExtract(Guid g, bool rev)
+        private static string GuidExtract(Guid g, bool rev)
         {
             string s = g.ToString();
             int slash = s.IndexOf('-');

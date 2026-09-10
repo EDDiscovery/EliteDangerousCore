@@ -12,28 +12,31 @@
  * governing permissions and limitations under the License.
  */
 
+using BaseUtils;
+using ExtendedConditionsForms;
 using ExtendedControls;
 using QuickJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace EliteDangerousCore
+namespace EliteDangerousCore.Bindings
 {
     public class DeviceKeyNames : IEnumerable<DeviceKeyNames.DeviceEntry>
     {
+        [System.Diagnostics.DebuggerDisplay("{DeviceList} {Buttons} {POV}")]
         public class DeviceEntry
         {
             public string DeviceList { get; set; }
-            public int Buttons { get; set; }
-            public int POV { get; set; }
-            public string[] Axis { get; set; }
+            public int Buttons { get; set; }        // 0 not known
+            public int POV { get; set; }            // 0 not known
+            public string[] Axis { get; set; }      // empty
             public string[] Devices => DeviceList.Split(',');
 
-            static public string[] DefaultAxis = new string[] { "X", "Y", "Z", "RX", "RY", "RZ", "U", "V" };
             public class RenameEntry
             {
                 public string Name { get; set; }
@@ -43,9 +46,14 @@ namespace EliteDangerousCore
             public Dictionary<string, RenameEntry> Names = new Dictionary<string, RenameEntry>();
         }
 
-        public DeviceEntry Get(string deviceList)
+        public DeviceEntry GetDeviveList(string deviceList)
         {
             return renames.Find(x => x.DeviceList == deviceList);
+        }
+        public DeviceEntry GetDevice(string frontierdevicename)
+        {
+            var dev = renames.Find(x => x.Devices.Contains(frontierdevicename));
+            return dev;
         }
 
         public void Add(DeviceEntry dev)
@@ -68,9 +76,9 @@ namespace EliteDangerousCore
                     {
                         DeviceEntry r = new DeviceEntry();
                         r.DeviceList = devices["Devices"].Str();
-                        r.Buttons = devices["Buttons"].Int(128);
-                        r.POV = devices["POV"].Int(2);
-                        r.Axis = devices["Axis"].Str("X,Y,Z,RX,RY,RZ,U,V").Split(',');
+                        r.Buttons = devices["Buttons"].Int(0);
+                        r.POV = devices["POV"].Int(0);
+                        r.Axis = devices["Axis"].Str("").SplitNoEmptyStrings(',');
 
                         foreach (var kvp in devices["Keys"].Object())
                         {
@@ -127,11 +135,12 @@ namespace EliteDangerousCore
 
         public void Edit(Form backcontrol, string layoutname, string frontierdevicename)
         {
+#if false
             DeviceEntry dev = renames.Find(x => x.Devices.Contains(frontierdevicename));
 
             ConfigurableForm f = new ConfigurableForm();
 
-            var devkname = Get(frontierdevicename);
+            var devkname = GetDeviveList(frontierdevicename);
             int joystickbuttons = devkname?.Buttons ?? 128;
             int joystickpov = devkname?.POV ?? 2;
             string[] joystickaxis = devkname?.Axis ?? DeviceKeyNames.DeviceEntry.DefaultAxis;
@@ -186,7 +195,8 @@ namespace EliteDangerousCore
                 //{
 
                 //}
-            }
+#endif
+        }
 
         public IEnumerator<DeviceEntry> GetEnumerator()
         {
