@@ -245,6 +245,7 @@ namespace EliteDangerousCore.Bindings
             //keynames.Edit(this.FindForm(), bf.KeyboardLayout, bf.GetDevice("231D0200")); return;
 
             CheckedIconNewListBoxForm dropdown = new CheckedIconNewListBoxForm();
+            dropdown.CloseBoundaryRegion = new Size(32, extButtonDeviceKeys.Height);
 
             var devices = bf.DeviceListNoKeyboardMouseDevice;
 
@@ -271,6 +272,10 @@ namespace EliteDangerousCore.Bindings
                 }
             }
 
+            dropdown.UC.AddButton("&Save-File", "Save to File");
+            dropdown.UC.AddButton("&Load-File", "Load from File");
+            dropdown.UC.AddButton("&Reset", "Reset to default");
+
             if (devices.Count > 0)
             {
                 dropdown.CloseBoundaryRegion = new Size(32, extButtonDeviceRemap.Height);
@@ -279,9 +284,54 @@ namespace EliteDangerousCore.Bindings
                 dropdown.PositionBelow(extButtonDeviceRemap);
                 dropdown.UC.ButtonPressed += (i, s1, s2, o, m) =>      // called on click of button
                 {
-                    Device dev = (Device)o;
-                    keynames.Edit(this.FindForm(), bf.KeyboardLayout, dev);
-                    Display();
+                    if (s1 == "&Save-File")
+                    {
+                        SaveFileDialog sfd = new SaveFileDialog();
+                        sfd.FileName = "KeyNames";
+                        sfd.DefaultExt = "json";
+                        sfd.Filter = "Keynames(*.json)|*.json|All Files (*.*)|*.*";
+                        if (sfd.ShowDialog(FindForm()) == DialogResult.OK)
+                        {
+                            string json = keynames.Get();
+                            if (!FileHelpers.TryWriteToFile(sfd.FileName, json))
+                            {
+                                ExtendedControls.MessageBoxTheme.Show($"Failed to write {sfd.FileName}", "Warning".Tx(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                    else if (s1 == "&Load-File")
+                    {
+                        OpenFileDialog ofd = new OpenFileDialog();
+                        ofd.FileName = "KeyNames";
+                        ofd.DefaultExt = "json";
+                        ofd.Filter = "Keynames(*.json)|*.json|All Files (*.*)|*.*";
+                        if (ofd.ShowDialog(FindForm()) == DialogResult.OK)
+                        {
+                            string str = FileHelpers.TryReadAllTextFromFile(ofd.FileName);
+                            if ( str != null )
+                            {
+                                if ( !keynames.Set(str))
+                                    ExtendedControls.MessageBoxTheme.Show($"File is not in correct format {ofd.FileName}", "Warning".Tx(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                            else
+                            {
+                                ExtendedControls.MessageBoxTheme.Show($"Failed to read {ofd.FileName}", "Warning".Tx(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                    else if (s1 == "&Reset")
+                    {
+                        if ( ExtendedControls.MessageBoxTheme.Show($"Confirm reset to program defined default set", "Warning".Tx(), MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                        {
+                            ResetKeyNames?.Invoke();
+                        }
+                    }
+                    else
+                    {
+                        Device dev = (Device)o;
+                        keynames.Edit(this.FindForm(), bf.KeyboardLayout, dev);
+                        Display();
+                    }
                     dropdown.Close();
                 };
                 dropdown.Show(this);

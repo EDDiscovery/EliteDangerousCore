@@ -77,7 +77,7 @@ namespace EliteDangerousCore.Bindings
             return dev != null ? (dev.Names.Where(kvp => kvp.Value.Name == rename).Select(x => x.Key).FirstOrDefault() ?? rename) : rename;
         }
 
-        public void Set(string json)
+        public bool Set(string json)
         {
             renames.Clear();
             if (json != null)
@@ -88,7 +88,7 @@ namespace EliteDangerousCore.Bindings
                 {
                     JArray devarray = tk["Devices"].Array();
 
-                    foreach (JObject devices in devarray)
+                    foreach (JObject devices in devarray.EmptyIfNull())
                     {
                         DeviceNameSet r = new DeviceNameSet(devices["Devices"].Str("Unknown"));
                         r.Buttons = devices["Buttons"].Int(-1);
@@ -103,8 +103,11 @@ namespace EliteDangerousCore.Bindings
 
                         renames.Add(r);
                     }
+
+                    return true;
                 }
             }
+            return false;
         }
 
         public string Get()

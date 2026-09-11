@@ -80,7 +80,7 @@
     </Compile>
     <Compile Include="FrontierData\Bindings\Device.cs" />
     <Compile Include="FrontierData\Bindings\FrontierDevicesNames.cs" />
-    <Compile Include="FrontierData\Bindings\BindingsEntry.cs" />
+    <Compile Include="FrontierData\Bindings\BindingsFileEntry.cs" />
     <Compile Include="FrontierData\Bindings\FrontierBindingClassification.cs" />
     <Compile Include="FrontierData\FDName\CrimesDataScannedDockingFDName.cs" />
     <Compile Include="FrontierData\FDName\SignalsGenusFDName.cs" />

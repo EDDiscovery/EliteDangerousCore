@@ -28,6 +28,7 @@ namespace EliteDangerousCore.Bindings
         public bool IsDirty => extButtonSave.Enabled;
         public Action<string> ChangedBindings { get; set; }           // saved this load
         public Action<string> ChangedDefault { get; set; }            // changed the start preset file
+        public Action ResetKeyNames { get; set; }                     // request keyname reset
 
         // called to pop up a way of the user pressing key/joystick.
         public Func<BindingsFile, BindingEntry, Tuple<string,string>> DeviceInput { get; set; }
@@ -448,13 +449,12 @@ namespace EliteDangerousCore.Bindings
         {
             return showFrontierNamesToolStripMenuItem.Checked ? name : name.SplitCapsWordFull().Replace("Buggy", "SRV").Replace("Turret", "SRV Turret").Replace("Humanoid", "On Foot").ReplaceIfStartsWith("Cam ", "Galaxy Map ");
         }
-        
-        //provide access to the find device of bindings file for device mapping purposes
-        public string FindDeviceName(string name, Guid instanceguid, Guid productguid, int productid, int vendorid)
-        {
-            return FrontierDeviceNames.Find(name, instanceguid, productguid, productid, vendorid, bf.DeviceList.Select(x => x.FrontierName).ToList());
-        }
 
+        // return the frontier name associated with this physical device
+        public string GetDeviceName(string physicalname, Guid instanceguid, Guid productguid, int productid, int vendorid)
+        {
+            return bf.GetDeviceName(physicalname, instanceguid, productguid, productid, vendorid);
+        }
 
         #endregion
 

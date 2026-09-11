@@ -42,11 +42,13 @@ namespace EliteDangerousCore.Bindings
         public IEnumerable<BindingEntry> Values => Elements.Where(x => x.Value.Attributes.Count>0).Select(x => x.Value);
 
         public List<Device> DeviceList => devices;
-        public List<Device> DeviceListNoKeyboardMouse => devices.Where(x => !x.Keyboard && !x.Mouse ).ToList();
+        public List<Device> DeviceListNoDevice => devices.Where(x => !x.IsNoDevice).ToList();
+        public List<Device> DeviceListNoKeyboardMouse => devices.Where(x => !x.Keyboard && !x.Mouse).ToList();
         public List<Device> DeviceListNoKeyboardMouseDevice => devices.Where(x => !x.Keyboard && !x.Mouse && !x.IsNoDevice).ToList();
 
         public Device GetDevice(string frontierdevicename) => devices.Find(x => x.FrontierName == frontierdevicename);
         public Device GetDeviceByBetterName(string bettername) => devices.Find(x => x.BetterName == bettername);
+
 
         // creation
         public BindingsFile()
@@ -376,6 +378,12 @@ namespace EliteDangerousCore.Bindings
             return false;
         }
 
+
+        // return the frontier name associated with this physical device
+        public string GetDeviceName(string physicalname, Guid instanceguid, Guid productguid, int productid, int vendorid)
+        {
+            return FrontierDeviceNames.Find(physicalname, instanceguid, productguid, productid, vendorid, DeviceList.Select(x => x.FrontierName).ToList());
+        }
 
         // used to report on entry and key set associated with a found device/keyname
         public class DeviceKeySet
