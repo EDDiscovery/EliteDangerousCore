@@ -228,7 +228,7 @@ namespace EliteDangerousCore.Bindings
                 if (Keys.Count == 1)
                     Keys.Add(new DeviceKeyPair(externaldevice, key));
                 else
-                    Keys[0] = new DeviceKeyPair(externaldevice, key);
+                    Keys[1] = new DeviceKeyPair(externaldevice, key);
             }
 
             public void Remap(Device oldname, Device newdev)
@@ -259,9 +259,9 @@ namespace EliteDangerousCore.Bindings
                 //if (!Keys[0].Assigned)
                 //    return "---NA";
 
-                string part = Keys[0].Device + ":" +  Keys[0].FrontierKeyName;
+                string part = Keys[0].Device.FrontierName + ":" +  Keys[0].FrontierKeyName;
                 if (Keys.Count > 1)
-                    return "(" + part + "," + Keys[1].Device + ":" + Keys[1].FrontierKeyName+ ")";
+                    return "(" + part + "," + Keys[1].Device.FrontierName + ":" + Keys[1].FrontierKeyName+ ")";
                 else
                     return part;
             }

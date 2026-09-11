@@ -29,12 +29,7 @@ namespace EliteDangerousCore.Bindings
             Pov = pov;
             Buttons = buttons;
         }
-        public Device(string name, bool keyboard, bool mouse)
-        {
-            BetterName = FrontierName = name;
-            Mouse = mouse;
-            Keyboard = keyboard;
-        }
+
         public Device()
         {
             FrontierName = "{NoDevice}";
@@ -60,11 +55,11 @@ namespace EliteDangerousCore.Bindings
 
         public string FrontierName { get; set; }
         public string BetterName { get; set; }
-        public string[] Axis { get; set; }
+        public string[] Axis { get; set; }      // may be null
         public int Pov { get; set; }
         public int Buttons { get; set; }
-        public bool Mouse { get; set; }
-        public bool Keyboard { get; set; }
+        public bool Mouse => FrontierName == MouseDeviceName;
+        public bool Keyboard => FrontierName == KeyboardDeviceName;
 
         public bool Equals(Device other)
         {

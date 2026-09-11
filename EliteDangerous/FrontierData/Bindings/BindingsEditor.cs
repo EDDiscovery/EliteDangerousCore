@@ -447,7 +447,8 @@ namespace EliteDangerousCore.Bindings
 
         public string BetterBindingName(string name)
         {
-            return showFrontierNamesToolStripMenuItem.Checked ? name : name.SplitCapsWordFull().Replace("Buggy", "SRV").Replace("Turret", "SRV Turret").Replace("Humanoid", "On Foot").ReplaceIfStartsWith("Cam ", "Galaxy Map ");
+            return showFrontierNamesToolStripMenuItem.Checked ? name : name.SplitCapsWordFull().Replace("Buggy", "SRV").Replace("Turret", "SRV Turret").
+                            Replace("Humanoid", "On Foot").ReplaceIfStartsWith("Cam ", "Galaxy Map ").Replace("Toggle Button Up Input","Silent Running");
         }
 
         // return the frontier name associated with this physical device
