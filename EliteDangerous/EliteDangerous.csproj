@@ -65,7 +65,7 @@
     <Compile Include="FrontierData\Bindings\BindingsEditorUIRightClick.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FrontierData\Bindings\BindingsEditorDeviceKeyNames.cs" />
+    <Compile Include="FrontierData\Bindings\DeviceKeyNames.cs" />
     <Compile Include="FrontierData\Bindings\BindingsEditorUIToolbar.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -78,7 +78,7 @@
     <Compile Include="FrontierData\Bindings\BindingsEditor.Designer.cs">
       <DependentUpon>BindingsEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrontierData\Bindings\DeviceParameters.cs" />
+    <Compile Include="FrontierData\Bindings\Device.cs" />
     <Compile Include="FrontierData\Bindings\FrontierDevicesNames.cs" />
     <Compile Include="FrontierData\Bindings\BindingsEntry.cs" />
     <Compile Include="FrontierData\Bindings\FrontierBindingClassification.cs" />

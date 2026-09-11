@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BindingsEditor));
             this.dataViewScrollerPanel = new ExtendedControls.ExtPanelDataGridViewScroll();
             this.dataGridView = new BaseUtils.DataGridViewColumnControl();
             this.ColGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -57,7 +56,7 @@
             this.showFrontierNamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.extComboBoxFilter = new ExtendedControls.ExtComboBox();
             this.labelWarning = new System.Windows.Forms.Label();
-            this.extButtonDeviceRename = new ExtendedControls.ExtButton();
+            this.extButtonDeviceRemap = new ExtendedControls.ExtButton();
             this.extButtonReload = new ExtendedControls.ExtButton();
             this.extButtonDeviceNew = new ExtendedControls.ExtButton();
             this.extButtonFolder = new ExtendedControls.ExtButton();
@@ -360,21 +359,21 @@
             this.labelWarning.TabIndex = 3;
             this.labelWarning.Text = "<code>";
             // 
-            // extButtonDeviceRename
+            // extButtonDeviceRemap
             // 
-            this.extButtonDeviceRename.BackColor2 = System.Drawing.Color.Red;
-            this.extButtonDeviceRename.ButtonDisabledScaling = 0.5F;
-            this.extButtonDeviceRename.GradientDirection = 90F;
-            this.extButtonDeviceRename.Location = new System.Drawing.Point(895, 3);
-            this.extButtonDeviceRename.MouseOverScaling = 1.3F;
-            this.extButtonDeviceRename.MouseSelectedScaling = 1.3F;
-            this.extButtonDeviceRename.Name = "extButtonDeviceRename";
-            this.extButtonDeviceRename.Size = new System.Drawing.Size(75, 23);
-            this.extButtonDeviceRename.TabIndex = 2;
-            this.extButtonDeviceRename.Text = "Device <>";
-            this.toolTip.SetToolTip(this.extButtonDeviceRename, "Rename a device");
-            this.extButtonDeviceRename.UseVisualStyleBackColor = true;
-            this.extButtonDeviceRename.Click += new System.EventHandler(this.buttonDeviceRename_Click);
+            this.extButtonDeviceRemap.BackColor2 = System.Drawing.Color.Red;
+            this.extButtonDeviceRemap.ButtonDisabledScaling = 0.5F;
+            this.extButtonDeviceRemap.GradientDirection = 90F;
+            this.extButtonDeviceRemap.Location = new System.Drawing.Point(895, 3);
+            this.extButtonDeviceRemap.MouseOverScaling = 1.3F;
+            this.extButtonDeviceRemap.MouseSelectedScaling = 1.3F;
+            this.extButtonDeviceRemap.Name = "extButtonDeviceRemap";
+            this.extButtonDeviceRemap.Size = new System.Drawing.Size(75, 23);
+            this.extButtonDeviceRemap.TabIndex = 2;
+            this.extButtonDeviceRemap.Text = "Device <>";
+            this.toolTip.SetToolTip(this.extButtonDeviceRemap, "Remap Device assignments to another");
+            this.extButtonDeviceRemap.UseVisualStyleBackColor = true;
+            this.extButtonDeviceRemap.Click += new System.EventHandler(this.buttonDeviceRemap_Click);
             // 
             // extButtonReload
             // 
@@ -404,7 +403,8 @@
             this.extButtonDeviceNew.Size = new System.Drawing.Size(75, 23);
             this.extButtonDeviceNew.TabIndex = 2;
             this.extButtonDeviceNew.Text = "Device +";
-            this.toolTip.SetToolTip(this.extButtonDeviceNew, resources.GetString("extButtonDeviceNew.ToolTip"));
+            this.toolTip.SetToolTip(this.extButtonDeviceNew, "Add a new Device. Best practice is to use the Elite Controls Editor to add one it" +
+        "em from the controller so as to discover what Elite calls it");
             this.extButtonDeviceNew.UseVisualStyleBackColor = true;
             this.extButtonDeviceNew.Click += new System.EventHandler(this.buttonNewDevice_Click);
             // 
@@ -510,7 +510,7 @@
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonFolder);
             this.extFlowLayoutPanelTop.Controls.Add(this.labelWarning);
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceNew);
-            this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceRename);
+            this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceRemap);
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceKeys);
             this.extFlowLayoutPanelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.extFlowLayoutPanelTop.GradientDirection = 0F;
@@ -567,7 +567,7 @@
         private ExtendedControls.ExtButton extButtonDuplicate;
         private ExtendedControls.ExtButton extButtonSave;
         private ExtendedControls.ExtButton extButtonSetDefault;
-        private ExtendedControls.ExtButton extButtonDeviceRename;
+        private ExtendedControls.ExtButton extButtonDeviceRemap;
         private ExtendedControls.ExtButton extButtonReload;
         private ExtendedControls.ExtButton extButtonDeviceNew;
         private ExtendedControls.ExtButton extButtonFolder;

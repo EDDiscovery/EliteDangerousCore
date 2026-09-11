@@ -79,7 +79,7 @@ namespace EliteDangerousCore.Bindings
             }
 
             // remove assignments using this device
-            public bool RemoveDevice(string device)
+            public bool RemoveDevice(Device device)
             {
                 bool primarymatch = PrimaryKeys?.IsDevice(device) == true;
                 bool secondarymatch = SecondaryKeys?.IsDevice(device) == true;
@@ -113,10 +113,10 @@ namespace EliteDangerousCore.Bindings
             }
 
             // rename device
-            public void RenameDevice(string oldname, string newname)
+            public void Remap(Device olddevice, Device newdevice)
             {
-                PrimaryKeys?.RenameDevice(oldname, newname);
-                SecondaryKeys?.RenameDevice(oldname, newname);
+                PrimaryKeys?.Remap(olddevice, newdevice);
+                SecondaryKeys?.Remap(olddevice, newdevice);
             }
 
             public bool SwapPrimarySecondary()
@@ -143,9 +143,9 @@ namespace EliteDangerousCore.Bindings
             }
 
             // what devices are used by this entry
-            public HashSet<string> Devices()
+            public HashSet<Device> Devices()
             {
-                var devices = new HashSet<string>();
+                var devices = new HashSet<Device>();
                 if (PrimaryKeys != null)
                 {
                     foreach (var dkp in PrimaryKeys.Keys.EmptyIfNull())
@@ -202,9 +202,9 @@ namespace EliteDangerousCore.Bindings
 
             public int Count => Keys.Count;
             public bool Assigned => Keys.Count > 0 && Keys[0].Assigned;
-            public bool IsKeyboard => Keys.Count > 0 && Keys[0].IsKeyboard && (Keys.Count == 1 || Keys[1].IsKeyboard);
-            public bool IsJoystick() => Assigned == true && Keys[0].Device != DeviceKeyPair.NoDeviceName && !Keys[0].IsKeyboard && !Keys[0].IsMouse;
-            public bool IsDevice(string device) => Keys.Count > 0 && (Keys[0].Device == device || (Keys.Count > 1 && Keys[1].Device == device));
+            public bool IsKeyboard => Keys.Count > 0 && Keys[0].Device.IsKeyboard && (Keys.Count == 1 || Keys[1].Device.IsKeyboard);
+            public bool IsJoystick() => Assigned == true && Keys[0].Device.IsDevice && !Keys[0].Device.IsKeyboard && !Keys[0].Device.IsMouse;
+            public bool IsDevice(Device device) => Keys.Count > 0 && (Keys[0].Device == device || (Keys.Count > 1 && Keys[1].Device == device));
 
             public DeviceKeyPairList() { Clear(); }
             public DeviceKeyPairList(DeviceKeyPair first) { Keys = new List<DeviceKeyPair> { first }; }
@@ -223,7 +223,7 @@ namespace EliteDangerousCore.Bindings
                     Keys.RemoveAt(1);
             }
 
-            public void SetMod(string externaldevice, string key)
+            public void SetMod(Device externaldevice, string key)
             {
                 if (Keys.Count == 1)
                     Keys.Add(new DeviceKeyPair(externaldevice, key));
@@ -231,10 +231,10 @@ namespace EliteDangerousCore.Bindings
                     Keys[0] = new DeviceKeyPair(externaldevice, key);
             }
 
-            public void RenameDevice(string oldname, string newname)
+            public void Remap(Device oldname, Device newdev)
             {
                 foreach (var x in Keys.EmptyIfNull().Where(x => x.Device == oldname))
-                    x.Device = newname;
+                    x.Device = newdev;
             }
 
 
@@ -315,7 +315,7 @@ namespace EliteDangerousCore.Bindings
                         {
                             x.VKeyName = x.FrontierKeyName;      // always set key name
 
-                            if (x.Device == DeviceKeyPair.KeyboardDeviceName)
+                            if (x.Device.IsKeyboard)
                             {
                                 string ourkeyname = FrontierKeyConversion.FrontierToKeys(layoutname, x.FrontierKeyName);
                                 if (ourkeyname.StartsWith("!"))
@@ -330,30 +330,18 @@ namespace EliteDangerousCore.Bindings
             }
         }
 
-        // convert the frontier name for POV's and keyboard keys to our naming and store in Key
-
         // Device vs Key/Frontier Key Name
 
         [System.Diagnostics.DebuggerDisplay("DKP {Device}:{FrontierKeyName}")]        
         public class DeviceKeyPair
         {
-            public string Device { get; set; }                  // internal name of device
+            public Device Device { get; set; }  
             public string FrontierKeyName { get; set; }         // frontier name
             public string VKeyName { get; set; }                // not part of bindings editor, but can be set up using bindindfile set vkey names
 
             public bool Assigned => FrontierKeyName.HasChars();
 
-            // these are fixed names at this level, the other names have to be handled at bindingfile level
-            public bool IsKeyboard => IsKeyboardDevice(Device);
-            public bool IsMouse => IsMouseDevice(Device);
-            public bool IsDevice => Device != NoDeviceName;
-            public bool IsJoystick => IsJoystickDevice(Device);
-            public static bool IsKeyboardDevice(string device) { return device == KeyboardDeviceName; }
-            public static bool IsMouseDevice(string device) { return device == MouseDeviceName; }
-            public static bool IsNoDevice(string device) { return device == NoDeviceName; }
-            public static bool IsJoystickDevice(string device) { return !IsKeyboardDevice(device) && !IsMouseDevice(device) && !IsNoDevice(device); }
-
-            public DeviceKeyPair(string internaldevicename, string frontierkeyname)
+            public DeviceKeyPair(Device internaldevicename, string frontierkeyname)
             {
                 Device = internaldevicename;
                 FrontierKeyName = frontierkeyname;
@@ -361,15 +349,13 @@ namespace EliteDangerousCore.Bindings
 
             public DeviceKeyPair()
             {
-                Device = NoDeviceName;
+                Device = new Device();
                 FrontierKeyName = "";
             }
 
-            public bool Equals(DeviceKeyPair other) => Device == other.Device && FrontierKeyName == other.FrontierKeyName;
+            public bool IsDevice => Device.IsDevice;
 
-            public const string KeyboardDeviceName = "Keyboard";
-            public const string MouseDeviceName = "Mouse";
-            public const string NoDeviceName = "{NoDevice}";
+            public bool Equals(DeviceKeyPair other) => Device.FrontierName == other.Device.FrontierName && FrontierKeyName == other.FrontierKeyName;
         }
     }
 }

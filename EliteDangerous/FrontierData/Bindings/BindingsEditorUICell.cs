@@ -63,8 +63,7 @@ namespace EliteDangerousCore.Bindings
                 DataGridViewComboBoxCell dc = row.Cells[deviceindex] as DataGridViewComboBoxCell;
                 DataGridViewComboBoxCell dk = row.Cells[deviceindex+1] as DataGridViewComboBoxCell;
 
-                DeviceParameters device = bf.GetBetterName( !onkey  ? newcellvalue : row.Cells[deviceindex].Value.ToString());
-                string frontierdevice = device.FrontierName;
+                Device device = bf.GetDeviceByBetterName( !onkey  ? newcellvalue : row.Cells[deviceindex].Value.ToString());
                 string renamedkeyname = onkey ? newcellvalue : row.Cells[deviceindex + 1].Value?.ToString() ?? null;
                 string frontierkeyname = keynames.OriginalName(device.FrontierName, renamedkeyname );
                 bool nodevice = device.IsNoDevice;
@@ -103,14 +102,14 @@ namespace EliteDangerousCore.Bindings
                         }
                     }
 
-                    SetHint(row, deviceindex, frontierdevice);       // set hint only on dev 
+                    SetHint(row, deviceindex, device);       // set hint only on dev 
                     SetDirty();
                 }
                 else if (ci == ColPrimaryKey.Index)
                 {
                     dk.ErrorText = null;
-                    entry.PrimaryKeys.Keys[0] = new DeviceKeyPair(frontierdevice, frontierkeyname);
-                    SetHint(row, deviceindex, frontierdevice, frontierkeyname);       // set hint only on dev 
+                    entry.PrimaryKeys.Keys[0] = new DeviceKeyPair(device, frontierkeyname);
+                    SetHint(row, deviceindex, device, frontierkeyname);       // set hint only on dev 
                     SetDirty();
                 }
                 else if (ci == ColPrimaryModDevice.Index)
@@ -123,14 +122,14 @@ namespace EliteDangerousCore.Bindings
                     dk.ErrorText = nodevice ? null : "Invalid - enter a value";
                     AddKeyOptions(entry.IsBinding, device, dk);
 
-                    SetHint(row, deviceindex, frontierdevice);       // set hint only on dev 
+                    SetHint(row, deviceindex, device);       // set hint only on dev 
                     SetDirty();
                 }
                 else if (ci == ColPrimaryModKey.Index)
                 {
                     dk.ErrorText = null;
-                    entry.PrimaryKeys.SetMod(frontierdevice, frontierkeyname);      // either add mod or change current mod
-                    SetHint(row, deviceindex, frontierdevice, frontierkeyname);       // set hint only on dev 
+                    entry.PrimaryKeys.SetMod(device, frontierkeyname);      // either add mod or change current mod
+                    SetHint(row, deviceindex, device, frontierkeyname);       // set hint only on dev 
                     SetDirty();
                 }
                 else if (ci == ColSecondaryDevice.Index)
@@ -157,14 +156,14 @@ namespace EliteDangerousCore.Bindings
                         row.Cells[ci + 2].ReadOnly = row.Cells[ci + 3].ReadOnly = false;    // else enable the mod and key. Device will be already filled
                     }
 
-                    SetHint(row, ci, frontierdevice);       // set hint only on dev 
+                    SetHint(row, ci, device);       // set hint only on dev 
                     SetDirty();
                 }
                 else if (ci == ColSecondaryKey.Index)
                 {
                     dk.ErrorText = null;
-                    entry.SecondaryKeys.Keys[0] = new DeviceKeyPair(frontierdevice, frontierkeyname);
-                    SetHint(row, deviceindex, frontierdevice, frontierkeyname);       // set hint only on dev 
+                    entry.SecondaryKeys.Keys[0] = new DeviceKeyPair(device, frontierkeyname);
+                    SetHint(row, deviceindex, device, frontierkeyname);       // set hint only on dev 
                     SetDirty();
                 }
                 else if (ci == ColSecondaryModDevice.Index)
@@ -177,14 +176,14 @@ namespace EliteDangerousCore.Bindings
                     dk.ErrorText = nodevice ? null : "Invalid - enter a value";
                     AddKeyOptions(entry.IsBinding, device, dk);
 
-                    SetHint(row, deviceindex, frontierdevice);       // set hint only on dev 
+                    SetHint(row, deviceindex, device);       // set hint only on dev 
                     SetDirty();
                 }
                 else if (ci == ColSecondaryModKey.Index)
                 {
                     dk.ErrorText = null;
-                    entry.SecondaryKeys.SetMod(frontierdevice, frontierkeyname);
-                    entry.PrimaryKeys.SetMod(frontierdevice, frontierkeyname);      // either add mod or change current mod
+                    entry.SecondaryKeys.SetMod(device, frontierkeyname);
+                    entry.PrimaryKeys.SetMod(device, frontierkeyname);      // either add mod or change current mod
                     SetDirty();
                 }
 
@@ -203,7 +202,7 @@ namespace EliteDangerousCore.Bindings
             {
                 DataGridViewComboBoxCell c = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
                 string selected = c.Value as string;
-                bool nodevice = selected == DeviceKeyPair.NoDeviceName;
+                bool nodevice = selected == Device.NoDeviceName;
                 if (nodevice)
                     c.Value = "";       // this clears the cell here, can't do it in EDC selected index
             }
@@ -264,26 +263,22 @@ namespace EliteDangerousCore.Bindings
 
             if (entry.IsKeyOrBinding && (ci == ColPrimaryDevice.Index || ci == ColPrimaryKey.Index || (ci >= ColPrimaryModDevice.Index && entry.IsKey)))
             {
-                // returns device in frontier naming, using FindDevice to convert from DirectInput info to frontier name
+                // returns device
                 // return key in frontier naming, using KeysToFrontier to convert
 
-                var frontierdkp = DeviceInput?.Invoke(bf, entry);      
+                var frontiertuple = DeviceInput?.Invoke(bf, entry);      
 
-                if (frontierdkp != null)
+                if (frontiertuple != null)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Frontier Key {frontierdkp.Device} {frontierdkp.FrontierKeyName}");
+                    System.Diagnostics.Debug.WriteLine($"Frontier Key {frontiertuple.Item1} {frontiertuple.Item2}");
 
-                    // we may rename it, so it works both for Joy_29 and renamed..
-                    //  DeviceKeyPair renameddkp = new DeviceKeyPair(BetterDeviceName(frontierdkp.Device), keyrenames.GetRename(frontierdkp.Device,frontierdkp.FrontierKeyName));     
-
-                    //   System.Diagnostics.Debug.WriteLine($"Renamed device/key {renameddkp.Device} {renameddkp.FrontierKeyName}");
-
-                    DeviceParameters device = bf.Get(frontierdkp.Device);
+                    Device dp = bf.GetDevice(frontiertuple.Item1);
+                    DeviceKeyPair dkp = new DeviceKeyPair(dp, frontiertuple.Item2);
 
                     if (ci == ColPrimaryDevice.Index || ci == ColPrimaryKey.Index)
                     {
-                        SetPair(row, entry.IsBinding, ColPrimaryDevice.Index, device , frontierdkp.FrontierKeyName);
-                        entry.PrimaryKeys.Keys[0] = frontierdkp;
+                        SetPair(row, entry.IsBinding, ColPrimaryDevice.Index, dkp.Device, dkp.FrontierKeyName);
+                        entry.PrimaryKeys.Keys[0] = dkp;
 
                         if (entry.IsBinding == false)
                         {
@@ -293,21 +288,21 @@ namespace EliteDangerousCore.Bindings
                     }
                     else if (ci == ColPrimaryModDevice.Index || ci == ColPrimaryModKey.Index)
                     {
-                        SetPair(row, false, ColPrimaryModDevice.Index, device, frontierdkp.FrontierKeyName);
-                        entry.PrimaryKeys.SetMod(frontierdkp.Device, frontierdkp.FrontierKeyName);
+                        SetPair(row, false, ColPrimaryModDevice.Index, dkp.Device, dkp.FrontierKeyName);
+                        entry.PrimaryKeys.SetMod(dkp.Device, dkp.FrontierKeyName);
                     }
 
                     else if (ci == ColSecondaryDevice.Index || ci == ColSecondaryKey.Index)
                     {
-                        SetPair(row, false, ColSecondaryDevice.Index, device, frontierdkp.FrontierKeyName);
-                        entry.SecondaryKeys.Keys[0] = frontierdkp;
+                        SetPair(row, false, ColSecondaryDevice.Index, dkp.Device, dkp.FrontierKeyName);
+                        entry.SecondaryKeys.Keys[0] = dkp;
 
                         row.Cells[ColSecondaryModDevice.Index].ReadOnly = false;    // etheselse enable the mod device
                     }
                     else if (ci == ColSecondaryModDevice.Index || ci == ColSecondaryModKey.Index)
                     {
-                        SetPair(row, false, ColSecondaryModDevice.Index, device, frontierdkp.FrontierKeyName);
-                        entry.SecondaryKeys.SetMod(frontierdkp.Device, frontierdkp.FrontierKeyName);
+                        SetPair(row, false, ColSecondaryModDevice.Index, dkp.Device, dkp.FrontierKeyName);
+                        entry.SecondaryKeys.SetMod(dkp.Device, dkp.FrontierKeyName);
                     }
                     else
                     {
@@ -355,7 +350,7 @@ namespace EliteDangerousCore.Bindings
                 vf.AllowAddingMoreEntries = false;
                 vf.DisableDeletion = true;
                 vf.ComboBoxVariables = fixedoptions;
-                vf.Init(vars, $"Values for {BetterName(entry.Name)}", this.FindForm().Icon);
+                vf.Init(vars, $"Values for {BetterBindingName(entry.Name)}", this.FindForm().Icon);
                 if (vf.ShowDialog(this.FindForm()) == DialogResult.OK)
                 {
                     foreach (var x in vf.Result.NameEnumuerable)

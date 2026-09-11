@@ -101,42 +101,41 @@ namespace EliteDangerousCore.Bindings
  
 
         // Return list of standard frontier names for joystick axis, joystick buttons, mouse and keyboard
-        // each setting may be mixed freely
-        static public HashSet<string> FrontierKeyNames(string layoutname, bool axis, DeviceParameters para, bool inclalphanumbersfkeys = true)
+        // indicate if to list axis and buttons
+        // if its def not a keyboard, no need to include layoutname
+        static public HashSet<string> FrontierKeyNames(Device device, bool incaxis, bool incbuttons, string layoutname = null, bool inclalphanumbersfkeys = true)
         {
             HashSet<string> ret = new HashSet<string>();
 
-            if (axis)
+            if (incaxis)
             {
-                foreach (var x in para.Axis.EmptyIfNull())
+                foreach (var x in device.Axis.EmptyIfNull())
                 {
                     ret.Add($"Joy_{x}Axis");          // joy axis
                 }
             }
-            else
+
+            if ( incbuttons && device.Buttons>0)
             {
-                if (para.Buttons > 0)
+                for (int i = 1; i <= Math.Min(32, device.Buttons); i++)
+                    ret.Add($"Joy_{i}");
+                for (int i = 1; i <= device.Pov; i++)
                 {
-                    for (int i = 1; i <= Math.Min(32, para.Buttons); i++)
-                        ret.Add($"Joy_{i}");
-                    for (int i = 1; i <= para.Pov; i++)
-                    {
-                        ret.Add($"Joy_POV{i}Left");
-                        ret.Add($"Joy_POV{i}Right");
-                        ret.Add($"Joy_POV{i}Left");
-                        ret.Add($"Joy_POV{i}Up");
-                        ret.Add($"Joy_POV{i}Down");
-                        ret.Add($"Joy_POV{i}UpLeft");
-                        ret.Add($"Joy_POV{i}UpRight");
-                        ret.Add($"Joy_POV{i}DownLeft");
-                        ret.Add($"Joy_POV{i}DownRight");
-                    }
-                    for (int i = 32; i <= para.Buttons; i++)
-                        ret.Add($"Joy_{i}");
+                    ret.Add($"Joy_POV{i}Left");
+                    ret.Add($"Joy_POV{i}Right");
+                    ret.Add($"Joy_POV{i}Left");
+                    ret.Add($"Joy_POV{i}Up");
+                    ret.Add($"Joy_POV{i}Down");
+                    ret.Add($"Joy_POV{i}UpLeft");
+                    ret.Add($"Joy_POV{i}UpRight");
+                    ret.Add($"Joy_POV{i}DownLeft");
+                    ret.Add($"Joy_POV{i}DownRight");
                 }
+                for (int i = 32; i <= device.Buttons; i++)
+                    ret.Add($"Joy_{i}");
             }
 
-            if ( para.Mouse )
+            if ( device.Mouse )
             {
                 ret.Add("Mouse_1");
                 ret.Add("Mouse_2");
@@ -150,7 +149,7 @@ namespace EliteDangerousCore.Bindings
                 ret.Add("Pos_Mouse_ZAxis");
             }
             
-            if ( para.Keyboard )
+            if ( device.Keyboard )
             {
                 foreach (var x in FrontierKeyConversion.FrontierKeyNames(layoutname))
                     ret.Add(x);

@@ -12,12 +12,16 @@
  * governing permissions and limitations under the License.
  */
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
 namespace EliteDangerousCore.Bindings
 {
     [System.Diagnostics.DebuggerDisplay("{FrontierName} {BetterName} : {AxisList} {Pov} {Buttons} K{Keyboard} M{Mouse}")]
-    public class DeviceParameters
+    public class Device : IEquatable<Device>, IEqualityComparer<Device>
     {
-        public DeviceParameters(string name, string bestname, string[] axis, int pov, int buttons)
+        public Device(string name, string bestname, string[] axis, int pov, int buttons)
         {
             FrontierName = name;
             BetterName = bestname;
@@ -25,21 +29,32 @@ namespace EliteDangerousCore.Bindings
             Pov = pov;
             Buttons = buttons;
         }
-        public DeviceParameters(string name, bool keyboard, bool mouse)
+        public Device(string name, bool keyboard, bool mouse)
         {
             BetterName = FrontierName = name;
             Mouse = mouse;
             Keyboard = keyboard;
         }
-        public DeviceParameters(string bettername)
+        public Device()
         {
             FrontierName = "{NoDevice}";
-            BetterName = bettername;
+            BetterName = "---";
         }
 
         public string AxisList => Axis != null ? string.Join(", ", Axis) : "";
 
-        public bool IsNoDevice => FrontierName == "{NoDevice}";
+        public bool HasBetterName => BetterName != FrontierName;
+
+        // these are fixed names at this level, the other names have to be handled at bindingfile level
+        public bool IsNoDevice => FrontierName == NoDeviceName;
+        public bool IsDevice => FrontierName != NoDeviceName;
+        public bool IsKeyboard => FrontierName == KeyboardDeviceName;
+        public bool IsMouse => FrontierName == MouseDeviceName;
+        public bool IsJoystick => !IsNoDevice && !IsKeyboard && !IsMouse;
+
+        public const string KeyboardDeviceName = "Keyboard";
+        public const string MouseDeviceName = "Mouse";
+        public const string NoDeviceName = "{NoDevice}";
 
         static public string[] DefaultAxis = new string[] { "X", "Y", "Z", "RX", "RY", "RZ", "U", "V" };
 
@@ -50,5 +65,20 @@ namespace EliteDangerousCore.Bindings
         public int Buttons { get; set; }
         public bool Mouse { get; set; }
         public bool Keyboard { get; set; }
+
+        public bool Equals(Device other)
+        {
+            return other.FrontierName == FrontierName;
+        }
+
+        public bool Equals(Device x, Device y)
+        {
+            return x == null && y == null ? true : x == null || y == null ? false : x.FrontierName == y.FrontierName;
+        }
+
+        public int GetHashCode(Device obj)
+        {
+            return obj.FrontierName.GetHashCode();
+        }
     }
 }

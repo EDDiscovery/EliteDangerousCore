@@ -45,7 +45,7 @@ namespace EliteDangerousCore.Bindings
 
             dataGridView.ClearSelection();
 
-            HashSet<string> devicespresent = new HashSet<string>();     // build a list of devices across the range
+            HashSet<Device> devicespresent = new HashSet<Device>();     // build a list of devices across the range
 
             // go thru the range, select the cells, build up options
             foreach ( var row in rcrows)
@@ -75,7 +75,7 @@ namespace EliteDangerousCore.Bindings
                 removeDeviceToolStripMenuItem.DropDownItems.Clear();
                 foreach (var x in devicespresent )
                 {
-                    ToolStripMenuItem tsi = new ToolStripMenuItem() { Name = x, Text = BetterDeviceName(x)};
+                    ToolStripMenuItem tsi = new ToolStripMenuItem() { Name = x.FrontierName, Text = x.BetterName};
                     tsi.Click += (s1, e1) => {
                         foreach (DataGridViewRow row in rcrows)
                         {

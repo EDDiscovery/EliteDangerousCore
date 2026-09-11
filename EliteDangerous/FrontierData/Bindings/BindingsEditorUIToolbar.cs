@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace EliteDangerousCore.Bindings
@@ -100,8 +101,6 @@ namespace EliteDangerousCore.Bindings
         private void ApplyFilter()
         {
             string sel = (string)extComboBoxFilter.SelectedItem;
-            if (extComboBoxFilter.SelectedIndex >= filtercomboboxmodestart)
-                sel = OriginalDeviceName(sel);
 
             dataGridView.FilterGridView((r) =>
             {
@@ -200,58 +199,92 @@ namespace EliteDangerousCore.Bindings
             }
         }
 
-        private void buttonDeviceRename_Click(object sender, EventArgs e)
+        private void buttonDeviceRemap_Click(object sender, EventArgs e)
         {
-            ExtendedControls.CheckedIconNewListBoxForm displayfilter = new CheckedIconNewListBoxForm();
+            CheckedIconNewListBoxForm dropdown = new CheckedIconNewListBoxForm();
             var items = bf.DeviceListNoKeyboardMouseDevice;
 
             if (items.Count > 0)
             {
-                foreach (var x in items)
-                    displayfilter.UC.AddButton(x.FrontierName, x.BetterName);       // tag is internal name, text is rename
-
-                displayfilter.CloseBoundaryRegion = new Size(32, extButtonDeviceRename.Height);
-                displayfilter.UC.ImageSize = new Size(24, 24);
-                displayfilter.UC.ScreenMargin = new Size(0, 0);
-                displayfilter.PositionBelow(extButtonDeviceRename);
-                displayfilter.UC.ButtonPressed += (i, s1, s2, o, m) =>      // called on click of button
+                foreach (Device dev in items)
                 {
-                    string newname = ExtendedControls.PromptSingleLine.ShowDialog(this, "Device:", "", $"Enter new device name for {s1}", this.FindForm().Icon);
-                    if (newname != null)
-                        bf.RenameDevice(s1, newname);
+                    CheckedIconUserControl.SubForm sf = new CheckedIconUserControl.SubForm();
+                    foreach(Device otherdev in items.Where(k=>k!=dev))
+                    {
+                        sf.Items.Add( new CheckedIconUserControl.Item() { Tag = dev.FrontierName +":" + otherdev.FrontierName, Text = otherdev.BetterName, Button = true } );
+                    }
+
+                    dropdown.UC.AddButton(dev.FrontierName, dev.BetterName,null,sf);      
+                }
+
+                dropdown.CloseBoundaryRegion = new Size(32, extButtonDeviceRemap.Height);
+                dropdown.UC.ImageSize = new Size(24, 24);
+                dropdown.UC.ScreenMargin = new Size(0, 0);
+                dropdown.PositionBelow(extButtonDeviceRemap);
+                dropdown.UC.ButtonPressed += (i, s1, s2, o, m) =>      // called on click of button
+                {
+                    string fromname = s1.Substring(0, s1.IndexOf(":"));
+                    Device fromdevice = bf.GetDevice(fromname);
+                    string toname = s1.Substring(s1.IndexOf(":")+1);
+                    Device todevice = bf.GetDevice(toname);
+
+                    bf.Remap(fromdevice,todevice);
 
                     SetDirty();
                     ComboBoxFilterFill();
                     Display();
-                    displayfilter.Close();
+                    dropdown.Close();
                 };
-                displayfilter.Show(this);
+                dropdown.Show(this);
             }
         }
 
 
         private void extButtonDeviceKeys_Click(object sender, EventArgs e)
         {
-            //keyrenames.Edit(this.FindForm(), bf.KeyboardLayout, "231D0200");
-            ExtendedControls.CheckedIconNewListBoxForm displayfilter = new CheckedIconNewListBoxForm();
-            var items = bf.DeviceListNoKeyboardMouseDevice;
+            //keynames.Edit(this.FindForm(), bf.KeyboardLayout, bf.GetDevice("231D0200")); return;
 
-            if (items.Count > 0)
+            CheckedIconNewListBoxForm dropdown = new CheckedIconNewListBoxForm();
+
+            var devices = bf.DeviceListNoKeyboardMouseDevice;
+
+            // all known devices
+
+            foreach (var dev in devices)
+                dropdown.UC.AddButton(dev.FrontierName, dev.BetterName, usertag: dev);       // tag is internal name, text is rename
+
+            // all other devices in name list
+            foreach ( DeviceKeyNames.DeviceNameSet dev in keynames)
             {
-                foreach (var x in items)
-                    displayfilter.UC.AddButton(x.FrontierName, x.BetterName);       // tag is internal name, text is rename
-
-                displayfilter.CloseBoundaryRegion = new Size(32, extButtonDeviceRename.Height);
-                displayfilter.UC.ImageSize = new Size(24, 24);
-                displayfilter.UC.ScreenMargin = new Size(0, 0);
-                displayfilter.PositionBelow(extButtonDeviceRename);
-                displayfilter.UC.ButtonPressed += (i, s1, s2, o, m) =>      // called on click of button
+                bool add = true;
+                foreach( var idev in dev.Devices)
                 {
-                    keynames.Edit(this.FindForm(), bf.KeyboardLayout, s1);
+                    if (bf.GetDevice(idev) != null)
+                        add = false;
+                }
+
+                if ( add )
+                {
+                    // make up a device with the parameters from the rename
+                    Device madeup = new Device(dev.DeviceList,dev.DeviceList, dev.Axis.Length>0 ? dev.Axis: Device.DefaultAxis,dev.POV>-1 ? dev.POV : 2, dev.Buttons>-1 ? dev.Buttons : 128);
+                    dropdown.UC.AddButton(dev.DeviceList, dev.DeviceList, usertag: madeup);       // tag is internal name, text is rename
+                }
+            }
+
+            if (devices.Count > 0)
+            {
+                dropdown.CloseBoundaryRegion = new Size(32, extButtonDeviceRemap.Height);
+                dropdown.UC.ImageSize = new Size(24, 24);
+                dropdown.UC.ScreenMargin = new Size(0, 0);
+                dropdown.PositionBelow(extButtonDeviceRemap);
+                dropdown.UC.ButtonPressed += (i, s1, s2, o, m) =>      // called on click of button
+                {
+                    Device dev = (Device)o;
+                    keynames.Edit(this.FindForm(), bf.KeyboardLayout, dev);
                     Display();
-                    displayfilter.Close();
+                    dropdown.Close();
                 };
-                displayfilter.Show(this);
+                dropdown.Show(this);
             }
 
         }

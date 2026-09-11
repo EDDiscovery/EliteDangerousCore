@@ -29,8 +29,8 @@ namespace EliteDangerousCore.Bindings
         public Action<string> ChangedBindings { get; set; }           // saved this load
         public Action<string> ChangedDefault { get; set; }            // changed the start preset file
 
-        // called to pop up a way of the user pressing key/joystick. Return DKP with the names as presented in the pop down list, ie. Via ConvertDeviceNameList
-        public Func<BindingsFile, BindingEntry, DeviceKeyPair> DeviceInput { get; set; }
+        // called to pop up a way of the user pressing key/joystick.
+        public Func<BindingsFile, BindingEntry, Tuple<string,string>> DeviceInput { get; set; }
 
         public BindingsEditor()
         {
@@ -47,7 +47,7 @@ namespace EliteDangerousCore.Bindings
         // folder and preferredbindfile (can be null)
         // give known devices and properties
         // give known device name mappings
-        public void Init(string folder, string preferredbindfile, List<DeviceParameters> deviceparas, DeviceKeyNames keynames)
+        public void Init(string folder, string preferredbindfile, List<Device> deviceparas, DeviceKeyNames keynames)
         {
             List<FileInfo> bindfiles = Directory.EnumerateFiles(folder, "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToList();
             foreach (var x in bindfiles)
@@ -145,7 +145,7 @@ namespace EliteDangerousCore.Bindings
                     row.Cells[0].Value = entry.ClassMode.Item1.ToString().SplitCapsWordFull();
                     row.Cells[0].Tag = (int)entry.ClassMode.Item1;     // tag 0 gets class, first sort, tag 1 gets order this is in the file
                     row.Cells[1].Value = entry.ClassMode.Item2.ToString().SplitCapsWordFull();
-                    row.Cells[2].Value = BetterName(entry.Name) + (FrontierBindingClassification.HoldButton(entry.Name) ? " (Hold)" : "");
+                    row.Cells[2].Value = BetterBindingName(entry.Name) + (FrontierBindingClassification.HoldButton(entry.Name) ? " (Hold)" : "");
                     row.Cells[2].Tag = orderno;
 
                     if (!showFrontierNamesToolStripMenuItem.Checked)
@@ -171,7 +171,7 @@ namespace EliteDangerousCore.Bindings
                     row.Cells[0].Value = entry.ClassMode.Item1.ToString().SplitCapsWordFull();
                     row.Cells[0].Tag = (int)entry.ClassMode.Item1;     // tag 0 gets class, first sort, tag 1 gets order this is in the file
                     row.Cells[1].Value = entry.ClassMode.Item2.ToString().SplitCapsWordFull();
-                    row.Cells[2].Value = BetterName(entry.Name);
+                    row.Cells[2].Value = BetterBindingName(entry.Name);
                     if (!showFrontierNamesToolStripMenuItem.Checked)
                         row.Cells[2].ToolTipText = "Value entry " + entry.Name;
                     if (entry.Attributes.Count == 0)
@@ -197,7 +197,7 @@ namespace EliteDangerousCore.Bindings
             ColSecondaryDevice.DisplayStyleForCurrentCellOnly = ColSecondaryKey.DisplayStyleForCurrentCellOnly =
             ColSecondaryModDevice.DisplayStyleForCurrentCellOnly = ColSecondaryModKey.DisplayStyleForCurrentCellOnly = true;
 
-            extButtonDeviceNew.Visible = extButtonDeviceRename.Visible = bf.IsEditable;
+            extButtonDeviceNew.Visible = extButtonDeviceRemap.Visible = bf.IsEditable;
             labelWarning.Text = bf.IsEditable ? "" : $"Unknown Keyboard Layout {bf.KeyboardCulture} {InputLanguage.CurrentInputLanguage.LayoutName} {InputLanguage.CurrentInputLanguage.Culture.Name}. File is not editable";
 
             dataGridView.ContextMenuStrip = bf.IsEditable ? this.contextMenuStrip : null;
@@ -205,12 +205,6 @@ namespace EliteDangerousCore.Bindings
             IndicateErrors();
 
             ApplyFilter();
-        }
-
-        //provide access to the find device of bindings file for device mapping purposes
-        public string FindDevice(string name, Guid instanceguid, Guid productguid, int productid, int vendorid)
-        {
-            return FrontierDeviceNames.Find(name,instanceguid, productguid, productid, vendorid, bf.DeviceList.Select(x=>x.FrontierName).ToList());
         }
 
         #region Helpers
@@ -233,7 +227,7 @@ namespace EliteDangerousCore.Bindings
             }
         }
 
-        void SetUpCells(DataGridViewRow row, bool editable, bool binding, List<DeviceParameters> devices, int index, BindingsFile.DeviceKeyPair dkp)
+        void SetUpCells(DataGridViewRow row, bool editable, bool binding, List<Device> devices, int index, BindingsFile.DeviceKeyPair dkp)
         {
             var dc = row.Cells[index] as DataGridViewComboBoxCell;
             var dk = row.Cells[index + 1] as DataGridViewComboBoxCell;
@@ -247,9 +241,8 @@ namespace EliteDangerousCore.Bindings
 
             if (dkp != null)
             {
-                DeviceParameters device = bf.Get(dkp.Device);
                 dc.Tag = dkp;
-                SetDevice(dc, device);
+                SetDevice(dc, dkp.Device);
 
                 if (!dkp.IsDevice)              // if no device, cell is clear
                 {
@@ -258,7 +251,7 @@ namespace EliteDangerousCore.Bindings
                 }
                 else
                 {
-                    SetKey(dk, binding, device, dkp.FrontierKeyName);
+                    SetKey(dk, binding, dkp.Device, dkp.FrontierKeyName);
                 }
 
             }
@@ -276,14 +269,14 @@ namespace EliteDangerousCore.Bindings
         }
 
         // set up a device cell, with a better name than frontierdevice
-        private void SetDevice(DataGridViewCell dc, DeviceParameters device)
+        private void SetDevice(DataGridViewCell dc, Device device)
         {
             SetValue(dc, device.BetterName);     // set up device valu
             //System.Diagnostics.Debug.WriteLine($"Changed Device {frontierdevicename}");
         }
 
         // set up a key cell, given the binding and frontier device name. 
-        private void SetKey(DataGridViewComboBoxCell dk, bool binding, DeviceParameters device, string frontierkeyname)
+        private void SetKey(DataGridViewComboBoxCell dk, bool binding, Device device, string frontierkeyname)
         {
             dk.Value = null;        // need to clear before clearing items
             AddKeyOptions(binding, device, dk);
@@ -294,20 +287,19 @@ namespace EliteDangerousCore.Bindings
         }
 
         // set hints on device/key pair.  You may call with both nulls, or just device, or both
-        private void SetHint(DataGridViewRow row, int deviceindex, string frontierdevicename = null, string frontierkeyname = null)
+        private void SetHint(DataGridViewRow row, int deviceindex, Device device = null, string frontierkeyname = null)
         {
             row.Cells[deviceindex].ToolTipText = row.Cells[deviceindex + 1].ToolTipText = null;
 
-            if (frontierdevicename != null)
+            if (device != null)
             {
                 string nl = Environment.NewLine;    // for debugging change to "|"
-                string bdn = BetterDeviceName(frontierdevicename);
-                row.Cells[deviceindex].ToolTipText = DeviceKeyPair.IsJoystickDevice(frontierdevicename) && bdn != frontierdevicename ? (bdn + nl + "Frontier Name " + frontierdevicename) : null;
+                row.Cells[deviceindex].ToolTipText = device.IsJoystick && device.HasBetterName ? (device.BetterName + nl + "Frontier Name " + device.FrontierName) : null;
 
                 if (frontierkeyname != null)
                 {
-                    string bk = keynames.GetRename(frontierdevicename, frontierkeyname);
-                    string hint = keynames.GetHint(frontierdevicename, frontierkeyname);
+                    string bk = keynames.GetRename(device.FrontierName, frontierkeyname);
+                    string hint = keynames.GetHint(device.FrontierName, frontierkeyname);
                     row.Cells[deviceindex + 1].ToolTipText = bk != frontierkeyname ? (hint + nl + frontierkeyname) : null;
                 }
             }
@@ -323,31 +315,22 @@ namespace EliteDangerousCore.Bindings
         }
 
         // use renamed device in here
-        private void SetPair(DataGridViewRow row, bool binding, int index, DeviceParameters device, string frontierkeyname)
+        private void SetPair(DataGridViewRow row, bool binding, int index, Device device, string frontierkeyname)
         {
             SetDevice(row.Cells[index], device);
             SetKey(row.Cells[index + 1] as DataGridViewComboBoxCell, binding, device, frontierkeyname);
-            SetHint(row,index,device.FrontierName,frontierkeyname);
+            SetHint(row,index,device,frontierkeyname);
         }
 
-        // add options to key, based on binding, the bindings file external device name
-        private void AddKeyOptions(bool isaxis, DeviceParameters dp, DataGridViewComboBoxCell c)
+        // add options to key, based on binding and the device
+        private void AddKeyOptions(bool isaxis, Device device, DataGridViewComboBoxCell c)
         {
-            //var devkname = keynames.GetDevice(dp.FrontierName);              // else use information in device names
-
-            //bool isjoystick = DeviceKeyPair.IsJoystickDevice(frontierdevicename);
-
-            //string[] joystickaxis = isjoystick && isaxis ? (dp != null ? dp.Item2 : devkname?.Axis.Length>0 ? devkname.Axis : DeviceKeyNames.DeviceEntry.DefaultAxis) : new string[0];
-            //int joystickbuttons = isjoystick && !isaxis ? (dp != null ? dp.Item3 : devkname?.Buttons > 0 ? devkname.Buttons : 128) : 0;
-            //int joystickpov = isjoystick && !isaxis ? (dp != null ? dp.Item4 : devkname?.POV > 0 ? devkname.POV : 2 ) : 0;
-
-            //if ( isjoystick ) System.Diagnostics.Debug.WriteLine($"{frontierdevicename} {isaxis} = `{string.Join(",", joystickaxis)}` {joystickbuttons} {joystickpov}");
-
-            var ret = FrontierKeyConversion.FrontierKeyNames(bf.KeyboardLayout, isaxis, dp);
+            // we are not going to use keynams to set joystick limits, just physical detected devices
+            var ret = FrontierKeyConversion.FrontierKeyNames(device, isaxis, !isaxis, bf.KeyboardLayout);
 
             c.Items.Clear();
             foreach (var x in ret)
-                c.Items.Add( keynames.GetRename(dp.FrontierName,x));
+                c.Items.Add( keynames.GetRename(device.FrontierName,x));
         }
 
 
@@ -369,7 +352,7 @@ namespace EliteDangerousCore.Bindings
         private void SetEnables(bool active, bool saveit)
         {
             extButtonDuplicate.Enabled = extButtonSetDefault.Enabled = active;
-            extButtonDeviceNew.Enabled = extButtonReload.Enabled = extButtonDeviceRename.Enabled = active;
+            extButtonDeviceNew.Enabled = extButtonReload.Enabled = extButtonDeviceRemap.Enabled = active;
             extButtonReload.Enabled = extButtonSave.Enabled = saveit;
         }
 
@@ -410,10 +393,10 @@ namespace EliteDangerousCore.Bindings
                                    // System.Diagnostics.Debug.WriteLine($"Checked Clash: `{entry1.ToString()}` vs `{entry2.ToString()}`");
                                     var cell1 = row.Cells[same.Item1 == 1 ? ColPrimaryKey.Index : ColSecondaryKey.Index];
                                     cell1.Style.BackColor = Color.DarkRed;
-                                    cell1.ToolTipText = clash + $" {BetterName(entry2.Name)} {(same.Item2 == 1 ? "Primary" : "Secondary")}";
+                                    cell1.ToolTipText = clash + $" {BetterBindingName(entry2.Name)} {(same.Item2 == 1 ? "Primary" : "Secondary")}";
                                     var cell2 = rowcompare.Cells[same.Item2 == 1 ? ColPrimaryKey.Index : ColSecondaryKey.Index];
                                     cell2.Style.BackColor = Color.DarkRed;
-                                    cell2.ToolTipText = clash + $" {BetterName(entry1.Name)} {(same.Item1 == 1 ? "Primary" : "Secondary")}";
+                                    cell2.ToolTipText = clash + $" {BetterBindingName(entry1.Name)} {(same.Item1 == 1 ? "Primary" : "Secondary")}";
                                 }
 
                             }
@@ -461,18 +444,17 @@ namespace EliteDangerousCore.Bindings
             }
         }
 
-        public string BetterName(string name)
+        public string BetterBindingName(string name)
         {
             return showFrontierNamesToolStripMenuItem.Checked ? name : name.SplitCapsWordFull().Replace("Buggy", "SRV").Replace("Turret", "SRV Turret").Replace("Humanoid", "On Foot").ReplaceIfStartsWith("Cam ", "Galaxy Map ");
         }
-        public string BetterDeviceName(string frontiername)
+        
+        //provide access to the find device of bindings file for device mapping purposes
+        public string FindDeviceName(string name, Guid instanceguid, Guid productguid, int productid, int vendorid)
         {
-            return deviceparas.Find(x => x.FrontierName == frontiername)?.BetterName ?? frontiername;
+            return FrontierDeviceNames.Find(name, instanceguid, productguid, productid, vendorid, bf.DeviceList.Select(x => x.FrontierName).ToList());
         }
-        public string OriginalDeviceName(string bettername)
-        {
-            return deviceparas.Find(x => x.BetterName == bettername)?.FrontierName ?? bettername;
-        }
+
 
         #endregion
 
@@ -488,7 +470,7 @@ namespace EliteDangerousCore.Bindings
         private int filtercomboboxmodestart = 0;
 
         private DeviceKeyNames keynames;
-        private List<DeviceParameters> deviceparas;
+        private List<Device> deviceparas;
 
         private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {

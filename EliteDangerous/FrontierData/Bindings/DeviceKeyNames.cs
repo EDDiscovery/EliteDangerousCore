@@ -12,53 +12,69 @@
  * governing permissions and limitations under the License.
  */
 
-using BaseUtils;
-using ExtendedConditionsForms;
 using ExtendedControls;
 using QuickJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
 namespace EliteDangerousCore.Bindings
 {
-    public class DeviceKeyNames : IEnumerable<DeviceKeyNames.DeviceEntry>
+    public class DeviceKeyNames : IEnumerable<DeviceKeyNames.DeviceNameSet>
     {
         [System.Diagnostics.DebuggerDisplay("{DeviceList} {Buttons} {POV}")]
-        public class DeviceEntry
+        public class DeviceNameSet
         {
+            public DeviceNameSet(string s) { DeviceList = s; }
             public string DeviceList { get; set; }
-            public int Buttons { get; set; }        // 0 not known
-            public int POV { get; set; }            // 0 not known
-            public string[] Axis { get; set; }      // empty
+            public int Buttons { get; set; } = -1;
+            public int POV { get; set; } = -1;    
+            public string[] Axis { get; set; } = new string[0];
             public string[] Devices => DeviceList.Split(',');
 
-            public class RenameEntry
+            public class KeyEntry
             {
                 public string Name { get; set; }
                 public string Hint { get; set; }
             }
 
-            public Dictionary<string, RenameEntry> Names = new Dictionary<string, RenameEntry>();
+            public Dictionary<string, KeyEntry> Names = new Dictionary<string, KeyEntry>();
         }
 
-        public DeviceEntry GetDeviveList(string deviceList)
+        public DeviceNameSet GetByDeviceList(string deviceList)
         {
             return renames.Find(x => x.DeviceList == deviceList);
         }
-        public DeviceEntry GetDevice(string frontierdevicename)
+
+        public DeviceNameSet GetDevice(string frontierdevicename)
         {
             var dev = renames.Find(x => x.Devices.Contains(frontierdevicename));
             return dev;
         }
 
-        public void Add(DeviceEntry dev)
+        public void Add(DeviceNameSet dev)
         {
             renames.Add(dev);
+        }
+
+        public string GetRename(string bfdev, string bfname)
+        {
+            var dev = renames.Find(x => x.Devices.Contains(bfdev));
+            return dev != null ? dev.Names.TryGetValue(bfname, out DeviceNameSet.KeyEntry sn) ? sn.Name : bfname : bfname;
+        }
+        public string GetHint(string bfdev, string bfname)
+        {
+            var dev = renames.Find(x => x.Devices.Contains(bfdev));
+            return dev != null ? dev.Names.TryGetValue(bfname, out DeviceNameSet.KeyEntry sn) ? sn.Hint : null : null;
+        }
+
+        public string OriginalName(string bfdev, string rename)
+        {
+            var dev = renames.Find(x => x.Devices.Contains(bfdev));
+            return dev != null ? (dev.Names.Where(kvp => kvp.Value.Name == rename).Select(x => x.Key).FirstOrDefault() ?? rename) : rename;
         }
 
         public void Set(string json)
@@ -74,39 +90,21 @@ namespace EliteDangerousCore.Bindings
 
                     foreach (JObject devices in devarray)
                     {
-                        DeviceEntry r = new DeviceEntry();
-                        r.DeviceList = devices["Devices"].Str();
-                        r.Buttons = devices["Buttons"].Int(0);
-                        r.POV = devices["POV"].Int(0);
+                        DeviceNameSet r = new DeviceNameSet(devices["Devices"].Str("Unknown"));
+                        r.Buttons = devices["Buttons"].Int(-1);
+                        r.POV = devices["POV"].Int(-1);
                         r.Axis = devices["Axis"].Str("").SplitNoEmptyStrings(',');
 
                         foreach (var kvp in devices["Keys"].Object())
                         {
                             string orgname = kvp.Key;
-                            r.Names.Add(kvp.Key, new DeviceEntry.RenameEntry() { Name = kvp.Value["Rename"].Str(), Hint = kvp.Value["Hint"].StrNull() });
+                            r.Names.Add(kvp.Key, new DeviceNameSet.KeyEntry() { Name = kvp.Value["Rename"].Str(), Hint = kvp.Value["Hint"].StrNull() });
                         }
 
                         renames.Add(r);
                     }
                 }
             }
-        }
-
-        public string GetRename(string bfdev, string bfname)
-        {
-            var dev = renames.Find(x => x.Devices.Contains(bfdev));
-            return dev != null ? dev.Names.TryGetValue(bfname, out DeviceEntry.RenameEntry sn) ? sn.Name : bfname : bfname;
-        }
-        public string GetHint(string bfdev, string bfname)
-        {
-            var dev = renames.Find(x => x.Devices.Contains(bfdev));
-            return dev != null ? dev.Names.TryGetValue(bfname, out DeviceEntry.RenameEntry sn) ? sn.Hint : null : null;
-        }
-
-        public string OriginalName(string bfdev, string rename)
-        {
-            var dev = renames.Find(x => x.Devices.Contains(bfdev));
-            return dev != null ? (dev.Names.Where(kvp => kvp.Value.Name == rename).Select(x => x.Key).FirstOrDefault() ?? rename) : rename;
         }
 
         public string Get()
@@ -133,72 +131,69 @@ namespace EliteDangerousCore.Bindings
             return jo.ToString(true);
         }
 
-        public void Edit(Form backcontrol, string layoutname, string frontierdevicename)
+        public void Edit(Form backcontrol, string layoutname, Device device)
         {
-#if false
-            DeviceEntry dev = renames.Find(x => x.Devices.Contains(frontierdevicename));
-
             ConfigurableForm f = new ConfigurableForm();
 
-            var devkname = GetDeviveList(frontierdevicename);
-            int joystickbuttons = devkname?.Buttons ?? 128;
-            int joystickpov = devkname?.POV ?? 2;
-            string[] joystickaxis = devkname?.Axis ?? DeviceKeyNames.DeviceEntry.DefaultAxis;
-            HashSet<string> keys = FrontierKeyConversion.FrontierKeyNames(layoutname, joystickaxis, joystickbuttons, joystickpov, false, false, false);
+            HashSet<string> keys = FrontierKeyConversion.FrontierKeyNames(device,true,true);
 
             const int dataleft = 100;
             Size labelsize = new Size(dataleft-10, 24);
             Size textboxsize = new Size(200, 24);
             Size oksize = new Size(100, 24);
             int hintleft = dataleft + textboxsize.Width + 10;
-            int vpos = 40;
             const int vspacing = 32;
 
-            f.AddOK(new Point(hintleft + textboxsize.Width - oksize.Width, vpos), "Press to accept changes", oksize);
-            f.AddCancel(new Point(hintleft + textboxsize.Width - oksize.Width*2 - 10, vpos), "Press to cancel changes", oksize);
-            vpos += vspacing;
+            // find dns or not, make dns
+            DeviceNameSet dns = GetDevice(device.FrontierName);
 
+            int vpos = 8;
+            f.AddOK(new Point(hintleft + textboxsize.Width - oksize.Width, vpos), "Press to accept changes", oksize, paneltype: ConfigurableEntryList.Entry.PanelType.Top);
+            f.AddCancel(new Point(hintleft + textboxsize.Width - oksize.Width*2 - 10, vpos), "Press to cancel changes", oksize, paneltype: ConfigurableEntryList.Entry.PanelType.Top);
+            vpos += vspacing;
+            f.AddLabelAndEntry("Device List", new Point(4, 4), ref vpos, vspacing, labelsize, 
+                    new ConfigurableEntryList.Entry("Device-List", typeof(ExtTextBox), dns?.DeviceList ?? device.FrontierName, new Point(dataleft, 0), textboxsize, "Comma seperated list of frontier device names this applies to") { PlacedInPanel = ConfigurableEntryList.Entry.PanelType.Top });
+            f.TopPanelHeight = vpos;
+
+
+            vpos = 4;
             foreach( var keyname in keys)
             {
-                DeviceEntry.RenameEntry re = null;
-                dev?.Names.TryGetValue(keyname, out re);
+                DeviceNameSet.KeyEntry re = null;
+                dns?.Names.TryGetValue(keyname, out re);
                 f.AddLabelAndEntry(keyname, new Point(4, 4), ref vpos, vspacing, labelsize, new ConfigurableEntryList.Entry(keyname, typeof(ExtTextBox), re?.Name ?? "", new Point(dataleft, 0), textboxsize, "Name of key"));
                 f.Add(new ConfigurableEntryList.Entry("H-"+keyname, typeof(ExtTextBox), re?.Hint ?? "", new Point(hintleft, vpos-vspacing), textboxsize, "Tooltip Hint"));
             }
 
             f.InstallStandardTriggers();
 
-            if (f.ShowDialogCentred(backcontrol, backcontrol.Icon, $"Edit Device {frontierdevicename}") == DialogResult.OK)
+            if (f.ShowDialogCentred(backcontrol, backcontrol.Icon, $"Edit Device {device.BetterName}") == DialogResult.OK)
             {
-                foreach( var keyname in keys)
+                if (dns == null)
+                {
+                    dns = new DeviceNameSet(f.Get("Device-List"));
+                    renames.Add(dns);
+                }
+                else
+                {
+                    dns.DeviceList = f.Get("Device-List");
+                }
+
+                foreach (var keyname in keys)
                 {
                     string name = f.Get(keyname);
                     string hint = f.Get("H-" + keyname);
                     if (name.HasChars())
                     {
-                        dev.Names[keyname] = new DeviceEntry.RenameEntry() { Name = name, Hint = hint };
+                        dns.Names[keyname] = new DeviceNameSet.KeyEntry() { Name = name, Hint = hint };
                     }
                     else
-                        dev.Names.Remove(keyname);
+                        dns.Names.Remove(keyname);
                 }
             }
-
-                //Variables v = new Variables();
-                //v["Devices"] = dev.DeviceList;
-                //foreach (var kvp in dev.Names)
-                //{
-                //    v[kvp.Key] = kvp.Value.Name + (kvp.Value.Hint!=null ? (";" + kvp.Value.Hint) : "");
-                //}
-                //VariablesForm vf = new VariablesForm();
-                //vf.Init(v, "Key set for devices {dlist}",this.FindForm().Icon);
-                //if ( vf.ShowDialog() == DialogResult.OK )
-                //{
-
-                //}
-#endif
         }
 
-        public IEnumerator<DeviceEntry> GetEnumerator()
+        public IEnumerator<DeviceNameSet> GetEnumerator()
         {
             return renames.GetEnumerator();
         }
@@ -208,6 +203,6 @@ namespace EliteDangerousCore.Bindings
             return GetEnumerator();
         }
 
-        private List<DeviceEntry> renames = new List<DeviceEntry>();
+        private List<DeviceNameSet> renames = new List<DeviceNameSet>();
     }
 }
