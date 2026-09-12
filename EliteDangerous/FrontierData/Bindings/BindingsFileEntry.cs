@@ -214,7 +214,7 @@ namespace EliteDangerousCore.Bindings
 
             public void Clear()
             {
-                Keys = new List<DeviceKeyPair> { new DeviceKeyPair() };
+                Keys = new List<DeviceKeyPair> { new DeviceKeyPair() };         // its okay to make multiple NoDevices, its not okay to make multiple other devices
             }
 
             public void ClearMod()
@@ -347,6 +347,8 @@ namespace EliteDangerousCore.Bindings
                 FrontierKeyName = frontierkeyname;
             }
 
+            // make a NoDevice
+            // its okay to make multiple NoDevices, its not okay to make multiple other devices.  Only 1 set of Devices are allowed, and are made by above constructor
             public DeviceKeyPair()
             {
                 Device = new Device();
