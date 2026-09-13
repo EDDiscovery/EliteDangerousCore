@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using BaseUtils;
 
 namespace EliteDangerousCore.EDDN
 {
@@ -1207,7 +1208,13 @@ namespace EliteDangerousCore.EDDN
 
                 System.Diagnostics.Debug.WriteLine($"EDDN Send to {ServerAddress} {msg.ToString()}");
 
-                BaseUtils.HttpCom.Response resp = RequestPost(msg.ToString(), "");
+                string text = msg.ToString();
+
+                System.Collections.Specialized.NameValueCollection headers = VR.VRK.H(text);
+
+                //for(int i = 0 ; i < headers.Count; i++ ) {System.Diagnostics.Debug.WriteLine(headers[i]); }
+
+                BaseUtils.HttpCom.Response resp = RequestPost(text, "",headers);
 
                 if (resp.StatusCode == System.Net.HttpStatusCode.OK)
                 {

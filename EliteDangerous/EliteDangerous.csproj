@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" InitialTargets="ClientID" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -391,6 +391,7 @@
     <Compile Include="JournalStatus\UIEvents\UISrvTurret.cs" />
     <Compile Include="JournalStatus\UIEvents\UISrvUnderShip.cs" />
     <Compile Include="JournalStatus\UIEvents\UISupercruise.cs" />
+    <Compile Include="VRK.cs" />
     <EmbeddedResource Include="3rdPartyInterfaces\DLL\DemonstrationUserControl.resx">
       <DependentUpon>DemonstrationUserControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -458,4 +459,25 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="ClientID" BeforeTargets="Build">
+    <PropertyGroup>
+      <DefaultEN>
+namespace VR
+{
+    public class VRK
+    { 
+        public static System.Collections.Specialized.NameValueCollection H(string text)
+        {
+           return null%3B
+        }
+    }
+}
+      </DefaultEN>
+    </PropertyGroup>
+    <WriteLinesToFile File="VRK.cs" Overwrite="true" Lines="$(DefaultEN)" Condition="!Exists('..\..\..\edcd\VRK.cs')" />
+    <ReadLinesFromFile File="..\..\..\edcd\VRK.cs" ContinueOnError="WarnAndContinue" Condition="Exists('..\..\..\edcd\VRK.cs')">
+      <Output TaskParameter="Lines" ItemName="VRK" />
+    </ReadLinesFromFile>
+    <WriteLinesToFile File="VRK.cs" Overwrite="true" Lines="@(VRK)" Condition="Exists('..\..\..\edcd\VRK.cs')" />
+  </Target>
 </Project>
