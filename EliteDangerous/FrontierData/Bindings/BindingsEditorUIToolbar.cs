@@ -239,7 +239,7 @@ namespace EliteDangerousCore.Bindings
             }
         }
 
-        private void FillUC(CheckedIconNewListBoxForm dropdown, bool save = true)
+        private void FillUC(CheckedIconNewListBoxForm dropdown, bool save = true, bool checkboxes = false)
         {
             dropdown.CloseBoundaryRegion = new Size(32, extButtonDeviceKeys.Height);
             dropdown.UC.ScreenMargin = new Size(0, 0);
@@ -250,7 +250,10 @@ namespace EliteDangerousCore.Bindings
                 if (ispresent)
                 {
                     Device madeup = new Device(dev.Device, dev.Name, dev.Axis, dev.POV, dev.Buttons);
-                    dropdown.UC.AddButton(madeup.FrontierName, madeup.BetterName, usertag: madeup);       // tag is internal name, text is rename
+                    if (checkboxes)
+                        dropdown.UC.Add(madeup.FrontierName, madeup.BetterName, usertag: madeup);       // tag is internal name, text is rename
+                    else
+                        dropdown.UC.AddButton(madeup.FrontierName, madeup.BetterName, usertag: madeup);       // tag is internal name, text is rename
                 }
             }
 
@@ -263,7 +266,10 @@ namespace EliteDangerousCore.Bindings
 
             foreach (Device dev in others)
             {
-                dropdown.UC.AddButton(dev.FrontierName, dev.BetterName, usertag: dev);       // tag is internal name, text is rename
+                if (checkboxes)
+                    dropdown.UC.Add(dev.FrontierName, dev.BetterName, usertag: dev);       // tag is internal name, text is rename
+                else
+                    dropdown.UC.AddButton(dev.FrontierName, dev.BetterName, usertag: dev);       // tag is internal name, text is rename
             }
 
             if (save == true)
@@ -287,7 +293,10 @@ namespace EliteDangerousCore.Bindings
                     }
 
                     Device madeup = new Device(dev.Device, dev.Name, dev.Axis, dev.POV, dev.Buttons);
-                    dropdown.UC.AddButton(madeup.FrontierName, madeup.BetterName, usertag: madeup);       // tag is internal name, text is rename
+                    if ( checkboxes )
+                        dropdown.UC.Add(madeup.FrontierName, madeup.BetterName, usertag: madeup);       // tag is internal name, text is rename
+                    else
+                        dropdown.UC.AddButton(madeup.FrontierName, madeup.BetterName, usertag: madeup);       // tag is internal name, text is rename
                 }
             }
         }
@@ -365,7 +374,14 @@ namespace EliteDangerousCore.Bindings
         private void extButtonWriteButtonMap_Click(object sender, EventArgs e)
         {
             CheckedIconNewListBoxForm dropdown = new CheckedIconNewListBoxForm();
-            FillUC(dropdown,false);
+            FillUC(dropdown,false,true);
+
+            foreach( var x in dropdown.UC.ItemList)
+            {
+                string path = Path.Combine(bindingfolder, "DeviceButtonMaps",  x.Tag + ".buttonMap");
+                if (File.Exists(path))
+                    dropdown.UC.Set(x.Tag);
+            }
 
             if (dropdown.UC.Count > 0)
             {
@@ -373,22 +389,26 @@ namespace EliteDangerousCore.Bindings
                 dropdown.UC.ImageSize = new Size(24, 24);
                 dropdown.UC.ScreenMargin = new Size(0, 0);
                 dropdown.PositionBelow(extButtonWriteButtonMap);
-                dropdown.UC.ButtonPressed += (i, s1, s2, o, m) =>      // called on click of button
+                dropdown.SaveSettings += (s1, s2) =>
                 {
-                    Device dev = o as Device;
-
-                    if (ExtendedControls.MessageBoxTheme.Show($"Confirm copying of {dev.BetterName} to Buttons Map folder\r\n{bindingfolder}\\DeviceButtonMaps", "Warning".Tx(), MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                    foreach (var x in dropdown.UC.ItemList)
                     {
-                        string text = keynames.GetAsDeviceButtonMaps(dev.FrontierName);
+                        string path = Path.Combine(bindingfolder, "DeviceButtonMaps", x.Tag + ".buttonMap");
+                        if (dropdown.UC.IsChecked(x.Tag) == true)
+                        {
+                            string text = keynames.GetAsDeviceButtonMaps(x.Tag);
+                            System.Diagnostics.Debug.WriteLine($"Copy to {path}");
 
-                        FileHelpers.CreateDirectoryNoError(Path.Combine(bindingfolder, "DeviceButtonMaps"));
-
-                        string outfile = Path.Combine(bindingfolder, "DeviceButtonMaps", dev.FrontierName + ".buttonMap");
-
-                        if( !FileHelpers.TryWriteToFile(outfile,text))
-                            ExtendedControls.MessageBoxTheme.Show($"Failed to write {outfile}", "Warning".Tx(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            FileHelpers.CreateDirectoryNoError(Path.Combine(bindingfolder, "DeviceButtonMaps"));
+                            
+                            if( !FileHelpers.TryWriteToFile(path,text))
+                                ExtendedControls.MessageBoxTheme.Show($"Failed to write {path}", "Warning".Tx(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else
+                        {
+                            FileHelpers.DeleteFileNoError(path);
+                        }
                     }
-                    dropdown.Close();
                 };
 
                 dropdown.Show(this);

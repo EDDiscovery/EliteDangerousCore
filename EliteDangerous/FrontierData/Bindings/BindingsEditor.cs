@@ -89,10 +89,10 @@ namespace EliteDangerousCore.Bindings
 
             // load stored key renames
 
-
             ComboBoxFilterFill();
 
-            System.Diagnostics.Debug.WriteLine($"Key list {keynames.Get()}");
+            //System.Diagnostics.Debug.WriteLine($"Key list {keynames.Get()}");
+
             Display();
 
             updatecheck.Tick += Updatecheck_Tick;
