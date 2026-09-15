@@ -109,6 +109,7 @@ namespace EliteDangerousCore.Bindings
                 {
                     dk.ErrorText = null;
                     entry.PrimaryKeys.Keys[0] = new DeviceKeyPair(device, frontierkeyname);
+
                     SetHint(row, deviceindex, device, frontierkeyname);       // set hint only on dev 
                     SetDirty();
                 }
@@ -129,6 +130,7 @@ namespace EliteDangerousCore.Bindings
                 {
                     dk.ErrorText = null;
                     entry.PrimaryKeys.SetMod(device, frontierkeyname);      // either add mod or change current mod
+
                     SetHint(row, deviceindex, device, frontierkeyname);       // set hint only on dev 
                     SetDirty();
                 }
@@ -163,6 +165,7 @@ namespace EliteDangerousCore.Bindings
                 {
                     dk.ErrorText = null;
                     entry.SecondaryKeys.Keys[0] = new DeviceKeyPair(device, frontierkeyname);
+
                     SetHint(row, deviceindex, device, frontierkeyname);       // set hint only on dev 
                     SetDirty();
                 }
@@ -184,6 +187,8 @@ namespace EliteDangerousCore.Bindings
                     dk.ErrorText = null;
                     entry.SecondaryKeys.SetMod(device, frontierkeyname);
                     entry.PrimaryKeys.SetMod(device, frontierkeyname);      // either add mod or change current mod
+
+                    SetHint(row, deviceindex, device);       // set hint only on dev 
                     SetDirty();
                 }
 
@@ -243,13 +248,14 @@ namespace EliteDangerousCore.Bindings
         {
             if (e.KeyChar == 13 && dataGridView.CurrentCell != null && bf.IsEditable)
             {
+                e.Handled = true;
                 int ci = dataGridView.CurrentCell.ColumnIndex;
                 if (ci == ColValues.Index)
                     ValueEdit(dataGridView.Rows[dataGridView.CurrentCell.RowIndex]);     // will reject non attribute entry
                 else
                     DirectInput(dataGridView.CurrentCell);     // will reject any not allowed
-                e.Handled = true;
             }
+
         }
 
         // Direct Input of key/button/axis from controllers. Will reject if c is not compatible
@@ -272,13 +278,55 @@ namespace EliteDangerousCore.Bindings
                 {
                     System.Diagnostics.Debug.WriteLine($"Frontier Key {frontiertuple.Item1} {frontiertuple.Item2}");
 
-                    Device dp = bf.GetDevice(frontiertuple.Item1);
+                    Device dp = bf.GetDevice(frontiertuple.Item1);      // frontier name to device handle
+
                     DeviceKeyPair dkp = new DeviceKeyPair(dp, frontiertuple.Item2);
+
+                    // Inputdevices stick POV into one ID, we need to split it apart again
+
+                    DeviceKeyPair povkey2 = null;
+                    if (frontiertuple.Item2.StartsWith("Joy_POV"))
+                    {
+                        int len = dkp.FrontierKeyName.Length;
+                        if (frontiertuple.Item2.EndsWith("UpRight"))
+                        {
+                            povkey2 = new DeviceKeyPair(dp, dkp.FrontierKeyName.Remove(len-7, 2));
+                            dkp.FrontierKeyName = dkp.FrontierKeyName.Substring(0, len - 5);
+                        }
+                        else if (frontiertuple.Item2.EndsWith("DownRight"))
+                        {
+                            povkey2 = new DeviceKeyPair(dp, dkp.FrontierKeyName.Remove(len-9, 4));
+                            dkp.FrontierKeyName = dkp.FrontierKeyName.Substring(0, len - 5);
+                        }
+                        else if (frontiertuple.Item2.EndsWith("UpLeft"))
+                        {
+                            povkey2 = new DeviceKeyPair(dp, dkp.FrontierKeyName.Remove(len - 6, 2));
+                            dkp.FrontierKeyName = dkp.FrontierKeyName.Substring(0, dkp.FrontierKeyName.Length - 4);
+                        }
+                        else if (frontiertuple.Item2.EndsWith("DownLeft"))
+                        {
+                            povkey2 = new DeviceKeyPair(dp, dkp.FrontierKeyName.Remove(len - 8, 4));
+                            dkp.FrontierKeyName = dkp.FrontierKeyName.Substring(0, dkp.FrontierKeyName.Length - 4);
+                        }
+                    }
+
+                    // its a button, but we are allowed to use Axis Pos/Neg to indicate a push in one or other direction
+                    if ( !entry.IsBinding && frontiertuple.Item2.Contains("Axis"))
+                    {
+                        if (frontiertuple.Item3)
+                            dkp.FrontierKeyName = "Pos_" + dkp.FrontierKeyName;
+                        else
+                            dkp.FrontierKeyName = "Neg_" + dkp.FrontierKeyName;
+                    }
 
                     if (ci == ColPrimaryDevice.Index || ci == ColPrimaryKey.Index)
                     {
-                        SetPair(row, entry.IsBinding, ColPrimaryDevice.Index, dkp.Device, dkp.FrontierKeyName);
                         entry.PrimaryKeys.Keys[0] = dkp;
+                        if (povkey2 != null)
+                            entry.PrimaryKeys.SetMod(povkey2.Device, povkey2.FrontierKeyName);
+                        SetPair(row, entry.IsBinding, ColPrimaryDevice.Index, dkp.Device, dkp.FrontierKeyName);
+                        if (povkey2 != null)
+                            SetPair(row, false, ColPrimaryModDevice.Index, povkey2.Device, povkey2.FrontierKeyName);
 
                         if (entry.IsBinding == false)
                         {
@@ -288,21 +336,25 @@ namespace EliteDangerousCore.Bindings
                     }
                     else if (ci == ColPrimaryModDevice.Index || ci == ColPrimaryModKey.Index)
                     {
-                        SetPair(row, false, ColPrimaryModDevice.Index, dkp.Device, dkp.FrontierKeyName);
                         entry.PrimaryKeys.SetMod(dkp.Device, dkp.FrontierKeyName);
+                        SetPair(row, false, ColPrimaryModDevice.Index, dkp.Device, dkp.FrontierKeyName);
                     }
 
                     else if (ci == ColSecondaryDevice.Index || ci == ColSecondaryKey.Index)
                     {
-                        SetPair(row, false, ColSecondaryDevice.Index, dkp.Device, dkp.FrontierKeyName);
                         entry.SecondaryKeys.Keys[0] = dkp;
+                        if (povkey2 != null)
+                            entry.SecondaryKeys.SetMod(povkey2.Device, povkey2.FrontierKeyName);
+                        SetPair(row, false, ColSecondaryDevice.Index, dkp.Device, dkp.FrontierKeyName);
+                        if (povkey2 != null)
+                            SetPair(row, false, ColSecondaryModDevice.Index, povkey2.Device, povkey2.FrontierKeyName);
 
                         row.Cells[ColSecondaryModDevice.Index].ReadOnly = false;    // etheselse enable the mod device
                     }
                     else if (ci == ColSecondaryModDevice.Index || ci == ColSecondaryModKey.Index)
                     {
-                        SetPair(row, false, ColSecondaryModDevice.Index, dkp.Device, dkp.FrontierKeyName);
                         entry.SecondaryKeys.SetMod(dkp.Device, dkp.FrontierKeyName);
+                        SetPair(row, false, ColSecondaryModDevice.Index, dkp.Device, dkp.FrontierKeyName);
                     }
                     else
                     {

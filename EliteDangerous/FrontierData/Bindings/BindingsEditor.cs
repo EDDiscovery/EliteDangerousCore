@@ -31,7 +31,8 @@ namespace EliteDangerousCore.Bindings
         public Action ResetKeyNames { get; set; }                     // request keyname reset
 
         // called to pop up a way of the user pressing key/joystick.
-        public Func<BindingsFile, BindingEntry, Tuple<string,string>> DeviceInput { get; set; }
+        // tuple returned is frontier device, frontier key name, joystick direction positive
+        public Func<BindingsFile, BindingEntry, Tuple<string,string,bool>> DeviceInput { get; set; }
 
         public BindingsEditor()
         {
@@ -50,13 +51,16 @@ namespace EliteDangerousCore.Bindings
         // give known device name mappings
         public void Init(string folder, string preferredbindfile, List<Device> deviceparas, DeviceKeyNames keynames)
         {
+            this.deviceparas = deviceparas;
+            this.keynames = keynames;
+            this.bindingfolder = folder;
+
             List<FileInfo> bindfiles = Directory.EnumerateFiles(folder, "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToList();
+
             foreach (var x in bindfiles)
                 extComboBoxBindFiles.Items.Add(x.Name);
             extComboBoxBindFiles.Tag = bindfiles.Select(x=>x.FullName).ToList();
 
-            this.deviceparas = deviceparas;
-            this.keynames = keynames;
 
             bf = new BindingsFile(deviceparas);
 
@@ -148,9 +152,6 @@ namespace EliteDangerousCore.Bindings
                     row.Cells[1].Value = entry.ClassMode.Item2.ToString().SplitCapsWordFull();
                     row.Cells[2].Value = BetterBindingName(entry.Name) + (FrontierBindingClassification.HoldButton(entry.Name) ? " (Hold)" : "");
                     row.Cells[2].Tag = orderno;
-
-                    if (!showFrontierNamesToolStripMenuItem.Checked)
-                        row.Cells[2].ToolTipText = "Assignment " + entry.Name;
 
                     row.Cells[3].Value = BindingEntry.ValuesAsList(entry.Name, entry.Values, true);
 
@@ -290,6 +291,10 @@ namespace EliteDangerousCore.Bindings
         // set hints on device/key pair.  You may call with both nulls, or just device, or both
         private void SetHint(DataGridViewRow row, int deviceindex, Device device = null, string frontierkeyname = null)
         {
+            BindingEntry entry = row.Tag as BindingEntry;
+            row.Cells[2].ToolTipText = !showFrontierNamesToolStripMenuItem.Checked ? (entry.Name + Environment.NewLine) : "";
+            row.Cells[2].ToolTipText += entry.IsKeyOrBinding ? (entry.PrimaryKeys.KeyDescription() + (entry.IsKey ? " : " + entry.SecondaryKeys.KeyDescription() : "")) : "";
+
             row.Cells[deviceindex].ToolTipText = row.Cells[deviceindex + 1].ToolTipText = null;
 
             if (device != null)
@@ -460,6 +465,7 @@ namespace EliteDangerousCore.Bindings
         #endregion
 
 
+        private string bindingfolder;
         private BindingsFile bf;
         private Timer updatecheck = new Timer() { Interval = 1000 };
 
@@ -477,5 +483,8 @@ namespace EliteDangerousCore.Bindings
         {
 
         }
+
+
+
     }
 }

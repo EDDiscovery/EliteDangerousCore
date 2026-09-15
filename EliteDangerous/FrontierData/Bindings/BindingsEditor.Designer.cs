@@ -67,6 +67,7 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.extFlowLayoutPanelTop = new ExtendedControls.ExtFlowLayoutPanel();
             this.extButtonDeviceKeys = new ExtendedControls.ExtButton();
+            this.extButtonWriteButtonMap = new ExtendedControls.ExtButton();
             this.dataViewScrollerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
@@ -512,6 +513,7 @@
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceNew);
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceRemap);
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceKeys);
+            this.extFlowLayoutPanelTop.Controls.Add(this.extButtonWriteButtonMap);
             this.extFlowLayoutPanelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.extFlowLayoutPanelTop.GradientDirection = 0F;
             this.extFlowLayoutPanelTop.Location = new System.Drawing.Point(0, 0);
@@ -540,6 +542,21 @@
             this.extButtonDeviceKeys.Text = "Device Keys";
             this.extButtonDeviceKeys.UseVisualStyleBackColor = true;
             this.extButtonDeviceKeys.Click += new System.EventHandler(this.extButtonDeviceKeys_Click);
+            // 
+            // extButtonWriteButtonMap
+            // 
+            this.extButtonWriteButtonMap.BackColor2 = System.Drawing.Color.Red;
+            this.extButtonWriteButtonMap.ButtonDisabledScaling = 0.5F;
+            this.extButtonWriteButtonMap.GradientDirection = 90F;
+            this.extButtonWriteButtonMap.Location = new System.Drawing.Point(1057, 3);
+            this.extButtonWriteButtonMap.MouseOverScaling = 1.3F;
+            this.extButtonWriteButtonMap.MouseSelectedScaling = 1.3F;
+            this.extButtonWriteButtonMap.Name = "extButtonWriteButtonMap";
+            this.extButtonWriteButtonMap.Size = new System.Drawing.Size(75, 23);
+            this.extButtonWriteButtonMap.TabIndex = 2;
+            this.extButtonWriteButtonMap.Text = "Button Map";
+            this.extButtonWriteButtonMap.UseVisualStyleBackColor = true;
+            this.extButtonWriteButtonMap.Click += new System.EventHandler(this.extButtonWriteButtonMap_Click);
             // 
             // BindingsEditor
             // 
@@ -598,5 +615,6 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn ColSecondaryModDevice;
         private System.Windows.Forms.DataGridViewComboBoxColumn ColSecondaryModKey;
         private ExtendedControls.ExtButton extButtonDeviceKeys;
+        private ExtendedControls.ExtButton extButtonWriteButtonMap;
     }
 }

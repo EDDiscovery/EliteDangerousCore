@@ -256,12 +256,10 @@ namespace EliteDangerousCore.Bindings
             {
                 if (Keys?.Count < 1)
                     return "";
-                //if (!Keys[0].Assigned)
-                //    return "---NA";
 
-                string part = Keys[0].Device.FrontierName + ":" +  Keys[0].FrontierKeyName;
+                string part = Keys[0].Device.FrontierName + (Keys[0].FrontierKeyName.HasChars() ? ":" + Keys[0].FrontierKeyName : "");
                 if (Keys.Count > 1)
-                    return "(" + part + "," + Keys[1].Device.FrontierName + ":" + Keys[1].FrontierKeyName+ ")";
+                    return "(" + part + "," + Keys[1].Device.FrontierName + (Keys[1].FrontierKeyName.HasChars() ? ":" + Keys[1].FrontierKeyName : "")+ ")";
                 else
                     return part;
             }

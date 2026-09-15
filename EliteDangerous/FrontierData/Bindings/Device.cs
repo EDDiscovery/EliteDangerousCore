@@ -26,6 +26,7 @@ namespace EliteDangerousCore.Bindings
             FrontierName = name;
             BetterName = bestname;
             Axis = axis;
+            System.Diagnostics.Debug.Assert(axis != null);  
             Pov = pov;
             Buttons = buttons;
         }
@@ -36,11 +37,16 @@ namespace EliteDangerousCore.Bindings
             BetterName = "---";
         }
 
-        public string AxisList => Axis != null ? string.Join(", ", Axis) : "";
+        public string FrontierName { get; set; }
+        public string BetterName { get; set; }
+        public string[] Axis { get; set; }                          // not null, may be empty
+        public string AxisList => Axis.Length > 0 ? string.Join(",", Axis) : "";      // not null
+        public int Pov { get; set; }
+        public int Buttons { get; set; }
+        public bool Mouse => FrontierName == MouseDeviceName;
+        public bool Keyboard => FrontierName == KeyboardDeviceName;
 
         public bool HasBetterName => BetterName != FrontierName;
-
-        // these are fixed names at this level, the other names have to be handled at bindingfile level
         public bool IsNoDevice => FrontierName == NoDeviceName;
         public bool IsDevice => FrontierName != NoDeviceName;
         public bool IsKeyboard => FrontierName == KeyboardDeviceName;
@@ -52,14 +58,21 @@ namespace EliteDangerousCore.Bindings
         public const string NoDeviceName = "{NoDevice}";
 
         static public string[] DefaultAxis = new string[] { "X", "Y", "Z", "RX", "RY", "RZ", "U", "V" };
+        static public string DefaultAxisList = string.Join(",",DefaultAxis);
 
-        public string FrontierName { get; set; }
-        public string BetterName { get; set; }
-        public string[] Axis { get; set; }      // may be null
-        public int Pov { get; set; }
-        public int Buttons { get; set; }
-        public bool Mouse => FrontierName == MouseDeviceName;
-        public bool Keyboard => FrontierName == KeyboardDeviceName;
+        // make sure axis is in the correct order and no crap is present
+        static public string[] TriageAxisList(string[] axis)
+        {
+            string[] newaxis = new string[axis.Length];
+            int entry = 0;
+            for (int i = 0; i < DefaultAxis.Length; i++)
+            {
+                if (Array.IndexOf(axis, DefaultAxis[i]) != -1)        // if found in axis..
+                    newaxis[entry++] = DefaultAxis[i];
+            }
+
+            return entry == axis.Length ? newaxis : null;           // if we used them all up, return
+        }
 
         public bool Equals(Device other)
         {

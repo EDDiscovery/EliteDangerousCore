@@ -109,30 +109,36 @@ namespace EliteDangerousCore.Bindings
 
             if (incaxis)
             {
-                foreach (var x in device.Axis.EmptyIfNull())
+                foreach (var axis in device.Axis.EmptyIfNull())
                 {
-                    ret.Add($"Joy_{x}Axis");          // joy axis
+                    ret.Add($"Joy_{axis}Axis");          // joy axis
                 }
             }
 
-            if ( incbuttons && device.Buttons>0)
+            if ( incbuttons )
             {
-                for (int i = 1; i <= Math.Min(32, device.Buttons); i++)
-                    ret.Add($"Joy_{i}");
+                if (device.Buttons > 0)
+                {
+                    for (int i = 1; i <= Math.Min(32, device.Buttons); i++)
+                        ret.Add($"Joy_{i}");
+                }
                 for (int i = 1; i <= device.Pov; i++)
                 {
                     ret.Add($"Joy_POV{i}Left");
                     ret.Add($"Joy_POV{i}Right");
-                    ret.Add($"Joy_POV{i}Left");
                     ret.Add($"Joy_POV{i}Up");
                     ret.Add($"Joy_POV{i}Down");
-                    ret.Add($"Joy_POV{i}UpLeft");
-                    ret.Add($"Joy_POV{i}UpRight");
-                    ret.Add($"Joy_POV{i}DownLeft");
-                    ret.Add($"Joy_POV{i}DownRight");
                 }
-                for (int i = 32; i <= device.Buttons; i++)
-                    ret.Add($"Joy_{i}");
+                if (device.Buttons > 0)
+                {
+                    for (int i = 32; i <= device.Buttons; i++)
+                        ret.Add($"Joy_{i}");
+                }
+                foreach (var axis in device.Axis.EmptyIfNull())
+                {
+                    ret.Add($"Pos_Joy{axis}Axis");
+                    ret.Add($"Neg_Joy{axis}Axis");
+                }
             }
 
             if ( device.Mouse )
