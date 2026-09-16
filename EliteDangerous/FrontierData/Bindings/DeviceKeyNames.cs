@@ -50,13 +50,13 @@ namespace EliteDangerousCore.Bindings
 
         public DeviceNameSet GetDevice(string frontierdevicename)
         {
-            var dev = renames.Find(x => x.Device.EqualsIIC(frontierdevicename));
+            var dev = devices.Find(x => x.Device.EqualsIIC(frontierdevicename));
             return dev;
         }
 
         public void Add(DeviceNameSet dev)
         {
-            renames.Add(dev);
+            devices.Add(dev);
         }
 
         public string GetRename(string bfdev, string bfname)
@@ -67,7 +67,7 @@ namespace EliteDangerousCore.Bindings
             }
             else
             {
-                var dev = renames.Find(x => x.Device.EqualsIIC(bfdev));
+                var dev = devices.Find(x => x.Device.EqualsIIC(bfdev));
                 return dev != null ? dev.Names.TryGetValue(bfname, out DeviceNameSet.KeyEntry sn) ? sn.Name : bfname : bfname;
             }
         }
@@ -79,12 +79,12 @@ namespace EliteDangerousCore.Bindings
             }
             else
             {
-                var dev = renames.Find(x => x.Device.EqualsIIC(bfdev));
+                var dev = devices.Find(x => x.Device.EqualsIIC(bfdev));
                 return dev != null ? dev.Names.TryGetValue(bfname, out DeviceNameSet.KeyEntry sn) ? sn.Hint : null : null;
             }
         }
 
-        public string OriginalName(string bfdev, string rename)
+        public string GetOriginalName(string bfdev, string rename)
         {
             if (bfdev == Device.KeyboardDeviceName)
             {
@@ -92,14 +92,34 @@ namespace EliteDangerousCore.Bindings
             }
             else
             {
-                var dev = renames.Find(x => x.Device.EqualsIIC(bfdev));
+                var dev = devices.Find(x => x.Device.EqualsIIC(bfdev));
                 return dev != null ? (dev.Names.Where(kvp => kvp.Value.Name == rename).Select(x => x.Key).FirstOrDefault() ?? rename) : rename;
             }
         }
 
+        public Image GetIcon(string bfdev, string bfname, bool returnnone = true)
+        {
+            var dev = devices.Find(x => x.Device.EqualsIIC(bfdev));
+            if ( dev != null && dev.Names.TryGetValue(bfname, out DeviceNameSet.KeyEntry sn) && sn.Icon != null)
+            {
+                Image s = iconset.Get("FrontierData.Bindings.KeyIcons." + sn.Icon.Replace("[", "").Replace("]", ""));
+                return s;
+            }
+
+            if ( returnnone )
+            {
+                Image s = iconset.Get("FrontierData.Bindings.KeyIcons.none");
+                return s;
+            }
+
+            return null;
+        }
+
         public bool Set(string json)
         {
-            renames.Clear();
+            devices.Clear();
+            iconset.LoadIconsFromAssembly(System.Reflection.Assembly.GetExecutingAssembly());       // lazy load note
+
             if (json != null)
             {
                 JToken tk = JToken.Parse(json, out string err, JToken.ParseOptions.CheckEOL | JToken.ParseOptions.AllowTrailingCommas);
@@ -128,7 +148,7 @@ namespace EliteDangerousCore.Bindings
                             });
                         }
 
-                        renames.Add(r);
+                        this.devices.Add(r);
                     }
 
                     return true;
@@ -142,7 +162,7 @@ namespace EliteDangerousCore.Bindings
             JObject jo = new JObject();
             jo["Version"] = "1.0.0.0";
             JArray devarray = new JArray();
-            foreach (var dev in renames)
+            foreach (var dev in devices)
             {
                 if (onlydevice == null || onlydevice == dev.Device)
                 {
@@ -181,7 +201,7 @@ namespace EliteDangerousCore.Bindings
         {
             XElement root = new XElement("Root");
 
-            DeviceNameSet dev = renames.Find(x => x.Device == device);
+            DeviceNameSet dev = devices.Find(x => x.Device == device);
             if (dev != null)
             {
                 foreach( var kvp in dev.Names)
@@ -198,18 +218,16 @@ namespace EliteDangerousCore.Bindings
             return $"<!--- {dev.Name} ({dev.Device}) -->" + Environment.NewLine + root.ToString();  
         }
 
-        public void Edit(Form backcontrol, string layoutname, Device device)
+        public bool Edit(Form backcontrol, string layoutname, Device device)
         {
             // icons set, credit Frontier Elite Dangerous and Cmdr. Nutball
             // loadede at FrontierData.Bindings.KeyIcons.Name
-            BaseUtils.Icons.IconSet set = new BaseUtils.Icons.IconSet();
-            set.LoadIconsFromAssembly(System.Reflection.Assembly.GetExecutingAssembly());
 
             // get icon list for drop down, prioritising none
             List<CheckedIconGroupUserControl.Item> icondropdownlist = new List<CheckedIconGroupUserControl.Item>();
-            foreach (var icon in set.Names().OrderBy(x=>x))
+            foreach (var icon in iconset.Names().OrderBy(x=>x))
             {
-                Image s = set.Get(icon);
+                Image s = iconset.Get(icon);
                 string cutname = icon.Substring(icon.LastIndexOf(".") + 1);
                 if ( cutname == "none")
                     icondropdownlist.Insert(0,new CheckedIconUserControl.Item(icon, cutname, s, button: true));
@@ -272,10 +290,10 @@ namespace EliteDangerousCore.Bindings
                             new ConfigurableEntryList.Entry(keyname, typeof(ExtTextBox), re?.Name ?? "", new Point(int.MinValue, 0), textboxsize, "Name of key"));
                 f.Add(new ConfigurableEntryList.Entry("H-" + keyname, typeof(ExtTextBox), re?.Hint ?? "", new Point(hintleft, vpos - vspacing), textboxsize, "Tooltip Hint"));
 
-                Image s = set.Get("FrontierData.Bindings.KeyIcons." + (re?.Icon ?? "[none]").Replace("[", "").Replace("]", ""));
+                Image s = GetIcon(device.FrontierName,keyname,true);
 
                 // text value holds the [name], and the ButtonImage overrides it with an image
-                // we store the current setting in text value
+                // we store the current setting in text value (because its a drop down button Get() and Set() address the configuration data for the drop down not the text)
                 string iconname = re?.Icon ?? "[none]";
                 f.Add(new ConfigurableEntryList.Entry("I-" + keyname, iconname, new Point(iconleft, vpos - vspacing), iconsize, $"{iconname} Icon for Frontier Button Display", icondropdownlist, s) { ImageSize = new Size(40,40), MultiColumns = true} );
 
@@ -289,7 +307,7 @@ namespace EliteDangerousCore.Bindings
                 if (text.Contains("DropDownButtonPressed"))     // only respond to drop down event
                 {
                     string sel = (string)entry;                 // full name of icon path
-                    Image s = set.GetOrNull(sel);               // get image
+                    Image s = iconset.GetOrNull(sel);               // get image
                     string iconname = "[" + sel.Substring(sel.LastIndexOf(".") + 1) + "]";      // compute setting [name]
                     ConfigurableEntryList.Entry ent = obj2 as ConfigurableEntryList.Entry;
                     ((ExtButtonWithNewCheckedListBox)ent.Control).CloseDropDown();              // close drop down
@@ -305,7 +323,7 @@ namespace EliteDangerousCore.Bindings
                 if (dns == null)
                 {
                     dns = new DeviceNameSet(f.Get("Device-ID"));
-                    renames.Add(dns);
+                    devices.Add(dns);
                 }
                 else
                 {
@@ -346,12 +364,16 @@ namespace EliteDangerousCore.Bindings
                 }
 
                 System.Diagnostics.Debug.WriteLine(Get(device.FrontierName));
+
+                return true;
             }
+
+            return false;
         }
 
         public IEnumerator<DeviceNameSet> GetEnumerator()
         {
-            return renames.GetEnumerator();
+            return devices.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -359,6 +381,7 @@ namespace EliteDangerousCore.Bindings
             return GetEnumerator();
         }
 
-        private List<DeviceNameSet> renames = new List<DeviceNameSet>();
+        private List<DeviceNameSet> devices = new List<DeviceNameSet>();
+        BaseUtils.Icons.IconSet iconset = new BaseUtils.Icons.IconSet();    
     }
 }

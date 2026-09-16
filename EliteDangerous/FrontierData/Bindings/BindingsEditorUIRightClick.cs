@@ -52,7 +52,7 @@ namespace EliteDangerousCore.Bindings
             {
                 dataGridView.SetCurrentAndSelectAllCellsOnRow(row.Index, true);
                 var rowentry = (BindingEntry)row.Tag;
-                doeshaveanykeys |= rowentry.IsAssigned;
+                doeshaveanykeys |= rowentry.IsPrimaryAssigned;
                 doeshavesecondary |= rowentry.IsPrimaryAndSecondaryAssigned;
                 System.Diagnostics.Debug.WriteLine($"Row check {row.Index} {rowentry.Name}");
                 foreach (var d in rowentry.Devices())
@@ -182,7 +182,7 @@ namespace EliteDangerousCore.Bindings
             {
                 var entry = (BindingEntry)row.Tag;
 
-                if (entry.IsAssigned)
+                if (entry.IsPrimaryAssigned)
                 {
                     entry.ClearAll();
                     SetUpCells(row, entry);

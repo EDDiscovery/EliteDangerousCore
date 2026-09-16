@@ -65,7 +65,7 @@ namespace EliteDangerousCore.Bindings
 
                 Device device = bf.GetDeviceByBetterName( !onkey  ? newcellvalue : row.Cells[deviceindex].Value.ToString());
                 string renamedkeyname = onkey ? newcellvalue : row.Cells[deviceindex + 1].Value?.ToString() ?? null;
-                string frontierkeyname = keynames.OriginalName(device.FrontierName, renamedkeyname );
+                string frontierkeyname = devicekeynames.GetOriginalName(device.FrontierName, renamedkeyname );
                 bool nodevice = device.IsNoDevice;
 
                 System.Diagnostics.Debug.WriteLine($"Selected cell pair {row.Index}: {deviceindex} `{device.FrontierName}` `{frontierkeyname}`");

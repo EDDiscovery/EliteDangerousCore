@@ -76,6 +76,8 @@ namespace EliteDangerousCore
             Codex
         };
 
+        public static string ToEnglish(Classification cls) => cls.ToString().SplitCapsWordFull();
+
         const int CarrierExpiryTime = 10 * (60 * 60 * 24);              // days till we consider the carrier signal expired..
 
         // Make a signal description from JSON
@@ -244,7 +246,12 @@ namespace EliteDangerousCore
 
             return signalclass;
         }
-        
+
+        public static Classification ClassifySignal(SignalFDName fdsignalname)
+        {
+            return GetClassification(fdsignalname, null, !fdsignalname.Contains("$") && !fdsignalname.Contains("-class"), "");
+        }
+
         public static Classification ClassifyStationName(SignalFDName signal)
         {
             string fdsignalname = signal.ToLower();

@@ -95,18 +95,18 @@ namespace EliteDangerousCore.Bindings
 
         private void ExtComboBoxFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ApplyFilter();
+            dataGridView.FilterGridView((r) => Filter(r));
         }
 
-        private void ApplyFilter()
+        private bool Filter(DataGridViewRow r)
         {
-            string sel = (string)extComboBoxFilter.SelectedItem;
-
-            dataGridView.FilterGridView((r) =>
+            if (extComboBoxFilter.SelectedIndex == 0)
+                return true;
+            else
             {
-                if (extComboBoxFilter.SelectedIndex == 0)
-                    return true;
-                else if (extComboBoxFilter.SelectedIndex >= filtercomboboxmodestart)
+                string sel = (string)extComboBoxFilter.SelectedItem;
+
+                if (extComboBoxFilter.SelectedIndex >= filtercomboboxmodestart)
                 {
                     bool match = r.Cells[ColPrimaryDevice.Index].Value?.ToString() == sel;
                     match |= r.Cells[ColPrimaryModDevice.Index].Value?.ToString() == sel;
@@ -118,9 +118,8 @@ namespace EliteDangerousCore.Bindings
                     return r.Cells[ColUI.Index].Value.ToString() == sel;
                 else
                     return r.Cells[ColGroup.Index].Value.ToString() == sel;
-            });
+            }
         }
-
 
         private void extButtonSave_Click(object sender, EventArgs e)
         {
@@ -244,7 +243,7 @@ namespace EliteDangerousCore.Bindings
             dropdown.CloseBoundaryRegion = new Size(32, extButtonDeviceKeys.Height);
             dropdown.UC.ScreenMargin = new Size(0, 0);
 
-            foreach (DeviceKeyNames.DeviceNameSet dev in keynames)
+            foreach (DeviceKeyNames.DeviceNameSet dev in devicekeynames)
             {
                 bool ispresent = bf.GetDevice(dev.Device) != null;
                 if (ispresent)
@@ -259,7 +258,7 @@ namespace EliteDangerousCore.Bindings
 
             // any ones in device list not in device names 
 
-            var others = bf.DeviceList.Where(x => keynames.GetDevice(x.FrontierName) == null && !x.IsKeyboard && !x.IsMouse && !x.IsNoDevice);
+            var others = bf.DeviceList.Where(x => devicekeynames.GetDevice(x.FrontierName) == null && !x.IsKeyboard && !x.IsMouse && !x.IsNoDevice);
 
             if ( others.Any())
                 dropdown.UC.AddSeparator();
@@ -281,7 +280,7 @@ namespace EliteDangerousCore.Bindings
             }
 
             bool first = true;
-            foreach (DeviceKeyNames.DeviceNameSet dev in keynames)
+            foreach (DeviceKeyNames.DeviceNameSet dev in devicekeynames)
             {
                 bool ispresent = bf.GetDevice(dev.Device) != null;
                 if (!ispresent)
@@ -325,7 +324,7 @@ namespace EliteDangerousCore.Bindings
                         sfd.Filter = "Keynames(*.json)|*.json|All Files (*.*)|*.*";
                         if (sfd.ShowDialog(FindForm()) == DialogResult.OK)
                         {
-                            string json = keynames.Get();
+                            string json = devicekeynames.Get();
                             if (!FileHelpers.TryWriteToFile(sfd.FileName, json))
                             {
                                 ExtendedControls.MessageBoxTheme.Show($"Failed to write {sfd.FileName}", "Warning".Tx(), MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -343,7 +342,7 @@ namespace EliteDangerousCore.Bindings
                             string str = FileHelpers.TryReadAllTextFromFile(ofd.FileName);
                             if ( str != null )
                             {
-                                if ( !keynames.Set(str))
+                                if ( !devicekeynames.Set(str))
                                     ExtendedControls.MessageBoxTheme.Show($"File is not in correct format {ofd.FileName}", "Warning".Tx(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                             else
@@ -362,10 +361,12 @@ namespace EliteDangerousCore.Bindings
                     else
                     {
                         Device dev = (Device)o;
-                        keynames.Edit(this.FindForm(), bf.KeyboardLayout, dev);
-                        Display();
+                        if ( devicekeynames.Edit(this.FindForm(), bf.KeyboardLayout, dev) )
+                            Display();      // refresh!
                     }
                     dropdown.Close();
+
+                    Display();
                 };
                 dropdown.Show(this);
             }
@@ -396,7 +397,7 @@ namespace EliteDangerousCore.Bindings
                         string path = Path.Combine(bindingfolder, "DeviceButtonMaps", x.Tag + ".buttonMap");
                         if (dropdown.UC.IsChecked(x.Tag) == true)
                         {
-                            string text = keynames.GetAsDeviceButtonMaps(x.Tag);
+                            string text = devicekeynames.GetAsDeviceButtonMaps(x.Tag);
                             System.Diagnostics.Debug.WriteLine($"Copy to {path}");
 
                             FileHelpers.CreateDirectoryNoError(Path.Combine(bindingfolder, "DeviceButtonMaps"));

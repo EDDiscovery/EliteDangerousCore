@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+using ExtendedControls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,12 +33,12 @@ namespace EliteDangerousCore.Bindings
 
         // called to pop up a way of the user pressing key/joystick.
         // tuple returned is frontier device, frontier key name, joystick direction positive
-        public Func<BindingsFile, BindingEntry, Tuple<string,string,bool>> DeviceInput { get; set; }
+        public Func<BindingsFile, BindingEntry, Tuple<string, string, bool>> DeviceInput { get; set; }
 
         public BindingsEditor()
         {
             InitializeComponent();
-            ColValues.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+           // ColValues.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
             dataGridView.MakeDoubleBuffered();
 
@@ -52,15 +53,14 @@ namespace EliteDangerousCore.Bindings
         public void Init(string folder, string preferredbindfile, List<Device> deviceparas, DeviceKeyNames keynames)
         {
             this.deviceparas = deviceparas;
-            this.keynames = keynames;
+            this.devicekeynames = keynames;
             this.bindingfolder = folder;
 
             List<FileInfo> bindfiles = Directory.EnumerateFiles(folder, "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToList();
 
             foreach (var x in bindfiles)
                 extComboBoxBindFiles.Items.Add(x.Name);
-            extComboBoxBindFiles.Tag = bindfiles.Select(x=>x.FullName).ToList();
-
+            extComboBoxBindFiles.Tag = bindfiles.Select(x => x.FullName).ToList();
 
             bf = new BindingsFile(deviceparas);
 
@@ -93,6 +93,9 @@ namespace EliteDangerousCore.Bindings
 
             //System.Diagnostics.Debug.WriteLine($"Key list {keynames.Get()}");
 
+            dataGridView.SetWordWrap(true);
+            dataGridView.RowTemplate.MinimumHeight = Font.ScalePixels(40);
+
             Display();
 
             updatecheck.Tick += Updatecheck_Tick;
@@ -101,23 +104,26 @@ namespace EliteDangerousCore.Bindings
 
         public string KeyNames()
         {
-            return keynames.Get();
+            return devicekeynames.Get();
         }
 
         public void Display()
-        { 
+        {
             dataGridView.Rows.Clear();
+            dataViewScrollerPanel.Suspend();
+
+            var sortstate = dataGridView.GetSort(ColGroup.Index);        // default sort of this ascending
 
             int orderno = 0;
 
             foreach (var entry in bf.Entries)
             {
                 //if (entry.Name != "CamPitchUp")   continue;
-              //  if (!entry.Name.StartsWith("UI"))   continue;
+                //  if (!entry.Name.StartsWith("UI"))   continue;
 
                 var row = dataGridView.RowTemplate.Clone() as DataGridViewRow;
 
-                if ( entry.IsKeyOrBinding )
+                if (entry.IsKeyOrBinding)
                 {
                     row.Cells.Add(new DataGridViewTextBoxCell());       // 0 group
                     row.Cells.Add(new DataGridViewTextBoxCell());       // 1 ui
@@ -187,11 +193,12 @@ namespace EliteDangerousCore.Bindings
                         row.Cells[i].ReadOnly = true;
                 }
 
+                row.Visible = Filter(row);          // filter out this row if required
+
                 orderno++;
             }
 
-
-            dataGridView.Sort(ColGroup, ListSortDirection.Ascending );
+            dataGridView.Sort(sortstate);           // restate sort
 
             // seems you have to apply after add
             ColPrimaryDevice.DisplayStyleForCurrentCellOnly = ColPrimaryKey.DisplayStyleForCurrentCellOnly =
@@ -206,7 +213,7 @@ namespace EliteDangerousCore.Bindings
 
             IndicateErrors();
 
-            ApplyFilter();
+            dataViewScrollerPanel.Resume();
         }
 
         #region Helpers
@@ -282,7 +289,7 @@ namespace EliteDangerousCore.Bindings
         {
             dk.Value = null;        // need to clear before clearing items
             AddKeyOptions(binding, device, dk);
-            string bk = keynames.GetRename(device.FrontierName, frontierkeyname);
+            string bk = devicekeynames.GetRename(device.FrontierName, frontierkeyname);
             SetValue(dk, bk);
             dk.ErrorText = null;
             //System.Diagnostics.Debug.WriteLine($"Changed Key {binding} {frontierdevicename} {frontierkeyname}");
@@ -304,8 +311,8 @@ namespace EliteDangerousCore.Bindings
 
                 if (frontierkeyname != null)
                 {
-                    string bk = keynames.GetRename(device.FrontierName, frontierkeyname);
-                    string hint = keynames.GetHint(device.FrontierName, frontierkeyname);
+                    string bk = devicekeynames.GetRename(device.FrontierName, frontierkeyname);
+                    string hint = devicekeynames.GetHint(device.FrontierName, frontierkeyname);
                     row.Cells[deviceindex + 1].ToolTipText = bk != frontierkeyname ? (hint + nl + frontierkeyname) : null;
                 }
             }
@@ -325,7 +332,7 @@ namespace EliteDangerousCore.Bindings
         {
             SetDevice(row.Cells[index], device);
             SetKey(row.Cells[index + 1] as DataGridViewComboBoxCell, binding, device, frontierkeyname);
-            SetHint(row,index,device,frontierkeyname);
+            SetHint(row, index, device, frontierkeyname);
         }
 
         // add options to key, based on binding and the device
@@ -336,7 +343,7 @@ namespace EliteDangerousCore.Bindings
 
             c.Items.Clear();
             foreach (var x in ret)
-                c.Items.Add( keynames.GetRename(device.FrontierName,x));
+                c.Items.Add(devicekeynames.GetRename(device.FrontierName, x));
         }
 
 
@@ -394,9 +401,9 @@ namespace EliteDangerousCore.Bindings
 
                             if (same != null)
                             {
-                                if ( !FrontierBindingClassification.HoldButton(entry1.Name) && !FrontierBindingClassification.HoldButton(entry2.Name))
-                                { 
-                                   // System.Diagnostics.Debug.WriteLine($"Checked Clash: `{entry1.ToString()}` vs `{entry2.ToString()}`");
+                                if (!FrontierBindingClassification.HoldButton(entry1.Name) && !FrontierBindingClassification.HoldButton(entry2.Name))
+                                {
+                                    // System.Diagnostics.Debug.WriteLine($"Checked Clash: `{entry1.ToString()}` vs `{entry2.ToString()}`");
                                     var cell1 = row.Cells[same.Item1 == 1 ? ColPrimaryKey.Index : ColSecondaryKey.Index];
                                     cell1.Style.BackColor = Color.DarkRed;
                                     cell1.ToolTipText = clash + $" {BetterBindingName(entry2.Name)} {(same.Item2 == 1 ? "Primary" : "Secondary")}";
@@ -453,7 +460,7 @@ namespace EliteDangerousCore.Bindings
         public string BetterBindingName(string name)
         {
             return showFrontierNamesToolStripMenuItem.Checked ? name : name.SplitCapsWordFull().Replace("Buggy", "SRV").Replace("Turret", "SRV Turret").
-                            Replace("Humanoid", "On Foot").ReplaceIfStartsWith("Cam ", "Galaxy Map ").Replace("Toggle Button Up Input","Silent Running");
+                            Replace("Humanoid", "On Foot").ReplaceIfStartsWith("Cam ", "Galaxy Map ").Replace("Toggle Button Up Input", "Silent Running");
         }
 
         // return the frontier name associated with this physical device
@@ -464,6 +471,50 @@ namespace EliteDangerousCore.Bindings
 
         #endregion
 
+        #region Paint 
+        private void dataGridView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            var row = dataGridView.Rows[e.RowIndex];
+            var entry = row.Tag as BindingEntry;
+
+            // if its a key, see if the primary/secondary keys are there, and then call the paint func below
+
+            if (entry?.IsKeyOrBinding == true)
+            {
+                if (entry.PrimaryKeys?.Assigned == true)
+                {
+                    PaintKey(entry.PrimaryKeys.Keys[0].Device, entry.PrimaryKeys.Keys[0].FrontierKeyName, ColPrimaryKey.Index, e.RowBounds, e.Graphics);
+                    if (entry.PrimaryKeys.HasMod)
+                        PaintKey(entry.PrimaryKeys.Keys[1].Device, entry.PrimaryKeys.Keys[1].FrontierKeyName, ColPrimaryModKey.Index, e.RowBounds, e.Graphics);
+
+                }
+                if (entry.SecondaryKeys?.Assigned == true)
+                {
+                    PaintKey(entry.SecondaryKeys.Keys[0].Device, entry.SecondaryKeys.Keys[0].FrontierKeyName, ColSecondaryKey.Index, e.RowBounds, e.Graphics);
+                    if (entry.SecondaryKeys.HasMod)
+                        PaintKey(entry.SecondaryKeys.Keys[1].Device, entry.SecondaryKeys.Keys[1].FrontierKeyName, ColSecondaryModKey.Index, e.RowBounds, e.Graphics);
+
+                }
+            }
+        }
+
+        private void PaintKey(Device dev, string key, int col, Rectangle rowbounds, Graphics gr)
+        {
+            Image bk = devicekeynames.GetIcon(dev.FrontierName, key, false);
+            if (bk != null)
+            {
+                var colrect = dataGridView.GetColumnDisplayRectangle(col, false);
+                int pad = 1;
+                var p1 = new Rectangle(colrect.X + colrect.Width - rowbounds.Height - pad, rowbounds.Y + pad, rowbounds.Height - pad * 2, rowbounds.Height - pad * 2);
+                //System.Diagnostics.Debug.WriteLine($"Row has main icon {p1}");
+                gr.DrawImage(bk, p1);
+
+            }
+        }
+
+        #endregion
+
+        #region Vars
 
         private string bindingfolder;
         private BindingsFile bf;
@@ -476,15 +527,15 @@ namespace EliteDangerousCore.Bindings
         private int filtercomboboxuistart = 0;
         private int filtercomboboxmodestart = 0;
 
-        private DeviceKeyNames keynames;
+        private DeviceKeyNames devicekeynames;
         private List<Device> deviceparas;
 
         private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
+            // debug - should never happen
         }
 
-
+        #endregion
 
     }
 }

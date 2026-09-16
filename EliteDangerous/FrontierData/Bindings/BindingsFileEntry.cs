@@ -35,7 +35,7 @@ namespace EliteDangerousCore.Bindings
             public bool IsBinding { get; set; }                       // is it a joystick binding? 
             public bool IsKey => PrimaryKeys != null && !IsBinding;     // is it a keys
             public bool IsKeyOrBinding => PrimaryKeys != null;        // is it a key or binding entry?
-            public bool IsAssigned => PrimaryKeys?.Assigned == true;  // does we have any assignments? Primary must be defined
+            public bool IsPrimaryAssigned => PrimaryKeys?.Assigned == true;  // does we have any assignments? Primary must be defined
             public bool IsPrimaryAndSecondaryAssigned => PrimaryKeys != null && PrimaryKeys.Assigned && SecondaryKeys != null && SecondaryKeys.Assigned;
 
             public DeviceKeyPairList PrimaryKeys { get; set; }      // May be null
@@ -202,6 +202,7 @@ namespace EliteDangerousCore.Bindings
 
             public int Count => Keys.Count;
             public bool Assigned => Keys.Count > 0 && Keys[0].Assigned;
+            public bool HasMod => Keys.Count > 1;
             public bool IsKeyboard => Keys.Count > 0 && Keys[0].Device.IsKeyboard && (Keys.Count == 1 || Keys[1].Device.IsKeyboard);
             public bool IsJoystick() => Assigned == true && Keys[0].Device.IsDevice && !Keys[0].Device.IsKeyboard && !Keys[0].Device.IsMouse;
             public bool IsDevice(Device device) => Keys.Count > 0 && (Keys[0].Device == device || (Keys.Count > 1 && Keys[1].Device == device));
