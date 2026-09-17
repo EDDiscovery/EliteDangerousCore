@@ -39,9 +39,9 @@ namespace EliteDangerousCore.UIEvents
         {
         }
 
-        public UIGUIFocus(int focus, DateTime time, bool refresh) : this( time, refresh)
+        public UIGUIFocus(Focus focus, DateTime time, bool refresh) : this( time, refresh)
         {
-            GUIFocus = (Focus)focus;
+            GUIFocus = focus;
         }
 
         public Focus GUIFocus { get; private set; }

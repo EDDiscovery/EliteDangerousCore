@@ -29,7 +29,7 @@ namespace EliteDangerousCore.UIEvents
         {
         }
 
-        public UIOverallStatus(UIMode uim, List<UITypeEnum> list, int focus, UIPips.Pips pips, int fg, double fuel, double res, int cargo,
+        public UIOverallStatus(UIMode uim, List<UITypeEnum> list, UIGUIFocus.Focus focus, UIPips.Pips pips, int fg, double fuel, double res, int cargo,
             UIPosition.Position pos, double heading, double radius, string legalstate, string bodyname,
             double health, bool lowh, double gravity, double temp, UITemperature.TempState tempstate, double oxygen, bool lowox,
             string selw, string selwloc, 
@@ -39,7 +39,7 @@ namespace EliteDangerousCore.UIEvents
         {
             UIMode = uim;
             Flags = list;
-            Focus = (UIGUIFocus.Focus)focus;
+            Focus = focus;
             Pips = pips;
             Firegroup = fg;
             Fuel = fuel;

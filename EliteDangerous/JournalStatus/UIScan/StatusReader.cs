@@ -28,7 +28,7 @@ namespace EliteDangerousCore
 
         // these are exported to Actions UI events by Form_NewUIEvent in Status_ event variables (new sept 26)
         public UIMode Mode { get; set; } = null;            // mode.majormode and mode.mode, taxi, multicrew
-        public int GUIFocus { get; set; } = NotPresent;     // shows -1 when no status has been read, then always reads a valid value. On foot, there is no GUI field, so set to NoFocus
+        public UIGUIFocus.Focus GUIFocus { get; set; } = UIGUIFocus.Focus.NoFocus;     
         public int FireGroup { get; set; } = NotPresent;
         public double FuelLevel { get; set; } = NotPresent;
         public double ReserveLevel { get; set; } = NotPresent;
@@ -97,7 +97,8 @@ namespace EliteDangerousCore
         public void Reset()
         {
             flags1 = flags2 = 0;
-            GUIFocus = FireGroup = NotPresent;
+            GUIFocus = UIGUIFocus.Focus.NoFocus;
+            FireGroup = NotPresent;
             FuelLevel = ReserveLevel = NotPresent;
             LegalStatus = null;
             CargoCount = NotPresent;
@@ -219,7 +220,7 @@ namespace EliteDangerousCore
                         lastshiptype = nextshiptype;
                     }
 
-                    int curguifocus = jo["GuiFocus"].Int((int)UIGUIFocus.Focus.NoFocus);            // in landed mode, its disappears, so its the same as NoFocus.
+                    var curguifocus = (UIGUIFocus.Focus)(jo["GuiFocus"].Int(0));        // in landed mode, its disappears, so its the same as NoFocus.
                     if (curguifocus != GUIFocus || changedmajormode)
                     {
                         uievents.Add(new UIEvents.UIGUIFocus(curguifocus, EventTimeUTC, changedmajormode));
