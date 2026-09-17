@@ -25,6 +25,9 @@ namespace EliteDangerousCore
     public class StatusReader
     {
         #region Properties
+
+        // these are exported to Actions UI events by Form_NewUIEvent in Status_ event variables (new sept 26)
+        public UIMode Mode { get; set; } = null;            // mode.majormode and mode.mode, taxi, multicrew
         public int GUIFocus { get; set; } = NotPresent;     // shows -1 when no status has been read, then always reads a valid value. On foot, there is no GUI field, so set to NoFocus
         public int FireGroup { get; set; } = NotPresent;
         public double FuelLevel { get; set; } = NotPresent;
@@ -40,12 +43,46 @@ namespace EliteDangerousCore
         public double Temperature { get; set; } = NotPresent;
         public double Gravity { get; set; } = NotPresent;
         public double Health { get; set; } = NotPresent;
+        public UIEvents.UITemperature.TempState TemperatureState { get; set; } = UITemperature.TempState.Normal;
         public string SelectedWeapon { get; set; } = null;
         public string SelectedWeaponLocalised { get; set; } = null;
         public string DestinationName { get; set; } = null;           // when you have set a target, a body, station, system
         public string DestinationNameLoc { get; set; } = null;        // when you have a $.. id
         public SystemAddress DestinationSystemAddress { get; set; } = null;
         public int? DestinationBodyID { get; set; } = null;
+
+        // extracted from flags for use when generate an action set. Note the UIMode and FSDState covers a lot of these flags and makes them more useful
+        public bool LandingGear => (flags1 & (1 << (int)StatusFlags1Ship.LandingGear)) != 0;
+        public bool Supercruise => (flags1 & (1 << (int)StatusFlags1Ship.Supercruise)) != 0;
+        public bool FlightAssist => (flags1 & (1 << (int)StatusFlags1Ship.FlightAssist)) != 0;
+        public bool HardpointsDeployed => (flags1 & (1 << (int)StatusFlags1Ship.HardpointsDeployed)) != 0;
+        public bool InWing => (flags1 & (1 << (int)StatusFlags1Ship.InWing)) != 0;
+        public bool CargoScoopDeployed => (flags1 & (1 << (int)StatusFlags1Ship.CargoScoopDeployed)) != 0;
+        public bool SilentRunning => (flags1 & (1 << (int)StatusFlags1Ship.SilentRunning)) != 0;
+        public bool ScoopingFuel => (flags1 & (1 << (int)StatusFlags1Ship.ScoopingFuel)) != 0;
+        public UIOverallStatus.FSDStateType FSDState { get; set; } = UIOverallStatus.FSDStateType.Normal;
+        public bool OverHeating => (flags1 & (1 << (int)StatusFlags1Ship.OverHeating)) != 0;
+        public bool BeingInterdicted => (flags1 & (1 << (int)StatusFlags1Ship.BeingInterdicted)) != 0;
+        public bool AnalysisMode => (flags1 & (1 << (int)StatusFlags1Ship.HUDInAnalysisMode)) != 0;
+
+        public bool SrvHandbrake => (flags1 & (1 << (int)StatusFlags1SRV.SrvHandbrake)) != 0;
+        public bool SrvTurret => (flags1 & (1 << (int)StatusFlags1SRV.SrvTurret)) != 0;
+        public bool SrvUnderShip => (flags1 & (1 << (int)StatusFlags1SRV.SrvUnderShip)) != 0;
+        public bool SrvDriveAssist => (flags1 & (1 << (int)StatusFlags1SRV.SrvDriveAssist)) != 0;
+        public bool SrvHighBeam => (flags1 & (1 << (int)StatusFlags1SRV.SrvHighBeam)) != 0;
+        
+        public bool ShieldsUp => (flags1 & (1 << (int)StatusFlags1All.ShieldsUp)) != 0;
+        public bool Lights => (flags1 & (1 << (int)StatusFlags1All.Lights)) != 0;
+        public bool LowFuel => (flags1 & (1 << (int)StatusFlags1All.LowFuel)) != 0;
+        public bool HasLatLong => (flags1 & (1 << (int)StatusFlags1All.HasLatLong)) != 0;
+        public bool IsInDanger => (flags1 & (1 << (int)StatusFlags1All.IsInDanger)) != 0;
+        public bool NightVision => (flags1 & (1 << (int)StatusFlags1All.NightVision)) != 0;
+
+        public bool AimDownSight => (flags2 & (1 << (int)StatusFlags2Events.AimDownSight)) != 0;
+        public bool BreathableAtmosphere => (flags2 & (1 << (int)StatusFlags2Events.BreathableAtmosphere)) != 0;
+        public bool SupercruiseOverdrive => (flags2 & (1 << (int)StatusFlags2Events.SupercruiseOverdrive)) != 0;
+        public bool SupercruiseAssist => (flags2 & (1 << (int)StatusFlags2Events.SupercruiseAssist)) != 0;
+        public bool NPCCrewActive => (flags2 & (1 << (int)StatusFlags2Events.NPCCrewActive)) != 0;
 
         #endregion
 
@@ -120,7 +157,7 @@ namespace EliteDangerousCore
                     List<UIEvent> uievents = new List<UIEvent>();
                     List<JournalEntry> jevents = new List<JournalEntry>();
 
-                    UIMode lastshiptype = ShipType(flags1, flags2);
+                    UIMode lastshiptype = ShipType(flags1, flags2);     // current flags
 
                     long curflags1 = jo["Flags"].Long(0);
                     long curflags2 = jo["Flags2"].Long(0);      // 0 is backwards compat with horizons
@@ -133,9 +170,9 @@ namespace EliteDangerousCore
                     {
                         UIMode nextshiptype = ShipType(curflags1, curflags2);
 
-                        //System.Diagnostics.Debug.WriteLine("UI Flags changed {0} {1} {2} -> {3} {4} {5}", prev_flags.Value, prev_flags2.Value, shiptype, curflags, curflags2, nextshiptype);
+                        System.Diagnostics.Debug.WriteLine($"UI Flags changed {flags1} {flags2} -> {curflags1} {curflags2} : {lastshiptype} -> {nextshiptype}");
 
-                        if (!nextshiptype.Mode.Equals(lastshiptype))        // changed ship situation..
+                        if (!nextshiptype.Equals(lastshiptype))        // changed ship situation..
                         {
                             // did we change major mode
                             changedmajormode = nextshiptype.MajorMode != lastshiptype.MajorMode || nextshiptype.Multicrew != lastshiptype.Multicrew || nextshiptype.Taxi != lastshiptype.Taxi;
@@ -143,6 +180,8 @@ namespace EliteDangerousCore
                             uievents.Add(new UIEvents.UIMode(nextshiptype.Mode, nextshiptype.MajorMode, nextshiptype.Multicrew, nextshiptype.Taxi, EventTimeUTC, changedmajormode));        // Generate an event for it
 
                             System.Diagnostics.Debug.WriteLine($"UI Mode change to {nextshiptype.Mode} {nextshiptype.MajorMode} {nextshiptype.Multicrew} {nextshiptype.Taxi}");
+
+                            Mode = nextshiptype;
                         }
 
                         uievents.AddRange(ReportFlagState(typeof(StatusFlags2Events), curflags2, flags2, EventTimeUTC, changedmajormode));
@@ -158,6 +197,18 @@ namespace EliteDangerousCore
                             f.FsdCharging = CheckFlags(curflags2, StatusFlags2ReportedInOtherMessages.FSDHyperdriveCharging);
                             f.SupercruiseCharging = f.Charging && !f.FsdCharging;
                         }
+
+                        FSDState = UIEvents.UIOverallStatus.FSDStateType.Normal;
+                        if (CheckFlags(curflags1, StatusFlags1Ship.FsdMassLocked))
+                            FSDState = UIEvents.UIOverallStatus.FSDStateType.MassLock;
+                        if (CheckFlags(curflags1, StatusFlags1Ship.FsdJump))
+                            FSDState = UIEvents.UIOverallStatus.FSDStateType.Jumping;
+                        else if (CheckFlags(curflags1, StatusFlags1Ship.FsdCharging))            // older 3.8 will return Charging only
+                            FSDState = CheckFlags(curflags2, StatusFlags2ReportedInOtherMessages.FSDHyperdriveCharging) ? UIEvents.UIOverallStatus.FSDStateType.ChargingFSDFlagSet : UIEvents.UIOverallStatus.FSDStateType.Charging;
+                        else if (CheckFlags(curflags2, StatusFlags2Events.GlideMode))
+                            FSDState = UIEvents.UIOverallStatus.FSDStateType.Gliding;
+                        else if (CheckFlags(curflags1, StatusFlags1Ship.FsdCooldown))
+                            FSDState = UIEvents.UIOverallStatus.FSDStateType.Cooldown;
 
                         fireoverall = true;
 
@@ -363,53 +414,41 @@ namespace EliteDangerousCore
 
                         uievents.Add(new UIEvents.UITemperature(temperature, tempstate, EventTimeUTC, changedmajormode));
                         Temperature = temperature;
+                        TemperatureState =  tempstate;
                         fireoverall = true;
                     }
 
-                    if (fireoverall)
+                    if (fireoverall )
                     {
                         List<UITypeEnum> flagsset = ReportFlagState(typeof(StatusFlags1Ship), curflags1);
                         flagsset.AddRange(ReportFlagState(typeof(StatusFlags1SRV), curflags1));
                         flagsset.AddRange(ReportFlagState(typeof(StatusFlags1All), curflags1));
                         flagsset.AddRange(ReportFlagState(typeof(StatusFlags2Events), curflags2));
 
-                        bool glidemode = CheckFlags(curflags2, StatusFlags2Events.GlideMode);
                         bool breathableatmos = CheckFlags(curflags2, StatusFlags2Events.BreathableAtmosphere);
-
-                        UIEvents.UIOverallStatus.FSDStateType fsdstate = UIEvents.UIOverallStatus.FSDStateType.Normal;
-                        if (CheckFlags(curflags1, StatusFlags1Ship.FsdMassLocked))
-                            fsdstate = UIEvents.UIOverallStatus.FSDStateType.MassLock;
-                        if (CheckFlags(curflags1, StatusFlags1Ship.FsdJump))
-                            fsdstate = UIEvents.UIOverallStatus.FSDStateType.Jumping;
-                        else if (CheckFlags(curflags1, StatusFlags1Ship.FsdCharging))            // older 3.8 will return Charging only
-                            fsdstate = CheckFlags(curflags2, StatusFlags2ReportedInOtherMessages.FSDHyperdriveCharging) ? UIEvents.UIOverallStatus.FSDStateType.ChargingFSDFlagSet : UIEvents.UIOverallStatus.FSDStateType.Charging;
-                        else if (CheckFlags(curflags2, StatusFlags2Events.GlideMode))
-                            fsdstate = UIEvents.UIOverallStatus.FSDStateType.Gliding;
-                        else if (CheckFlags(curflags1, StatusFlags1Ship.FsdCooldown))
-                            fsdstate = UIEvents.UIOverallStatus.FSDStateType.Cooldown;
 
                         uievents.Add(new UIEvents.UIOverallStatus(lastshiptype, flagsset, GUIFocus, PIPStatus, FireGroup,
                                                                 FuelLevel, ReserveLevel, CargoCount, Position, Heading, BodyRadius, LegalStatus,
                                                                 BodyName,
                                                                 Health, lowhealth, gravity, Temperature, tempstate, Oxygen, lowoxygen,
                                                                 SelectedWeapon, SelectedWeaponLocalised,
-                                                                fsdstate, breathableatmos,
+                                                                FSDState, breathableatmos,
                                                                 DestinationName, DestinationNameLoc, DestinationBodyID, DestinationSystemAddress,
                                                                 EventTimeUTC,
                                                                 changedmajormode));        // overall list of flags set
                     }
 
                     //for debugging, keep
-#if true
+#if false
                     foreach (var uient in uievents)
                     {
                         if (!(uient is UIOverallStatus))        // dont report this, its due to individual ones
                         {
-                         //   System.Diagnostics.Trace.WriteLine($"UI Event {uient.EventTimeUTC} {uient.EventTypeStr} : {uient.ToString()}");
-                            //BaseUtils.Variables v = new BaseUtils.Variables();
-                            //v.AddPropertiesFieldsOfClass(uient, "", null, 2);
-                            //foreach (var x in v.NameEnumuerable)
-                            //    System.Diagnostics.Trace.WriteLine(string.Format("  {0} = {1}", x, v[x]));
+                            System.Diagnostics.Trace.WriteLine($"UI Event {uient.EventTimeUTC} {uient.EventTypeStr} : {uient.ToString()}");
+                            BaseUtils.Variables v = new BaseUtils.Variables();
+                            v.AddPropertiesFieldsOfClass(uient, "", null, 2);
+                            foreach (var x in v.NameEnumuerable)
+                                System.Diagnostics.Trace.WriteLine(string.Format("  {0} = {1}", x, v[x]));
                         }
                     }
 #endif

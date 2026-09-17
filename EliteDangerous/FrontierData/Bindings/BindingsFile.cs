@@ -29,17 +29,17 @@ namespace EliteDangerousCore.Bindings
         public string FileName { get; private set; }
         public DateTime FileWriteTime { get; private set; }
         public bool IsOutOfDate() => IsLoaded && File.GetLastWriteTimeUtc(FileName) > FileWriteTime;        // is our copy behind the one on the diskette?      
-        public string PresetName { get { return RootAttributes.TryGetValue("PresetName", out string s) ? s : "Unknown"; } set { RootAttributes["PresetName"] = value; } }
-        public string KeyboardCulture { get { return Elements.TryGetValue("KeyboardLayout", out BindingEntry v) ? v.Value : "Unknown"; } }
+        public string PresetName { get { return rootAttributes.TryGetValue("PresetName", out string s) ? s : "Unknown"; } set { rootAttributes["PresetName"] = value; } }
+        public string KeyboardCulture { get { return elements.TryGetValue("KeyboardLayout", out BindingEntry v) ? v.Value : "Unknown"; } }
         public string KeyboardLayout { get { return FrontierKeyConversion.GetSupportedLayout(KeyboardCulture); } }      // if NULL, we do not know the keyboard layout
         public bool IsEditable => KeyboardLayout != null;       // we can edit it
 
         // element lists
-        public IEnumerable<BindingEntry> Entries => Elements.Values;
+        public IEnumerable<BindingEntry> Entries => elements.Values;
         // which are bindings or keys
-        public IEnumerable<BindingEntry> Assignments => Elements.Where(x => x.Value.IsKeyOrBinding).Select(x => x.Value);
+        public IEnumerable<BindingEntry> Assignments => elements.Where(x => x.Value.IsKeyOrBinding).Select(x => x.Value);
         // which have values in attributes
-        public IEnumerable<BindingEntry> Values => Elements.Where(x => x.Value.Attributes.Count>0).Select(x => x.Value);
+        public IEnumerable<BindingEntry> Values => elements.Where(x => x.Value.Attributes.Count>0).Select(x => x.Value);
 
         public List<Device> DeviceList => devices;
         public List<Device> DeviceListNoDevice => devices.Where(x => !x.IsNoDevice).ToList();
@@ -53,10 +53,22 @@ namespace EliteDangerousCore.Bindings
         // creation
         public BindingsFile()
         {
+            Clear();
         }
+
         public BindingsFile(List<Device> knowndevices)
         {
+            Clear();
             devices = knowndevices;
+        }
+
+        public void Clear()
+        {
+            rootAttributes  = new Dictionary<string, string>();
+            elements = new Dictionary<string, BindingEntry>();
+            devices = new List<Device>();
+            FileName = null;
+            FileWriteTime = DateTime.MinValue;
         }
 
         // get bindings file name from path and odyssey
@@ -158,7 +170,7 @@ namespace EliteDangerousCore.Bindings
                     {
                         string attr = y.Name.ToString();
                         //System.Diagnostics.Debug.WriteLine($"Root {y.NodeType} {y.Name}");
-                        RootAttributes[attr] = y.Value;
+                        rootAttributes[attr] = y.Value;
 
                     }
                 }
@@ -234,7 +246,7 @@ namespace EliteDangerousCore.Bindings
                         }
                     }
 
-                    Elements[rootelement.Name.ToString()] = entry;
+                    elements[rootelement.Name.ToString()] = entry;
                 }
 
                 FileName = filetoload;
@@ -253,14 +265,14 @@ namespace EliteDangerousCore.Bindings
             XElement root = new XElement("Root");
 
             // all root attributes
-            foreach (var kvp in RootAttributes)
+            foreach (var kvp in rootAttributes)
             {
                 XAttribute attr = new XAttribute(kvp.Key, kvp.Value);
                 root.Add(attr);
             }
 
             // all elements in order of reading
-            foreach (var kvp in Elements)
+            foreach (var kvp in elements)
             {
                 BindingEntry entry = kvp.Value;
                 XElement elm = new XElement(kvp.Key);
@@ -368,7 +380,7 @@ namespace EliteDangerousCore.Bindings
         {
             if (KeyboardLayout != null)
             {
-                foreach (var entry in Elements.Values)
+                foreach (var entry in elements.Values)
                 {
                     entry.PrimaryKeys?.AssignVKeyNames(KeyboardLayout);
                     entry.SecondaryKeys?.AssignVKeyNames(KeyboardLayout);
@@ -444,7 +456,7 @@ namespace EliteDangerousCore.Bindings
 
         public BindingEntry FindAction(string name, bool withkeys = true)
         {
-            return Elements.TryGetValue(name,out var action) ? (withkeys ? (action.IsKeyOrBinding ? action : null) : null) : null;   
+            return elements.TryGetValue(name,out var action) ? (withkeys ? (action.IsKeyOrBinding ? action : null) : null) : null;   
         }
 
         public Device AddDevice(string name)
@@ -460,14 +472,8 @@ namespace EliteDangerousCore.Bindings
 
         public void Remap(Device olddevice, Device newdevice)
         {
-            foreach (var element in Elements)
+            foreach (var element in elements)
                 element.Value.Remap(olddevice, newdevice);
-        }
-
-        public void Clear()
-        {
-            foreach (var element in Elements)
-                element.Value.ClearAll();
         }
 
         public string ListBindings()
@@ -485,7 +491,7 @@ namespace EliteDangerousCore.Bindings
         public string ListValues()
         {
             string ret = "";
-            foreach (var kvp in Elements.Where(x=>x.Value.Values.Count>0 || x.Value.Attributes.Count>0))
+            foreach (var kvp in elements.Where(x=>x.Value.Values.Count>0 || x.Value.Attributes.Count>0))
             {
                 foreach (var x in kvp.Value.Values)
                     ret += kvp.Value.Name + "." + x.Key + "=" + x.Value + Environment.NewLine;
@@ -533,15 +539,11 @@ namespace EliteDangerousCore.Bindings
                 return null;
         }
 
- 
-        // all root attributes
-        private Dictionary<string, string> RootAttributes { get; set; } = new Dictionary<string, string>();
+        private Dictionary<string, string> rootAttributes;
 
-        // all xml elements
-        private Dictionary<string, BindingEntry> Elements { get; set; } = new Dictionary<string, BindingEntry>();
+        private Dictionary<string, BindingEntry> elements;
 
-        // device list
-        private List<Device> devices { get; set; } = new List<Device>();
+        private List<Device> devices;
 
         // This prints out the vkeys associated with the OEM codes and using the custom binds file with those OEMs
         // keys assigned to frontier functions listed below shows you and builds the translation entries for frontiertovkey

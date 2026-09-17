@@ -65,9 +65,9 @@
             this.extButtonSave = new ExtendedControls.ExtButton();
             this.extComboBoxBindFiles = new ExtendedControls.ExtComboBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.extFlowLayoutPanelTop = new ExtendedControls.ExtFlowLayoutPanel();
             this.extButtonDeviceKeys = new ExtendedControls.ExtButton();
             this.extButtonWriteButtonMap = new ExtendedControls.ExtButton();
+            this.extFlowLayoutPanelTop = new ExtendedControls.ExtFlowLayoutPanel();
             this.dataViewScrollerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
@@ -499,6 +499,39 @@
             // 
             this.toolTip.ShowAlways = true;
             // 
+            // extButtonDeviceKeys
+            // 
+            this.extButtonDeviceKeys.BackColor2 = System.Drawing.Color.Red;
+            this.extButtonDeviceKeys.ButtonDisabledScaling = 0.5F;
+            this.extButtonDeviceKeys.GradientDirection = 90F;
+            this.extButtonDeviceKeys.Location = new System.Drawing.Point(976, 3);
+            this.extButtonDeviceKeys.MouseOverScaling = 1.3F;
+            this.extButtonDeviceKeys.MouseSelectedScaling = 1.3F;
+            this.extButtonDeviceKeys.Name = "extButtonDeviceKeys";
+            this.extButtonDeviceKeys.Size = new System.Drawing.Size(75, 23);
+            this.extButtonDeviceKeys.TabIndex = 2;
+            this.extButtonDeviceKeys.Text = "Device Keys";
+            this.toolTip.SetToolTip(this.extButtonDeviceKeys, "Edit Device buttons/axis to names and icons");
+            this.extButtonDeviceKeys.UseVisualStyleBackColor = true;
+            this.extButtonDeviceKeys.Click += new System.EventHandler(this.extButtonDeviceKeys_Click);
+            // 
+            // extButtonWriteButtonMap
+            // 
+            this.extButtonWriteButtonMap.BackColor2 = System.Drawing.Color.Red;
+            this.extButtonWriteButtonMap.ButtonDisabledScaling = 0.5F;
+            this.extButtonWriteButtonMap.GradientDirection = 90F;
+            this.extButtonWriteButtonMap.Location = new System.Drawing.Point(1057, 3);
+            this.extButtonWriteButtonMap.MouseOverScaling = 1.3F;
+            this.extButtonWriteButtonMap.MouseSelectedScaling = 1.3F;
+            this.extButtonWriteButtonMap.Name = "extButtonWriteButtonMap";
+            this.extButtonWriteButtonMap.Size = new System.Drawing.Size(75, 23);
+            this.extButtonWriteButtonMap.TabIndex = 2;
+            this.extButtonWriteButtonMap.Text = "Button Map";
+            this.toolTip.SetToolTip(this.extButtonWriteButtonMap, "Transfer key maps to the frontiers binding folder DeviceButtonMaps. This makes th" +
+        "e names show up in the frontier control editor");
+            this.extButtonWriteButtonMap.UseVisualStyleBackColor = true;
+            this.extButtonWriteButtonMap.Click += new System.EventHandler(this.extButtonWriteButtonMap_Click);
+            // 
             // extFlowLayoutPanelTop
             // 
             this.extFlowLayoutPanelTop.ChildrenThemed = true;
@@ -527,36 +560,6 @@
         System.Drawing.SystemColors.Control,
         System.Drawing.SystemColors.Control};
             this.extFlowLayoutPanelTop.ThemeColorSet = -1;
-            // 
-            // extButtonDeviceKeys
-            // 
-            this.extButtonDeviceKeys.BackColor2 = System.Drawing.Color.Red;
-            this.extButtonDeviceKeys.ButtonDisabledScaling = 0.5F;
-            this.extButtonDeviceKeys.GradientDirection = 90F;
-            this.extButtonDeviceKeys.Location = new System.Drawing.Point(976, 3);
-            this.extButtonDeviceKeys.MouseOverScaling = 1.3F;
-            this.extButtonDeviceKeys.MouseSelectedScaling = 1.3F;
-            this.extButtonDeviceKeys.Name = "extButtonDeviceKeys";
-            this.extButtonDeviceKeys.Size = new System.Drawing.Size(75, 23);
-            this.extButtonDeviceKeys.TabIndex = 2;
-            this.extButtonDeviceKeys.Text = "Device Keys";
-            this.extButtonDeviceKeys.UseVisualStyleBackColor = true;
-            this.extButtonDeviceKeys.Click += new System.EventHandler(this.extButtonDeviceKeys_Click);
-            // 
-            // extButtonWriteButtonMap
-            // 
-            this.extButtonWriteButtonMap.BackColor2 = System.Drawing.Color.Red;
-            this.extButtonWriteButtonMap.ButtonDisabledScaling = 0.5F;
-            this.extButtonWriteButtonMap.GradientDirection = 90F;
-            this.extButtonWriteButtonMap.Location = new System.Drawing.Point(1057, 3);
-            this.extButtonWriteButtonMap.MouseOverScaling = 1.3F;
-            this.extButtonWriteButtonMap.MouseSelectedScaling = 1.3F;
-            this.extButtonWriteButtonMap.Name = "extButtonWriteButtonMap";
-            this.extButtonWriteButtonMap.Size = new System.Drawing.Size(75, 23);
-            this.extButtonWriteButtonMap.TabIndex = 2;
-            this.extButtonWriteButtonMap.Text = "Button Map";
-            this.extButtonWriteButtonMap.UseVisualStyleBackColor = true;
-            this.extButtonWriteButtonMap.Click += new System.EventHandler(this.extButtonWriteButtonMap_Click);
             // 
             // BindingsEditor
             // 
