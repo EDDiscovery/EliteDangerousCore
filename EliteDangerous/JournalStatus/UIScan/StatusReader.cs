@@ -178,9 +178,10 @@ namespace EliteDangerousCore
                             // did we change major mode
                             changedmajormode = nextshiptype.MajorMode != lastshiptype.MajorMode || nextshiptype.Multicrew != lastshiptype.Multicrew || nextshiptype.Taxi != lastshiptype.Taxi;
 
-                            uievents.Add(new UIEvents.UIMode(nextshiptype.Mode, nextshiptype.MajorMode, nextshiptype.Multicrew, nextshiptype.Taxi, EventTimeUTC, changedmajormode));        // Generate an event for it
+                            var uevent = new UIEvents.UIMode(nextshiptype.Mode, nextshiptype.MajorMode, nextshiptype.Multicrew, nextshiptype.Taxi, nextshiptype.PhysicalMulticrew, nextshiptype.TelepresenceMulticrew, EventTimeUTC, changedmajormode);
+                            uievents.Add(uevent);        // Generate an event for it
 
-                            System.Diagnostics.Debug.WriteLine($"UI Mode change to {nextshiptype.Mode} {nextshiptype.MajorMode} {nextshiptype.Multicrew} {nextshiptype.Taxi}");
+                            System.Diagnostics.Debug.WriteLine($"UI Mode change to {uevent.Mode} {uevent.MajorMode} mc{uevent.Multicrew} pmc {uevent.PhysicalMulticrew} tmc {uevent.TelepresenceMulticrew} Taxi {uevent.Taxi}");
 
                             Mode = nextshiptype;
                         }
@@ -507,60 +508,62 @@ namespace EliteDangerousCore
         private static UIMode ShipType(long flags1, long flags2)
         {
             bool multicrew = CheckFlags(flags2, StatusFlags2ShipType.InMulticrew);
+            bool physicalmulticrew = CheckFlags(flags2, StatusFlags2ReportedInOtherMessages.PhysicalMulticrew);
+            bool telepresencemulticrew = CheckFlags(flags2, StatusFlags2ReportedInOtherMessages.TelepresenceMulticrew);
             bool taxi = CheckFlags(flags2, StatusFlags2ShipType.InTaxi);
 
             if (CheckFlags(flags1, StatusFlags1ShipType.InFighter))
             {
-                return new UIMode(UIMode.ModeType.Fighter, UIMode.MajorModeType.Fighter, multicrew, false);
+                return new UIMode(UIMode.ModeType.Fighter, UIMode.MajorModeType.Fighter, multicrew, false, physicalmulticrew, telepresencemulticrew);
             }
             else if (CheckFlags(flags1, StatusFlags1ShipType.InSRV))
             {
-                return new UIMode(UIMode.ModeType.SRV, UIMode.MajorModeType.SRV, multicrew, false);
+                return new UIMode(UIMode.ModeType.SRV, UIMode.MajorModeType.SRV, multicrew, false, physicalmulticrew, telepresencemulticrew);
             }
             else if (CheckFlags(flags2, StatusFlags2ShipType.OnFoot))
             {
                 if (CheckFlags(flags2, StatusFlags2ShipType.OnFootInStation))        // station means starport
                 {
-                    return new UIMode(CheckFlags(flags2, StatusFlags2ShipType.OnFootInHangar) ? UIEvents.UIMode.ModeType.OnFootStarPortHangar : UIEvents.UIMode.ModeType.OnFootStarPortSocialSpace, UIMode.MajorModeType.OnFoot, multicrew, false);
+                    return new UIMode(CheckFlags(flags2, StatusFlags2ShipType.OnFootInHangar) ? UIEvents.UIMode.ModeType.OnFootStarPortHangar : UIEvents.UIMode.ModeType.OnFootStarPortSocialSpace, UIMode.MajorModeType.OnFoot, multicrew, false, physicalmulticrew, telepresencemulticrew);
                 }
                 else if (CheckFlags(flags2, StatusFlags2ShipType.OnFootInHangar))        // if set, but no station, its a planetary port
                 {
-                    return new UIMode(UIMode.ModeType.OnFootPlantaryPortHangar, UIMode.MajorModeType.OnFoot, multicrew, false);
+                    return new UIMode(UIMode.ModeType.OnFootPlantaryPortHangar, UIMode.MajorModeType.OnFoot, multicrew, false, physicalmulticrew, telepresencemulticrew);
                 }
                 else if (CheckFlags(flags2, StatusFlags2ShipType.OnFootInSocialSpace))
                 {
-                    return new UIMode(UIMode.ModeType.OnFootPlantaryPortSocialSpace, UIMode.MajorModeType.OnFoot, multicrew, false);
+                    return new UIMode(UIMode.ModeType.OnFootPlantaryPortSocialSpace, UIMode.MajorModeType.OnFoot, multicrew, false, physicalmulticrew, telepresencemulticrew);
                 }
                 else if (CheckFlags(flags2, StatusFlags2ShipType.OnFootOnPlanet))
                 {
-                    return new UIMode(CheckFlags(flags2, StatusFlags2ShipType.OnFootExterior) ? UIEvents.UIMode.ModeType.OnFootPlanet : UIEvents.UIMode.ModeType.OnFootInstallationInside, UIMode.MajorModeType.OnFoot, multicrew, false);
+                    return new UIMode(CheckFlags(flags2, StatusFlags2ShipType.OnFootExterior) ? UIEvents.UIMode.ModeType.OnFootPlanet : UIEvents.UIMode.ModeType.OnFootInstallationInside, UIMode.MajorModeType.OnFoot, multicrew, false, physicalmulticrew, telepresencemulticrew);
                 }
                 else
                 {
-                    return new UIMode(UIEvents.UIMode.ModeType.OnFootPlanet, UIMode.MajorModeType.OnFoot, multicrew, false);      // backup in case..
+                    return new UIMode(UIEvents.UIMode.ModeType.OnFootPlanet, UIMode.MajorModeType.OnFoot, multicrew, false, physicalmulticrew, telepresencemulticrew);      // backup in case..
                 }
             }
             else if (CheckFlags(flags1, StatusFlags1ShipType.InMainShip))
             {
                 if (CheckFlags(flags1, StatusFlags1Ship.Supercruise))
                 {
-                    return new UIMode(UIMode.ModeType.MainShipSupercruise, UIMode.MajorModeType.MainShip, multicrew, taxi);
+                    return new UIMode(UIMode.ModeType.MainShipSupercruise, UIMode.MajorModeType.MainShip, multicrew, taxi, physicalmulticrew, telepresencemulticrew);
                 }
                 else if (CheckFlags(flags1, StatusFlags1Ship.Docked))
                 {
-                    return new UIMode(CheckFlags(flags1, StatusFlags1All.HasLatLong) ? UIEvents.UIMode.ModeType.MainShipDockedPlanet : UIEvents.UIMode.ModeType.MainShipDockedStarPort, UIMode.MajorModeType.MainShip, multicrew, taxi);
+                    return new UIMode(CheckFlags(flags1, StatusFlags1All.HasLatLong) ? UIEvents.UIMode.ModeType.MainShipDockedPlanet : UIEvents.UIMode.ModeType.MainShipDockedStarPort, UIMode.MajorModeType.MainShip, multicrew, taxi, physicalmulticrew, telepresencemulticrew);
                 }
                 else if (CheckFlags(flags1, StatusFlags1Ship.Landed))
                 {
-                    return new UIMode(UIMode.ModeType.MainShipLanded, UIMode.MajorModeType.MainShip, multicrew, taxi);
+                    return new UIMode(UIMode.ModeType.MainShipLanded, UIMode.MajorModeType.MainShip, multicrew, taxi, physicalmulticrew, telepresencemulticrew);
                 }
                 else
                 {
-                    return new UIMode(UIMode.ModeType.MainShipNormalSpace, UIMode.MajorModeType.MainShip, multicrew, taxi);
+                    return new UIMode(UIMode.ModeType.MainShipNormalSpace, UIMode.MajorModeType.MainShip, multicrew, taxi, physicalmulticrew, telepresencemulticrew);
                 }
             }
 
-            return new UIMode(UIMode.ModeType.None, UIMode.MajorModeType.None, false, false);
+            return new UIMode(UIMode.ModeType.None, UIMode.MajorModeType.None, false, false,false,false);
         }
 
         private static bool CheckFlags(long flags, Object bit) { return (flags & (1L << (int)bit)) != 0; }
@@ -669,7 +672,10 @@ namespace EliteDangerousCore
             VeryCold = 10,
             VeryHot = 11,
             TempBits = (1 << Cold) | (1 << Hot) | (1 << VeryCold) | (1 << VeryHot),
+            TelepresenceMulticrew = 17,
+            PhysicalMulticrew = 18,
             FSDHyperdriveCharging = 19,         // U14 nov 22
+            //23-31 not defined
         }
 
         #endregion

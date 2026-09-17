@@ -24,19 +24,23 @@ namespace EliteDangerousCore.UIEvents
         {
         }
 
-        public UIMode(ModeType type, MajorModeType mode, bool multicrew, bool taxi) : this(DateTime.MinValue,false)
+        public UIMode(ModeType type, MajorModeType mode, bool multicrew, bool taxi, bool pmc, bool tmc) : this(DateTime.MinValue,false)
         {
             Mode = type;
             MajorMode = mode;
             Multicrew = multicrew;
+            PhysicalMulticrew = pmc;
+            TelepresenceMulticrew = tmc;
             Taxi = taxi;
         }
 
-        public UIMode(ModeType type, MajorModeType mode, bool multicrew, bool taxi, DateTime time, bool refresh) : this(time, refresh)
+        public UIMode(ModeType type, MajorModeType mode, bool multicrew, bool taxi, bool pmc, bool tmc, DateTime time, bool refresh) : this(time, refresh)
         {
             Mode = type;
             MajorMode = mode;
             Multicrew = multicrew;
+            PhysicalMulticrew = pmc;
+            TelepresenceMulticrew = tmc;
             Taxi = taxi;
         }
 
@@ -77,6 +81,8 @@ namespace EliteDangerousCore.UIEvents
 
         public bool Taxi { get; private set; }                  // if in taxi, will have MainShip* modes
         public bool Multicrew { get; private set; }             // if playing in multicrew
+        public bool PhysicalMulticrew { get; private set; }     // if playing in multicrew
+        public bool TelepresenceMulticrew { get; private set; } // if playing in multicrew
 
         public bool InFlight
         {
@@ -95,12 +101,13 @@ namespace EliteDangerousCore.UIEvents
 
         public override string ToString()
         {
-            return $"{MajorMode}, {Mode}, mc {Multicrew}, taxi {Taxi}";
+            return $"{MajorMode}, {Mode}, mc {Multicrew} (p{PhysicalMulticrew}t{TelepresenceMulticrew}), taxi {Taxi}";
         }
 
         public bool Equals(UIMode other)
         {
-            return Mode == other.Mode && MajorMode == other.MajorMode && Taxi == other.Taxi && Multicrew == other.Multicrew;
+            return Mode == other.Mode && MajorMode == other.MajorMode && Taxi == other.Taxi && Multicrew == other.Multicrew 
+                && PhysicalMulticrew == other.PhysicalMulticrew && TelepresenceMulticrew == other.TelepresenceMulticrew;
         }
     }
 }
