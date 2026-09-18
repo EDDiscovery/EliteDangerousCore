@@ -477,38 +477,46 @@ namespace EliteDangerousCore.Bindings
             var row = dataGridView.Rows[e.RowIndex];
             var entry = row.Tag as BindingEntry;
 
+            //System.Diagnostics.Debug.WriteLine($"Paint Row {row.Index}");
+
             // if its a key, see if the primary/secondary keys are there, and then call the paint func below
 
             if (entry?.IsKeyOrBinding == true)
             {
-                if (entry.PrimaryKeys?.Assigned == true)
+                if (entry.PrimaryKeys?.Assigned == true )
                 {
-                    PaintKey(entry.PrimaryKeys.Keys[0].Device, entry.PrimaryKeys.Keys[0].FrontierKeyName, ColPrimaryKey.Index, e.RowBounds, e.Graphics);
+                    PaintKey(entry.PrimaryKeys.Keys[0].Device, entry.PrimaryKeys.Keys[0].FrontierKeyName, row.Index, ColPrimaryKey.Index, e.RowBounds, e.Graphics);
                     if (entry.PrimaryKeys.HasMod)
-                        PaintKey(entry.PrimaryKeys.Keys[1].Device, entry.PrimaryKeys.Keys[1].FrontierKeyName, ColPrimaryModKey.Index, e.RowBounds, e.Graphics);
+                        PaintKey(entry.PrimaryKeys.Keys[1].Device, entry.PrimaryKeys.Keys[1].FrontierKeyName, row.Index, ColPrimaryModKey.Index, e.RowBounds, e.Graphics);
 
                 }
                 if (entry.SecondaryKeys?.Assigned == true)
                 {
-                    PaintKey(entry.SecondaryKeys.Keys[0].Device, entry.SecondaryKeys.Keys[0].FrontierKeyName, ColSecondaryKey.Index, e.RowBounds, e.Graphics);
+                    PaintKey(entry.SecondaryKeys.Keys[0].Device, entry.SecondaryKeys.Keys[0].FrontierKeyName, row.Index, ColSecondaryKey.Index, e.RowBounds, e.Graphics);
                     if (entry.SecondaryKeys.HasMod)
-                        PaintKey(entry.SecondaryKeys.Keys[1].Device, entry.SecondaryKeys.Keys[1].FrontierKeyName, ColSecondaryModKey.Index, e.RowBounds, e.Graphics);
+                        PaintKey(entry.SecondaryKeys.Keys[1].Device, entry.SecondaryKeys.Keys[1].FrontierKeyName, row.Index, ColSecondaryModKey.Index, e.RowBounds, e.Graphics);
 
                 }
             }
         }
 
-        private void PaintKey(Device dev, string key, int col, Rectangle rowbounds, Graphics gr)
+        private void PaintKey(Device dev, string key, int row, int col, Rectangle rowbounds, Graphics gr)
         {
-            Image bk = devicekeynames.GetIcon(dev.FrontierName, key, false);
-            if (bk != null)
-            {
-                var colrect = dataGridView.GetColumnDisplayRectangle(col, false);
-                int pad = 1;
-                var p1 = new Rectangle(colrect.X + colrect.Width - rowbounds.Height - pad, rowbounds.Y + pad, rowbounds.Height - pad * 2, rowbounds.Height - pad * 2);
-                //System.Diagnostics.Debug.WriteLine($"Row has main icon {p1}");
-                gr.DrawImage(bk, p1);
+            var crow = dataGridView.CurrentCell?.RowIndex ?? -1;
+            var ccol = dataGridView.CurrentCell?.ColumnIndex ?? -1;
 
+            if (crow != row || ccol != col)
+            {
+                Image bk = devicekeynames.GetIcon(dev.FrontierName, key, false);
+                if (bk != null)
+                {
+                    var colrect = dataGridView.GetColumnDisplayRectangle(col, false);
+                    int pad = 1;
+                    var p1 = new Rectangle(colrect.X + colrect.Width - rowbounds.Height - pad, rowbounds.Y + pad, rowbounds.Height - pad * 2, rowbounds.Height - pad * 2);
+                    //System.Diagnostics.Debug.WriteLine($"Row has main icon {p1}");
+                    gr.DrawImage(bk, p1);
+
+                }
             }
         }
 

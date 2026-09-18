@@ -89,6 +89,8 @@ namespace EliteDangerousCore.Bindings
             foreach (var x in bf.DeviceList)
                 extComboBoxFilter.Items.Add(x.BetterName);
 
+            extComboBoxFilter.ItemSeperators = new int[] {filtercomboboxuistart,filtercomboboxmodestart};
+
             extComboBoxFilter.SelectedIndex = 0;
             extComboBoxFilter.SelectedIndexChanged += ExtComboBoxFilter_SelectedIndexChanged;
         }
@@ -97,7 +99,8 @@ namespace EliteDangerousCore.Bindings
         {
             dataGridView.FilterGridView((r) => Filter(r));
         }
-
+        
+        // calculate if the row is filtered in or out
         private bool Filter(DataGridViewRow r)
         {
             if (extComboBoxFilter.SelectedIndex == 0)
