@@ -129,7 +129,7 @@ namespace EliteDangerousCore.JournalEvents
             // only call if in these types from 4.0 we can be on foot or in a taxi
             if (ShipFD.IsValid && ShipFD.IsShipSRVFighterLander)
             {
-                shp.LoadGame(ShipId, ShipType, ShipFD, ShipName, ShipIdent, FuelLevel, FuelCapacity);
+                shp.LoadGame(this, ShipId, ShipType, ShipFD, ShipName, ShipIdent, FuelLevel, FuelCapacity);
             }
         }
 

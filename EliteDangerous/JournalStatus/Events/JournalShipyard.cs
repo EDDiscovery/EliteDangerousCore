@@ -183,7 +183,7 @@ namespace EliteDangerousCore.JournalEvents
                 shp.Store(StoreOldShipFD, StoreOldShipId, whereami, system.Name);
 
             if (SellOldShipId?.IsValid == true && SellOldShipFD?.IsValid == true)
-                shp.Sell(SellOldShipFD, SellOldShipId);
+                shp.Sell(this, SellOldShipFD, SellOldShipId);
         }
 
         public override string GetInfo()
@@ -193,11 +193,11 @@ namespace EliteDangerousCore.JournalEvents
 
             if (StoreOldShipFD != null)
             {
-                sb.BuildCont("Stored".Tx() + ": ", StoreOldShip);
+                sb.BuildCont("Stored".Tx() + ": ", StoreOldShip, "< (;)", StoreOldShipId );
             }
             if (SellOldShipFD != null)
             {
-                sb.BuildCont("Sold".Tx() + ": ", StoreOldShip, "Amount: ; cr;N0".Tx(), SellPrice);
+                sb.BuildCont("Sold".Tx() + ": ", SellOldShip, "< (;)", SellOldShipId, "Amount: ; cr;N0".Tx(), SellPrice);
             }
             return sb.ToString();
         }
@@ -223,12 +223,12 @@ namespace EliteDangerousCore.JournalEvents
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             //System.Diagnostics.Debug.WriteLine(EventTimeUTC + " NEW");
-            shp.ShipyardNew(ShipType, ShipFD, ShipId);
+            shp.ShipyardNew(this, ShipType, ShipFD, ShipId);
         }
 
         public override string GetInfo()
         {
-            return ShipType;
+            return ShipType + $" ({ShipId})";
         }
     }
 
@@ -270,12 +270,12 @@ namespace EliteDangerousCore.JournalEvents
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
             //Debug.WriteLine(EventTimeUTC + " SELL");
-            shp.Sell(ShipTypeFD, SellShipId);
+            shp.Sell(this, ShipTypeFD, SellShipId);
         }
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", ShipType, "Amount: ; cr;N0".Tx(), ShipPrice, "At".Tx() + ": ", System);
+            return BaseUtils.FieldBuilder.Build("", ShipType_Localised, "< (;)", SellShipId, "Amount: ; cr;N0".Tx(), ShipPrice, "At".Tx() + ": ", System);
         }
 
         public JObject CreateJSON()            // create JSON of this record..
@@ -332,7 +332,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Swap ".Tx(), StoreOldShip, "< for a ".Tx(), ShipType);
+            return BaseUtils.FieldBuilder.Build("Swap ".Tx(), StoreOldShip, "< (;)", StoreShipId, "< for a ".Tx(), ShipType_Localised, "< (;)",ShipId);
         }
     }
 
@@ -381,12 +381,12 @@ namespace EliteDangerousCore.JournalEvents
         {
             DateTime arrival = EventTimeUTC.AddSeconds(nTransferTime ?? 0);
             //System.Diagnostics.Debug.WriteLine(EventTimeUTC + " Transfer");
-            shp.Transfer(ShipType, ShipTypeFD, ShipId, FromSystem, system.Name, whereami, arrival);
+            shp.Transfer(this, ShipType, ShipTypeFD, ShipId, FromSystem, system.Name, whereami, arrival);
         }
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Of ".Tx(), ShipType, "< from ".Tx(), FromSystem, "Distance: ; ly;0.0".Tx(),
+            return BaseUtils.FieldBuilder.Build("Of ".Tx(), ShipType_Localised, "< (;)", ShipId, "< from ".Tx(), FromSystem, "Distance: ; ly;0.0".Tx(),
                             Distance, "Price: ; cr;N0".Tx(), TransferPrice, "Transfer Time".Tx() + ": ", FriendlyTransferTime);
         }
     }
@@ -480,9 +480,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             //System.Diagnostics.Debug.WriteLine(EventTimeUTC + " StoredShips");
             if (ShipsHere != null)
-                shp.StoredShips(ShipsHere);
+                shp.StoredShips(this, ShipsHere);
             if (ShipsRemote != null)
-                shp.StoredShips(ShipsRemote);
+                shp.StoredShips(this, ShipsRemote);
         }
 
     }
@@ -515,7 +515,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
-            shp.Sell(ShipTypeFD, SellShipId);
+            shp.Sell(this, ShipTypeFD, SellShipId);
         }
 
         public override string GetInfo()
@@ -550,7 +550,7 @@ namespace EliteDangerousCore.JournalEvents
     }
 
     [JournalEntryType(JournalTypeEnum.ShipRedeemed)]
-    public class JournalShipRedeemed : JournalEntry
+    public class JournalShipRedeemed : JournalEntry, IShipInformation
     {
         public JournalShipRedeemed(JObject evt) : base(evt, JournalTypeEnum.ShipRedeemed)
         {
@@ -565,9 +565,14 @@ namespace EliteDangerousCore.JournalEvents
         public VehicleFDName ShipFD { get; set; }
         public string ShipType_Localised { get; set; }
 
+        public void ShipInformation(ShipList shp, string whereami, ISystem system)
+        {
+            shp.ShipRedeemed(this);
+        }
+
         public override string GetInfo(FillInformationData fid)
         {
-            return string.Format("Redeemed and deployed ship {0} at {1} into shipyard".Tx(), ShipType, fid.WhereAmI);
+            return string.Format("Redeemed and deployed ship {0} at {1} into shipyard".Tx() + ". ID:{2}", ShipType, fid.WhereAmI, ShipId);
         }
     }
 

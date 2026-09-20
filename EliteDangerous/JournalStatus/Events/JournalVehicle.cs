@@ -173,7 +173,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (ID.IsValid)
             {
-                shp.RestockVehicle(ID, TypeFD, Type_Localised, Loadout);
+                shp.RestockVehicle(this, ID, TypeFD, Type_Localised, Loadout);
             }
         }
 

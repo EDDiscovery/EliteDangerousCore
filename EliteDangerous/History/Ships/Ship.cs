@@ -22,7 +22,7 @@ using QuickJSON;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("{ID}:{ShipType}:{ShipFD}:{Modules.Count}")]
+    [System.Diagnostics.DebuggerDisplay("{ID}:{ShipType}:{ShipFD.ID}:{State} Modules {Modules.Count}")]
     public class Ship
     {
         #region Information interface
@@ -30,6 +30,8 @@ namespace EliteDangerousCore
         public ShipID ID { get; private set; }                 // its Frontier ID.     ID's are moved to high range when sold
         public enum ShipState { Owned, Sold, Destroyed, Imported};
         public ShipState State { get; set; } = ShipState.Owned; // if owned, sold, destroyed. Default owned
+        public JournalEntry CreateEvent { get; set; }
+        public JournalEntry SoldDestroyedEvent { get; set; }
         public string ShipType { get; private set; }        // ship type name, nice, fer-de-lance, etc. can be null
         public VehicleFDName ShipFD { get; private set; }          // ship type name, fdname, may be null until set
         public string ShipUserName { get; private set; }    // ship name, may be empty or null
@@ -270,7 +272,7 @@ namespace EliteDangerousCore
 
         public double ModuleMass()
         {
-            //foreach( var x in Modules)  System.Diagnostics.Debug.WriteLine($"Module {x.Value.Item} mass {x.Value.Mass}");
+           // foreach( var x in Modules.OrderBy(x => x.Key))  System.Diagnostics.Debug.WriteLine($"Module {x.Key} {x.Value.Item} mass {x.Value.Mass()}");
             return (from var in Modules select var.Value.Mass()).Sum();
         }
 
@@ -434,8 +436,11 @@ namespace EliteDangerousCore
 
                 List<Tuple<double, double, double>> weapons = new List<Tuple<double, double, double>>();
 
-                foreach (var modkvp in Modules)
+                //System.Diagnostics.Debug.WriteLine($"\r\nCompute Module Stats {ship.Name}");
+                foreach (var modkvp in Modules.OrderBy(x=>x.Key))
                 {
+                    //System.Diagnostics.Debug.WriteLine($"Stats on Module {modkvp.Key} = {modkvp.Value.ItemFD}");
+
                     var me = modkvp.Value.GetModuleEngineered(out string _);        // may be null if no loadout present, due to crap journal
 
                     if (me != null)
@@ -492,6 +497,7 @@ namespace EliteDangerousCore
                         if (me.IsHardpoint)
                         {
                             res.PowerDrawWeapons += powerdraw;
+                            System.Diagnostics.Debug.WriteLine($"   Weapon {powerdraw} total {res.PowerDrawWeapons}");
 
                             var thmload = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermalLoad), 1);      // should always be there
                             var distdraw = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.DistributorDraw), 1);// should always be there
@@ -759,16 +765,18 @@ namespace EliteDangerousCore
 
         #region Creating and changing
 
-        public Ship(ShipID id)
+        public Ship(ShipID id, JournalEntry create)
         {
             ID = id;
+            CreateEvent = create;
             Modules = new Dictionary<ShipSlots.Slot, ShipModule>();
         }
 
         public Ship ShallowClone()          // shallow clone.. does not clone the ship modules, just the dictionary
         {
-            Ship sm = new Ship(this.ID);
+            Ship sm = new Ship(this.ID,this.CreateEvent);
             sm.State = this.State;
+            sm.SoldDestroyedEvent = this.SoldDestroyedEvent;
             sm.ShipType = this.ShipType;
             sm.ShipFD = ShipFD?.Clone();        // may be null
             sm.ShipUserName = this.ShipUserName;
@@ -1033,20 +1041,22 @@ namespace EliteDangerousCore
             return this;
         }
 
-        public Ship SellShip()
+        public Ship SellShip(JournalEntry sold)
         {
             Ship sm = this.ShallowClone();
             sm.State = ShipState.Sold;
             sm.SubVehicle = SubVehicleType.None;
+            sm.SoldDestroyedEvent = sold;
             sm.ClearStorage();
             return sm;
         }
 
-        public Ship Destroyed()
+        public Ship Destroyed(JournalEntry destroyed)
         {
             Ship sm = this.ShallowClone();
             sm.State = ShipState.Destroyed;
             sm.SubVehicle = SubVehicleType.None;
+            sm.SoldDestroyedEvent = destroyed;
             sm.ClearStorage();
             return sm;
         }

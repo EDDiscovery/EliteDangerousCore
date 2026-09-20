@@ -170,7 +170,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
         {
-            shp.Resurrect(Option.Equals("free", System.StringComparison.InvariantCultureIgnoreCase));    // if free, we did not rebuy the ship
+            shp.Resurrect(this, Option.EqualsIIC("free"));    // if free, we did not rebuy the ship
         }
 
         public override string GetInfo()

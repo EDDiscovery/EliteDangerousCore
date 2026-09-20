@@ -25,8 +25,9 @@ namespace EliteDangerousCore
     {
         public int Count => ships.Count;
         public Ship this[int n] => ships.Values.ToArray()[n];
-        public IEnumerable<Ship> OwnedSpaceShips() { return ships.Where(x => x.Value.State == Ship.ShipState.Owned && x.Value.ShipFD.Type == VehicleFDName.VehicleType.Ship).Select(x => x.Value); }
-        public IEnumerable<Ship> SoldDestroyedSpaceShips() { return ships.Where(x => x.Value.State != Ship.ShipState.Owned && x.Value.ShipFD.Type == VehicleFDName.VehicleType.Ship).Select(x => x.Value); }
+        public Dictionary<string, Ship> SpaceShips() { return ships.Where(x => x.Value.ShipFD.Type == VehicleFDName.VehicleType.Ship).ToDictionary(y => y.Key, z => z.Value); }
+        public Dictionary<string, Ship> OwnedSpaceShips() { return ships.Where(x => x.Value.State == Ship.ShipState.Owned && x.Value.ShipFD.Type == VehicleFDName.VehicleType.Ship).ToDictionary(y => y.Key, z => z.Value);}
+        public Dictionary<string, Ship> SoldDestroyedSpaceShips() { return ships.Where(x => x.Value.State != Ship.ShipState.Owned && x.Value.ShipFD.Type == VehicleFDName.VehicleType.Ship).ToDictionary(y => y.Key, z => z.Value); }
 
         public ShipModulesInStore StoredModules { get; private set; }       // stored modules
 
@@ -35,8 +36,6 @@ namespace EliteDangerousCore
         [QuickJSON.JsonIgnore()]
         public Ship CurrentShip { get { return HaveCurrentShip ? ships[currentid] : null; } }
 
-        // IDs have been repeated, need more than just that
-        private string Key(VehicleFDName fdname, ShipID i) { return fdname.ToLower() + ":" + i.ToString(); }
 
         public Ship GetShipByShortName(string sn)
         {
@@ -72,8 +71,6 @@ namespace EliteDangerousCore
             return (index >= 0) ? lst[index] : null;
         }
 
-        private ulong newsoldid = ulong.MaxValue / 2;
-
         public ShipList()
         {
             ships = new Dictionary<string, Ship>();
@@ -82,14 +79,14 @@ namespace EliteDangerousCore
             currentid = null;
         }
 
-        public void Loadout(ShipID id, string ship, VehicleFDName shipfd, string name, string ident, List<ShipModule> modulelist,
+        public void Loadout(JournalLoadout ld, ShipID id, string ship, VehicleFDName shipfd, string name, string ident, List<ShipModule> modulelist,
                         long HullValue, long ModulesValue, long Rebuy, double unladenmass, double reservefuelcap, double hullhealth, bool? Hot)
         {
             string sid = Key(shipfd, id);
 
             //DebuggerHelpers.DP("SL","Loadout {0} {1} {2} {3}", id, ship, name, ident);
 
-            Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
+            Ship sm = GetShip(sid,ld);            // this either gets current ship or makes a new one.
             ships[sid] = sm = sm.SetShipDetails(ship, shipfd, name, ident, 0, 0, HullValue, ModulesValue, Rebuy, unladenmass, reservefuelcap, hullhealth, Hot);     // update ship key, make a fresh one if required.
 
             //DebuggerHelpers.DP("SL","Loadout " + sid);
@@ -168,10 +165,10 @@ namespace EliteDangerousCore
         }
 
 
-        public void LoadGame(ShipID id, string ship, VehicleFDName shipfd, string name, string ident, double fuellevel, double fueltotal)        // LoadGame..
+        public void LoadGame(JournalEntry lg, ShipID id, string ship, VehicleFDName shipfd, string name, string ident, double fuellevel, double fueltotal)        // LoadGame..
         {
             string sid = Key(shipfd, id);
-            Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
+            Ship sm = GetShip(sid,lg);            // this either gets current ship or makes a new one.
             ships[sid] = sm = sm.SetShipDetails(ship, shipfd, name, ident, fuellevel, fueltotal);   // this makes a shallow copy if any data has changed..
 
             //DebuggerHelpers.DP("SL","Load Game " + sid);
@@ -235,10 +232,10 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void RestockVehicle(ShipID id, VehicleFDName shipfd, string ship, string Loadout)
+        public void RestockVehicle(JournalEntry evt, ShipID id, VehicleFDName shipfd, string ship, string Loadout)
         {
             string sid = Key(shipfd, id);
-            Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
+            Ship sm = GetShip(sid,evt);            // this either gets current ship or makes a new one.
             ships[sid] = sm.SetShipDetails(ship, shipfd);   // this makes a shallow copy if any data has changed..
             VerifyList();
         }
@@ -256,18 +253,6 @@ namespace EliteDangerousCore
             //DebuggerHelpers.DP("SL","Fighter Destroyed");
             if (HaveCurrentShip)
                 ships[currentid] = ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
-            VerifyList();
-        }
-
-        public void Resurrect(bool abandonedship)
-        {
-            if (HaveCurrentShip)           // resurrect always in ship
-            {
-                if (abandonedship)
-                    ships[currentid] = ships[currentid].Destroyed();
-                else
-                    ships[currentid] = ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
-            }
             VerifyList();
         }
 
@@ -308,7 +293,7 @@ namespace EliteDangerousCore
 
             //DebuggerHelpers.DP("SL",sid + " Swap to at " + system);
 
-            Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
+            Ship sm = GetShip(sid, e);            // this either gets current ship or makes a new one.
             sm = sm.SetShipDetails(e.ShipType, e.ShipFD);   // shallow copy if changed
             sm = sm.SwapTo();                               // swap into
             ships[sid] = sm;
@@ -316,36 +301,57 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void ShipyardNew(string ship, VehicleFDName shipfd, ShipID id)
+        public void ShipyardNew(JournalEntry jevent, string ship, VehicleFDName shipfd, ShipID id)
         {
             string sid = Key(shipfd, id);
-            //DebuggerHelpers.DP("SL",sid + " New");
-
-            Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
+            Ship sm = GetShip(sid, jevent);            // this either gets current ship or makes a new one.
             ships[sid] = sm.SetShipDetails(ship, shipfd); // shallow copy if changed
-            currentid = sid;
+            currentid = sid;        // implies we are in it
             VerifyList();
         }
 
-        public void Sell(VehicleFDName shipfd, ShipID id)
+        // prebought one, does not mean we swapped into it
+        public void ShipRedeemed(JournalShipRedeemed jevent)
+        {
+            string sid = Key(jevent.ShipFD, jevent.ShipId);
+            Ship sm = GetShip(sid, jevent);            // this either gets current ship or makes a new one.
+            ships[sid] = sm.SetShipDetails(jevent.ShipType, jevent.ShipFD); 
+            VerifyList();
+        }
+
+        public void Sell(JournalEntry jevent, VehicleFDName shipfd, ShipID id)
         {
             string sid = Key(shipfd, id);
             if (ships.ContainsKey(sid))       // if we don't have it, don't worry
             {
-                //DebuggerHelpers.DP("SL",sid + " Sold ");
-                ships[sid] = ships[sid].SellShip();
+                Debugger.DP("SL", $"ShipList {jevent.EventTimeUTC} Sold ship `{sid}` due to {jevent.EventTypeStr} {jevent.GetInfo()}");
+                ships[sid] = ships[sid].SellShip(jevent);
             }
             else
             {
-                Debugger.DP("SL",sid + " can't find to Sell");
+                Debugger.DP("SL", sid + " can't find to Sell");
             }
             VerifyList();
         }
 
-        public void Transfer(string ship, VehicleFDName shipFD, ShipID id, string fromsystem, string tosystem, string tostation, DateTime arrivaltime)
+        public void Resurrect(JournalEntry jevent, bool abandonedship)
+        {
+            if (HaveCurrentShip)           // resurrect always in ship
+            {
+                if (abandonedship)
+                {
+                    Debugger.DP("SL", $"ShipList {jevent.EventTimeUTC} Resurrect `{currentid}` due to {jevent.EventTypeStr} {jevent.GetInfo()}");
+                    ships[currentid] = ships[currentid].Destroyed(jevent);
+                }
+                else
+                    ships[currentid] = ships[currentid].SetSubVehicle(Ship.SubVehicleType.None);
+            }
+            VerifyList();
+        }
+        public void Transfer(JournalEntry evt, string ship, VehicleFDName shipFD, ShipID id, string fromsystem, string tosystem, string tostation, DateTime arrivaltime)
         {
             string sid = Key(shipFD, id);
-            Ship sm = EnsureShip(sid);              // this either gets current ship or makes a new one.
+            Ship sm = GetShip(sid,evt);              // this either gets current ship or makes a new one.
             sm = sm.SetShipDetails(ship, shipFD);               // set up minimum stuff we know about it
             sm = sm.Transfer(tosystem, tostation, arrivaltime);    // transfer set up
             ships[sid] = sm;
@@ -368,14 +374,14 @@ namespace EliteDangerousCore
             VerifyList();
         }
 
-        public void StoredShips(StoredShip[] ships)
+        public void StoredShips(JournalEntry evt, StoredShip[] ships)
         {
             foreach (var i in ships)
             {
                 string sid = Key(i.ShipTypeFD, i.ShipID);
                 //DebuggerHelpers.DP("SL",sid + " Stored info " + i.StarSystem + ":" + i.StationName + " transit" + i.InTransit);
 
-                Ship sm = EnsureShip(sid);              // this either gets current ship or makes a new one.
+                Ship sm = GetShip(sid,evt);              // this either gets current ship or makes a new one.
                 sm = sm.SetShipDetails(i.ShipType, i.ShipTypeFD, i.Name, hot: i.Hot);  // set up minimum stuff we know about it
 
                 if (!i.InTransit)                                 // if in transit, we don't know where it is, ignore
@@ -390,7 +396,7 @@ namespace EliteDangerousCore
         {
             string sid = Key(e.ShipFD, e.ShipId);
 
-            Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
+            Ship sm = GetShip(sid,e);            // this either gets current ship or makes a new one.
             ships[sid] = sm.SetShipDetails(e.Ship, e.ShipFD, e.ShipName, e.ShipIdent); // will clone if data changed..
             VerifyList();
         }
@@ -399,7 +405,7 @@ namespace EliteDangerousCore
         {
             string sid = Key(e.ShipFD, e.ShipId);
 
-            Ship sm = EnsureShip(sid);              // this either gets current ship or makes a new one.
+            Ship sm = GetShip(sid,e);              // this either gets current ship or makes a new one.
 
             ships[sid] = sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed, store back into array (bug may 24!)
 
@@ -427,7 +433,7 @@ namespace EliteDangerousCore
         {
             string sid = Key(e.ShipFD, e.ShipId);
 
-            Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
+            Ship sm = GetShip(sid,e);            // this either gets current ship or makes a new one.
 
             sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed
             ships[sid] = sm.RemoveModule(e.SlotFD, e.SellItemFD);
@@ -442,7 +448,7 @@ namespace EliteDangerousCore
         {
             string sid = Key(e.ShipFD, e.ShipId);
 
-            Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
+            Ship sm = GetShip(sid,e);            // this either gets current ship or makes a new one.
             sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed
             ships[sid] = sm.SwapModule(e.FromSlot, e.FromSlotFD, e.FromItem, e.FromItemFD, e.FromItemLocalised,
                                             e.ToSlot, e.ToSlotFD, e.ToItem, e.ToItemFD, e.ToItemLocalised);
@@ -453,7 +459,7 @@ namespace EliteDangerousCore
         {
             string sid = Key(e.ShipFD, e.ShipId);
 
-            Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
+            Ship sm = GetShip(sid,e);            // this either gets current ship or makes a new one.
 
             sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed
 
@@ -470,7 +476,7 @@ namespace EliteDangerousCore
         {
             string sid = Key(e.ShipFD, e.ShipId);
 
-            Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
+            Ship sm = GetShip(sid,e);            // this either gets current ship or makes a new one.
 
             sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed
             if (e.SwapOutItemFD != null)
@@ -491,7 +497,7 @@ namespace EliteDangerousCore
         {
             string sid = Key(e.ShipFD, e.ShipId);
 
-            Ship sm = EnsureShip(sid);            // this either gets current ship or makes a new one.
+            Ship sm = GetShip(sid,e);            // this either gets current ship or makes a new one.
             sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // will clone if data changed..
             ships[sid] = sm.RemoveModules(e.ModuleItems);
             StoredModules = StoredModules.StoreModule(e.ModuleItems, itemlocalisation, sys);
@@ -587,26 +593,44 @@ namespace EliteDangerousCore
 
         #region Helpers
 
-        private Ship EnsureShip(string id)      // ensure we have an ID of this type..
+        // ensure we have an ID of this type..
+        private Ship GetShip(string id,JournalEntry jevent)      
         {
-            if (ships.ContainsKey(id))
+            if (ships.TryGetValue(id, out Ship ship))           // is it there
             {
-                Ship sm = ships[id];
-
-                if (sm.State == Ship.ShipState.Owned)               // if owned, ok
-                    return sm;
-                else
+                if (ship.State == Ship.ShipState.Sold || ship.State == Ship.ShipState.Destroyed)
                 {
-                    ships[Key(sm.ShipFD, new ShipID(newsoldid++))] = sm;              // okay, we place this information on back ID list+  all Ids of this will now refer to new entry
+                    int reused = 1;
+                    while (ships.ContainsKey(id + KeyReuseMarker + reused.ToStringInvariant()))
+                        reused++;
+
+                    string soldid = id + KeyReuseMarker + reused.ToStringInvariant();
+
+                    Debugger.DP("SL", $"ShipList {jevent.EventTimeUTC} ship `{id}` is marked sold/destroyed, move to {soldid} and make a new one due to {jevent.EventTimeUTC} {jevent.EventTypeStr} {jevent.GetInfo()}");
+                    ships[soldid] = ship;
+                    ships.Remove(id);
                 }
+                else
+                    return ship;
             }
 
             ulong i = id.Substring(id.IndexOf(":") + 1).InvariantParseULong(0);
-            //DebuggerHelpers.DP("SL",$"ShipList made new ship {id}.. {i}");
-            Ship smn = new Ship(new ShipID(i));
+            Debugger.DP("SL", $"ShipList {jevent.EventTimeUTC} New ship `{id}` due to {jevent.EventTypeStr} {jevent.GetInfo()}");
+            Ship smn = new Ship(new ShipID(i), jevent);
             ships[id] = smn;
             return smn;
         }
+
+        // IDs have been repeated, need more than just that
+        private string Key(VehicleFDName fdname, ShipID i) { return fdname.ToLower() + ":" + i.ToString(); }
+
+        public static string ReuseMarkerIndex(string key, string prefix)
+        {
+            return key.Contains(ShipList.KeyReuseMarker) ? prefix + key.Substring(key.IndexOf(ShipList.KeyReuseMarker) + ShipList.KeyReuseMarker.Length) : "";
+        }
+
+        public const string KeyReuseMarker = "SD-";    // indicates the ID has been reused, number follows showing the reuse number
+
 
         void VerifyList()       // included so when debugging we can turn this on and verify the list after every action. Journals are so random they sometimes throw up problems.
         {
@@ -626,7 +650,7 @@ namespace EliteDangerousCore
             {
                 if (multicrew)
                 {
-                    //DebuggerHelpers.DP("SL",$"ShipList Ignore {je.EventTimeUTC} {je.EventTypeStr} due to multicrew");
+                    //DebuggerHelpers.DP("SL",$"ShipList Ignore {je} {je.EventTypeStr} due to multicrew");
                 }
                 else
                 {

@@ -147,7 +147,8 @@ namespace EliteDangerousCore
 
         public ShipModule(string s, ShipSlots.Slot sfd, string i, ModFDName ifd, string l)
         {
-            Slot = s; SlotFD = sfd; Item = i; ItemFD = ifd; LocalisedItem = l;
+            Slot = s; SlotFD = sfd; Item = i; ItemFD = ifd; LocalisedItem = l; 
+            Enabled = true;      // presume on, sept 26 missing
         }
 
         public void SetEngineering( EngineeringData eng )

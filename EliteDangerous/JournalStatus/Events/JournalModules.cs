@@ -127,13 +127,13 @@ namespace EliteDangerousCore.JournalEvents
                 }
             }
 
-            shp.Loadout(ShipId, ShipType, ShipFD, ShipName, ShipIdent, ShipModules, HullValue ?? 0, ModulesValue ?? 0, Rebuy ?? 0,
+            shp.Loadout(this, ShipId, ShipType, ShipFD, ShipName, ShipIdent, ShipModules, HullValue ?? 0, ModulesValue ?? 0, Rebuy ?? 0,
                                 UnladenMass ?? 0, ReserveFuelCapacity ?? 0, HullHealth ?? 0, Hot);
         }
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Ship".Tx()+": ", ShipType, "Name".Tx()+": ", ShipName, "Ident".Tx()+": ", ShipIdent, ";(Hot)".Tx(), Hot,
+            return BaseUtils.FieldBuilder.Build("Ship".Tx()+": ", ShipType, "< (;)", ShipId, "Name".Tx()+": ", ShipName, "Ident".Tx()+": ", ShipIdent, ";(Hot)".Tx(), Hot,
                 "Modules".Tx()+": ", ShipModules.Count, "Hull Health: ;%;N1".Tx(), HullHealth, "Hull: ; cr;N0".Tx(), HullValue, "Modules: ; cr;N0".Tx(), ModulesValue, "Rebuy: ; cr;N0".Tx(), Rebuy);
         }
 
