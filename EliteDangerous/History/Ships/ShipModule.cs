@@ -117,7 +117,8 @@ namespace EliteDangerousCore
                         double? power,                  // only from Modules info
                         EngineeringData engineering)
         {
-            Slot = slotname; SlotFD = slotfdname; Item = itemname; ItemFD = itemfdname; Enabled = enabled; Priority = priority; 
+            Slot = slotname; SlotFD = slotfdname; Item = itemname; ItemFD = itemfdname; 
+            Enabled = enabled; Priority = priority; 
             AmmoClip = ammoclip; AmmoHopper = ammohopper;
             if (health.HasValue)
                 Health = (int)(health * 100.0);
@@ -129,6 +130,10 @@ namespace EliteDangerousCore
         public void SetPriority(int priority)
         {
             Priority = priority;
+        }
+        public void CyclePriority()
+        {
+            Priority = Priority.HasValue ? (Priority.Value+1) % 5 : 0;
         }
         public void SetEnabled(bool enabled)
         {

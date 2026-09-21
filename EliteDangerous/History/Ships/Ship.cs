@@ -384,9 +384,16 @@ namespace EliteDangerousCore
             public double WeaponMaxSus { get; set; }
 
             public double? PowerPlant { get; set; }      // mw null if no power plant
-            public double PowerDrawCore { get; set; }   // mw
-            public double PowerDrawWeapons { get; set; } // mw
-            public double PowerDrawTotal { get; set; }  // mw
+
+            // level 0-4
+            public double[] PowerDrawCorePrio { get; set; } = new double[5];  // mw
+            public double[] PowerDrawWeaponsPrio { get; set; } = new double[5];// mw
+            public double PowerDrawTotalPrio(int level ) => PowerDrawCorePrio[level] + PowerDrawWeaponsPrio[level];
+            public double PowerDrawCore => PowerDrawCorePrio.Sum();
+            public double PowerDrawWeapons => PowerDrawWeaponsPrio.Sum();
+            public double PowerDrawTotal => PowerDrawCorePrio.Sum() + PowerDrawWeaponsPrio.Sum();
+
+
         }
 
         // derived (nicked) from EDSY thank you
@@ -496,7 +503,7 @@ namespace EliteDangerousCore
 
                         if (me.IsHardpoint)
                         {
-                            res.PowerDrawWeapons += powerdraw;
+                            res.PowerDrawWeaponsPrio[modkvp.Value.Priority ?? 0] += powerdraw;
                             System.Diagnostics.Debug.WriteLine($"   Weapon {powerdraw} total {res.PowerDrawWeapons}");
 
                             var thmload = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermalLoad), 1);      // should always be there
@@ -548,7 +555,7 @@ namespace EliteDangerousCore
                         }
                         else
                         {
-                            res.PowerDrawCore += powerdraw;
+                            res.PowerDrawCorePrio[modkvp.Value.Priority ?? 0] += powerdraw;
                         }
 
                         //System.Diagnostics.Debug.WriteLine($"Power Draw {me.EnglishModName} {modkvp.Value.Enabled} {powerdraw} : core {res.PowerDrawCore} dep {res.PowerDrawWeapons} both {res.PowerDrawCore+res.PowerDrawWeapons}");
@@ -556,9 +563,6 @@ namespace EliteDangerousCore
                         //System.Diagnostics.Debug.WriteLine($"{me.EnglishModName}: nodistdraw {dps_nodistdraw} {dps_distdraw} {ammotime_wepcap} {ammotime_nocap}");
                     }
                 }
-
-                res.PowerDrawTotal = res.PowerDrawCore + res.PowerDrawWeapons;
-
 
                 var armourmoduleengineered = GetShipModulePropertiesEngineered(ShipSlots.Slot.Armour);
                 if (armourmoduleengineered != null)

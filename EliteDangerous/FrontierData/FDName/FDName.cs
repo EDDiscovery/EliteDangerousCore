@@ -17,7 +17,7 @@ using System;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("FD {fdname}")]
+    [System.Diagnostics.DebuggerDisplay("FD {ID}")]
     public abstract class FDName : IEquatable<FDName>, IComparable<FDName>, IEquatable
     {
         public FDName()

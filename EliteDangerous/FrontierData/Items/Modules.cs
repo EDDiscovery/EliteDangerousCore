@@ -504,6 +504,8 @@ namespace EliteDangerousCore
             public bool IsMiningEquipment { get { return ModType == ModuleTypes.AbrasionBlaster || ModType == ModuleTypes.MiningLance || ModType == ModuleTypes.Sub_SurfaceDisplacementMissile || ModType == ModuleTypes.SeismicChargeLauncher ||
                                             ModType == ModuleTypes.MiningLaser || ModType == ModuleTypes.MiningLance; } }
 
+            public bool HasEnable { get { return PowerDraw.HasValue; } }
+
             // string should be in spansh/EDCD csv compatible format, in english, as it it fed into Spansh
             public static string EnglishModTypeString(ModuleTypes t) { return t.ToString().Replace("AX", "AX ").Replace("_", "-").SplitCapsWordFull(); }
             public string EnglishModTypeString() { return EnglishModTypeString(ModType); }

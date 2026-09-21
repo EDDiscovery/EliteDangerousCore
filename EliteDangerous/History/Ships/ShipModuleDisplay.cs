@@ -145,12 +145,13 @@ namespace EliteDangerousCore
                 Rectangle border = new Rectangle(new Point(0, 0), new Size(BoxSize.Width - 1, BoxSize.Height - 1));
 
                 int leftx = Font.Height * 3 / 2;
-                int rightsplit = BoxSize.Width - iconsize - 2;
+                int rightsplittop = BoxSize.Width - iconsize * (DisplayPriority ? 2:1) - 2;
+                int rightsplitbot = BoxSize.Width - iconsize * 1 - 2;
 
                 Rectangle slottypearea = new Rectangle(new Point(0, 0), new Size(leftx-2, BoxSize.Height));
-                Rectangle toptextarea = new Rectangle(new Point(leftx, 0), new Size(rightsplit - leftx, topbot));
-                Rectangle bottextarea = new Rectangle(new Point(leftx, BoxSize.Height - topbot), new Size(rightsplit - leftx, topbot));
-                Rectangle midtextarea = new Rectangle(new Point(leftx, toptextarea.Bottom), new Size(rightsplit - leftx, bottextarea.Top- toptextarea.Bottom));
+                Rectangle toptextarea = new Rectangle(new Point(leftx, 0), new Size(rightsplittop - leftx, topbot));
+                Rectangle bottextarea = new Rectangle(new Point(leftx, BoxSize.Height - topbot), new Size(rightsplitbot - leftx, topbot));
+                Rectangle midtextarea = new Rectangle(new Point(leftx, toptextarea.Bottom), new Size(rightsplitbot - leftx, bottextarea.Top- toptextarea.Bottom));
 
                 ShipModule module = shipinstance?.GetModuleInSlot(slsz.Slot);      // may be null
                 ItemData.ShipModule engmod = module?.GetModuleEngineered(out string report); // may be null
@@ -237,10 +238,10 @@ namespace EliteDangerousCore
                                     txt += $"{engmod.Clip}/{engmod.Ammo} ";
                                 if (DisplayMW && engmod?.PowerDraw > 0)
                                     txt += $"{engmod.PowerDraw:0.0}MW ";
+                                if (engmod?.PowerGen > 0)
+                                    txt += $"{engmod.PowerGen:0.0}MW ";
                                 if (DisplayHealth && module.Health.HasValue)
                                     txt += $"{module.Health}% ";
-                                if (DisplayPriority && module.Priority.HasValue && engmod.PowerDraw.HasValue && slsz.CanHavePriority)
-                                    txt += $"P{module.Priority + 1} ";
 
                                 g.DrawString(txt, Font, textbrushdisabled, toptextarea, fright);
                             }
@@ -286,11 +287,19 @@ namespace EliteDangerousCore
 
                 il.Add(new ExtendedControls.ImageElement.Element(new Rectangle(startpoint, BoxSize), bmp, boxtag, tooltip));
 
-                if (module?.Enabled != null )
+                if (module != null && engmod.HasEnable)
                 {
                     var ei = BaseUtils.Icons.IconSet.GetImage(module.Enabled == true ? "Controls.PowerOn48" : "Controls.PowerOff48");
-                    il.Add(new ExtendedControls.ImageElement.Element(new Rectangle(startpoint.X + rightsplit, startpoint.Y + toptextarea.Height / 2 - iconsize / 2, iconsize, iconsize),
-                                ei, onoffbutton, "Click to power on/off manually", false));
+                    il.Add(new ExtendedControls.ImageElement.Element(new Rectangle(startpoint.X + BoxSize.Width - iconsize - 2, startpoint.Y + toptextarea.Height / 2 - iconsize / 2, iconsize, iconsize),
+                                ei, onoffbutton, "Click to power on/off manually", false)
+                    { Name = "Enable" });
+                    if (DisplayPriority)
+                    {
+                        var lab = new ExtendedControls.ImageElement.Element() { Name = "Priority" };
+                        lab.TextAutoSize(new Point(startpoint.X + BoxSize.Width - iconsize * 2 - 2, startpoint.Y + toptextarea.Height / 2 - iconsize / 2), new Size(iconsize, iconsize), module.Priority.HasValue ? (module.Priority.Value + 1).ToStringInvariant() : "?", Font, TextForeColor, TextBackColor,
+                            tag: onoffbutton, tooltip: "Click to cycle priority");
+                        il.Add(lab);
+                    }
                 }
 
                 startpoint.Y += boxarea.Height + BoxSpacing.Height;
@@ -298,7 +307,7 @@ namespace EliteDangerousCore
 
             return il;
         }
-
+       
         #endregion
     }
 }

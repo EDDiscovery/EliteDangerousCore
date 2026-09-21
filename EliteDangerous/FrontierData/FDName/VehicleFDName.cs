@@ -20,7 +20,7 @@ namespace EliteDangerousCore
 {
     // Vehicles, ship/lander/srv/fighter/suit
 
-    [System.Diagnostics.DebuggerDisplay("FD {Str()}: {VehicleType}")]
+    [System.Diagnostics.DebuggerDisplay("FD {ID}:{Type}")]
     public class VehicleFDName : FDName
     {
         public VehicleFDName() : base()
