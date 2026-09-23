@@ -154,6 +154,7 @@ namespace EliteDangerousCore
         {
             Slot = s; SlotFD = sfd; Item = i; ItemFD = ifd; LocalisedItem = l; 
             Enabled = true;      // presume on, sept 26 missing
+            Priority = 0;       // presuming, seems that way, Sept 26
         }
 
         public void SetEngineering( EngineeringData eng )

@@ -398,6 +398,8 @@ namespace EliteDangerousCore.Bindings
         }
 
         // used to report on entry and key set associated with a found device/keyname
+
+        [System.Diagnostics.DebuggerDisplay("{Entry.Name} {Keys.KeyDescription()} P:{Primary}")]
         public class DeviceKeySet
         {
             public BindingEntry Entry { get; set; }
