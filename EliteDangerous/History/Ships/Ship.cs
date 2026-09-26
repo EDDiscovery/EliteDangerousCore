@@ -955,12 +955,12 @@ namespace EliteDangerousCore
             return this;
         }
 
-        public Ship AddModule(string slot, ShipSlots.Slot slotfd, string itemname, ModFDName itemfd, string itemlocalised)
+        public Ship AddModule(ShipSlots.Slot slotfd, string itemname, ModFDName itemfd, string itemlocalised)
         {
             if (!Modules.ContainsKey(slotfd) || Modules[slotfd].Item.Equals(itemname) == false)       // if does not have it, or item is not the same..
             {
                 Ship sm = this.ShallowClone();
-                sm.Modules[slotfd] = new ShipModule(slot, slotfd, itemname, itemfd, itemlocalised);
+                sm.Modules[slotfd] = new ShipModule(slotfd, itemname, itemfd, itemlocalised);
                 //System.Diagnostics.Debug.WriteLine("Slot add " + slot);
 
                 if (ItemData.IsFuelTank(itemfd))
@@ -1008,20 +1008,20 @@ namespace EliteDangerousCore
             return sm ?? this;
         }
 
-        public Ship SwapModule(string fromslot, ShipSlots.Slot fromslotfd, string fromitem, ModFDName fromitemfd, string fromiteml,
-                                          string toslot, ShipSlots.Slot toslotfd, string toitem, ModFDName toitemfd, string toiteml)
+        public Ship SwapModule(ShipSlots.Slot fromslotfd, string fromitem, ModFDName fromitemfd, string fromiteml,
+                                          ShipSlots.Slot toslotfd, string toitem, ModFDName toitemfd, string toiteml)
         {
             Ship sm = this.ShallowClone();
             if (Modules.ContainsKey(fromslotfd))
             {
                 if (Modules.ContainsKey(toslotfd))
                 {
-                    sm.Modules[fromslotfd] = new ShipModule(fromslot, fromslotfd, toitem, toitemfd, toiteml);
+                    sm.Modules[fromslotfd] = new ShipModule(fromslotfd, toitem, toitemfd, toiteml);
                 }
                 else
                     sm.Modules.Remove(fromslotfd);
 
-                sm.Modules[toslotfd] = new ShipModule(toslot, toslotfd, fromitem, fromitemfd, fromiteml);
+                sm.Modules[toslotfd] = new ShipModule(toslotfd, fromitem, fromitemfd, fromiteml);
 
                 if (!fromitemfd.Equals(toitemfd) && (ItemData.IsFuelTank(fromitemfd) || ItemData.IsFuelTank(toitemfd)))
                 {

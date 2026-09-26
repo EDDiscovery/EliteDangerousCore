@@ -78,8 +78,7 @@ namespace EliteDangerousCore.JournalEvents
 
                     if ( debugout ) System.Diagnostics.Debug.WriteLine($"  Modules {slotfdname} {itemfdname} = {engname} {itemfdname.GetForeignModuleName(null,slotfdname)}");
 
-                    ShipModule module = new ShipModule(ShipSlots.ToEnglish(slotfdname),
-                                                        slotfdname,
+                    ShipModule module = new ShipModule( slotfdname,
                                                         engname,
                                                         itemfdname,
                                                         jo["On"].BoolNull(),
@@ -700,8 +699,7 @@ namespace EliteDangerousCore.JournalEvents
                     ShipSlots.Slot SlotFDname = ShipSlots.ToEnum(jo["Slot"].Str());
                     var itemfdname = ModFDName.Normalise(jo["Item"].Str(), out string engname, this);
 
-                    ShipModule module = new ShipModule( ShipSlots.ToEnglish(SlotFDname),
-                                                        SlotFDname,
+                    ShipModule module = new ShipModule( SlotFDname,
                                                         engname,
                                                         itemfdname,
                                                         null, // unknown

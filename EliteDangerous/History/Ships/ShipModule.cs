@@ -21,9 +21,8 @@ namespace EliteDangerousCore
     {
         #region Information interface
 
-        public string Slot { get; private set; }        // never null       - english name
         public ShipSlots.Slot SlotFD { get; private set; }    // never null    
-        public string Item { get; private set; }        // never null       - nice name, used to track, english
+        public string Item { get; private set; }        // never null       - nice name, english
         public ModFDName ItemFD { get; private set; }      // never null     - FD normalised ID name
         public string LocalisedItem { get; set; }       // Modulex events only supply this. so it may be null if we have not seen one of them pass by with this Item name
 
@@ -98,7 +97,7 @@ namespace EliteDangerousCore
         {
             bool engsame = Engineering != null ? Engineering.Same(other.Engineering) : (other.Engineering == null);     // if null, both null, else use the same func
 
-            return (Slot == other.Slot && Item == other.Item && Enabled == other.Enabled &&
+            return (SlotFD == other.SlotFD && Item == other.Item && Enabled == other.Enabled &&
                      Priority == other.Priority && //AmmoClip == other.AmmoClip && AmmoHopper == other.AmmoHopper &&
                      Health == other.Health && Value == other.Value && engsame);
         }
@@ -110,14 +109,14 @@ namespace EliteDangerousCore
         public ShipModule()
         { }
 
-        public ShipModule(string slotname, ShipSlots.Slot slotfdname, string itemname, ModFDName itemfdname,
+        public ShipModule(ShipSlots.Slot slotfdname, string itemname, ModFDName itemfdname,
                         bool? enabled, int? priority, 
                         int? ammoclip, int? ammohopper, 
                         double? health, long? value,
                         double? power,                  // only from Modules info
                         EngineeringData engineering)
         {
-            Slot = slotname; SlotFD = slotfdname; Item = itemname; ItemFD = itemfdname; 
+            SlotFD = slotfdname; Item = itemname; ItemFD = itemfdname; 
             Enabled = enabled; Priority = priority; 
             AmmoClip = ammoclip; AmmoHopper = ammohopper;
             if (health.HasValue)
@@ -142,7 +141,7 @@ namespace EliteDangerousCore
 
         public ShipModule( ShipModule other)
         {
-            Slot = other.Slot; SlotFD = other.SlotFD; Item = other.Item; ItemFD = other.ItemFD;
+            SlotFD = other.SlotFD; Item = other.Item; ItemFD = other.ItemFD;
             LocalisedItem = other.LocalisedItem;
             Enabled = other.Enabled; Priority = other.Priority; Health = other.Health; Value = other.Value;
             AmmoClip = other.AmmoClip; AmmoHopper = other.AmmoHopper; 
@@ -150,9 +149,9 @@ namespace EliteDangerousCore
             Engineering = other.Engineering;
         }
 
-        public ShipModule(string s, ShipSlots.Slot sfd, string i, ModFDName ifd, string l)
+        public ShipModule(ShipSlots.Slot sfd, string i, ModFDName ifd, string l)
         {
-            Slot = s; SlotFD = sfd; Item = i; ItemFD = ifd; LocalisedItem = l; 
+            SlotFD = sfd; Item = i; ItemFD = ifd; LocalisedItem = l; 
             Enabled = true;      // presume on, sept 26 missing
             Priority = 0;       // presuming, seems that way, Sept 26
         }

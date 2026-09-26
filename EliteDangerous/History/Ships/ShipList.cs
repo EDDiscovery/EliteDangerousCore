@@ -412,7 +412,7 @@ namespace EliteDangerousCore
             if (e.StoredItemFD != null)                             // if we stored something
                 StoredModules = StoredModules.StoreModule(e.StoredItemFD, e.StoredItem, e.StoredItemLocalised, sys);
 
-            ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.BuyItem, e.BuyItemFD, e.BuyItemLocalised);      // replace the slot with this
+            ships[sid] = sm.AddModule( e.SlotFD, e.BuyItem, e.BuyItemFD, e.BuyItemLocalised);      // replace the slot with this
 
             itemlocalisation[e.BuyItemFD] = e.BuyItemLocalised;       // record any localisations
             if (e.SellItemFD != null)
@@ -450,8 +450,8 @@ namespace EliteDangerousCore
 
             Ship sm = GetShip(sid,e);            // this either gets current ship or makes a new one.
             sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed
-            ships[sid] = sm.SwapModule(e.FromSlot, e.FromSlotFD, e.FromItem, e.FromItemFD, e.FromItemLocalised,
-                                            e.ToSlot, e.ToSlotFD, e.ToItem, e.ToItemFD, e.ToItemLocalised);
+            ships[sid] = sm.SwapModule(e.FromSlotFD, e.FromItem, e.FromItemFD, e.FromItemLocalised,
+                                            e.ToSlotFD, e.ToItem, e.ToItemFD, e.ToItemLocalised);
             VerifyList();
         }
 
@@ -464,7 +464,7 @@ namespace EliteDangerousCore
             sm = sm.SetShipDetails(e.Ship, e.ShipFD);   // shallow copy if changed
 
             if (e.ReplacementItemFD != null)
-                ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.ReplacementItem, e.ReplacementItemFD, e.ReplacementItemLocalised);
+                ships[sid] = sm.AddModule(e.SlotFD, e.ReplacementItem, e.ReplacementItemFD, e.ReplacementItemLocalised);
             else
                 ships[sid] = sm.RemoveModule(e.SlotFD, e.StoredItemFD);
 
@@ -482,7 +482,7 @@ namespace EliteDangerousCore
             if (e.SwapOutItemFD != null)
                 StoredModules = StoredModules.StoreModule(e.SwapOutItemFD, e.SwapOutItem, e.SwapOutItemLocalised, sys);
 
-            ships[sid] = sm.AddModule(e.Slot, e.SlotFD, e.RetrievedItem, e.RetrievedItemFD, e.RetrievedItemLocalised);
+            ships[sid] = sm.AddModule(e.SlotFD, e.RetrievedItem, e.RetrievedItemFD, e.RetrievedItemLocalised);
 
             StoredModules = StoredModules.RemoveModuleUsingEnglishName(e.RetrievedItem);
             VerifyList();
