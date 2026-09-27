@@ -61,11 +61,17 @@ namespace EliteDangerousCore.Bindings
             Clear();
         }
 
-        public void Clear()
+        // clear, either keep physical devices or reset them
+        public void Clear(List<Device> physicaldevices = null)
         {
             rootAttributes  = new Dictionary<string, string>();
             elements = new Dictionary<string, BindingEntry>();
-            devices.RemoveAll(x => x.PhysicalDevice == false);          // only keep physical devices
+            
+            if ( physicaldevices != null)
+                devices = physicaldevices;
+            else
+                devices.RemoveAll(x => x.PhysicalDevice == false);          // remove all but physical
+
             FileName = null;
             FileWriteTime = DateTime.MinValue;
         }
