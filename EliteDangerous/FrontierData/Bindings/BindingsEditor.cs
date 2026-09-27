@@ -109,6 +109,20 @@ namespace EliteDangerousCore.Bindings
             updatecheck.Start();
         }
 
+        // Reload, checking for dirt, and possibly giving a new device list
+        public void Reload(List<Device> physicaldevices = null)
+        {
+            if (CheckAskDirty())
+            {
+                string curfile = bf.FileName;
+                var devices = bf.DeviceList;        // current device list
+                bf = new BindingsFile(physicaldevices ?? devices);     // pass either the new list, or the physical devices to the new instance of BF
+                bf.Read(curfile);
+                Display();
+                ClearDirty();
+            }
+        }
+
         private void Display()
         {
             dataGridView.Rows.Clear();

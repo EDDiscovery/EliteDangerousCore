@@ -63,16 +63,7 @@ namespace EliteDangerousCore.Bindings
 
         private void extButtonReload_Click(object sender, EventArgs e)
         {
-            if (CheckAskDirty())
-            {
-                string curfile = bf.FileName;
-                var devices = bf.DeviceList;        // current device list
-                bf = new BindingsFile(devices);     // pass to the new instance of BF
-                bf.Read(curfile);
-                Display();
-                ClearDirty();
-
-            }
+            Reload();
         }
 
         private void ComboBoxFilterFill()
