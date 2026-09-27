@@ -338,9 +338,10 @@
             this.extComboBoxFilter.DisableBackgroundDisabledShadingGradient = false;
             this.extComboBoxFilter.DisabledScaling = 0.5F;
             this.extComboBoxFilter.DisplayMember = "";
+            this.extComboBoxFilter.DropDownMinimumItemWidth = -1;
             this.extComboBoxFilter.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.extComboBoxFilter.GradientDirection = 90F;
-            this.extComboBoxFilter.Location = new System.Drawing.Point(242, 3);
+            this.extComboBoxFilter.Location = new System.Drawing.Point(291, 3);
             this.extComboBoxFilter.MouseOverScalingColor = 1.3F;
             this.extComboBoxFilter.Name = "extComboBoxFilter";
             this.extComboBoxFilter.SelectedIndex = -1;
@@ -354,7 +355,8 @@
             // labelWarning
             // 
             this.labelWarning.AutoSize = true;
-            this.labelWarning.Location = new System.Drawing.Point(765, 0);
+            this.labelWarning.Location = new System.Drawing.Point(242, 8);
+            this.labelWarning.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
             this.labelWarning.Name = "labelWarning";
             this.labelWarning.Size = new System.Drawing.Size(43, 13);
             this.labelWarning.TabIndex = 3;
@@ -372,7 +374,6 @@
             this.extButtonDeviceRemap.Size = new System.Drawing.Size(75, 23);
             this.extButtonDeviceRemap.TabIndex = 2;
             this.extButtonDeviceRemap.Text = "Device <>";
-            this.toolTip.SetToolTip(this.extButtonDeviceRemap, "Remap Device assignments to another");
             this.extButtonDeviceRemap.UseVisualStyleBackColor = true;
             this.extButtonDeviceRemap.Click += new System.EventHandler(this.buttonDeviceRemap_Click);
             // 
@@ -381,14 +382,13 @@
             this.extButtonReload.BackColor2 = System.Drawing.Color.Red;
             this.extButtonReload.ButtonDisabledScaling = 0.5F;
             this.extButtonReload.GradientDirection = 90F;
-            this.extButtonReload.Location = new System.Drawing.Point(441, 3);
+            this.extButtonReload.Location = new System.Drawing.Point(490, 3);
             this.extButtonReload.MouseOverScaling = 1.3F;
             this.extButtonReload.MouseSelectedScaling = 1.3F;
             this.extButtonReload.Name = "extButtonReload";
             this.extButtonReload.Size = new System.Drawing.Size(75, 23);
             this.extButtonReload.TabIndex = 2;
             this.extButtonReload.Text = "Reload";
-            this.toolTip.SetToolTip(this.extButtonReload, "Remove a device and all assignments");
             this.extButtonReload.UseVisualStyleBackColor = true;
             this.extButtonReload.Click += new System.EventHandler(this.extButtonReload_Click);
             // 
@@ -404,8 +404,6 @@
             this.extButtonDeviceNew.Size = new System.Drawing.Size(75, 23);
             this.extButtonDeviceNew.TabIndex = 2;
             this.extButtonDeviceNew.Text = "Device +";
-            this.toolTip.SetToolTip(this.extButtonDeviceNew, "Add a new Device. Best practice is to use the Elite Controls Editor to add one it" +
-        "em from the controller so as to discover what Elite calls it");
             this.extButtonDeviceNew.UseVisualStyleBackColor = true;
             this.extButtonDeviceNew.Click += new System.EventHandler(this.buttonNewDevice_Click);
             // 
@@ -414,14 +412,13 @@
             this.extButtonFolder.BackColor2 = System.Drawing.Color.Red;
             this.extButtonFolder.ButtonDisabledScaling = 0.5F;
             this.extButtonFolder.GradientDirection = 90F;
-            this.extButtonFolder.Location = new System.Drawing.Point(684, 3);
+            this.extButtonFolder.Location = new System.Drawing.Point(733, 3);
             this.extButtonFolder.MouseOverScaling = 1.3F;
             this.extButtonFolder.MouseSelectedScaling = 1.3F;
             this.extButtonFolder.Name = "extButtonFolder";
             this.extButtonFolder.Size = new System.Drawing.Size(75, 23);
             this.extButtonFolder.TabIndex = 2;
             this.extButtonFolder.Text = "Show Folder";
-            this.toolTip.SetToolTip(this.extButtonFolder, "Show bindings folder in explorer");
             this.extButtonFolder.UseVisualStyleBackColor = true;
             this.extButtonFolder.Click += new System.EventHandler(this.extButtonFolder_Click);
             // 
@@ -430,14 +427,13 @@
             this.extButtonSetDefault.BackColor2 = System.Drawing.Color.Red;
             this.extButtonSetDefault.ButtonDisabledScaling = 0.5F;
             this.extButtonSetDefault.GradientDirection = 90F;
-            this.extButtonSetDefault.Location = new System.Drawing.Point(603, 3);
+            this.extButtonSetDefault.Location = new System.Drawing.Point(652, 3);
             this.extButtonSetDefault.MouseOverScaling = 1.3F;
             this.extButtonSetDefault.MouseSelectedScaling = 1.3F;
             this.extButtonSetDefault.Name = "extButtonSetDefault";
             this.extButtonSetDefault.Size = new System.Drawing.Size(75, 23);
             this.extButtonSetDefault.TabIndex = 2;
             this.extButtonSetDefault.Text = "Set Default";
-            this.toolTip.SetToolTip(this.extButtonSetDefault, "Tell Elite to use this bindings file");
             this.extButtonSetDefault.UseVisualStyleBackColor = true;
             this.extButtonSetDefault.Click += new System.EventHandler(this.extButtonSetDefault_Click);
             // 
@@ -446,14 +442,13 @@
             this.extButtonDuplicate.BackColor2 = System.Drawing.Color.Red;
             this.extButtonDuplicate.ButtonDisabledScaling = 0.5F;
             this.extButtonDuplicate.GradientDirection = 90F;
-            this.extButtonDuplicate.Location = new System.Drawing.Point(522, 3);
+            this.extButtonDuplicate.Location = new System.Drawing.Point(571, 3);
             this.extButtonDuplicate.MouseOverScaling = 1.3F;
             this.extButtonDuplicate.MouseSelectedScaling = 1.3F;
             this.extButtonDuplicate.Name = "extButtonDuplicate";
             this.extButtonDuplicate.Size = new System.Drawing.Size(75, 23);
             this.extButtonDuplicate.TabIndex = 2;
             this.extButtonDuplicate.Text = "Duplicate";
-            this.toolTip.SetToolTip(this.extButtonDuplicate, "Make a copy of the file with a new name. Use Save to commit");
             this.extButtonDuplicate.UseVisualStyleBackColor = true;
             this.extButtonDuplicate.Click += new System.EventHandler(this.extButtonDuplicate_Click);
             // 
@@ -462,14 +457,13 @@
             this.extButtonSave.BackColor2 = System.Drawing.Color.Red;
             this.extButtonSave.ButtonDisabledScaling = 0.5F;
             this.extButtonSave.GradientDirection = 90F;
-            this.extButtonSave.Location = new System.Drawing.Point(360, 3);
+            this.extButtonSave.Location = new System.Drawing.Point(409, 3);
             this.extButtonSave.MouseOverScaling = 1.3F;
             this.extButtonSave.MouseSelectedScaling = 1.3F;
             this.extButtonSave.Name = "extButtonSave";
             this.extButtonSave.Size = new System.Drawing.Size(75, 23);
             this.extButtonSave.TabIndex = 2;
             this.extButtonSave.Text = "Save";
-            this.toolTip.SetToolTip(this.extButtonSave, "Save changes to file. Create a backup file per save");
             this.extButtonSave.UseVisualStyleBackColor = true;
             this.extButtonSave.Click += new System.EventHandler(this.extButtonSave_Click);
             // 
@@ -482,6 +476,7 @@
             this.extComboBoxBindFiles.DisableBackgroundDisabledShadingGradient = false;
             this.extComboBoxBindFiles.DisabledScaling = 0.5F;
             this.extComboBoxBindFiles.DisplayMember = "";
+            this.extComboBoxBindFiles.DropDownMinimumItemWidth = -1;
             this.extComboBoxBindFiles.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.extComboBoxBindFiles.GradientDirection = 90F;
             this.extComboBoxBindFiles.Location = new System.Drawing.Point(3, 3);
@@ -536,13 +531,13 @@
             // 
             this.extFlowLayoutPanelTop.ChildrenThemed = true;
             this.extFlowLayoutPanelTop.Controls.Add(this.extComboBoxBindFiles);
+            this.extFlowLayoutPanelTop.Controls.Add(this.labelWarning);
             this.extFlowLayoutPanelTop.Controls.Add(this.extComboBoxFilter);
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonSave);
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonReload);
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDuplicate);
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonSetDefault);
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonFolder);
-            this.extFlowLayoutPanelTop.Controls.Add(this.labelWarning);
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceNew);
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceRemap);
             this.extFlowLayoutPanelTop.Controls.Add(this.extButtonDeviceKeys);

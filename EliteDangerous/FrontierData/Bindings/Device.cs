@@ -21,7 +21,7 @@ namespace EliteDangerousCore.Bindings
     [System.Diagnostics.DebuggerDisplay("{FrontierName} {BetterName} : {AxisList} {Pov} {Buttons} K{Keyboard} M{Mouse}")]
     public class Device : IEquatable<Device>, IEqualityComparer<Device>
     {
-        public Device(string name, string bestname, string[] axis, int pov, int buttons)
+        public Device(string name, string bestname, string[] axis, int pov, int buttons, bool phydev)
         {
             FrontierName = name;
             BetterName = bestname;
@@ -29,16 +29,19 @@ namespace EliteDangerousCore.Bindings
             System.Diagnostics.Debug.Assert(axis != null);  
             Pov = pov;
             Buttons = buttons;
+            PhysicalDevice = phydev;
         }
 
         public Device()
         {
             FrontierName = "{NoDevice}";
             BetterName = "---";
+            PhysicalDevice = true;
         }
 
         public string FrontierName { get; set; }
         public string BetterName { get; set; }
+        public bool PhysicalDevice { get; set; }                    // acutally plugged in
         public string[] Axis { get; set; }                          // not null, may be empty
         public string AxisList => Axis.Length > 0 ? string.Join(",", Axis) : "";      // not null
         public int Pov { get; set; }

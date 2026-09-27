@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2026-2026 EDDiscovery development team
+ * Copyright 2026-2026 Robby
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the License at
@@ -27,9 +27,13 @@ namespace EliteDangerousCore.Bindings
     public partial class BindingsEditor : UserControl
     {
         public bool IsDirty => extButtonSave.Enabled;
-        public Action<string> ChangedBindings { get; set; }           // saved this load
-        public Action<string> ChangedDefault { get; set; }            // changed the start preset file
-        public Action ResetKeyNames { get; set; }                     // request keyname reset
+        public Action<string> ChangedBindings { get; set; }             // saved this load
+        public Action<string> ChangedDefault { get; set; }              // changed the start preset file
+        public Action ResetKeyNames { get; set; }                       // request keyname reset
+        public string KeyNames() => devicekeynames.Get();               // Keynames in XML
+
+        // return the frontier name associated with this physical device
+        public string GetDeviceName(string physicalname, Guid instanceguid, Guid productguid, int productid, int vendorid) => bf.GetDeviceName(physicalname, instanceguid, productguid, productid, vendorid);
 
         // called to pop up a way of the user pressing key/joystick.
         // tuple returned is frontier device, frontier key name, joystick direction positive
@@ -38,7 +42,7 @@ namespace EliteDangerousCore.Bindings
         public BindingsEditor()
         {
             InitializeComponent();
-           // ColValues.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            // ColValues.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
             dataGridView.MakeDoubleBuffered();
 
@@ -52,17 +56,17 @@ namespace EliteDangerousCore.Bindings
         // give known device name mappings
         public void Init(string folder, string preferredbindfile, List<Device> deviceparas, DeviceKeyNames keynames)
         {
-            this.deviceparas = deviceparas;
-            this.devicekeynames = keynames;
             this.bindingfolder = folder;
+            this.devicekeynames = keynames;
 
             List<FileInfo> bindfiles = Directory.EnumerateFiles(folder, "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToList();
 
             foreach (var x in bindfiles)
                 extComboBoxBindFiles.Items.Add(x.Name);
+
             extComboBoxBindFiles.Tag = bindfiles.Select(x => x.FullName).ToList();
 
-            bf = new BindingsFile(deviceparas);
+            bf = new BindingsFile(deviceparas);         // load devices, physical, into bindings file they will be kept during the edit. We need a new BF because we are going to edit it
 
             if (preferredbindfile != null) // if preferred bind file
             {
@@ -73,8 +77,11 @@ namespace EliteDangerousCore.Bindings
                 }
             }
 
+            extComboBoxBindFiles.Tag = bindfiles.Select(x => x.FullName).ToList();
+
             int index = bindfiles.FindIndex(x => x.FullName == preferredbindfile);
-            if (index >= 0)
+
+            if (index >= 0) 
             {
                 extComboBoxBindFiles.SelectedIndex = index;
                 SetEnables(true, false);
@@ -102,12 +109,7 @@ namespace EliteDangerousCore.Bindings
             updatecheck.Start();
         }
 
-        public string KeyNames()
-        {
-            return devicekeynames.Get();
-        }
-
-        public void Display()
+        private void Display()
         {
             dataGridView.Rows.Clear();
             dataViewScrollerPanel.Suspend();
@@ -207,16 +209,38 @@ namespace EliteDangerousCore.Bindings
             ColSecondaryModDevice.DisplayStyleForCurrentCellOnly = ColSecondaryModKey.DisplayStyleForCurrentCellOnly = true;
 
             extButtonDeviceNew.Visible = extButtonDeviceRemap.Visible = bf.IsEditable;
-            labelWarning.Text = bf.IsEditable ? "" : $"Unknown Keyboard Layout {bf.KeyboardCulture} {InputLanguage.CurrentInputLanguage.LayoutName} {InputLanguage.CurrentInputLanguage.Culture.Name}. File is not editable";
-
             dataGridView.ContextMenuStrip = bf.IsEditable ? this.contextMenuStrip : null;
 
+            SetWarning();
             IndicateErrors();
 
             dataViewScrollerPanel.Resume();
         }
 
+
         #region Helpers
+
+        // check and warn.  Note public since we may need to restablish it after themeing
+        public void SetWarning()
+        {
+            labelWarning.ForeColor = Theme.Current.TextBlockHighlightColor;
+            toolTip.SetToolTip(labelWarning, null);
+
+            if (bf != null)
+            {
+                if (!bf.IsEditable)
+                    labelWarning.Text = $"Unknown Keyboard Layout {bf.KeyboardCulture} {InputLanguage.CurrentInputLanguage.LayoutName} {InputLanguage.CurrentInputLanguage.Culture.Name}. File is not editable";
+                else if (bf.NonPhysicalDevicesInUse)
+                {
+                    labelWarning.Text = "Devices Not Plugged In!";
+                    toolTip.SetToolTip(labelWarning, string.Join(Environment.NewLine, bf.DeviceList.Where(x=>x.PhysicalDevice==false).Select(x=>x.FrontierName)));
+                }
+                else
+                    labelWarning.Text = "";
+            }
+            else
+                labelWarning.Text = "";
+        }
 
         void SetUpCells(DataGridViewRow row, BindingEntry entry)
         {
@@ -236,45 +260,51 @@ namespace EliteDangerousCore.Bindings
             }
         }
 
-        void SetUpCells(DataGridViewRow row, bool editable, bool binding, List<Device> devices, int index, BindingsFile.DeviceKeyPair dkp)
+        private void SetUpCells(DataGridViewRow row, bool editable, bool binding, List<Device> devices, int index, BindingsFile.DeviceKeyPair dkp)
         {
-            var dc = row.Cells[index] as DataGridViewComboBoxCell;
-            var dk = row.Cells[index + 1] as DataGridViewComboBoxCell;
+            var cdevice = row.Cells[index] as DataGridViewComboBoxCell;
+            var ckey = row.Cells[index + 1] as DataGridViewComboBoxCell;
 
-            dc.Value = null;
-            dk.Value = null;
+            cdevice.Value = null;
+            ckey.Value = null;
 
-            dc.Items.Clear();
+            cdevice.Items.Clear();
             foreach (var device in devices)
-                dc.Items.Add(device.BetterName);           // always add the device list in
+                cdevice.Items.Add(device.BetterName);           // always add the device list in
 
             if (dkp != null)
             {
-                dc.Tag = dkp;
-                SetDevice(dc, dkp.Device);
+                cdevice.Tag = dkp;
+                SetDevice(cdevice, dkp.Device);
+                SetDeviceColour(cdevice, dkp.Device);
 
                 if (!dkp.IsDevice)              // if no device, cell is clear
                 {
-                    dk.Value = null;
-                    dk.ReadOnly = true;
+                    ckey.Value = null;
+                    ckey.ReadOnly = true;
                 }
                 else
                 {
-                    SetKey(dk, binding, dkp.Device, dkp.FrontierKeyName);
+                    SetKey(ckey, binding, dkp.Device, dkp.FrontierKeyName);
                 }
 
             }
             else
             {
-                dk.ReadOnly = true;
+                ckey.ReadOnly = true;
             }
 
             SetHint(row, index, dkp?.Device, dkp?.FrontierKeyName);
 
             if (!editable)
             {
-                dc.ReadOnly = dk.ReadOnly = true;
+                cdevice.ReadOnly = ckey.ReadOnly = true;
             }
+        }
+
+        private void SetDeviceColour(DataGridViewCell dc, Device device)
+        {
+            dc.Style.ForeColor = device.PhysicalDevice ? Color.Empty : Theme.Current.TextBlockHighlightColor;
         }
 
         // set up a device cell, with a better name than frontierdevice
@@ -331,6 +361,7 @@ namespace EliteDangerousCore.Bindings
         private void SetPair(DataGridViewRow row, bool binding, int index, Device device, string frontierkeyname)
         {
             SetDevice(row.Cells[index], device);
+            SetDeviceColour(row.Cells[index], device);
             SetKey(row.Cells[index + 1] as DataGridViewComboBoxCell, binding, device, frontierkeyname);
             SetHint(row, index, device, frontierkeyname);
         }
@@ -345,8 +376,6 @@ namespace EliteDangerousCore.Bindings
             foreach (var x in ret)
                 c.Items.Add(devicekeynames.GetRename(device.FrontierName, x));
         }
-
-
         private bool CheckAskDirty()
         {
             bool ok = !IsDirty || ExtendedControls.MessageBoxTheme.Show(this, $"{bf.PresetName} has been modified, abandon changes?", "Changed Binding", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK;
@@ -457,17 +486,12 @@ namespace EliteDangerousCore.Bindings
             }
         }
 
-        public string BetterBindingName(string name)
+        private string BetterBindingName(string name)
         {
             return showFrontierNamesToolStripMenuItem.Checked ? name : name.SplitCapsWordFull().Replace("Buggy", "SRV").Replace("Turret", "SRV Turret").
                             Replace("Humanoid", "On Foot").ReplaceIfStartsWith("Cam ", "Galaxy Map ").Replace("Toggle Button Up Input", "Silent Running");
         }
 
-        // return the frontier name associated with this physical device
-        public string GetDeviceName(string physicalname, Guid instanceguid, Guid productguid, int productid, int vendorid)
-        {
-            return bf.GetDeviceName(physicalname, instanceguid, productguid, productid, vendorid);
-        }
 
         #endregion
 
@@ -536,7 +560,6 @@ namespace EliteDangerousCore.Bindings
         private int filtercomboboxmodestart = 0;
 
         private DeviceKeyNames devicekeynames;
-        private List<Device> deviceparas;
 
         private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {

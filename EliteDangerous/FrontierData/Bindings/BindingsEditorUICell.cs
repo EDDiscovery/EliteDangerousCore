@@ -14,8 +14,10 @@
 
 using BaseUtils;
 using ExtendedConditionsForms;
+using ExtendedControls;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using static EliteDangerousCore.Bindings.BindingsFile;
 
@@ -60,8 +62,8 @@ namespace EliteDangerousCore.Bindings
 
                 int deviceindex = ((ci- ColPrimaryDevice.Index) & 0xfe)+ColPrimaryDevice.Index;
                 bool onkey = deviceindex != ci;
-                DataGridViewComboBoxCell dc = row.Cells[deviceindex] as DataGridViewComboBoxCell;
-                DataGridViewComboBoxCell dk = row.Cells[deviceindex+1] as DataGridViewComboBoxCell;
+                DataGridViewComboBoxCell cdevice = row.Cells[deviceindex] as DataGridViewComboBoxCell;
+                DataGridViewComboBoxCell ckey = row.Cells[deviceindex+1] as DataGridViewComboBoxCell;
 
                 Device device = bf.GetDeviceByBetterName( !onkey  ? newcellvalue : row.Cells[deviceindex].Value.ToString());
                 string renamedkeyname = onkey ? newcellvalue : row.Cells[deviceindex + 1].Value?.ToString() ?? null;
@@ -74,11 +76,12 @@ namespace EliteDangerousCore.Bindings
 
                 if (ci == ColPrimaryDevice.Index)
                 {
-                    dk.Value = "";
-                    dk.ErrorText = nodevice ? null : "Invalid - enter a value";
-                    dk.ReadOnly = nodevice;
+                    ckey.Value = "";
+                    ckey.ErrorText = nodevice ? null : "Invalid - enter a value";
+                    ckey.ReadOnly = nodevice;
 
-                    AddKeyOptions(entry.IsBinding, device, dk);
+                    SetDeviceColour(cdevice, device);
+                    AddKeyOptions(entry.IsBinding, device, ckey);
 
                     if (nodevice)                  // no device clears everything to the right for primary and sets it read only
                     {
@@ -107,7 +110,7 @@ namespace EliteDangerousCore.Bindings
                 }
                 else if (ci == ColPrimaryKey.Index)
                 {
-                    dk.ErrorText = null;
+                    ckey.ErrorText = null;
                     entry.PrimaryKeys.Keys[0] = new DeviceKeyPair(device, frontierkeyname);
 
                     SetHint(row, deviceindex, device, frontierkeyname);       // set hint only on dev 
@@ -118,17 +121,19 @@ namespace EliteDangerousCore.Bindings
                     if (nodevice)     // if no device, clear the mod
                         entry.PrimaryKeys.ClearMod();
 
-                    dk.Value = "";
-                    dk.ReadOnly = nodevice;
-                    dk.ErrorText = nodevice ? null : "Invalid - enter a value";
-                    AddKeyOptions(entry.IsBinding, device, dk);
+                    ckey.Value = "";
+                    ckey.ReadOnly = nodevice;
+                    ckey.ErrorText = nodevice ? null : "Invalid - enter a value";
+
+                    SetDeviceColour(cdevice, device);
+                    AddKeyOptions(entry.IsBinding, device, ckey);
 
                     SetHint(row, deviceindex, device);       // set hint only on dev 
                     SetDirty();
                 }
                 else if (ci == ColPrimaryModKey.Index)
                 {
-                    dk.ErrorText = null;
+                    ckey.ErrorText = null;
                     entry.PrimaryKeys.SetMod(device, frontierkeyname);      // either add mod or change current mod
 
                     SetHint(row, deviceindex, device, frontierkeyname);       // set hint only on dev 
@@ -136,10 +141,11 @@ namespace EliteDangerousCore.Bindings
                 }
                 else if (ci == ColSecondaryDevice.Index)
                 {
-                    dk.Value = "";
-                    dk.ErrorText = nodevice ? null : "Invalid - enter a value";
-                    dk.ReadOnly = nodevice;
+                    ckey.Value = "";
+                    ckey.ErrorText = nodevice ? null : "Invalid - enter a value";
+                    ckey.ReadOnly = nodevice;
 
+                    SetDeviceColour(cdevice, device);
                     AddKeyOptions(entry.IsBinding, device, (DataGridViewComboBoxCell)row.Cells[ci + 1]);
 
                     if (nodevice)                  // no device clears everything to the right for primary
@@ -163,7 +169,7 @@ namespace EliteDangerousCore.Bindings
                 }
                 else if (ci == ColSecondaryKey.Index)
                 {
-                    dk.ErrorText = null;
+                    ckey.ErrorText = null;
                     entry.SecondaryKeys.Keys[0] = new DeviceKeyPair(device, frontierkeyname);
 
                     SetHint(row, deviceindex, device, frontierkeyname);       // set hint only on dev 
@@ -174,17 +180,19 @@ namespace EliteDangerousCore.Bindings
                     if (nodevice)     // if no device, clear the mod
                         entry.SecondaryKeys.ClearMod();
 
-                    dk.Value = "";
-                    dk.ReadOnly = nodevice;
-                    dk.ErrorText = nodevice ? null : "Invalid - enter a value";
-                    AddKeyOptions(entry.IsBinding, device, dk);
+                    ckey.Value = "";
+                    ckey.ReadOnly = nodevice;
+                    ckey.ErrorText = nodevice ? null : "Invalid - enter a value";
+
+                    SetDeviceColour(cdevice, device);
+                    AddKeyOptions(entry.IsBinding, device, ckey);
 
                     SetHint(row, deviceindex, device);       // set hint only on dev 
                     SetDirty();
                 }
                 else if (ci == ColSecondaryModKey.Index)
                 {
-                    dk.ErrorText = null;
+                    ckey.ErrorText = null;
                     entry.SecondaryKeys.SetMod(device, frontierkeyname);
                     entry.PrimaryKeys.SetMod(device, frontierkeyname);      // either add mod or change current mod
 
@@ -192,8 +200,8 @@ namespace EliteDangerousCore.Bindings
                     SetDirty();
                 }
 
-
                 IndicateErrors();
+                SetWarning();
                 System.Diagnostics.Debug.WriteLine($"Entry {entry.ToString()}");
             }
         }
@@ -362,6 +370,7 @@ namespace EliteDangerousCore.Bindings
                     }
 
                     SetDirty();
+                    SetWarning();
                 }
 
                 System.Diagnostics.Debug.WriteLine($"Entry {entry.ToString()}");

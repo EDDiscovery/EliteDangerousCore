@@ -42,7 +42,8 @@ namespace EliteDangerousCore.Bindings
                     list.Remove(bf.FileName);
                 }
 
-                bf = new BindingsFile(deviceparas);
+                var devices = bf.DeviceList;        // current device list
+                bf = new BindingsFile(devices);     // pass to the new instance of BF
                 bf.Read(fullpathnewfile);
 
                 extComboBoxBindFiles.SelectedIndex = list.IndexOf(fullpathnewfile);
@@ -65,7 +66,8 @@ namespace EliteDangerousCore.Bindings
             if (CheckAskDirty())
             {
                 string curfile = bf.FileName;
-                bf = new BindingsFile(deviceparas);
+                var devices = bf.DeviceList;        // current device list
+                bf = new BindingsFile(devices);     // pass to the new instance of BF
                 bf.Read(curfile);
                 Display();
                 ClearDirty();
@@ -196,7 +198,7 @@ namespace EliteDangerousCore.Bindings
             string s = ExtendedControls.PromptSingleLine.ShowDialog(this, "Device:", "", "Enter new device name", this.FindForm().Icon);
             if (s != null)
             {
-                bf.AddDevice(s);
+                bf.GetOrAddDevice(s);
                 Display();
             }
         }
@@ -248,14 +250,15 @@ namespace EliteDangerousCore.Bindings
 
             foreach (DeviceKeyNames.DeviceNameSet dev in devicekeynames)
             {
-                bool ispresent = bf.GetDevice(dev.Device) != null;
-                if (ispresent)
+                var bdev = bf.GetDevice(dev.Device);
+
+                if (bdev!=null)
                 {
-                    Device madeup = new Device(dev.Device, dev.Name, dev.Axis, dev.POV, dev.Buttons);
+                    Device madeup = new Device(dev.Device, dev.Name, dev.Axis, dev.POV, dev.Buttons, false);        // we use a madeup one because we don't want to affect the device one
                     if (checkboxes)
-                        dropdown.UC.Add(madeup.FrontierName, madeup.BetterName, usertag: madeup);       // tag is internal name, text is rename
+                        dropdown.UC.Add(madeup.FrontierName, madeup.BetterName, usertag: madeup, textcolor: bdev.PhysicalDevice ? default(Color?): Theme.Current.TextBlockHighlightColor);       // tag is internal name, text is rename
                     else
-                        dropdown.UC.AddButton(madeup.FrontierName, madeup.BetterName, usertag: madeup);       // tag is internal name, text is rename
+                        dropdown.UC.AddButton(madeup.FrontierName, madeup.BetterName, usertag: madeup, textcolor: bdev.PhysicalDevice ? default(Color?) : Theme.Current.TextBlockHighlightColor);       // tag is internal name, text is rename
                 }
             }
 
@@ -294,7 +297,7 @@ namespace EliteDangerousCore.Bindings
                         dropdown.UC.AddSeparator();
                     }
 
-                    Device madeup = new Device(dev.Device, dev.Name, dev.Axis, dev.POV, dev.Buttons);
+                    Device madeup = new Device(dev.Device, dev.Name, dev.Axis, dev.POV, dev.Buttons, false);
                     if ( checkboxes )
                         dropdown.UC.Add(madeup.FrontierName, madeup.BetterName, usertag: madeup);       // tag is internal name, text is rename
                     else

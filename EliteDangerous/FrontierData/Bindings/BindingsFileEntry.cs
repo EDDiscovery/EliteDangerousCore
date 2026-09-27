@@ -37,6 +37,7 @@ namespace EliteDangerousCore.Bindings
             public bool IsKeyOrBinding => PrimaryKeys != null;        // is it a key or binding entry?
             public bool IsPrimaryAssigned => PrimaryKeys?.Assigned == true;  // does we have any assignments? Primary must be defined
             public bool IsPrimaryAndSecondaryAssigned => PrimaryKeys != null && PrimaryKeys.Assigned && SecondaryKeys != null && SecondaryKeys.Assigned;
+            public bool IsPrimaryOrSecondaryNonPhysical => PrimaryKeys != null && PrimaryKeys.Assigned && SecondaryKeys != null && SecondaryKeys.Assigned;
 
             public DeviceKeyPairList PrimaryKeys { get; set; }      // May be null
             public DeviceKeyPairList SecondaryKeys { get; set; }    // May be null
@@ -206,6 +207,8 @@ namespace EliteDangerousCore.Bindings
             public bool IsKeyboard => Keys.Count > 0 && Keys[0].Device.IsKeyboard && (Keys.Count == 1 || Keys[1].Device.IsKeyboard);
             public bool IsJoystick() => Assigned == true && Keys[0].Device.IsDevice && !Keys[0].Device.IsKeyboard && !Keys[0].Device.IsMouse;
             public bool IsDevice(Device device) => Keys.Count > 0 && (Keys[0].Device == device || (Keys.Count > 1 && Keys[1].Device == device));
+            public bool IsNonPhysical => (Keys.Count > 0 && Keys[0].Assigned && !Keys[0].Device.PhysicalDevice) ||
+                                         (Keys.Count > 1 && Keys[1].Assigned && !Keys[1].Device.PhysicalDevice);
 
             public DeviceKeyPairList() { Clear(); }
             public DeviceKeyPairList(DeviceKeyPair first) { Keys = new List<DeviceKeyPair> { first }; }

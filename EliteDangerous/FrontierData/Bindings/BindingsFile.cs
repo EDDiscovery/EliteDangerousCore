@@ -23,7 +23,7 @@ using System.Xml.Linq;
 
 namespace EliteDangerousCore.Bindings
 {
-    public partial class BindingsFile 
+    public partial class BindingsFile
     {
         public bool IsLoaded => FileName != null;
         public string FileName { get; private set; }
@@ -33,6 +33,9 @@ namespace EliteDangerousCore.Bindings
         public string KeyboardCulture { get { return elements.TryGetValue("KeyboardLayout", out BindingEntry v) ? v.Value : "Unknown"; } }
         public string KeyboardLayout { get { return FrontierKeyConversion.GetSupportedLayout(KeyboardCulture); } }      // if NULL, we do not know the keyboard layout
         public bool IsEditable => KeyboardLayout != null;       // we can edit it
+        public bool NonPhysicalDevices => DeviceList.Find(x => x.PhysicalDevice == false) != null;
+        public bool NonPhysicalDevicesInUse => elements.Values.ToList().Find(x => x.PrimaryKeys?.IsNonPhysical == true) != null ||
+                                                elements.Values.ToList().Find(x => x.SecondaryKeys?.IsNonPhysical == true) != null;
 
         // element lists
         public IEnumerable<BindingEntry> Entries => elements.Values;
@@ -50,23 +53,19 @@ namespace EliteDangerousCore.Bindings
         public Device GetDeviceByBetterName(string bettername) => devices.Find(x => x.BetterName == bettername);
 
 
-        // creation
-        public BindingsFile()
+        // start give physical devices including NoDevice, or null for just no device
+        // physical devices are kept over a Clear
+        public BindingsFile(List<Device> physicaldevices)
         {
+            this.devices = physicaldevices != null ? physicaldevices : new List<Device> { new Device() };
             Clear();
-        }
-
-        public BindingsFile(List<Device> knowndevices)
-        {
-            Clear();
-            devices = knowndevices;
         }
 
         public void Clear()
         {
             rootAttributes  = new Dictionary<string, string>();
             elements = new Dictionary<string, BindingEntry>();
-            devices = new List<Device>();
+            devices.RemoveAll(x => x.PhysicalDevice == false);          // only keep physical devices
             FileName = null;
             FileWriteTime = DateTime.MinValue;
         }
@@ -461,12 +460,12 @@ namespace EliteDangerousCore.Bindings
             return elements.TryGetValue(name,out var action) ? (withkeys ? (action.IsKeyOrBinding ? action : null) : null) : null;   
         }
 
-        public Device AddDevice(string name)
+        public Device GetOrAddDevice(string frontiername)
         {
-            Device ret = devices.Find(x => x.FrontierName == name);
+            Device ret = devices.Find(x => x.FrontierName == frontiername);
             if (ret == null)
             {
-                ret = new Device(name, name, Device.DefaultAxis, 2, 128);       // unknown devices get max parameters
+                ret = new Device(frontiername, frontiername, Device.DefaultAxis, 2, 128, false);       // unknown devices get max parameters
                 devices.Add(ret);
             }
             return ret;
@@ -518,7 +517,7 @@ namespace EliteDangerousCore.Bindings
 
                 string extname = xdevice.Value;
 
-                Device dev = AddDevice(extname);
+                Device dev = GetOrAddDevice(extname);
 
                 string frontierkeyname = xkey.Value;
 
@@ -530,7 +529,7 @@ namespace EliteDangerousCore.Bindings
                     {
                         extname = y.Attribute("Device").Value;
                         frontierkeyname = y.Attribute("Key").Value;
-                        dev = AddDevice(extname);
+                        dev = GetOrAddDevice(extname);
                         dvp.Add(new DeviceKeyPair(dev, frontierkeyname));
                     }
                 }
