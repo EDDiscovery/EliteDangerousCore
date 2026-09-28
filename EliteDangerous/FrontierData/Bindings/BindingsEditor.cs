@@ -54,7 +54,7 @@ namespace EliteDangerousCore.Bindings
         // folder and preferredbindfile (can be null)
         // give known devices and properties
         // give known device name mappings
-        public void Init(string folder, string preferredbindfile, List<Device> deviceparas, DeviceKeyNames keynames)
+        public void Init(string folder, string preferredbindfile, List<Device> physicaldevices, DeviceKeyNames keynames)
         {
             this.bindingfolder = folder;
             this.devicekeynames = keynames;
@@ -66,7 +66,9 @@ namespace EliteDangerousCore.Bindings
 
             extComboBoxBindFiles.Tag = bindfiles.Select(x => x.FullName).ToList();
 
-            bf = new BindingsFile(deviceparas);         // load devices, physical, into bindings file they will be kept during the edit. We need a new BF because we are going to edit it
+            // load devices, physical, into bindings file they will be kept during the edit. We need a new BF because we are going to edit it
+            
+            bf = new BindingsFile(physicaldevices);         
 
             if (preferredbindfile != null) // if preferred bind file
             {
@@ -486,9 +488,11 @@ namespace EliteDangerousCore.Bindings
             if (bf.IsOutOfDate() && !dataGridView.IsCurrentCellInEditMode)
             {
                 updatecheck.Stop();
-                if (ExtendedControls.MessageBoxTheme.Show(this, $"{bf.PresetName} has been changed externally, do you wish to update?", "Warning - Binding File changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                if (!IsDirty || ExtendedControls.MessageBoxTheme.Show(this, $"{bf.PresetName} has been changed externally, do you wish to update?", "Warning - Binding File changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
                 {
-                    bf.Read(bf.FileName);       // does not change device list btw
+                    string filename = bf.FileName;
+                    bf.Clear(bf.DeviceList);    // clear load back to physical devices
+                    bf.Read(filename);       // read
                     ClearDirty();
                     Display();
                     updatecheck.Start();        // start the clock in case it was stopped

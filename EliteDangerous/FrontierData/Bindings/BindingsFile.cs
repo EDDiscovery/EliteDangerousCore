@@ -53,24 +53,20 @@ namespace EliteDangerousCore.Bindings
         public Device GetDeviceByBetterName(string bettername) => devices.Find(x => x.BetterName == bettername);
 
 
-        // start give physical devices including NoDevice, or null for just no device
-        // physical devices are kept over a Clear
+        // physical devices only are taken from list, if none is given, only NoDevice is added
         public BindingsFile(List<Device> physicaldevices)
         {
-            this.devices = physicaldevices != null ? physicaldevices : new List<Device> { new Device() };
-            Clear();
+            Clear(physicaldevices);
         }
 
-        // clear, either keep physical devices or reset them
+        // clear.
+        // physical devices only are taken from list, if none is given, only NoDevice is added
         public void Clear(List<Device> physicaldevices = null)
         {
             rootAttributes  = new Dictionary<string, string>();
             elements = new Dictionary<string, BindingEntry>();
-            
-            if ( physicaldevices != null)
-                devices = physicaldevices;
-            else
-                devices.RemoveAll(x => x.PhysicalDevice == false);          // remove all but physical
+
+            devices = physicaldevices != null ? physicaldevices.Where(x => x.PhysicalDevice).ToList() : new List<Device> { new Device() };
 
             FileName = null;
             FileWriteTime = DateTime.MinValue;
