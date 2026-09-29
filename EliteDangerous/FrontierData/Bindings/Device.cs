@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 namespace EliteDangerousCore.Bindings
 {
-    [System.Diagnostics.DebuggerDisplay("{FrontierName} {BetterName} : {AxisList} {Pov} {Buttons} K{Keyboard} M{Mouse}")]
+    [System.Diagnostics.DebuggerDisplay("{FrontierName} {BetterName} : {AxisList} {Pov} {Buttons} Phy:{PhysicalDevice}")]
     public class Device : IEquatable<Device>, IEqualityComparer<Device>
     {
         public Device(string name, string bestname, string[] axis, int pov, int buttons, bool phydev)

@@ -80,10 +80,10 @@
             this.dataViewScrollerPanel.Controls.Add(this.vScrollBarCustomMC);
             this.dataViewScrollerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataViewScrollerPanel.InternalMargin = new System.Windows.Forms.Padding(0);
-            this.dataViewScrollerPanel.Location = new System.Drawing.Point(0, 34);
+            this.dataViewScrollerPanel.Location = new System.Drawing.Point(0, 29);
             this.dataViewScrollerPanel.Name = "dataViewScrollerPanel";
             this.dataViewScrollerPanel.ScrollBarWidth = 24;
-            this.dataViewScrollerPanel.Size = new System.Drawing.Size(1526, 717);
+            this.dataViewScrollerPanel.Size = new System.Drawing.Size(1526, 722);
             this.dataViewScrollerPanel.TabIndex = 1;
             this.dataViewScrollerPanel.VerticalScrollBarDockRight = true;
             // 
@@ -117,7 +117,7 @@
             this.dataGridView.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGridView.SingleRowSelect = false;
-            this.dataGridView.Size = new System.Drawing.Size(1502, 717);
+            this.dataGridView.Size = new System.Drawing.Size(1502, 722);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView_CellBeginEdit);
             this.dataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellClick);
@@ -235,7 +235,7 @@
             this.vScrollBarCustomMC.MousePressedButtonColor = System.Drawing.Color.Red;
             this.vScrollBarCustomMC.MousePressedButtonColor2 = System.Drawing.Color.Red;
             this.vScrollBarCustomMC.Name = "vScrollBarCustomMC";
-            this.vScrollBarCustomMC.Size = new System.Drawing.Size(24, 717);
+            this.vScrollBarCustomMC.Size = new System.Drawing.Size(24, 722);
             this.vScrollBarCustomMC.SkinnyStyle = ExtendedControls.ExtScrollBar.ScrollStyle.Normal;
             this.vScrollBarCustomMC.SliderColor = System.Drawing.Color.DarkGray;
             this.vScrollBarCustomMC.SliderColor2 = System.Drawing.Color.DarkGray;
@@ -529,6 +529,7 @@
             // 
             // extFlowLayoutPanelTop
             // 
+            this.extFlowLayoutPanelTop.AutoSize = true;
             this.extFlowLayoutPanelTop.ChildrenThemed = true;
             this.extFlowLayoutPanelTop.Controls.Add(this.extComboBoxBindFiles);
             this.extFlowLayoutPanelTop.Controls.Add(this.labelWarning);
@@ -547,7 +548,7 @@
             this.extFlowLayoutPanelTop.Location = new System.Drawing.Point(0, 0);
             this.extFlowLayoutPanelTop.Name = "extFlowLayoutPanelTop";
             this.extFlowLayoutPanelTop.PaintTransparentColor = System.Drawing.Color.Transparent;
-            this.extFlowLayoutPanelTop.Size = new System.Drawing.Size(1526, 34);
+            this.extFlowLayoutPanelTop.Size = new System.Drawing.Size(1526, 29);
             this.extFlowLayoutPanelTop.TabIndex = 3;
             this.extFlowLayoutPanelTop.ThemeColors = new System.Drawing.Color[] {
         System.Drawing.SystemColors.Control,
@@ -570,6 +571,7 @@
             this.extFlowLayoutPanelTop.ResumeLayout(false);
             this.extFlowLayoutPanelTop.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

@@ -72,6 +72,21 @@ namespace EliteDangerousCore.Bindings
             FileWriteTime = DateTime.MinValue;
         }
 
+        // call if physical devices have changed. Will keep all the non physical devices already mentioned
+        public void ResetPhysicalDevices(List<Device> physicaldevices)
+        {
+            // all devices not in physical list
+            var notphysical = devices.Where(x => physicaldevices.Find(y=>y.FrontierName.EqualsIIC(x.FrontierName)) == null).ToList();
+            devices = physicaldevices;
+            foreach(var dev in notphysical)
+                GetOrAddDevice(dev.FrontierName);       // add as a non physical device
+            foreach(var x in Entries)                   // we point the entries to the previous devices in the devicelist, we need to repoint
+            {
+                x.PrimaryKeys?.Replace(devices);
+                x.SecondaryKeys?.Replace(devices);
+            }
+        }
+
         // get bindings file name from path and odyssey
         public static string FindBindingsFile(string path, bool odyssey)
         {

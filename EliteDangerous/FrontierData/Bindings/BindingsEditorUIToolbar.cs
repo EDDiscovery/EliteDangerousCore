@@ -157,13 +157,12 @@ namespace EliteDangerousCore.Bindings
             {
                 if (ExtendedControls.MessageBoxTheme.Show(this, $"{bf.PresetName} will become the default for all sections\r\nConfirm Selection", "Set Default binding file", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
                 {
-                    string folder = Path.GetDirectoryName(bf.FileName);
-                    var presetfile = BindingsFile.FindStartPreset(folder, true);
+                    var presetfile = BindingsFile.FindStartPreset(bindingfolder, true);
 
                     if (presetfile == null)
                     {
                         ExtendedControls.MessageBoxTheme.Show(this, $"No StartPreset file present, creating new file", "Set Default binding file", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        presetfile = Tuple.Create(Path.Combine(folder, "StartPreset.4.start"), DateTime.UtcNow, 4);
+                        presetfile = Tuple.Create(Path.Combine(bindingfolder, "StartPreset.4.start"), DateTime.UtcNow, 4);
                     }
 
                     if (!BaseUtils.FileHelpers.TryWriteToFile(presetfile.Item1, string.Format("{0}\r\n{0}\r\n{0}\r\n{0}\r\n", bf.PresetName)))
@@ -181,7 +180,7 @@ namespace EliteDangerousCore.Bindings
 
         private void extButtonFolder_Click(object sender, EventArgs e)
         {
-            Processes.Explorer(Path.GetDirectoryName(bf.FileName));
+            Processes.Explorer(bindingfolder);
         }
 
         private void buttonNewDevice_Click(object sender, EventArgs e)

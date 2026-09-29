@@ -518,6 +518,8 @@ namespace EliteDangerousCore
             public int? Class { get; set; }     // handled specifically
             public string Rating { get; set; }
 
+            public string ClassRating => (Class != null ? Class.Value.ToStringInvariant() : "") + (Rating != null ? Rating : "");
+
             // EDSY ordered
 
 

@@ -81,6 +81,12 @@ namespace EliteDangerousCore
             {
             }
 
+            // will return null if unknown module. Can't do engineering don't have enough data
+            public ItemData.ShipModule GetModuleUnengineered()
+            {
+                return ItemData.TryGetShipModule(NameFD, out ItemData.ShipModule sm, false) ? sm : null;
+            }
+
             public bool Equals(StoredModule other)
             {
                 return (StorageSlot == other.StorageSlot && string.Compare(Name, other.Name) == 0 && string.Compare(Name_Localised, other.Name_Localised) == 0 &&

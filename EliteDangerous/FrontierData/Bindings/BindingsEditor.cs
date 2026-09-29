@@ -112,18 +112,50 @@ namespace EliteDangerousCore.Bindings
         }
 
         // Reload, checking for dirt, and possibly giving a new device list
-        public void Reload(List<Device> physicaldevices = null)
+        public void Reload()
         {
-            if (CheckAskDirty())
+            if (bf.IsLoaded && CheckAskDirty())
             {
                 string curfile = bf.FileName;
-                var devices = bf.DeviceList;        // current device list
-                bf = new BindingsFile(physicaldevices ?? devices);     // pass either the new list, or the physical devices to the new instance of BF
+                bf.Clear(bf.DeviceList);                // clear back to physical device list
                 bf.Read(curfile);
                 Display();
                 ClearDirty();
             }
         }
+
+        // Reload, checking for dirt, and possibly giving a new device list
+        public void ResetPhysicalDevices(List<Device> physicaldevices)
+        {
+            bf.ResetPhysicalDevices(physicaldevices);               // will keep user defined or bindings file ones
+            Display();
+        }
+
+        // check and warn.  Note public since we may need to restablish it after themeing
+        public void SetWarning()
+        {
+            labelWarning.ForeColor = Theme.Current.TextBlockHighlightColor;
+            toolTip.SetToolTip(labelWarning, null);
+
+            if (bf != null)
+            {
+                if (!bf.IsLoaded)
+                    labelWarning.Text = $"No Bindings file setup - Use Elite Controls to make one";
+                else if (!bf.IsEditable)
+                    labelWarning.Text = $"Unknown Keyboard Layout {bf.KeyboardCulture} {InputLanguage.CurrentInputLanguage.LayoutName} {InputLanguage.CurrentInputLanguage.Culture.Name}. File is not editable";
+                else if (bf.NonPhysicalDevicesInUse)
+                {
+                    labelWarning.Text = "Devices Not Plugged In!";
+                    toolTip.SetToolTip(labelWarning, string.Join(Environment.NewLine, bf.DeviceList.Where(x => x.PhysicalDevice == false).Select(x => x.FrontierName)));
+                }
+                else
+                    labelWarning.Text = "";
+            }
+            else
+                labelWarning.Text = "";
+        }
+
+        #region Main display
 
         private void Display()
         {
@@ -233,32 +265,11 @@ namespace EliteDangerousCore.Bindings
             dataViewScrollerPanel.Resume();
         }
 
+        #endregion
 
         #region Helpers
 
-        // check and warn.  Note public since we may need to restablish it after themeing
-        public void SetWarning()
-        {
-            labelWarning.ForeColor = Theme.Current.TextBlockHighlightColor;
-            toolTip.SetToolTip(labelWarning, null);
-
-            if (bf != null)
-            {
-                if (!bf.IsEditable)
-                    labelWarning.Text = $"Unknown Keyboard Layout {bf.KeyboardCulture} {InputLanguage.CurrentInputLanguage.LayoutName} {InputLanguage.CurrentInputLanguage.Culture.Name}. File is not editable";
-                else if (bf.NonPhysicalDevicesInUse)
-                {
-                    labelWarning.Text = "Devices Not Plugged In!";
-                    toolTip.SetToolTip(labelWarning, string.Join(Environment.NewLine, bf.DeviceList.Where(x=>x.PhysicalDevice==false).Select(x=>x.FrontierName)));
-                }
-                else
-                    labelWarning.Text = "";
-            }
-            else
-                labelWarning.Text = "";
-        }
-
-        void SetUpCells(DataGridViewRow row, BindingEntry entry)
+        private void SetUpCells(DataGridViewRow row, BindingEntry entry)
         {
             if (entry.IsBinding)
             {
@@ -490,11 +501,8 @@ namespace EliteDangerousCore.Bindings
                 updatecheck.Stop();
                 if (!IsDirty || ExtendedControls.MessageBoxTheme.Show(this, $"{bf.PresetName} has been changed externally, do you wish to update?", "Warning - Binding File changed", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
                 {
-                    string filename = bf.FileName;
-                    bf.Clear(bf.DeviceList);    // clear load back to physical devices
-                    bf.Read(filename);       // read
-                    ClearDirty();
-                    Display();
+                    ClearDirty();               // so it will reload
+                    Reload();
                     updatecheck.Start();        // start the clock in case it was stopped
                 }
                 else

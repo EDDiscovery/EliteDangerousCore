@@ -235,10 +235,19 @@ namespace EliteDangerousCore.Bindings
                     Keys[1] = new DeviceKeyPair(externaldevice, key);
             }
 
+            // change oldname devices to newdev
             public void Remap(Device oldname, Device newdev)
             {
                 foreach (var x in Keys.EmptyIfNull().Where(x => x.Device == oldname))
                     x.Device = newdev;
+            }
+
+            // Device list has updated, replace all of the old device names with new ones
+            // if can't find, keep old (should not happen)
+            public void Replace(List<Device> newentries)
+            {
+                foreach (var x in Keys.EmptyIfNull())
+                    x.Device = newentries.Find(y => y.FrontierName == x.Device.FrontierName) ?? x.Device;        // emergency can't find
             }
 
 
