@@ -136,9 +136,9 @@ namespace EliteDangerousCore.ScreenShots
 
         }
 
-        public void Configure(Form parent)
+        public void Configure(Form parent, Icon ico)
         {
-            ScreenShotConfigureForm frm = new ScreenShotConfigureForm();
+            ScreenShotConfigureForm frm = new ScreenShotConfigureForm() { Icon = ico };
             frm.Init(converter, AutoConvert, InputFolder, InputFileExtension, OutputFolder);
 
             if ( frm.ShowDialog(parent) == DialogResult.OK)
