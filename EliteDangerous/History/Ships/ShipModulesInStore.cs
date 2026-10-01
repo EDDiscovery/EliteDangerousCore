@@ -22,14 +22,15 @@ namespace EliteDangerousCore
 {
     public class ShipModulesInStore
     {
+        [System.Diagnostics.DebuggerDisplay("{StorageSlot} {NameFD} {StarSystem} {MarketID}")]
         public class StoredModule: IEquatable<StoredModule> // storage used by journal event..
         {
             public int StorageSlot{ get; set; }
             public ModFDName NameFD{ get; set; }
             public string Name { get; set; }         // English name, keyed on this
             public string Name_Localised{ get; set; }
-            public string StarSystem{ get; set; }       // not while in transit
-            public MarketID MarketID{ get; set; }       // not while in transit
+            public string StarSystem{ get; set; }       // null while in transit
+            public MarketID MarketID{ get; set; }       // null while in transit
             public long TransferCost{ get; set; }   // not while in transit
             public int TransferTime{ get; set; }    // not while in transit
             public EngineeringRecipeFDName EngineerModifications{ get; set; }    // null if none present

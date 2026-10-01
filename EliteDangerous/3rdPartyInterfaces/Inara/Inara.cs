@@ -263,7 +263,10 @@ namespace EliteDangerousCore.Inara
                 data["itemValue"] = x.BuyPrice;
                 data["isHot"] = x.Hot;
                 data["starsystemName"] = x.StarSystem;
-                data["marketID"] = x.MarketID.Value;
+                if (x.MarketID != null)
+                    data["marketID"] = x.MarketID.Value;        // this is what happened before we changed MarketID to a class
+                else
+                    data["marketID"] = null;
                 if (x.EngineerModifications != null)
                 {
                     JObject eng = new JObject();
@@ -324,7 +327,7 @@ namespace EliteDangerousCore.Inara
                 eventData["starsystemName"] = starsystemName;
             if (stationName.HasChars())
                 eventData["stationName"] = stationName;
-            if (MarketID?.HasValue == true)
+            if (MarketID != null)
                 eventData["marketID"] = MarketID.Value;
 
             return Event("setCommanderShip", dt, eventData);
@@ -405,7 +408,7 @@ namespace EliteDangerousCore.Inara
             eventData["shipGameID"] = id.Value;
             eventData["starsystemName"] = starsystem;
             eventData["stationName"] = station;
-            if (marketid?.HasValue == true)
+            if (marketid!=null)
                 eventData["marketID"] = marketid.Value;
             if (transfertimesec > 0)
                 eventData["transferTime"] = transfertimesec;
@@ -419,7 +422,7 @@ namespace EliteDangerousCore.Inara
             eventData["shipGameID"] = id.Value;
             eventData["starsystemName"] = starsystem;
             eventData["stationName"] = station;
-            if (marketid?.HasValue == true)
+            if (marketid != null)
                 eventData["marketID"] = marketid.Value;
             return Event("addCommanderTravelDock", dt, eventData);
         }
@@ -449,7 +452,7 @@ namespace EliteDangerousCore.Inara
             eventData["starsystemName"] = starsystem;
             if (station.HasChars())
                 eventData["stationName"] = station;
-            if (marketid?.HasValue == true)
+            if (marketid != null)
                 eventData["marketID"] = marketid.Value;
             return Event("setCommanderTravelLocation", dt, eventData);
         }
