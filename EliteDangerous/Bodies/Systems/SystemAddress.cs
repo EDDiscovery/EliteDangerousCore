@@ -100,12 +100,9 @@ namespace EliteDangerousCore
         public bool IsValid => ID != 0;
         public bool IsNotValid => ID == 0;
         public ulong Value => ID;
-        public override string ToString()       // null if not defined
+        public override string ToString()       
         {
-            if (ID == 0)
-                return null;
-            else
-                return ID.ToStringInvariant();
+            return ID.ToStringInvariant();
         }
     }
 }
