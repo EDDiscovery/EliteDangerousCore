@@ -735,10 +735,10 @@ namespace VR
 }
       </DefaultEN>
     </PropertyGroup>
-    <WriteLinesToFile File="VRK.cs" Overwrite="true" Lines="$(DefaultEN)" Condition="!Exists('..\..\..\edcd\VRK.cs')" />
-    <ReadLinesFromFile File="..\..\..\edcd\VRK.cs" ContinueOnError="WarnAndContinue" Condition="Exists('..\..\..\edcd\VRK.cs')">
+    <WriteLinesToFile File="VRK.cs" Overwrite="true" Lines="$(DefaultEN)" Condition="!Exists('..\..\..\edcd\VRK$(SolutionName).cs')" />
+    <ReadLinesFromFile File="..\..\..\edcd\VRK$(SolutionName).cs" ContinueOnError="WarnAndContinue" Condition="Exists('..\..\..\edcd\VRK$(SolutionName).cs')">
       <Output TaskParameter="Lines" ItemName="VRK" />
     </ReadLinesFromFile>
-    <WriteLinesToFile File="VRK.cs" Overwrite="true" Lines="@(VRK)" Condition="Exists('..\..\..\edcd\VRK.cs')" />
+    <WriteLinesToFile File="VRK.cs" Overwrite="true" Lines="@(VRK)" Condition="Exists('..\..\..\edcd\VRK$(SolutionName).cs')" />
   </Target>
 </Project>
