@@ -654,9 +654,9 @@ namespace EliteDangerousCore.EDDN
                 ["systemName"] = journal.Yard.StarSystem,
                 ["stationName"] = journal.Yard.StationName,
                 ["marketId"] = journal.MarketID.Value,
-                ["ships"] = new JArray(journal.Yard.Ships.Select(m => m.ShipType).Distinct())      // ship type if FDName
             };
 
+            message["ships"] = new JArray(journal.Yard.Ships.Select(m => m.ShipType.ID).Distinct());      // ship type if FDName
             message["odyssey"] = journal.IsOdyssey;     // new may 21
             message["horizons"] = journal.IsHorizons;
 
@@ -967,7 +967,7 @@ namespace EliteDangerousCore.EDDN
 
             msg["header"] = Header(gameversion,build);
             msg["$schemaRef"] = CommoditySchema;
-
+ 
             JObject message = new JObject();
 
             message["systemName"] = systemName;
