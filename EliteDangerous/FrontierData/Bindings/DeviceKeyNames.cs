@@ -54,6 +54,14 @@ namespace EliteDangerousCore.Bindings
             return dev;
         }
 
+
+        // best name of device, or frontier name
+        public string GetDeviceNameOrFrontierName(string frontierdevicename)
+        {
+            var dev = devices.Find(x => x.Device.EqualsIIC(frontierdevicename));
+            return dev?.Name ?? frontierdevicename;
+        }
+
         public void Add(DeviceNameSet dev)
         {
             devices.Add(dev);
