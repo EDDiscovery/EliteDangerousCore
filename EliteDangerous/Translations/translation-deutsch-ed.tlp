@@ -918,6 +918,20 @@ FDCDA739585356: "Thargoid Capital Ship Data" => "Thargoiden-Großkampfschiff-Dat
 9F0A7BE43C6581: "Search and Rescue Voucher" => "Suchen und Retten Beleg"
 F958260588E1AF: "Steel" => "Stahl"
 4A1B391ED87F19: "Haematite" => "Hämatit"
+922D5AFF6174D5: "Curated Commodity Package" @
+0FA9BF602DF552: "Helium" @
+726649A6D4AAD6: "Helium-3" @
+30991C21BF4120: "Iridium" @
+6F47A8754E5985: "Bastnasite" @
+008DB8CEBD3D5E: "Deuterium" @
+9C89C256CA86B1: "Thortveitite" @
+11790189695FCD: "Quartz Pyroxenite" @
+5130CE9DCBCAD1: "Olivine" @
+6989B2A2928F3B: "Periclase Dunite" @
+52086129A3B5FC: "Sapphire" @
+B3850E04B5CC10: "Diamond" @
+B217E98C3BF70F: "Ruby" @
+9BA77EC5EFBA5A: "Magnesite" @
 
 SECTION EngineeringData
 
@@ -1169,6 +1183,7 @@ E2407F2BA86D9F: "Space Construction Depot" => "Weltraumkonstruktionsdepot"
 2D68CF109D6809: "Dockable Planet Station" => "Dockbare planetare Station"
 D089EF39D4EA65: "Construction POI" @
 39A76A40856116: "Dodec" @
+9267B3634807D3: "Outpost Scientific" @
 
 SECTION PowerPlayStates
 
@@ -1185,7 +1200,7 @@ F6D3C9C3B20E15: "Stronghold" => "Festung"
 // these are the ones which can't be satisfied from ModulePartNames
 
 SECTION ModuleTypeNames
-
+7B680AE998E654: "Surface Mining" @
 74C8CD195A9A7B: "Pacifier Frag Cannon" => "Friedensstifter-Splitterkanone"
 84B8326146D262: "Cargo Scanner" => "Verzeichnisscanner"
 FF989D476F1F12: "Guardian Module Reinforcement" => "Guardian-Modulverstärkung"
@@ -1215,6 +1230,9 @@ EB702E354D4040: "Fighter Weapon" => "Fighter-Waffe"
 86B9B261DED066: "Vanity Type" => "Kosmetik-Typ"
 352374D32CCD3B: "Unknown Type" => "Unbekannter Typ"
 036F587DDBE3AB: "Lightweight Alloy (Default)" @
+7F3C61AC8B0BA8: "Fighter" @
+EAD533685E262E: "Weapon" @
+F69654FCE2BE39: "Suit" @
 
 SECTION ModulePartNames
 
@@ -1256,6 +1274,8 @@ E89383A3EAE0FE: "Surface Scanner" => "Detail-Oberflächenscanner"
 1E150F53516D41: "Standard Docking Computer" => "Standard-Landecomputer"
 300DCF505B20B3: "Advanced Docking Computer" => "Erweiterter Landecomputer"
 70523AB707ECE7: "Fighter Hangar" => "Fighter-Bucht"
+A96D1886F17C53: "Large Planetary Vehicle Hangar" @
+27D1F4AD17F1C0: "MKII Large Planetary Vehicle Hangar" @
 F29E64CC9E04F3: "Remote Release Flak Launcher" => "Flakwerfer mit Fernzündung"
 1080CBE65D9A1D: "Remote Release Flechette Launcher" => "Pfeilwerfer mit Fernzündung"
 96D6DE2D0ECA17: "Frame Shift Drive Interdictor" => "FSA-Unterbrecher"
@@ -1274,7 +1294,7 @@ C63B1C1BCFD89F: "Guardian Hybrid Power Plant" => "Guardian-Kraftwerk"
 286E5F17D2DFFE: "Frame Shift Drive" => "Frameshift-Antrieb"
 BC7C4D39E10588: "Frame Shift Drive (SCO)" => "Frameshift-Antrieb (SCO)"
 7E102B2176905C: "Frame Shift Wake Scanner" => "FS-Sogwolkenscanner"
-23F2C43DDC4C99: "Frame Shift Wake Scanner" => "FS-Sogwolkenscanner"
+23F2C43DDC4C99: "Wake Scanner" => "FS-Sogwolkenscanner"
 9275CA7358B155: "Life Support" => "Lebenserhaltung"
 A65DF936BCD66F: "Collector Limpet Controller" => "Steuerung Sammeldrohne"
 010A01796C54DA: "Fuel Transfer Limpet Controller" => "Treibstofftransfer-Drohnenstrg."
@@ -1330,7 +1350,7 @@ B274BC2A7429E0: "Pulse Laser" => "Impulslaser"
 7809B2B30F59B4: "Pulse Wave Analyser" => "Impulswellen-Analysator"
 5BB7DBB8683EC3: "Rail Gun" => "Schienenkanone"
 EAC52E34209313: "Imperial Hammer Rail Gun" => "Imperiale Hammer-Schienenkanone"
-9101FC1744AB27: "Sensors" => "Sensoren"
+9101FC1744AB27: "Sensor" => "Sensoren"
 0F094935AF23BE: "Shield Booster" => "Schild-Booster"
 13AFA94574C563: "Shield Cell Bank" => "Schildzellenbank"
 7278A03C01494A: "Shield Generator" => "Schildgenerator"
@@ -1351,8 +1371,12 @@ FFE926B9A1E06C: "Concord Cannon" => "Concord-Kanone"
 492166ECE113AD: "Colonisation Module" => "Kolonisierungsmodul"
 0DB27EBBF41345: "Large Cargo Rack" => "Großes Frachtgestell"
 80C6C2BEA1E3BF: "Mining Volley Repeater" @
+14727AE1418827: "MKII Vessel Hangar (Free)" @
+01CE358DB16568: "MKII Vessel Hangar" @
 
 SECTION ShipSlots
+4DC14EFAB1E6E6: "Mining Rig" @
+815B944A41FF1D: "Deposit Scanner" @
 
 F5B0EF731C022D: "Bobble Position 1" => "Armaturenbrett 1"
 7E3AF4B6256EFA: "Bobble Position 2" => "Armaturenbrett 2"
