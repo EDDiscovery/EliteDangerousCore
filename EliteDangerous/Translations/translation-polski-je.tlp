@@ -1,6 +1,7 @@
 ﻿
 SECTION JournalTypeEnum
 DC7FCEE8298DF3: "Game Mode Change" @
+E3ACAEA10B7987: "Market ID" @
 9EFC707F8ABFDB: "Launch Vessel" @
 C7EC98CED613F9: "EDD Destination Selected" @
 94A37CFA0C8992: "Afmu Repairs" => "Naprawa AFMU"
@@ -443,6 +444,7 @@ A1CF264F7F1E4F: "Rocky" => "Skalisty"
 
 SECTION JournalScan
 
+5EF9F3C41EF819: "Has planetary mining signals." @
 F14CA5F3DC73DE: "Current value: {0:N0}" @
 FF2E1860C6D49F: "First Discovered value: {0:N0}" @
 9BAE0E54DA6CE9: "Autoscan of {0}" => "Autoskan {0}"
