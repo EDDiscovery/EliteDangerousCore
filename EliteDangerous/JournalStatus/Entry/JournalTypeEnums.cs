@@ -156,6 +156,7 @@ namespace EliteDangerousCore
         Location = 400,
         MassModuleStore = 1010,
         Market = 405,
+        MarketID = 406,
         MarketBuy = 410,
         MarketSell = 420,
         MaterialCollected = 430,

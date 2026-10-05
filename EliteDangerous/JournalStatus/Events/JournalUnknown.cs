@@ -95,5 +95,11 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
-
+    [JournalEntryType(JournalTypeEnum.MarketID)]
+    public class JournalMarketID : JournalUnimplemented
+    {
+        public JournalMarketID(JObject evt) : base(evt, JournalTypeEnum.MarketID, true)
+        {
+        }
+    }
 }

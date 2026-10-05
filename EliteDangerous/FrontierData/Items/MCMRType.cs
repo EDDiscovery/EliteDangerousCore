@@ -28,7 +28,7 @@ namespace EliteDangerousCore
             Raw, Encoded, Manufactured,                     // all, materials
             Item,                                           // odyssey 4.0.  Called goods in game
             Component,                                      // odyssey 4.0.  Called assets in game
-            Data,                                           // odyssey 4.0.  
+            Data,                                           // odyssey 4.0. 
             Consumable,                                     // odyssey 4.0. 
         };
         public CatType Category { get; private set; }               // see above
@@ -180,11 +180,15 @@ namespace EliteDangerousCore
 
             // new Ascendency 3/11/2024
             PowerIndustrial,PowerMiscIndust, PowerInventory, PowerPlayMilitary, PowerElectronics, PowerComputer, PowerExperiment,
-            PowerAgriculture, PowerExtraction, PowerEquipment, PowerMedical, PowerMiscComputer, PowerSecurity, PowerPower, PowerReasearch,
+            PowerAgriculture, PowerExtraction, PowerEquipment, PowerMedical, PowerMiscComputer, PowerSecurity, PowerPower, PowerResearch,
 
             // new Ascendency 3/12/2024
 
             BioMechanicalComponent, SabotagedComponent,
+
+            // new Oct 2026 noted
+
+            OperationsStrikeData, OperationsCounterAttackData, NM_Seed,
 
             //---------------------------------------------------------- Component/Assets
             Aerogel = 5000, CarbonFibrePlating, ChemicalCatalyst, ChemicalSuperbase, Circuitboard, CircuitSwitch, ElectricalFuse, ElectricalWiring,
@@ -1273,12 +1277,18 @@ namespace EliteDangerousCore
             Add(CatType.Item, MCMR.PowerMiscComputer, "Data Storage Device","MRPMC");
             Add(CatType.Item, MCMR.PowerSecurity, "Security Logs", "MRPSL");
             Add(CatType.Item, MCMR.PowerPower, "Energy Regulator", "MRPPP");
-            Add(CatType.Item, MCMR.PowerReasearch, "Research Notes", "MRPRD");
+            Add(CatType.Item, MCMR.PowerResearch, "Research Notes", "MRPRD");
 
             // ascendency 3/12/24
 
             Add(CatType.Item, MCMR.BioMechanicalComponent, "Spire Refinery Compound", "MRSPRC");
             Add(CatType.Item, MCMR.SabotagedComponent, "Contaminated Spire Compound", "MRSBSC");
+
+            // new Oct 26
+
+            Add(CatType.Item, MCMR.OperationsStrikeData, "Operations Strike Data", "OPRSD");
+            Add(CatType.Item, MCMR.OperationsCounterAttackData, "Operations Counter Attack Data", "OPRCAD");
+            Add(CatType.Item, MCMR.NM_Seed, "Unica Seed", "USEED");
 
             // Components
 

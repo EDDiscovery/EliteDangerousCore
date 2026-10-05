@@ -165,6 +165,8 @@ namespace EliteDangerousCore
 
             new SynthesisRecipe( "Limpets", "Limpet Basic", SynthesisRecipe.SynthesisLevel.Basic, "10Fe,10Ni"),
 
+            new SynthesisRecipe( "Mining Rig", "Mining Rig Basic", SynthesisRecipe.SynthesisLevel.Basic, "3Fe,2Ni,1ME"),
+
             new SynthesisRecipe( "Nanite Munitions", "Guardian Nanite Torpedo Pylon", SynthesisRecipe.SynthesisLevel.Basic, "2GPCe,5HEXS,5PMR"),
 
             new SynthesisRecipe( "Plasma Munitions", "Plasma Ammo Basic", SynthesisRecipe.SynthesisLevel.Basic,"4P,3S,1Mn" ),
