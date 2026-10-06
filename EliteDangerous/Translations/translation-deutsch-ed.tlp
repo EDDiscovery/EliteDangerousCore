@@ -918,23 +918,23 @@ FDCDA739585356: "Thargoid Capital Ship Data" => "Thargoiden-Großkampfschiff-Dat
 9F0A7BE43C6581: "Search and Rescue Voucher" => "Suchen und Retten Beleg"
 F958260588E1AF: "Steel" => "Stahl"
 4A1B391ED87F19: "Haematite" => "Hämatit"
-922D5AFF6174D5: "Curated Commodity Package" @
-0FA9BF602DF552: "Helium" @
-726649A6D4AAD6: "Helium-3" @
-30991C21BF4120: "Iridium" @
-6F47A8754E5985: "Bastnasite" @
-008DB8CEBD3D5E: "Deuterium" @
-9C89C256CA86B1: "Thortveitite" @
-11790189695FCD: "Quartz Pyroxenite" @
-5130CE9DCBCAD1: "Olivine" @
-6989B2A2928F3B: "Periclase Dunite" @
-52086129A3B5FC: "Sapphire" @
-B3850E04B5CC10: "Diamond" @
-B217E98C3BF70F: "Ruby" @
-9BA77EC5EFBA5A: "Magnesite" @
-455D8F1FD279E9: "Operations Strike Data" @
-6206BF660FE9B5: "Operations Counter Attack Data" @
-528C2290F89AFD: "Unica Seed" @
+922D5AFF6174D5: "Curated Commodity Package" => "Kuratiertes Handelswarenpaket"
+0FA9BF602DF552: "Helium" => "Helium"
+726649A6D4AAD6: "Helium-3" => "Helium-3"
+30991C21BF4120: "Iridium" => "Iridium"
+6F47A8754E5985: "Bastnasite" => "Bastnäsit"
+008DB8CEBD3D5E: "Deuterium" => "Deuterium"
+9C89C256CA86B1: "Thortveitite" => "Thortveitit"
+11790189695FCD: "Quartz Pyroxenite" => "Quartzpyroxenit"
+5130CE9DCBCAD1: "Olivine" => "Olivin"
+6989B2A2928F3B: "Periclase Dunite" => "Periklasdunit"
+52086129A3B5FC: "Sapphire" => "Saphir"
+B3850E04B5CC10: "Diamond" => "Diamant"
+B217E98C3BF70F: "Ruby" => "Rubin"
+9BA77EC5EFBA5A: "Magnesite" => "Magnesit"
+455D8F1FD279E9: "Operations Strike Data" => "Einsatz Angriffsdaten"
+6206BF660FE9B5: "Operations Counter Attack Data" => "Einsatz Gegenangriffsdaten"
+528C2290F89AFD: "Unica Seed" => "Unicasamen"
 
 SECTION EngineeringData
 
@@ -1079,7 +1079,7 @@ E3A998C0E178AC: "Wanted passenger" => "Gesuchter Passagier"
 771CD10722A7D2: "Discharging a weapon" => "Abfeuern einer Waffe"
 0F204F94B09CCD: "Destroying an APEX Shuttle" => "Zerstörung eines APEX-Shuttles"
 04E4EDA53C745B: "Tampering with a station" => "Sabotage einer Station"
-157F19260E9D31: "Assaulting a Person" @
+157F19260E9D31: "Assaulting a Person" => "Angriff auf eine Person"
 
 SECTION FactionStates
 
@@ -1118,7 +1118,7 @@ A21193C4A51E0D: "Alliance" => "Allianz"
 6809E8745EABCE: "Guardian" => "Guardian"
 824377DA32D5A8: "Thargoid" => "Thargoid"
 7EE28AFA2ED21A: "Pilots Federation" => "Pilotenföderation"
-55492602030481: "Player Pilots" @
+55492602030481: "Player Pilots" => "Spielerpiloten"
 
 
 SECTION GovernmentTypes
@@ -1137,7 +1137,7 @@ D8D4559A372171: "Prison" => "Gefängnis"
 9DB9478502242D: "Prison Colony" => "Gefängniskolonie"
 AB1A1F939BDE0E: "Theocracy" => "Theokratie"
 0646F4AFD90C8F: "Undefined" => "Undefiniert"
-750A7CEF420603: "Megaconstruction" @
+750A7CEF420603: "Megaconstruction" => "Megakonstruktion"
 
 SECTION EconomyTypes
 
@@ -1166,7 +1166,7 @@ SECTION StarportStates
 643321EE0FC5B8: "Under Repairs" => "In Reparatur"
 F34FB6E3669DFD: "Abandoned" => "Verlassen"
 DA33E1B7E0C4EA: "Construction" => "Konstruktion"
-18FC67B9AB74B9: "Damaged Human" @
+18FC67B9AB74B9: "Damaged Human" => "Beschädigt menschlich"
 
 SECTION StarportTypes
 
@@ -1184,9 +1184,9 @@ CD515256E31FA0: "Crater Port" => "Kraterhafen"
 E2407F2BA86D9F: "Space Construction Depot" => "Weltraumkonstruktionsdepot"
 72D0849A72AB18: "Planetary Construction Depot" => "Planetares Konstruktionsdepot"
 2D68CF109D6809: "Dockable Planet Station" => "Dockbare planetare Station"
-D089EF39D4EA65: "Construction POI" @
-39A76A40856116: "Dodec" @
-9267B3634807D3: "Outpost Scientific" @
+D089EF39D4EA65: "Construction POI" => "Konstruktions-POI"
+39A76A40856116: "Dodec" => "Dodec"
+9267B3634807D3: "Outpost Scientific" => "Wissenschaftlicher Außenposten"
 
 SECTION PowerPlayStates
 
@@ -1203,7 +1203,7 @@ F6D3C9C3B20E15: "Stronghold" => "Festung"
 // these are the ones which can't be satisfied from ModulePartNames
 
 SECTION ModuleTypeNames
-7B680AE998E654: "Surface Mining" @
+7B680AE998E654: "Surface Mining" => "Oberflächenbergbau"
 74C8CD195A9A7B: "Pacifier Frag Cannon" => "Friedensstifter-Splitterkanone"
 84B8326146D262: "Cargo Scanner" => "Verzeichnisscanner"
 FF989D476F1F12: "Guardian Module Reinforcement" => "Guardian-Modulverstärkung"
@@ -1232,10 +1232,10 @@ EB702E354D4040: "Fighter Weapon" => "Fighter-Waffe"
 1CC4848D27B6F3: "Wear And Tear Type" => "Verschleißteil"
 86B9B261DED066: "Vanity Type" => "Kosmetik-Typ"
 352374D32CCD3B: "Unknown Type" => "Unbekannter Typ"
-036F587DDBE3AB: "Lightweight Alloy (Default)" @
-7F3C61AC8B0BA8: "Fighter" @
-EAD533685E262E: "Weapon" @
-F69654FCE2BE39: "Suit" @
+036F587DDBE3AB: "Lightweight Alloy (Default)" => "Leitgewichtslegierung (Standard)"
+7F3C61AC8B0BA8: "Fighter" => "Fighter"
+EAD533685E262E: "Weapon" => "Waffe"
+F69654FCE2BE39: "Suit" => "Anzug"
 
 SECTION ModulePartNames
 
@@ -1262,9 +1262,9 @@ E4B1AB2D0505E8: "Cytoscrambler Burst Laser" => "Zytostreuer-Salvenlaser"
 306BFD525FA9C5: "Fragment Cannon" => "Splitterkanone"
 8DFC90E4A072C6: "Pacifier Fragment Cannon" => "Friedensstifter-Splitterkanone"
 D3BBF2FAE69CDA: "Corrosion Resistant Cargo Rack" => "Korrosionsbeständiges Frachtgestell"
-4C621ED5B80D7D: "Anti Corrosion Cargo Rack" @
+4C621ED5B80D7D: "Anti Corrosion Cargo Rack" => "Antikorrosions-Frachtgestell"
 93C5390A421D81: "Cargo Rack" => "Frachtgestell"
-AC08D99EB032B0: "Agile Boost Engine" @
+AC08D99EB032B0: "Agile Boost Engine" => "Wendiger Schubantrieb"
 9917741FA0BE27: "Manifest Scanner" => "Verzeichnisscanner"
 09CE66844887F5: "Chaff Launcher" => "Düpelwerfer"
 C72CB5EAFA5795: "Electronic Countermeasure" => "Elektronische Gegenmaßnmahmen"
@@ -1277,8 +1277,8 @@ E89383A3EAE0FE: "Surface Scanner" => "Detail-Oberflächenscanner"
 1E150F53516D41: "Standard Docking Computer" => "Standard-Landecomputer"
 300DCF505B20B3: "Advanced Docking Computer" => "Erweiterter Landecomputer"
 70523AB707ECE7: "Fighter Hangar" => "Fighter-Bucht"
-A96D1886F17C53: "Large Planetary Vehicle Hangar" @
-27D1F4AD17F1C0: "MKII Large Planetary Vehicle Hangar" @
+A96D1886F17C53: "Large Planetary Vehicle Hangar" => "Große planetare Fahrzeugbucht"
+27D1F4AD17F1C0: "MKII Large Planetary Vehicle Hangar" => "MK II Große planetare Fahrzeugbucht"
 F29E64CC9E04F3: "Remote Release Flak Launcher" => "Flakwerfer mit Fernzündung"
 1080CBE65D9A1D: "Remote Release Flechette Launcher" => "Pfeilwerfer mit Fernzündung"
 96D6DE2D0ECA17: "Frame Shift Drive Interdictor" => "FSA-Unterbrecher"
@@ -1328,7 +1328,7 @@ C008DCFA55478D: "Rocket Propelled FSD Disrupter" => "Containment-Rakete"
 8E84C39592581B: "Pack Hound Missile Rack" => "Schwarmwerfer-Raketenrampe"
 CD7FA37A5942F0: "Advanced Torp Pylon" => "Optimierter Torpedopylon"
 D47989B5AEA7E2: "Advanced Missile Rack" => "Optimierte Raketenrampe"
-41CF6E004D66DD: "Sub surface Extraction Missile" @
+41CF6E004D66DD: "Sub surface Extraction Missile" => "Untergrundextraktionsgeschoss"
 B3A021E4800549: "Enzyme Missile Rack" => "Enzymraketenrampe"
 94E9918390EAA7: "Module Reinforcement Package" => "Modulverstärkung"
 8454F69AA40E0B: "AX Multi Cannon" => "AX-Mehrfachgeschütz"
@@ -1345,7 +1345,7 @@ CA39470A7A6DED: "Advanced Planet Approach Suite" => "Fortgeschrittene Planetenan
 36AA174EFAA515: "Plasma Accelerator" => "Plasmabeschleuniger"
 F79B4B8AD884B9: "Advanced Plasma Accelerator" => "Optimierter Plasmabeschleuniger"
 1D202C4D8DA513: "Shock Cannon" => "Schockkanone"
-0CDA078656B69A: "Shock Cannon MK II" @
+0CDA078656B69A: "Shock Cannon MK II" => "Schockkanone MK II"
 7A5078EF876AD6: "Power Distributor" => "Energieverteiler"
 717B5FB556BE67: "Power Plant" => "Kraftwerk"
 B274BC2A7429E0: "Pulse Laser" => "Impulslaser"
@@ -1373,13 +1373,13 @@ E8B772D1BC2A20: "Enhanced Performance Thrusters" => "Verbesserte Performance-Sch
 FFE926B9A1E06C: "Concord Cannon" => "Concord-Kanone"
 492166ECE113AD: "Colonisation Module" => "Kolonisierungsmodul"
 0DB27EBBF41345: "Large Cargo Rack" => "Großes Frachtgestell"
-80C6C2BEA1E3BF: "Mining Volley Repeater" @
-14727AE1418827: "MKII Vessel Hangar (Free)" @
-01CE358DB16568: "MKII Vessel Hangar" @
+80C6C2BEA1E3BF: "Mining Volley Repeater" => "Abbau Salvenverstärker"
+14727AE1418827: "MKII Vessel Hangar (Free)" => "MK II Fahrzeugbucht (Gratis)"
+01CE358DB16568: "MKII Vessel Hangar" => "MK II Fahrzeugbucht"
 
 SECTION ShipSlots
-4DC14EFAB1E6E6: "Mining Rig" @
-815B944A41FF1D: "Deposit Scanner" @
+4DC14EFAB1E6E6: "Mining Rig" => "Abbauanlage"
+815B944A41FF1D: "Deposit Scanner" => "Ablagerungsscanner"
 
 F5B0EF731C022D: "Bobble Position 1" => "Armaturenbrett 1"
 7E3AF4B6256EFA: "Bobble Position 2" => "Armaturenbrett 2"
@@ -1413,13 +1413,13 @@ BE7DD45637B559: "Medium Hardpoint 2" => "Mittlere Aufhängung 2"
 4BBD04305C4BF0: "Medium Hardpoint 3" => "Mittlere Aufhängung 3"
 485F68ABD0CDE8: "Medium Hardpoint 4" => "Mittlere Aufhängung 4"
 A7AB21F5CF19AE: "Medium Hardpoint 5" => "Mittlere Aufhängung 5"
-890406A48C1D3F: "Medium Hardpoint 6" @
+890406A48C1D3F: "Medium Hardpoint 6" => "Mittlere Aufhängung 6"
 77E9039F43F6E2: "Military Slot 1" => "Militärschacht 1"
 A22CCB7E4839AD: "Military Slot 2" => "Militärschacht 2"
 62898937228B9D: "Military Slot 3" => "Militärschacht 3"
-12B03109BE7102: "Passenger Slot 1" @
-4CA5B20A43C19C: "Passenger Slot 3" @
-1A1276E80D136D: "Passenger Slot 2" @
+12B03109BE7102: "Passenger Slot 1" => "Passagierschacht 1"
+4CA5B20A43C19C: "Passenger Slot 3" => "Passagierschacht 3"
+1A1276E80D136D: "Passenger Slot 2" => "Passagierschacht 2"
 659756B43DB6FA: "Paint Job" => "Lackierung"
 1247331999BD41: "Ship Cockpit" => "Schiffscockpit"
 B94A658100919D: "Ship ID Right" => "Schiff-ID Rechts"
@@ -1490,8 +1490,8 @@ B9F7EC2C516319: "Optional Slot 10 Class 4" => "Optionaler Schacht 10 Klasse 4"
 2E43536EE0228A: "Optional Slot 11 Class 2" => "Optionaler Schacht 11 Klasse 2"
 396FF2847C8FAD: "Optional Slot 11 Class 3" => "Optionaler Schacht 11 Klasse 3"
 7B3D33D0B5E58B: "Optional Slot 12 Class 1" => "Optionaler Schacht 12 Klasse 1"
-99231038FC49DD: "Optional Slot 13 Class 1" @
-EB2C412690A12A: "Optional Slot 13 Class 2" => "Optionaler Schacht 13 Klasse 1"
+99231038FC49DD: "Optional Slot 13 Class 1" => "Optionaler Schacht 13 Klasse 1"
+EB2C412690A12A: "Optional Slot 13 Class 2" => "Optionaler Schacht 13 Klasse 2"
 F448DCEB3AF33F: "Optional Slot 14 Class 1" => "Optionaler Schacht 14 Klasse 1"
 EB2E26440F6DEA: "Small Hardpoint 1" => "Kleine Aufhängung 1"
 D55A80FE439B81: "Small Hardpoint 2" => "Kleine Aufhängung 2"
@@ -1515,13 +1515,13 @@ D96AA577649F7B: "Turret Type 2" => "Geschützturm 2"
 BCC6D8B8761B2B: "Colonisation Suite" => "Kolonisierungssuite"
 1D10985EBE451F: "Large Cargo 1" => "Große Fracht 1"
 FA9AB13CECC85C: "Large Cargo 2" => "Große Fracht 2"
-915A0715B57347: "Medium Mining Hardpoint 1" @
-E104214FD34AC0: "Medium Mining Hardpoint 2" @
-5E6DE9C9A368F8: "Small Mining Hardpoint 1" @
-B682567449A543: "Large Mining Hardpoint 1" @
-F4A2558C583E61: "Limpet Controller 1" @
-0B523B44CCD4E7: "Fighter Bay 1" @
-09D463E32B04B2: "Hologram" @
+915A0715B57347: "Medium Mining Hardpoint 1" => "Mittlere Abbauaufhängung 1"
+E104214FD34AC0: "Medium Mining Hardpoint 2" => "Mittlere Abbauaufhängung 2"
+5E6DE9C9A368F8: "Small Mining Hardpoint 1" => "Kleine Abbauaufhängung 1"
+B682567449A543: "Large Mining Hardpoint 1" => "Große Abbauaufhängung 1"
+F4A2558C583E61: "Limpet Controller 1" => "Drohnensteuerung 1"
+0B523B44CCD4E7: "Fighter Bay 1" => "Fighterbucht 1"
+09D463E32B04B2: "Hologram" => "Hologramm"
 
 SECTION StationServices
 

@@ -1,9 +1,9 @@
 ﻿
 SECTION JournalTypeEnum
-DC7FCEE8298DF3: "Game Mode Change" @
-E3ACAEA10B7987: "Market ID" @
-9EFC707F8ABFDB: "Launch Vessel" @
-C7EC98CED613F9: "EDD Destination Selected" @
+DC7FCEE8298DF3: "Game Mode Change" => "Spielmoduswechsel"
+E3ACAEA10B7987: "Market ID" => "Markt-ID"
+9EFC707F8ABFDB: "Launch Vessel" => "Fahrzeugstart"
+C7EC98CED613F9: "EDD Destination Selected" => "EDD Ziel ausgewählt"
 94A37CFA0C8992: "Afmu Repairs" => "AFW Reparatur"
 D2F34790ECB3BA: "Approach Body" => "Annäherung an Himmelskörper"
 5FB514306EBAE2: "Approach Settlement" => "Annäherung an Siedlung"
@@ -137,7 +137,7 @@ ECE8DF43B4E578: "Set User Ship Name" => "Benutzerschiffsname setzen"
 4E29C0CE3E9D61: "Shipyard Sell" => "Verkauf (Werft)"
 270AB9D553AFE5: "Shipyard Swap" => "Austausch (Werft)"
 7E6D4BF9F2AA3F: "Shipyard Transfer" => "Schiffstransport"
-86188917717CAE: "Shipyard Bank Deposit" @
+86188917717CAE: "Shipyard Bank Deposit" => "Bankeinzahlung (Werft)"
 7908BD051ADB46: "Ship Targeted" => "Schiff anvisiert"
 7FDDB7D8D1D60B: "Shutdown" => "Herunterfahren"
 CAAACBDEADF1BF: "SRV Destroyed" => "SRV zerstört"
@@ -252,9 +252,9 @@ DDDE2AEC826902: "Nav Route Clear" => "Navroute leeren"
 02374D50F6A18D: "Powerplay Merits" => "Machtspielverdienst"
 8062068144644D: "Powerplay Rank" => "Machtspielrang"
 5668ADC227F38B: "Carrier Location" => "Carrierstandort"
-00D83C2DDC1290: "Cancelled Squadron Application" @
-61CAC65A66E653: "Squadron Application Approved" @
-33646EA5A80A0A: "Squadron Application Rejected" @
+00D83C2DDC1290: "Cancelled Squadron Application" => "Staffelbewerbung abgebrochen"
+61CAC65A66E653: "Squadron Application Approved" => "Staffelbewerbung angenommen"
+33646EA5A80A0A: "Squadron Application Rejected" => "Staffelbewerbung abgelehnt"
 
 SECTION JournalCargo
 
@@ -444,7 +444,7 @@ A1CF264F7F1E4F: "Rocky" => "Felsig"
 
 SECTION JournalScan
 
-5EF9F3C41EF819: "Has planetary mining signals." @
+5EF9F3C41EF819: "Has planetary mining signals." => "Hat planetare Abbausignale"
 F14CA5F3DC73DE: "Current value: {0:N0}" => "Derzeitiger Wert: {0:N0}"
 FF2E1860C6D49F: "First Discovered value: {0:N0}" => "Wert Ersterkundung: {0:N0}"
 9BAE0E54DA6CE9: "Autoscan of {0}" => "Automatischer Scan von {0}"
@@ -886,7 +886,7 @@ C54AD6BB838817: "; fired" => "; gefeuert"
 20282D7E9CB678: "Hired: ;" => "Angestellt: ;"
 14C60EE946D100: "< of faction " => "< von Fraktion "
 AC931D89719A85: ";Telepresence" => ";Telepräsenz"
-83AB8FD5A0558A: "; Due to Crime" @
+83AB8FD5A0558A: "; Due to Crime" => "; Aufgrund von Verbrechen"
 C3F104D1365744: "Role" => "Rolle"
 FA4417824B6B53: "Crew Member" => "Crewmitglied"
 D8798F1C63F24D: ";Due to Crime" => ";Aufgrund von Verbrechen"
@@ -1092,7 +1092,7 @@ CA4B1A71D2F677: "Repair Crews" => "Reparaturcrews"
 CF7C02B2B0079B: "Concourse Bar" => "Hallenbar"
 F157DA72429B0A: "Vista Genomics" => "Vista Genomics"
 AA5680B5B5B241: "Pioneer Supplies" => "Pionierausrüstungen"
-F1A87D41F026EE: "Squadron Bank" @
+F1A87D41F026EE: "Squadron Bank" => "Staffelbank"
 
 SECTION JournalScanOrganics
 
