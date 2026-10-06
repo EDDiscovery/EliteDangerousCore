@@ -684,6 +684,7 @@ public string Format(string frontline = "    ")
             public long Leaderboardpowerplayhighestcontribution { get; set; }
             public long Leaderboardtradehighestcontribution { get; set; }
             public long Leaderboardtradeillicithighestcontribution { get; set; }
+            public long Leaderboardoperationscorehighestcontribution { get; set; }
             public int Leaderboardpodiums { get; set; }
 
             public string Format(string frontline = "    ")
@@ -712,6 +713,7 @@ public string Format(string frontline = "    ")
                     "Highest contribution for Powerplay leaderboard: ;;N0".Tx(), Leaderboardpowerplayhighestcontribution,
                     "Highest contribution for Trade leaderboard: ;;N0".Tx(), Leaderboardtradehighestcontribution,
                     "Highest contribution for Illicit Trade leaderboard: ;;N0".Tx(), Leaderboardtradeillicithighestcontribution,
+                    "Highest contribution for Operations leaderboard: ;;N0".Tx(), Leaderboardoperationscorehighestcontribution,
                     "Times squadron got a podium place: ;;N0".Tx(), Leaderboardpodiums);                
             }
         }
