@@ -18,7 +18,7 @@ namespace EliteDangerousCore
 {
     public class SecurityDefinitions
     {
-        public enum Security
+        public enum Security    // .Tx()
         {
             Unknown = 0,
             Low,

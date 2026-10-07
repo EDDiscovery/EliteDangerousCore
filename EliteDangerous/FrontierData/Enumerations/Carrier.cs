@@ -18,7 +18,12 @@ namespace EliteDangerousCore
 {
     public class CarrierDefinitions
     {
-        public enum CarrierType { FleetCarrier, SquadronCarrier,  UnknownType };
+        public enum CarrierType     // .Tx()
+        { 
+            FleetCarrier, 
+            SquadronCarrier,  
+            UnknownType 
+        };
     
         // maps the allegiance fdname to an enum.  Spaces can be in the name ("Pilots Federation") to cope with Spansh
         // If null is passed in, its presumed field is missing and thus Unknown.
@@ -47,9 +52,11 @@ namespace EliteDangerousCore
         public enum ShipPackOperationType { BuyPack, SellPack, RestockPack, Unknown }
 
         // as per frontier CrewRole Entry
-        public enum ServiceType
+        public enum ServiceType // .Tx()
         {
-            BridgeCrew, CommodityTrading, TritiumDepot,        // not a crew services, but core items. UserControlCarrier iterates along this list and we use this to guide it
+            BridgeCrew, 
+            CommodityTrading, 
+            TritiumDepot,        // not a crew services, but core items. UserControlCarrier iterates along this list and we use this to guide it
 
             // searching logs for CarrierStats and CarrierCrewServices gave these july 26
             Refuel,

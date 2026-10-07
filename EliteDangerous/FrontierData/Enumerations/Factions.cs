@@ -21,7 +21,7 @@ namespace EliteDangerousCore
 {
     public class FactionDefinitions
     {
-        public enum State
+        public enum State   // .Tx()
         {
             Unknown,
             UnknownSpansh,
@@ -141,7 +141,7 @@ namespace EliteDangerousCore
 
             public class PowerStatesInfo
             {
-                public enum States
+                public enum States 
                 {
                     Unknown,
                     Blight,

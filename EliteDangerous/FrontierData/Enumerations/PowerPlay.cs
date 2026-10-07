@@ -18,7 +18,7 @@ namespace EliteDangerousCore
 {
     public class PowerPlayDefinitions
     {
-        public enum State
+        public enum State   // .Tx()
         {
             Unknown = 0,
             InPrepareRadius,

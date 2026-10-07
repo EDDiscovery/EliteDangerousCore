@@ -25,7 +25,7 @@ namespace EliteDangerousCore
         #region Services
 
         // Names are sort of syned with Spansh, and are more meaningful than fdnames.
-        public enum StationServices
+        public enum StationServices // .Tx()
         {
             Unknown,
                 ApexInterstellar,
@@ -176,7 +176,7 @@ namespace EliteDangerousCore
         #endregion
 
         #region Starports
-        public enum StarportTypes
+        public enum StarportTypes // .Tx()
         {
             Unknown,
             AsteroidBase,
@@ -255,7 +255,7 @@ namespace EliteDangerousCore
 
         #region Startport state
 
-        public enum StarportState
+        public enum StarportState // .Tx()
         {
             Unknown,
             None,
@@ -343,7 +343,8 @@ namespace EliteDangerousCore
 //4239 = OnFootSettlement,PlanetaryConstructionDepot
 //4242 = PlanetaryConstructionDepot
 
-        public enum Classification { 
+        public enum Classification 
+        { 
             Unknown,
             NormalPort,  
             MegaShip,       

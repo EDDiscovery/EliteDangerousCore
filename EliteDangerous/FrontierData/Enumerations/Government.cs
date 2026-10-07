@@ -19,7 +19,7 @@ namespace EliteDangerousCore
 {
     public class GovernmentDefinitions
     {
-        public enum Government
+        public enum Government  // .Tx()
         {
             Unknown,
             Anarchy,

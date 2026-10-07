@@ -1184,18 +1184,17 @@ CD515256E31FA0: "Crater Port" => "创建港口(Port)"
 E2407F2BA86D9F: "Space Construction Depot" => "太空建造基地"
 72D0849A72AB18: "Planetary Construction Depot" => "行星建造基地"
 2D68CF109D6809: "Dockable Planet Station" => "可对接行星空间站"
-D089EF39D4EA65: "Construction POI" => "建造兴趣点(POI)"
+98A309D0711AAD: "Gameplay POI" => "建造兴趣点(POI)"
 39A76A40856116: "Dodec" @
 9267B3634807D3: "Outpost Scientific" @
 
 SECTION PowerPlayStates
 
-1C3BEAD9C3B9C0: "In prepare radius" => "准备半径"
+BAEE3A8199D1C1: "In Prepare Radius" => "准备半径"
 D8B21A674C893B: "Prepared" => "准备阶段"
 FD83DA39F2DA91: "Contested" => "发生冲突"
 30401222095701: "Controlled" => "受控"
-F15914E9852279: "In turmoil" => " 处于动荡中"
-64701663DF9A69: "Home system" => "势力母星系"
+C0977D62F7F6E3: "Turmoil" => " 处于动荡中"
 A306BDBFED7B4A: "Fortified" => "强化"
 F6D3C9C3B20E15: "Stronghold" => "堡垒"
 

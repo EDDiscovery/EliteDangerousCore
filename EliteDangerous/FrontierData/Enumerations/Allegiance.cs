@@ -19,7 +19,7 @@ namespace EliteDangerousCore
 {
     public class AllegianceDefinitions
     {
-        public enum Allegiance
+        public enum Allegiance      // .Tx()
         {
             Unknown = 0,
             Federation,

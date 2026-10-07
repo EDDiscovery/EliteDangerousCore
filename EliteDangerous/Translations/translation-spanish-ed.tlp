@@ -1184,18 +1184,17 @@ CD515256E31FA0: "Crater Port" => "Puerto de Cráter"
 E2407F2BA86D9F: "Space Construction Depot" => "Depósito de Construcción Espacial"
 72D0849A72AB18: "Planetary Construction Depot" => "Depósito de Construcción Planetaria"
 2D68CF109D6809: "Dockable Planet Station" => "Estación Planetaria Atracable"
-D089EF39D4EA65: "Construction POI" => "PDI de Construcción"
+98A309D0711AAD: "Gameplay POI" => "PDI de Construcción"
 39A76A40856116: "Dodec" @
 9267B3634807D3: "Outpost Scientific" @
 
 SECTION PowerPlayStates
 
-1C3BEAD9C3B9C0: "In prepare radius" => "En radio para preparación"
+BAEE3A8199D1C1: "In Prepare Radius" => "En radio para preparación"
 D8B21A674C893B: "Prepared" => "Preparado"
 FD83DA39F2DA91: "Contested" => "Disputado"
 30401222095701: "Controlled" => "Controlado"
-F15914E9852279: "In turmoil" => "Sufriendo Revueltas"
-64701663DF9A69: "Home system" => "Cuartel General"
+C0977D62F7F6E3: "Turmoil" => "Sufriendo Revueltas"
 A306BDBFED7B4A: "Fortified" => "Fortificado"
 F6D3C9C3B20E15: "Stronghold" => "Bastión"
 

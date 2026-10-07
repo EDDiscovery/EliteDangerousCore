@@ -258,6 +258,12 @@ namespace EliteDangerousCore
             return ifd.Contains("int_fueltank");
         }
 
+        // PTx() does nothing except mark for checkers that this is a translated phrase
+
+        static string[] sizes = new string[] { " Small".PTx(), " Medium".PTx(), " Large".PTx(), " Huge".PTx(), " Tiny".PTx(), " Standard".PTx(), " Intermediate".PTx(), " Advanced".PTx() };
+        static string[] armourdelim = new string[] { "Lightweight".PTx(), "Reinforced".PTx(), "Military".PTx(), "Mirrored".PTx(), "Reactive".PTx() };
+        static string[] types = new string[] { " Gimbal ".PTx(), " Fixed ".PTx(), " Turret ".PTx() };
+
         // called at start up to set up translation of module names
         static private void TranslateModule(ShipModule sm)
         {
@@ -265,7 +271,6 @@ namespace EliteDangerousCore
                 sm.ModType == ShipModule.ModuleTypes.MilitaryGradeComposite || sm.ModType == ShipModule.ModuleTypes.MirroredSurfaceComposite ||
                 sm.ModType == ShipModule.ModuleTypes.ReactiveSurfaceComposite)
             {
-                string[] armourdelim = new string[] { "Lightweight", "Reinforced", "Military", "Mirrored", "Reactive" };
                 int index = sm.EnglishModName.IndexOf(armourdelim, out int anum, StringComparison.InvariantCulture);
                 string translated = sm.EnglishModName.Substring(index).Tx();
                 sm.TranslatedModName = sm.EnglishModName.Substring(0, index) + translated;
@@ -273,8 +278,8 @@ namespace EliteDangerousCore
             }
             else
             {
-                int cindex = sm.EnglishModName.LastIndexOf(" Class ", StringComparison.InvariantCulture);
-                int rindex = sm.EnglishModName.LastIndexOf(" Rating ", StringComparison.InvariantCulture);
+                int cindex = sm.EnglishModName.LastIndexOf(" Class ".PTx(), StringComparison.InvariantCulture);
+                int rindex = sm.EnglishModName.LastIndexOf(" Rating ".PTx(), StringComparison.InvariantCulture);
 
                 if (cindex != -1 && rindex != -1)
                 {
@@ -309,12 +314,10 @@ namespace EliteDangerousCore
                 }
                 else
                 {
-                    string[] sizes = new string[] { " Small", " Medium", " Large", " Huge", " Tiny", " Standard", " Intermediate", " Advanced" };
                     int sindex = sm.EnglishModName.IndexOf(sizes, out int snum, StringComparison.InvariantCulture);
 
                     if (sindex >= 0)
                     {
-                        string[] types = new string[] { " Gimbal ", " Fixed ", " Turret " };
                         int gindex = sm.EnglishModName.IndexOf(types, out int gnum, StringComparison.InvariantCulture);
 
                         if (gindex >= 0)
@@ -361,7 +364,7 @@ namespace EliteDangerousCore
         [System.Diagnostics.DebuggerDisplay("{EnglishModName} {ModType} {ModuleID} {Class} {Rating}")]
         public class ShipModule
         {
-            public enum ModuleTypes
+            public enum ModuleTypes // .Tx()
             {
                 // Aligned with spansh, spansh is aligned with outfitting.csv on EDCD.
                 // all buyable
@@ -481,14 +484,27 @@ namespace EliteDangerousCore
                 XenoScanner,
 
                 // Not buyable, DiscoveryScanner marks the first non buyable - see code below
-                DiscoveryScanner, PrisonCells, DataLinkScanner, SRVScanner, FighterWeapon,
-                VanityType, UnknownType, CockpitType, CargoBayDoorType, WearAndTearType, Codex,
+                DiscoveryScanner, 
+                PrisonCells, 
+                DataLinkScanner, 
+                SRVScanner, 
+                FighterWeapon,
+                VanityType, 
+                UnknownType, 
+                CockpitType, 
+                CargoBayDoorType, 
+                WearAndTearType, 
+                Codex,
 
                 // marks it as a special effect modifier list not a module
                 SpecialEffect,
 
                 // generic for module type recipes
-                Armour, Fighter, Module, Suit, Weapon,
+                Armour, 
+                Fighter, 
+                Module, 
+                Suit, 
+                Weapon,
             };
 
             public string EnglishModName { get; set; }     // english name

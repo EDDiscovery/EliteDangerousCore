@@ -23,7 +23,7 @@ namespace EliteDangerousCore
 {
     public static class BodyDefinitions
     {
-        public enum BodyType
+        public enum BodyType        // .Tx()
         {
             Unknown,
 

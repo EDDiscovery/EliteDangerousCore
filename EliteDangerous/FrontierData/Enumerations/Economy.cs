@@ -24,10 +24,9 @@ namespace EliteDangerousCore
         // from EDCD 
         // localisation can be provided via the Identifiers caching of $economy
 
-        public enum Economy
+        public enum Economy     // .Tx()
         {
             Unknown,
-
             Agri,
             Colony,
             Extraction,

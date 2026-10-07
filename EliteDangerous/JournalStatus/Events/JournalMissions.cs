@@ -766,13 +766,7 @@ namespace EliteDangerousCore.JournalEvents
             [JsonAlwaysCreate]
             public MissionID MissionID { get; set; }
             public string Type { get; set; }          // Friendly name, not fdev
-            public enum PassengerType
-            {
-                Tourist, Refugee, Soldier, Explorer, Terrorist, Business, AidWorker, Security, MinorCelebrity, Criminal, Politician,
-                Protester,
-                Medical, HeadOfState, PoliticalPrisoner, Scientist, POW, Unknown
-            };
-            public PassengerType FDType { get; set; }        // FDtype
+            public PassengersDefinitions.Types FDType { get; set; }        // FDtype
             public bool VIP { get; set; }
             public bool Wanted { get; set; }
             public int Count { get; set; }
@@ -792,11 +786,10 @@ namespace EliteDangerousCore.JournalEvents
                     if (!p.Type.HasChars())
                         p.Type = "Tourist";     // a few have this missing in typical frontier style, just fill it in
 
-                    p.FDType = Enum.TryParse(p.Type, true, out Passengers.PassengerType s) ? s : Passengers.PassengerType.Unknown;
-                    if (p.FDType == Passengers.PassengerType.Unknown)
+                    p.FDType = Enum.TryParse(p.Type, true, out PassengersDefinitions.Types s) ? s : PassengersDefinitions.Types.Unknown;
+                    if (p.FDType == PassengersDefinitions.Types.Unknown)
                     {
                         BaseUtils.Debugger.TraceBreak($"*** Unknown Passenger type {p.Type}");
-                        ;
                     }
                     p.Type = p.FDType.ToString().SplitCapsWordFull();
                 }
