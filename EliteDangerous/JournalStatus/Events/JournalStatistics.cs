@@ -126,16 +126,21 @@ namespace EliteDangerousCore.JournalEvents
             public int WeaponsOwned { get; set; }
             public long SpentOnPremiumStock { get; set; }
             public int PremiumStockBought { get; set; }
+            public int MercCoinsCurrent {  get; set; }
+            public int MerCoinsTotalEarned { get; set; }
+            public int MercCoinsTotalSpent { get; set; }
+            public int MercCoinsSpentOnMercGear { get; set; }
+            public int MercCoinsSpentOnEngineering { get; set; }
 
             public string Format(string frontline = "    ")
             {
-                return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline, 
-                    "Wealth: ; cr;N0".Tx(),  CurrentWealth, 
+                return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
+                    "Wealth: ; cr;N0".Tx(), CurrentWealth,
                     "Spent on Ships: ; cr;N0".Tx(), SpentOnShips,
-                    "Spent on Outfitting: ; cr;N0".Tx(), SpentOnOutfitting, 
-                    "Spent on Repairs: ; cr;N0".Tx(), SpentOnRepairs, 
+                    "Spent on Outfitting: ; cr;N0".Tx(), SpentOnOutfitting,
+                    "Spent on Repairs: ; cr;N0".Tx(), SpentOnRepairs,
                     "Spent on Fuel: ; cr;N0".Tx(), SpentOnFuel,
-                    "Spent on Ammo: ; cr;N0".Tx(), SpentOnAmmoConsumables, 
+                    "Spent on Ammo: ; cr;N0".Tx(), SpentOnAmmoConsumables,
                     "Insurance Claims: ;;N0".Tx(), InsuranceClaims,
                     "Spent on Insurance: ; cr;N0".Tx(), SpentOnInsurance,
                     "Owned ships: ;;N0".Tx(), OwnedShipCount,
@@ -145,7 +150,12 @@ namespace EliteDangerousCore.JournalEvents
                     "Suits Owned: ;;N0".Tx(), SuitsOwned,
                     "Weapons Owned: ;;N0".Tx(), WeaponsOwned,
                     "Spent on Premium Stock: ; cr;N0".Tx(), SpentOnPremiumStock,
-                    "Premium Stock bought: ;;N0".Tx(), PremiumStockBought);
+                    "Premium Stock bought: ;;N0".Tx(), PremiumStockBought,
+                    "Current Merc Coins: ;;N0".Tx(), MercCoinsCurrent,
+                    "Total Merc Coins earned: ;;N0".Tx(), MerCoinsTotalEarned,
+                    "Total Merc Coins spent: ;;N0".Tx(), MercCoinsTotalSpent,
+                    "Merc Coins spent on Merc Gear: ;;N0".Tx(), MercCoinsSpentOnMercGear,
+                    "Merc Coins spent on Engineering: ;;N0".Tx(), MercCoinsSpentOnEngineering);
             }
         }
 
@@ -674,6 +684,7 @@ public string Format(string frontline = "    ")
             public long Leaderboardpowerplayhighestcontribution { get; set; }
             public long Leaderboardtradehighestcontribution { get; set; }
             public long Leaderboardtradeillicithighestcontribution { get; set; }
+            public long Leaderboardoperationscorehighestcontribution { get; set; }
             public int Leaderboardpodiums { get; set; }
 
             public string Format(string frontline = "    ")
@@ -702,6 +713,7 @@ public string Format(string frontline = "    ")
                     "Highest contribution for Powerplay leaderboard: ;;N0".Tx(), Leaderboardpowerplayhighestcontribution,
                     "Highest contribution for Trade leaderboard: ;;N0".Tx(), Leaderboardtradehighestcontribution,
                     "Highest contribution for Illicit Trade leaderboard: ;;N0".Tx(), Leaderboardtradeillicithighestcontribution,
+                    "Highest contribution for Operations leaderboard: ;;N0".Tx(), Leaderboardoperationscorehighestcontribution,
                     "Times squadron got a podium place: ;;N0".Tx(), Leaderboardpodiums);                
             }
         }
