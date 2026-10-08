@@ -978,7 +978,7 @@ C747D3A6040F7B: "Enter the API key from the Inara Website\r\nGet an Inara API ke
 8D74BA59E06617: "Give the name this commander is known as in EDSM" @
 BB1D039B4A17EB: "Browse to the the journal folder" @
 D589A4444C45C3: "Enter commander name as used in Elite Dangerous" @
-336EE34F690338: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\r\nLeave override journal location blank to use the standard Frontier location for journals" @
+336EE34F690338: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer" @
 6841D35D0AFBD2: "Select folder where Journal*.log files are stored by Frontier in" @
 C8F2449029DBE8: "Folder does not exist" @
 017A61D0567AB2: "Console Commander" @

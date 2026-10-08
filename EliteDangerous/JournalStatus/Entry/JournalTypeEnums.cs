@@ -300,6 +300,7 @@ namespace EliteDangerousCore
         EDDDestinationSelected = 2020,
 
         // below are not events currently supported or icon rename events
+        // .NotTx() indicate to scanner not translated
 
         ObsoleteOrIcons = 10000,
 

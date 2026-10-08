@@ -91,7 +91,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", FriendlyName, "< sell price ; cr;N0".Tx(), Price);
+            return BaseUtils.FieldBuilder.Build("", FriendlyName, "< " + "Sell price".Tx() + " ; cr;N0", Price);
         }
 
         public void WeaponInformation(SuitWeaponList shp, string whereami, ISystem system)

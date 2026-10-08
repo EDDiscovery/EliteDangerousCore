@@ -274,7 +274,7 @@ namespace EliteDangerousCore.StarScan2
                     }
                     if (bn.CodexEntries != null)
                     {
-                        tooltip.Append("Codexs".Tx());
+                        tooltip.Append("Codex".Tx());
                         tooltip.Append(": " + Environment.NewLine);
                         JournalCodexEntry.CodexList(tooltip, bn.CodexEntries, 4, true, Environment.NewLine);
                         tooltip.AppendCR();

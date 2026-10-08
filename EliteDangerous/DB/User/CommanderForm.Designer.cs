@@ -336,7 +336,8 @@
             this.textBoxBorderJournal.TabIndex = 1;
             this.textBoxBorderJournal.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.textBoxBorderJournal.TextNoChange = "";
-            this.toolTip.SetToolTip(this.textBoxBorderJournal, resources.GetString("textBoxBorderJournal.ToolTip"));
+            this.toolTip.SetToolTip(this.textBoxBorderJournal, "Enter the journal location folder.  Normally leave this field blank only if you a" +
+        "re using EDD on another computer than your play computer");
             this.textBoxBorderJournal.WordWrap = true;
             // 
             // textBoxBorderCmdr
@@ -538,7 +539,7 @@
             this.labelEDSMAPI.Location = new System.Drawing.Point(3, 32);
             this.labelEDSMAPI.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.labelEDSMAPI.Name = "labelEDSMAPI";
-            this.labelEDSMAPI.Size = new System.Drawing.Size(82, 13);
+            this.labelEDSMAPI.Size = new System.Drawing.Size(79, 13);
             this.labelEDSMAPI.TabIndex = 2;
             this.labelEDSMAPI.Text = "EDSM API Key";
             // 
@@ -548,7 +549,7 @@
             this.labelEDSMN.Location = new System.Drawing.Point(3, 3);
             this.labelEDSMN.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.labelEDSMN.Name = "labelEDSMN";
-            this.labelEDSMN.Size = new System.Drawing.Size(72, 13);
+            this.labelEDSMN.Size = new System.Drawing.Size(69, 13);
             this.labelEDSMN.TabIndex = 2;
             this.labelEDSMN.Text = "EDSM Name";
             // 
@@ -606,7 +607,7 @@
             this.labelCN.Location = new System.Drawing.Point(3, 3);
             this.labelCN.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.labelCN.Name = "labelCN";
-            this.labelCN.Size = new System.Drawing.Size(97, 13);
+            this.labelCN.Size = new System.Drawing.Size(94, 13);
             this.labelCN.TabIndex = 2;
             this.labelCN.Text = "Commander Name";
             // 
@@ -616,7 +617,7 @@
             this.labelJL.Location = new System.Drawing.Point(3, 32);
             this.labelJL.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.labelJL.Name = "labelJL";
-            this.labelJL.Size = new System.Drawing.Size(88, 13);
+            this.labelJL.Size = new System.Drawing.Size(85, 13);
             this.labelJL.TabIndex = 2;
             this.labelJL.Text = "Journal Location";
             // 
@@ -750,7 +751,7 @@
             this.labelINARAN.Location = new System.Drawing.Point(3, 3);
             this.labelINARAN.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.labelINARAN.Name = "labelINARAN";
-            this.labelINARAN.Size = new System.Drawing.Size(65, 13);
+            this.labelINARAN.Size = new System.Drawing.Size(62, 13);
             this.labelINARAN.TabIndex = 2;
             this.labelINARAN.Text = "Inara Name";
             // 
@@ -760,7 +761,7 @@
             this.labelInaraAPI.Location = new System.Drawing.Point(3, 30);
             this.labelInaraAPI.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.labelInaraAPI.Name = "labelInaraAPI";
-            this.labelInaraAPI.Size = new System.Drawing.Size(75, 13);
+            this.labelInaraAPI.Size = new System.Drawing.Size(72, 13);
             this.labelInaraAPI.TabIndex = 2;
             this.labelInaraAPI.Text = "Inara API Key";
             // 
@@ -862,7 +863,7 @@
             this.HomeSys.Location = new System.Drawing.Point(3, 3);
             this.HomeSys.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.HomeSys.Name = "HomeSys";
-            this.HomeSys.Size = new System.Drawing.Size(75, 13);
+            this.HomeSys.Size = new System.Drawing.Size(72, 13);
             this.HomeSys.TabIndex = 2;
             this.HomeSys.Text = "Home System";
             // 
@@ -910,6 +911,7 @@
             this.extScrollBar.MousePressedButtonColor2 = System.Drawing.Color.Red;
             this.extScrollBar.Name = "extScrollBar";
             this.extScrollBar.Size = new System.Drawing.Size(48, 538);
+            this.extScrollBar.SkinnyStyle = ExtendedControls.ExtScrollBar.ScrollStyle.Normal;
             this.extScrollBar.SliderColor = System.Drawing.Color.DarkGray;
             this.extScrollBar.SliderColor2 = System.Drawing.Color.DarkGray;
             this.extScrollBar.SliderDrawAngle = 90F;
@@ -993,7 +995,7 @@
             this.Controls.Add(this.statusStripCustom);
             this.Name = "CommanderForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "CommanderForm";
+            this.Text = "Commander Form";
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.groupBoxCustomEDDN.ResumeLayout(false);

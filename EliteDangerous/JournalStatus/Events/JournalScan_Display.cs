@@ -379,36 +379,43 @@ namespace EliteDangerousCore.JournalEvents
                     information.Append(" \u232C");  // partial
             }
 
-            information.Append(" is a ".Tx());
+            string prepad = " ";
+
+            information.Append(prepad + "is a".Tx() + " ");
 
             // Additional information
+
             information.Append((js.IsStar) ? Stars.ToLocalisedLanguage(js.StarTypeID) + "." : null);
+
             information.Append((js.CanBeTerraformable) ? @"terraformable ".Tx() : null);
             information.Append((js.IsPlanet) ? Planets.PlanetNameTranslated(js.PlanetTypeID) + "." : null);
-            information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? @" Is tiny ".Tx() + "(" + RadiusText + ")." : null);
-            information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? @" Is large.".Tx() + "(" + RadiusText + ")." : null);
-            information.Append((js.IsLandable) ? @" Is landable.".Tx() : null);
-            information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? @" (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)" : null);
-            information.Append((js.HasAtmosphere && showAtmos) ? @" Atmosphere".Tx() + ": " + js.AtmosphereTranslated : null);
-            information.Append((js.IsLandable && js.nSurfaceTemperature.HasValue && showTemp) ? (string.Format(" Surface temperature: {0} K.".Tx(), Math.Round(js.nSurfaceTemperature.Value, 1, MidpointRounding.AwayFromZero))) : null);
-            information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? @" Has ".Tx() + js.VolcanismTranslated + "." : null);
+
+            information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? prepad +  "Is tiny".Tx() + " (" + RadiusText + ")." : null);
+            information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? prepad +  "Is large".Tx() + " (" + RadiusText + ")." : null);
+            information.Append((js.IsLandable) ? prepad +  "Is landable".Tx() + "." : null);
+            information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? " (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)." : null);
+            information.Append((js.HasAtmosphere && showAtmos) ? prepad +  "Atmosphere".Tx() + ": " + js.AtmosphereTranslated + ".": null);
+            information.Append((js.IsLandable && js.nSurfaceTemperature.HasValue && showTemp) ? prepad +  "Surface temperature".Tx() + ": " + Math.Round(js.nSurfaceTemperature.Value, 1, MidpointRounding.AwayFromZero) + "K." : null);
+            information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? js.VolcanismTranslated: null);
             information.Append((hasminingsignals) ? " Has mining signals.".Tx() : null);
-            information.Append((hasplanetaryminingsignals) ? (" " + "Has planetary mining signals.".Tx()) : null);
-            information.Append((hasgeosignals) ? (string.Format(" Geological signals: {0}.".Tx(), js.CountGeoSignals)) : null);
-            information.Append((hasbiosignals) ? (string.Format(" Biological signals: {0}.".Tx(), js.CountBioSignals)) : null);
-            information.Append((hasthargoidsignals) ? (string.Format(" Thargoid signals: {0}.".Tx(), js.CountThargoidSignals)) : null);
-            information.Append((hasguardiansignals) ? (string.Format(" Guardian signals: {0}.".Tx(), js.CountGuardianSignals)) : null);
-            information.Append((hashumansignals) ? (string.Format(" Human signals: {0}.".Tx(), js.CountHumanSignals)) : null);
-            information.Append((hasothersignals) ? (string.Format(" 'Other' signals: {0}.".Tx(), js.CountOtherSignals)) : null);
-            information.Append((js.HasRingsOrBelts && showRings) ? @" Is ringed.".Tx() : null);
-            information.Append((js.nEccentricity >= eccentricityLimit) ? (string.Format(@" Has an high eccentricity of {0}.".Tx(), js.nEccentricity)) : null);
-            information.Append(hasscanorganics ? " Has been scanned for organics.".Tx() : null);
+            information.Append((hasplanetaryminingsignals) ? (prepad +  "Has planetary mining signals.".Tx()) : null);
+
+            information.Append((hasgeosignals) ? ("Geological signals".Tx() + ": "+ js.CountGeoSignals + ".") : null);
+            information.Append((hasbiosignals) ? ("Biological signals".Tx() + ": " + js.CountBioSignals + ".") : null);
+            information.Append((hasthargoidsignals) ? ("Thargoid signals".Tx() + ": " + js.CountThargoidSignals + ".") : null);
+            information.Append((hasguardiansignals) ? ("Guardian signals".Tx() + ": " + js.CountGuardianSignals + ".") : null);
+            information.Append((hashumansignals) ? ("Human signals".Tx() + ": " + js.CountHumanSignals + ".") : null);
+            information.Append((hasothersignals) ? ("Other signals".Tx() + ": " + js.CountOtherSignals + ".") : null);
+
+            information.Append((js.HasRingsOrBelts && showRings) ? prepad +  "Is ringed".Tx() + "." : null);
+            information.Append((js.nEccentricity >= eccentricityLimit) ? prepad +  "Has an high eccentricity of".Tx() + $" {js.nEccentricity:N3}." : null);
+            information.Append(hasscanorganics ? prepad +  "Has been scanned for organics".Tx() + "." : null);
 
             var ev = js.GetEstimatedValues();
 
             if (js.WasMapped == true && js.WasDiscovered == true && js.WasFootfalled != true)
             {
-                information.Append(" (Mapped & Discovered)".Tx());
+                information.Append(" (" + "Mapped & Discovered".Tx() + ")");
                 if (showvalues)
                 {
                     information.Append(' ').Append(ev.EstimatedValueMappedEfficiently.ToString("N0")).Append(" cr");
@@ -416,7 +423,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else if (js.WasMapped == true && js.WasDiscovered == false && js.WasFootfalled != true)
             {
-                information.Append(" (Mapped)".Tx());
+                information.Append(" (" + "Mapped".Tx() + ")");
                 if (showvalues)
                 {
                     information.Append(' ').Append(ev.EstimatedValueFirstMappedEfficiently.ToString("N0")).Append(" cr");
@@ -424,7 +431,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else if (js.WasDiscovered == true && js.WasMapped == false && js.WasFootfalled != true)
             {
-                information.Append(" (Discovered)".Tx());
+                information.Append(" (" + "Discovered".Tx() + ")");
                 if (showvalues)
                 {
                     information.Append(' ').Append((ev.EstimatedValueFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
@@ -432,7 +439,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else if (js.WasMapped == true && js.WasDiscovered == true && js.WasFootfalled == true)
             {
-                information.Append(" (Mapped & Discovered & Footfalled)".Tx());
+                information.Append(" (" + "Mapped & Discovered & Footfalled".Tx() + ")");
                 if (showvalues)
                 {
                     information.Append(' ').Append(ev.EstimatedValueMappedEfficiently.ToString("N0")).Append(" cr");
@@ -440,7 +447,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else if (js.WasMapped == true && js.WasDiscovered == false && js.WasFootfalled == true)
             {
-                information.Append(" (Mapped & Footfalled)".Tx());
+                information.Append(" (" + "Mapped & Footfalled".Tx() + ")");
                 if (showvalues)
                 {
                     information.Append(' ').Append(ev.EstimatedValueFirstMappedEfficiently.ToString("N0")).Append(" cr");
@@ -448,7 +455,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else if (js.WasDiscovered == true && js.WasMapped == false && js.WasFootfalled == true)
             {
-                information.Append(" (Discovered & Footfalled)".Tx());
+                information.Append(" (" + "Discovered & Footfalled".Tx() + ")");
                 if (showvalues)
                 {
                     information.Append(' ').Append((ev.EstimatedValueFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");
@@ -456,7 +463,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             else if (js.WasDiscovered == false && js.WasMapped == false && js.WasFootfalled == true)
             {
-                information.Append(" (Footfalled)".Tx());
+                information.Append(" (" + "Footfalled".Tx() + ")");
                 if (showvalues)
                 {
                     information.Append(' ').Append((ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently > 0 ? ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently : ev.EstimatedValueBase).ToString("N0")).Append(" cr");

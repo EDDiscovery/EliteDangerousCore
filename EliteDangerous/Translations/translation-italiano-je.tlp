@@ -169,8 +169,6 @@ D50F857E661100: "Crew Member Quits" @
 0BBA6B926C275D: "Crew Member Role Change" @
 87840FD0486F82: "EDD Item Set" @
 EF44C2AD2FEB81: "EDD Commodity Prices" @
-54C7AEAC0DF2CA: "Engineer Contribution_Unknown" @
-7C4BA9326738CC: "Engineer Contribution_Mat Commod" @
 4F231038718008: "Applied To Squadron" @
 D9189899F7098F: "Asteroid Cracked" @
 182D7F00B01931: "Codex Entry" @
@@ -313,7 +311,6 @@ C45A6B5C9F13D9: "< at " @
 46FE700B99EAD5: "< in " @
 D446B632E23844: "Items to buy" @
 38892DF3CDB24B: "{0}: {1} sell {2} Diff {3} {4}%  " @
-0E5A14D01A6CE1: "{0}: {1}  " @
 9E0595F4B34B89: "Sell only Items" @
 
 SECTION JournalEngineerProgress
@@ -460,7 +457,6 @@ BF8E38829287B3: "Age: ;my;0.0" @
 41997D5AA8F9A8: "<;, Landable" @
 CABD9FE7A7C5A8: "<;, Terraformable" @
 9C417B6452D141: "Gravity: ;G;0.00" @
-34E1E2662E5B20: "No Atmosphere" @
 6E95AA58CB9A87: "Age: {0} my" @
 74526B12CD7DC5: "Solar Masses: {0:N2}" @
 B32AA433DE4238: "Surface Temp: {0}K" @
@@ -468,7 +464,6 @@ DF8BA3A47550F7: "Gravity: {0:N2}g" @
 9F2DAE94A92136: "Surface Pressure: {0} Atmospheres" @
 139A26036740E3: "Surface Pressure: {0} Pa" @
 E550B8BF252DA0: "Volcanism: {0}" @
-F2242B579D81E1: "No Volcanism" @
 056665C891A44A: "Distance from Arrival Point {0:N1}ls" @
 E452781D716535: "Orbital Period: {0} days" @
 9C92D7D1E0B506: "Semi Major Axis: {0:0.00}AU" @
@@ -486,18 +481,9 @@ B285F06D312CA2: "Tidally locked" @
 75B04B88D4665E: "Rings" @
 5987FFD982A381: "Base Estimated value: {0:N0}" @
 6682A019C4883F: "Mapped value: {0:N0}/{1:N0}e" @
-C467DD57E52397: "Discovered by {0} on {1}" @
-854F99DFC01A9F: " - Others stars not considered" @
 5046A1063B521B: "Atmospheric Composition" @
 D8F3372588C7F1: "Planetary Composition" @
-E9B087E594BA11: " - Habitable Zone, {0} ({1}-{2} AU)," @
-CF39B2D7E183F0: " - Metal Rich planets, {0} ({1}-{2} AU)," @
-0E2916E8281391: " - Water Worlds, {0} ({1}-{2} AU)," @
-4C363DDC65BBA2: " - Earth Like Worlds, {0} ({1}-{2} AU)," @
-5B1F0120B3CD0F: " - Ammonia Worlds, {0} ({1}-{2} AU)," @
-C379074215EC59: " - Icy Planets, {0} (from {1} AU)" @
 8669CDDA694B59: "Dist: ;ls;0.0" @
-56A9DD3BD69226: "Dist" => "Entf"
 94820B8DEE66A2: "Efficiently" @
 97E379A834EF5E: "First Discovered+Mapped value: {0:N0}/{1:N0}e" @
 F42A5A3B540E51: "First Mapped value: {0:N0}/{1:N0}e" @
@@ -506,6 +492,15 @@ AC983DAC73C35D: "Scan Type: {0}" @
 AEF0ABF930C73C: "Ascending Node: {0:0.000}°" @
 4853FB66BD4B2E: "Mean Anomaly: {0:0.000}°" @
 2F670401770A29: "Already Footfalled" @
+
+SECTION HabZones
+
+7CF4218BC44A5D: "Habitable Zone, {0} ({1}-{2} AU)" @
+A005C0C018C17E: "Metal Rich planets, {0} ({1}-{2} AU)" @
+F9ECCFF84E26C3: "Water Worlds, {0} ({1}-{2} AU)" @
+467B62B557939E: "Earth Like Worlds, {0} ({1}-{2} AU)" @
+4E77B1E900B3EE: "Ammonia Worlds, {0} ({1}-{2} AU)" @
+8EED937D77689F: "Icy Planets, {0} (from {1} AU)" @
 
 SECTION JournalSAAScanComplete
 
@@ -731,7 +726,6 @@ SECTION MulticrewClass
 8CE2E6C39769DC: "Total Time" @
 B8759E7DAEEB15: "Gunner Time" @
 A2D11970FCAA8C: "Fighter Time" @
-90AAB0386139D2: "Credits: ; cr;N0" @
 DBAF8C40DD5627: "Fines: ; cr;N0" @
 
 SECTION MaterialTraderStatsClass
@@ -912,8 +906,8 @@ EF6F6B19531B71: ";Active Fine" @
 33C98BED0FDE5C: "< on pad " @
 B56631BC889045: "Cockpit" @
 408DF9CD449307: "Corrosion" @
-3CDF4084F0BA2A: "Total Cost: ; cr;N0" @
-6D23A438BB2054: "Total Sale: ; cr;N0" @
+B5D8DA40F3ED31: "Total Cost" @
+E9415863CFCC3D: "Total Sale" @
 7624811212F417: "each: ; cr;N0" @
 B90EBC91B3A742: "Drones" => "Drohnen"
 51195EF23F030B: "Price: ; cr;N0" @
@@ -927,7 +921,6 @@ ACBB9E004BB3EA: "Discovered" @
 903937A1820E07: "NPC Controlled;" @
 BBD80CF7E2DED5: "Build" => "Bauart"
 88BE9D62D71BAB: "Part" => "Teil"
-4E54D83E64A56D: "Credits: ;;N0" @
 88027E516ABD34: "Not Landed;Landed" @
 DB39EF29AA8E17: "Fuel Level: ;;0.0" @
 9875F4471A80C2: "Capacity: ;;0.0" @
@@ -943,12 +936,11 @@ D3FC1E3648741C: "Added Friend" @
 7394520AEF05D7: "< (NPC);(Player)" @
 EFBA445DCE4D4D: "Failed to interdict;Interdicted" @
 6D4C60FFF57E67: "Boost: ;;0.0" @
-95C16848518091: "< buy price ; cr;N0" @
-9BF139DE61306E: "< sell price ; cr;N0" @
+BA7BE969E7C1BB: "Buy price" @
+D57E7FA2CAA064: "Sell price" @
 3576A295DC62CE: "Legal;Illegal" @
 B965812110F44B: "Not Stolen;Stolen" @
 94CF760FC133A6: "Market;BlackMarket" @
-6774408DE640A0: "< ; items" @
 E6560D9C298E72: "Sold" @
 27548C4FC95D7C: "Received" @
 A733B809D2F123: "Active" => "Aktiv"
@@ -965,11 +957,10 @@ A9E6320C912D31: "Mission name" @
 5D2525AD1B6266: "Hull: ; cr;N0" @
 19CD6C33DB63F3: "Modules: ; cr;N0" @
 F0DB993787E3F4: "Rebuy: ; cr;N0" @
-DBDAABE93AE174: "< into " @
-BAC8E74F0524D9: " on " => " auf "
+A379C85F8C69A0: "into" @
 4DB98AF9E39320: "Replaced by" @
 405F45092D843A: "Modifications" @
-127EA66ADF07B7: ", Swapped with " @
+0AF7A8485BB2D2: "Swapped with" @
 B06383A94B7BE1: "Transfer Cost: ; cr;N0" @
 400BDDE7F69B52: "Value: ; cr;N0" @
 F398AE993C17B4: "Total modules" @
@@ -977,14 +968,14 @@ F10983CD704614: "Into ship" @
 AD277E4A02CD50: "Transfer Time" @
 4B8A3E370AEDAF: "Music Track" @
 194DFB1A2EC6C7: "Wages for " @
-0FC9A117F3B233: " items available" @
+2A846ED7477092: "items available" @
 166D76AE76F567: "No Passengers" @
 12473AE7FBD7A8: "Merits" @
 B66C4B2775554E: "Votes" @
 8B6EFFD47EFDEC: "Pledged" @
 C65D5243E9C5E6: "From Power" @
 BF2C7EF9644B5F: "To Power" @
-DFAE9A3323B18F: ", Systems" @
+E26DFC1F8D9688: "Systems" @
 FD31761D9B4004: "Shield ;;N1" @
 FBA2A215328E6A: "Lost Target" @
 11530A93A09C51: "Shields Down;Shields Up" @
@@ -1053,36 +1044,31 @@ SECTION JournalMicroResources
 
 SECTION JournalScanInfo
 
-50C9F6207A37F8: " is a " => " ist ein(e) "
-0574C953EE5588: " Atmosphere" @
-331B8B83C09885: " Surface temperature: {0} K." @
+794AD1AAD63C28: "is a" => "ist ein(e)"
+221026370F53E1: "Atmosphere" @
+3D9E27EEB502A5: "Surface temperature" @
 0606F2F9983136: "terraformable " @
-7C5BAE6C336788: " Is tiny " @
-9DB73891779D78: " Is large." @
+65C132989A3982: "Is tiny" @
+9538FA9B132C61: "Is large" @
 AC2B43A4D65B41: " Has mining signals." @
-5234E64B6E1C03: " Biological signals: {0}." @
-53140EBBBD2DC3: " Geological signals: {0}." @
-F9C8D414B1F142: " Thargoid signals: {0}." @
-62F9A8EAB9A1E8: " Guardian signals: {0}." @
-4CC1BD64C545E4: " Human signals: {0}." @
-EE5122344A579C: " 'Other' signals: {0}." @
-204E719EB4129D: " (Mapped & Discovered)" @
-D91D9838CE0944: " (Mapped)" @
-B2983B7DF494FA: " (Discovered)" @
-28D71AA19F7722: " (Mapped & Discovered & Footfalled)" @
-C9E160E5886911: " (Discovered & Footfalled)" @
-5B311AC7A079E0: " (Mapped & Footfalled)" @
-3A8B7F7DE33BAF: " (Footfalled)" @
-D343B137399D3A: " Is landable." @
-817016EBBA625C: " Is ringed." @
-69016A1EE7145D: " Has " => " hat "
-AF3631062BAF32: " Has an high eccentricity of {0}." @
-50D8B4A941C26B: "unknown" => "unbekannt"
-E4D013B562F9F8: " Basic" @
-DF4C2085E463AE: " Standard" => "Standard"
-AFCB2A18DD3242: " Premium" @
+44012680B4AA93: "Biological signals" @
+272D385F696052: "Geological signals" @
+DFE7B6F92EAFC7: "Thargoid signals" @
+FE28F41AF4A444: "Guardian signals" @
+C9FC56997F2C9D: "Human signals" @
+B21F6D1C4E7A48: "Other signals" @
+6E5D8362D37548: "Mapped & Discovered" @
+CE22096993313A: "Mapped & Discovered & Footfalled" @
+BEB183389084ED: "Discovered & Footfalled" @
+B710B364F8E0F6: "Mapped & Footfalled" @
+87BD92F82FDE9A: "Footfalled" @
+D6841AFCAD4973: "Is landable" @
+502FD1BD73C3D7: "Is ringed" @
+A6C3E88F2D1C97: "Has an high eccentricity of" @
+AA2C96DACF00C4: "Basic" @
+6C2F2888C561E0: "Premium" @
 82DA45C64A0D04: "{0} has {1} level elements." @
-1147BFBDA286FC: " Has been scanned for organics." @
+C154F6FA296D4B: "Has been scanned for organics" @
 
 SECTION Services
 

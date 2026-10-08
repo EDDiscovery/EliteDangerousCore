@@ -108,7 +108,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship".Tx()+": ", ShipType, "Name".Tx()+": ", ShipName, "Ident".Tx()+": ", ShipIdent, "Credits: ;;N0".Tx(), Credits);
+            return BaseUtils.FieldBuilder.Build("Cmdr ", LoadGameCommander, "Ship".Tx()+": ", ShipType, "Name".Tx()+": ", ShipName, "Ident".Tx()+": ", ShipIdent, "Credits".Tx() + ": ; cr;N0", Credits);
         }
         public override string GetDetailed()
         {

@@ -124,46 +124,42 @@
   <data name="textBoxBorderEDSMName.EndButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAe
-        wAAAHsABES62twAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
+        vgAAHr4BkbqOfgAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
         AD5NGIphAJsmnIphAFkTQcUwAFaJQzEAoMF9g4mDa50AAAAASUVORK5CYII=
 </value>
   </data>
   <data name="textBoxBorderEDSMAPI.EndButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAe
-        wAAAHsABES62twAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
+        vgAAHr4BkbqOfgAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
         AD5NGIphAJsmnIphAFkTQcUwAFaJQzEAoMF9g4mDa50AAAAASUVORK5CYII=
 </value>
   </data>
   <data name="textBoxBorderJournal.EndButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAe
-        wAAAHsABES62twAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
+        vgAAHr4BkbqOfgAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
         AD5NGIphAJsmnIphAFkTQcUwAFaJQzEAoMF9g4mDa50AAAAASUVORK5CYII=
 </value>
-  </data>
-  <data name="textBoxBorderJournal.ToolTip" xml:space="preserve">
-    <value>Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer
-Leave override journal location blank to use the standard Frontier location for journals</value>
   </data>
   <data name="textBoxBorderCmdr.EndButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAe
-        wAAAHsABES62twAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
+        vgAAHr4BkbqOfgAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
         AD5NGIphAJsmnIphAFkTQcUwAFaJQzEAoMF9g4mDa50AAAAASUVORK5CYII=
 </value>
   </data>
   <data name="textBoxBorderInaraName.EndButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAe
-        wAAAHsABES62twAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
+        vgAAHr4BkbqOfgAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
         AD5NGIphAJsmnIphAFkTQcUwAFaJQzEAoMF9g4mDa50AAAAASUVORK5CYII=
 </value>
   </data>
   <data name="textBoxBorderInaraAPIKey.EndButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAe
-        wAAAHsABES62twAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
+        vgAAHr4BkbqOfgAAAAd0SU1FB+MDAggpB2WcKicAAAAzSURBVChTY/hPImAAEwwMRGGoWggLXRIdwxXD
         AD5NGIphAJsmnIphAFkTQcUwAFaJQzEAoMF9g4mDa50AAAAASUVORK5CYII=
 </value>
   </data>

@@ -236,7 +236,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Systems != null)
             {
-                sb.Append(", Systems".Tx()+": ");
+                sb.Append(", " + "Systems".Tx()+": ");
 
                 bool comma = false;
                 foreach (string s in Systems)

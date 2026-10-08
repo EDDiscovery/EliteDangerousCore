@@ -502,7 +502,7 @@ public string Format(string frontline = "    ")
                     "Total Time".Tx()+": ", TimeTotal.SecondsToDHMString(),
                     "Gunner Time".Tx()+": ", GunnerTimeTotal.SecondsToDHMString(),
                     "Fighter Time".Tx()+": ", FighterTimeTotal.SecondsToDHMString(),
-                    "Credits: ; cr;N0".Tx(), CreditsTotal,
+                    "Credits".Tx() + ": ; cr;N0", CreditsTotal,
                     "Fines: ; cr;N0".Tx(), FinesTotal);
             }
         }

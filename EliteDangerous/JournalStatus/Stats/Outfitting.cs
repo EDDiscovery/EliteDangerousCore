@@ -91,7 +91,7 @@ namespace EliteDangerousCore
 
         public string Ident()
         {
-            return StarSystem + ":" + StationName + " on " + EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(DateTimeUTC).ToString();
+            return StarSystem + ":" + StationName + " " + EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(DateTimeUTC).ToString();
         }
 
         public List<string> ItemList() { return (from x1 in Items select x1.Name).ToList(); }

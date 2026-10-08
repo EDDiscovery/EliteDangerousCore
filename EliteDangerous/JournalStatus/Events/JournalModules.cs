@@ -236,8 +236,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo() 
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Build("", BuyItemFD.GetForeignModuleName(BuyItemLocalised), "< into ".Tx(),
-                                                        ShipSlots.ToLocalisedLanguage(SlotFD), "Cost: ; cr;N0".Tx(), BuyPrice);
+            sb.Build("", BuyItemFD.GetForeignModuleName(BuyItemLocalised), "<" + "into".Tx() + " ",ShipSlots.ToLocalisedLanguage(SlotFD), "Cost: ; cr;N0".Tx(), BuyPrice);
             if (SellItemFD != null)
             {
                 sb.AppendCS();
@@ -493,7 +492,7 @@ namespace EliteDangerousCore.JournalEvents
             System.Text.StringBuilder sb = new System.Text.StringBuilder(256);
             
             sb.Build("", RetrievedItemFD?.GetForeignModuleName(RetrievedItemLocalised),
-                            "< into ".Tx(), ShipSlots.ToLocalisedLanguage(SlotFD), ";(Hot)".Tx(), Hot);
+                            "<" + "into".Tx() + " ", ShipSlots.ToLocalisedLanguage(SlotFD), ";(Hot)".Tx(), Hot);
             if (Cost > 0)
             {
                 sb.AppendCS();
@@ -668,7 +667,7 @@ namespace EliteDangerousCore.JournalEvents
                             "Item".Tx()+": ", FromItemFD.GetForeignModuleName(FromItemLocalised));
             if (ToItemFD.IsValid)
             {
-                sb.Append(", Swapped with ".Tx());
+                sb.Append(" " +"Swapped with".Tx() + " ");
                 sb.Append(ToItemFD.GetForeignModuleName(ToItemLocalised));
             }
 

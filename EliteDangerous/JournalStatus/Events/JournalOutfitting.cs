@@ -82,7 +82,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Horizons { get; set; }
         public override string GetInfo() 
         {
-            return YardInfo.Items != null ? (YardInfo.Items.Length.ToString() + " items available".Tx()) : "";
+            return YardInfo.Items != null ? (YardInfo.Items.Length.ToString() + " " + "items available".Tx()) : "";
         }
 
         public override string GetDetailed()

@@ -70,7 +70,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             foreach (MicroResource m in mat.EmptyIfNull())
             {
-                sb.Append(BaseUtils.FieldBuilder.Build(prefix, m.GetFriendlyName(), "; items".Tx(), m.Count));
+                sb.Append(BaseUtils.FieldBuilder.Build(prefix, m.GetFriendlyName(), "; " + "Items".Tx(), m.Count));
                 sb.AppendCR();
             }
         }
@@ -362,11 +362,11 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (Items.Length == 1)
                 {
-                    return BaseUtils.FieldBuilder.Build("", Items[0].GetFriendlyName(), "", Items[0].Count, "< sell price ; cr;N0".Tx(), Price);
+                    return BaseUtils.FieldBuilder.Build("", Items[0].GetFriendlyName(), "", Items[0].Count, "< " + "Sell price".Tx() + " ; cr;N0", Price);
                 }
                 else
                 {
-                    return BaseUtils.FieldBuilder.Build("Items".Tx()+ ":; ", TotalCount, "< sell price ; cr;N0".Tx(), Price);
+                    return BaseUtils.FieldBuilder.Build("Items".Tx()+ ":; ", TotalCount, "< " + "Sell price".Tx() + " ; cr;N0", Price);
                 }
             }
             return "";
@@ -428,7 +428,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             int? itemcount = Count > 1 ? Count : default(int?);
-            return BaseUtils.FieldBuilder.Build("", Received_FriendlyName, "; items".Tx(), itemcount);
+            return BaseUtils.FieldBuilder.Build("", Received_FriendlyName, "; " + "Items".Tx(), itemcount);
         }
 
         public override string GetDetailed()
@@ -603,7 +603,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);     // may be null
             int? itemcount = Resource.Count > 1 ? Resource.Count : default(int?);
-            return BaseUtils.FieldBuilder.Build("", Resource.GetFriendlyName(), "< (;)", mcd?.TranslatedCategory, "< ; items".Tx(), itemcount, ";Stolen".Tx(), Stolen);
+            return BaseUtils.FieldBuilder.Build("", Resource.GetFriendlyName(), "< (;)", mcd?.TranslatedCategory, "< ; " + "Items".Tx(), itemcount, ";Stolen".Tx(), Stolen);
         }
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)    // no action, BPC does the work, but mark as MR
@@ -636,7 +636,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);     // may be null
             int? itemcount = Resource.Count > 1 ? Resource.Count : default(int?);
-            return BaseUtils.FieldBuilder.Build("", Resource.GetFriendlyName(), "< (;)", mcd?.TranslatedCategory, "< ; items".Tx(), itemcount);
+            return BaseUtils.FieldBuilder.Build("", Resource.GetFriendlyName(), "< (;)", mcd?.TranslatedCategory, "< ; " +"Items".Tx(), itemcount);
         }
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)    // no action, BPC does the work, but mark as MR

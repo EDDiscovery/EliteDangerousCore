@@ -84,7 +84,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Type".Tx()+": ", FriendlyType, "Count".Tx()+": ", Count, "Total Cost: ; cr;N0".Tx(), TotalCost, "each: ; cr;N0".Tx(), BuyPrice);
+            return BaseUtils.FieldBuilder.Build("Type".Tx()+": ", FriendlyType, "Count".Tx()+": ", Count, "Total Cost".Tx() + ": ; cr;N0", TotalCost, "each: ; cr;N0".Tx(), BuyPrice);
         }
     }
 

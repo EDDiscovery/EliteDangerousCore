@@ -147,10 +147,10 @@ namespace EliteDangerousCore
             string spstate = SpawningState_Localised != null ? SpawningState_Localised.Truncate(0, 32, "..") : null;
 
             return BaseUtils.FieldBuilder.Build(
-                        ";Station".Tx() + ": ", ClassOfSignal == Classification.Station,
-                        ";Carrier".Tx() + ": ", ClassOfSignal == Classification.Carrier,
-                        ";Megaship".Tx() + ": ", ClassOfSignal == Classification.Megaship,
-                        ";Installation".Tx() + ": ", ClassOfSignal == Classification.Installation,
+                        ";" + "Station".Tx() + ": ", ClassOfSignal == Classification.Station,
+                        ";" + "Carrier".Tx() + ": ", ClassOfSignal == Classification.Carrier,
+                        ";" + "Megaship".Tx() + ": ", ClassOfSignal == Classification.Megaship,
+                        ";" + "Installation".Tx() + ": ", ClassOfSignal == Classification.Installation,
                         "<", signname,
                         "", USSTypeLocalised,
                         "Threat Level".Tx() + ": ", ThreatLevel,

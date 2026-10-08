@@ -52,7 +52,7 @@ namespace EliteDangerousCore
         public enum ShipPackOperationType { BuyPack, SellPack, RestockPack, Unknown }
 
         // as per frontier CrewRole Entry
-        public enum ServiceType // .Tx()
+        public enum ServiceType 
         {
             BridgeCrew, 
             CommodityTrading, 

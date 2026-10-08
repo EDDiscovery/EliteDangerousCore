@@ -215,27 +215,27 @@ namespace EliteDangerousCore.JournalEvents
             DateTime? exp = Expiry > DateTime.MinValue ? EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry) : default(DateTime?);
 
             return BaseUtils.FieldBuilder.Build("", LocalisedName,
-                                      "< from ".Tx(translate), Faction,
-                                      "System".Tx(translate)+": ", DestinationSystem,
-                                      "Station".Tx(translate)+": ", DestinationStation,
-                                      "Settlement".Tx(translate)+": ", DestinationSettlement,
-                                      "Expiry".Tx(translate)+": ", exp,
-                                      "Influence".Tx(translate)+": ", Influence,
-                                      "Reputation".Tx(translate)+": ", Reputation,
-                                      "Reward: ; cr;N0".Tx(translate), Reward,
-                                      "; (Wing)".Tx(translate), Wing);
+                                      "< from ".TxCond(translate), Faction,
+                                      "System".TxCond(translate)+": ", DestinationSystem,
+                                      "Station".TxCond(translate)+": ", DestinationStation,
+                                      "Settlement".TxCond(translate)+": ", DestinationSettlement,
+                                      "Expiry".TxCond(translate)+": ", exp,
+                                      "Influence".TxCond(translate)+": ", Influence,
+                                      "Reputation".TxCond(translate)+": ", Reputation,
+                                      "Reward: ; cr;N0".TxCond(translate), Reward,
+                                      "; (Wing)".TxCond(translate), Wing);
         }
 
         public string MissionDetailedInfo(bool translate)          // MissionList::FullInfo (DLL uses this), Journal Entry detailed info
         {
             return BaseUtils.FieldBuilder.Build(
-                                           "Deliver".Tx(translate)+": ", CommodityLocalised,
-                                           "Count".Tx(translate)+": ", Count,
-                                           "Target".Tx(translate)+": ", TargetLocalised,
+                                           "Deliver".TxCond(translate)+": ", CommodityLocalised,
+                                           "Count".TxCond(translate)+": ", Count,
+                                           "Target".TxCond(translate)+": ", TargetLocalised,
                                            "Type".Tx() + ": ", TargetTypeFriendly,
-                                           "Target Faction".Tx(translate)+": ", TargetFaction,
-                                           "Kill Count".Tx(translate)+": ", KillCount,
-                                           "Passengers".Tx(translate)+": ", PassengerCount);
+                                           "Target Faction".TxCond(translate)+": ", TargetFaction,
+                                           "Kill Count".TxCond(translate)+": ", KillCount,
+                                           "Passengers".TxCond(translate)+": ", PassengerCount);
         }
 
         public string MissionInfoColumn()          //  MissionList:info, used for MissionList:Info, used in mission panels.
@@ -478,7 +478,7 @@ namespace EliteDangerousCore.JournalEvents
             if (PermitsAwarded != null && PermitsAwarded.Length > 0)
             {
                 if (pretty)
-                    detailed += "Permits".Tx(translate)+": ";
+                    detailed += "Permits".TxCond(translate)+": ";
 
                 for (int i = 0; i < PermitsAwarded.Length; i++)
                     detailed += ((i > 0) ? "," : "") + PermitsAwarded[i];
@@ -495,7 +495,7 @@ namespace EliteDangerousCore.JournalEvents
             if (CommodityReward != null && CommodityReward.Length > 0)
             {
                 if (pretty)
-                    detailed += "Rewards".Tx(translate)+": ";
+                    detailed += "Rewards".TxCond(translate)+": ";
 
                 for (int i = 0; i < CommodityReward.Length; i++)
                 {
@@ -515,7 +515,7 @@ namespace EliteDangerousCore.JournalEvents
             if (MaterialsReward != null && MaterialsReward.Length > 0)
             {
                 if (pretty)
-                    detailed += "Rewards".Tx(translate)+": ";
+                    detailed += "Rewards".TxCond(translate)+": ";
 
                 for (int i = 0; i < MaterialsReward.Length; i++)
                 {

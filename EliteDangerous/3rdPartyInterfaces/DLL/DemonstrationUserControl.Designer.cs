@@ -1,4 +1,5 @@
-﻿
+﻿//  .NotTxFile()     indicate don't scan in translation UI 
+
 namespace EliteDangerous.DLL
 {
     partial class DemonstrationUserControl

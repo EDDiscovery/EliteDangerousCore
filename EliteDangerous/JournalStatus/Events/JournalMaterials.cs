@@ -110,7 +110,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             foreach (Material m in mat)
             {
-                sb.Append(BaseUtils.FieldBuilder.Build(" ", m.FriendlyName, "; items".Tx(), m.Count));
+                sb.Append(BaseUtils.FieldBuilder.Build(" ", m.FriendlyName, "; " +"Items".Tx(), m.Count));
                 sb.AppendCR();
             }
         }
@@ -164,9 +164,10 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
-                return BaseUtils.FieldBuilder.Build("", mcd.TranslatedName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".Tx(), Count, "Total".Tx()+": ", Total);
+                return BaseUtils.FieldBuilder.Build("", mcd.TranslatedName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, 
+                    "< ; " + "Items".Tx(), Count, "Total".Tx()+": ", Total);
             else
-                return BaseUtils.FieldBuilder.Build("", Name_Localised, "< ; items".Tx(), Count);
+                return BaseUtils.FieldBuilder.Build("", Name_Localised, "< ; " + "Items".Tx(), Count);
         }
     }
 
@@ -200,9 +201,9 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Name);
             if (mcd != null)
-                return BaseUtils.FieldBuilder.Build("", mcd.TranslatedName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; items".Tx(), Count, "Total".Tx()+": ", Total);
+                return BaseUtils.FieldBuilder.Build("", mcd.TranslatedName, "< (", mcd.TranslatedCategory, ";)", mcd.TranslatedType, "< ; " + "Items".Tx(), Count, "Total".Tx()+": ", Total);
             else
-                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; items".Tx(), Count);
+                return BaseUtils.FieldBuilder.Build("", FriendlyName, "< ; " + "Items".Tx(), Count);
         }
     }
 
