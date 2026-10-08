@@ -714,6 +714,12 @@ ADDF7363C9A0F5: "Suits fully Upgraded: ;;N0" => "套装完全升级: ;;N0"
 1110D135B3AC55: "Suits fully Modified: ;;N0" => "套装完全改装: ;;N0"
 9CE0C127CEC0A7: "Weapons fully Modified: ;;N0" => "武器完全改装: ;;N0"
 
+
+SECTION SuitsWeapons
+
+CC459F63A7AECD: "Mods" => "模组"
+9E7FD7DDAEE291: "Loadout" => "配置"
+
 SECTION CrewClass
 
 FDBB95B8322925: "Total Wages: ; cr;N0" => "总工资支出: ; cr;N0"

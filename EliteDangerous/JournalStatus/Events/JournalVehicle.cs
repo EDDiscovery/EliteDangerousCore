@@ -181,7 +181,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Type_Localised, "Cost: ; cr;N0".Tx(), Cost, "Count".Tx() + ": ", Count, "Loadout".Tx() + ": ", Loadout);
+            return BaseUtils.FieldBuilder.Build("", Type_Localised, "Cost".Tx() + ": ; cr N0", Cost, "Count".Tx() + ": ", Count, "Loadout".Tx() + ": ", Loadout);
         }
     }
 

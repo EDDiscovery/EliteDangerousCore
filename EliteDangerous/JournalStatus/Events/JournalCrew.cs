@@ -83,7 +83,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("Hired: ;".Tx(), Name, "< of faction ".Tx(), 
-                            Faction, "Rank".Tx()+": ", RankDefinitions.FriendlyName(CombatRank), "Cost: ; cr;N0".Tx(), Cost);
+                            Faction, "Rank".Tx()+": ", RankDefinitions.FriendlyName(CombatRank), "Cost".Tx() + ": ; cr N0", Cost);
             
         }
     }

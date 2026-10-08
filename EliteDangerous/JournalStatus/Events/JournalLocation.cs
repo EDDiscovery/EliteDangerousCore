@@ -138,18 +138,17 @@ namespace EliteDangerousCore.JournalEvents
         public override string SummaryName(ISystem sys)     // Location
         {
             if (Docked)
-                return string.Format("At {0}".Tx(), StationName_Localised);
+                return "At".Tx() + " " + StationName_Localised;
             else
             {
                 string bodyname = Body.HasChars() ? Body.ReplaceIfStartsWith(StarSystem) : StarSystem;
-                if ( OnFoot == true )
+                if (OnFoot == true)
                     return string.Format("On Foot at {0}".Tx(), bodyname);
                 else if (Latitude.HasValue && Longitude.HasValue)
                     return string.Format("Landed on {0}".Tx(), bodyname);
                 else
-                    return string.Format("At {0}".Tx(), bodyname);
+                    return "At".Tx() + " " + bodyname;
             }
-
         }
 
         public override string GetInfo()        // Location

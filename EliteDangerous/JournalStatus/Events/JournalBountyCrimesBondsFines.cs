@@ -245,7 +245,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("", CrimesFDName.ToLocalisedLanguage(FDCrimeType), "< on faction ".Tx(), Faction, 
-                        "Against ".Tx(), VictimLocalised, "Cost: ; cr;N0".Tx(), Fine, "Bounty: ; cr;N0".Tx(), Bounty);
+                        "Against ".Tx(), VictimLocalised, "Cost".Tx() + ": ; cr N0", Fine, "Bounty: ; cr;N0".Tx(), Bounty);
         }
     }
 
@@ -348,7 +348,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            string info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".Tx(), Amount, "< to ".Tx(), Faction_Localised);
+            string info = BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Amount, "< to ".Tx(), Faction_Localised);
             if (BrokerPercentage > 0)
                 info += string.Format(", Broker took {0:N0}%".Tx(), BrokerPercentage);
             return info;
@@ -387,7 +387,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            string info =BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".Tx(), Amount, "< to ".Tx(), Faction_Localised);
+            string info =BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Amount, "< to ".Tx(), Faction_Localised);
             if (BrokerPercentage > 0)
                 info += string.Format(", Broker took {0:N0}%".Tx(), BrokerPercentage);
             return info;
@@ -419,7 +419,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            string info = BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".Tx(), Amount);
+            string info = BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Amount);
             if (BrokerPercentage > 0)
                 info += string.Format(", Broker took {0:N0}%".Tx(), BrokerPercentage);
             return info;

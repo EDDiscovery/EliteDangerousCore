@@ -202,7 +202,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("At ".Tx(), Location,
-                                              "Cost: ; cr;N0".Tx(), Price,
+                                              "Cost".Tx() + ": ; cr N0", Price,
                                               "Call Sign".Tx()+": ", Callsign);
         }
 
@@ -652,7 +652,7 @@ namespace EliteDangerousCore.JournalEvents
                                                 "", FriendlyOperation,
                                                 "", PackTheme,
                                                 "Tier".Tx()+": ", PackTier,
-                                                "Cost: ; cr;N0".Tx(), Cost,
+                                                "Cost".Tx() + ": ; cr N0", Cost,
                                                 "Refund: ; cr;N0".Tx(), Refund
                                                 );
 
@@ -693,7 +693,7 @@ namespace EliteDangerousCore.JournalEvents
             return BaseUtils.FieldBuilder.Build("", FriendlyOperation,
                                                 "", PackTheme,
                                                 "Tier".Tx()+": ", PackTier,
-                                                "Cost: ; cr;N0".Tx(), Cost,
+                                                "Cost".Tx() + ": ; cr N0", Cost,
                                                 "Refund: ; cr;N0".Tx(), Refund
                                                 );
 
@@ -763,14 +763,14 @@ namespace EliteDangerousCore.JournalEvents
             {
                 return BaseUtils.FieldBuilder.Build("Purchase".Tx()+": ", Order.Commodity_Localised,
                                                     "", Order.PurchaseOrder,
-                                                    "Cost: ; cr;N0".Tx(), Order.Price,
+                                                    "Cost".Tx() + ": ; cr N0", Order.Price,
                                                     "<; (Blackmarket)", Order.BlackMarket);
             }
             else if (Order.SaleOrder != null)
             {
                 return BaseUtils.FieldBuilder.Build("Sell".Tx()+": ", Order.Commodity_Localised,
                                                     "", Order.SaleOrder,
-                                                    "Cost: ; cr;N0".Tx(), Order.Price,
+                                                    "Cost".Tx() + ": ; cr N0", Order.Price,
                                                     "<; (Blackmarket)", Order.BlackMarket); 
             }
             else if ( CancelTrade != null && CancelTrade.Value == true )

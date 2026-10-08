@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".Tx(), Cost, "Fuel: ; tons;0.0".Tx(), Amount);
+            return BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Cost, "Fuel: ; tons;0.0".Tx(), Amount);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -65,7 +65,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".Tx(), Cost, "Fuel: ; tons;0.0".Tx(), Amount);
+            return BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Cost, "Fuel: ; tons;0.0".Tx(), Amount);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)

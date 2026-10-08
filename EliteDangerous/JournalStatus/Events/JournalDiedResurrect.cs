@@ -175,7 +175,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Option".Tx()+": ", Option, "Cost: ; cr;N0".Tx(), Cost, ";Bankrupt".Tx(), Bankrupt);
+            return BaseUtils.FieldBuilder.Build("Option".Tx()+": ", Option, "Cost".Tx() + ": ; cr N0", Cost, ";Bankrupt".Tx(), Bankrupt);
         }
     }
 

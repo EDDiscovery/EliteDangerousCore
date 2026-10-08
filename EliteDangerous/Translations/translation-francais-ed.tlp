@@ -936,6 +936,12 @@ B217E98C3BF70F: "Ruby" @
 6206BF660FE9B5: "Operations Counter Attack Data" @
 528C2290F89AFD: "Unica Seed" @
 
+SECTION MaterialTypes
+
+DA433CD41E7FB7: "Raw" => "Brut"
+58AC2F7D78D326: "Encoded" => "Encodé"
+8AB3DB9BFC3921: "Manufactured" => "Fabriqué"
+
 SECTION EngineeringData
 
 05FC94B0147F09: "Engineer" => "Ingénieur"
@@ -998,6 +1004,7 @@ SECTION ScreenShotImageConverter
 
 SECTION ScreenShotConfigureForm
 
+8AE1C34BD37FAD: "Left" => "Restant"
 835B2880FDF517: "Screen Shot Configure" => "Configuration des captures d'écran"
 0B9344A6FEDB18: "Crop/Resize Settings" => "Paramètres de rognage"
 CAE0435C41E816: "Top" => "Haut"
@@ -1032,6 +1039,150 @@ F50801EB15AB8D: "Surface features" => "Eléments de surface"
 2C5D5B88672D11: "Codex" @
 85373BC01466D9: "Organics" => "Formes de vie organique"
 B3C13D36C779CE: "Genuses" => "Genres"
+
+SECTION Stations
+
+4CB8D8545ED6BF: "Station" @
+
+SECTION Misc
+7548AB52C3D1D5: "Power" => "Puissance"
+44F6AF6945544C: "Quantity" => "Quantité"
+38DFC233193C18: "Commodity" => "Marchandise"
+171A0606F7C745: "Group" => "Groupe"
+160F06D4799C85: "Purchase" => "Achat"
+C7AD6F7B6831A8: "Redeem Voucher" => "Valeur des primes réclamées"
+2C60D95A352DA3: "Pay Fines" => "Valeur des amendes"
+B83FE58DB23E57: "Interdicted" => "Interdit"
+C21AFB3EFA18AB: "Interdiction" => "Interdiction"
+F25CE1B8A399BD: "Security" => "Sécurité"
+A7B93D2128E820: "Mode" @
+7E8548C30FEF17: "Economy" => "Économie"
+E471FACAC24C5F: "Allegiance" => "Allégeance"
+A7250206751868: "State" => "Statut"
+5C9CB498F540DF: "Government" => "Gouvernement"
+4D064726954A17: "Advanced" => "Avancé"
+79056C7AE5C30B: "Commander" => "Commandant"
+F5110F31C60E83: "EDSM Name" => "Nom EDSM"
+96DDACCF581F48: "Ring" => "Anneau"
+2DBDE6DD6FB541: "Belt" => "Ceinture d'astéroïdes"
+A689A999A5E620: "Expired" => "Expiré"
+41FF354B2B330B: "Class" => "Classe"
+E5AAEAAC2E19A2: "Radius" => "Rayon"
+AE79EA1E9C6391: "To" => "vers"
+B25928C6990255: "Total" @
+0CF5E327910E74: "Fleet Carrier" => "Porte-vaisseaux"
+7F0950D59B1A34: "Squadron Carrier" => "Porte-vaisseaux d'escadron"
+3F66052A107EAF: "From" => "Depuis"
+F32D0645A8333F: "Weapons" => "Armes"
+ECE2AC10D7266F: "Slot" => "Emplacement"
+B2B53EE4FC1A90: "Stored" => "Stocké"
+CA73BB4E22EBFD: "Stored Modules" => "Modules stockés"
+ECDDA59AEA5EE6: "Item" => "Équipement"
+FAB9348C4FD97F: "Armour" => "Armure"
+323D4FC7337134: "Ship" => "Vaisseau"
+AF0AD10B2A196B: "Mass" => "Masse"
+64AE43E8FE7620: "Cost" => "Coût"
+B10CFFF10BABC0: "Nav Route" => "Itinéraire de navigation en jeu"
+A9292825CC0CA6: "Landable" => "Atterrissable"
+EA5B349025CF82: "Metal-rich body" => "Corps riche en métaux"
+1B90271D66CF2D: "Progress" => "Progression"
+4DA805AFD83F17: "Ship Locker" => "Entrepôt du vaisseau"
+E5E429BCC9C2E4: "Data" => "Données"
+CCE370D2F9781A: "Rare" @
+0CCF90EB09D636: "Backpack" => "Sac à dos"
+A3C686E711E472: "Category" => "Catégorie"
+FA3CF2AD51E078: "Sell" => "Vente"
+7CECA51FCAFE42: "Buy" => "Achat"
+6C98E86FC49B32: "Cargo" => "Cargaison"
+4A7C05BDEB22B3: "Mapped" => "Cartographié"
+21B572F3D9F3E3: "Already Mapped" => "Déjà cartographié"
+43DF814DBC5742: "Already Discovered" => "Déjà découvert"
+B8FF02892916FF: "Module" @
+7C7F5D049FAD25: "Level" => "Niveau"
+D219C68101F532: "Location" => "Localisation"
+C7D7652EC6A795: "Reward" => "Récompense"
+BFAC50D6424B51: "Credits" => "Crédits"
+68316444B99C6B: "Died" => "Mort"
+61AD50A9B9189C: "Target" => "Cible"
+9D269517397775: "Faction" @
+FCAA3EA68677B6: "Target Faction" => "Faction cible"
+BC0792D8DC81E8: "System" => "Système"
+3DEB7456519697: "Type" @
+2DA600BF940484: "Version" @
+709A23220F2C3D: "Name" => "Nom"
+4DFB01DC92677C: "Colonisation" @
+C6C5065C1BFCBE: "Engineers" => "Ingénieurs"
+91B0BA24657FE5: "Carrier" => "Porte-vaisseaux"
+20063AD9053289: "Enable" => "Activer"
+84219262228FD0: "Override" @
+2F3B5C55BC27CD: "Browse" => "Parcourir"
+86896507A6ED88: "Material Trader" => "Commerçants de matériaux"
+AF169BB89CFBA4: "Combat" @
+28CBA55D2AADF5: "Scan" @
+D7B22A6928D409: "Synthesis" => "Synthèses"
+DEF494BAD4AAB6: "Outfitting" => "Équipements"
+2086B21F8F4927: "Statistics" => "Statistiques"
+323EA30C1DCCD5: "Missions" @
+2402EA36326521: "Materials" => "Matériaux"
+
+E8249C664732DF: "Remove All" => "Supprimer tout"
+
+49CE5DE18C09AA: "Hostile" @
+C65CDEF3DEF45A: "Unfriendly" => "Non amicale"
+4BD29139454399: "Neutral" => "Neutre"
+713DB5C16D862F: "Cordial" => "Cordiale"
+BF567DC7870262: "Friendly" => "Amicale"
+81F1B69D074090: "Allied" => "Alliée"
+
+6C82E6DD86807E: "Time" => "Heure"
+BC7819B34FF875: "Unknown" => "Inconnu"
+6EEF6648406C33: "None" => "Aucun"
+9CE3BD4224C8C1: "OK" @
+77DFD2135F4DB7: "Cancel" => "Annuler"
+E9C45563358E81: "Warning" => "Attention"
+
+
+SECTION Stats
+022AFB2A3DD28F: "Ident" @
+BF95513D610332: "Jet Cone Boost" => "Boost par jet de matière"
+D436FDB4D178CC: "Belt Cluster" => "Ceintures d'astéroïdes"
+6D391E1333D9E0: "Bank Account" => "Compte en banque"
+1B5A20A804DC74: "Crime" @
+6BEEE635DCA549: "Smuggling" => "Contrebande"
+49352196F6D28E: "Trading" => "Commerce"
+FAABCF8B4B60DB: "Mining" => "Minage"
+957464A0F91C56: "Exploration" @
+AB86B441AD93E7: "Passengers" => "Passagers"
+DD48A1149548F0: "Rank" => "Rang"
+955A4E9A59BF11: "Powerplay" @
+67711E423601BA: "Squadron" => "Escadron"
+E72ED7A5BCA163: "Bounties on Thargoids" => "Primes sur des Thargoids"
+C070DE1BD06E83: "Bounties on On Foot NPC" => "Primes sur des PNJ à pied"
+6273A2A0CA35EF: "Bounties on Skimmers" => "Primes sur des drones sentinelles"
+9A18F8035AAEA1: "Ships Unknown Rank" => "Vaisseaux de rang inconnu"
+BAC11F62A1EE7D: "Ships Elite Rank" => "Vaisseaux de rang Élite"
+6ED71D543A46B5: "Ships Deadly Rank" => "Vaisseaux de rang Létal"
+C154182DA6A0EA: "Ships Dangerous Rank" => "Vaisseaux de rang Vétéran"
+366E78B1602F76: "Ships Master Rank" => "Vaisseaux de rang Maître"
+457AA8E691A5DA: "Ships Expert Rank" => "Vaisseaux de rang Expert"
+68F8A460EF2B65: "Ships Competent Rank" => "Vaisseaux de rang Compétent"
+8FAD289393971D: "Ships Novice Rank" => "Vaisseaux de rang Novice"
+8727F6D4EE824C: "Ships Harmless Rank" => "Vaisseaux de rang Bleu"
+EAF8AE7FAE1187: "PVP Elite Rank" => "Joueur de rang Élite"
+B313E7107D5C86: "PVP Deadly Rank" => "Joueur de rang Létal"
+7743458F23BEEB: "PVP Dangerous Rank" => "Joueur de rang Vétéran"
+28AF125F4DCEB4: "PVP Master Rank" => "Joueur de rang Maître"
+A6E743F4A8DA1F: "PVP Expert Rank" => "Joueur de rang Expert"
+0D4936734E146A: "PVP Competent Rank" => "Joueur de rang Compétent"
+0A7B5DB004014C: "PVP Novice Rank" => "Joueur de rang Novice"
+8BED567DC90C30: "PVP Harmless Rank" => "Joueur de rang Bleu"
+E0C47B9F787BC5: "Search and Rescue" => "Sauvetage"
+4EC8D6E506ED34: "Fleetcarrier" => "Porte-vaisseaux"
+B663617A36922A: "CQC" @
+E41CFBE34F8307: "Exobiology" => "Exobiologie"
+57D866D2E06189: "Thargoids" => "Rencontres"
+DE463BA892C2F3: "Crew" => "Équipage"
+
 
 SECTION Signals
 

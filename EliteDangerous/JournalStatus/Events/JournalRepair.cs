@@ -68,9 +68,9 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             if (Items.Count > 1)
-                return BaseUtils.FieldBuilder.Build("Repaired: ", Items.Count, "Cost: ; cr;N0".Tx(), Cost);
+                return BaseUtils.FieldBuilder.Build("Repaired: ", Items.Count, "Cost".Tx() + ": ; cr N0", Cost);
             else
-                return BaseUtils.FieldBuilder.Build("", ItemFD.GetForeignModuleName(ItemLocalised), "Cost: ; cr;N0".Tx(), Cost);
+                return BaseUtils.FieldBuilder.Build("", ItemFD.GetForeignModuleName(ItemLocalised), "Cost".Tx() + ": ; cr N0", Cost);
         }
         public override string GetDetailed()
         {
@@ -81,7 +81,7 @@ namespace EliteDangerousCore.JournalEvents
                 sb.AppendCR();
             }
 
-            return sb.ToString() + BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".Tx(), Cost);
+            return sb.ToString() + BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Cost);
         }
     }
 
@@ -103,7 +103,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Cost: ; cr;N0".Tx(), Cost);
+            return BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Cost);
         }
     }
 

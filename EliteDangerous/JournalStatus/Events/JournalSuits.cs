@@ -45,7 +45,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             string smod = SuitMods != null ? string.Join(", ", SuitMods.Select(x=> EngineeringRecipe.GetBetterNameForEngineeringRecipeFDName(x))) : null;
-            return BaseUtils.FieldBuilder.Build("", FriendlyName, "Mods".Tx()+": ", smod, "Cost: ; cr;N0".Tx(), Price);
+            return BaseUtils.FieldBuilder.Build("", FriendlyName, "Mods".Tx()+": ", smod, "Cost".Tx() + ": ; cr N0", Price);
             
         }
 
@@ -583,7 +583,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             long? p = Cost > 0 ? Cost : default(long?);
             string smod = SuitMods != null ? string.Join(", ", SuitMods.Select(x => EngineeringRecipe.GetBetterNameForEngineeringRecipeFDName(x))) : null;
-            return BaseUtils.FieldBuilder.Build("", Name_Localised, "< => ", Class, "Mods".Tx()+": ", smod, "Cost: ; cr;N0".Tx(), p);
+            return BaseUtils.FieldBuilder.Build("", Name_Localised, "< => ", Class, "Mods".Tx()+": ", smod, "Cost".Tx() + ": ; cr N0", p);
         }
 
         public void SuitInformation(SuitList shp, string whereami, ISystem system)

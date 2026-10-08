@@ -149,7 +149,7 @@ namespace EliteDangerousCore.JournalEvents
             public int Large;
         };
 
-        public override string SummaryName(ISystem sys) { return string.Format("At {0}".Tx(), StationName_Localised); }
+        public override string SummaryName(ISystem sys) { return "At".Tx() + " " + StationName_Localised; }
 
         public override string GetInfo()
         {

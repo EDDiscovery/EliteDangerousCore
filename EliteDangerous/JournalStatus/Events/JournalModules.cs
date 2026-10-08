@@ -236,7 +236,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo() 
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Build("", BuyItemFD.GetForeignModuleName(BuyItemLocalised), "<" + "into".Tx() + " ",ShipSlots.ToLocalisedLanguage(SlotFD), "Cost: ; cr;N0".Tx(), BuyPrice);
+            sb.Build("", BuyItemFD.GetForeignModuleName(BuyItemLocalised), "<" + "into".Tx() + " ",ShipSlots.ToLocalisedLanguage(SlotFD), "Cost".Tx() + ": ; cr N0", BuyPrice);
             if (SellItemFD != null)
             {
                 sb.AppendCS();
@@ -296,7 +296,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", BuyItemFD.GetForeignModuleName(BuyItemLocalised), "Cost: ; cr;N0".Tx(), BuyPrice);
+            return BaseUtils.FieldBuilder.Build("", BuyItemFD.GetForeignModuleName(BuyItemLocalised), "Cost".Tx() + ": ; cr N0", BuyPrice);
         }
     }
 
@@ -496,7 +496,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Cost > 0)
             {
                 sb.AppendCS();
-                sb.Build("Cost: ; cr;N0".Tx(), Cost);
+                sb.Build("Cost".Tx() + ": ; cr N0", Cost);
             }
 
             if (SwapOutItemFD!=null)
@@ -583,7 +583,7 @@ namespace EliteDangerousCore.JournalEvents
             System.Text.StringBuilder sb = new System.Text.StringBuilder(256);
 
             sb.Build("", StoredItemFD.GetForeignModuleName(StoredItemLocalised), "< from ".Tx(),
-                               ShipSlots.ToLocalisedLanguage(SlotFD), ";(Hot)".Tx(), Hot, "Cost: ; cr;N0".Tx(), Cost);
+                               ShipSlots.ToLocalisedLanguage(SlotFD), ";(Hot)".Tx(), Hot, "Cost".Tx() + ": ; cr N0", Cost);
 
             if (ReplacementItem!=null)
             {
@@ -922,7 +922,7 @@ namespace EliteDangerousCore.JournalEvents
         }
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", StoredItemFD.GetForeignModuleName(StoredItemLocalised), "Cost: ; cr;N0".Tx(), TransferCost, "Into ship".Tx()+": ", Ship, "Transfer Time".Tx()+": ", FriendlyTransferTime);
+            return BaseUtils.FieldBuilder.Build("", StoredItemFD.GetForeignModuleName(StoredItemLocalised), "Cost".Tx() + ": ; cr N0", TransferCost, "Into ship".Tx()+": ", Ship, "Transfer Time".Tx()+": ", FriendlyTransferTime);
         }
     }
 

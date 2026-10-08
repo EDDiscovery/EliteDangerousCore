@@ -936,6 +936,12 @@ B217E98C3BF70F: "Ruby" @
 6206BF660FE9B5: "Operations Counter Attack Data" @
 528C2290F89AFD: "Unica Seed" @
 
+SECTION MaterialTypes
+
+DA433CD41E7FB7: "Raw" => "元素材料"
+58AC2F7D78D326: "Encoded" => "编码材料："
+8AB3DB9BFC3921: "Manufactured" => "人造材料"
+
 SECTION EngineeringData
 
 05FC94B0147F09: "Engineer" => "工程师"
@@ -998,6 +1004,7 @@ SECTION ScreenShotImageConverter
 
 SECTION ScreenShotConfigureForm
 
+8AE1C34BD37FAD: "Left" => "剩余数"
 835B2880FDF517: "Screen Shot Configure" => "截图配置"
 0B9344A6FEDB18: "Crop/Resize Settings" => "裁剪设置"
 CAE0435C41E816: "Top" => "上"
@@ -1032,6 +1039,150 @@ F50801EB15AB8D: "Surface features" => "地表特征"
 2C5D5B88672D11: "Codex" => "星图日志(Codex)"
 85373BC01466D9: "Organics" => "有机体"
 B3C13D36C779CE: "Genuses" => "生物属种"
+
+SECTION Stations
+
+4CB8D8545ED6BF: "Station" @
+
+SECTION Misc
+7548AB52C3D1D5: "Power" => "势力斗争"
+44F6AF6945544C: "Quantity" => "精炼矿石量"
+38DFC233193C18: "Commodity" => "商品列表"
+171A0606F7C745: "Group" => "面板列表使用字母顺序进行排序，而不是安装类别排序。注意需要重启。（目前中文界面下无效）"
+160F06D4799C85: "Purchase" @
+C7AD6F7B6831A8: "Redeem Voucher" => "兑换代券"
+2C60D95A352DA3: "Pay Fines" => "支付罚款"
+B83FE58DB23E57: "Interdicted" => "被拦截次数"
+C21AFB3EFA18AB: "Interdiction" => "逃脱FSD拦截"
+F25CE1B8A399BD: "Security" @
+A7B93D2128E820: "Mode" => "模式"
+7E8548C30FEF17: "Economy" => "经济"
+E471FACAC24C5F: "Allegiance" => "势力"
+A7250206751868: "State" => "状态"
+5C9CB498F540DF: "Government" => "政府类型："
+4D064726954A17: "Advanced" => "安全模式"
+79056C7AE5C30B: "Commander" => "指挥官"
+F5110F31C60E83: "EDSM Name" => "EDSM 用户名"
+96DDACCF581F48: "Ring" => "有1个环"
+2DBDE6DD6FB541: "Belt" => "小行星带："
+A689A999A5E620: "Expired" @
+41FF354B2B330B: "Class" => "星体种类"
+E5AAEAAC2E19A2: "Radius" => "半径"
+AE79EA1E9C6391: "To" => "到"
+B25928C6990255: "Total" => "总量"
+0CF5E327910E74: "Fleet Carrier" @
+7F0950D59B1A34: "Squadron Carrier" @
+3F66052A107EAF: "From" => "从"
+F32D0645A8333F: "Weapons" => "武器"
+ECE2AC10D7266F: "Slot" @
+B2B53EE4FC1A90: "Stored" => "飞船及其装备的模组"
+CA73BB4E22EBFD: "Stored Modules" => "飞船及其装备的模组"
+ECDDA59AEA5EE6: "Item" => "查看装备信息，基于空间站访问记录的数据"
+FAB9348C4FD97F: "Armour" => "装甲"
+323D4FC7337134: "Ship" => "飞船"
+AF0AD10B2A196B: "Mass" => "质量"
+64AE43E8FE7620: "Cost" => "价值"
+B10CFFF10BABC0: "Nav Route" => "导航航线"
+A9292825CC0CA6: "Landable" => "可登陆"
+EA5B349025CF82: "Metal-rich body" => "富金属天体"
+1B90271D66CF2D: "Progress" => "工程师进展"
+4DA805AFD83F17: "Ship Locker" @
+E5E429BCC9C2E4: "Data" => "数据"
+CCE370D2F9781A: "Rare" @
+0CCF90EB09D636: "Backpack" @
+A3C686E711E472: "Category" => "类别"
+FA3CF2AD51E078: "Sell" => "售出价格(Cr/t)"
+7CECA51FCAFE42: "Buy" => "收购价格(Cr/t)"
+6C98E86FC49B32: "Cargo" => "货舱所持(t)"
+4A7C05BDEB22B3: "Mapped" @
+21B572F3D9F3E3: "Already Mapped" @
+43DF814DBC5742: "Already Discovered" @
+B8FF02892916FF: "Module" => "模组"
+7C7F5D049FAD25: "Level" => "等级"
+D219C68101F532: "Location" => "地点"
+C7D7652EC6A795: "Reward" => "报酬"
+BFAC50D6424B51: "Credits" => "信用点"
+68316444B99C6B: "Died" => "死亡次数"
+61AD50A9B9189C: "Target" => "目标派系"
+9D269517397775: "Faction" => "派系"
+FCAA3EA68677B6: "Target Faction" => "目标派系"
+BC0792D8DC81E8: "System" => "星系："
+3DEB7456519697: "Type" => "类型"
+2DA600BF940484: "Version" => "版本"
+709A23220F2C3D: "Name" => "标题"
+4DFB01DC92677C: "Colonisation" => "殖民地"
+C6C5065C1BFCBE: "Engineers" => "工程师"
+91B0BA24657FE5: "Carrier" => "航母"
+20063AD9053289: "Enable" => "启用"
+84219262228FD0: "Override" => "覆盖"
+2F3B5C55BC27CD: "Browse" => "浏览"
+86896507A6ED88: "Material Trader" => "材料交易商"
+AF169BB89CFBA4: "Combat" => "战斗"
+28CBA55D2AADF5: "Scan" => "扫描"
+D7B22A6928D409: "Synthesis" => "合成"
+DEF494BAD4AAB6: "Outfitting" => "装备"
+2086B21F8F4927: "Statistics" => "统计资料"
+323EA30C1DCCD5: "Missions" => "任务"
+2402EA36326521: "Materials" => "材料"
+
+E8249C664732DF: "Remove All" => "移除所有"
+
+49CE5DE18C09AA: "Hostile" => "敌对"
+C65CDEF3DEF45A: "Unfriendly" => "恶意"
+4BD29139454399: "Neutral" => "中立"
+713DB5C16D862F: "Cordial" => "善意"
+BF567DC7870262: "Friendly" => "友好"
+81F1B69D074090: "Allied" => "盟友"
+
+6C82E6DD86807E: "Time" => "时间"
+BC7819B34FF875: "Unknown" => "未知"
+6EEF6648406C33: "None" => "无"
+9CE3BD4224C8C1: "OK" => "确认"
+77DFD2135F4DB7: "Cancel" => "取消"
+E9C45563358E81: "Warning" => "警告"
+
+
+SECTION Stats
+022AFB2A3DD28F: "Ident" => "飞船牌号"
+BF95513D610332: "Jet Cone Boost" => "等离子喷流助推"
+D436FDB4D178CC: "Belt Cluster" @
+6D391E1333D9E0: "Bank Account" => "\r★ 银行账户"
+1B5A20A804DC74: "Crime" @
+6BEEE635DCA549: "Smuggling" => "\r★ 走私"
+49352196F6D28E: "Trading" => "\r★ 贸易"
+FAABCF8B4B60DB: "Mining" => "矿石精炼"
+957464A0F91C56: "Exploration" @
+AB86B441AD93E7: "Passengers" => "乘客"
+DD48A1149548F0: "Rank" => "NPC船员等级"
+955A4E9A59BF11: "Powerplay" @
+67711E423601BA: "Squadron" => "申请加入中队"
+E72ED7A5BCA163: "Bounties on Thargoids" @
+C070DE1BD06E83: "Bounties on On Foot NPC" @
+6273A2A0CA35EF: "Bounties on Skimmers" @
+9A18F8035AAEA1: "Ships Unknown Rank" @
+BAC11F62A1EE7D: "Ships Elite Rank" @
+6ED71D543A46B5: "Ships Deadly Rank" @
+C154182DA6A0EA: "Ships Dangerous Rank" @
+366E78B1602F76: "Ships Master Rank" @
+457AA8E691A5DA: "Ships Expert Rank" @
+68F8A460EF2B65: "Ships Competent Rank" @
+8FAD289393971D: "Ships Novice Rank" @
+8727F6D4EE824C: "Ships Harmless Rank" @
+EAF8AE7FAE1187: "PVP Elite Rank" @
+B313E7107D5C86: "PVP Deadly Rank" @
+7743458F23BEEB: "PVP Dangerous Rank" @
+28AF125F4DCEB4: "PVP Master Rank" @
+A6E743F4A8DA1F: "PVP Expert Rank" @
+0D4936734E146A: "PVP Competent Rank" @
+0A7B5DB004014C: "PVP Novice Rank" @
+8BED567DC90C30: "PVP Harmless Rank" @
+E0C47B9F787BC5: "Search and Rescue" => "搜寻与救援"
+4EC8D6E506ED34: "Fleetcarrier" @
+B663617A36922A: "CQC" @
+E41CFBE34F8307: "Exobiology" @
+57D866D2E06189: "Thargoids" @
+DE463BA892C2F3: "Crew" => "更改船员职责"
+
 
 SECTION Signals
 
