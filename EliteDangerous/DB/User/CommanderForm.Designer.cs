@@ -336,8 +336,7 @@
             this.textBoxBorderJournal.TabIndex = 1;
             this.textBoxBorderJournal.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.textBoxBorderJournal.TextNoChange = "";
-            this.toolTip.SetToolTip(this.textBoxBorderJournal, "Enter the journal location folder.  Normally leave this field blank only if you a" +
-        "re using EDD on another computer than your play computer");
+            this.toolTip.SetToolTip(this.textBoxBorderJournal, "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\r\nLeave override journal location blank to use the standard Frontier location for journals");
             this.textBoxBorderJournal.WordWrap = true;
             // 
             // textBoxBorderCmdr

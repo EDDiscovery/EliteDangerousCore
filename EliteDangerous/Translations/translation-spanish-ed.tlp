@@ -1196,6 +1196,7 @@ FD83DA39F2DA91: "Contested" => "Disputado"
 30401222095701: "Controlled" => "Controlado"
 C0977D62F7F6E3: "Turmoil" => "Sufriendo Revueltas"
 A306BDBFED7B4A: "Fortified" => "Fortificado"
+AC9F27AD74A115: "Unoccupied" @
 F6D3C9C3B20E15: "Stronghold" => "Bastión"
 
 
@@ -1492,6 +1493,7 @@ B9F7EC2C516319: "Optional Slot 10 Class 4" => "Compartimento Opcional 10 Clase 4
 99231038FC49DD: "Optional Slot 13 Class 1" => "Compartimento Opcional 13 Clase 1"
 EB2C412690A12A: "Optional Slot 13 Class 2" => "Compartimento Opcional 13 Clase 2"
 F448DCEB3AF33F: "Optional Slot 14 Class 1" => "Compartimento Opcional 14 Clase 1"
+45A1DD67CDD695: "Optional Slot 14 Class 2" @
 EB2E26440F6DEA: "Small Hardpoint 1" => "Anclaje Pequeño 1"
 D55A80FE439B81: "Small Hardpoint 2" => "Anclaje Pequeño 2"
 F947800CCCE7FF: "Small Hardpoint 3" => "Anclaje Pequeño 3"
@@ -1511,6 +1513,7 @@ E4DD5EE5641BD6: "Vessel Voice" => "Voz de la Nave"
 3CE46E3FB1D343: "Weapon Colour" => "Color del Arma"
 D96AA577649F7B: "Turret Type 2" => "Torreta tipo 2"
 3AE8579069394D: "Sine Wave Scanner" @
+50128387AF1F10: "Biological Scanner" @
 BCC6D8B8761B2B: "Colonisation Suite" => "Equipo de Colonización"
 1D10985EBE451F: "Large Cargo 1" @
 FA9AB13CECC85C: "Large Cargo 2" @

@@ -1196,6 +1196,7 @@ FD83DA39F2DA91: "Contested" => "Umstritten"
 30401222095701: "Controlled" => "Kontrolliert"
 C0977D62F7F6E3: "Turmoil" => "In Aufruhr"
 A306BDBFED7B4A: "Fortified" => "Befestigt"
+AC9F27AD74A115: "Unoccupied" @
 F6D3C9C3B20E15: "Stronghold" => "Festung"
 
 
@@ -1492,6 +1493,7 @@ B9F7EC2C516319: "Optional Slot 10 Class 4" => "Optionaler Schacht 10 Klasse 4"
 99231038FC49DD: "Optional Slot 13 Class 1" => "Optionaler Schacht 13 Klasse 1"
 EB2C412690A12A: "Optional Slot 13 Class 2" => "Optionaler Schacht 13 Klasse 2"
 F448DCEB3AF33F: "Optional Slot 14 Class 1" => "Optionaler Schacht 14 Klasse 1"
+45A1DD67CDD695: "Optional Slot 14 Class 2" @
 EB2E26440F6DEA: "Small Hardpoint 1" => "Kleine Aufhängung 1"
 D55A80FE439B81: "Small Hardpoint 2" => "Kleine Aufhängung 2"
 F947800CCCE7FF: "Small Hardpoint 3" => "Kleine Aufhängung 3"
@@ -1511,6 +1513,7 @@ E4DD5EE5641BD6: "Vessel Voice" => "Schiffstimme"
 3CE46E3FB1D343: "Weapon Colour" => "Waffenverzierung"
 D96AA577649F7B: "Turret Type 2" => "Geschützturm 2"
 3AE8579069394D: "Sine Wave Scanner" => "Sinuswellen-Scanner"
+50128387AF1F10: "Biological Scanner" @
 BCC6D8B8761B2B: "Colonisation Suite" => "Kolonisierungssuite"
 1D10985EBE451F: "Large Cargo 1" => "Große Fracht 1"
 FA9AB13CECC85C: "Large Cargo 2" => "Große Fracht 2"

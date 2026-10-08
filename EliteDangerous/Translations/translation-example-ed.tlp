@@ -978,7 +978,7 @@ C747D3A6040F7B: "Enter the API key from the Inara Website\r\nGet an Inara API ke
 8D74BA59E06617: "Give the name this commander is known as in EDSM" @
 BB1D039B4A17EB: "Browse to the the journal folder" @
 D589A4444C45C3: "Enter commander name as used in Elite Dangerous" @
-336EE34F690338: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer" @
+336EE34F690338: "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\r\nLeave override journal location blank to use the standard Frontier location for journals" @
 6841D35D0AFBD2: "Select folder where Journal*.log files are stored by Frontier in" @
 C8F2449029DBE8: "Folder does not exist" @
 017A61D0567AB2: "Console Commander" @
@@ -1017,6 +1017,14 @@ A94BDE0A67C8B5: "Mark HiRes Files" @
 5B5F0166120216: "Original Image" @
 0022FD2EB8F912: "JPEG Quality" @
 
+SECTION Misc
+
+7548AB52C3D1D5: "Power" @
+44F6AF6945544C: "Quantity" @
+38DFC233193C18: "Commodity" @
+171A0606F7C745: "Group" @
+160F06D4799C85: "Purchase" @
+
 SECTION Screenshot
 
 8AE834B8E13929: "Folder specified does not exist" @
@@ -1032,6 +1040,10 @@ F50801EB15AB8D: "Surface features" @
 2C5D5B88672D11: "Codex" @
 85373BC01466D9: "Organics" @
 B3C13D36C779CE: "Genuses" @
+
+SECTION Stations
+
+4CB8D8545ED6BF: "Station" @
 
 SECTION Signals
 
@@ -1196,6 +1208,7 @@ FD83DA39F2DA91: "Contested" @
 30401222095701: "Controlled" @
 C0977D62F7F6E3: "Turmoil" @
 A306BDBFED7B4A: "Fortified" @
+AC9F27AD74A115: "Unoccupied" @
 F6D3C9C3B20E15: "Stronghold" @
 
 
@@ -1492,6 +1505,7 @@ B9F7EC2C516319: "Optional Slot 10 Class 4" @
 99231038FC49DD: "Optional Slot 13 Class 1" @
 EB2C412690A12A: "Optional Slot 13 Class 2" @
 F448DCEB3AF33F: "Optional Slot 14 Class 1" @
+45A1DD67CDD695: "Optional Slot 14 Class 2" @
 EB2E26440F6DEA: "Small Hardpoint 1" @
 D55A80FE439B81: "Small Hardpoint 2" @
 F947800CCCE7FF: "Small Hardpoint 3" @
@@ -1511,6 +1525,7 @@ E4DD5EE5641BD6: "Vessel Voice" @
 3CE46E3FB1D343: "Weapon Colour" @
 D96AA577649F7B: "Turret Type 2" @
 3AE8579069394D: "Sine Wave Scanner" @
+50128387AF1F10: "Biological Scanner" @
 BCC6D8B8761B2B: "Colonisation Suite" @
 1D10985EBE451F: "Large Cargo 1" @
 FA9AB13CECC85C: "Large Cargo 2" @
