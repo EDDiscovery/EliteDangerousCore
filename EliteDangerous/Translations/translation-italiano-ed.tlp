@@ -950,7 +950,7 @@ SECTION MissionState
 
 SECTION CommanderForm
 
-7420CC18DF9C4B: "CommanderForm" => "Scheda"
+C8742B3010C3C5: "Commander Form" => "Scheda"
 6E6A6F2086BB5F: "Other" => "Altro"
 B26565C54E6DA2: "Default Map Color" => "Colore della mappa normale"
 F3646F7AE1228F: "Home System" => "Domicilio"

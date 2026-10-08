@@ -14,7 +14,7 @@
 
 namespace EliteDangerousCore
 {
-    public enum JournalTypeEnum
+    public enum JournalTypeEnum     // .Tx()
     {
         Unknown = 0,
 

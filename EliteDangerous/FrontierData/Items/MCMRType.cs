@@ -22,7 +22,7 @@ namespace EliteDangerousCore
     [System.Diagnostics.DebuggerDisplay("Mat {Category} {Type} {MaterialGroup} {EnglishName} {FDName} {Shortname}")]
     public class MaterialCommodityMicroResourceType
     {
-        public enum CatType
+        public enum CatType                                 // .Tx()
         {
             Commodity,                                      // all, commodity items
             Raw, Encoded, Manufactured,                     // all, materials
@@ -36,7 +36,7 @@ namespace EliteDangerousCore
         [QuickJSON.JsonIgnore()]
         public string TranslatedCategory { get; private set; }      // translation of above..
 
-        public enum ItemType
+        public enum ItemType                                 // .Tx()
         {
             VeryCommon, Common, Standard, Rare, VeryRare,           // materials
             Unknown,                                                // used for microresources (Item/Component/Data/Consumable)
@@ -50,7 +50,7 @@ namespace EliteDangerousCore
         public string TranslatedType { get; private set; }          // translation of above..        
 
 
-        public enum MaterialGroupType                               // Material trader group type
+        public enum MaterialGroupType                               // .Tx() Material trader group type
         {
             NA,                                                     // for other than materials
             RawCategory1, RawCategory2, RawCategory3, RawCategory4, RawCategory5, RawCategory6, RawCategory7,

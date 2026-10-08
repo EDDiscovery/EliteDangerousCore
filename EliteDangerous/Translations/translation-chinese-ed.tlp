@@ -950,7 +950,7 @@ SECTION MissionState
 
 SECTION CommanderForm
 
-7420CC18DF9C4B: "CommanderForm" => "指挥官配置"
+C8742B3010C3C5: "Commander Form" => "指挥官配置"
 6E6A6F2086BB5F: "Other" => "自定义布局 (可自定义显示的面板和位置)"
 B26565C54E6DA2: "Default Map Color" => "默认星图颜色"
 F3646F7AE1228F: "Home System" => "家园星系"

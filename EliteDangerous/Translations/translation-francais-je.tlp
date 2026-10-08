@@ -577,6 +577,11 @@ E8385CA7E6A83B: "Spent on Suit Consumables: ; cr;N0" => "Dépensé en consommabl
 A87E7D3B543DF1: "Weapons Owned: ;;N0" => "Armes de poing possédés : ;;N0"
 2D8EB9D873525C: "Spent on Premium Stock: ; cr;N0" => "Dépensé en articles premium : ; cr;N0"
 D06DBE4E150485: "Premium Stock bought: ;;N0" => "Articles premium achetés : ;;N0"
+D8B3D191ABB42D: "Current Merc Coins: ;;N0" @
+1FC8DD92D2295C: "Total Merc Coins earned: ;;N0" @
+FA08667589C56E: "Total Merc Coins spent: ;;N0" @
+40CA3ACCBDC967: "Merc Coins spent on Merc Gear: ;;N0" @
+5C5D5816CF4964: "Merc Coins spent on Engineering: ;;N0" @
 
 SECTION CombatClass
 
@@ -820,6 +825,7 @@ BDC6D8E52A2CA6: "Highest contribution for Exploration leaderboard: ;;N0" => "Rec
 4C83A8A9F5B221: "Highest contribution for Powerplay leaderboard: ;;N0" => "Record de contribution au classement luttes d'influence galactiques : ;;N0"
 E5F44644D71624: "Highest contribution for Trade leaderboard: ;;N0" => "Record de contribution au classement commerce : ;;N0"
 4DC4A4CFA653D6: "Highest contribution for Illicit Trade leaderboard: ;;N0" => "Record de contribution au classement commerce (marché noir) : ;;N0"
+408B9F94D1C846: "Highest contribution for Operations leaderboard: ;;N0" @
 DD290F0A316A20: "Times squadron got a podium place: ;;N0" => "Podiums obtenus : ;;N0"
 
 SECTION JournalStoredModules
