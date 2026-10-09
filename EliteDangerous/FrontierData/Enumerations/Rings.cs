@@ -58,7 +58,7 @@ namespace EliteDangerousCore
             sb.AppendCR();
 
             if (MassMT > (BodyPhysicalConstants.oneMoon_KG / 1e9 / 1000))
-                sb.AppendFormat(frontpad + "Mass: {0:N4}{1}".Tx(), MassMT / (BodyPhysicalConstants.oneMoon_KG / 1E9), " Moons".Tx());
+                sb.AppendFormat(frontpad + "Mass: {0:N4}{1}".Tx(), MassMT / (BodyPhysicalConstants.oneMoon_KG / 1E9), " " + "Moons".Tx());
             else
                 sb.AppendFormat(frontpad + "Mass: {0:N4}{1}".Tx(), MassMT, " MT");
 

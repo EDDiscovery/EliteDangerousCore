@@ -203,9 +203,9 @@ namespace EliteDangerousCore
                 if (otherinfo)
                 {
                     sb.BuildCont("Happiness".Tx()+": ", Happiness_Localised,
-                                                                   ";Squadron System".Tx(), SquadronFaction,
-                                                                   ";Happiest System".Tx(), HappiestSystem,
-                                                                   ";Home System".Tx(), HomeSystem
+                                                                   ";" + "Squadron".Tx() + " "+ "System".Tx(), SquadronFaction,
+                                                                   ";" + "Happiest".Tx() + " " + "System".Tx(), HappiestSystem,
+                                                                   ";" + "Home".Tx() + " " + "System".Tx(), HomeSystem
                                                                    );
                 }
 

@@ -59,7 +59,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()  
         {
-            return BaseUtils.FieldBuilder.Build("At ".Tx(), Body , "< in ".Tx(), System , "File".Tx()+": ", Filename, 
+            return BaseUtils.FieldBuilder.Build("At ".Tx(), Body , "<" + "In".Tx() + " ", System , "File".Tx()+": ", Filename, 
                         "Width".Tx()+": ", Width , "Height".Tx()+": ", Height,
                         "Latitude: ;°;F4".Tx(), nLatitude, "Longitude: ;°;F4".Tx(), nLongitude);
 

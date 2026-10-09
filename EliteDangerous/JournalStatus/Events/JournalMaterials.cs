@@ -235,7 +235,7 @@ namespace EliteDangerousCore.JournalEvents
                 info += BaseUtils.FieldBuilder.Build("", Name_Localised, " (", mcd.TranslatedCategory, ";)", mcd.TranslatedType);
 
             if (DiscoveryNumber > 0)
-                info += string.Format(", Discovery {0}".Tx(), DiscoveryNumber);
+                info += string.Format(", " + "Discovery".Tx() + " {0}", DiscoveryNumber);
 
             return info;
         }

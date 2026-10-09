@@ -507,11 +507,11 @@ namespace EliteDangerousCore.JournalEvents
             else if (IsPlanet)
             {
                 return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass".Tx() + ": ", MassEMMM,
-                                                "<;, Landable".Tx(), IsLandable,
-                                                "<;, Terraformable".Tx(), TerraformState == "Terraformable", "", HasAtmosphere ? AtmosphereTranslated : null,
-                                                 "Gravity: ;G;0.00".Tx(), nSurfaceGravityG,
-                                                 "Radius".Tx() + ": ", RadiusText,
-                                                 "Dist: ;ls;0.0".Tx(), DistanceFromArrivalLS,
+                                                "<;, " + "Landable".Tx(), IsLandable,
+                                                "<;, " + "Terraformable".Tx(), TerraformState == "Terraformable", "", HasAtmosphere ? AtmosphereTranslated : null,
+                                                "Gravity: ;G;0.00".Tx(), nSurfaceGravityG,
+                                                "Radius".Tx() + ": ", RadiusText,
+                                                "Dist: ;ls;0.0".Tx(), DistanceFromArrivalLS,
                                                 "Name".Tx() + ": ", showbodyname != null ? BodyName.ReplaceIfStartsWith(showbodyname.Name) : null);
             }
             else

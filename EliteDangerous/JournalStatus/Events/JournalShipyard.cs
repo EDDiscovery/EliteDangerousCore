@@ -332,7 +332,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Swap ".Tx(), StoreOldShip, "< (;)", StoreShipId, "< for a ".Tx(), ShipType_Localised, "< (;)",ShipId);
+            return BaseUtils.FieldBuilder.Build("Swap ".Tx(), StoreOldShip, "< (;)", StoreShipId, "< " + "For a".Tx() + " ", ShipType_Localised, "< (;)",ShipId);
         }
     }
 
@@ -386,7 +386,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Of ".Tx(), ShipType_Localised, "< (;)", ShipId, "< from ".Tx(), FromSystem, "Distance: ; ly;0.0".Tx(),
+            return BaseUtils.FieldBuilder.Build("Of ".Tx(), ShipType_Localised, "< (;)", ShipId, "< " + "From".Tx() + " ", FromSystem, "Distance: ; ly;0.0".Tx(),
                             Distance, "Price: ; cr;N0".Tx(), TransferPrice, "Transfer Time".Tx() + ": ", FriendlyTransferTime);
         }
     }
@@ -457,7 +457,7 @@ namespace EliteDangerousCore.JournalEvents
                         sb.AppendPrePad(BaseUtils.FieldBuilder.Build(
                             "; ", m.Name,
                             "<", m.ShipType,
-                            "< at ".Tx(), m.StarSystem,
+                            "<" + "At".Tx() + " ", m.StarSystem,
                             "Transfer Cost: ; cr;N0".Tx(), m.TransferPrice, "Time".Tx() + ": ", m.TransferTimeString,
                             "Value: ; cr;N0".Tx(), m.Value, ";(Hot)".Tx(), m.Hot), System.Environment.NewLine);
                     }

@@ -154,9 +154,9 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             var sb = new System.Text.StringBuilder(256);
-            sb.Build("", "Docked".Tx(), "Type".Tx()+": ", StationDefinitions.ToLocalisedLanguage(FDStationType), "< in system ".Tx(), StarSystem,
+            sb.Build("", "Docked".Tx(), "Type".Tx()+": ", StationDefinitions.ToLocalisedLanguage(FDStationType), "< " + "In system".Tx() + " ", StarSystem,
                 "State".Tx()+": ", StationDefinitions.ToLocalisedLanguage(StationState),
-                ";(Wanted)".Tx(), Wanted,
+                ";(" + "Wanted".Tx() + ")".Tx(), Wanted,
                 ";Active Fine".Tx(), ActiveFine,
                 "Faction".Tx()+": ", Faction,
                 "< in state ".Tx(), FactionDefinitions.ToLocalisedLanguage(FactionState),

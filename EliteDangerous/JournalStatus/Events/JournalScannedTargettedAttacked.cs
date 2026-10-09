@@ -113,7 +113,7 @@ namespace EliteDangerousCore.JournalEvents
                 return ToString();
             else
             {
-                return (MergedEntries.Count() + 1).ToString() + " Target Events".Tx();
+                return (MergedEntries.Count() + 1).ToString() + " " + "Target Events".Tx();
             }
         }
 
@@ -144,12 +144,12 @@ namespace EliteDangerousCore.JournalEvents
                 }
                 else if (ScanStage.Value == 1)
                 {
-                    return BaseUtils.FieldBuilder.Build("", PilotName_Localised, "Rank".Tx()+": ", PilotRank, "< in ".Tx(), Ship_Localised);
+                    return BaseUtils.FieldBuilder.Build("", PilotName_Localised, "Rank".Tx()+": ", PilotRank, "<" + "In".Tx() + " ", Ship_Localised);
                 }
                 else if (ScanStage.Value == 2)
                 {
                     return BaseUtils.FieldBuilder.Build(
-                        "", PilotName_Localised, "Rank".Tx()+": ", PilotRank, "< in ".Tx(), Ship_Localised,
+                        "", PilotName_Localised, "Rank".Tx()+": ", PilotRank, "<" + "In".Tx() + " ", Ship_Localised,
                         "Shield ;;N1".Tx(), ShieldHealth, "Hull ;;N1".Tx(), HullHealth);
 
 
@@ -157,10 +157,10 @@ namespace EliteDangerousCore.JournalEvents
                 else if (ScanStage.Value == 3)
                 {
                     return BaseUtils.FieldBuilder.Build(
-                                    "", PilotName_Localised, "< (;)", LegalStatus, "Rank".Tx()+": ", PilotRank, "< in ".Tx(), Ship_Localised,
+                                    "", PilotName_Localised, "< (;)", LegalStatus, "Rank".Tx()+": ", PilotRank, "<" + "In".Tx() + " ", Ship_Localised,
                                     "Shield ;;N1".Tx(), ShieldHealth, "Hull ;;N1".Tx(), HullHealth,
                                     "Bounty: ; cr;N0".Tx(), Bounty,
-                                    "", SubSystem, "< at ;;N1".Tx(), SubSystemHealth,
+                                    "", SubSystem, "< " + "At".Tx() + " ;;N1", SubSystemHealth,
                                     "Power".Tx()+": ", Power
                                     );
                 }

@@ -348,7 +348,7 @@ namespace EliteDangerousCore.JournalEvents
         }
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", SellItemFD.GetForeignModuleName(SellItemLocalised), "< from ".Tx(),
+            return BaseUtils.FieldBuilder.Build("", SellItemFD.GetForeignModuleName(SellItemLocalised), "< " + "From".Tx() + " ",
                                             ShipSlots.ToLocalisedLanguage(SlotFD), "Price: ; cr;N0".Tx(), SellPrice);
         }
 
@@ -582,7 +582,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder(256);
 
-            sb.Build("", StoredItemFD.GetForeignModuleName(StoredItemLocalised), "< from ".Tx(),
+            sb.Build("", StoredItemFD.GetForeignModuleName(StoredItemLocalised), "< " + "From".Tx() + " ",
                                ShipSlots.ToLocalisedLanguage(SlotFD), ";(Hot)".Tx(), Hot, "Cost".Tx() + ": ; cr N0", Cost);
 
             if (ReplacementItem!=null)
@@ -796,7 +796,7 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (ShipModulesInStore.StoredModule m in ModuleItems)
                 {
                     sb.AppendCR();
-                    sb.Build("", m.NameFD.GetForeignModuleName(m.Name_Localised), "< at ".Tx(), m.StarSystem,
+                    sb.Build("", m.NameFD.GetForeignModuleName(m.Name_Localised), "<" + "At".Tx() + " ", m.StarSystem,
                                 "Transfer Cost: ; cr;N0".Tx(), m.TransferCost,
                                 "Time".Tx() + ": ", m.TransferTimeString,
                                 "Value: ; cr;N0".Tx(), m.TransferCost, ";(Hot)".Tx(), m.Hot);

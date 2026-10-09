@@ -78,7 +78,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Faction.HasChars() || Allegiance != AllegianceDefinitions.Allegiance.Unknown || Economy != EconomyDefinitions.Economy.Unknown)
             {
                 sb.BuildCont(
-                    "Faction".Tx()+": ", Faction, "<;(Wanted) ".Tx(), Wanted,
+                    "Faction".Tx()+": ", Faction, "<;(" + "Wanted".Tx() + ") ", Wanted,
                     "State".Tx()+": ", FactionDefinitions.ToLocalisedLanguage(FactionState),
                     "Allegiance".Tx()+": ", AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
                     "Economy".Tx()+": ", EconomyDefinitions.ToLocalisedLanguage(Economy),
@@ -276,7 +276,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetDetailed()    // carrier jump
         {
             StringBuilder sb = new StringBuilder();
-            sb.Build("<;(Wanted) ".Tx(), Wanted);
+            sb.Build("<;(" + "Wanted".Tx() + ") ", Wanted);
 
             if (HasPowerPlayInfo)
             {

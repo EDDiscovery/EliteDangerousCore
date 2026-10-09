@@ -285,10 +285,7 @@ B065C5EEE9CF43: "Tier Reached" @
 SECTION FSSSignal
 
 16D19F8245DA02: "Threat Level" @
-A6E0A89081909E: ";Station" @
-F8AF3031BB50C4: ";Carrier" @
-7E861CF6FC0928: ";Megaship" @
-F810904826BC3A: ";Installation" @
+C81B79DF3C6448: "Installation" @
 20C226FB3237BB: "Last Seen" @
 
 SECTION JournalFSSDiscoveryScan
@@ -307,8 +304,7 @@ SECTION JournalDocked
 SECTION JournalCommodityPricesBase
 
 BBB81F7CA96417: "Prices on ; items" @
-C45A6B5C9F13D9: "< at " @
-46FE700B99EAD5: "< in " @
+AEF36502D67B05: "In" @
 D446B632E23844: "Items to buy" @
 38892DF3CDB24B: "{0}: {1} sell {2} Diff {3} {4}%  " @
 9E0595F4B34B89: "Sell only Items" @
@@ -326,11 +322,9 @@ E2A979859FDBBA: "; ly;N2" @
 
 SECTION JournalLeaveBody
 
-0BB7C46C2736F9: "In " @
 
 SECTION JournalLocOrJump
 
-A1F7BF2AD4BEB6: "<;(Wanted) " @
 182D37EC74BF3C: "Population" @
 6B3FB6468F5B3C: "Inf: ;%" @
 20682CE886E023: "Pending State" @
@@ -351,21 +345,18 @@ B208B70B652E87: "Landed on {0}" @
 SECTION JournalLocOrJump
 
 E298B0EC36231C: "Type " @
-F6551977CCE103: "< in system " @
+5E76464C161E26: "In system" @
 115686EAF61F61: "Happiness" @
 9BF00A5AD1074F: "Reputation: ;%;N1" @
-B88C0272084C40: ";Squadron System" @
-CAB4C00BAF5433: ";Happiest System" @
-077DC88F4AAFF0: ";Home System" @
+D61087F9C608B6: "Happiest" @
 6BE989FCF3D7AF: "Active State" @
 
 SECTION JournalMissionAccepted
 
-3283C6A6480226: "< from " @
 BA8F571E0F93E1: "Expiry" @
 03ECFA6479FA3A: "Influence" @
 3A4F33142BB77B: "Reward: ; cr;N0" @
-4B0AAE097D7790: "; (Wing)" @
+589CE3494A2AD6: "Wing" @
 DCAC5D49C54C3C: "Deliver" @
 4266916B95C358: "Target Type" @
 594D59A3A18111: "Kill Count" @
@@ -373,7 +364,7 @@ DCAC5D49C54C3C: "Deliver" @
 
 SECTION JournalMaterialDiscovered
 
-8842645407ACA4: ", Discovery {0}" @
+3B3290C7FA38E8: "Discovery" @
 
 SECTION JournalMaterials
 
@@ -383,7 +374,7 @@ SECTION JournalMissionRedirected
 
 SECTION MissionItem
 
-81A4D1EEDF027B: "<;(Passenger)" @
+B1B482B63A553F: "Passenger" @
 
 SECTION JournalModuleInfo
 
@@ -407,9 +398,8 @@ E443046C7DE75A: "Soldier" @
 
 SECTION JournalReceiveText
 
-BC18E959D7B347: " Texts" @
+045962C8A5575F: "Texts" @
 585AF9B23226A0: "from " @
-C0FFAB3C44DC69: "< on " @
 
 SECTION JournalRepairDrone
 
@@ -454,8 +444,6 @@ D2F52355860145: "Scan Nav" @
 D000D9F51096C0: "Scan of {0}" @
 5168D608A81C18: "Mass: ;SM;0.00" @
 BF8E38829287B3: "Age: ;my;0.0" @
-41997D5AA8F9A8: "<;, Landable" @
-CABD9FE7A7C5A8: "<;, Terraformable" @
 9C417B6452D141: "Gravity: ;G;0.00" @
 6E95AA58CB9A87: "Age: {0} my" @
 74526B12CD7DC5: "Solar Masses: {0:N2}" @
@@ -476,7 +464,7 @@ FD157443DE4822: "Orbital Eccentricity" @
 456A3E168361D1: "Rotation Period: {0} days" @
 B285F06D312CA2: "Tidally locked" @
 1E92B81458AA22: "Candidate for terraforming" @
-7376D9B2BD1D99: " Moons" @
+418458B2E2D068: "Moons" @
 0CB33492C61519: "Belts" @
 75B04B88D4665E: "Rings" @
 5987FFD982A381: "Base Estimated value: {0:N0}" @
@@ -530,8 +518,7 @@ E0049A66519CAE: "On" @
 SECTION JournalShipTargeted
 
 D43B938327A28B: "Hull ;;N1" @
-4D69DC1C675053: "< at ;;N1" @
-0313D542901BDC: " Target Events" @
+E80B0F71712CE3: "Target Events" @
 
 SECTION JournalShipyardSell
 
@@ -539,7 +526,7 @@ SECTION JournalShipyardSell
 SECTION JournalShipyardSwap
 
 1688D8D732BD46: "Swap " @
-4A90C2022F4FC6: "< for a " @
+C4E888A145F199: "For a" @
 
 SECTION JournalShipyardTransfer
 

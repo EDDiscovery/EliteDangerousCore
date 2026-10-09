@@ -56,7 +56,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return "In ".Tx()+ StarSystem;
+            return "In".Tx() + " " + StarSystem;
         }
 
         public void AddStarScan(StarScan s, ISystem system)
@@ -107,7 +107,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return "In ".Tx()+ StarSystem;
+            return "In".Tx() + " " + StarSystem;
         }
 
         public void AddStarScan(StarScan s, ISystem system)

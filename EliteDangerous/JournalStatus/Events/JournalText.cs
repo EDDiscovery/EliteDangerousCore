@@ -90,7 +90,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
                 sb.Append((MergedEntries.Count() + 1).ToString());
-                sb.Append(" Texts".Tx());
+                sb.Append(" " + "Texts".Tx());
                 sb.AppendSPC();
                 sb.Append("from ".Tx());
                 sb.Append(Channel);
@@ -116,7 +116,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string ToString()
         {
             if ( FromLocalised.HasChars() )
-                return BaseUtils.FieldBuilder.Build("From".Tx()+": ", FromLocalised, "< on ".Tx(), Channel, "<: ", MessageLocalised);
+                return BaseUtils.FieldBuilder.Build("From".Tx()+": ", FromLocalised, "< " + "On".Tx() + " ", Channel, "<: ", MessageLocalised);
             else
                 return BaseUtils.FieldBuilder.Build("", Channel, "<: ", MessageLocalised);
         }

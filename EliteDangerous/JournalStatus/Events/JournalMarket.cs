@@ -54,8 +54,8 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("Prices on ; items".Tx(), Commodities.Count,
-                                                "< at ".Tx(), Station_Localised ?? Station,
-                                                "< in ".Tx(), StarSystem);
+                                                "<" + "At".Tx() + " ", Station_Localised ?? Station,
+                                                "<" + "In".Tx() + " ", StarSystem);
         }
 
         public override string GetDetailed()

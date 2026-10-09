@@ -156,7 +156,7 @@ namespace EliteDangerousCore.JournalEvents
             if (Docked)
             {
                 return BaseUtils.FieldBuilder.Build("Type ".Tx(), StationDefinitions.ToLocalisedLanguage(FDStationType),
-                            "< in system ".Tx(), StarSystem);
+                            "< " + "In system".Tx() + " ", StarSystem);
             }
             else if (Latitude.HasValue && Longitude.HasValue)
             {
@@ -174,7 +174,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (Docked)
             {
-                sb.Build("<;(Wanted) ".Tx(), Wanted,
+                sb.Build("<;(" + "Wanted".Tx() + ") ", Wanted,
                         "Faction".Tx()+": ", StationFaction,
                         "State".Tx()+": ", StationFactionStateTranslated,
                         "Allegiance".Tx()+": ", AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance),

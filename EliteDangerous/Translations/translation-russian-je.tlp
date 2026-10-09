@@ -284,11 +284,8 @@ B065C5EEE9CF43: "Tier Reached" => "Достигнут уровень"
 
 SECTION FSSSignal
 
-16D19F8245DA02: "Threat Level" => " уровень угрозы"
-A6E0A89081909E: ";Station" => "; станция"
-F8AF3031BB50C4: ";Carrier" @
-7E861CF6FC0928: ";Megaship" @
-F810904826BC3A: ";Installation" @
+16D19F8245DA02: "Threat Level" => "уровень угрозы"
+C81B79DF3C6448: "Installation" @
 20C226FB3237BB: "Last Seen" @
 
 SECTION JournalFSSDiscoveryScan
@@ -307,8 +304,7 @@ SECTION JournalDocked
 SECTION JournalCommodityPricesBase
 
 BBB81F7CA96417: "Prices on ; items" => "Цены на ; товары"
-C45A6B5C9F13D9: "< at " => "< на "
-46FE700B99EAD5: "< in " => "< в "
+AEF36502D67B05: "In" => "в"
 D446B632E23844: "Items to buy" => "Товары, которые можно купить"
 38892DF3CDB24B: "{0}: {1} sell {2} Diff {3} {4}%  " => "{0}: {1} продать {2} разница {3} {4}%  "
 9E0595F4B34B89: "Sell only Items" => "Товары, которые можно продать"
@@ -326,15 +322,13 @@ E2A979859FDBBA: "; ly;N2" @
 
 SECTION JournalLeaveBody
 
-0BB7C46C2736F9: "In " => "Система"
 
 SECTION JournalLocOrJump
 
-A1F7BF2AD4BEB6: "<;(Wanted) " => "<;(в розыске) "
 182D37EC74BF3C: "Population" => "Население"
 6B3FB6468F5B3C: "Inf: ;%" => "влияние: ;%"
-20682CE886E023: "Pending State" => " ожидаемое состояние"
-A65110A78F3D51: "Recovering State" => " состояние восстановления"
+20682CE886E023: "Pending State" => "ожидаемое состояние"
+A65110A78F3D51: "Recovering State" => "состояние восстановления"
 
 SECTION JournalFuelScoop
 
@@ -351,21 +345,18 @@ B208B70B652E87: "Landed on {0}" => "Местоположение: планета
 SECTION JournalLocOrJump
 
 E298B0EC36231C: "Type " => "Тип"
-F6551977CCE103: "< in system " => "<, система"
+5E76464C161E26: "In system" => "система"
 115686EAF61F61: "Happiness" => "удовлетворенность"
 9BF00A5AD1074F: "Reputation: ;%;N1" => "репутация: ;%;N1"
-B88C0272084C40: ";Squadron System" => ";система эскадрильи"
-CAB4C00BAF5433: ";Happiest System" => ";самая удовлетворенная система"
-077DC88F4AAFF0: ";Home System" => ";домашняя система"
-6BE989FCF3D7AF: "Active State" => " текущие состояния"
+D61087F9C608B6: "Happiest" => "самая удовлетворенная система"
+6BE989FCF3D7AF: "Active State" => "текущие состояния"
 
 SECTION JournalMissionAccepted
 
-3283C6A6480226: "< from " => "< от фракции "
 BA8F571E0F93E1: "Expiry" => "срок"
 03ECFA6479FA3A: "Influence" => "влияние"
 3A4F33142BB77B: "Reward: ; cr;N0" => "награда: ; кр.;N0"
-4B0AAE097D7790: "; (Wing)" => "; (для крыла)"
+589CE3494A2AD6: "Wing" => "для крыла"
 DCAC5D49C54C3C: "Deliver" => "Товар"
 4266916B95C358: "Target Type" => "тип цели"
 594D59A3A18111: "Kill Count" => "счетчик целей"
@@ -373,7 +364,7 @@ DCAC5D49C54C3C: "Deliver" => "Товар"
 
 SECTION JournalMaterialDiscovered
 
-8842645407ACA4: ", Discovery {0}" => ", открытие № {0}"
+3B3290C7FA38E8: "Discovery" => "открытие №"
 
 SECTION JournalMaterials
 
@@ -383,7 +374,7 @@ SECTION JournalMissionRedirected
 
 SECTION MissionItem
 
-81A4D1EEDF027B: "<;(Passenger)" => "<; (пассажир)"
+B1B482B63A553F: "Passenger" => "пассажир"
 
 SECTION JournalModuleInfo
 
@@ -407,9 +398,8 @@ E443046C7DE75A: "Soldier" @
 
 SECTION JournalReceiveText
 
-BC18E959D7B347: " Texts" => " сообщен."
+045962C8A5575F: "Texts" => "сообщен."
 585AF9B23226A0: "from " => "на канале "
-C0FFAB3C44DC69: "< on " => "<, канал"
 
 SECTION JournalRepairDrone
 
@@ -429,11 +419,11 @@ CE4729AC2B42E6: "Main: ;t;0.0" => "Основной бак: ; т;0.0"
 
 SECTION StarPlanetRing
 
-6BD20BEF04169E: "Mass: {0:N4}{1}" => " Масса: {0:N4}{1}"
-C2029264A2B419: "Inner Radius: {0:0.00}ls" => " Внутренний радиус: {0:0.00} св. с."
-9CAFCE749205D4: "Outer Radius: {0:0.00}ls" => " Внешний радиус: {0:0.00} св. с."
-C80236826F4F32: "Inner Radius: {0}km" => " Внутренний радиус: {0} км"
-D95BA68EDFC767: "Outer Radius: {0}km" => " Внешний радиус: {0} км"
+6BD20BEF04169E: "Mass: {0:N4}{1}" => "Масса: {0:N4}{1}"
+C2029264A2B419: "Inner Radius: {0:0.00}ls" => "Внутренний радиус: {0:0.00} св. с"
+9CAFCE749205D4: "Outer Radius: {0:0.00}ls" => "Внешний радиус: {0:0.00} св. с"
+C80236826F4F32: "Inner Radius: {0}km" => "Внутренний радиус: {0} км"
+D95BA68EDFC767: "Outer Radius: {0}km" => "Внешний радиус: {0} км"
 6B2FC602242208: "Icy" => "лед."
 A1CF264F7F1E4F: "Rocky" => "каменн."
 2FD9C95A438B18: "Metal Rich" => "насыщ. металлами"
@@ -454,8 +444,6 @@ D2F52355860145: "Scan Nav" => "Сканирование нав. маяка"
 D000D9F51096C0: "Scan of {0}" => "Сканирование {0}"
 5168D608A81C18: "Mass: ;SM;0.00" => "солнечных масс: ; ;0.00"
 BF8E38829287B3: "Age: ;my;0.0" => "возраст: ; млн лет;0.0"
-41997D5AA8F9A8: "<;, Landable" => "<;, пригодна для посадки"
-CABD9FE7A7C5A8: "<;, Terraformable" => "<;, пригодна для терраформирования"
 9C417B6452D141: "Gravity: ;G;0.00" => "гравитация: ; g;0.00"
 6E95AA58CB9A87: "Age: {0} my" => "Возраст: {0} млн лет"
 74526B12CD7DC5: "Solar Masses: {0:N2}" => "Солнечных масс: {0:N2}"
@@ -476,7 +464,7 @@ FD157443DE4822: "Orbital Eccentricity" => "Эксцентриситет орби
 456A3E168361D1: "Rotation Period: {0} days" => "Период вращения: {0} дн"
 B285F06D312CA2: "Tidally locked" => "Приливный захват"
 1E92B81458AA22: "Candidate for terraforming" => "Кандидат на терраформирование"
-7376D9B2BD1D99: " Moons" => " лунных масс"
+418458B2E2D068: "Moons" => "лунных масс"
 0CB33492C61519: "Belts" => "Пояса"
 75B04B88D4665E: "Rings" => "Кольца"
 5987FFD982A381: "Base Estimated value: {0:N0}" => "Примерная стоимость данных сканирования: {0:N0} кр.,"
@@ -530,8 +518,7 @@ E0049A66519CAE: "On" => "корабль"
 SECTION JournalShipTargeted
 
 D43B938327A28B: "Hull ;;N1" => "корпус: ;;N1"
-4D69DC1C675053: "< at ;;N1" => "< в ;;N1"
-0313D542901BDC: " Target Events" => " (количество целей)"
+E80B0F71712CE3: "Target Events" => "(количество целей)"
 
 SECTION JournalShipyardSell
 
@@ -539,7 +526,7 @@ SECTION JournalShipyardSell
 SECTION JournalShipyardSwap
 
 1688D8D732BD46: "Swap " => "Замена "
-4A90C2022F4FC6: "< for a " => "< на "
+C4E888A145F199: "For a" => "на"
 
 SECTION JournalShipyardTransfer
 

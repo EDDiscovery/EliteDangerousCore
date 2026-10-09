@@ -103,7 +103,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public string Format()
             {
-                return BaseUtils.FieldBuilder.Build("", Name_Localised, "<;(Passenger)".Tx(), PassengerMission, " " + "Expires".Tx()+": ", ExpiryTimeUTC.ToLocalTime());
+                return BaseUtils.FieldBuilder.Build("", Name_Localised, "<;(" + "Passenger".Tx() + ")", PassengerMission, " " + "Expires".Tx()+": ", ExpiryTimeUTC.ToLocalTime());
             }
         }
     }
@@ -215,7 +215,7 @@ namespace EliteDangerousCore.JournalEvents
             DateTime? exp = Expiry > DateTime.MinValue ? EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry) : default(DateTime?);
 
             return BaseUtils.FieldBuilder.Build("", LocalisedName,
-                                      "< from ".TxCond(translate), Faction,
+                                      "< " + "From".TxCond(translate) + " ", Faction,
                                       "System".TxCond(translate)+": ", DestinationSystem,
                                       "Station".TxCond(translate)+": ", DestinationStation,
                                       "Settlement".TxCond(translate)+": ", DestinationSettlement,
@@ -223,7 +223,7 @@ namespace EliteDangerousCore.JournalEvents
                                       "Influence".TxCond(translate)+": ", Influence,
                                       "Reputation".TxCond(translate)+": ", Reputation,
                                       "Reward: ; cr;N0".TxCond(translate), Reward,
-                                      "; (Wing)".TxCond(translate), Wing);
+                                      "; (" + "Wing".Tx() + ")".TxCond(translate), Wing);
         }
 
         public string MissionDetailedInfo(bool translate)          // MissionList::FullInfo (DLL uses this), Journal Entry detailed info
@@ -443,7 +443,7 @@ namespace EliteDangerousCore.JournalEvents
         {
 
             return BaseUtils.FieldBuilder.Build("", LocalisedName,
-                                        "< from ".Tx(), Faction,
+                                        "< " + "From".Tx() + " ", Faction,
                                         "Reward: ; cr;N0".Tx(), Reward,
                                         "Donation".Tx()+": ", Donation,
                                         "System".Tx()+": ", DestinationSystem,

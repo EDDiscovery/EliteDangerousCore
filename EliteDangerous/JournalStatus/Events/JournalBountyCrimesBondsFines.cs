@@ -196,7 +196,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("; cr;N0", Reward, "< from ".Tx(), AwardingFaction_Localised,
+            return BaseUtils.FieldBuilder.Build("; cr;N0", Reward, "< " + "From".Tx() + " ", AwardingFaction_Localised,
                 "<, due to ".Tx(), VictimFaction_Localised);
         }
 
@@ -304,8 +304,8 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("x", NumberRewards,
-                                        "Reward: ; cr;N0".Tx(), Reward, 
-                                        "< from ".Tx(), AwardingFaction_Localised,
+                                        "Reward: ; cr;N0".Tx(), Reward,
+                                        "< " + "From".Tx() + " ", AwardingFaction_Localised,
                                         "<, due to ".Tx(), VictimFaction_Localised);
         }
 
@@ -553,7 +553,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Ship".Tx()+": ", ShipType_Localised, "< in system ".Tx(), System);
+            return BaseUtils.FieldBuilder.Build("Ship".Tx()+": ", ShipType_Localised, "< " + "In system".Tx() + " ", System);
         }
     }
 
