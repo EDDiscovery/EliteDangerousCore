@@ -59,9 +59,6 @@ F73669E0485E17: "Helium gas giant" => "氦气态巨行星"
 
 SECTION MaterialCommodityMicroResourceType
 
-8DEC7F27C9D37E: "Consumable" => "消耗品"
-297D709EBEB7F1: "Goods" => "货品"
-20E338624CEE29: "Assets" => "资产"
 A6D9973DE820A4: "Very Common" => "非常普遍 (Very Common)"
 7DE90A65241A6C: "Common" => "普遍 (Common)"
 2DFA66079D9B72: "Standard" => "一般 (Standard)"
@@ -938,9 +935,13 @@ B217E98C3BF70F: "Ruby" @
 
 SECTION MaterialTypes
 
+38DFC233193C18: "Commodity" => "商品列表"
 DA433CD41E7FB7: "Raw" => "元素材料"
 58AC2F7D78D326: "Encoded" => "编码材料："
 8AB3DB9BFC3921: "Manufactured" => "人造材料"
+C92C529E0731C5: "Component" @
+E5E429BCC9C2E4: "Data" => "数据"
+8DEC7F27C9D37E: "Consumable" => "消耗品"
 
 SECTION EngineeringData
 
@@ -1047,7 +1048,6 @@ SECTION Stations
 SECTION Misc
 7548AB52C3D1D5: "Power" => "势力斗争"
 44F6AF6945544C: "Quantity" => "精炼矿石量"
-38DFC233193C18: "Commodity" => "商品列表"
 171A0606F7C745: "Group" => "面板列表使用字母顺序进行排序，而不是安装类别排序。注意需要重启。（目前中文界面下无效）"
 160F06D4799C85: "Purchase" @
 C7AD6F7B6831A8: "Redeem Voucher" => "兑换代券"
@@ -1087,7 +1087,6 @@ A9292825CC0CA6: "Landable" => "可登陆"
 EA5B349025CF82: "Metal-rich body" => "富金属天体"
 1B90271D66CF2D: "Progress" => "工程师进展"
 4DA805AFD83F17: "Ship Locker" @
-E5E429BCC9C2E4: "Data" => "数据"
 CCE370D2F9781A: "Rare" @
 0CCF90EB09D636: "Backpack" @
 A3C686E711E472: "Category" => "类别"

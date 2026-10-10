@@ -120,12 +120,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("At ".Tx(), System, ";", EDDBodyName, "ID", EDDBodyId, "in ".Tx(), Region_Localised,
+            return BaseUtils.FieldBuilder.Build("At".Tx() + " ", System, ";", EDDBodyName, "ID", EDDBodyId, "In".Tx(), Region_Localised,
                                                 "", Name_Localised,
                                                 "", Category_Localised,
                                                 "", SubCategory_Localised,
-                                                ";New Entry".Tx(), IsNewEntry,
-                                                ";Traits".Tx(), NewTraitsDiscovered,
+                                                ";" +"New Entry".Tx(), IsNewEntry,
+                                                ";" + "Traits".Tx(), NewTraitsDiscovered,
                                                 "Nearest".Tx()+": ", NearestDestination_Localised,
                                                 "Latitude: ;°;F4".Tx(), Latitude, "Longitude: ;°;F4".Tx(), Longitude
                                                 );
@@ -142,8 +142,8 @@ namespace EliteDangerousCore.JournalEvents
                                                 "", Name_Localised,
                                                 "", Category_Localised,
                                                 "", SubCategory_Localised,
-                                                ";New Entry".Tx(), IsNewEntry,
-                                                ";Traits".Tx(), NewTraitsDiscovered,
+                                                ";" + "New Entry".Tx(), IsNewEntry,
+                                                ";" + "Traits".Tx(), NewTraitsDiscovered,
                                                 "Nearest".Tx()+": ", NearestDestination_Localised
                                                 );
         }

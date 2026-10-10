@@ -10,9 +10,9 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- *
  */
+
+
 using QuickJSON;
 using System;
 using System.Drawing;
@@ -59,7 +59,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()  
         {
-            return BaseUtils.FieldBuilder.Build("At ".Tx(), Body , "<" + "In".Tx() + " ", System , "File".Tx()+": ", Filename, 
+            return BaseUtils.FieldBuilder.Build("At".Tx() + " ", Body , "<" + "In".Tx() + " ", System , "File".Tx()+": ", Filename, 
                         "Width".Tx()+": ", Width , "Height".Tx()+": ", Height,
                         "Latitude: ;°;F4".Tx(), nLatitude, "Longitude: ;°;F4".Tx(), nLongitude);
 

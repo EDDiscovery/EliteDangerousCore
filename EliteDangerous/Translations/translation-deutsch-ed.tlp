@@ -59,9 +59,6 @@ F73669E0485E17: "Helium gas giant" => "Helium-Gasriese"
 
 SECTION MaterialCommodityMicroResourceType
 
-8DEC7F27C9D37E: "Consumable" => "Verbrauchsgegenstände"
-297D709EBEB7F1: "Goods" => "Waren"
-20E338624CEE29: "Assets" => "Material"
 A6D9973DE820A4: "Very Common" => "Sehr häufig"
 7DE90A65241A6C: "Common" => "Häufig"
 2DFA66079D9B72: "Standard" => "Standard"
@@ -938,9 +935,13 @@ B217E98C3BF70F: "Ruby" => "Rubin"
 
 SECTION MaterialTypes
 
+38DFC233193C18: "Commodity" => "Handelsware"
 DA433CD41E7FB7: "Raw" => "Roh"
 58AC2F7D78D326: "Encoded" => "Verschlüsselt"
 8AB3DB9BFC3921: "Manufactured" => "Produziert"
+C92C529E0731C5: "Component" @
+E5E429BCC9C2E4: "Data" => "Daten"
+8DEC7F27C9D37E: "Consumable" => "Verbrauchsgegenstände"
 
 SECTION EngineeringData
 
@@ -1047,7 +1048,6 @@ SECTION Stations
 SECTION Misc
 7548AB52C3D1D5: "Power" => "Leistung"
 44F6AF6945544C: "Quantity" => "Anzahl"
-38DFC233193C18: "Commodity" => "Handelsware"
 171A0606F7C745: "Group" => "Gruppe"
 160F06D4799C85: "Purchase" => "Einkauf"
 C7AD6F7B6831A8: "Redeem Voucher" => "Gutschein eingelöst"
@@ -1087,7 +1087,6 @@ A9292825CC0CA6: "Landable" => "landbar"
 EA5B349025CF82: "Metal-rich body" => "Metallreicher Planet"
 1B90271D66CF2D: "Progress" => "Fortschritt"
 4DA805AFD83F17: "Ship Locker" => "Schiffsspind"
-E5E429BCC9C2E4: "Data" => "Daten"
 CCE370D2F9781A: "Rare" => "Selten"
 0CCF90EB09D636: "Backpack" => "Rucksack"
 A3C686E711E472: "Category" => "Kategorie"

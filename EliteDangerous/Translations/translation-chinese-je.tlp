@@ -260,10 +260,7 @@ SECTION JournalCargo
 
 SECTION JournalCodexEntry
 
-21F7B3DA0DB370: "At " => "在"
-C36551215CB2D4: "in " => "在"
-0E35DDA343D4D9: ";New Entry" => ";新增条目"
-BF03B90D446D74: ";Traits" => ";特性"
+D1A616085A1A99: "Traits" => "特性"
 
 SECTION CommunityGoal
 
@@ -306,7 +303,6 @@ SECTION JournalCommodityPricesBase
 BBB81F7CA96417: "Prices on ; items" => "上的价格;物品"
 AEF36502D67B05: "In" => "在"
 D446B632E23844: "Items to buy" => "待购物品"
-38892DF3CDB24B: "{0}: {1} sell {2} Diff {3} {4}%  " => "{0}: {1} 售价 {2} 差价 {3} {4}%  "
 9E0595F4B34B89: "Sell only Items" => "仅出售物品"
 
 SECTION JournalEngineerProgress

@@ -260,10 +260,7 @@ SECTION JournalCargo
 
 SECTION JournalCodexEntry
 
-21F7B3DA0DB370: "At " => "Bei "
-C36551215CB2D4: "in " => "in "
-0E35DDA343D4D9: ";New Entry" => ";neuer Eintrag"
-BF03B90D446D74: ";Traits" => ";Merkmale"
+D1A616085A1A99: "Traits" => "Merkmale"
 
 SECTION CommunityGoal
 
@@ -306,7 +303,6 @@ SECTION JournalCommodityPricesBase
 BBB81F7CA96417: "Prices on ; items" => "Preise von ; Gegenständen"
 AEF36502D67B05: "In" => "in"
 D446B632E23844: "Items to buy" => "Waren zu kaufen"
-38892DF3CDB24B: "{0}: {1} sell {2} Diff {3} {4}%  " => "{0}: {1} verkaufen {2} Unterschied {3} {4}%  "
 9E0595F4B34B89: "Sell only Items" => "Waren nur zum Verkauf"
 
 SECTION JournalEngineerProgress

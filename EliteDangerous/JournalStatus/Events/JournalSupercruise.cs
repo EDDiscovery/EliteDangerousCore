@@ -127,7 +127,7 @@ namespace EliteDangerousCore.JournalEvents
                 info += DestinationDrop.GetInfo() + ", ";
             }
             else
-                info = "At ".Tx();
+                info = "At".Tx() + " ";
 
             info += BaseUtils.FieldBuilder.Build("",Body, "<" + "In".Tx() + " ", StarSystem, "Type".Tx()+":;;;;SCF", BodyType);
             return info;
@@ -154,7 +154,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("At ".Tx(), Location_Localised.Alt(Location), "Threat Level".Tx()+": ", Threat);
+            return BaseUtils.FieldBuilder.Build("At".Tx() + " ", Location_Localised.Alt(Location), "Threat Level".Tx()+": ", Threat);
         }
     }
 

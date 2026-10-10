@@ -78,7 +78,7 @@ namespace EliteDangerousCore.JournalEvents
                         if (c.HasDemandAndPrice)
                         {
                             sb.Append("  ");
-                            sb.Append(string.Format("{0}: {1} sell {2} Diff {3} {4}%  ".Tx(),
+                            sb.Append(string.Format("{0}: {1} "+ "Sell".Tx() +" {2} " + "Diff".Tx() + " {3} {4}%  ".Tx(),
                                 name, c.buyPrice, c.sellPrice, c.buyPrice - c.sellPrice,
                                 ((double)(c.buyPrice - c.sellPrice) / (double)c.sellPrice * 100.0).ToString("0.#")));
                         }
