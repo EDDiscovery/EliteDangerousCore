@@ -78,7 +78,7 @@ namespace EliteDangerousCore.JournalEvents
                         if (c.HasDemandAndPrice)
                         {
                             sb.Append("  ");
-                            sb.Append(string.Format("{0}: {1} "+ "Sell".Tx() +" {2} " + "Diff".Tx() + " {3} {4}%  ".Tx(),
+                            sb.Append(string.Format("{0}: {1} " + "Sell".Tx() +" {2} " + "Diff".Tx() + " {3} {4}%  ",
                                 name, c.buyPrice, c.sellPrice, c.buyPrice - c.sellPrice,
                                 ((double)(c.buyPrice - c.sellPrice) / (double)c.sellPrice * 100.0).ToString("0.#")));
                         }
@@ -100,7 +100,7 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         string name = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.fdname);
                         sb.Append("  ");
-                        sb.Append(string.Format("{0}: {1}  ".Tx(), name, c.sellPrice));
+                        sb.Append(string.Format("{0}: {1}  ", name, c.sellPrice));
                         sb.AppendCR();
                     }
                 }
@@ -226,7 +226,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, "< " + "Buy price".Tx() + " ; cr;N0", BuyPrice, "Total Cost".Tx() + ": ; cr;N0", TotalCost);
+            return BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, 
+                        "< " + "Buy price".Tx() + " ; cr;N0", BuyPrice, 
+                        "Total Cost".Tx() + ": ; cr;N0", TotalCost);
         }
     }
 
@@ -286,7 +288,11 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             long profit = TotalSale - (AvgPricePaid * Count);
-            return BaseUtils.FieldBuilder.Build("", FriendlyType, "", Count, "< " + "Sell price".Tx() + " ; cr;N0", SellPrice, "Total Sale".Tx() + ": ; cr;N0", TotalSale, "Profit: ; cr;N0".Tx(), profit);
+            return BaseUtils.FieldBuilder.Build("", FriendlyType, 
+                            "", Count, 
+                            "< " + "Sell price".Tx() + " ; cr;N0", SellPrice, 
+                            "Total Sale".Tx() + ": ; cr;N0", TotalSale, 
+                            "Profit".Tx() + ": ; cr;N0", profit);
         }
 
         public override string GetDetailed()

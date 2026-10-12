@@ -10,9 +10,10 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- *
  */
+
+
+
 using QuickJSON;
 using System;
 using System.Collections.Generic;
@@ -76,7 +77,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo(JournalEntry.FillInformationData fid)
         {
-            return BaseUtils.FieldBuilder.Build("" , fid.BodyName, "Progress: ;%;N1".Tx(), ConstructionProgress * 100.0f,
+            return BaseUtils.FieldBuilder.Build("" , fid.BodyName, "Progress".Tx() + ": ;%;N1", ConstructionProgress * 100.0f,
                                                 ";Complete", ConstructionComplete,
                                                 ";Failed", ConstructionFailed);
         }

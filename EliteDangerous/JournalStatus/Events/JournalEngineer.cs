@@ -131,7 +131,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("", Engineer.ID, "Type".Tx()+": ", Type, "Commodity".Tx()+": ", Commodity_Localised,
-                    "Material".Tx()+": ", Material_Localised, "Quantity".Tx()+": ", Quantity, "TotalQuantity".Tx()+": ", TotalQuantity);
+                    "Material".Tx()+": ", Material_Localised, "Quantity".Tx()+": ", Quantity, "Total Quantity".Tx()+": ", TotalQuantity);
         }
     }
 

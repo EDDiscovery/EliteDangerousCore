@@ -75,13 +75,13 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (nAge.HasValue)
                 {
-                    sb.AppendFormat("Age: {0} my".Tx(), nAge.Value.ToString("N0"));
+                    sb.AppendFormat("Age".Tx() + ": {0} my", nAge.Value.ToString("N0"));
                     sb.AppendCR();
                 }
 
                 if (nStellarMass.HasValue)
                 {
-                    sb.AppendFormat("Solar Masses: {0:N2}".Tx(), nStellarMass.Value);
+                    sb.AppendFormat("Solar Masses".Tx() + ": {0:N2}", nStellarMass.Value);
                     sb.AppendCR();
                 }
 
@@ -103,7 +103,7 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (DistanceFromArrivalLS > 0)
                 {
-                    sb.AppendFormat("Distance from Arrival Point {0:N1}ls".Tx(), DistanceFromArrivalLS);
+                    sb.AppendFormat("Distance from Arrival Point".Tx() + " {0:N1}ls" , DistanceFromArrivalLS);
                     sb.AppendCR();
                 }
 
@@ -156,13 +156,13 @@ namespace EliteDangerousCore.JournalEvents
 
             if (nSurfaceTemperature.HasValue)
             {
-                sb.AppendFormat("Surface Temp: {0}K".Tx(), nSurfaceTemperature.Value.ToString("N0"));
+                sb.AppendFormat("Surface Temp".Tx() + ": {0}K", nSurfaceTemperature.Value.ToString("N0"));
                 sb.AppendCR();
             }
 
             if (nSurfaceGravity.HasValue)
             {
-                sb.AppendFormat("Gravity: {0:N2}g".Tx(), nSurfaceGravityG.Value);
+                sb.AppendFormat("Gravity".Tx() + ": {0:N2}g", nSurfaceGravityG.Value);
                 sb.AppendCR();
             }
 
@@ -170,34 +170,34 @@ namespace EliteDangerousCore.JournalEvents
             {
                 if (nSurfacePressure.Value > 1000)
                 {
-                    sb.AppendFormat("Surface Pressure: {0} Atmospheres".Tx(), nSurfacePressureEarth.Value.ToString("N2"));
+                    sb.AppendFormat("Surface Pressure".Tx() + ": {0} " + "Atmospheres".Tx(), nSurfacePressureEarth.Value.ToString("N2"));
                 }
                 else
                 {
-                    sb.AppendFormat("Surface Pressure: {0} Pa".Tx(), (nSurfacePressure.Value).ToString("N2"));
+                    sb.AppendFormat("Surface Pressure".Tx() + ": {0} " + "Pa", (nSurfacePressure.Value).ToString("N2"));
                 }
                 sb.AppendCR();
             }
 
             if (HasMeaningfulVolcanism)
             {
-                sb.AppendFormat("Volcanism: {0}".Tx(), VolcanismTranslated);
+                sb.AppendFormat("Volcanism".Tx() + ": {0}", VolcanismTranslated);
                 sb.AppendCR();
             }
 
 
             if (nOrbitalPeriodDays.HasValue && nOrbitalPeriodDays > 0)
             {
-                sb.AppendFormat("Orbital Period: {0} days".Tx(), nOrbitalPeriodDays.Value.ToString("0.0####"));
+                sb.AppendFormat("Orbital Period".Tx() + ": {0}", nOrbitalPeriodDays.Value.ToString("0.0####"));
                 sb.AppendCR();
             }
 
             if (nSemiMajorAxis.HasValue)
             {
                 if (IsStar || nSemiMajorAxis.Value > BodyPhysicalConstants.oneAU_m / 10)
-                    sb.AppendFormat("Semi Major Axis: {0:0.00}AU".Tx(), nSemiMajorAxisAU.Value);
+                    sb.AppendFormat("Semi Major Axis".Tx() + ": {0:0.00}AU", nSemiMajorAxisAU.Value);
                 else
-                    sb.AppendFormat("Semi Major Axis: {0}km".Tx(), (nSemiMajorAxis.Value / 1000).ToString("N1"));
+                    sb.AppendFormat("Semi Major Axis".Tx() + ": {0}km", (nSemiMajorAxis.Value / 1000).ToString("N1"));
                 sb.AppendCR();
             }
 
@@ -212,44 +212,44 @@ namespace EliteDangerousCore.JournalEvents
 
             if (nOrbitalInclination.HasValue)
             {
-                sb.AppendFormat("Orbital Inclination: {0:0.000}°".Tx(), nOrbitalInclination.Value);
+                sb.AppendFormat("Orbital Inclination".Tx() + ": {0:0.000}°", nOrbitalInclination.Value);
                 sb.AppendCR();
             }
 
             if (nAscendingNode.HasValue)
             {
-                sb.AppendFormat("Ascending Node: {0:0.000}°".Tx(), nAscendingNode.Value);
+                sb.AppendFormat("Ascending Node".Tx() + ": {0:0.000}°", nAscendingNode.Value);
                 sb.AppendCR();
             }
 
             if (nPeriapsis.HasValue)
             {
-                sb.AppendFormat("Arg Of Periapsis: {0:0.000}°".Tx(), nPeriapsis.Value);
+                sb.AppendFormat("Arg Of Periapsis".Tx() + ": {0:0.000}°", nPeriapsis.Value);
                 sb.AppendCR();
             }
 
             if (nMeanAnomaly.HasValue)
             {
-                sb.AppendFormat("Mean Anomaly: {0:0.000}°".Tx(), nMeanAnomaly.Value);
+                sb.AppendFormat("Mean Anomaly".Tx() + ": {0:0.000}°", nMeanAnomaly.Value);
                 sb.AppendCR();
             }
 
             if (nAxialTiltDeg.HasValue)
             {
-                sb.AppendFormat("Axial tilt: {0:0.00}°".Tx(), nAxialTiltDeg.Value);
+                sb.AppendFormat("Axial tilt".Tx() + ": {0:0.00}°", nAxialTiltDeg.Value);
                 sb.AppendCR();
             }
 
             if (nRotationPeriodDays.HasValue)
             {
-                sb.AppendFormat("Rotation Period: {0} days".Tx(), nRotationPeriodDays.Value.ToString("0.0####"));
+                sb.AppendFormat("Rotation Period".Tx() + ": {0}", nRotationPeriodDays.Value.ToString("0.0####"));
                 sb.AppendCR();
             }
 
 
             if (nAbsoluteMagnitude.HasValue)
             {
-                sb.AppendFormat("Absolute Magnitude: {0:0.00}".Tx(), nAbsoluteMagnitude.Value);
+                sb.AppendFormat("Absolute Magnitude".Tx() + ": {0:0.00}", nAbsoluteMagnitude.Value);
                 sb.AppendCR();
             }
 
@@ -297,33 +297,33 @@ namespace EliteDangerousCore.JournalEvents
 
             ScanEstimatedValues ev = GetEstimatedValues();
 
-            sb.AppendFormat("Current value: {0:N0}".Tx() + "", ev.EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsWebSourced));
+            sb.Append("Value".Tx() + $": {ev.EstimatedValue(WasDiscovered, WasMapped, Mapped, EfficientMapped, IsWebSourced):N0}");
             sb.AppendCR();
 
             if (ev.EstimatedValueFirstDiscoveredFirstMapped > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
             {
-                string msg = "First Discovered+Mapped value: {0:N0}/{1:N0}e".Tx() + "";
-                sb.AppendFormat(msg, ev.EstimatedValueFirstDiscoveredFirstMapped, ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently);
+                string msg = "First Discovered+Mapped value".Tx() + $": {ev.EstimatedValueFirstDiscoveredFirstMapped:N0}/{ev.EstimatedValueFirstDiscoveredFirstMappedEfficiently:N0}e";
+                sb.Append(msg);
                 sb.AppendCR();
             }
 
             if (ev.EstimatedValueFirstMapped > 0 && (!WasMapped.HasValue || !WasMapped.Value))    // if was not mapped
             {
-                sb.AppendFormat("First Mapped value: {0:N0}/{1:N0}e".Tx() + "", ev.EstimatedValueFirstMapped, ev.EstimatedValueFirstMappedEfficiently);
+                sb.AppendFormat("First Mapped value".Tx() + ": {0:N0}/{1:N0}e", ev.EstimatedValueFirstMapped, ev.EstimatedValueFirstMappedEfficiently);
                 sb.AppendCR();
             }
 
             if (ev.EstimatedValueFirstDiscovered > 0 && (!WasDiscovered.HasValue || !WasDiscovered.Value))  // if we don't know, or its not discovered
             {
-                sb.AppendFormat("First Discovered value: {0:N0}".Tx() + "", ev.EstimatedValueFirstDiscovered);
+                sb.AppendFormat("First Discovered value".Tx() + ": {0:N0}", ev.EstimatedValueFirstDiscovered);
                 sb.AppendCR();
             }
 
             if (ev.EstimatedValueFirstDiscovered > 0) // if we have extra details, on planets, show the base value
             {
-                sb.AppendFormat("Mapped value: {0:N0}/{1:N0}e".Tx() + "", ev.EstimatedValueMapped, ev.EstimatedValueMappedEfficiently);
+                sb.AppendFormat("Mapped value".Tx() + ": {0:N0}/{1:N0}e", ev.EstimatedValueMapped, ev.EstimatedValueMappedEfficiently);
                 sb.AppendCR();
-                sb.AppendFormat("Base Estimated value: {0:N0}".Tx() + "", ev.EstimatedValueBase);
+                sb.AppendFormat("Base Estimated value".Tx() + ": {0:N0}", ev.EstimatedValueBase);
                 sb.AppendCR();
             }
 
@@ -345,7 +345,7 @@ namespace EliteDangerousCore.JournalEvents
 
             if (ScanType != ScanTypeEnum.Unknown)        // early entries did not
             {
-                sb.AppendFormat("Scan Type: {0}".Tx(), ScanType);
+                sb.AppendFormat("Scan Type".Tx() + ": {0}", ScanType);
                 sb.AppendCR();
             }
 
@@ -387,7 +387,7 @@ namespace EliteDangerousCore.JournalEvents
 
             information.Append((js.IsStar) ? Stars.ToLocalisedLanguage(js.StarTypeID) + "." : null);
 
-            information.Append((js.CanBeTerraformable) ? @"terraformable ".Tx() : null);
+            information.Append((js.CanBeTerraformable) ? @"Terraformable".Tx() + " " : null);
             information.Append((js.IsPlanet) ? Planets.PlanetNameTranslated(js.PlanetTypeID) + "." : null);
 
             information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? prepad +  "Is tiny".Tx() + " (" + RadiusText + ")." : null);
@@ -397,7 +397,7 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((js.HasAtmosphere && showAtmos) ? prepad +  "Atmosphere".Tx() + ": " + js.AtmosphereTranslated + ".": null);
             information.Append((js.IsLandable && js.nSurfaceTemperature.HasValue && showTemp) ? prepad +  "Surface temperature".Tx() + ": " + Math.Round(js.nSurfaceTemperature.Value, 1, MidpointRounding.AwayFromZero) + "K." : null);
             information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? js.VolcanismTranslated: null);
-            information.Append((hasminingsignals) ? " Has mining signals.".Tx() : null);
+            information.Append((hasminingsignals) ? " " + "Has mining signals".Tx() + "." : null);
             information.Append((hasplanetaryminingsignals) ? (prepad +  "Has planetary mining signals.".Tx()) : null);
 
             information.Append((hasgeosignals) ? ("Geological signals".Tx() + ": "+ js.CountGeoSignals + ".") : null);
@@ -498,10 +498,10 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (IsStar)
             {
-                return BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass: ;SM;0.00".Tx(), nStellarMass,
-                                                "Age: ;my;0.0".Tx(), nAge,
+                return BaseUtils.FieldBuilder.Build("", StarTypeText, "Mass".Tx() + ": ;SM;0.00", nStellarMass,
+                                                "Age".Tx() + ": ;my;0.0", nAge,
                                                 "Radius".Tx() + ": ", RadiusText,
-                                                "Dist: ;ls;0.0".Tx(), DistanceFromArrivalLS,
+                                                "Distance".Tx() + ": ;ls;0.0", DistanceFromArrivalLS,
                                                 "Name".Tx() + ": ", showbodyname != null ? BodyName.ReplaceIfStartsWith(showbodyname.Name) : null);
             }
             else if (IsPlanet)
@@ -509,16 +509,16 @@ namespace EliteDangerousCore.JournalEvents
                 return BaseUtils.FieldBuilder.Build("", PlanetTypeText, "Mass".Tx() + ": ", MassEMMM,
                                                 "<;, " + "Landable".Tx(), IsLandable,
                                                 "<;, " + "Terraformable".Tx(), TerraformState == "Terraformable", "", HasAtmosphere ? AtmosphereTranslated : null,
-                                                "Gravity: ;G;0.00".Tx(), nSurfaceGravityG,
+                                                "Gravity".Tx() + ": ;G;0.00", nSurfaceGravityG,
                                                 "Radius".Tx() + ": ", RadiusText,
-                                                "Dist: ;ls;0.0".Tx(), DistanceFromArrivalLS,
+                                                "Distance".Tx() + ": ;ls;0.0", DistanceFromArrivalLS,
                                                 "Name".Tx() + ": ", showbodyname != null ? BodyName.ReplaceIfStartsWith(showbodyname.Name) : null);
             }
             else
             {
                 return BaseUtils.FieldBuilder.Build("Mass".Tx() + ": ", MassEMMM,
-                                                 "Dist: ;ls;0.0".Tx(), DistanceFromArrivalLS,
-                                                "Name".Tx() + ": ", showbodyname != null ? BodyName.ReplaceIfStartsWith(showbodyname.Name) : null);
+                                                 "Distance".Tx() + ": ;ls;0.0", DistanceFromArrivalLS,
+                                                 "Name".Tx() + ": ", showbodyname != null ? BodyName.ReplaceIfStartsWith(showbodyname.Name) : null);
             }
         }
 

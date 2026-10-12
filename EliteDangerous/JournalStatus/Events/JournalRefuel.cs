@@ -37,7 +37,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Cost, "Fuel: ; tons;0.0".Tx(), Amount);
+            return BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Cost, "Fuel".Tx() + ": ; t;0.0", Amount);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -65,7 +65,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Cost, "Fuel: ; tons;0.0".Tx(), Amount);
+            return BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Cost, "Fuel".Tx() + ": ; t;0.0", Amount);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -88,7 +88,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build(";t;0.0", Scooped, "Total: ;t;0.0".Tx(), Total);
+            return BaseUtils.FieldBuilder.Build(";t;0.0", Scooped, "Total".Tx() + ": ;t;0.0", Total);
         }
 
         public void ShipInformation(ShipList shp, string whereami, ISystem system)
@@ -115,9 +115,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Main: ;t;0.0".Tx(), FuelMain,
+            return BaseUtils.FieldBuilder.Build("Fuel".Tx() + ": ;t;0.0", FuelMain,
                                                 "< <- ;t;0.0", FuelStart,
-                                                "Reservoir: ;t;0.0".Tx(), FuelReservoir , 
+                                                "Reservoir".Tx() + ": ;t;0.0", FuelReservoir , 
                                                 "< (x;)", FuelEvents);
         }
 

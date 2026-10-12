@@ -33,7 +33,6 @@ F966E50854E3BE: "Rogue Planet" => "Samotna Planeta"
 A796E9CB0C487E: "Nebula" @
 6291A56BDE2FBC: "Stellar Remnant Nebula" @
 457A6D2361E0B4: "Unknown star class" @
-DA951D81DC5835: "Class {0} star" @
 
 SECTION EDPlanet
 
@@ -941,6 +940,7 @@ DA433CD41E7FB7: "Raw" @
 8AB3DB9BFC3921: "Manufactured" @
 C92C529E0731C5: "Component" @
 E5E429BCC9C2E4: "Data" => "Dane"
+297D709EBEB7F1: "Goods" @
 8DEC7F27C9D37E: "Consumable" @
 
 SECTION EngineeringData
@@ -948,12 +948,13 @@ SECTION EngineeringData
 05FC94B0147F09: "Engineer" => "Inżynier"
 A60F2C73604F62: "Quality" => "Jakość"
 A5BADB0C4C0940: "Experimental Effect" => "Efekt Eksperymentalny"
-C312376DA63393: "Original: ;;0.###" => "Oryginał:;;0.###"
-75A08C2632AF12: "< (Worse); (Better)" => "< (Gorzej); (Lepiej)"
+C0A8060F3B1102: "Original" => "Oryginał"
+B032583DB6CF07: "Multiplier" @
+DD1F00569CD7B2: "Worse" => "Gorzej"
+303CFD6EA9AABD: "Better" => "Lepiej"
 
 SECTION MissionState
 
-2CA6F1899AED14: "Progress:;%;N1" => "Postęp:;%;N1"
 
 SECTION CommanderForm
 
@@ -996,7 +997,7 @@ A0801CDD86D5EA: "Include Subfolders" @
 SECTION ScreenshotDirectoryWatcher
 
 779892E0617E90: "Scanning for {0} screenshots in {1}" => "Skanowanie zrzutów ekranu {0} w {1}"
-94106851BD8B68: "Folder specified for image conversion does not exist, check screenshot settings in the settings panel" => "Folder przeznaczony na konwersję obrazów nie istnieje, sprawdź ustawienia w sekcji Zrzuty Ekranu"
+E9338ED72024B3: "Folder specified for image conversion does not exist, check screenshot settings in the Settings panel" => "Folder przeznaczony na konwersję obrazów nie istnieje, sprawdź ustawienia w sekcji Zrzuty Ekranu"
 831FE55DFAD611: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Błąd przetwarzania obrazu, sprawdź z innym zrzutem ekranu, sprawdź ustawienia ścieżki wyjściowej. (Wyjątek "
 
 SECTION ScreenShotImageConverter
@@ -1034,7 +1035,6 @@ C180FD4808AE6C: "Select screenshot folder" @
 SECTION ScanDisplayUserControl
 
 AD7F166EE19EC4: "No scan data available" => "Brak dostępnych danych skanu"
-BC71898C9ADABE: "Barycentre of {0}" => "Barycentrum {0}"
 F50801EB15AB8D: "Surface features" @
 2346A18EA3002F: "Signals" => "Signale"
 2C5D5B88672D11: "Codex" => "Kodex"
@@ -1185,7 +1185,7 @@ DE463BA892C2F3: "Crew" => "Załoga"
 
 SECTION Signals
 
-EC12FE95DAE4B4: "Ring Hot Spot of type " @
+B0AC0AEBCCF16C: "Ring Hot Spot of type" @
 
 SECTION Crimes
 
@@ -1334,7 +1334,7 @@ CD515256E31FA0: "Crater Port" @
 E2407F2BA86D9F: "Space Construction Depot" @
 72D0849A72AB18: "Planetary Construction Depot" @
 2D68CF109D6809: "Dockable Planet Station" @
-98A309D0711AAD: "Gameplay POI" @
+D089EF39D4EA65: "Construction POI" @
 39A76A40856116: "Dodec" @
 9267B3634807D3: "Outpost Scientific" @
 
@@ -1382,6 +1382,7 @@ EB702E354D4040: "Fighter Weapon" @
 1CC4848D27B6F3: "Wear And Tear Type" @
 86B9B261DED066: "Vanity Type" @
 352374D32CCD3B: "Unknown Type" @
+45D2597560EB4A: "SRV Scanner" @
 036F587DDBE3AB: "Lightweight Alloy (Default)" @
 7F3C61AC8B0BA8: "Fighter" @
 EAD533685E262E: "Weapon" @

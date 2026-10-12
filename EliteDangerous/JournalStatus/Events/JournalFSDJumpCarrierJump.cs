@@ -59,7 +59,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? Taxi { get; set; }
         public bool? Multicrew { get; set; }
 
-        public override string SummaryName(ISystem sys) { return string.Format("Jump to {0}".Tx(), StarSystem); }
+        public override string SummaryName(ISystem sys) { return "Jump to".Tx() + " " + StarSystem; }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
             s.GetOrAddSystem(new SystemClass(StarPos.X, StarPos.Y, StarPos.Z, SystemAddress, StarSystem));     // we use our data to fill in 
@@ -73,7 +73,9 @@ namespace EliteDangerousCore.JournalEvents
 
             var sb = new System.Text.StringBuilder(256);
 
-            sb.Build("; ly;N2".Tx(), tempdist, "Fuel used: ; t;N2".Tx(), tempused, "Fuel left: ; t;N2".Tx(), templevel);
+            sb.Build("; " + "ly".Tx() + ";N2", tempdist, 
+                     "Fuel used".Tx() + ": ; t;N2", tempused, 
+                     "Fuel left".Tx() + ": ; t;N2", templevel);
 
             if (Faction.HasChars() || Allegiance != AllegianceDefinitions.Allegiance.Unknown || Economy != EconomyDefinitions.Economy.Unknown)
             {
@@ -197,7 +199,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             if (IsHyperspace)
-                return "Hyperspace".Tx()+ BaseUtils.FieldBuilder.Build("< to ".Tx(), StarSystem, "", FriendlyStarClass);
+                return "Hyperspace".Tx()+ BaseUtils.FieldBuilder.Build("< " + "To".Tx() + " ", StarSystem, "", FriendlyStarClass);
             else
                 return "Supercruise".Tx();
         }
@@ -259,9 +261,9 @@ namespace EliteDangerousCore.JournalEvents
         public override string SummaryName(ISystem sys)
         {
             if (Docked)
-                return string.Format("Jumped with carrier {0} to {1}".Tx(), StationName, Body);
+                return string.Format("Carrier jumped to".Tx() + " {0} : {1}", StationName, Body);
             else
-                return string.Format("Carrier jumped to {0}".Tx(), Body);
+                return string.Format("Carrier jumped to".Tx() + " {0}", Body);
         }
         public void AddStarScan(StarScan2.StarScan s, ISystem system)
         {
@@ -299,6 +301,49 @@ namespace EliteDangerousCore.JournalEvents
         }
     }
 
+    [JournalEntryType(JournalTypeEnum.JetConeBoost)]
+    public class JournalJetConeBoost : JournalEntry
+    {
+        public JournalJetConeBoost(JObject evt) : base(evt, JournalTypeEnum.JetConeBoost)
+        {
+            BoostValue = evt["BoostValue"].Double();
 
+        }
+        public double BoostValue { get; set; }
 
+        public override string GetInfo()
+        {
+            return BaseUtils.FieldBuilder.Build("Boost".Tx() + ": ;;0.0", BoostValue);
+        }
+    }
+
+    [JournalEntryType(JournalTypeEnum.JetConeDamage)]
+    public class JournalJetConeDamage : JournalEntry
+    {
+        public JournalJetConeDamage(JObject evt) : base(evt, JournalTypeEnum.JetConeDamage)
+        {
+            string modid = evt["Module"].Str();
+            if (modid.HasChars())     // earl ones from 2016 were really borked
+            {
+                ModuleFD = ModFDName.Normalise(modid, out string engname, this);
+                Module = engname;
+            }
+            else
+            {
+                ModuleFD = ModFDName.Empty;
+                Module = ModuleFD.ID;
+            }
+
+            ModuleLocalised = JournalFieldNaming.CheckLocalisation(evt["Module_Localised"].Str(), Module);
+        }
+
+        public ModFDName ModuleFD { get; set; }
+        public string Module { get; set; }      // english name
+        public string ModuleLocalised { get; set; }
+
+        public override string GetInfo()
+        {
+            return ModuleFD.IsValid ? ModuleFD.GetForeignModuleName(ModuleLocalised) : "";
+        }
+    }
 }

@@ -603,7 +603,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             MaterialCommodityMicroResourceType mcd = MaterialCommodityMicroResourceType.GetByFDName(Resource.Name);     // may be null
             int? itemcount = Resource.Count > 1 ? Resource.Count : default(int?);
-            return BaseUtils.FieldBuilder.Build("", Resource.GetFriendlyName(), "< (;)", mcd?.TranslatedCategory, "< ; " + "Items".Tx(), itemcount, ";Stolen".Tx(), Stolen);
+            return BaseUtils.FieldBuilder.Build("", Resource.GetFriendlyName(), "< (;)", mcd?.TranslatedCategory, "< ; " + "Items".Tx(), itemcount, ";" + "Stolen".Tx(), Stolen);
         }
 
         public void UpdateMicroResource(MaterialCommoditiesMicroResourceList mc, JournalEntry unused)    // no action, BPC does the work, but mark as MR

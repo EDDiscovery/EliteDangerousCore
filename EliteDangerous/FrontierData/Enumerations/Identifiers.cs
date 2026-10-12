@@ -94,7 +94,7 @@ namespace EliteDangerousCore
                     if (mcd != null)    // if we find it, translate it, else leave it alone
                         mintype = mcd.TranslatedName;
 
-                    res = "Ring Hot Spot of type ".Tx() + mintype;
+                    res = "Ring Hot Spot of type".Tx() + " " + mintype;
                 }
             }
             return res;

@@ -196,8 +196,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("; cr;N0", Reward, "< " + "From".Tx() + " ", AwardingFaction_Localised,
-                "<, due to ".Tx(), VictimFaction_Localised);
+            return BaseUtils.FieldBuilder.Build("; cr;N0", Reward, 
+                "< " + "From".Tx() + " ", AwardingFaction_Localised,
+                "<, " + "Due to".Tx() + " ", VictimFaction_Localised);
         }
 
         public string Type { get { return "Capital Ship Bond".Tx(); } }
@@ -244,8 +245,11 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", CrimesFDName.ToLocalisedLanguage(FDCrimeType), "< on faction ".Tx(), Faction, 
-                        "Against ".Tx(), VictimLocalised, "Cost".Tx() + ": ; cr N0", Fine, "Bounty: ; cr;N0".Tx(), Bounty);
+            return BaseUtils.FieldBuilder.Build("", CrimesFDName.ToLocalisedLanguage(FDCrimeType), 
+                        "< " + "Faction".Tx() + " ", Faction, 
+                        "Against".Tx() + " ", VictimLocalised, 
+                        "Cost".Tx() + ": ; cr N0", Fine, 
+                        "Bounty".Tx() + ": ; cr;N0", Bounty);
         }
     }
 
@@ -268,7 +272,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", CrimesFDName.ToLocalisedLanguage(FDCrimeType), "Offender ".Tx(), OffenderLocalised, "Bounty: ; cr;N0".Tx(), Bounty);
+            return BaseUtils.FieldBuilder.Build("", CrimesFDName.ToLocalisedLanguage(FDCrimeType), 
+                "Offender".Tx() + " ", OffenderLocalised, 
+                "Bounty".Tx() + ": ; cr;N0", Bounty);
         }
     }
 
@@ -304,9 +310,9 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("x", NumberRewards,
-                                        "Reward: ; cr;N0".Tx(), Reward,
+                                        "Reward".Tx() + ": ; cr;N0", Reward,
                                         "< " + "From".Tx() + " ", AwardingFaction_Localised,
-                                        "<, due to ".Tx(), VictimFaction_Localised);
+                                        "<, " + "Due to".Tx() + " ", VictimFaction_Localised);
         }
 
         public bool HasFaction(string faction)
@@ -348,9 +354,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            string info = BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Amount, "< to ".Tx(), Faction_Localised);
+            string info = BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Amount, "< " + "To".Tx() + " ", Faction_Localised);
             if (BrokerPercentage > 0)
-                info += string.Format(", Broker took {0:N0}%".Tx(), BrokerPercentage);
+                info += string.Format(", " + "Broker".Tx() + " {0:N0}%", BrokerPercentage);
             return info;
         }
 
@@ -387,9 +393,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            string info =BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Amount, "< to ".Tx(), Faction_Localised);
+            string info =BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Amount, "< " +"Faction".Tx()+ " ", Faction_Localised);
             if (BrokerPercentage > 0)
-                info += string.Format(", Broker took {0:N0}%".Tx(), BrokerPercentage);
+                info += string.Format(", " + "Broker".Tx() + " {0:N0}%", BrokerPercentage);
             return info;
         }
 
@@ -421,7 +427,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             string info = BaseUtils.FieldBuilder.Build("Cost".Tx() + ": ; cr N0", Amount);
             if (BrokerPercentage > 0)
-                info += string.Format(", Broker took {0:N0}%".Tx(), BrokerPercentage);
+                info += string.Format(", " + "Broker".Tx() + " {0:N0}%", BrokerPercentage);
             return info;
         }
     }
@@ -493,9 +499,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            string info = BaseUtils.FieldBuilder.Build("Type".Tx()+": ", Type, "Amount: ; cr;N0".Tx(), Amount, "Faction".Tx()+": ", Faction);
+            string info = BaseUtils.FieldBuilder.Build("Type".Tx()+": ", Type, "Amount".Tx() + ": ; cr;N0", Amount, "Faction".Tx()+": ", Faction);
             if (BrokerPercentage > 0)
-                info += string.Format(", Broker took {0:N0}%".Tx(), BrokerPercentage);
+                info += string.Format(", " + "Broker".Tx() + " {0:N0}%", BrokerPercentage);
             return info;
         }
 

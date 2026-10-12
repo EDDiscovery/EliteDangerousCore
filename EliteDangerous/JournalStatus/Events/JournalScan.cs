@@ -702,17 +702,18 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys)
         {
-            string text = "Scan of {0}".Tx();
+            string sysn = BodyName.ReplaceIfStartsWith(sys.Name);
+            string text = "Scan".Tx() + " " + sysn;
             if (ScanType == ScanTypeEnum.AutoScan)
-                text = "Autoscan of {0}".Tx();
+                text = "Scan Auto".Tx() + " " + sysn;
             else if (ScanType == ScanTypeEnum.Detailed)
-                text = "Detailed scan of {0}".Tx();
+                text = "Detailed scan".Tx() + " " + sysn;
             else if (ScanType == ScanTypeEnum.Basic)
-                text = "Basic scan of {0}".Tx();
+                text = "Scan Basic".Tx() + " " + sysn;
             else if (ScanType == ScanTypeEnum.NavBeacon || ScanType == ScanTypeEnum.NavBeaconDetail)
-                text = "Nav scan of {0}".Tx();
+                text = "Scan Nav".Tx() + " " + sysn;
 
-            return string.Format(text, BodyName.ReplaceIfStartsWith(sys.Name));
+            return text;
         }
 
         [PropertyNameAttribute("Scan Auto, Scan Basic, Scan Nav, Scan")]

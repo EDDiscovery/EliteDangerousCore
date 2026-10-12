@@ -119,7 +119,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             var sb = new System.Text.StringBuilder(256);
 
-            sb.Build("", FriendlyMotherlodeMaterial, "", Content_Localised, "Remaining: ;%;N1".Tx(), Remaining);
+            sb.Build("", FriendlyMotherlodeMaterial, "", Content_Localised, "Remaining".Tx() + ": ;%;N1", Remaining);
             
             if ( Materials != null )
             {

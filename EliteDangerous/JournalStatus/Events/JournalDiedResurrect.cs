@@ -15,6 +15,7 @@
  */
 using QuickJSON;
 using System;
+using System.Reflection.Emit;
 
 namespace EliteDangerousCore.JournalEvents
 {
@@ -74,7 +75,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public Killer[] Killers { get; set; }           // may be null if no killer listed
 
-        public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)
+        public void UpdateMissions(MissionListAccumulator mlist, ISystem sys, string body)
         {
             mlist.Died(this.EventTimeUTC);
         }
@@ -98,24 +99,23 @@ namespace EliteDangerousCore.JournalEvents
 
                     if (k.Ship.Type == VehicleFDName.VehicleType.Suit)
                     {
-                        string type = k.Ship.Contains("citizen") ? k.FriendlyShip.Replace("Suit ", "") : k.FriendlyShip.Replace("Suit", "Trooper");
-                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", type);
+                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "", k.FriendlyShip);
                     }
                     else if (k.Ship.Type == VehicleFDName.VehicleType.Ship)
                     {
-                        kstr = string.Format("{0} in ship type {1} rank {2}".Tx(), k.Name_Localised, k.FriendlyShip, k.Rank.ToString());
+                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "Ship".Tx() + ": ", k.FriendlyShip, "Rank".Tx() + ": ", RankDefinitions.FriendlyName(k.Rank));
                     }
                     else if (k.FriendlyShip.HasChars())
                     {
-                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised != "Unknown" ? k.Name_Localised : null, "", k.FriendlyShip, "Rank".Tx() + ": ", k.Rank.ToString());
+                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised != "Unknown" ? k.Name_Localised : null, "", k.FriendlyShip, "Rank".Tx() + ": ", RankDefinitions.FriendlyName(k.Rank));
                     }
                     else
-                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "Rank".Tx() + ": ", k.Rank);
+                        kstr = BaseUtils.FieldBuilder.Build("", k.Name_Localised, "Rank".Tx() + ": ", RankDefinitions.FriendlyName(k.Rank));
 
                     sb.AppendPrePad(kstr, ", ");
                 }
 
-                return "Killed by ".Tx() + sb.ToString();
+                return "Killed by".Tx() + " " + sb.ToString();
             }
             else
                 return null;;
@@ -175,7 +175,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Option".Tx()+": ", Option, "Cost".Tx() + ": ; cr N0", Cost, ";Bankrupt".Tx(), Bankrupt);
+            return BaseUtils.FieldBuilder.Build("Option".Tx()+": ", Option, "Cost".Tx() + ": ; cr N0", Cost, ";" + "Bankrupt".Tx(), Bankrupt);
         }
     }
 

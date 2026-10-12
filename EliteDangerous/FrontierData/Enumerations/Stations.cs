@@ -194,7 +194,7 @@ namespace EliteDangerousCore
             SpaceConstructionDepot,
             PlanetaryConstructionDepot, // IsPlantaryPort
             DockablePlanetStation,      // IsPlantaryPort
-            GameplayPOI,
+            GameplayPOI,                // .NotTxThis() Gets replaced below with "Construction POI"
             Dodec,
 
             Station,        // Location has it as this, when on foot on station, or when outside an orbiting station
@@ -228,7 +228,7 @@ namespace EliteDangerousCore
         public static string ToEnglish(StarportTypes starporttype)
         {
             if (starporttype == StarportTypes.GameplayPOI)
-                return "Construction POI";
+                return "Construction POI".PTx();                    // programatically translated below in ToLocalisedLanguage. PTx() does nothing
             else
                 return starporttype.ToString().SplitCapsWordFull();
         }

@@ -132,8 +132,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Ship".Tx()+": ", ShipType, "< (;)", ShipId, "Name".Tx()+": ", ShipName, "Ident".Tx()+": ", ShipIdent, ";(Hot)".Tx(), Hot,
-                "Modules".Tx()+": ", ShipModules.Count, "Hull Health: ;%;N1".Tx(), HullHealth, "Hull: ; cr;N0".Tx(), HullValue, "Modules: ; cr;N0".Tx(), ModulesValue, "Rebuy: ; cr;N0".Tx(), Rebuy);
+            return BaseUtils.FieldBuilder.Build("Ship".Tx()+": ", ShipType, "< (;)", ShipId, "Name".Tx()+": ", ShipName, "Ident".Tx()+": ", ShipIdent, ";(" + "Hot".Tx() + ")", Hot,
+                "Modules".Tx()+": ", ShipModules.Count, 
+                "Hull Health".Tx() + ": ;%;N1", HullHealth, 
+                "Hull".Tx() + ": ; cr;N0", HullValue, 
+                "Modules".Tx() + ": ; cr;N0", ModulesValue, 
+                "Rebuy".Tx() + ": ; cr;N0", Rebuy);
         }
 
 
@@ -240,7 +244,7 @@ namespace EliteDangerousCore.JournalEvents
             if (SellItemFD != null)
             {
                 sb.AppendCS();
-                sb.Build("Sold".Tx()+": ", SellItemFD.GetForeignModuleName(SellItemLocalised), "Price: ; cr;N0".Tx(), SellPrice);
+                sb.Build("Sold".Tx()+": ", SellItemFD.GetForeignModuleName(SellItemLocalised), "Price".Tx() + ": ; cr;N0", SellPrice);
             }
 
             if (StoredItemFD != null)
@@ -349,7 +353,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("", SellItemFD.GetForeignModuleName(SellItemLocalised), "< " + "From".Tx() + " ",
-                                            ShipSlots.ToLocalisedLanguage(SlotFD), "Price: ; cr;N0".Tx(), SellPrice);
+                                            ShipSlots.ToLocalisedLanguage(SlotFD), "Price".Tx() + ": ; cr;N0", SellPrice);
         }
 
     }
@@ -401,7 +405,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("Item".Tx()+": ", SellItemFD.GetForeignModuleName(SellItemLocalised),
-                                            "Price: ; cr;N0".Tx(), SellPrice);
+                                            "Price".Tx() + ": ; cr;N0", SellPrice);
         }
 
         public override string GetDetailed()
@@ -492,7 +496,7 @@ namespace EliteDangerousCore.JournalEvents
             System.Text.StringBuilder sb = new System.Text.StringBuilder(256);
             
             sb.Build("", RetrievedItemFD?.GetForeignModuleName(RetrievedItemLocalised),
-                            "<" + "into".Tx() + " ", ShipSlots.ToLocalisedLanguage(SlotFD), ";(Hot)".Tx(), Hot);
+                            "<" + "into".Tx() + " ", ShipSlots.ToLocalisedLanguage(SlotFD), ";(" + "Hot".Tx() + ")", Hot);
             if (Cost > 0)
             {
                 sb.AppendCS();
@@ -569,7 +573,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Cost.HasValue)
             {
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, StoredItemFD.GetForeignModuleName(StoredItemLocalised) + " @ ".Tx() + Ship, -(Cost.Value));
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, StoredItemFD.GetForeignModuleName(StoredItemLocalised) + " @ " + Ship, -(Cost.Value));
             }
         }
 
@@ -583,7 +587,7 @@ namespace EliteDangerousCore.JournalEvents
             System.Text.StringBuilder sb = new System.Text.StringBuilder(256);
 
             sb.Build("", StoredItemFD.GetForeignModuleName(StoredItemLocalised), "< " + "From".Tx() + " ",
-                               ShipSlots.ToLocalisedLanguage(SlotFD), ";(Hot)".Tx(), Hot, "Cost".Tx() + ": ; cr N0", Cost);
+                               ShipSlots.ToLocalisedLanguage(SlotFD), ";(" + "Hot".Tx() + ")", Hot, "Cost".Tx() + ": ; cr N0", Cost);
 
             if (ReplacementItem!=null)
             {
@@ -663,7 +667,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder(256);
 
-            sb.Build( "Slot".Tx()+": ", ShipSlots.ToLocalisedLanguage(FromSlotFD), "< to ".Tx(), ShipSlots.ToLocalisedLanguage(ToSlotFD), 
+            sb.Build( "Slot".Tx()+": ", ShipSlots.ToLocalisedLanguage(FromSlotFD), 
+                            "< " + "To".Tx() + " ", ShipSlots.ToLocalisedLanguage(ToSlotFD), 
                             "Item".Tx()+": ", FromItemFD.GetForeignModuleName(FromItemLocalised));
             if (ToItemFD.IsValid)
             {
@@ -796,10 +801,12 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (ShipModulesInStore.StoredModule m in ModuleItems)
                 {
                     sb.AppendCR();
-                    sb.Build("", m.NameFD.GetForeignModuleName(m.Name_Localised), "<" + "At".Tx() + " ", m.StarSystem,
-                                "Transfer Cost: ; cr;N0".Tx(), m.TransferCost,
+                    sb.Build("", m.NameFD.GetForeignModuleName(m.Name_Localised), 
+                                "<" + "At".Tx() + " ", m.StarSystem,
+                                "Transfer Cost".Tx() + ": ; cr;N0", m.TransferCost,
                                 "Time".Tx() + ": ", m.TransferTimeString,
-                                "Value: ; cr;N0".Tx(), m.TransferCost, ";(Hot)".Tx(), m.Hot);
+                                "Value".Tx() + ": ; cr;N0", m.TransferCost, 
+                                ";(" + "Hot".Tx() + ")", m.Hot);
                 }
                 return sb.ToString();
             }
@@ -860,7 +867,7 @@ namespace EliteDangerousCore.JournalEvents
                 foreach (ModuleItem m in ModuleItems)
                 {
                     sb.AppendCR();
-                    sb.Build("", m.NameFD.GetForeignModuleName(m.Name_Localised), ";(Hot)".Tx(), m.Hot);
+                    sb.Build("", m.NameFD.GetForeignModuleName(m.Name_Localised), ";(" + "Hot".Tx() + ")", m.Hot);
                 }
                 return sb.ToString();
             }

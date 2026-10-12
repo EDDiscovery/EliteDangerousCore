@@ -58,24 +58,24 @@ namespace EliteDangerousCore
             sb.AppendCR();
 
             if (MassMT > (BodyPhysicalConstants.oneMoon_KG / 1e9 / 1000))
-                sb.AppendFormat(frontpad + "Mass: {0:N4}{1}".Tx(), MassMT / (BodyPhysicalConstants.oneMoon_KG / 1E9), " " + "Moons".Tx());
+                sb.Append(frontpad + "Mass".Tx() + $": {MassMT / (BodyPhysicalConstants.oneMoon_KG / 1E9):N4} " + "Moons".Tx());
             else
-                sb.AppendFormat(frontpad + "Mass: {0:N4}{1}".Tx(), MassMT, " MT");
+                sb.Append(frontpad + "Mass".Tx() + $": {MassMT:N4} MT");
 
             sb.AppendCR();
 
             if (InnerRad > BodyPhysicalConstants.oneAU_m / 10)       // more than 0.1AU, its in ls
             {
-                sb.AppendFormat(frontpad + "Inner Radius: {0:0.00}ls".Tx(), (InnerRad / BodyPhysicalConstants.oneLS_m));
+                sb.Append(frontpad + "Inner Radius".Tx() + $": {InnerRad / BodyPhysicalConstants.oneLS_m:0.00}ls");
                 sb.AppendCR();
-                sb.AppendFormat(frontpad + "Outer Radius: {0:0.00}ls".Tx(), (OuterRad / BodyPhysicalConstants.oneLS_m));
+                sb.Append(frontpad + "Outer Radius".Tx() + $": {OuterRad / BodyPhysicalConstants.oneLS_m:0.00}ls");
                 sb.AppendCR();
             }
             else
             {
-                sb.AppendFormat(frontpad + "Inner Radius: {0}km".Tx(), (InnerRad / 1000).ToString("N0"));
+                sb.Append(frontpad + "Inner Radius".Tx() + $": {InnerRad / 1000:N0}km");
                 sb.AppendCR();
-                sb.AppendFormat(frontpad + "Outer Radius: {0}km".Tx() + " \u0394 {1}", (OuterRad / 1000).ToString("N0"), ((OuterRad - InnerRad) / 1000).ToString("N0"));
+                sb.Append(frontpad + "Outer Radius".Tx() + $": {OuterRad / 1000:N0}km \u0394 {(OuterRad - InnerRad) / 1000:N0}");
                 sb.AppendCR();
             }
         }

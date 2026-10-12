@@ -143,9 +143,9 @@ namespace EliteDangerousCore.JournalEvents
             {
                 string bodyname = Body.HasChars() ? Body.ReplaceIfStartsWith(StarSystem) : StarSystem;
                 if (OnFoot == true)
-                    return string.Format("On Foot at {0}".Tx(), bodyname);
+                    return "On Foot at".Tx() + " " + bodyname;
                 else if (Latitude.HasValue && Longitude.HasValue)
-                    return string.Format("Landed on {0}".Tx(), bodyname);
+                    return "Landed on".Tx() + " " + bodyname;
                 else
                     return "At".Tx() + " " + bodyname;
             }
@@ -155,7 +155,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             if (Docked)
             {
-                return BaseUtils.FieldBuilder.Build("Type ".Tx(), StationDefinitions.ToLocalisedLanguage(FDStationType),
+                return BaseUtils.FieldBuilder.Build("Type".Tx() + " ", StationDefinitions.ToLocalisedLanguage(FDStationType),
                             "< " + "In system".Tx() + " ", StarSystem);
             }
             else if (Latitude.HasValue && Longitude.HasValue)

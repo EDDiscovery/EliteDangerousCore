@@ -13,9 +13,7 @@
  *
  */
 
-using System;
 using System.Collections.Generic;
-using static BaseUtils.TypeHelpers;
 
 namespace EliteDangerousCore
 {
@@ -58,7 +56,7 @@ namespace EliteDangerousCore
     // events containing feature information on a body
     public interface IBodyFeature  
     {
-        DateTime EventTimeUTC { get; }
+        System.DateTime EventTimeUTC { get; }
         JournalTypeEnum EventTypeID { get; }
         string EventTypeStr { get; }
         string SummaryName(ISystem sys);

@@ -34,7 +34,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo() 
         {
-            return BaseUtils.FieldBuilder.Build("", Name, "< to role ;".Tx(), Role);
+            return Name + " " + "Role".Tx() + ": " + Role;
         }
     }
 
@@ -52,7 +52,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("; fired".Tx(), Name);
+            return "Fired".Tx() + ": " + Name;
             
         }
     }
@@ -82,8 +82,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Hired: ;".Tx(), Name, "< of faction ".Tx(), 
-                            Faction, "Rank".Tx()+": ", RankDefinitions.FriendlyName(CombatRank), "Cost".Tx() + ": ; cr N0", Cost);
+            return BaseUtils.FieldBuilder.Build("Hired".Tx() + ": ", Name, "Faction".Tx() + " ", Faction, 
+                                        "Rank".Tx()+": ", RankDefinitions.FriendlyName(CombatRank), "Cost".Tx() + ": ; cr N0", Cost);
             
         }
     }
@@ -104,7 +104,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Crew".Tx()+": ", Crew, ";Telepresence".Tx(), Telepresence);
+            return BaseUtils.FieldBuilder.Build("Crew".Tx()+": ", Crew, ";" + "Telepresence".Tx(), Telepresence);
             
         }
     }
@@ -123,7 +123,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Crew".Tx()+": ", Crew, ";Telepresence".Tx(), Telepresence);
+            return BaseUtils.FieldBuilder.Build("Crew".Tx()+": ", Crew, ";" + "Telepresence".Tx(), Telepresence);
             
         }
     }
@@ -142,7 +142,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Crew".Tx()+": ", Crew, ";Telepresence".Tx(), Telepresence);
+            return BaseUtils.FieldBuilder.Build("Crew".Tx()+": ", Crew, ";" + "Telepresence".Tx(), Telepresence);
             
         }
     }
@@ -174,7 +174,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Crew".Tx()+": ", Crew, "Role".Tx()+": ", Role, ";Telepresence".Tx(), Telepresence);
+            return BaseUtils.FieldBuilder.Build("Crew".Tx()+": ", Crew, "Role".Tx()+": ", Role, ";" + "Telepresence".Tx(), Telepresence);
             
         }
     }
@@ -195,7 +195,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Crew Member".Tx()+": ", Crew, ";Due to Crime".Tx(), OnCrime, ";Telepresence".Tx(), Telepresence);
+            return BaseUtils.FieldBuilder.Build("Crew Member".Tx()+": ", Crew, ";" + "Due to Crime".Tx(), OnCrime, ";" + "Telepresence".Tx(), Telepresence);
             
         }
     }
@@ -215,7 +215,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
 
-            return BaseUtils.FieldBuilder.Build("Captain".Tx()+": ", Captain, ";Telepresence".Tx(), Telepresence);
+            return BaseUtils.FieldBuilder.Build("Captain".Tx()+": ", Captain, ";" + "Telepresence".Tx(), Telepresence);
             
         }
     }
@@ -242,7 +242,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Role".Tx()+": ", Role, ";Telepresence".Tx(), Telepresence);
+            return BaseUtils.FieldBuilder.Build("Role".Tx()+": ", Role, ";" + "Telepresence".Tx(), Telepresence);
             
         }
     }
@@ -262,7 +262,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("; Due to Crime".Tx(), OnCrime, ";Telepresence".Tx(), Telepresence);
+            return BaseUtils.FieldBuilder.Build(";" + "Due to Crime".Tx(), OnCrime, ";" + "Telepresence".Tx(), Telepresence);
             
         }
     }
@@ -282,7 +282,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Captain".Tx()+": ", Captain, ";Telepresence".Tx(), Telepresence);
+            return BaseUtils.FieldBuilder.Build("Captain".Tx()+": ", Captain, ";" + "Telepresence".Tx(), Telepresence);
             
         }
 

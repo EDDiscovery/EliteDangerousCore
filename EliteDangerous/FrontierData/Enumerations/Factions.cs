@@ -193,10 +193,10 @@ namespace EliteDangerousCore
                 if (frontpart)
                 {
                     sb.Build("", Name,  "State".Tx()+": ", FactionDefinitions.ToLocalisedLanguage(FactionState),
-                                        "Reputation: ;%;N1".Tx(), MyReputation,
+                                        "Reputation".Tx() + ": ;%;N1", MyReputation,
                                         "Government".Tx()+": ", GovernmentDefinitions.ToLocalisedLanguage(Government),
                                         "Allegiance".Tx()+": ", AllegianceDefinitions.ToLocalisedLanguage(Allegiance),
-                                        "Inf: ;%".Tx(), (Influence * 100.0).ToString("0.0")
+                                        "Influence".Tx() + ": ;%", (Influence * 100.0).ToString("0.0")
                                                                    );
                 }
 

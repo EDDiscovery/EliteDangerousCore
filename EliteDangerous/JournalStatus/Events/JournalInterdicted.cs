@@ -10,9 +10,8 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- *
  */
+
 using QuickJSON;
 using System.Linq;
 
@@ -52,12 +51,13 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo() 
         {
             if ( Submitted )
-                return BaseUtils.FieldBuilder.Build(";Submitted".Tx(), Submitted, "< to ".Tx(), Interdictor_Localised, 
-                    "< (NPC);(Player)".Tx(), IsPlayer, "Rank: ", RankDefinitions.FriendlyName(CombatRank), 
+                return BaseUtils.FieldBuilder.Build(";Submitted".Tx(), Submitted, 
+                    "< " + "To".Tx() + " ", Interdictor_Localised, 
+                    "< (" +"NPC".Tx()+");(" + "Player".Tx() + ")", IsPlayer, "Rank: ", RankDefinitions.FriendlyName(CombatRank), 
                     "Faction".Tx()+": ", Faction, "Power".Tx()+": ", Power);
             else
-                return BaseUtils.FieldBuilder.Build("By".Tx()+": ", Interdictor_Localised, 
-                    "< (NPC);(Player)".Tx(), IsPlayer, 
+                return BaseUtils.FieldBuilder.Build("By".Tx()+": ", Interdictor_Localised,
+                    "< (" + "NPC".Tx() + ");(" + "Player".Tx() + ")", IsPlayer, 
                     "Rank: ", RankDefinitions.FriendlyName(CombatRank), 
                     "Faction".Tx()+": ", Faction, "Power".Tx()+": ", Power);
         }
@@ -92,8 +92,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Failed to interdict;Interdicted".Tx(), Success, "< ", Interdicted_Localised, 
-                        "< (NPC);(Player)".Tx(), IsPlayer, 
+            return BaseUtils.FieldBuilder.Build("Failed to interdict".Tx() + ";" + "Interdicted".Tx(), Success, "< ", Interdicted_Localised,
+                        "< (" + "NPC".Tx() + ");(" + "Player".Tx() + ")", IsPlayer, 
                         "Rank: ", RankDefinitions.FriendlyName(CombatRank), 
                         "Faction".Tx()+": ", Faction, "Power".Tx()+": ", Power);
         }
@@ -119,7 +119,7 @@ namespace EliteDangerousCore.JournalEvents
         public bool? IsThargoid { get; set; }        // update 15+
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("By".Tx()+": ", Interdictor_Localised, "< (NPC);(Player)".Tx(), IsPlayer);
+            return BaseUtils.FieldBuilder.Build("By".Tx()+": ", Interdictor_Localised, "< (" + "NPC".Tx() + ");(" + "Player".Tx() + ")", IsPlayer);
         }
     }
 

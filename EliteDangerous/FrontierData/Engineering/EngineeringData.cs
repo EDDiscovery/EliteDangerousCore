@@ -171,7 +171,10 @@ namespace EliteDangerousCore
                         {
                             bool better = m.LessIsGood ? (m.Value < m.OriginalValue) : (m.Value > m.OriginalValue);
                             double mul = m.Value / m.OriginalValue * 100 - 100;
-                            sb.Build("", m.FriendlyLabel, "<: ;;0.###", m.Value, "Original: ;;0.###".Tx(), m.OriginalValue, "Mult: ;%;N1", mul, "< (Worse); (Better)".Tx(), better);
+                            sb.Build("", m.FriendlyLabel, "<: ;;0.###", m.Value, 
+                                        "Original".Tx() + ": ;;0.###", m.OriginalValue, 
+                                        "Multiplier".Tx() + ": ;%;N1", mul, 
+                                        "< (" + "Worse".Tx() + "); (" + "Better".Tx() + ")", better);
                         }
                         else
                         {

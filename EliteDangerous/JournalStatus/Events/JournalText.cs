@@ -90,9 +90,11 @@ namespace EliteDangerousCore.JournalEvents
             {
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
                 sb.Append((MergedEntries.Count() + 1).ToString());
-                sb.Append(" " + "Texts".Tx());
                 sb.AppendSPC();
-                sb.Append("from ".Tx());
+                sb.Append("Texts".Tx());
+                sb.AppendSPC();
+                sb.Append("From".Tx());
+                sb.AppendSPC();
                 sb.Append(Channel);
                 return sb.ToString();
             }

@@ -84,7 +84,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Type".Tx()+": ", FriendlyType, "Count".Tx()+": ", Count, "Total Cost".Tx() + ": ; cr;N0", TotalCost, "each: ; cr;N0".Tx(), BuyPrice);
+            return BaseUtils.FieldBuilder.Build("Type".Tx()+": ", FriendlyType, 
+                    "Count".Tx()+": ", Count, 
+                    "Total".Tx() + ": ; cr;N0", TotalCost, 
+                    "Each".Tx() + ": ; cr;N0", BuyPrice);
         }
     }
 
@@ -127,7 +130,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", FriendlyType, "Count".Tx()+": ", Count, "Price: ; cr;N0".Tx(), SellPrice, "Amount: ; cr;N0".Tx(), TotalSale);
+            return BaseUtils.FieldBuilder.Build("", FriendlyType, 
+                        "Count".Tx()+ ": ", Count, 
+                        "Price".Tx() + ": ; cr;N0", SellPrice, 
+                        "Amount".Tx() + ": ; cr;N0", TotalSale);
         }
     }
 

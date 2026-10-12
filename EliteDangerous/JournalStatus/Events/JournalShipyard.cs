@@ -10,9 +10,8 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- *
  */
+
 using QuickJSON;
 using System;
 using System.Linq;
@@ -189,7 +188,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Build("", ShipType, "Amount: ; cr;N0".Tx(), ShipPrice);
+            sb.Build("", ShipType, "Amount".Tx() + ": ; cr;N0", ShipPrice);
 
             if (StoreOldShipFD != null)
             {
@@ -197,7 +196,7 @@ namespace EliteDangerousCore.JournalEvents
             }
             if (SellOldShipFD != null)
             {
-                sb.BuildCont("Sold".Tx() + ": ", SellOldShip, "< (;)", SellOldShipId, "Amount: ; cr;N0".Tx(), SellPrice);
+                sb.BuildCont("Sold".Tx() + ": ", SellOldShip, "< (;)", SellOldShipId, "Amount".Tx() + ": ; cr;N0", SellPrice);
             }
             return sb.ToString();
         }
@@ -275,7 +274,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", ShipType_Localised, "< (;)", SellShipId, "Amount: ; cr;N0".Tx(), ShipPrice, "At".Tx() + ": ", System);
+            return BaseUtils.FieldBuilder.Build("", ShipType_Localised, "< (;)", SellShipId,
+                                "Amount".Tx() + ": ; cr;N0", ShipPrice, 
+                                "At".Tx() + ": ", System);
         }
 
         public JObject CreateJSON()            // create JSON of this record..
@@ -332,7 +333,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Swap ".Tx(), StoreOldShip, "< (;)", StoreShipId, "< " + "For a".Tx() + " ", ShipType_Localised, "< (;)",ShipId);
+            return BaseUtils.FieldBuilder.Build("Swap".Tx() + " ", StoreOldShip, "< (;)", StoreShipId, "< " + "For a".Tx() + " ", ShipType_Localised, "< (;)",ShipId);
         }
     }
 
@@ -386,8 +387,12 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Of ".Tx(), ShipType_Localised, "< (;)", ShipId, "< " + "From".Tx() + " ", FromSystem, "Distance: ; ly;0.0".Tx(),
-                            Distance, "Price: ; cr;N0".Tx(), TransferPrice, "Transfer Time".Tx() + ": ", FriendlyTransferTime);
+            return BaseUtils.FieldBuilder.Build("Of".Tx() + " ", ShipType_Localised, 
+                            "< (;)", ShipId, 
+                            "< " + "From".Tx() + " ", FromSystem, 
+                            "Distance".Tx() + ": ; ly;0.0", Distance, 
+                            "Price".Tx() + ": ; cr;N0", TransferPrice, 
+                            "Transfer Time".Tx() + ": ", FriendlyTransferTime);
         }
     }
 
@@ -436,7 +441,7 @@ namespace EliteDangerousCore.JournalEvents
             if (ShipsHere != null)
             {
                 foreach (StoredShip m in ShipsHere)
-                    sb.AppendPrePad(BaseUtils.FieldBuilder.Build("", m.ShipType, "; cr;N0".Tx(), m.Value, ";(Hot)".Tx(), m.Hot), System.Environment.NewLine);
+                    sb.AppendPrePad(BaseUtils.FieldBuilder.Build("", m.ShipType, "; cr;N0", m.Value, ";(" + "Hot".Tx() + ")", m.Hot), System.Environment.NewLine);
             }
 
             if (ShipsRemote != null)
@@ -448,8 +453,10 @@ namespace EliteDangerousCore.JournalEvents
                     if (m.InTransit)
                     {
                         sb.AppendPrePad(BaseUtils.FieldBuilder.Build("; ", m.Name,
-                                    "<; in transit".Tx(), m.ShipType,
-                                    "Value: ; cr;N0".Tx(), m.Value, ";(Hot)".Tx(), m.Hot), System.Environment.NewLine);
+                                    "<; " + "In Transit".Tx(), m.ShipType,
+                                    "Value".Tx() + ": ; cr;N0", m.Value, 
+                                    ";(" + "Hot".Tx() + ")", m.Hot), 
+                                    System.Environment.NewLine);
 
                     }
                     else
@@ -458,8 +465,11 @@ namespace EliteDangerousCore.JournalEvents
                             "; ", m.Name,
                             "<", m.ShipType,
                             "<" + "At".Tx() + " ", m.StarSystem,
-                            "Transfer Cost: ; cr;N0".Tx(), m.TransferPrice, "Time".Tx() + ": ", m.TransferTimeString,
-                            "Value: ; cr;N0".Tx(), m.Value, ";(Hot)".Tx(), m.Hot), System.Environment.NewLine);
+                            "Transfer Cost".Tx() + ": ; cr;N0", m.TransferPrice, 
+                            "Time".Tx() + ": ", m.TransferTimeString,
+                            "Value".Tx() + ": ; cr;N0", m.Value, 
+                            ";(" + "Hot".Tx() + ")", m.Hot), 
+                            System.Environment.NewLine);
                     }
                 }
             }
@@ -520,7 +530,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Ship".Tx() + ": ", ShipType, "System".Tx() + ": ", System, "Price: ; cr;N0".Tx(), ShipPrice);
+            return BaseUtils.FieldBuilder.Build("Ship".Tx() + ": ", ShipType, "System".Tx() + ": ", System, "Price".Tx() + ": ; cr;N0", ShipPrice);
         }
     }
 

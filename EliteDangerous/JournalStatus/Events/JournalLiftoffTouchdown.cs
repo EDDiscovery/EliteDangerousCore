@@ -63,9 +63,10 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo() 
         {
             return BaseUtils.FieldBuilder.Build("", Body, 
-                                          "NPC Controlled;".Tx(), PlayerControlled,
-                                        "Nearest".Tx()+": ", NearestDestination_Localised, 
-                                        "Latitude: ;°;F4".Tx(), Latitude, "Longitude: ;°;F4".Tx(), Longitude);
+                                          "NPC Controlled".Tx() + ";", PlayerControlled,
+                                          "Nearest".Tx()+": ", NearestDestination_Localised, 
+                                          "Latitude: ;°;F4".Tx(), Latitude, 
+                                          "Longitude: ;°;F4".Tx(), Longitude);
         }
     }
 
@@ -118,9 +119,10 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("", Body,
-                                            "NPC Controlled;".Tx(), PlayerControlled,
-                                          "Nearest".Tx()+": ", NearestDestination_Localised,
-                                          "Latitude: ;°;F4".Tx(), Latitude, "Longitude: ;°;F4".Tx(), Longitude);
+                                            "NPC Controlled".Tx() + ";", PlayerControlled,
+                                            "Nearest".Tx()+": ", NearestDestination_Localised,
+                                            "Latitude: ;°;F4".Tx(), Latitude, 
+                                            "Longitude: ;°;F4".Tx(), Longitude);
 
         }
 

@@ -112,7 +112,8 @@ namespace EliteDangerousCore.JournalEvents
         }
         public override string GetDetailed()
         {
-            return BaseUtils.FieldBuilder.Build("Mode".Tx()+": ", GameMode, "Group".Tx()+": ", Group, "Not Landed;Landed".Tx(), StartLanded, "Fuel Level: ;;0.0".Tx(), FuelLevel, "Capacity: ;;0.0".Tx(), FuelCapacity);
+            return BaseUtils.FieldBuilder.Build("Mode".Tx()+": ", GameMode, "Group".Tx()+": ", Group, "Not Landed;Landed".Tx(), StartLanded, 
+                "Fuel Level".Tx() + ": ;;0.0", FuelLevel, "Capacity".Tx() + ": ;;0.0", FuelCapacity);
         }
 
         public void Ledger(Ledger mcl)

@@ -48,7 +48,7 @@ namespace EliteDangerousCore
 
         public void HabZoneText_Hab(StringBuilder sb, string pad = " - ")
         {
-            sb.AppendFormat(pad + "Habitable Zone, {0} ({1}-{2} AU)".Tx(),
+            sb.AppendFormat(pad + "Habitable Zone".Tx() + " {0} ({1}-{2} AU)",
                  $"{HabitableZoneInner:N0}-{HabitableZoneOuter:N0}ls",
                  (HabitableZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
                  (HabitableZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
@@ -56,7 +56,7 @@ namespace EliteDangerousCore
 
         public void HabZoneText_MRP(StringBuilder sb, string pad = " - ")
         {
-            sb.AppendFormat(pad + "Metal Rich planets, {0} ({1}-{2} AU)".Tx(),
+            sb.AppendFormat(pad + "Metal Rich planets".Tx() + " {0} ({1}-{2} AU)",
                              $"{MetalRichZoneInner:N0}-{MetalRichZoneOuter:N0}ls",
                              (MetalRichZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
                              (MetalRichZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
@@ -64,28 +64,28 @@ namespace EliteDangerousCore
 
         public void HabZoneText_WW(StringBuilder sb, string pad = " - ")
         {
-            sb.AppendFormat(pad + "Water Worlds, {0} ({1}-{2} AU)".Tx(),
+            sb.AppendFormat(pad + "Water Worlds".Tx() + " {0} ({1}-{2} AU)",
                              $"{WaterWrldZoneInner:N0}-{WaterWrldZoneOuter:N0}ls",
                              (WaterWrldZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
                              (WaterWrldZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
         }
         public void HabZoneText_EL(StringBuilder sb, string pad = " - ")
         {
-            sb.AppendFormat(pad + "Earth Like Worlds, {0} ({1}-{2} AU)".Tx(),
+            sb.AppendFormat(pad + "Earth Like Worlds".Tx() + " {0} ({1}-{2} AU)",
                              $"{EarthLikeZoneInner:N0}-{EarthLikeZoneOuter:N0}ls",
                              (EarthLikeZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
                              (EarthLikeZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
         }
         public void HabZoneText_AW(StringBuilder sb, string pad = " - ")
         {
-            sb.AppendFormat(pad + "Ammonia Worlds, {0} ({1}-{2} AU)".Tx(),
+            sb.AppendFormat(pad + "Ammonia Worlds".Tx() + " {0} ({1}-{2} AU)",
                              $"{AmmonWrldZoneInner:N0}-{AmmonWrldZoneOuter:N0}ls",
                              (AmmonWrldZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"),
                              (AmmonWrldZoneOuter / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
         }
         public void HabZoneText_ZIP(StringBuilder sb, string pad = " - ")
         {
-            sb.AppendFormat(pad + "Icy Planets, {0} (from {1} AU)".Tx(),
+            sb.AppendFormat(pad + "Icy Planets".Tx() + " {0} (from {1} AU)",
                              $"{IcyPlanetZoneInner:N0}ls to ~",
                              (IcyPlanetZoneInner / BodyPhysicalConstants.oneAU_LS).ToString("N2"));
         }

@@ -289,7 +289,6 @@
     <Compile Include="JournalStatus\Events\JournalFriends.cs" />
     <Compile Include="JournalStatus\Events\JournalHeatHullDamage.cs" />
     <Compile Include="JournalStatus\Events\JournalInterdicted.cs" />
-    <Compile Include="JournalStatus\Events\JournalJetCone.cs" />
     <Compile Include="JournalStatus\Events\JournalLiftoffTouchdown.cs" />
     <Compile Include="JournalStatus\Events\JournalLocation.cs" />
     <Compile Include="JournalStatus\Events\JournalMarket.cs" />

@@ -33,7 +33,6 @@ F966E50854E3BE: "Rogue Planet" => "Planeta pícaro"
 A796E9CB0C487E: "Nebula" => "Nébula"
 6291A56BDE2FBC: "Stellar Remnant Nebula" => "Nébula de Restos Estelares"
 457A6D2361E0B4: "Unknown star class" => "Estrella de clase desconocida"
-DA951D81DC5835: "Class {0} star" => "Estrella de clase {0}"
 
 SECTION EDPlanet
 
@@ -941,6 +940,7 @@ DA433CD41E7FB7: "Raw" => "Elemento"
 8AB3DB9BFC3921: "Manufactured" => "Manufacturado"
 C92C529E0731C5: "Component" @
 E5E429BCC9C2E4: "Data" => "Datos"
+297D709EBEB7F1: "Goods" => "Mercancías"
 8DEC7F27C9D37E: "Consumable" => "Consumible"
 
 SECTION EngineeringData
@@ -948,12 +948,13 @@ SECTION EngineeringData
 05FC94B0147F09: "Engineer" => "Ingeniero"
 A60F2C73604F62: "Quality" => "Calidad"
 A5BADB0C4C0940: "Experimental Effect" => "Efecto experimental"
-C312376DA63393: "Original: ;;0.###" => "Original:;;0.###"
-75A08C2632AF12: "< (Worse); (Better)" => "< (Peor); (Mejor)"
+C0A8060F3B1102: "Original" => "Original"
+B032583DB6CF07: "Multiplier" @
+DD1F00569CD7B2: "Worse" => "Peor"
+303CFD6EA9AABD: "Better" => "Mejor"
 
 SECTION MissionState
 
-2CA6F1899AED14: "Progress:;%;N1" => "Progreso:;%;N1"
 
 SECTION CommanderForm
 
@@ -981,7 +982,7 @@ C747D3A6040F7B: "Enter the API key from the Inara Website\r\nGet an Inara API ke
 6B75A3DB046011: "Click to send journal information to EDDN. EDDN feeds tools such as EDDB, EDSM, Inara with data from commanders. All data is made anonymised" => "Haga clic para enviar información del diario a EDDN. EDDN alimenta herramientas como EDDB, EDSM, Inara con datos de los comandantes. Todos los datos se anonimizan"
 52503993582E1E: "Receive any FSD jumps from EDSM that are on their database but not in EDDiscovery" => "Reciba todos los saltos FSD de EDSM que estén en su base de datos pero no en EDDiscovery"
 669BEBF7483A79: "Send your travel and ship data to EDSM" => "Envíe sus datos de viaje y envío a EDSM"
-034723940C1DC8: "Enter the API key from the EDSM Website\r\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" => "Introduzca la clave de API del sitio web de EDSM\nObtenga una clave de API de EDSM de https://www.edsm.net en el menú \" Mi cuenta \" "
+034723940C1DC8: "Enter the API key from the EDSM Website\r\nGet an EDSM API key from https://www.edsm.net in \"My account\" menu" => "Introduzca la clave de API del sitio web de EDSM\nObtenga una clave de API de EDSM de https://www.edsm.net en el menú \" Mi cuenta \""
 8D74BA59E06617: "Give the name this commander is known as in EDSM" => "Da el nombre con el que se conoce a este comandante en EDSM"
 BB1D039B4A17EB: "Browse to the the journal folder" => "Vaya a la carpeta de la revista"
 D589A4444C45C3: "Enter commander name as used in Elite Dangerous" => "Ingrese el nombre del comandante como se usa en Elite Dangerous"
@@ -996,7 +997,7 @@ A0801CDD86D5EA: "Include Subfolders" => "Incluir Subcarpetas"
 SECTION ScreenshotDirectoryWatcher
 
 779892E0617E90: "Scanning for {0} screenshots in {1}" => "Buscando {0} capturas de pantalla en {1}"
-94106851BD8B68: "Folder specified for image conversion does not exist, check screenshot settings in the settings panel" => "La carpeta especificada para la conversión de imágenes no existe, verifique la configuración en la pestaña Capturas de pantalla"
+E9338ED72024B3: "Folder specified for image conversion does not exist, check screenshot settings in the Settings panel" => "La carpeta especificada para la conversión de imágenes no existe, verifique la configuración en la pestaña Capturas de pantalla"
 831FE55DFAD611: "Error in executing image conversion, try another screenshot, check output path settings. (Exception " => "Error al ejecutar la conversión de imagen, pruebe con otra captura de pantalla, verifique la configuración de la ruta de salida. (Excepción "
 
 SECTION ScreenShotImageConverter
@@ -1034,7 +1035,6 @@ C180FD4808AE6C: "Select screenshot folder" => "Seleccionar carpeta de captura de
 SECTION ScanDisplayUserControl
 
 AD7F166EE19EC4: "No scan data available" => "No hay datos de escaneo disponibles"
-BC71898C9ADABE: "Barycentre of {0}" => "Baricentro de {0}"
 F50801EB15AB8D: "Surface features" => "Características de la superficie"
 2346A18EA3002F: "Signals" => "Señales"
 2C5D5B88672D11: "Codex" => "Códice"
@@ -1185,7 +1185,7 @@ DE463BA892C2F3: "Crew" => "Tripulación"
 
 SECTION Signals
 
-EC12FE95DAE4B4: "Ring Hot Spot of type " => "Zona caliente del anillo de tipo "
+B0AC0AEBCCF16C: "Ring Hot Spot of type" => "Zona caliente del anillo de tipo"
 
 SECTION Crimes
 
@@ -1334,7 +1334,7 @@ CD515256E31FA0: "Crater Port" => "Puerto de Cráter"
 E2407F2BA86D9F: "Space Construction Depot" => "Depósito de Construcción Espacial"
 72D0849A72AB18: "Planetary Construction Depot" => "Depósito de Construcción Planetaria"
 2D68CF109D6809: "Dockable Planet Station" => "Estación Planetaria Atracable"
-98A309D0711AAD: "Gameplay POI" => "PDI de Construcción"
+D089EF39D4EA65: "Construction POI" => "PDI de Construcción"
 39A76A40856116: "Dodec" @
 9267B3634807D3: "Outpost Scientific" @
 
@@ -1382,6 +1382,7 @@ EB702E354D4040: "Fighter Weapon" => "Armamento del Caza"
 1CC4848D27B6F3: "Wear And Tear Type" => "Tipo de Desgaste"
 86B9B261DED066: "Vanity Type" @
 352374D32CCD3B: "Unknown Type" => "Tipo Desconocido"
+45D2597560EB4A: "SRV Scanner" @
 036F587DDBE3AB: "Lightweight Alloy (Default)" => "Aleación Ligera (Predeterminado)"
 7F3C61AC8B0BA8: "Fighter" @
 EAD533685E262E: "Weapon" @

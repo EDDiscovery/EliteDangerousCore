@@ -77,8 +77,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".Tx(), BaseValue, "Bonus: ; cr;N0".Tx(), Bonus,
-                                "Total: ; cr;N0".Tx(), TotalEarnings);
+            return BaseUtils.FieldBuilder.Build(
+                                "Amount".Tx() + ": ; cr;N0", BaseValue,
+                                "Bonus".Tx() + ": ; cr;N0", Bonus,
+                                "Total".Tx() + ": ; cr;N0", TotalEarnings);
         }
 
 
@@ -156,8 +158,10 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Amount: ; cr;N0".Tx(), BaseValue, "Bonus: ; cr;N0".Tx(), Bonus,
-                                "Total: ; cr;N0".Tx(), TotalEarnings);
+            return BaseUtils.FieldBuilder.Build(
+                                "Amount".Tx() + ": ; cr;N0", BaseValue,
+                                "Bonus".Tx() + ": ; cr;N0", Bonus,
+                                "Total".Tx() + ": ; cr;N0", TotalEarnings);
         }
 
         public override string GetDetailed()
@@ -214,7 +218,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Count".Tx()+": ", Bios?.Length ?? 0, "Amount: ; cr;N0".Tx(), TotalValue);
+            return BaseUtils.FieldBuilder.Build("Count".Tx()+": ", Bios?.Length ?? 0, "Amount".Tx() + ": ; cr;N0", TotalValue);
         }
 
         public override string GetDetailed()

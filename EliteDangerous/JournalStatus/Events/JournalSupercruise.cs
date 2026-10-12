@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             string info = StarSystem;
             if (Wanted == true)
-                info += ", You are wanted.".Tx();
+                info += ", " + "Wanted".Tx();
             return info;
         }
 

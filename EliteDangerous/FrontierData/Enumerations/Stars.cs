@@ -248,7 +248,7 @@ namespace EliteDangerousCore
                     return "Unknown star class".Tx();
 
                 default:
-                    return string.Format("Class {0} star".Tx(), id.ToString());
+                    return string.Format("Class".Tx() + " {0} " + "Star".Tx(), id.ToString());
             }
         }
 

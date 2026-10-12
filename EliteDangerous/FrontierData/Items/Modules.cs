@@ -260,9 +260,9 @@ namespace EliteDangerousCore
 
         // PTx() does nothing except mark for checkers that this is a translated phrase
 
-        static string[] sizes = new string[] { " Small".PTx(), " Medium".PTx(), " Large".PTx(), " Huge".PTx(), " Tiny".PTx(), " Standard".PTx(), " Intermediate".PTx(), " Advanced".PTx() };
-        static string[] armourdelim = new string[] { "Lightweight".PTx(), "Reinforced".PTx(), "Military".PTx(), "Mirrored".PTx(), "Reactive".PTx() };
-        static string[] types = new string[] { " Gimbal ".PTx(), " Fixed ".PTx(), " Turret ".PTx() };
+        static string[] sizes = new string[] { " Small", " Medium", " Large", " Huge", " Tiny", " Standard", " Intermediate", " Advanced" };
+        static string[] armourdelim = new string[] { "Lightweight", "Reinforced", "Military", "Mirrored", "Reactive"};
+        static string[] types = new string[] { " Gimbal ", " Fixed ", " Turret " };
 
         // called at start up to set up translation of module names
         static private void TranslateModule(ShipModule sm)
@@ -278,8 +278,8 @@ namespace EliteDangerousCore
             }
             else
             {
-                int cindex = sm.EnglishModName.LastIndexOf(" Class ".PTx(), StringComparison.InvariantCulture);
-                int rindex = sm.EnglishModName.LastIndexOf(" Rating ".PTx(), StringComparison.InvariantCulture);
+                int cindex = sm.EnglishModName.LastIndexOf(" Class ", StringComparison.InvariantCulture);
+                int rindex = sm.EnglishModName.LastIndexOf(" Rating ", StringComparison.InvariantCulture);
 
                 if (cindex != -1 && rindex != -1)
                 {
@@ -497,7 +497,7 @@ namespace EliteDangerousCore
                 Codex,
 
                 // marks it as a special effect modifier list not a module
-                SpecialEffect,
+                SpecialEffect,      // .NotTxThis() not for the scanner
 
                 // generic for module type recipes
                 Armour, 

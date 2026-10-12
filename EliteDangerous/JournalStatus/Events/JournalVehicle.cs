@@ -44,7 +44,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Loadout".Tx() + ": ", Loadout, "NPC Controlled;".Tx(), PlayerControlled);
+            return BaseUtils.FieldBuilder.Build("Loadout".Tx() + ": ", Loadout, "NPC Controlled".Tx() + ";", PlayerControlled);
         }
 
         public override string SummaryName(ISystem sys)
@@ -80,7 +80,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Loadout".Tx() + ": ", Loadout, "NPC Controlled;".Tx(), PlayerControlled);
+            return BaseUtils.FieldBuilder.Build("Loadout".Tx() + ": ", Loadout, "NPC Controlled".Tx() + ";", PlayerControlled);
         }
     }
 
@@ -238,7 +238,7 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             return BaseUtils.FieldBuilder.Build("", SRVType_Localised, "Loadout".Tx() + ": ", Loadout) +
-                        BaseUtils.FieldBuilder.Build(", " + "NPC Controlled;".Tx(), PlayerControlled);
+                        BaseUtils.FieldBuilder.Build(", " + "NPC Controlled".Tx() + ";", PlayerControlled);
         }
     }
 

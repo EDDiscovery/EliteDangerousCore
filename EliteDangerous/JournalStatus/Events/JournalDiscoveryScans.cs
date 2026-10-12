@@ -10,9 +10,10 @@
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
  * ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- *
- *
  */
+
+
+
 using EliteDangerousCore.StarScan2;
 using QuickJSON;
 using System;
@@ -66,7 +67,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo(FillInformationData fid)
         {
-            return BaseUtils.FieldBuilder.Build("Progress: ;%;N1".Tx(), Progress, 
+            return BaseUtils.FieldBuilder.Build("Progress".Tx() + ": ;%;N1", Progress, 
                 "Bodies".Tx()+": ", BodyCount, 
                 "Others".Tx()+": ", NonBodyCount,
                 "@ ", fid.System.Name);
@@ -294,7 +295,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys)
         {
-            return base.SummaryName(sys) + " " + "of ".Tx()+ BodyName.ReplaceIfStartsWith(sys.Name);
+            return base.SummaryName(sys) + " " + "Of".Tx() + " " + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
         public override string GetInfo(FillInformationData fid)
@@ -402,7 +403,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys)
         {
-            return base.SummaryName(sys) + " " + "of ".Tx()+ BodyName.ReplaceIfStartsWith(sys.Name);
+            return base.SummaryName(sys) + " " + "Of".Tx() + " " + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
 
@@ -647,7 +648,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string SummaryName(ISystem sys)
         {
-            return base.SummaryName(sys) + " " + "of ".Tx()+ BodyName.ReplaceIfStartsWith(sys.Name);
+            return base.SummaryName(sys) + " " + "Of".Tx() + " " + BodyName.ReplaceIfStartsWith(sys.Name);
         }
 
         public override string GetInfo(FillInformationData fid)
@@ -810,8 +811,8 @@ namespace EliteDangerousCore.JournalEvents
                             "<: ", s.Genus_Localised, 
                             "", s.Species_Localised_Short, 
                             "", s.Variant_Localised_Short,
-                            "Value: ; cr;N0".Tx(), s.EstimatedValue, 
-                            "Potential Value: ; cr;N0".Tx(), s.PotentialEstimatedValue);
+                            "Value".Tx() + ": ; cr;N0", s.EstimatedValue, 
+                            "Potential Value".Tx() + ": ; cr;N0", s.PotentialEstimatedValue);
 
                 if (index++ < list.Count - 1)     // if another to go, separ
                     sb.Append(separ);

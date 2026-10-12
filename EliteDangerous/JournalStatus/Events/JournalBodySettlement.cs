@@ -192,7 +192,7 @@ namespace EliteDangerousCore.JournalEvents
                 sb.Build("Economy".Tx()+": ", EconomyDefinitions.ToLocalisedLanguage(StationEconomy),
                     "Government".Tx()+": ", GovernmentDefinitions.ToLocalisedLanguage(StationGovernment),
                     "Faction".Tx()+": ", Faction,
-                    "< in state ".Tx(), FactionDefinitions.ToLocalisedLanguage(FactionState),
+                    "< " + "State".Tx() + " ", FactionDefinitions.ToLocalisedLanguage(FactionState),
                     "Allegiance".Tx()+": ", AllegianceDefinitions.ToLocalisedLanguage(StationAllegiance));
 
                 if (StationServices != null)

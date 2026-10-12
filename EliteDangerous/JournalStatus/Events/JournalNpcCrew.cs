@@ -40,7 +40,7 @@ namespace EliteDangerousCore.JournalEvents
         public void Ledger(Ledger mcl)
         {
             if ( Amount != 0 )
-                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Wages for ".Tx()+ Name, -Amount);
+                mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Wages".Tx() + " " + Name, -Amount);
         }
     }
 

@@ -286,18 +286,18 @@ namespace EliteDangerousCore.JournalEvents
             return BaseUtils.FieldBuilder.Build("Name".Tx()+": ", State.Name,
                                                 "Call Sign".Tx()+": ", State.Callsign,
                                                 "Carrier Type".Tx()+": ", CarrierDefinitions.ToLocalisedLanguage(State.CarrierType),
-                                                "Fuel Level: ;;N0".Tx(), State.FuelLevel,
-                                                "Jump Range: ; ly;0.0".Tx(), State.JumpRangeCurr,
-                                                "Carrier Balance: ; cr;N0".Tx(), State.Finance.CarrierBalance,
-                                                "Reserve Balance: ; cr;N0".Tx(), State.Finance.ReserveBalance,
-                                                "Available Balance: ; cr;N0".Tx(), State.Finance.AvailableBalance,
-                                                "Reserve Percent: ;;N1".Tx(), State.Finance.ReservePercent,
-                                                "Tax Rate Pioneersupplies: ;;N1".Tx(), State.Finance.TaxRatePioneersupplies,
-                                                "Tax Rate Shipyard: ;;N1".Tx(), State.Finance.TaxRateShipyard,
-                                                "Tax Rate Rearm: ;;N1".Tx(), State.Finance.TaxRateRearm,
-                                                "Tax Rate Outfitting: ;;N1".Tx(), State.Finance.TaxRateOutfitting,
-                                                "Tax Rate Refuel: ;;N1".Tx(), State.Finance.TaxRateRefuel,
-                                                "Tax Rate Repair: ;;N1".Tx(), State.Finance.TaxRateRepair
+                                                "Fuel Level".Tx() + ": ;;N0", State.FuelLevel,
+                                                "Jump Range".Tx() + ": ; ly;0.0", State.JumpRangeCurr,
+                                                "Carrier Balance".Tx() + ": ; cr;N0", State.Finance.CarrierBalance,
+                                                "Reserve Balance".Tx() + ": ; cr;N0", State.Finance.ReserveBalance,
+                                                "Available Balance".Tx() + ": ; cr;N0", State.Finance.AvailableBalance,
+                                                "Reserve Percent".Tx() + ": ;;N1", State.Finance.ReservePercent,
+                                                "Tax Rate Pioneersupplies".Tx() + ": ;;N1", State.Finance.TaxRatePioneersupplies,
+                                                "Tax Rate Shipyard".Tx() + ": ;;N1", State.Finance.TaxRateShipyard,
+                                                "Tax Rate Rearm".Tx() + ": ;;N1", State.Finance.TaxRateRearm,
+                                                "Tax Rate Outfitting".Tx() + ": ;;N1", State.Finance.TaxRateOutfitting,
+                                                "Tax Rate Refuel".Tx() + ": ;;N1", State.Finance.TaxRateRefuel,
+                                                "Tax Rate Repair".Tx() + ": ;;N1", State.Finance.TaxRateRepair
                                                 );
         }
 
@@ -384,8 +384,8 @@ namespace EliteDangerousCore.JournalEvents
             if (DepartureTime.HasValue)
                 dtime = EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(DepartureTime.Value);
 
-            return BaseUtils.FieldBuilder.Build("To ".Tx(), SystemName,
-                                                "Body ".Tx(), Body,
+            return BaseUtils.FieldBuilder.Build("To".Tx() + " ", SystemName,
+                                                "Body".Tx() + " ", Body,
                                                 "@ ", dtime
                                                 );
         }
@@ -416,8 +416,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Refund: ; cr;N0".Tx(), ScrapRefund,
-                                                "at UTC ".Tx(), ScrapDateTimeUTC
+            return BaseUtils.FieldBuilder.Build("Refund".Tx() + ": ; cr;N0", ScrapRefund,
+                                                "At".Tx() + " " , ScrapDateTimeUTC
                                                 );
         }
 
@@ -473,9 +473,9 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             if (Deposit > 0)
-                return BaseUtils.FieldBuilder.Build("Deposit: ; cr;N0".Tx(), Deposit, "Carrier Balance: ; cr;N0".Tx(), CarrierBalance);
+                return BaseUtils.FieldBuilder.Build("Deposit".Tx() + ": ; cr;N0", Deposit, "Carrier Balance".Tx() + ": ; cr;N0", CarrierBalance);
             else
-                return BaseUtils.FieldBuilder.Build("Withdraw: ; cr;N0".Tx(), Withdraw, "Carrier Balance: ; cr;N0".Tx(), CarrierBalance);
+                return BaseUtils.FieldBuilder.Build("Withdraw".Tx() + ": ; cr;N0", Withdraw, "Carrier Balance".Tx() + ": ; cr;N0", CarrierBalance);
         }
 
         public void Ledger(Ledger mcl)
@@ -512,8 +512,8 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Amount: ;;N0".Tx(), Amount,
-                                                "Fuel Level: ;;N0".Tx(), Total);
+            return BaseUtils.FieldBuilder.Build("Amount".Tx() + ": ;;N0", Amount,
+                                                "Fuel".Tx()+ ": ;;N0", Total);
         }
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
@@ -599,16 +599,16 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Carrier Balance: ; cr;N0".Tx(), Finance.CarrierBalance,
-                                                "Reserve Balance: ; cr;N0".Tx(), Finance.ReserveBalance,
-                                                "Available Balance: ; cr;N0".Tx(), Finance.AvailableBalance,
-                                                "Reserve Percent: ;;N1".Tx(), Finance.ReservePercent,
-                                                "Tax Rate Pioneersupplies: ;;N1".Tx(), Finance.TaxRatePioneersupplies,
-                                                "Tax Rate Shipyard: ;;N1".Tx(), Finance.TaxRateShipyard,
-                                                "Tax Rate Rearm: ;;N1".Tx(), Finance.TaxRateRearm,
-                                                "Tax Rate Outfitting: ;;N1".Tx(), Finance.TaxRateOutfitting,
-                                                "Tax Rate Refuel: ;;N1".Tx(), Finance.TaxRateRefuel,
-                                                "Tax Rate Repair: ;;N1".Tx(), Finance.TaxRateRepair
+            return BaseUtils.FieldBuilder.Build("Carrier Balance".Tx() + ": ; cr;N0", Finance.CarrierBalance,
+                                                "Reserve Balance".Tx() + ": ; cr;N0", Finance.ReserveBalance,
+                                                "Available Balance".Tx() + ": ; cr;N0", Finance.AvailableBalance,
+                                                "Reserve Percent".Tx() + ": ;;N1", Finance.ReservePercent,
+                                                "Tax Rate Pioneersupplies".Tx() + ": ;;N1", Finance.TaxRatePioneersupplies,
+                                                "Tax Rate Shipyard".Tx() + ": ;;N1", Finance.TaxRateShipyard,
+                                                "Tax Rate Rearm".Tx() + ": ;;N1", Finance.TaxRateRearm,
+                                                "Tax Rate Outfitting".Tx() + ": ;;N1", Finance.TaxRateOutfitting,
+                                                "Tax Rate Refuel".Tx() + ": ;;N1", Finance.TaxRateRefuel,
+                                                "Tax Rate Repair".Tx() + ": ;;N1", Finance.TaxRateRepair
                                                 );
         }
 
@@ -654,7 +654,7 @@ namespace EliteDangerousCore.JournalEvents
                                                 "", PackTheme,
                                                 "Tier".Tx()+": ", PackTier,
                                                 "Cost".Tx() + ": ; cr N0", Cost,
-                                                "Refund: ; cr;N0".Tx(), Refund
+                                                "Refund".Tx() + ": ; cr;N0", Refund
                                                 );
 
         }
@@ -695,7 +695,7 @@ namespace EliteDangerousCore.JournalEvents
                                                 "", PackTheme,
                                                 "Tier".Tx()+": ", PackTier,
                                                 "Cost".Tx() + ": ; cr N0", Cost,
-                                                "Refund: ; cr;N0".Tx(), Refund
+                                                "Refund".Tx() + ": ; cr;N0", Refund
                                                 );
 
         }
@@ -940,7 +940,7 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         string name = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.fdname);
                         sb.Append("  ");
-                        sb.Append(string.Format("{0}: {1}  ".Tx(), name, c.buyPrice));
+                        sb.Append(string.Format("{0}: {1}  ", name, c.buyPrice));
                         sb.AppendCR();
                     }
                 }
@@ -956,7 +956,7 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         string name = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(c.fdname);
                         sb.Append("  ");
-                        sb.Append(string.Format("{0}: {1}  ".Tx(), name, c.sellPrice));
+                        sb.Append(string.Format("{0}: {1}  ", name, c.sellPrice));
                         sb.AppendCR();
                     }
                 }

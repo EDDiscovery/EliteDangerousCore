@@ -13,7 +13,8 @@
  *
  *
  */
-using EliteDangerousCore.DB;
+
+using EliteDangerousCore;
 using QuickJSON;
 using System;
 using System.Collections.Generic;
@@ -222,8 +223,8 @@ namespace EliteDangerousCore.JournalEvents
                                       "Expiry".TxCond(translate)+": ", exp,
                                       "Influence".TxCond(translate)+": ", Influence,
                                       "Reputation".TxCond(translate)+": ", Reputation,
-                                      "Reward: ; cr;N0".TxCond(translate), Reward,
-                                      "; (" + "Wing".Tx() + ")".TxCond(translate), Wing);
+                                      "Reward".TxCond(translate) + ": ; cr;N0", Reward,
+                                      "; (" + "Wing".TxCond(translate) + ")", Wing);
         }
 
         public string MissionDetailedInfo(bool translate)          // MissionList::FullInfo (DLL uses this), Journal Entry detailed info
@@ -444,7 +445,7 @@ namespace EliteDangerousCore.JournalEvents
 
             return BaseUtils.FieldBuilder.Build("", LocalisedName,
                                         "< " + "From".Tx() + " ", Faction,
-                                        "Reward: ; cr;N0".Tx(), Reward,
+                                        "Reward".Tx() + ": ; cr;N0", Reward,
                                         "Donation".Tx()+": ", Donation,
                                         "System".Tx()+": ", DestinationSystem,
                                         "Station".Tx()+": ", DestinationStation,
@@ -719,7 +720,7 @@ namespace EliteDangerousCore.JournalEvents
                                       "", NewDestinationStation);
         }
 
-        public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)
+        public void UpdateMissions(MissionListAccumulator mlist, ISystem sys, string body)
         {
             mlist.Redirected(this);
         }
@@ -805,7 +806,7 @@ namespace EliteDangerousCore.JournalEvents
                 StringBuilder sb = new System.Text.StringBuilder();
                 foreach (Passengers p in Manifest)
                 {
-                    sb.AppendSemiColonS().Build("", p.Type, "< ", p.Count, "; (VIP)", p.VIP, ";(Wanted)".Tx(), p.Wanted);
+                    sb.AppendSemiColonS().Build("", p.Type, "< ", p.Count, "; (VIP)", p.VIP, ";(" + "Wanted".Tx() + ")", p.Wanted);
                 }
 
                 return sb.ToString();

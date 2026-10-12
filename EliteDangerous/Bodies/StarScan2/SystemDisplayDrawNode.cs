@@ -60,7 +60,7 @@ namespace EliteDangerousCore.StarScan2
                 //if (drawtype == DrawLevel.NoText)
                 //  nodelabels = null;
 
-                String tooltip = string.Format("Barycentre of {0}".Tx(), presentationname);
+                String tooltip = string.Format("Barycentre".Tx() + " " + "Of".Tx() + " {0}", presentationname);
 
                 if (notext)
                     nodelabels = null;

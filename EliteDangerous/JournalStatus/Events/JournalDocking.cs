@@ -154,12 +154,14 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
             var sb = new System.Text.StringBuilder(256);
-            sb.Build("", "Docked".Tx(), "Type".Tx()+": ", StationDefinitions.ToLocalisedLanguage(FDStationType), "< " + "In system".Tx() + " ", StarSystem,
+            sb.Build("", "Docked".Tx(), 
+                "Type".Tx()+": ", StationDefinitions.ToLocalisedLanguage(FDStationType), 
+                "< " + "In system".Tx() + " ", StarSystem,
                 "State".Tx()+": ", StationDefinitions.ToLocalisedLanguage(StationState),
-                ";(" + "Wanted".Tx() + ")".Tx(), Wanted,
-                ";Active Fine".Tx(), ActiveFine,
+                ";(" + "Wanted".Tx() + ")", Wanted,
+                ";" + "Active Fine".Tx(), ActiveFine,
                 "Faction".Tx()+": ", Faction,
-                "< in state ".Tx(), FactionDefinitions.ToLocalisedLanguage(FactionState),
+                "< " + "State".Tx() + " ", FactionDefinitions.ToLocalisedLanguage(FactionState),
                 "Latitude: ;°;F4".Tx(), Latitude, "Longitude: ;°;F4".Tx(), Longitude);
 
             return sb.ToString();
@@ -277,7 +279,9 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", StationName_Localised, "< on pad ".Tx(), LandingPad, "Type".Tx()+": ", StationDefinitions.ToLocalisedLanguage(FDStationType));
+            return BaseUtils.FieldBuilder.Build("", StationName_Localised, 
+                                                "< " + "On Pad".Tx() + " ", LandingPad, 
+                                                "Type".Tx()+": ", StationDefinitions.ToLocalisedLanguage(FDStationType));
         }
     }
 

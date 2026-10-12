@@ -37,7 +37,7 @@ namespace EliteDangerousCore
         BuyTradeData = 50,
         CancelDropship = 4006,
         CancelTaxi = 4007,
-        CapShipBond = 60,
+        CapShipBond = 60,           // .NotTxThis() Indicate to scanner not to try and translate this, the event itself uses a special name
         Cargo = 63,
         CargoDepot = 64,
         CargoTransfer = 1370,
@@ -115,7 +115,7 @@ namespace EliteDangerousCore
         Embark = 4013,
         EscapeInterdiction = 260,
         FactionKillBond = 270,
-        FCMaterials = 271,
+        FCMaterials = 271,      // .NotTxThis() Indicate to scanner not to try and translate this, the event itself uses a special name
         FetchRemoteModule = 1000,
         FSDJump = 280,
         FSDTarget = 281,
@@ -300,6 +300,7 @@ namespace EliteDangerousCore
         EDDDestinationSelected = 2020,
 
         // below are not events currently supported or icon rename events
+
         // .NotTx() indicate to scanner not translated
 
         ObsoleteOrIcons = 10000,

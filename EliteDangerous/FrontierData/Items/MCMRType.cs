@@ -551,7 +551,8 @@ namespace EliteDangerousCore
         public MaterialCommodityMicroResourceType(CatType cs, string englishtext, MCMR fdtype, MCFDName fdname, ItemType t, MaterialGroupType mtg, string shortn, Color cl, bool rare)
         {
             Category = cs;
-            TranslatedCategory = (Category == CatType.Item) ? "Goods" : (Category == CatType.Component) ? "Assets" : Category.ToString();      // name is as the game does
+            // name is as the game does. PTx marks it for the scanner we need the translation
+            TranslatedCategory = (Category == CatType.Item) ? "Goods".PTx() : (Category == CatType.Component) ? "Assets".PTx() : Category.ToString();      
             EnglishName = TranslatedName = englishtext;
             FDType = fdtype;
             FDName = fdname;

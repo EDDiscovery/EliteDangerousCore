@@ -193,7 +193,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", Power, "Amount: ; cr;N0".Tx(), Amount);
+            return BaseUtils.FieldBuilder.Build("", Power, "Amount".Tx() + ": ; cr;N0", Amount);
         }
     }
 
