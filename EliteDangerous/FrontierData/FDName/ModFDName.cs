@@ -53,7 +53,7 @@ namespace EliteDangerousCore
                     modulename = "Unknown Module";
 
                     if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
-                        BaseUtils.Debugger.TraceBreak($"*** Missing Module {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                        BaseUtils.Debugger.TraceBreak($"*** Missing Module {ev?.EventTimeUTC.ToStringZulu()} {(ev?.IsBeta == true ? "BETA " : "")}{ev?.EventTypeStr}");
 
                     return new ModFDName("Unknown Module");
                 }
@@ -71,7 +71,7 @@ namespace EliteDangerousCore
                 else
                 {
                     if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
-                        BaseUtils.Debugger.TraceBreak($"*** Unknown Module `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                        BaseUtils.Debugger.TraceBreak($"*** Unknown Module `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {(ev?.IsBeta == true ? "BETA " : "")}{ev?.EventTypeStr}");
 
                     modulename = "Unknown Module " + fdname;
                 }

@@ -74,7 +74,7 @@ namespace EliteDangerousCore
                 {
                     name = "Unknown Ship";
                     if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
-                        BaseUtils.Debugger.TraceBreak($"*** Missing Ship {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                        BaseUtils.Debugger.TraceBreak($"*** Missing Ship {ev?.EventTimeUTC.ToStringZulu()} {(ev?.IsBeta == true ? "BETA " : "")}{ev?.EventTypeStr}");
                     return new VehicleFDName("Unknown Ship");
                 }
             }
@@ -93,7 +93,7 @@ namespace EliteDangerousCore
                     if (ship == null)
                     {
                         if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
-                            BaseUtils.Debugger.TraceBreak($"*** Unknown ship: `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                            BaseUtils.Debugger.TraceBreak($"*** Unknown ship: `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {(ev?.IsBeta == true ? "BETA " : "")}{ev?.EventTypeStr}");
                         name = "Unknown Ship " + fdname;
                     }
                     else

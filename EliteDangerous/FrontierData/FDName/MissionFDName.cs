@@ -46,7 +46,7 @@ namespace EliteDangerousCore
             {
                 engname = "Missing Mission Name";
                 if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
-                    BaseUtils.Debugger.TraceBreak($"*** Missing Mission Name {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                    BaseUtils.Debugger.TraceBreak($"*** Missing Mission Name {ev?.EventTimeUTC.ToStringZulu()} {(ev?.IsBeta == true ? "BETA " : "")}{ev?.EventTypeStr}");
                 return new MissionFDName(engname);
             }
         }

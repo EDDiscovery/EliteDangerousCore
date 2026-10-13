@@ -56,7 +56,7 @@ namespace EliteDangerousCore
                     matname = "Unknown Material/Commodity";
 
                     if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
-                        BaseUtils.Debugger.TraceBreak($"*** Missing Material {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                        BaseUtils.Debugger.TraceBreak($"*** Missing Material {ev?.EventTimeUTC.ToStringZulu()} B{(ev?.IsBeta == true ? "BETA " : "")}{ev?.EventTypeStr}");
 
                     return new MCFDName("Unknown Material/Commodity");
                 }
@@ -76,7 +76,7 @@ namespace EliteDangerousCore
                 else
                 {
                     if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
-                        BaseUtils.Debugger.TraceBreak($"*** Unknown Mat/Commod `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}", true);
+                        BaseUtils.Debugger.TraceBreak($"*** Unknown Mat/Commod `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {(ev?.IsBeta == true ? "BETA " : "")}{ev?.EventTypeStr}", true);
 
                     matname = fdname.SplitCapsWordFull();
                 }

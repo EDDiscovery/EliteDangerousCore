@@ -49,7 +49,7 @@ namespace EliteDangerousCore
                     engname = "Unknown Recipe";
 
                     if (ev?.EventTimeUTC > EliteReleaseDates.RecipeComplainTime)
-                        BaseUtils.Debugger.TraceBreak($"*** Missing engineering recipe name {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                        BaseUtils.Debugger.TraceBreak($"*** Missing engineering recipe name {ev?.EventTimeUTC.ToStringZulu()} {(ev?.IsBeta == true ? "BETA " : "")}{ev?.EventTypeStr}");
 
                     return new EngineeringRecipeFDName("Unknown Recipe");
                 }
@@ -68,7 +68,7 @@ namespace EliteDangerousCore
                 else
                 {
                     if (ev?.EventTimeUTC > EliteReleaseDates.RecipeComplainTime)
-                        BaseUtils.Debugger.TraceBreak($"*** Unknown Engineering Recipe name `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {ev?.EventTypeStr}");
+                        BaseUtils.Debugger.TraceBreak($"*** Unknown Engineering Recipe name `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {(ev?.IsBeta == true ? "BETA " : "")}{ev?.EventTypeStr}");
 
                     engname = fdname.SplitCapsWordFull();
                 }
