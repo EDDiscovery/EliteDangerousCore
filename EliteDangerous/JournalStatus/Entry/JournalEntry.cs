@@ -388,15 +388,23 @@ namespace EliteDangerousCore
             {
                 string eventname = jo["event"].StrNull();
 
-                if (eventname != null)  // has an event name, therefore worth keeping
+                if (eventname.HasChars())                   // has an event name
                 {
                     if (ClassActivators.TryGetValue(eventname, out var act))        // if known, make it
+                    {
                         ret = act(jo);
+                    }
                     else
                     {
                         ret = new JournalUnknown(jo);           // else make a unknown one
                         System.Diagnostics.Debug.WriteLine("*** Not Recognised event " + jo.ToString());
                     }
+                }
+                else
+                {                               
+                    if ( !jo.Contains("timestamp"))
+                        jo["timestamp"] = DateTime.Now;
+                    ret = new JournalUnknown(jo);               // no event name, probably a "" one or missing, just make an unknown with any data
                 }
             }
 
@@ -406,6 +414,7 @@ namespace EliteDangerousCore
                     return null;
 
                 jo = new JObject();                 // otherwise, make a JSON for display purposes with BadJSON with the text in
+                jo["timestamp"] = DateTime.Now;     // must put a timestamp in otherwise we get a barf when processing the time
                 jo["BadJSON"] = text;               // used if we read bad JSON from the DB
                 ret = new JournalUnknown(jo);       // unknown
                 savejson = true;                    // need to keep this JSON as we made this up

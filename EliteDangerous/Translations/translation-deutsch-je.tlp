@@ -1008,6 +1008,7 @@ FB0FEB4A33D00B: "Was not logged" => "Noch nicht geloggt"
 SECTION AtmosphereTypes
 
 0A1DC5CE861C38: "Ammonia Atmosphere" => "Ammoniakatmosphäre"
+34E1E2662E5B20: "No Atmosphere" => "Keine Atmosphäre"
 E36E2226CA24CD: "Hot Thick Ammonia Atmosphere" => "Heiße dichte Ammoniakatmosphäre"
 F6022553670A62: "Hot Thick Ammonia Rich Atmosphere" => "Heiße dichte ammoniakreiche Atmosphäre"
 7559217BB156DC: "Ammonia Rich Atmosphere" => "Ammoniakreiche Atmosphäre"
