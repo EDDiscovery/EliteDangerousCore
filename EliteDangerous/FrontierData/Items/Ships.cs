@@ -1566,6 +1566,70 @@ namespace EliteDangerousCore
             Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
 
+        private static ShipProperties mediumtransport01 = new ShipProperties()
+        {
+            FDID = new VehicleFDName("Mediumtransport01", VehicleFDName.VehicleType.Ship),
+            HullMass = 260F,
+            Name = "Lynx Highliner",
+            Speed = 203,
+            Boost = 360,
+            HullCost = 1500000, // all tbc
+            Class = 2,
+            Shields = 228, // game base module
+            Armour = 630,
+
+            MinThrust = 89,     // tbc
+            BoostCost = 14,
+            FuelReserve = 0.61,
+            HeatCap = 277,
+            HeatDispMin = 0,
+            HeatDispMax = 0,
+            FuelCost = 50,
+            Hardness = 55,
+            Crew = 1,
+            FwdAcc = 0,
+            RevAcc = 0,
+            LatAcc = 0,
+
+            Hardpoints = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3),
+                                        new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2),
+                                        new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2),
+                                        new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2),
+                                        new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint4, 2),
+                                        },
+
+            Utility = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0),
+                            new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0),
+                            new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0),
+                            new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)},
+
+            Component = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 6),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 5),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5) },
+
+            Internal = new ShipSlots.SlotAndSize[] {
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Passenger01, 6),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Passenger02, 6),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Passenger03, 5),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2),
+                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1),
+                },
+            Military = new ShipSlots.SlotAndSize[] { },
+
+            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit, 1) },
+
+        };
+
         private static ShipProperties federation_corvette = new ShipProperties()
         {
             FDID = new VehicleFDName("Federation_Corvette",VehicleFDName.VehicleType.Ship),
@@ -1661,69 +1725,6 @@ namespace EliteDangerousCore
 
         // EDSY END
 
-        private static ShipProperties lynxhighliner = new ShipProperties()
-        {
-            FDID = new VehicleFDName("Mediumtransport01",VehicleFDName.VehicleType.Ship),
-            HullMass = 260F,
-            Name = "Lynx Highliner",
-            Speed = 203,
-            Boost = 360,
-            HullCost = 1500000, // all tbc
-            Class = 2,
-            Shields = 228, // game base module
-            Armour = 630,
-            
-            MinThrust = 89,     // tbc
-            BoostCost = 14,
-            FuelReserve = 0.61,
-            HeatCap = 277,
-            HeatDispMin = 0,
-            HeatDispMax = 0,
-            FuelCost = 50,
-            Hardness = 55,
-            Crew = 1,
-            FwdAcc = 0,
-            RevAcc = 0,
-            LatAcc = 0,
-
-            Hardpoints = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.LargeHardpoint1, 3), 
-                                        new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), 
-                                        new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2),
-                                        new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2),
-                                        new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint4, 2),
-                                        },
-
-            Utility = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), 
-                            new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), 
-                            new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), 
-                            new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)},
-
-            Component = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), 
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 5), 
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 6), 
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 5), 
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 6), 
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 5), 
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 3), 
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 5) },
-            
-            Internal = new ShipSlots.SlotAndSize[] {
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size6, 6),
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Passenger01, 6),
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Passenger02, 6),
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size5, 5),
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Passenger03, 5),
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size4, 4),
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size4, 4),
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size3, 3),
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size2, 2),
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1),
-                },
-            Military = new ShipSlots.SlotAndSize[] { },
-
-            Other = new ShipSlots.SlotAndSize[] { new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit, 1) },
-
-        };
         
         // MUST be after ship definitions else they are not constructed
 
@@ -1765,7 +1766,7 @@ namespace EliteDangerousCore
             { new VehicleFDName("lakonminer",VehicleFDName.VehicleType.Ship),lakonminer },
             { new VehicleFDName("mamba",VehicleFDName.VehicleType.Ship),mamba},
             { new VehicleFDName("mandalay",VehicleFDName.VehicleType.Ship),mandalay},
-            { new VehicleFDName("mediumtransport01",VehicleFDName.VehicleType.Ship), lynxhighliner },
+            { new VehicleFDName("mediumtransport01",VehicleFDName.VehicleType.Ship), mediumtransport01 },
             { new VehicleFDName("orca",VehicleFDName.VehicleType.Ship),orca},
             { new VehicleFDName("panthermkii",VehicleFDName.VehicleType.Ship), panthermkii },
             { new VehicleFDName("python",VehicleFDName.VehicleType.Ship),python},

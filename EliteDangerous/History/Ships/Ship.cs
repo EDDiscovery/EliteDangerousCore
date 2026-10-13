@@ -504,7 +504,7 @@ namespace EliteDangerousCore
                         if (me.IsHardpoint)
                         {
                             res.PowerDrawWeaponsPrio[modkvp.Value.Priority ?? 0] += powerdraw;
-                            System.Diagnostics.Debug.WriteLine($"   Weapon {powerdraw} total {res.PowerDrawWeapons}");
+                            //System.Diagnostics.Debug.WriteLine($"   Engineering Weapon {powerdraw} total {res.PowerDrawWeapons}");
 
                             var thmload = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.ThermalLoad), 1);      // should always be there
                             var distdraw = me.getEffectiveAttrValue(nameof(ItemData.ShipModule.DistributorDraw), 1);// should always be there
