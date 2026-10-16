@@ -82,8 +82,10 @@ namespace EliteDangerousCore
 
             if (GameVersion.Equals("4.4.0.0") && (Build.Contains("r329880/r0") || Build.Contains("STUPID FRONTIER REUSING THIS ID FOR RELEASE r330116/r0")))        // beta for nomad June 26
                 return true;
-            if (GameVersion.Equals("4.4.1.0") && (Build.Contains("r332668/r0") ))        // beta for rhino aug 2026
+            if (GameVersion.Equals("4.4.1.0") && (Build.Contains("r332668/r0")))        // beta for rhino aug 2026
                 return true;
+          //  if (GameVersion.Equals("4.4.2.0") && (Build.Contains("r334473/r0")))        // beta for anaconda mk ii oct 2026
+            //    return true;
 
             return false;
         }
