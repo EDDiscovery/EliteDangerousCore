@@ -40,6 +40,7 @@ namespace EliteDangerousCore
         public static DateTime Vanguards { get; } = new DateTime(2025, 8, 19, 12, 0, 0, DateTimeKind.Utc);            //squadron overhaul
         public static DateTime RhinoAlpha { get; } = new DateTime(2026, 8, 28, 12, 0, 0, DateTimeKind.Utc);            // Rhino SRV alpha
         public static DateTime Rhino { get; } = new DateTime(2026, 9, 2, 12, 0, 0, DateTimeKind.Utc);            // Rhino SRV TBC
+        public static DateTime AnacondaMkII { get; } = new DateTime(2026, 10, 20, 12, 0, 0, DateTimeKind.Utc);            // Anaconda MkII
         public static DateTime GameEndTime { get; } = new DateTime(2999, 12, 14, 23, 59, 59, DateTimeKind.Utc);      // not according to the forums, its already dead!
         public static DateTime ComplainTime { get; } = new DateTime(2016, 1, 1, 0, 0, 0, DateTimeKind.Utc);         // time to complain missing items
         public static DateTime RecipeComplainTime { get; } = Odyssey1;                                              // time to complain missing items
@@ -84,7 +85,7 @@ namespace EliteDangerousCore
                 return true;
             if (GameVersion.Equals("4.4.1.0") && (Build.Contains("r332668/r0")))        // beta for rhino aug 2026
                 return true;
-            if (GameVersion.Equals("4.4.2.0") && (Build.Contains("r334473/r0")))        // beta for anaconda mk ii oct 2026
+            if (GameVersion.Equals("4.4.2.0") && (Build.Contains("r334473/r0")) && EventTimeUTC < AnacondaMkII)        // beta for anaconda mk ii oct 2026 same as release version
                 return true;
 
             return false;
