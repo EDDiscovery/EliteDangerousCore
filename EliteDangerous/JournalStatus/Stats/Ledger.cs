@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EliteDangerousCore
 {
@@ -30,11 +31,13 @@ namespace EliteDangerousCore
             public long Profit { get; set; }                                     // profit on this transaction
             public double ProfitPerUnit { get; set; }                            // profit per unit
             public long CashTotal { get; set; }                                  // cash total at this point
+            public long MercTotal { get; set; }                                  // Merc total
         }
 
         // transactions are in ascending time order
         public List<Transaction> Transactions { get; private set; } = new List<Transaction>();
         public long CashTotal { get; set; } = 0;
+        public long MercCoins { get; set; } = 0;
         public long Assets { get; set; } = 0;
         public long Loan { get; set; } = 0;
 
@@ -60,6 +63,18 @@ namespace EliteDangerousCore
             return null;
         }
 
+        // find first transaction at or before date
+        public Transaction TransactionAtOrBefore(DateTime tx)
+        {
+            for (int i = Transactions.Count - 1; i >= 0; i--)
+            {
+                if (Transactions[i].EventTimeUTC <= tx)
+                    return Transactions[i];
+            }
+
+            return null;
+        }
+
         public void AddEvent(long jidn, DateTime t, JournalTypeEnum j, string n, long ca)      // event with cash adjust but no profit
         {
             if (ca == 0)
@@ -70,7 +85,8 @@ namespace EliteDangerousCore
             AddEvent(jidn, t, j, n, ca, 0 , 0);
         }
 
-        public void AddEvent(long jidn, DateTime t, JournalTypeEnum j, string text, long adjust, long profitp, double ppu) // full monty
+        // full monty
+        public void AddEvent(long jidn, DateTime t, JournalTypeEnum j, string text, long adjust, long profitp, double ppu) 
         {
             long newcashtotal = CashTotal + adjust;
             //System.Diagnostics.Debug.WriteLine("{0} {1} {2} {3} = {4}", j.ToString(), n, CashTotal, ca , newcashtotal);
@@ -85,7 +101,28 @@ namespace EliteDangerousCore
                 CashAdjust = adjust,
                 Profit = profitp,
                 CashTotal = CashTotal,
-                ProfitPerUnit = ppu
+                ProfitPerUnit = ppu,
+                MercTotal = MercCoins,
+            };
+
+            Transactions.Add(tr);
+        }
+
+        // a merc event
+        public void AddMercEvent(long jidn, DateTime t, JournalTypeEnum j, string text, long newmerc) // full monty
+        {
+            MercCoins = newmerc;
+
+            Transaction tr = new Transaction
+            {
+                JID = jidn,
+                EventTimeUTC = t,
+                EventType = j,
+                Notes = text,
+                CashAdjust = 0,
+                Profit = 0,
+                CashTotal = CashTotal,
+                MercTotal = MercCoins,
             };
 
             Transactions.Add(tr);

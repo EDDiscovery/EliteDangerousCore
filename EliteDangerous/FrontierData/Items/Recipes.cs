@@ -23,6 +23,7 @@ namespace EliteDangerousCore
         public string Name { get; private set; }        // name of receipe ie "Lightweight Hull Reinforcement"
         public MaterialCommodityMicroResourceType[] Ingredients { get; private set; }
         public int[] Amount { get; private set; }
+        public int MercCoins { get; set; } = 0;         // do we require any of these?
         public int Count { get { return Ingredients.Length; } }     // number of different items
         public int TotalItems { get { return Amount.Sum(); } }     // total sum of items needed
 
@@ -56,18 +57,10 @@ namespace EliteDangerousCore
             }
         }
 
-        public string IngredientsString
-        {
-            get
-            {
-                var ing = (from x in Ingredients select Amount[Array.IndexOf(Ingredients, x)].ToString() + x.Shortname).ToArray();
-                return string.Join(", ", ing);
-            }
-        }
         public string IngredientsStringvsCurrent(List<MaterialCommodityMicroResource> cur)
         {
             var ing = (from x in Ingredients select Amount[Array.IndexOf(Ingredients, x)].ToString() + x.Shortname + "(" + (cur.Find((z) => z.Details.FDName == x.FDName)?.Count ?? 0).ToStringInvariant() + ")").ToArray();
-            return string.Join(", ", ing);
+            return string.Join(", ", ing) + (MercCoins > 0 ? $", Merc {MercCoins}" : "");
         }
 
         public string IngredientsStringLong
@@ -75,7 +68,7 @@ namespace EliteDangerousCore
             get
             {
                 var ing = (from x in Ingredients select Amount[Array.IndexOf(Ingredients, x)].ToString() + " " + x.TranslatedName).ToArray();
-                return string.Join(", ", ing);
+                return string.Join(", ", ing) + (MercCoins > 0 ? $", Merc {MercCoins}" : "");
             }
         }
 

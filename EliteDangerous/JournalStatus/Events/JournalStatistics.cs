@@ -106,6 +106,11 @@ namespace EliteDangerousCore.JournalEvents
         public void Ledger(Ledger mcl)
         {
             mcl.Assets = BankAccount?.CurrentWealth ?? 0;
+
+            if (BankAccount!=null &&  mcl.MercCoins != BankAccount.MercCoinsCurrent)
+            {
+                mcl.AddMercEvent(Id, EventTimeUTC, EventTypeID, "Merc total updated", BankAccount.MercCoinsCurrent);
+            }
         }
 
         public class BankAccountClass

@@ -29,7 +29,6 @@ namespace EliteDangerousCore
         public string ModuleListSplitCaps => string.Join(",", ModuleType.Select(x => ItemData.ShipModule.EnglishModTypeString(x)));
         public EngineerFDName[] Engineers { get; private set; }     // may be zero length
         public IEnumerable<string> EngineersNames => Engineers.Select(x => x.ID);        // lots of them use strings for legacy reasons
-        public int MercCoins { get; set; } = 0;
         public string LevelAsString => Level?.ToString() ?? "NA";
         public string NameAndLevel => Name + (Level != null ? (":" + Level.ToString()) : "");
 
@@ -475,6 +474,28 @@ namespace EliteDangerousCore
             new EngineeringRecipe("Shielded", "misc_shielded", "1V,1SS,1FPC", ItemData.ShipModule.ModuleTypes.CollectorLimpetController, 4, "Ram Tah,The Sarge,Tiana Fortune,Marsha Hicks" ),
             new EngineeringRecipe("Shielded", "misc_shielded", "1W,1CoS,1FCC", ItemData.ShipModule.ModuleTypes.CollectorLimpetController, 5, "The Sarge,Tiana Fortune,Marsha Hicks" ),
 
+            new EngineeringRecipe("Ammo capacity","misc_heatsinkcapacity","1MS,1V,1Nb",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,1,"tbd"),        // No engineers as of OCT26 inara
+            new EngineeringRecipe("Lightweight","misc_lightweight","1CCe,1PLA,1PRA",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,5,"tbd"),
+            new EngineeringRecipe("Lightweight","misc_lightweight","1CCo,1PA,1PLA",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,4,"tbd"),
+            new EngineeringRecipe("Lightweight","misc_lightweight","1SAll,1Mn,1CCe",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,3,"tbd"),
+            new EngineeringRecipe("Lightweight","misc_lightweight","1SAll,1Mn",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,2,"tbd"),
+            new EngineeringRecipe("Lightweight","misc_lightweight","1P",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,1,"tbd"),
+            new EngineeringRecipe("Reinforced","misc_reinforced","1HDC,1Mo,1Tc",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,5,"tbd"),
+            new EngineeringRecipe("Reinforced","misc_reinforced","1Zn,1W,1Mo",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,4,"tbd"),
+            new EngineeringRecipe("Reinforced","misc_reinforced","1Ni,1SHE,1W",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,3,"tbd"),
+            new EngineeringRecipe("Reinforced","misc_reinforced","1Ni,1SHE",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,2,"tbd"),
+            new EngineeringRecipe("Reinforced","misc_reinforced","1Ni",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,1,"tbd"),
+            new EngineeringRecipe("Shielded","misc_shielded","1W,1CoS,1FCC",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,5,"tbd"),
+            new EngineeringRecipe("Shielded","misc_shielded","1V,1SS,1FPC",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,4,"tbd"),
+            new EngineeringRecipe("Shielded","misc_shielded","1C,1SHE,1HDC",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,3,"tbd"),
+            new EngineeringRecipe("Shielded","misc_shielded","1C,1SHE",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,2,"tbd"),
+            new EngineeringRecipe("Shielded","misc_shielded","1WSE",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,1,"tbd"),
+
+            new EngineeringRecipe("Long range detailed","detailedsurfacescanner_longrange","1MS,1Ge,1MCF",ItemData.ShipModule.ModuleTypes.DiscoveryScanner,2,"Etienne Dorn",5),
+            new EngineeringRecipe("Long range detailed","detailedsurfacescanner_longrange","1MS,1Ge,1PA",ItemData.ShipModule.ModuleTypes.DiscoveryScanner,3,"Etienne Dorn",5),
+            new EngineeringRecipe("Long range detailed","detailedsurfacescanner_longrange","1ME,1Nb,1PA,1PLA",ItemData.ShipModule.ModuleTypes.DiscoveryScanner,4,"Etienne Dorn",10),
+            new EngineeringRecipe("Long range detailed","detailedsurfacescanner_longrange","1ME,1MC,1Sn,1PRA",ItemData.ShipModule.ModuleTypes.DiscoveryScanner,5,"Etienne Dorn",20),
+
             new EngineeringRecipe("Lightweight", "misc_lightweight", "1P", ItemData.ShipModule.ModuleTypes.ElectronicCountermeasure, 1, "Ram Tah,Petra Olmanova" ),
             new EngineeringRecipe("Lightweight", "misc_lightweight", "1SAll,1Mn", ItemData.ShipModule.ModuleTypes.ElectronicCountermeasure, 2, "Ram Tah,Petra Olmanova" ),
             new EngineeringRecipe("Lightweight", "misc_lightweight", "1SAll,1Mn,1CCe", ItemData.ShipModule.ModuleTypes.ElectronicCountermeasure, 3, "Ram Tah,Petra Olmanova" ),
@@ -812,24 +833,8 @@ namespace EliteDangerousCore
             new EngineeringRecipe("Long range","mininglaser_longrange","1Cr,1MCF,1HE",ItemData.ShipModule.ModuleTypes.MiningLaser,3,"Liz Ryder,Juri Ishmaak",5),
             new EngineeringRecipe("Long range","mininglaser_longrange","1MCF,1CPo,1Se,1HV",ItemData.ShipModule.ModuleTypes.MiningLaser,4,"Juri Ishmaak",10),
             new EngineeringRecipe("Long range","mininglaser_longrange","1CIF,1ThA,1BiC,1PHR",ItemData.ShipModule.ModuleTypes.MiningLaser,5,"Juri Ishmaak",25),
-
-            new EngineeringRecipe("Ammo capacity","misc_heatsinkcapacity","1MS,1V,1Nb",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,1,"tbd"),
-            new EngineeringRecipe("Lightweight","misc_lightweight","1CCe,1PLA,1PRA",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,5,"tbd"),
-            new EngineeringRecipe("Lightweight","misc_lightweight","1CCo,1PA,1PLA",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,4,"tbd"),
-            new EngineeringRecipe("Lightweight","misc_lightweight","1SAll,1Mn,1CCe",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,3,"tbd"),
-            new EngineeringRecipe("Lightweight","misc_lightweight","1SAll,1Mn",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,2,"tbd"),
-            new EngineeringRecipe("Lightweight","misc_lightweight","1P",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,1,"tbd"),
-            new EngineeringRecipe("Reinforced","misc_reinforced","1HDC,1Mo,1Tc",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,5,"tbd"),
-            new EngineeringRecipe("Reinforced","misc_reinforced","1Zn,1W,1Mo",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,4,"tbd"),
-            new EngineeringRecipe("Reinforced","misc_reinforced","1Ni,1SHE,1W",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,3,"tbd"),
-            new EngineeringRecipe("Reinforced","misc_reinforced","1Ni,1SHE",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,2,"tbd"),
-            new EngineeringRecipe("Reinforced","misc_reinforced","1Ni",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,1,"tbd"),
-            new EngineeringRecipe("Shielded","misc_shielded","1W,1CoS,1FCC",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,5,"tbd"),
-            new EngineeringRecipe("Shielded","misc_shielded","1V,1SS,1FPC",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,4,"tbd"),
-            new EngineeringRecipe("Shielded","misc_shielded","1C,1SHE,1HDC",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,3,"tbd"),
-            new EngineeringRecipe("Shielded","misc_shielded","1C,1SHE",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,2,"tbd"),
-            new EngineeringRecipe("Shielded","misc_shielded","1WSE",ItemData.ShipModule.ModuleTypes.CausticSinkLauncher,1,"tbd"),
-
+            
+            
             new EngineeringRecipe("Efficient Weapon", "weapon_efficient", "1S", ItemData.ShipModule.ModuleTypes.Multi_Cannon, 1, "Tod 'The Blaster' McQuinn,Zacariah Nemo,Marsha Hicks" ),
             new EngineeringRecipe("Efficient Weapon", "weapon_efficient", "1S,1HDP", ItemData.ShipModule.ModuleTypes.Multi_Cannon, 2, "Tod 'The Blaster' McQuinn,Zacariah Nemo,Marsha Hicks" ),
             new EngineeringRecipe("Efficient Weapon", "weapon_efficient", "1ESED,1Cr,1HE", ItemData.ShipModule.ModuleTypes.Multi_Cannon, 3, "Tod 'The Blaster' McQuinn,Zacariah Nemo,Marsha Hicks" ),
@@ -984,7 +989,6 @@ namespace EliteDangerousCore
             new EngineeringRecipe("Support focused","powerdistributors3c5_supportfocused","1ABSD,1Cr,1EA",ItemData.ShipModule.ModuleTypes.PowerDistributor,3,"The Dweller,Marco Qwent,Hera Tani,Etienne Dorn",5),
             new EngineeringRecipe("Support focused","powerdistributors3c5_supportfocused","1USA,1MCF,1Se,1PCa",ItemData.ShipModule.ModuleTypes.PowerDistributor,4,"The Dweller,Etienne Dorn",10),
             new EngineeringRecipe("Support focused","powerdistributors3c5_supportfocused","1CSD,1Cd,1FPC,1MSC",ItemData.ShipModule.ModuleTypes.PowerDistributor,5,"The Dweller,Etienne Dorn",20),
-            //new EngineeringRecipe("Support focused","powerdistributors3c5_supportfocused","1S,1SLF,1CCo",ItemData.ShipModule.ModuleTypes.PowerDistributor,2,"tbd",5),
 
             new EngineeringRecipe("Support focused","powerdistributors4c2_supportfocused","1ABSD,1Cr,1EA",ItemData.ShipModule.ModuleTypes.PowerDistributor,3,"The Dweller,Marco Qwent,Hera Tani,Etienne Dorn",5),
             new EngineeringRecipe("Support focused","powerdistributors4c2_supportfocused","1USA,1MCF,1Se,1PCa",ItemData.ShipModule.ModuleTypes.PowerDistributor,4,"The Dweller,Etienne Dorn",10),
