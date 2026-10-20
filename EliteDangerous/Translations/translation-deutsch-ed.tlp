@@ -938,7 +938,7 @@ SECTION MaterialTypes
 DA433CD41E7FB7: "Raw" => "Roh"
 58AC2F7D78D326: "Encoded" => "Verschlüsselt"
 8AB3DB9BFC3921: "Manufactured" => "Produziert"
-C92C529E0731C5: "Component" @
+C92C529E0731C5: "Component" => "Komponente"
 E5E429BCC9C2E4: "Data" => "Daten"
 297D709EBEB7F1: "Goods" => "Waren"
 8DEC7F27C9D37E: "Consumable" => "Verbrauchsgegenstände"
@@ -949,7 +949,7 @@ SECTION EngineeringData
 A60F2C73604F62: "Quality" => "Qualität"
 A5BADB0C4C0940: "Experimental Effect" => "Experimenteller Effekt"
 C0A8060F3B1102: "Original" => "Original"
-B032583DB6CF07: "Multiplier" @
+B032583DB6CF07: "Multiplier" => "Multiplikator"
 DD1F00569CD7B2: "Worse" => "Schlechter"
 303CFD6EA9AABD: "Better" => "Besser"
 
@@ -1118,7 +1118,7 @@ C6C5065C1BFCBE: "Engineers" => "Ingenieure"
 86896507A6ED88: "Material Trader" => "Materialhändler"
 AF169BB89CFBA4: "Combat" => "Kampf"
 28CBA55D2AADF5: "Scan" => "Scan"
-3A9DCDFF45AC4F: "MercCoins" @
+3A9DCDFF45AC4F: "MercCoins" => "Söldnermünzen"
 D7B22A6928D409: "Synthesis" => "Synthese"
 DEF494BAD4AAB6: "Outfitting" => "Ausrüstung"
 2086B21F8F4927: "Statistics" => "Statistiken"
@@ -1347,7 +1347,7 @@ FD83DA39F2DA91: "Contested" => "Umstritten"
 30401222095701: "Controlled" => "Kontrolliert"
 C0977D62F7F6E3: "Turmoil" => "In Aufruhr"
 A306BDBFED7B4A: "Fortified" => "Befestigt"
-AC9F27AD74A115: "Unoccupied" @
+AC9F27AD74A115: "Unoccupied" => "Unbesetzt"
 F6D3C9C3B20E15: "Stronghold" => "Festung"
 
 
@@ -1383,7 +1383,7 @@ EB702E354D4040: "Fighter Weapon" => "Fighter-Waffe"
 1CC4848D27B6F3: "Wear And Tear Type" => "Verschleißteil"
 86B9B261DED066: "Vanity Type" => "Kosmetik-Typ"
 352374D32CCD3B: "Unknown Type" => "Unbekannter Typ"
-45D2597560EB4A: "SRV Scanner" @
+45D2597560EB4A: "SRV Scanner" => "SRV-Scanner"
 036F587DDBE3AB: "Lightweight Alloy (Default)" => "Leitgewichtslegierung (Standard)"
 7F3C61AC8B0BA8: "Fighter" => "Fighter"
 EAD533685E262E: "Weapon" => "Waffe"
@@ -1645,7 +1645,7 @@ B9F7EC2C516319: "Optional Slot 10 Class 4" => "Optionaler Schacht 10 Klasse 4"
 99231038FC49DD: "Optional Slot 13 Class 1" => "Optionaler Schacht 13 Klasse 1"
 EB2C412690A12A: "Optional Slot 13 Class 2" => "Optionaler Schacht 13 Klasse 2"
 F448DCEB3AF33F: "Optional Slot 14 Class 1" => "Optionaler Schacht 14 Klasse 1"
-45A1DD67CDD695: "Optional Slot 14 Class 2" @
+45A1DD67CDD695: "Optional Slot 14 Class 2" => "Optionaler Schacht 14 Klasse 2"
 EB2E26440F6DEA: "Small Hardpoint 1" => "Kleine Aufhängung 1"
 D55A80FE439B81: "Small Hardpoint 2" => "Kleine Aufhängung 2"
 F947800CCCE7FF: "Small Hardpoint 3" => "Kleine Aufhängung 3"
@@ -1665,7 +1665,7 @@ E4DD5EE5641BD6: "Vessel Voice" => "Schiffstimme"
 3CE46E3FB1D343: "Weapon Colour" => "Waffenverzierung"
 D96AA577649F7B: "Turret Type 2" => "Geschützturm 2"
 3AE8579069394D: "Sine Wave Scanner" => "Sinuswellen-Scanner"
-50128387AF1F10: "Biological Scanner" @
+50128387AF1F10: "Biological Scanner" => "Biologiescanner"
 BCC6D8B8761B2B: "Colonisation Suite" => "Kolonisierungssuite"
 1D10985EBE451F: "Large Cargo 1" => "Große Fracht 1"
 FA9AB13CECC85C: "Large Cargo 2" => "Große Fracht 2"
