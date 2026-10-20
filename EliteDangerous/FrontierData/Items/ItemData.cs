@@ -51,45 +51,39 @@ namespace EliteDangerousCore
 
                 foreach (var line in toadd)
                 {
-                    if (line.Contains("new ShipModule"))
+                    if (line.Contains("new ShipModule") && line.Contains("new ModFDName("))
                     {
-                        if (line.Contains("{"))
+                        StringParser sp = new StringParser(line.Substring(line.EndIndexOf("new ModFDName(")));
+
+                        string fdname = sp.NextQuotedWord();
+                        if (fdname != null)
                         {
-                            StringParser sp = new StringParser(line.Substring(line.IndexOf("{") + 1));
-                            string idn = sp.NextQuotedWordComma();
-                            if (idn != null)
+                            sp.SkipUntil(new char[] { '(' });
+                            sp.MoveOn(1);
+                            int? fid = sp.NextIntComma(" ,");
+                            string type = sp.NextWordComma();
+                            string text = sp.NextQuotedWord();
+                            System.Diagnostics.Debug.Assert(text != null && type != null && fid != null);
+
+                            ShipModule.ModuleTypes modtype = (ShipModule.ModuleTypes)Enum.Parse(typeof(ShipModule.ModuleTypes), type.Substring(type.LastIndexOf(".") + 1));
+
+                            ShipModule sm = new ShipModule(fid.Value, modtype, GenerateCandidateModuleName(new ModFDName(text)).ID);
+
+                            ModFDName id = new ModFDName(fdname);
+                            if (!vanitymodules.ContainsKey(id) && !shipmodules.ContainsKey(id) && !othershipmodules.ContainsKey(id))
                             {
-                                sp.SkipUntil(new char[] { '(' });
-                                sp.MoveOn(1);
-                                int? fid = sp.NextIntComma(" ,");
-                                string type = sp.NextWordComma();
-                                string text = sp.NextQuotedWord();
-                                System.Diagnostics.Debug.Assert(text != null && type != null && fid != null);
-
-                                ShipModule.ModuleTypes modtype = (ShipModule.ModuleTypes)Enum.Parse(typeof(ShipModule.ModuleTypes), type.Substring(type.LastIndexOf(".") + 1));
-
-                                ShipModule sm = new ShipModule(fid.Value, modtype, GenerateCandidateModuleName(new ModFDName(text)).ID);
-
-                                ModFDName id = new ModFDName(idn);
-                                if (!vanitymodules.ContainsKey(id) && !shipmodules.ContainsKey(id) && !othershipmodules.ContainsKey(id))
-                                {
-                                    System.Diagnostics.Debug.WriteLine($"Added new module {fid.Value}, {sm.ModuleID} {sm.ModType} {sm.EnglishModName}");
-                                    vanitymodules[id] = sm;
-                                    changedvms = true;
-                                }
-                                else
-                                {
-                                    System.Diagnostics.Debug.WriteLine($"Module exists {fid.Value}, {sm.ModuleID} {sm.ModType} {sm.EnglishModName}");
-                                }
+                                System.Diagnostics.Debug.WriteLine($"Added new module {fid.Value}, {sm.ModuleID} {sm.ModType} {sm.EnglishModName}");
+                                vanitymodules[id] = sm;
+                                changedvms = true;
                             }
                             else
                             {
-                                System.Diagnostics.Debug.WriteLine($"Bad line {line}");
+                                System.Diagnostics.Debug.WriteLine($"Module exists {fid.Value}, {sm.ModuleID} {sm.ModType} {sm.EnglishModName}");
                             }
                         }
                         else
                         {
-                            System.Diagnostics.Debug.WriteLine($"Bad line missing {{ {line}");
+                            System.Diagnostics.Debug.WriteLine($"Bad line {line}");
                         }
                     }
                     else if (line.Trim().Length > 0)

@@ -16,7 +16,7 @@ using System;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("{Slot} {Item} {LocalisedItem}")]
+    [System.Diagnostics.DebuggerDisplay("{SlotFD} {Item} {LocalisedItem}")]
     public class ShipModule
     {
         #region Information interface

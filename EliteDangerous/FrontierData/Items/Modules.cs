@@ -859,6 +859,23 @@ namespace EliteDangerousCore
                 return PropertiesInOrder;
             }
 
+            public static ModuleTypes? GetModuleType(ModFDName fd)
+            {
+                string fdname = fd.ID.Replace(" ", "").Replace("-", "_").Replace("Manifest", "Cargo").Replace("FrameShiftWakeScanner", "WakeScanner").Replace("Sensors", "Sensor")
+                    .Replace("ContainmentMissile", "MissileRack");
+
+                if (Enum.TryParse<ModuleTypes>(fdname, true, out ModuleTypes type))
+                {
+                    return type;
+                }
+                else if (Enum.TryParse<ModuleTypes>(fdname.Replace("_", ""), true, out type))                
+                {
+                    return type;
+                }
+                else
+                    return null;
+            }
+
             private static Dictionary<System.Reflection.PropertyInfo, OrderedPropertyNameAttribute> PropertiesInOrder = null;
             private static Object locker = new object();
         }

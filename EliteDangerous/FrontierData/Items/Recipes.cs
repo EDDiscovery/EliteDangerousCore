@@ -35,10 +35,6 @@ namespace EliteDangerousCore
                 Ingredients = new MaterialCommodityMicroResourceType[ilist.Length];
                 Amount = new int[ilist.Length];
 
-                if ( Name == "Fast Scanner")
-                {
-
-                }
                 for (int i = 0; i < ilist.Length; i++)
                 {
                     string s = new string(ilist[i].TakeWhile(c => !Char.IsLetter(c)).ToArray());
@@ -54,7 +50,10 @@ namespace EliteDangerousCore
                 }
             }
             else
+            {
+                System.Diagnostics.Debug.WriteLine($"{name} has no ingredients");
                 Ingredients = new MaterialCommodityMicroResourceType[0];
+            }
         }
 
         public string IngredientsString

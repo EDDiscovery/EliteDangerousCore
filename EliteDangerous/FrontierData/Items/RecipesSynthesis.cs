@@ -18,7 +18,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("Syn {FDName.Str()} {Level} `{Name}` {string.Join(\",\",Ingredients)}")]
+    [System.Diagnostics.DebuggerDisplay("Syn {FDName.ID)} {Level} `{Name}` {string.Join(\",\",Ingredients)}")]
 
     public class SynthesisRecipe : RecipeBase
     {

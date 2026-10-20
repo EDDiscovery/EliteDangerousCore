@@ -76,10 +76,6 @@ namespace EliteDangerousCore
             }
         }
 
-        public EngineeringRecipe GetRecipe()
-        {
-            return EngineeringRecipe.FindEngineeringFDName(this);
-        }
         public string NameAndLevel()
         {
             return EngineeringRecipe.FindEngineeringFDName(this)?.NameAndLevel ?? "";

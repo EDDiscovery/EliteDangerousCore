@@ -194,24 +194,30 @@ namespace EliteDangerousCore
                         {
                             {
                                 string txt = "";
-                                if (engmod.Class != null)
-                                    txt += $"{engmod.Class} ";
-                                if (engmod.Rating != null)
-                                    txt += $"{engmod.Rating} ";
-
-                                System.Diagnostics.Debug.Assert(engmod.TranslatedShortModName.Length > 0);
-                                txt += $"{engmod.TranslatedShortModName}";
-
-                                Image hpt = engmod.Mount == "F" ? BaseUtils.Icons.IconSet.GetImage($"Controls.Fixed48") :
-                                            engmod.Mount == "G" ? BaseUtils.Icons.IconSet.GetImage($"Controls.Gimbal48") :
-                                            engmod.Mount == "T" ? BaseUtils.Icons.IconSet.GetImage($"Controls.Turret48") : null;
-
                                 int xoff = midtextarea.X;
-                                if (hpt != null)
+
+                                if (engmod != null)
                                 {
-                                    g.DrawImage(hpt, new Rectangle(midtextarea.X, midtextarea.Y + midtextarea.Height / 2 - iconsize / 2, iconsize, iconsize), new Rectangle(0, 0, hpt.Width, hpt.Height), GraphicsUnit.Pixel);
-                                    xoff += iconsize + 2;
+                                    if (engmod.Class != null)
+                                        txt += $"{engmod.Class} ";
+                                    if (engmod.Rating != null)
+                                        txt += $"{engmod.Rating} ";
+
+                                    System.Diagnostics.Debug.Assert(engmod.TranslatedShortModName.Length > 0);
+                                    txt += $"{engmod.TranslatedShortModName}";
+
+                                    Image hpt = engmod.Mount == "F" ? BaseUtils.Icons.IconSet.GetImage($"Controls.Fixed48") :
+                                                engmod.Mount == "G" ? BaseUtils.Icons.IconSet.GetImage($"Controls.Gimbal48") :
+                                                engmod.Mount == "T" ? BaseUtils.Icons.IconSet.GetImage($"Controls.Turret48") : null;
+
+                                    if (hpt != null)
+                                    {
+                                        g.DrawImage(hpt, new Rectangle(midtextarea.X, midtextarea.Y + midtextarea.Height / 2 - iconsize / 2, iconsize, iconsize), new Rectangle(0, 0, hpt.Width, hpt.Height), GraphicsUnit.Pixel);
+                                        xoff += iconsize + 2;
+                                    }
                                 }
+                                else
+                                    txt = ShipSlots.ToLocalisedLanguage(module.SlotFD) + " " + module.ItemFD.ID;
 
                                 g.DrawString(txt, Font, textbrush, new Rectangle(xoff, midtextarea.Y, midtextarea.Width - xoff, midtextarea.Height), fleft);
                             }
@@ -287,7 +293,7 @@ namespace EliteDangerousCore
 
                 il.Add(new ExtendedControls.ImageElement.Element(new Rectangle(startpoint, BoxSize), bmp, boxtag, tooltip));
 
-                if (module != null && engmod.HasEnable)
+                if (module != null && engmod?.HasEnable == true)
                 {
                     var ei = BaseUtils.Icons.IconSet.GetImage(module.Enabled == true ? "Controls.PowerOn48" : "Controls.PowerOff48");
                     il.Add(new ExtendedControls.ImageElement.Element(new Rectangle(startpoint.X + BoxSize.Width - iconsize - 2, startpoint.Y + toptextarea.Height / 2 - iconsize / 2, iconsize, iconsize),
