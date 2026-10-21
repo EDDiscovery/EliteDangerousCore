@@ -92,7 +92,9 @@ namespace EliteDangerousCore
 
             Cargo01,     // MUST BE FIRST   // Panther clipper, july 25
             Cargo02,        // Panther clipper, july 25
-            Slot00_Size8,       
+            Slot00_Size6,
+            Slot00_Size7,
+            Slot00_Size8,
             Slot01_Size2,
             Slot01_Size3,
             Slot01_Size4,
@@ -299,6 +301,9 @@ namespace EliteDangerousCore
             [Slot.ShipKitWings] = "Ship Kit Wings".PTx(),
             [Slot.ShipName0] = "Nameplate Right".PTx(),
             [Slot.ShipName1] = "Nameplate Left".PTx(),
+
+            [Slot.Slot00_Size6] = "Optional Slot 0 Class 6".PTx(),
+            [Slot.Slot00_Size7] = "Optional Slot 0 Class 7".PTx(),
             [Slot.Slot00_Size8] = "Optional Slot 0 Class 8".PTx(),
 
             [Slot.Slot01_Size2] = "Optional Slot 1 Class 2".PTx(),
