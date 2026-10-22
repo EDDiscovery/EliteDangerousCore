@@ -42,7 +42,38 @@ namespace EliteDangerousCore.DB
         public string GameVersion { get; set; } = "";    // either empty, or gameversion from fileheader, overritten by loadgame
         public string Build { get; set; } = ""; // either empty, or gameversion from fileheader, overritten by loadgame
 
-        private string filename;       
+        // decode file name encoded in date to date
+        // JournalAlpha.210510202154.01.log 
+        // Journal.210128154806.01.log
+        // Journal.2023-04-22T144621.01.log
+        public string DateS
+        {
+            get
+            {
+                int jpos = FileName.LastIndexOf("Journal");
+                if (jpos >= 0) jpos = FileName.IndexOf(".", jpos + 7);
+                if (jpos >= 0)
+                {
+                    int epos = FileName.IndexOf(".", jpos + 1);
+                    if (epos >= 0)
+                        return FileName.Substring(jpos + 1, epos - jpos - 1);
+                }
+                return "";
+            }
+        }
+        public DateTime Date { get
+            {
+                string s = DateS;
+                if (s.Contains("T") && s.Length == 17)
+                    s = s.Substring(0, 13) + ":" + s.Substring(13, 2) + ":" + s.Substring(15, 2);
+                else if (!s.Contains("T") && s.Length == 12)
+                    s = "20" + s.Substring(0, 2) + "-" + s.Substring(2, 2) + "-" + s.Substring(4, 2) + "T" + s.Substring(6, 2) + ":" + s.Substring(8, 2) + ":" + s.Substring(10, 2);
+                if (!DateTime.TryParse(s, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal, out DateTime tt))
+                    System.Diagnostics.Debug.WriteLine($"TLU Date does not parse {s}");
+                return tt;
+            }
+        }
+
 
         public TravelLogUnit()
         {
@@ -199,6 +230,8 @@ namespace EliteDangerousCore.DB
         {
             return cacheid.Where(x => x.Value.CommanderId == cmdrid).Select(x=>x.Value).ToList();
         }
+
+        private string filename;
 
         public static Dictionary<long, TravelLogUnit> cacheid = null;
         // key is in original filename case - do not ToLower it due to linux 

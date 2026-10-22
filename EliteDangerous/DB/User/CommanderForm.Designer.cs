@@ -336,7 +336,7 @@
             this.textBoxBorderJournal.TabIndex = 1;
             this.textBoxBorderJournal.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.textBoxBorderJournal.TextNoChange = "";
-            this.toolTip.SetToolTip(this.textBoxBorderJournal, "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\r\nLeave override journal location blank to use the standard Frontier location for journals");
+            this.toolTip.SetToolTip(this.textBoxBorderJournal, resources.GetString("textBoxBorderJournal.ToolTip"));
             this.textBoxBorderJournal.WordWrap = true;
             // 
             // textBoxBorderCmdr
@@ -449,7 +449,7 @@
             // 
             this.panel_defaultmapcolor.AccessibleDescription = "";
             this.panel_defaultmapcolor.GradientDirection = 0F;
-            this.panel_defaultmapcolor.Location = new System.Drawing.Point(231, 23);
+            this.panel_defaultmapcolor.Location = new System.Drawing.Point(231, 31);
             this.panel_defaultmapcolor.Name = "panel_defaultmapcolor";
             this.panel_defaultmapcolor.Size = new System.Drawing.Size(51, 15);
             this.panel_defaultmapcolor.TabIndex = 4;
@@ -793,7 +793,7 @@
             this.extGroupBoxCommanderInfo.GradientDirection = 0F;
             this.extGroupBoxCommanderInfo.Location = new System.Drawing.Point(0, 368);
             this.extGroupBoxCommanderInfo.Name = "extGroupBoxCommanderInfo";
-            this.extGroupBoxCommanderInfo.Size = new System.Drawing.Size(691, 60);
+            this.extGroupBoxCommanderInfo.Size = new System.Drawing.Size(691, 76);
             this.extGroupBoxCommanderInfo.TabIndex = 37;
             this.extGroupBoxCommanderInfo.TabStop = false;
             this.extGroupBoxCommanderInfo.Text = "Other";
@@ -824,7 +824,7 @@
             this.tableLayoutPanelCommanderInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanelCommanderInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanelCommanderInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanelCommanderInfo.Size = new System.Drawing.Size(685, 41);
+            this.tableLayoutPanelCommanderInfo.Size = new System.Drawing.Size(685, 57);
             this.tableLayoutPanelCommanderInfo.TabIndex = 14;
             // 
             // extTextBoxAutoCompleteHomeSystem
@@ -849,7 +849,7 @@
             this.extTextBoxAutoCompleteHomeSystem.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.extTextBoxAutoCompleteHomeSystem.SelectionLength = 0;
             this.extTextBoxAutoCompleteHomeSystem.SelectionStart = 0;
-            this.extTextBoxAutoCompleteHomeSystem.Size = new System.Drawing.Size(152, 14);
+            this.extTextBoxAutoCompleteHomeSystem.Size = new System.Drawing.Size(152, 22);
             this.extTextBoxAutoCompleteHomeSystem.TabIndex = 0;
             this.extTextBoxAutoCompleteHomeSystem.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.extTextBoxAutoCompleteHomeSystem.TextChangedEvent = "";
@@ -869,7 +869,7 @@
             // labelMapCol
             // 
             this.labelMapCol.AutoSize = true;
-            this.labelMapCol.Location = new System.Drawing.Point(3, 23);
+            this.labelMapCol.Location = new System.Drawing.Point(3, 31);
             this.labelMapCol.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.labelMapCol.Name = "labelMapCol";
             this.labelMapCol.Size = new System.Drawing.Size(92, 13);
@@ -878,6 +878,7 @@
             // 
             // extPanelScroll
             // 
+            this.extPanelScroll.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.extPanelScroll.Controls.Add(this.extScrollBar);
             this.extPanelScroll.Controls.Add(this.panelGroups);
             this.extPanelScroll.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -901,15 +902,15 @@
             this.extScrollBar.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.extScrollBar.HideScrollBar = false;
             this.extScrollBar.LargeChange = 10;
-            this.extScrollBar.Location = new System.Drawing.Point(672, 0);
-            this.extScrollBar.Maximum = -96;
+            this.extScrollBar.Location = new System.Drawing.Point(670, 0);
+            this.extScrollBar.Maximum = -83;
             this.extScrollBar.Minimum = 0;
             this.extScrollBar.MouseOverButtonColor = System.Drawing.Color.Green;
             this.extScrollBar.MouseOverButtonColor2 = System.Drawing.Color.Green;
             this.extScrollBar.MousePressedButtonColor = System.Drawing.Color.Red;
             this.extScrollBar.MousePressedButtonColor2 = System.Drawing.Color.Red;
             this.extScrollBar.Name = "extScrollBar";
-            this.extScrollBar.Size = new System.Drawing.Size(48, 538);
+            this.extScrollBar.Size = new System.Drawing.Size(48, 536);
             this.extScrollBar.SkinnyStyle = ExtendedControls.ExtScrollBar.ScrollStyle.Normal;
             this.extScrollBar.SliderColor = System.Drawing.Color.DarkGray;
             this.extScrollBar.SliderColor2 = System.Drawing.Color.DarkGray;
@@ -920,8 +921,8 @@
             this.extScrollBar.ThumbButtonColor = System.Drawing.Color.DarkBlue;
             this.extScrollBar.ThumbButtonColor2 = System.Drawing.Color.DarkBlue;
             this.extScrollBar.ThumbDrawAngle = 0F;
-            this.extScrollBar.Value = -96;
-            this.extScrollBar.ValueLimited = -96;
+            this.extScrollBar.Value = -83;
+            this.extScrollBar.ValueLimited = -83;
             // 
             // panelGroups
             // 
@@ -934,7 +935,7 @@
             this.panelGroups.Controls.Add(this.groupBoxCustomJournal);
             this.panelGroups.Location = new System.Drawing.Point(0, 0);
             this.panelGroups.Name = "panelGroups";
-            this.panelGroups.Size = new System.Drawing.Size(691, 433);
+            this.panelGroups.Size = new System.Drawing.Size(691, 444);
             this.panelGroups.TabIndex = 1;
             // 
             // extGroupBoxEDAstro

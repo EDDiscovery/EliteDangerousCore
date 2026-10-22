@@ -478,16 +478,47 @@ namespace EliteDangerousCore.DB
             ExecuteNonQueries(queries);
         }
 
-        public void ClearJournal()
+        public void ClearJournal(DateTime starttime)
         {
-            string[] queries = new[]
+            if (starttime == DateTime.MinValue)
             {
-                "DELETE from JournalEntries",
-                "DELETE FROM TravelLogUnit",
-            };
+                string[] queries = new[]
+                {
+                    "DELETE from JournalEntries",
+                    "DELETE FROM TravelLogUnit",
+                };
 
-            ExecuteNonQueries(queries);
+                ExecuteNonQueries(queries);
+            }
+            else
+            {
+                string idlist = "";
+
+                using (DbCommand cmd = this.CreateCommand("select * from TravelLogUnit Order By id"))
+                {
+                    using (DbDataReader rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            TravelLogUnit sys = new TravelLogUnit(rdr);
+                            if (sys.Date >= starttime)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"{sys.FileName} : {sys.DateS} : {sys.Date}");
+                                idlist = idlist.AppendPrePad(sys.ID.ToStringInvariant(), ",");
+                            }
+                        }
+                    }
+                }
+
+                string zulu = starttime.ToStringZulu();
+                int rows = ExecuteNonQuery($"DELETE from JournalEntries Where EventTime >= \"{zulu}\"");
+                System.Diagnostics.Debug.WriteLine($"Journal entries {rows}");
+                rows = ExecuteNonQuery($"DELETE from TravelLogUnit Where ID IN ({idlist})");
+                System.Diagnostics.Debug.WriteLine($"TLU entries {rows}");
+            }
         }
+
+
         public void ClearCommanderTable()
         {
             string[] queries = new[]

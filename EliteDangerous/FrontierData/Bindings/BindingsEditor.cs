@@ -142,7 +142,7 @@ namespace EliteDangerousCore.Bindings
                 if (!bf.IsLoaded)
                     labelWarning.Text = $"No Bindings file setup - Use Elite Controls to make one";
                 else if (!bf.IsEditable)
-                    labelWarning.Text = $"Unknown Keyboard Layout {bf.KeyboardCulture} {InputLanguage.CurrentInputLanguage.LayoutName} {InputLanguage.CurrentInputLanguage.Culture.Name}. File is not editable";
+                    labelWarning.Text = $"Unsupported Keyboard Layout {bf.KeyboardCulture} {InputLanguage.CurrentInputLanguage.LayoutName} {InputLanguage.CurrentInputLanguage.Culture.Name}. File is not editable";
                 else if (bf.NonPhysicalDevicesInUse)
                 {
                     labelWarning.Text = "Devices Not Plugged In!";

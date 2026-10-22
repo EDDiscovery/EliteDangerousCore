@@ -52,10 +52,10 @@ namespace EliteDangerousCore
                 {
                     ModFDName candidatename = GenerateCandidateModuleName(fdid);
 
-                    var newmodule = new ShipModule(-1, IsVanity(candidatename) ? ShipModule.ModuleTypes.VanityType : ShipModule.ModuleTypes.UnknownType, candidatename.ID);
+                    var newmodule = new ShipModule(-1, DetermineType(candidatename), candidatename.ID);
                     string futilemessage = " - this is item unknown to EDD, but IT WILL not affect operation of the program. It would be nice to report it to us so we can add it to known module lists";
 
-                    BaseUtils.Debugger.TraceBreak($"*** Unknown Module in slot {ShipSlots.ToEnglish(slot)} : {{new ModFDName(\"{fdid.ToLower()}\"), new ShipModule(-1,{(IsVanity(candidatename) ? "ShipModule.ModuleTypes.VanityType" : "ShipModule.ModuleTypes.UnknownType")},\"{candidatename.ID}\") }}," + futilemessage);
+                    BaseUtils.Debugger.TraceBreak($"*** Unknown Module in slot {ShipSlots.ToEnglish(slot)} : {{new ModFDName(\"{fdid.ToLower()}\"), new ShipModule(-1, ShipModule.ModuleTypes.{DetermineType(fdid)},\"{candidatename.ID}\") }}," + futilemessage);
 
                     synthesisedmodules[candidatename] = m = newmodule;                   // lets cache them for completeness..
                  
@@ -81,6 +81,7 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Python Nx", "Python Mk II");
             candidatename = candidatename.Replace("Typex 2", "Alliance Crusader");
             candidatename = candidatename.Replace("Typex 3", "Alliance Challenger");
+            candidatename = candidatename.Replace("Anacondamkii", "Anaconda Mk II");
             candidatename = candidatename.Replace("Empire Trader", "Imperial Clipper");
             candidatename = candidatename.Replace("Krait Light", "Krait Phantom");
             candidatename = candidatename.Replace("Ferdelance", "Fer De Lance");
@@ -155,7 +156,14 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Constructshipfed ", "Construct Ship Federation ", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace("Corporatefleet ", "Corporate Fleet ", StringComparison.InvariantCultureIgnoreCase);
             candidatename = candidatename.Replace("Corporate Fleet Fleet", "Corporate Fleet ", StringComparison.InvariantCultureIgnoreCase);
+            candidatename = candidatename.Replace("Unknownartifact", "Unknown Artifact", StringComparison.InvariantCultureIgnoreCase);
             return new ModFDName(candidatename);
+        }
+        static public ShipModule.ModuleTypes DetermineType(ModFDName ifd)
+        {
+            string[] vlist = new[] { "bobble", "decal", "enginecustomisation", "nameplate", "paintjob",
+                                    "shipkit", "weaponcustomisation", "voicepack" , "lights", "spoiler" , "wings", "bumper", " tail", "hologram"};
+            return Array.Find(vlist, x => ifd.Contains(x)) != null ? ShipModule.ModuleTypes.VanityType : ifd.Contains("cockpit") ? ShipModule.ModuleTypes.CockpitType : ShipModule.ModuleTypes.UnknownType;
         }
 
         // List of ship modules. Synthesised are not included
@@ -244,13 +252,6 @@ namespace EliteDangerousCore
             }
 
             return ret.ToArray();
-        }
-
-        static public bool IsVanity(ModFDName ifd)
-        {
-            string[] vlist = new[] { "bobble", "decal", "enginecustomisation", "nameplate", "paintjob",
-                                    "shipkit", "weaponcustomisation", "voicepack" , "lights", "spoiler" , "wings", "bumper"};
-            return Array.Find(vlist, x => ifd.Contains(x)) != null;
         }
 
         static public bool IsFuelTank(ModFDName ifd)

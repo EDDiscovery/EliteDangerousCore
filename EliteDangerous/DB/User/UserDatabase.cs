@@ -114,12 +114,11 @@ namespace EliteDangerousCore.DB
             });
         }
 
-        public void ClearJournals()
+        public void ClearJournals(DateTime starttime)
         {
             DBWrite(db =>
             {
-                db.ClearJournal();
-                db.Vacuum();
+                db.ClearJournal(starttime);
             });
         }
         public void ClearCommanderTable()
