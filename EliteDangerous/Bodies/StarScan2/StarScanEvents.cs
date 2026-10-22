@@ -41,13 +41,13 @@ namespace EliteDangerousCore.StarScan2
                     if (!systemNodesByAddress.TryGetValue(sys.SystemAddress, out SystemNode node))
                     {
                         // if not found an address, check name
-                        if (systemNodesByName.TryGetValue(sys.Name, out node))      // if we have a name
+                        if (systemNodesByName.TryGetValue(sys.Name, out node))      // if we have a name but NOT an address
                         {
                             // if the node does not have address, or the addresses match, we match and update the system node address list
 
                             if ( !node.System.HasAddress || sys.SystemAddress == node.System.SystemAddress)   
                             {
-                                systemNodesByAddress.Add(sys.SystemAddress, node);        // add the new address into the node tree also
+                                systemNodesByAddress[sys.SystemAddress] = node;        // add the new address into the node tree also
                             }
                             else
                             {
@@ -55,14 +55,14 @@ namespace EliteDangerousCore.StarScan2
 
                                 $"StarScan Two systems with same name {node.System.NameAddress} with {sys.NameAddress}".DO("SS");
 
-                                systemNodesByName.Remove(node.System.Name);                 // rename existing entry with NameAddress
-                                systemNodesByName.Add(node.System.NameAddress, node);
+                                systemNodesByName.Remove(node.System.Name);                 // rename existing name entry with NameAddress
+                                systemNodesByName[node.System.NameAddress] = node;
 
                                 node = new SystemNode(sys);
-                                systemNodesByAddress.Add(sys.SystemAddress, node);    // make a new node
+                                systemNodesByAddress[sys.SystemAddress] = node;             // make a new node
                                 systemNodesByName[sys.NameAddress] = node;                  // store as name address pair
 
-                                systemNodesByNameDuplicated.Add(node.System.Name, node);    // the new node, add to the duplicate list, bare without repeats, so it can be found by name only
+                                systemNodesByNameDuplicated[node.System.Name] = node;       // the new node, add to the duplicate list, bare without repeats, so it can be found by name only
                             }
                         }
                         else if (!systemNodesByName.TryGetValue(sys.NameAddress, out node))      // if we don't have a nameAddress in there (due to a double name)
