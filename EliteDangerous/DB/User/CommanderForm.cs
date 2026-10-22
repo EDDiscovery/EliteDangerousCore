@@ -33,6 +33,7 @@ namespace EliteDangerousCore.Forms
 
             BaseUtils.TranslatorMkII.Instance.TranslateControls(this);
             BaseUtils.TranslatorMkII.Instance.TranslateTooltip(toolTip,this);
+            toolTip.SetToolTip(textBoxBorderJournal, "Enter the journal location folder.  Normally leave this field blank only if you are using EDD on another computer than your play computer\r\nLeave override journal location blank to use the standard Frontier location for journals".Tx());
 
             if (additionalcontrols != null)
             {
