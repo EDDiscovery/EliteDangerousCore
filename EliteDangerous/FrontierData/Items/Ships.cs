@@ -414,15 +414,7 @@ namespace EliteDangerousCore
             Hardpoints = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint1, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.MediumHardpoint3, 2)}, 
             Utility = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint1, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint2, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint3, 0), new ShipSlots.SlotAndSize(ShipSlots.Slot.TinyHardpoint4, 0)}, 
             Component = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Armour, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerPlant, 4), new ShipSlots.SlotAndSize(ShipSlots.Slot.MainEngines, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.FrameShiftDrive, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.LifeSupport, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PowerDistributor, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Radar, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.FuelTank, 3)}, 
-            Internal = new ShipSlots.SlotAndSize[] {
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), // oct 26 triage
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size3, 3), 
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size2, 2), 
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), 
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), 
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1), 
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1), 
-                new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
+            Internal = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot01_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot02_Size3, 3), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot03_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot04_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot05_Size2, 2), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot06_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot07_Size1, 1), new ShipSlots.SlotAndSize(ShipSlots.Slot.Slot08_Size1, 1)}, 
             Military = new ShipSlots.SlotAndSize[] {}, 
             Other = new ShipSlots.SlotAndSize[] {new ShipSlots.SlotAndSize(ShipSlots.Slot.CargoHatch,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.PlanetaryApproachSuite,1), new ShipSlots.SlotAndSize(ShipSlots.Slot.ShipCockpit,1)}, 
         };
