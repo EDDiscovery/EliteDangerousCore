@@ -858,7 +858,7 @@ namespace EliteDangerousCore.StarScan2
         public void ToString(System.Text.StringBuilder sp, string bid, int level = 0)
         {
             string front = bid.PadRight(20);
-            string names = (new string(' ', level) + (OwnName + " | " + (CanonicalNameNoSystemName() ?? "-"))).PadRight(35);
+            string names = (new string(' ', level) + ("`" + OwnName + "` | `" + (CanonicalNameNoSystemName() ?? "-") +"`")).PadRight(35);
             string pad = new string(' ', front.Length + 3 + level + 3);
             int cn = GetNameDepth();
             string cnl = cn >= 0 ? cn.ToString() : "";

@@ -125,7 +125,7 @@ namespace EliteDangerousCore.StarScan2
                                 BodyNode.BodyIDMarkerForAutoBodyBeltCluster, parentbody, this, ring.Name);
                         
                         parentbody.ChildBodies.Add(belt);
-                        $"Starscan Add {belt.BodyType} object {name} to `{parentbody.OwnName}`:{parentbody.BodyID}".DO(debugid);
+                        $"Starscan Add {belt.BodyType} object {name} to `{parentbody.CanonicalNameOrOwnName}`:{parentbody.BodyID}".DO(debugid);
                     }
 
                     belt.SetScan(ring);
@@ -272,19 +272,21 @@ namespace EliteDangerousCore.StarScan2
             HashSet<string> cnames = new HashSet<string>();     // quick name find to see if we have a bad repeat
             var bodylist = Bodies().ToList();
 
+            "Check Tree".DO(debugid);
+
             foreach( BodyNode x in bodylist)
             {
-                (x.SystemNode == this).Assert($"StarScan System Node not assigned to this {x.Name()}", () => { global::System.Diagnostics.Debug.WriteLine(PrintTree().ToString()); });
+                (x.SystemNode == this).Assert($"StarScan CHECK System Node not assigned to this {x.Name()}", () => { global::System.Diagnostics.Debug.WriteLine(PrintTree().ToString()); });
                 if ( x.BodyID>=0 )
                 {
                     totalbodieswithids++;
 
                     if (bodybyid.TryGetValue(x.BodyID, out BodyNode v))
                     {
-                        (v == x).Assert($"StarScan bodybyid not pointing to same place as ID for {x.Name()}", () => { global::System.Diagnostics.Debug.WriteLine(PrintTree().ToString()); });
+                        (v == x).Assert($"StarScan CHECK bodybyid not pointing to same place as ID for {x.Name()}", () => { global::System.Diagnostics.Debug.WriteLine(PrintTree().ToString()); });
                     }
                     else
-                        false.Assert($"StarScan Missing bodyid in bodybyid {x.Name()}", () => { global::System.Diagnostics.Debug.WriteLine(PrintTree().ToString()); });
+                        false.Assert($"StarScan CHECK Missing bodyid in bodybyid {x.Name()}", () => { global::System.Diagnostics.Debug.WriteLine(PrintTree().ToString()); });
                 }
                 
                 if ( x.CanonicalName!=null ) // check for repeated canonical names
@@ -296,7 +298,7 @@ namespace EliteDangerousCore.StarScan2
                         List<BodyNode> repeats = bodylist.Where(y => y.CanonicalName == x.CanonicalName && y.BodyType == x.BodyType).ToList();
                         if (repeats.Count > 1)
                         {
-                            global::System.Diagnostics.Trace.WriteLine($"Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} is repeated in {System.Name} for {EDCommander.Current?.Name}");
+                            global::System.Diagnostics.Trace.WriteLine($"Starscan CHECK CanonicalName `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} is repeated in {System.Name} for Cmdr `{EDCommander.Current?.Name}`");
                         }
                     }
                     cnames.Add(x.CanonicalName);
@@ -304,13 +306,13 @@ namespace EliteDangerousCore.StarScan2
                 
                 // these are classification errors
                 if (x.BodyType == BodyDefinitions.BodyType.AsteroidCluster && x.Parent.BodyType != BodyDefinitions.BodyType.StellarRing)
-                    global::System.Diagnostics.Trace.WriteLine($"**** Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} asteroid not under stellar ring {System.Name} for {EDCommander.Current?.Name}");
+                    global::System.Diagnostics.Trace.WriteLine($"**** Starscan CHECK `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} asteroid not under stellar ring {System.Name} for {EDCommander.Current?.Name}");
                 
                 if (x.BodyType == BodyDefinitions.BodyType.PlanetaryRing && !(x.Parent.BodyType == BodyDefinitions.BodyType.Planet || x.Parent.BodyType == BodyDefinitions.BodyType.Star))
-                    global::System.Diagnostics.Trace.WriteLine($"**** Starscan `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} planetary ring not under star/planet ring {System.Name} for {EDCommander.Current?.Name}");
+                    global::System.Diagnostics.Trace.WriteLine($"**** Starscan CHECK `{x.CanonicalName}`:{x.BodyID}:{x.BodyType} planetary ring not under star/planet ring {System.Name} for {EDCommander.Current?.Name}");
             }
 
-            (totalbodieswithids == bodybyid.Count).Assert($"StarScan {System.Name} Not the same number of bodyids as nodes {totalbodieswithids} with Ids in bodybyid {bodybyid.Count}", () => { global::System.Diagnostics.Debug.WriteLine(PrintTree().ToString()); });
+            (totalbodieswithids == bodybyid.Count).Assert($"StarScan CHECK {System.Name} Not the same number of bodyids as nodes {totalbodieswithids} with Ids in bodybyid {bodybyid.Count}", () => { global::System.Diagnostics.Debug.WriteLine(PrintTree().ToString()); });
 
             CheckParents(systemBodies);
         }

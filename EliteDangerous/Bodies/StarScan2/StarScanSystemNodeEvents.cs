@@ -69,14 +69,20 @@ namespace EliteDangerousCore.StarScan2
                 {
                     if (subbody.Parent != cur)                  // if there but not in correct place, move to correct place
                     {
-                        (subbody.PlacedWithoutParents == true).Assert($" Moving s/p subbody {subbody.OwnName} but it was not placed without parents");
-                        ReassignParent(subbody, cur, nt.BodyID);
-                        Sort(cur);      // added, needs sorting
-                        $"  StarScan Move s/p {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                        if (subbody.PlacedWithoutParents)
+                        {
+                            ReassignParent(subbody, cur, nt.BodyID);
+                            Sort(cur);      // added, needs sorting
+                            $"  StarScan Move s/p {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                        }
+                        else
+                        {
+                            $"  StarScan REJECT Move s/p {subbody.BodyType} `{subbody.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                        }
                     }
 
                     // If we have a difference in name, the new name is not an unknown name, and the subbody is not a BC name
-                    if (subbody.OwnName != subbodyname && !subbodyname.StartsWith(BodyNode.UnknownMarker) && !subbody.OwnName.StartsWith(BodyNode.BCNamingPrefix)) 
+                    if (!subbody.OwnName.EqualsIIC(subbodyname) && !subbodyname.StartsWith(BodyNode.UnknownMarker) && !subbody.OwnName.StartsWith(BodyNode.BCNamingPrefix)) 
                     {
                         subbody.ResetBodyName(subbodyname);
                         Sort(cur);      // changed name, sort
@@ -94,11 +100,12 @@ namespace EliteDangerousCore.StarScan2
                     subbody.PlacedWithoutParents = false;          // now confirmed in location
                 }
 
-                CheckTree();
                 cur = subbody;
                 pno--;
                 partno++;
             }
+
+            CheckTree();
 
             // final part of the scan
 
@@ -148,12 +155,19 @@ namespace EliteDangerousCore.StarScan2
             {
                 if (body.Parent != cur)                 // if there but not in correct place, move to correct place
                 {
-                    (body.PlacedWithoutParents == true).Assert($" Moving s/p {body.OwnName} but it was not placed without parents");
-                    ReassignParent(body, cur, sc.BodyID.Value);
-                    $"  StarScan Move s/p {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    if (body.PlacedWithoutParents)
+                    {
+                        ReassignParent(body, cur, sc.BodyID.Value);
+                        $"  StarScan Move s/p {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    }
+                    else
+                    {
+                        DumpTree();
+                        $"  StarScan REJECT Move s/p {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    }
                 }
 
-                if (ownname != body.OwnName)
+                if (!ownname.EqualsIIC(body.OwnName))
                 {
                     body.ResetBodyName(ownname);                        // make sure we are calling it by this part - this is the real name always
                     $"  StarScan Rename s/p {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
@@ -254,10 +268,16 @@ namespace EliteDangerousCore.StarScan2
                 {
                     if (subbody.Parent != cur)
                     {
-                        (subbody.PlacedWithoutParents == true).Assert($" Moving ns/p subbody {subbody.OwnName} but it was not placed without parents");
-                        ReassignParent(subbody, cur, nt.BodyID);
-                        Sort(cur);
-                        $"  StarScan Move ns/p {subbody.BodyType} `{subbody.OwnName}`:{subbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                        if (subbody.PlacedWithoutParents)
+                        {
+                            ReassignParent(subbody, cur, nt.BodyID);
+                            Sort(cur);
+                            $"  StarScan Move ns/p {subbody.BodyType} `{subbody.OwnName}`:{subbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                        }
+                        else
+                        {
+                            $"  StarScan REJECT Move ns/p {subbody.BodyType} `{subbody.OwnName}`:{subbody.BodyID} below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                        }
                     }
 
                     subbody.PlacedWithoutParents = false;       // now confirmed in location
@@ -308,12 +328,18 @@ namespace EliteDangerousCore.StarScan2
             {
                 if (body.Parent != cur)                 // if there but not in correct place, move to correct place
                 {
-                    (body.PlacedWithoutParents == true).Assert($" Moving ns/p parents {body.OwnName} but it was not placed without parents");
-                    ReassignParent(body, cur, sc.BodyID.Value);
-                    $"  StarScan Move ns/p {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    if (body.PlacedWithoutParents)
+                    {
+                        ReassignParent(body, cur, sc.BodyID.Value);
+                        $"  StarScan Move ns/p {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    }
+                    else
+                    {
+                        $"  StarScan REJECT Move ns/p {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
+                    }
                 }
 
-                if (body.OwnName != sc.BodyName)
+                if (!body.OwnName.EqualsIIC(sc.BodyName))
                 {
                     body.ResetBodyName(sc.BodyName);        // force the name we know on it
                     $"  StarScan Rename ns/p {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
@@ -437,7 +463,7 @@ namespace EliteDangerousCore.StarScan2
 
                     // we always have real names for each part
 
-                    if (subbody.OwnName != ownname && !subbody.OwnName.StartsWith(BodyNode.BCNamingPrefix))                     
+                    if (!subbody.OwnName.EqualsIIC(ownname) && !subbody.OwnName.StartsWith(BodyNode.BCNamingPrefix))                     
                     {
                         subbody.ResetBodyName(ownname);     // just in case we made an incorrect one before
                         Sort(cur);
