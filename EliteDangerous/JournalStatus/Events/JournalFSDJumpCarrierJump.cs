@@ -35,12 +35,7 @@ namespace EliteDangerousCore.JournalEvents
             BodyType = BodyDefinitions.GetBodyType(evt["BodyType"].Str());
             Taxi = evt["Taxi"].BoolNull();
             Multicrew = evt["Multicrew"].BoolNull();
-
-            JToken jm = evt["EDDMapColor"];
-            if ( jm != null) 
-                MapColor = jm.Int();
-            else 
-                evt["EDDMapColor"] = EDCommander.Current?.MapColour ?? 0;      // new entries get this default map colour if its not already there
+            evt[EDDMapColor] = MapColor = evt[EDDMapColor].Int(EDCommander.Current?.MapColour ?? 0);
         }
 
         public JournalFSDJump(DateTime utc, ISystem sys, int colour, bool edsmsynced, SystemSource datasource) : base(utc, sys, JournalTypeEnum.FSDJump, edsmsynced)
@@ -116,9 +111,8 @@ namespace EliteDangerousCore.JournalEvents
 
                 if (jo != null)
                 {
-                    jo["EDDMapColor"] = mapcolour;
+                    jo[EDDMapColor] = MapColor = mapcolour;
                     UpdateJsonEntry(jo, cn, null);
-                    MapColor = mapcolour;
                 }
             });
         }
@@ -130,10 +124,12 @@ namespace EliteDangerousCore.JournalEvents
             jo["event"] = "FSDJump";
             jo["StarSystem"] = StarSystem;
             jo["StarPos"] = new JArray(StarPos.X, StarPos.Y, StarPos.Z);
-            jo["EDDMapColor"] = MapColor;
+            jo[EDDMapColor] = MapColor;
             jo[EDSMJournalMarker] = true;       // mark as non journal sourced - now in june 2026 it sets datasource
             return jo;
         }
+        const string EDDMapColor = "EDDMapColor";
+
     }
 
 
@@ -240,11 +236,7 @@ namespace EliteDangerousCore.JournalEvents
 
             DistFromStarLS = evt["DistFromStarLS"].DoubleNull();
 
-            JToken jm = evt["EDDMapColor"];
-            if ( jm != null)
-                MapColor = jm.Int();
-            else
-                evt["EDDMapColor"] = EDCommander.Current?.MapColour ?? 0;      // new entries get this default map colour if its not already there. For debugging, allow no commander
+            evt[EDDMapColor] = MapColor = evt[EDDMapColor].Int(EDCommander.Current?.MapColour ?? 0);
         }
 
         public CarrierDefinitions.CarrierType CarrierType { get; } = CarrierDefinitions.CarrierType.UnknownType;        // stupid journal does not tell
@@ -299,6 +291,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             s.Update(this);
         }
+
+        const string EDDMapColor = "EDDMapColor";
     }
 
     [JournalEntryType(JournalTypeEnum.JetConeBoost)]
