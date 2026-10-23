@@ -81,8 +81,10 @@ namespace EliteDangerousCore.StarScan2
                         }
                     }
 
-                    // If we have a difference in name, the new name is not an unknown name, and the subbody is not a BC name
-                    if (!subbody.OwnName.EqualsIIC(subbodyname) && !subbodyname.StartsWith(BodyNode.UnknownMarker) && !subbody.OwnName.StartsWith(BodyNode.BCNamingPrefix)) 
+                    // Change Oct 26 - now only rename if its already unknown.  `HIP 87621` with its 3A ring around 4 forces this
+
+                    // If we are unknown, the new name is not an unknown name, and the subbody is not a BC name
+                    if (subbody.OwnName.StartsWith(BodyNode.UnknownMarker) && !subbody.OwnName.StartsWith(BodyNode.BCNamingPrefix) && !subbodyname.StartsWith(BodyNode.UnknownMarker))
                     {
                         subbody.ResetBodyName(subbodyname);
                         Sort(cur);      // changed name, sort
@@ -162,7 +164,6 @@ namespace EliteDangerousCore.StarScan2
                     }
                     else
                     {
-                        DumpTree();
                         $"  StarScan REJECT Move s/p {body.BodyType} `{body.OwnName}` below `{cur.OwnName}`:{cur.BodyID} in {systemname}".DO(debugid);
                     }
                 }

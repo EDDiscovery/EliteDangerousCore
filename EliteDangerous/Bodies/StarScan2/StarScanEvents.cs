@@ -40,11 +40,6 @@ namespace EliteDangerousCore.StarScan2
 
                     if (!systemNodesByAddress.TryGetValue(sys.SystemAddress, out SystemNode node))
                     {
-                        if ( sys.Name == "2MASS J05345639+0955045")
-                        {
-
-                        }
-
                         // if the name has already been noted as a duplicate
                         if ( systemNodesByNameDuplicated.TryGetValue(sys.Name,out node))        
                         {

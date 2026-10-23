@@ -231,7 +231,7 @@ namespace EliteDangerousCore
             new EngineeringRecipe("Overcharged, Focused","weapon_overcharged","",ItemData.ShipModule.ModuleTypes.AXMissileRack,1,""),
             new EngineeringRecipe("Rapid fire, High capacity","weapon_rapidfire","",ItemData.ShipModule.ModuleTypes.AXMissileRack,1,""),
             new EngineeringRecipe("Long range, Focused","weapon_longrange","",ItemData.ShipModule.ModuleTypes.MiningLaser,1,""),
-            new EngineeringRecipe("High capacity, Increased damage","weapon_highcapacity","",ItemData.ShipModule.ModuleTypes.AXMissileRack,1,""),
+            new EngineeringRecipe("High Capacity Magazine","weapon_highcapacity","",ItemData.ShipModule.ModuleTypes.AXMissileRack,1,""),
             new EngineeringRecipe("Decorative Green", "decorative_green", "" , ItemData.ShipModule.ModuleTypes.AXMissileRack, 1, ""),
             new EngineeringRecipe("Decorative Yellow", "decorative_yellow", "" , ItemData.ShipModule.ModuleTypes.AXMissileRack, 1, ""),
             new EngineeringRecipe("Decorative Red", "decorative_red", "" , ItemData.ShipModule.ModuleTypes.AXMissileRack, 1, ""),
