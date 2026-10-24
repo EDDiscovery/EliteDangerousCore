@@ -140,6 +140,10 @@ namespace EliteDangerousCore
             iridium, helium, helium3, bastnasite, deuterium, thortveitite, quartzpyroxenite, olivine, periclasedunite, sapphire,
             diamond, ruby, magnesite,
 
+            // found oct 26
+
+            LavignyStrategicReports, KaineAidSupplies, KaineMisinformation, KaineLobbyingMaterial,
+
             //---------------------------------------------------------- Raw
             Carbon = 1000, Iron, Lead, Nickel, Phosphorus, Rhenium, Sulphur, Arsenic,
             Chromium, Germanium, Manganese, Vanadium, Zinc, Zirconium, Boron, Cadmium,
@@ -735,8 +739,12 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.PowerPlay, MCMR.LavignyCorruptionDossiers, "Lavigny Corruption Reports");
             Add(CatType.Commodity, ItemType.PowerPlay, MCMR.LavignyFieldSupplies, "Lavigny Field Supplies");
             Add(CatType.Commodity, ItemType.PowerPlay, MCMR.LavignyGarisonSupplies, "Lavigny Garrison Supplies");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.LavignyStrategicReports, "Lavigny Strategic Reports");
             Add(CatType.Commodity, ItemType.PowerPlay, MCMR.LiberalCampaignMaterials, "Liberal Propaganda");
             Add(CatType.Commodity, ItemType.PowerPlay, MCMR.LoanedArms, "Marked Military Arms");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.KaineAidSupplies, "Kaine Aid Supplies");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.KaineMisinformation, "Kaine Misinformation");
+            Add(CatType.Commodity, ItemType.PowerPlay, MCMR.KaineLobbyingMaterial, "Kaine Lobbying Material");
             Add(CatType.Commodity, ItemType.PowerPlay, MCMR.MarkedSlaves, "Marked Slaves");
             Add(CatType.Commodity, ItemType.PowerPlay, MCMR.OnionheadDerivatives, "Onionhead Derivatives");
             Add(CatType.Commodity, ItemType.PowerPlay, MCMR.OnionheadSamples, "Onionhead Samples");
@@ -1009,7 +1017,7 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.Narcotics, MCMR.TarachTorSpice, "Tarach Spice", true);
             Add(CatType.Commodity, ItemType.Narcotics, MCMR.TransgenicOnionHead, "Lucan Onionhead", true);
             Add(CatType.Commodity, ItemType.Narcotics, MCMR.Wolf1301Fesh, "Wolf Fesh", true);
-            Add(CatType.Commodity, ItemType.Salvage, MCMR.ClassifiedExperimentalEquipment, "Classified Experimental Equipment", true);
+            Add(CatType.Commodity, ItemType.Technology, MCMR.ClassifiedExperimentalEquipment, "Classified Experimental Equipment", true);
             Add(CatType.Commodity, ItemType.Salvage, MCMR.EarthRelics, "Earth Relics", true);
             Add(CatType.Commodity, ItemType.Salvage, MCMR.GalacticTravelGuide, "Galactic Travel Guide", true);
             Add(CatType.Commodity, ItemType.Slaves, MCMR.MasterChefs, "Master Chefs", true);
