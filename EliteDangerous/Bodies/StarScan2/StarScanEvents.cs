@@ -36,20 +36,24 @@ namespace EliteDangerousCore.StarScan2
                 {
                     // System.Diagnostics.Debug.WriteLine($"SS2 Add {je.EventTimeUTC} {je.EventTypeID} {sys.Name} {sys.SystemAddress} {sys.HasCoordinate}");
 
-                    // find system node by address, 
-
+                    // find system node by address - does it fail?
                     if (!systemNodesByAddress.TryGetValue(sys.SystemAddress, out SystemNode node))
                     {
+                        // No system address found but we have a system address..
+
                         // if the name has already been noted as a duplicate
                         if ( systemNodesByNameDuplicated.TryGetValue(sys.Name,out node))        
                         {
+                            // we must have seen it at least twice if its in this list
+                            // and it must be a new one otherwise the address would have been recorded.
+                            // its a triple frontier fuck up ! add another
                             node = new SystemNode(sys);                                 // make a new node with name:new address  
                             systemNodesByAddress.Add(sys.SystemAddress, node);          // add address in
                             systemNodesByName[sys.NameAddress] = node;                  // store as name:newaddress tuple
-                            $"StarScan Duplicated name already present, add new duplicate {node.System.NameAddress}".DO("SSES;");
+                            $"StarScan Third or more duplicated name, add new duplicate {node.System.NameAddress}".DO("SSDUP;");
                         }
 
-                        // if not found an address, check name
+                        // check name cache
                         else if (systemNodesByName.TryGetValue(sys.Name, out node))      // if we have a name
                         {
                             // if the node does not have an address (really old) then fill in and fill in the system array
@@ -57,10 +61,10 @@ namespace EliteDangerousCore.StarScan2
                             {
                                 node.System.SystemAddress = sys.SystemAddress;              // fill in..
                                 systemNodesByAddress.Add(sys.SystemAddress, node);          // add the new address into the node tree also
-                                //$"StarScan Update system address {node.System.NameAddress}".DO("SS;");
+                                $"StarScan Update system address {node.System.NameAddress}".DO("SSES;");
                             }
 
-                            // if the system address match..
+                            // if the system address match.. all is good, just update the system node address table
                             else if (sys.SystemAddress == node.System.SystemAddress)
                             {
                                 systemNodesByAddress.Add(sys.SystemAddress, node);          // add the new address into the node tree also
@@ -68,29 +72,31 @@ namespace EliteDangerousCore.StarScan2
                             }
                             else
                             {
-                                // here we found a name, but the system addresses do not match.. therefore a frontier double triple naming situation. 
-                                // we have an address and a duplicated name, we remove the name from the system and file under the name:address tuple
+                                // sys.address is not in the cache, meaning its new
+                                // with have a node with name matching but address is not in the cache
+                                // therefore a frontier double triple naming situation with a new name:address tuple
+                                // we remove the name from the normal name table
+                                // and file both the existing one and the new pair under the name:address tuple
+                                // and we note the bare name in the duplicated list
 
-                                $"StarScan Two systems with same name first time noted {node.System.NameAddress} with {sys.NameAddress}".DO("SSES;");
+                                $"StarScan Two systems with same name first time noted {node.System.NameAddress} and new one {sys.NameAddress}".DO("SSDUP;");
 
                                 systemNodesByName.Remove(node.System.Name);                 // remove the current name 
                                 systemNodesByName.Add(node.System.NameAddress, node);       // add it back in under name:address tuple
+                                // the existing address is pointing to node.
+                                System.Diagnostics.Debug.Assert(systemNodesByAddress.TryGetValue(node.System.SystemAddress, out SystemNode nodex) && nodex == node );
 
                                 node = new SystemNode(sys);                                 // make a new node with name:new address  
-                                systemNodesByAddress.Add(sys.SystemAddress, node);          // add address in
+                                systemNodesByAddress.Add(sys.SystemAddress, node);          // add new address in
                                 systemNodesByName[sys.NameAddress] = node;                  // store as name:newaddress tuple
 
-                                // the new node, store to the duplicate list, bare without repeats, so it can be found by name only
+                                // the new node, store to the duplicate list, bare without repeats, so it can be found by name only and recorded as a known duplicate
                                 systemNodesByNameDuplicated[node.System.Name] = node;       // note it as a duplicate
                             }
                         }
-                        else if (systemNodesByName.TryGetValue(sys.NameAddress, out node))      // if we don't have a nameAddress in there (due to a double name)
-                        {
-                            $"StarScan Found system with Name address {node.System.NameAddress}".DO("SS;");
-                        }
                         else
                         {
-                            // no address found, and no name, no name:address, new node
+                            // No name bare or not in duplicated list, new node
                             node = new SystemNode(sys);
                             systemNodesByAddress.Add(sys.SystemAddress, node);        // make a new node
                             systemNodesByName[sys.Name] = node;                             // point name node to our new node

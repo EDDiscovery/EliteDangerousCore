@@ -142,7 +142,7 @@ namespace EliteDangerousCore.StarScan2
 
                     // double check we would not have found it by name without PlacedwithoutParent flag - shows up a bug, as the only way it can be misplaced if added without parents
                     // there are a few systems with repeated names which trigger this, hence just a trace (Amitrite for instance)
-                    if (body == null && FindCanonicalBodyNameType(sc.BodyName, sc.BodyType) != null) global::System.Diagnostics.Trace.WriteLine($"**** StarScan s/p {sc.BodyName} {sc.BodyType} Found but not with PlacedWithoutParent");
+                    if (body == null && FindCanonicalBodyNameType(sc.BodyName, sc.BodyType) != null) global::System.Diagnostics.Trace.WriteLine($"StarScan s/p {sc.BodyName} {sc.BodyType} Found but not with PlacedWithoutParent");
                 }
             }
 
@@ -314,7 +314,7 @@ namespace EliteDangerousCore.StarScan2
                     $"  StarScan Add ns/p Lookup Misplaced body {sc.BodyName}:{sc.BodyType} Matched `{body?.CanonicalName}`".DO(debugid);
 
                     // double check we would not have found it by name without PlacedwithoutParent flag - shows up a bug, as the only way it can be misplaced if added without parents
-                    if (body == null && FindCanonicalBodyNameType(sc.BodyName, sc.BodyType) != null) global::System.Diagnostics.Trace.WriteLine($"**** StarScan ns/p {sc.BodyName} {sc.BodyType} Found but not with PlacedWithoutParent");
+                    if (body == null && FindCanonicalBodyNameType(sc.BodyName, sc.BodyType) != null) global::System.Diagnostics.Trace.WriteLine($"StarScan ns/p {sc.BodyName} {sc.BodyType} Found but not with PlacedWithoutParent");
                 }
             }
 
