@@ -24,7 +24,7 @@ namespace EliteDangerousCore.Bindings
     {
         // Read the Frontier devicemappings and turn to JSON
 
-        public static JArray ReadFrontierDeviceBindingFile(string exepath)
+        public static JArray ReadFrontierDeviceMappingFile(string exepath)
         {
             var list = Directory.EnumerateFiles(Path.GetDirectoryName(exepath), "DeviceMappings.xml", SearchOption.AllDirectories).FirstOrDefault();
 
