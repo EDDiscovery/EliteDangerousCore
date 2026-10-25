@@ -12,472 +12,109 @@
  * governing permissions and limitations under the License.
  */
 
+using QuickJSON;
 using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace EliteDangerousCore.Bindings
 {
-    public class FrontierDeviceNames 
+    public class FrontierDeviceMapping 
     {
-        // best match of device name from Devices to a device given by name/guid,usb ids
+        // Read the Frontier devicemappings and turn to JSON
 
-        public static string Find(string name, Guid instanceguid, Guid productguid, int productid, int vendorid, List<string> frontierdeviceslist)
+        public static JArray ReadFrontierDeviceBindingFile(string exepath)
         {
-            string bestmatch = null;
-            int besttotal = 0;
+            var list = Directory.EnumerateFiles(Path.GetDirectoryName(exepath), "DeviceMappings.xml", SearchOption.AllDirectories).FirstOrDefault();
 
-            // try the frontier device naming table
-            string frontiername = usbvendorproductidtofrontier.ContainsKey(new Tuple<int, int>(productid, vendorid)) ? usbvendorproductidtofrontier[new Tuple<int, int>(productid, vendorid)] : null;
-
-            foreach (string dv in frontierdeviceslist)
+            if ( list!=null)
             {
-                if (dv.Equals(name, StringComparison.InvariantCultureIgnoreCase))      // exact match
-                    return dv;
-
-                if (frontiername != null && dv.Equals(frontiername, StringComparison.InvariantCultureIgnoreCase))
-                    return dv;
-
-                if (dv.Equals(GuidExtract(instanceguid, false), StringComparison.InvariantCultureIgnoreCase))
-                    return dv;
-                if (dv.Equals(GuidExtract(instanceguid, true), StringComparison.InvariantCultureIgnoreCase))
-                    return dv;
-                if (dv.Equals(GuidExtract(productguid, false), StringComparison.InvariantCultureIgnoreCase))
-                    return dv;
-                if (dv.Equals(GuidExtract(productguid, true), StringComparison.InvariantCultureIgnoreCase))
-                    return dv;
-
-                int total = dv.SplitCapsWord().ToLowerInvariant().ApproxMatch(name.ToLowerInvariant(), 4);
-                if (total > besttotal)
+                try
                 {
-                    besttotal = total;
-                    bestmatch = dv;
+                    JArray retlist = new JArray();
+
+                    XElement bindings = XElement.Load(list);
+
+                    foreach (XElement rootelement in bindings.Elements())
+                    {
+                        string devicename = rootelement.Name.ToString();
+                        
+                        {
+                            var pidt = rootelement.Elements().Where(x => x.Name == "PID").Select(x => x.Value).FirstOrDefault();
+                            var vidt = rootelement.Elements().Where(x => x.Name == "VID").Select(x => x.Value).FirstOrDefault();
+                            if (pidt != null && vidt != null)
+                            {
+                                var pid = Convert.ToInt32(pidt, 16);
+                                var vid = Convert.ToInt32(vidt, 16);
+                               // System.Diagnostics.Debug.WriteLine($"  {devicename} {pid:X} {vid:X}");
+                                JArray je = new JArray() { devicename, vid, pid };
+                                retlist.Add(je);
+                            }
+                        }
+
+                        foreach (XElement subelement in rootelement.Elements().Where(x=>x.Name=="Alternative").EmptyIfNull())
+                        {
+                            {
+                                var pidt = subelement.Elements().Where(x => x.Name == "PID").Select(x => x.Value).FirstOrDefault();
+                                var vidt = subelement.Elements().Where(x => x.Name == "VID").Select(x => x.Value).FirstOrDefault();
+                                if (pidt != null && vidt != null)
+                                {
+                                    var pid = Convert.ToInt32(pidt, 16);
+                                    var vid = Convert.ToInt32(vidt, 16);
+                                 //   System.Diagnostics.Debug.WriteLine($"  {devicename} {pid:X} {vid:X}");
+                                    JArray je = new JArray() { devicename, vid, pid };
+                                    retlist.Add(je);
+                                }
+                            }
+                        }
+                    }
+                    //System.Diagnostics.Debug.WriteLine($"JSON {retlist.ToString(true)}");
+
+                    return retlist;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Exception reading DeviceMappings {ex}");
                 }
             }
-
-            if (bestmatch != null)
-                return bestmatch;
 
             return null;
         }
 
-        // The frontier table, what is its name if its there, or null
-        public static string DeviceName(int productid, int vendorid)
-        {
-            return usbvendorproductidtofrontier.TryGetValue(Tuple.Create(productid, vendorid), out string name) ? name : null;
-        }
+        // global list of Device Mapping
 
-        private static string GuidExtract(Guid g, bool rev)
-        {
-            string s = g.ToString();
-            int slash = s.IndexOf('-');
-            if (slash >= 0)
-                s = s.Substring(0, slash);
+        public static JArray DeviceMappingToPIDVID { get; set; } = new JArray();
 
-            if (rev && s.Length == 8)
+        // given a device mapping JSON array of [ devicename, pid, vid] return devicename vs pid/vid
+        public static string FindPIDVID(int pid, int vid)
+        {
+            foreach (JArray x in DeviceMappingToPIDVID.EmptyIfNull())
             {
-                s = s.Substring(4, 4) + s.Substring(0, 4);
+                if (x[1].Int() == vid && x[2].Int() == pid)
+                    return x[0].Str();
             }
-
-            return s;
+            return null;
         }
 
-        // From frontier DeviceMapping.xml table using EDDTest devicemappings import, 8/4/22
-        private static Dictionary<Tuple<int, int>, string> usbvendorproductidtofrontier = new Dictionary<Tuple<int, int>, string>()
+        // given a device mapping JSON array of [ devicename, pid, vid] merge new into master
+        public static int MergeMappings(JArray masterjsondevicemap, JArray newdevicemap)
         {
-        {  new Tuple<int,int>(0x28E, 0x45E), "GamePad" },
-        {  new Tuple<int,int>(0x28F, 0x45E), "GamePad" },
-        {  new Tuple<int,int>(0x2FF, 0x45E), "GamePad" },
-        {  new Tuple<int,int>(0x5D04, 0x24C6), "GamePad" },
-        {  new Tuple<int,int>(0x2A1, 0x45E), "GamePad" },
-        {  new Tuple<int,int>(0x4716, 0x738), "GamePad" },
-        {  new Tuple<int,int>(0x213, 0xE6F), "GamePad" },
-        {  new Tuple<int,int>(0x291, 0x45E), "GamePad" },
-        {  new Tuple<int,int>(0x719, 0x45E), "GamePad" },
-        {  new Tuple<int,int>(0xF07, 0x44F), "GamePad" },
-        {  new Tuple<int,int>(0xB326, 0x44F), "GamePad" },
-        {  new Tuple<int,int>(0xC21D, 0x46D), "GamePad" },
-        {  new Tuple<int,int>(0xC21E, 0x46D), "GamePad" },
-        {  new Tuple<int,int>(0xC21F, 0x46D), "GamePad" },
-        {  new Tuple<int,int>(0xC242, 0x46D), "GamePad" },
-        {  new Tuple<int,int>(0xCA84, 0x46D), "GamePad" },
-        {  new Tuple<int,int>(0x4540, 0x738), "GamePad" },
-        {  new Tuple<int,int>(0x4556, 0x738), "GamePad" },
-        {  new Tuple<int,int>(0x4718, 0x738), "GamePad" },
-        {  new Tuple<int,int>(0x4726, 0x738), "GamePad" },
-        {  new Tuple<int,int>(0x4728, 0x738), "GamePad" },
-        {  new Tuple<int,int>(0x4738, 0x738), "GamePad" },
-        {  new Tuple<int,int>(0x4740, 0x738), "GamePad" },
-        {  new Tuple<int,int>(0x6040, 0x738), "GamePad" },
-        {  new Tuple<int,int>(0xB726, 0x738), "GamePad" },
-        {  new Tuple<int,int>(0xBEEF, 0x738), "GamePad" },
-        {  new Tuple<int,int>(0xCB02, 0x738), "GamePad" },
-        {  new Tuple<int,int>(0xCB03, 0x738), "GamePad" },
-        {  new Tuple<int,int>(0xF738, 0x738), "GamePad" },
-        {  new Tuple<int,int>(0x8802, 0xC12), "GamePad" },
-        {  new Tuple<int,int>(0x8809, 0xC12), "GamePad" },
-        {  new Tuple<int,int>(0x880A, 0xC12), "GamePad" },
-        {  new Tuple<int,int>(0x5, 0xE6F), "GamePad" },
-        {  new Tuple<int,int>(0x6, 0xE6F), "GamePad" },
-        {  new Tuple<int,int>(0x105, 0xE6F), "GamePad" },
-        {  new Tuple<int,int>(0x113, 0xE6F), "GamePad" },
-        {  new Tuple<int,int>(0x201, 0xE6F), "GamePad" },
-        {  new Tuple<int,int>(0x21F, 0xE6F), "GamePad" },
-        {  new Tuple<int,int>(0x301, 0xE6F), "GamePad" },
-        {  new Tuple<int,int>(0x401, 0xE6F), "GamePad" },
-        {  new Tuple<int,int>(0x201, 0xE8F), "GamePad" },
-        {  new Tuple<int,int>(0x3008, 0xE8F), "GamePad" },
-        {  new Tuple<int,int>(0xA, 0xF0D), "GamePad" },
-        {  new Tuple<int,int>(0xD, 0xF0D), "GamePad" },
-        {  new Tuple<int,int>(0x16, 0xF0D), "GamePad" },
-        {  new Tuple<int,int>(0x202, 0xF30), "GamePad" },
-        {  new Tuple<int,int>(0x8888, 0xF30), "GamePad" },
-        {  new Tuple<int,int>(0xFF0C, 0x102C), "GamePad" },
-        {  new Tuple<int,int>(0x4, 0x12AB), "GamePad" },
-        {  new Tuple<int,int>(0x301, 0x12AB), "GamePad" },
-        {  new Tuple<int,int>(0x8809, 0x12AB), "GamePad" },
-        {  new Tuple<int,int>(0x4748, 0x1430), "GamePad" },
-        {  new Tuple<int,int>(0x8888, 0x1430), "GamePad" },
-        {  new Tuple<int,int>(0x601, 0x146B), "GamePad" },
-        {  new Tuple<int,int>(0x37, 0x1532), "GamePad" },
-        {  new Tuple<int,int>(0x3F00, 0x15E4), "GamePad" },
-        {  new Tuple<int,int>(0x3F0A, 0x15E4), "GamePad" },
-        {  new Tuple<int,int>(0x3F10, 0x15E4), "GamePad" },
-        {  new Tuple<int,int>(0xBEEF, 0x162E), "GamePad" },
-        {  new Tuple<int,int>(0xFD00, 0x1689), "GamePad" },
-        {  new Tuple<int,int>(0xFD01, 0x1689), "GamePad" },
-        {  new Tuple<int,int>(0x2, 0x1BAD), "GamePad" },
-        {  new Tuple<int,int>(0x3, 0x1BAD), "GamePad" },
-        {  new Tuple<int,int>(0xF016, 0x1BAD), "GamePad" },
-        {  new Tuple<int,int>(0xF023, 0x1BAD), "GamePad" },
-        {  new Tuple<int,int>(0xF028, 0x1BAD), "GamePad" },
-        {  new Tuple<int,int>(0xF038, 0x1BAD), "GamePad" },
-        {  new Tuple<int,int>(0xF900, 0x1BAD), "GamePad" },
-        {  new Tuple<int,int>(0xF901, 0x1BAD), "GamePad" },
-        {  new Tuple<int,int>(0xF903, 0x1BAD), "GamePad" },
-        {  new Tuple<int,int>(0x5000, 0x24C6), "GamePad" },
-        {  new Tuple<int,int>(0x5300, 0x24C6), "GamePad" },
-        {  new Tuple<int,int>(0x5303, 0x24C6), "GamePad" },
-        {  new Tuple<int,int>(0x5500, 0x24C6), "GamePad" },
-        {  new Tuple<int,int>(0x5501, 0x24C6), "GamePad" },
-        {  new Tuple<int,int>(0x5506, 0x24C6), "GamePad" },
-        {  new Tuple<int,int>(0x5B02, 0x24C6), "GamePad" },
-        {  new Tuple<int,int>(0x2D1, 0x45E), "GamePad" },
-        {  new Tuple<int,int>(0x317, 0x7B5), "BlackWidow" },
-        {  new Tuple<int,int>(0xC28, 0x6A3), "SaitekAV8R03" },
-        {  new Tuple<int,int>(0x461, 0x6A3), "SaitekAV8R03" },
-        {  new Tuple<int,int>(0x2215, 0x738), "SaitekX55Joystick" },
-        {  new Tuple<int,int>(0x2221, 0x738), "SaitekX56Joystick" },
-        {  new Tuple<int,int>(0xA215, 0x738), "SaitekX55Throttle" },
-        {  new Tuple<int,int>(0xA221, 0x738), "SaitekX56Throttle" },
-        {  new Tuple<int,int>(0x762, 0x6A3), "SaitekX52Pro" },
-        {  new Tuple<int,int>(0x75C, 0x6A3), "SaitekX52" },
-        {  new Tuple<int,int>(0x255, 0x6A3), "SaitekX52" },
-        {  new Tuple<int,int>(0xC2AA, 0x46D), "LogitechG940Pedals" },
-        {  new Tuple<int,int>(0xC2A8, 0x46D), "LogitechG940Joystick" },
-        {  new Tuple<int,int>(0xC2A9, 0x46D), "LogitechG940Throttle" },
-        {  new Tuple<int,int>(0x402, 0x44F), "ThrustMasterWarthogJoystick" },
-        {  new Tuple<int,int>(0x404, 0x44F), "ThrustMasterWarthogThrottle" },
-        {  new Tuple<int,int>(0xFFFF, 0x44F), "ThrustMasterWarthogCombined" },
-        {  new Tuple<int,int>(0x1302, 0x738), "SaitekFLY5" },
-        {  new Tuple<int,int>(0xB108, 0x44F), "ThrustMasterTFlightHOTASX" },
-        {  new Tuple<int,int>(0xB67C, 0x44F), "ThrustMasterHOTAS4" },
-        {  new Tuple<int,int>(0xB67B, 0x44F), "ThrustMasterHOTAS4" },
-        {  new Tuple<int,int>(0xB68D, 0x44F), "TFlightHotasOne" },
-        {  new Tuple<int,int>(0xB10A, 0x44F), "T16000M" },
-        {  new Tuple<int,int>(0xB687, 0x44F), "T16000MTHROTTLE" },
-        {  new Tuple<int,int>(0xB679, 0x44F), "T-Rudder" },
-        //{  new Tuple<int,int>(0xFFFF, 0x44F), "TMwTARGET" },  // removed duplicate
-        {  new Tuple<int,int>(0xC215, 0x46D), "LogitechExtreme3DPro" },
-        {  new Tuple<int,int>(0xC121, 0x25F0), "GioteckPS3WiredController" },
-        {  new Tuple<int,int>(0x53C, 0x6A3), "SaitekX45" },
-        {  new Tuple<int,int>(0x8037, 0x2341), "EDTracker" },
-        {  new Tuple<int,int>(0xC219, 0x46D), "Logitech710WirelessGamepad" },
-        {  new Tuple<int,int>(0xC285, 0x46D), "LogitechWingManStrikeForce3D" },
-        {  new Tuple<int,int>(0x5F0D, 0x6A3), "SaitekP2600RumbleForce" },
-        {  new Tuple<int,int>(0xFF0C, 0x6A3), "SaitekP2500RumbleForce" },
-        {  new Tuple<int,int>(0x353E, 0x6A3), "SaitekCyborgEvoWireless" },
-        {  new Tuple<int,int>(0x764, 0x6A3), "SaitekProFlightCombatRudderPedals" },
-        {  new Tuple<int,int>(0x763, 0x6A3), "SaitekProFlightRudderPedals" },
-        {  new Tuple<int,int>(0xBEAD, 0x1234), "vJoy" },
-        {  new Tuple<int,int>(0xF1, 0x68E), "CHProThrottle1" },
-        {  new Tuple<int,int>(0xC0F1, 0x68E), "CHProThrottle2" },
-        {  new Tuple<int,int>(0xF3, 0x68E), "CHFighterStick" },
-        {  new Tuple<int,int>(0xC0F2, 0x68E), "CHProPedals" },
-        {  new Tuple<int,int>(0xC0F4, 0x68E), "CHCombatStick" },
-        {  new Tuple<int,int>(0xF4, 0x68E), "CHCombatStick" },
-        {  new Tuple<int,int>(0x3, 0xE8F), "TrustPredator" },
-        {  new Tuple<int,int>(0x268, 0x54C), "Playstation3Controller" },
-        {  new Tuple<int,int>(0x460, 0x6A3), "SaitekST290Pro" },
-        {  new Tuple<int,int>(0x3001, 0x47D), "XterminatorDualControl" },
-        {  new Tuple<int,int>(0x1B, 0x45E), "SideWinderForceFeedback2" },
-        {  new Tuple<int,int>(0x8036, 0x2341), "ArduinoLeonardo" },
-        {  new Tuple<int,int>(0x11, 0x4D8), "SlawFlightControlRudder" },
-        {  new Tuple<int,int>(0x211, 0x2833), "OculusTouch" },
-        {  new Tuple<int,int>(0xBA0, 0x54C), "DualShock4" },
-        {  new Tuple<int,int>(0x5C4, 0x54C), "DualShock4" },
-        {  new Tuple<int,int>(0x9CC, 0x54C), "DualShock4" },
+            int merges = 0;
+            foreach (JArray nw in newdevicemap.EmptyIfNull())
+            {
+                string name = nw[0].Str();
+                int vid = nw[1].Int();
+                int pid = nw[2].Int();
 
-        };
-
-
-        public static string[] BindingIconNames = new string[] 
-        {   "None",
-            "[x360PadU]",
-            "[x360PadD]",
-            "[x360PadL]",
-            "[x360PadR]",
-            "[x360Start]",
-            "[x360Back]",
-            "[x360A]",
-            "[x360B]",
-            "[x360X]",
-            "[x360Y]",
-            "[x360LBump]",
-            "[x360RBump]",
-            "[x360LTrig]",
-            "[x360RTrig]",
-            "[x360LThumb]",
-            "[x360RThumb]",
-            "[x360LXAxis]",
-            "[x360LXAxis+]",
-            "[x360LXAxis-]",
-            "[x360LYAxis]",
-            "[x360LYAxis+]",
-            "[x360LYAxis-]",
-            "[x360RXAxis]",
-            "[x360RXAxis+]",
-            "[x360RXAxis-]",
-            "[x360RYAxis]",
-            "[x360RYAxis+]",
-            "[x360RYAxis-]",
-            "[xb1PadU]",
-            "[xb1PadD]",
-            "[xb1PadL]",
-            "[xb1PadR]",
-            "[xb1Start]",
-            "[xb1Back]",
-            "[xb1A]",
-            "[xb1B]",
-            "[xb1X]",
-            "[xb1Y]",
-            "[xb1LBump]",
-            "[xb1RBump]",
-            "[xb1LTrig]",
-            "[xb1RTrig]",
-            "[xb1LThumb]",
-            "[xb1RThumb]",
-            "[xb1LXAxis]",
-            "[xb1LXAxis+]",
-            "[xb1LXAxis-]",
-            "[xb1LYAxis]",
-            "[xb1LYAxis+]",
-            "[xb1LYAxis-]",
-            "[xb1RXAxis]",
-            "[xb1RXAxis+]",
-            "[xb1RXAxis-]",
-            "[xb1RYAxis]",
-            "[xb1RYAxis+]",
-            "[xb1RYAxis-]",
-            "[x52b27]",
-            "[x52b28]",
-            "[x52b29]",
-            "[x52p1u]",
-            "[x52p1r]",
-            "[x52p1d]",
-            "[x52p1l]",
-            "[x52b9]",
-            "[x52b10]",
-            "[x52b11]",
-            "[x52b12]",
-            "[x52b13]",
-            "[x52b14]",
-            "[x52b16]",
-            "[x52b17]",
-            "[x52b18]",
-            "[x52b19]",
-            "[x52b20]",
-            "[x52b21]",
-            "[x52b22]",
-            "[x52b23]",
-            "[x52b3]",
-            "[x52b4]",
-            "[x52b5]",
-            "[x52b7]",
-            "[x52b8]",
-            "[x52b30]",
-            "[x52rx]",
-            "[x52rx+]",
-            "[x52rx-]",
-            "[x52ry]",
-            "[x52ry+]",
-            "[x52ry-]",
-            "[x52x]",
-            "[x52x+]",
-            "[x52x-]",
-            "[x52y]",
-            "[x52y+]",
-            "[x52y-]",
-            "[x52rz]",
-            "[x52rz+]",
-            "[x52rz-]",
-            "[x52b1]",
-            "[x52b6]",
-            "[x52b2]",
-            "[x52u]",
-            "[x52u+]",
-            "[x52u-]",
-            "[x52z]",
-            "[x52z+]",
-            "[x52z-]",
-            "[x52prob32]",
-            "[x52prop1u]",
-            "[x52prop1r]",
-            "[x52prop1d]",
-            "[x52prop1l]",
-            "[x52prob9]",
-            "[x52prob10]",
-            "[x52prob11]",
-            "[x52prob12]",
-            "[x52prob13]",
-            "[x52prob14]",
-            "[x52prob20]",
-            "[x52prob21]",
-            "[x52prob22]",
-            "[x52prob23]",
-            "[x52prob24]",
-            "[x52prob25]",
-            "[x52prob26]",
-            "[x52prob27]",
-            "[x52prob3]",
-            "[x52prob4]",
-            "[x52prob5]",
-            "[x52prob7]",
-            "[x52prob8]",
-            "[x52prob31]",
-            "[x52prorx]",
-            "[x52prorx+]",
-            "[x52prorx-]",
-            "[x52prory]",
-            "[x52prory+]",
-            "[x52prory-]",
-            "[x52prox]",
-            "[x52prox+]",
-            "[x52prox-]",
-            "[x52proy]",
-            "[x52proy+]",
-            "[x52proy-]",
-            "[x52prorz]",
-            "[x52prorz+]",
-            "[x52prorz-]",
-            "[x52prob1]",
-            "[x52prob15]",
-            "[x52prob6]",
-            "[x52prob2]",
-            "[x52prou]",
-            "[x52prou+]",
-            "[x52prou-]",
-            "[x52proz]",
-            "[x52proz+]",
-            "[x52proz-]",
-            "[x52prob19]",
-            "[ps4Triangle]",
-            "[ps4Square]",
-            "[ps4Cross]",
-            "[ps4Circle]",
-            "[ps4Touchpad]",
-            "[ps4TouchpadNE]",
-            "[ps4TouchpadSE]",
-            "[ps4TouchpadSW]",
-            "[ps4TouchpadNW]",
-            "[ps4Options]",
-            "[ps4Share]",
-            "[ps4RYAxis]",
-            "[ps4RXAxis]",
-            "[ps4RThumb]",
-            "[ps4RThumbU]",
-            "[ps4RThumbR]",
-            "[ps4RThumbL]",
-            "[ps4RThumbD]",
-            "[ps4LYAxis]",
-            "[ps4LXAxis]",
-            "[ps4LThumb]",
-            "[ps4LThumbU]",
-            "[ps4LThumbR]",
-            "[ps4LThumbL]",
-            "[ps4LThumbD]",
-            "[ps4R1]",
-            "[ps4R2]",
-            "[ps4R3]",
-            "[ps4L1]",
-            "[ps4L2]",
-            "[ps4L3]",
-            "[ps4PadU]",
-            "[ps4PadR]",
-            "[ps4PadL]",
-            "[ps4PadD]",
-            "[hts4Triangle]",
-            "[hts4Square]",
-            "[hts4Circle]",
-            "[hts4Cross]",
-            "[hts4HatSwitch]",
-            "[hts4Options]",
-            "[hts4Share]",
-            "[hts4PS]",
-            "[hts4JoyD]",
-            "[hts4JoyL]",
-            "[hts4JoyR]",
-            "[hts4JoyU]",
-            "[hts4JoyX]",
-            "[hts4JoyY]",
-            "[hts4JoyYawL]",
-            "[hts4JoyYawR]",
-            "[hts4JoyYawX]",
-            "[hts4R1]",
-            "[hts4R2]",
-            "[hts4R3]",
-            "[hts4L1]",
-            "[hts4L2]",
-            "[hts4L3]",
-            "[hts4ThrottleU]",
-            "[hts4ThrottleD]",
-            "[hts4ThrottleY]",
-            "[hts4RudderX]",
-            "[hts4RudderL]",
-            "[hts4RudderR]",
-            "[xb1htsF1]",
-            "[xb1htsF2]",
-            "[xb1htsB1]",
-            "[xb1htsB2]",
-            "[xb1htsB3]",
-            "[xb1htsB4]",
-            "[xb1htsB5]",
-            "[xb1htsPOVUp]",
-            "[xb1htsPOVDown]",
-            "[xb1htsPOVLeft]",
-            "[xb1htsPOVRght]",
-            "[xb1htsStart]",
-            "[xb1htsBack]",
-            "[xb1htsA]",
-            "[xb1htsB]",
-            "[xb1htsX]",
-            "[xb1htsY]",
-            "[xb1htsPrev]",
-            "[xb1htsNext]",
-            "[xb1htsJoyXAx]",
-            "[xb1htsJoyXAx+]",
-            "[xb1htsJoyXAx-]",
-            "[xb1htsJoyYAx]",
-            "[xb1htsJoyYAx+]",
-            "[xb1htsJoyYAx-]",
-            "[xb1htsJoyYawX]",
-            "[xb1htsJoyYawL]",
-            "[xb1htsJoyYawR]",
-            "[xb1htsThr]",
-            "[xb1htsThr+]",
-            "[xb1htsThr-]",
-            "[xb1htsRudAx]",
-            "[xb1htsRudAx+]",
-            "[xb1htsRudAx-]",
-        };
+                var found = masterjsondevicemap.Find(x => x[0].Str() == name && x[1].Int() == vid && x[2].Int() == pid);        // must all be there otherwise a new mapping set
+                if (found == null)
+                {
+                    masterjsondevicemap.Add(nw);
+                    merges++;
+                }
+            }
+            return merges;
+        }
     }
 }

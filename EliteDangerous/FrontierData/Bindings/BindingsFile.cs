@@ -14,6 +14,7 @@
 
 using BaseUtils;
 using BaseUtils.Win32;
+using QuickJSON;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -406,11 +407,59 @@ namespace EliteDangerousCore.Bindings
             return false;
         }
 
-
         // return the frontier name associated with this physical device
         public string GetDeviceName(string physicalname, Guid instanceguid, Guid productguid, int productid, int vendorid)
         {
-            return FrontierDeviceNames.Find(physicalname, instanceguid, productguid, productid, vendorid, DeviceList.Select(x => x.FrontierName).ToList());
+            string bestmatch = null;
+            int besttotal = 0;
+
+            // try the frontier device naming table
+            string frontiername = FrontierDeviceMapping.FindPIDVID(productid, vendorid);
+
+            foreach (string dv in DeviceList.Select(x => x.FrontierName))
+            {
+                if (dv.Equals(physicalname, StringComparison.InvariantCultureIgnoreCase))      // exact match
+                    return dv;
+
+                if (frontiername != null && dv.Equals(frontiername, StringComparison.InvariantCultureIgnoreCase))
+                    return dv;
+
+                if (dv.Equals(GuidExtract(instanceguid, false), StringComparison.InvariantCultureIgnoreCase))
+                    return dv;
+                if (dv.Equals(GuidExtract(instanceguid, true), StringComparison.InvariantCultureIgnoreCase))
+                    return dv;
+                if (dv.Equals(GuidExtract(productguid, false), StringComparison.InvariantCultureIgnoreCase))
+                    return dv;
+                if (dv.Equals(GuidExtract(productguid, true), StringComparison.InvariantCultureIgnoreCase))
+                    return dv;
+
+                int total = dv.SplitCapsWord().ToLowerInvariant().ApproxMatch(physicalname.ToLowerInvariant(), 4);
+                if (total > besttotal)
+                {
+                    besttotal = total;
+                    bestmatch = dv;
+                }
+            }
+
+            if (bestmatch != null)
+                return bestmatch;
+
+            return null;
+        }
+
+        private static string GuidExtract(Guid g, bool rev)
+        {
+            string s = g.ToString();
+            int slash = s.IndexOf('-');
+            if (slash >= 0)
+                s = s.Substring(0, slash);
+
+            if (rev && s.Length == 8)
+            {
+                s = s.Substring(4, 4) + s.Substring(0, 4);
+            }
+
+            return s;
         }
 
         // used to report on entry and key set associated with a found device/keyname
