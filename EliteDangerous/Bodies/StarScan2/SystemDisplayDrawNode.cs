@@ -132,6 +132,7 @@ namespace EliteDangerousCore.StarScan2
                 bool valuable = false, isdiscovered = false, terraformable = false, volcanism = false, mapped = false, previouslymapped = false, materialsicon = false, 
                                         hasatmosphere = false, landable = false;
                 int ringcount = 0;
+                bool ringshavesignals = ShowOverlays && bn.HasSignalsOnRingsOrBelts();
                 Image nodeimage = BodyDefinitions.GetImageNotScanned();
 
                 StringBuilder tooltip = new StringBuilder(1024);
@@ -235,6 +236,7 @@ namespace EliteDangerousCore.StarScan2
                             }
                         }
                     }
+
                 }       // end scan
                 else
                 {
@@ -283,32 +285,33 @@ namespace EliteDangerousCore.StarScan2
                     tooltip.AppendCR();
                 }
 
-                int numiconoverlays = ShowOverlays ? (terraformable ? 1 : 0) + (volcanism ? 1 : 0) +
+                int numlefticons = ShowOverlays ? (terraformable ? 1 : 0) + (volcanism ? 1 : 0) +
                                     (valuable ? 1 : 0) + (mapped ? 1 : 0) + (isdiscovered ? 1 : 0) + (previouslymapped ? 1 : 0) +
-                                    (bn.Signals != null ? 1 : 0) + (bn.Organics != null ? 1 : 0) + (bn.CodexEntries != null ? 1 : 0) : 0;
+                                    (bn.Signals!=null? 1:0) + (bn.Organics != null ? 1 : 0) + (bn.CodexEntries != null ? 1 : 0)
+                                    : 0;
 
                 int bitmapheight = size.Height * nodeheightratio / noderatiodivider;        // what height it is in units of noderatiodivider
 
                 // work out the width multipler dependent on what we draw
-                int imagewidthmultiplier16th = ringcount>0 ? 31 : materialsicon || landable ? 20 : 16;
+                int imagewidthmultiplier16th = ringcount>0 ? 31 : materialsicon || landable || ringshavesignals ? 20 : 16;
                 // area used by image+optional overlay for planet image
                 int imagewidtharea = imagewidthmultiplier16th * size.Width / 16;
 
                 // this is the minimum divider for icon area to give width of icon based on height
                 const int minicondivider = 4;
                 // this divider is a max of number of icons and min divider
-                int iconsizedivider = Math.Max(numiconoverlays, minicondivider);
+                int iconsizedivider = Math.Max(numlefticons, minicondivider);
                 // space between icons if wanted
                 const int iconvspacing = 0;
                 // get icon size, bitmap height minus iconvspacing parts / divider.. (ie. 125 with 6 icons = 125-(6-1)*1 = 120 / 6 = 20
-                int iconsize = (bitmapheight - iconvspacing * (numiconoverlays - 1)) / iconsizedivider;
+                int iconsize = (bitmapheight - iconvspacing * (numlefticons - 1)) / iconsizedivider;
                 // actual area width, which is only set to iconsize if we have icons
-                int iconwidtharea = numiconoverlays > 0 ? iconsize : 0;
+                int lefticonwidth = numlefticons > 0 ? iconsize : 0;
 
                 //System.Diagnostics.Debug.WriteLine($"..DrawNode {sn.OwnName} imagewidtharea {imagewidtharea} iconsize {iconsize} total {imagewidtharea+iconsize}");
 
                 // total width, of icon and image area
-                int bitmapwidth = iconwidtharea + imagewidtharea;
+                int bitmapwidth = lefticonwidth + imagewidtharea;
 
                 Bitmap bmp = new Bitmap(bitmapwidth, bitmapheight);
 
@@ -322,7 +325,7 @@ namespace EliteDangerousCore.StarScan2
                         }
                     }
 
-                    int imageleft = iconwidtharea + imagewidtharea / 2 - size.Width / 2;  // calculate where the left of the image is 
+                    int imageleft = lefticonwidth + imagewidtharea / 2 - size.Width / 2;  // calculate where the left of the image is 
                     int imagetop = bitmapheight / 2 - size.Height / 2;                  // and the top
 
                     if ( hasatmosphere) // show a atmosphere..
@@ -360,7 +363,7 @@ namespace EliteDangerousCore.StarScan2
                         }
                     }
 
-                    if (numiconoverlays > 0)
+                    if (numlefticons > 0)
                     {
                         int vpos = 0;
 
@@ -403,12 +406,12 @@ namespace EliteDangerousCore.StarScan2
                         if (bn.Signals != null)
                         {
                             //System.Diagnostics.Debug.WriteLine($"{bn.Name()} signals {bn.Signals.Count}");
-                            Image img = BodyDefinitions.GetImageSignals();
                             bool containsgeo = JournalSAASignalsFound.ContainsGeo(bn.Signals);
-                            if (JournalSAASignalsFound.ContainsBio(bn.Signals))
-                                img = containsgeo ? BodyDefinitions.GetImageGeoBioSignals() : BodyDefinitions.GetImageBioSignals();
-                            else if (containsgeo)
-                                img = BodyDefinitions.GetImageGeoSignals();
+                            bool containsbio = JournalSAASignalsFound.ContainsBio(bn.Signals);
+                            Image img = containsbio && containsgeo ? BodyDefinitions.GetImageGeoBioSignals() :
+                                        containsbio ? BodyDefinitions.GetImageBioSignals() : 
+                                        containsgeo ? BodyDefinitions.GetImageGeoSignals() :
+                                        BodyDefinitions.GetImageSignals();
 
                             g.DrawImageLocked(img, new Rectangle(0, vpos, iconsize, iconsize));
                             vpos += iconsize + iconvspacing;
@@ -426,12 +429,20 @@ namespace EliteDangerousCore.StarScan2
                             g.DrawImageLocked(BodyDefinitions.GetImageCodexEntry(), new Rectangle(0, vpos, iconsize, iconsize));
                             vpos += iconsize + iconvspacing;
                         }
+                    }
 
-                        if (materialsicon)
-                        {
-                            var mm = BodyDefinitions.GetImageMoreMaterials();
-                            g.DrawImageLocked(mm, new Rectangle(bmp.Width - mm.Width, bmp.Height - mm.Height, mm.Width, mm.Height));
-                        }
+                    // right aligned
+
+                    if (materialsicon)
+                    {
+                        var mm = BodyDefinitions.GetImageMoreMaterials();
+                        g.DrawImageLocked(mm, new Rectangle(bmp.Width - mm.Width, bmp.Height - mm.Height, mm.Width, mm.Height));
+                    }
+
+                    if (ringshavesignals)
+                    {
+                        var bis = BodyDefinitions.GetImageSignals();
+                        g.DrawImageLocked(bis, new Rectangle(bmp.Width - bis.Width, 0, iconsize, iconsize));
                     }
 
                     if (imageoverlaytext.HasChars())
@@ -443,7 +454,7 @@ namespace EliteDangerousCore.StarScan2
                         {
                             using (Brush b = new SolidBrush(text))
                             {
-                                g.DrawString(imageoverlaytext, f, b, new Rectangle(iconwidtharea, 0, bitmapwidth - iconwidtharea, bitmapheight), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+                                g.DrawString(imageoverlaytext, f, b, new Rectangle(lefticonwidth, 0, bitmapwidth - lefticonwidth, bitmapheight), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
                             }
                         }
                     }

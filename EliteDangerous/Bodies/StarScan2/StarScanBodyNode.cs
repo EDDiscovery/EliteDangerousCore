@@ -59,8 +59,8 @@ namespace EliteDangerousCore.StarScan2
         public bool IsStarOrPlanet { get { return BodyType == BodyDefinitions.BodyType.Star || BodyType == BodyDefinitions.BodyType.Planet; } }
         public bool IsPlanetOrMoon { get { return BodyType == BodyDefinitions.BodyType.Planet; } }
         public bool IsBarycentre { get { return BodyType == BodyDefinitions.BodyType.Barycentre; } }
+        public bool IsRingOrBelt { get { return BodyType == BodyDefinitions.BodyType.PlanetaryRing || BodyType == BodyDefinitions.BodyType.StellarRing; } }
         public bool IsBodyOrbitingStar { get { return BodyType == BodyDefinitions.BodyType.Planet || BodyType == BodyDefinitions.BodyType.StellarRing || BodyType == BodyDefinitions.BodyType.SmallBody; } }
-
         public bool WebCreatedNode { get { return Scan?.DataSource == SystemSource.FromEDSM || Scan?.DataSource == SystemSource.FromSpansh; } }
 
         // list of child bodies, sorted
@@ -249,6 +249,16 @@ namespace EliteDangerousCore.StarScan2
         public int SurfaceFeatureListSettlementsCount(bool showwebbodies)
         {
             return Features?.Count(x => (x is JournalApproachSettlement || x is JournalDocked) && (x.DataSource == SystemSource.FromJournal || showwebbodies)) ?? 0;
+        }
+
+        public bool HasSignalsOnRingsOrBelts()
+        {
+            foreach(var x in ChildBodies)
+            {
+                if (x.IsRingOrBelt && x.Signals?.Count > 0)
+                    return true;
+            }
+            return false;
         }
 
         public long ScanValue(bool includewebvalue)
@@ -893,7 +903,7 @@ namespace EliteDangerousCore.StarScan2
             }
             foreach (var x in Features.EmptyIfNull())
             { 
-                sp.Append($"{pad}F:{x.BodyType} {x.FDStationType} `{x.Name_Localised ?? x.Name}` on `{x.BodyName}`:{x.BodyID}");
+                sp.Append($"{pad}F:{x.EventTypeStr} bt {x.BodyType} st {x.FDStationType} nm `{x.Name_Localised ?? x.Name}` on `{x.BodyName}`:{x.BodyID}");
                 sp.AppendCR();
             }
         }
