@@ -44,8 +44,11 @@ namespace EliteDangerousCore.EDSM
             var assemblyFullName = Assembly.GetEntryAssembly().FullName;
             fromSoftwareVersion = assemblyFullName.Split(',')[1].Split('=')[1];
 
-            apiKey = EDCommander.Current.EDSMAPIKey;
-            commanderName = string.IsNullOrEmpty(EDCommander.Current.EdsmName) ? EDCommander.Current.Name : EDCommander.Current.EdsmName;
+            if (EDCommander.Current != null)
+            {
+                apiKey = EDCommander.Current.EDSMAPIKey;
+                commanderName = string.IsNullOrEmpty(EDCommander.Current.EdsmName) ? EDCommander.Current.Name : EDCommander.Current.EdsmName;
+            }
         }
 
         public EDSMClass(EDCommander cmdr) : this()
@@ -803,7 +806,7 @@ namespace EliteDangerousCore.EDSM
 
         #region Body info
 
-        private JObject GetBodies(string sysName)       // Verified Nov 20, null if bad json
+        public JObject GetBodies(string sysName)       // Verified Nov 20, null if bad json
         {
             string encodedSys = HttpUtility.UrlEncode(sysName);
 
@@ -820,7 +823,7 @@ namespace EliteDangerousCore.EDSM
             return msg;
         }
 
-        private JObject GetBodiesByID64(SystemAddress id64)       // Verified Nov 20, null if bad json
+        public JObject GetBodiesByID64(SystemAddress id64)       // Verified Nov 20, null if bad json
         {
             string query = "bodies?systemId64=" + id64.ToString();
             var response = RequestGet("api-system-v1/" + query);

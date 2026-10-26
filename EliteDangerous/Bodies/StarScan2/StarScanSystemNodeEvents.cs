@@ -25,9 +25,9 @@ namespace EliteDangerousCore.StarScan2
         // Get or make a standard named body node Scheau Prao ME-M c22-21 A 1 a etc with a parents list
         // given a own name like "A 1 a" or "1 a" or "1" make nodes down the tree if they don't exist, return final node.
         // we never use this to make a top level star
-        public BodyNode GetOrMakeStandardBodyNodeFromScanWithParents(JournalScan sc, string subname, string systemname)
+        public BodyNode GetOrMakeStandardBodyWithParents(JournalScan sc, string subname, string systemname)
         {
-            global::System.Diagnostics.Debug.Assert(sc.BodyID == 0 || sc.Parents != null);
+            global::System.Diagnostics.Debug.Assert(sc.Parents?.Count > 0);       // we must have a parents array
 
             // we align the parents field and the subname parts together
 
@@ -206,14 +206,18 @@ namespace EliteDangerousCore.StarScan2
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Non standard name with Parents
-        public BodyNode GetOrMakeNonStandardBodyFromScanWithParents(JournalScan sc, string systemname)
+        // With Parents list (subbody)
+        // Or without Parents list (topbody BodyID=0 star)
+        public BodyNode GetOrMakeTopLevelOrSubLevelBodyWithParentsList(JournalScan sc, string systemname)
         {
             global::System.Diagnostics.Debug.Assert(sc.BodyID == 0 || sc.Parents != null);
 
             $"Starscan ns/p {sc.EventTimeUTC} `{sc.BodyName}`:{sc.BodyID} Parents {sc.ParentList()}".DO(debugid);
 
             BodyNode cur = systemBodies;
+
+            // we may not have a parents list if its a top level body (BodyID=0)
+
             int pno = (sc.Parents?.Count ?? 0) - 1;
 
             while(pno >= 0)
@@ -381,7 +385,7 @@ namespace EliteDangerousCore.StarScan2
         // Get or make a standard named body node Scheau Prao ME-M c22-21 A 1 a etc without a parent list
         // given a own name like "A 1 a" or "1 a" or "1" make nodes down the tree if they don't exist, return final node.
         // Used for legacy Scans before Parents/BodyID
-        public BodyNode GetOrMakeStandardBodyNodeFromScanWithoutParents(JournalScan sc, string subname, string systemname)
+        public BodyNode GetOrMakeStandardBodyWithoutParents(JournalScan sc, string subname, string systemname)
         {
             // extract all named parts
 
@@ -504,7 +508,7 @@ namespace EliteDangerousCore.StarScan2
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Get or make a standard named body node for a planet, if we can find its parent. Else use the DiscretePlanet version
-        public BodyNode GetOrMakeStandardNamePlanet(string fdname, string subname, int? bid, string systemname)
+        public BodyNode GetOrMakeStandardPlanet(string fdname, string subname, int? bid, string systemname)
         {
             BodyNode body = bid.HasValue ? FindBody(bid.Value) : null;      // try and find it by id
 

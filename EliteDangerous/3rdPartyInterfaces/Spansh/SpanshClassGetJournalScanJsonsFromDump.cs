@@ -20,7 +20,7 @@ namespace EliteDangerousCore.Spansh
     {
         // return a JARRAY of Journal compatible JSON of bodies from the spansh dump format
         // may return null
-        private static JArray GetJournalScansJsonsFromDump(JObject spanshdump)
+        public static JArray GetJournalScansJsonsFromDump(JObject spanshdump)
         {
             //System.Diagnostics.Debug.WriteLine($"Spansh bodies found {foundsystem.Name} {foundsystem.SystemAddress}");
 

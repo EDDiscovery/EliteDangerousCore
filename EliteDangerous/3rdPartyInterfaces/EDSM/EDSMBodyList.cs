@@ -131,15 +131,17 @@ namespace EliteDangerousCore.EDSM
                         fromcache = true;   
                     }
 
-                    if (jobj != null && jobj["bodies"] != null)
+                    if (jobj != null && jobj.Contains("bodies") && jobj.Contains("name") && jobj.Contains("id64"))
                     {
                         List<JournalScan> bodies = new List<JournalScan>();
+
+                        SystemClass rxsys = new SystemClass(jobj["name"].Str("Unknown"),new SystemAddress(jobj["id64"].ULong()));
 
                         foreach (JObject edsmbody in jobj["bodies"])
                         {
                             try
                             {
-                                JObject jbody = EDSMClass.ConvertFromEDSMBodies(edsmbody, sys.SystemAddress);
+                                JObject jbody = EDSMClass.ConvertFromEDSMBodies(edsmbody, rxsys);
 
                                 JournalScan js = new JournalScan(jbody);
 
@@ -186,7 +188,7 @@ namespace EliteDangerousCore.EDSM
         }
 
         // Verified Nov 20,  by scan panel
-        private static JObject ConvertFromEDSMBodies(JObject jo, SystemAddress sysaddr)        // protect yourself against bad JSON
+        public static JObject ConvertFromEDSMBodies(JObject jo, ISystem rxsys)        // protect yourself against bad JSON
         {
             //System.Diagnostics.Debug.WriteLine($"EDSM Body {jo.ToString(true)}");
             JObject jout = new JObject
@@ -200,8 +202,8 @@ namespace EliteDangerousCore.EDSM
                 ["ScanType"] = "Detailed",
             };
 
-            if (sysaddr.IsValid)
-                jout["SystemAddress"] = sysaddr.Value;
+            jout["SystemAddress"] = rxsys.SystemAddress.Value;
+            jout["StarSystem"] = rxsys.Name;
 
             if (!jo["discovery"].IsNull())       // much more defense around this.. EDSM gives discovery=null back
             {

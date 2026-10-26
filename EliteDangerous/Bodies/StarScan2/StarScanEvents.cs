@@ -167,7 +167,7 @@ namespace EliteDangerousCore.StarScan2
                     lock (sn)
                     {
                         if (stdname)
-                            sn.GetOrMakeStandardNamePlanet(sc.BodyName, ownname, sc.BodyID, sys.Name);
+                            sn.GetOrMakeStandardPlanet(sc.BodyName, ownname, sc.BodyID, sys.Name);
                         else
                             sn.GetOrMakeDiscretePlanet(ownname, sc.BodyID, sys.Name);
                     }
@@ -246,15 +246,14 @@ namespace EliteDangerousCore.StarScan2
             {
                 ISystem scansystem = sn.System;
 
-                bool hasparentbodyid = sc.BodyID != null && (sc.BodyID == 0 || sc.Parents != null);     // no body/parent tree makes the scan problematc to make
-
                 bool stdname = sc.BodyName.StartsWith(scansystem.Name) && sc.BodyName.Length > scansystem.Name.Length;      // work out if its standard naming
                 string ownname = stdname ? sc.BodyName.Substring(scansystem.Name.Length).Trim() : sc.BodyName;
 
                 lock (sn)
                 {
-                    // triage for scans with full info
-                    if (hasparentbodyid)                        // if we have modern info 
+                    // if we have modern infom, a bodyID and either its a top level star or it has a parents list
+
+                    if (sc.BodyID != null && (sc.BodyID == 0 || sc.Parents?.Count>0)) 
                     {
                         if (sn.OldScansPresent)                 // we don't mix old scans with new scans. Old scans without parents trees are problematic
                         {
@@ -262,15 +261,15 @@ namespace EliteDangerousCore.StarScan2
                             sn.ClearBodies();
                         }
 
-                        if (stdname)
+                        if (stdname && sc.Parents?.Count>0)         // if its standard, with a parents list
                         {
                             //    $"Add Scan Std format {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}".DO();
-                            sn.GetOrMakeStandardBodyNodeFromScanWithParents(sc, ownname, scansystem.Name);
+                            sn.GetOrMakeStandardBodyWithParents(sc, ownname, scansystem.Name);
                         }
                         else
                         {
                             //     $"Add Scan NonStd format {sc.EventTimeUTC} `{sc.BodyName}` bid:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress} P: {sc.ParentList()}".DO();
-                            sn.GetOrMakeNonStandardBodyFromScanWithParents(sc, scansystem.Name);
+                            sn.GetOrMakeTopLevelOrSubLevelBodyWithParentsList(sc, scansystem.Name);
                         }
                     }
                     else
@@ -280,7 +279,7 @@ namespace EliteDangerousCore.StarScan2
                         if (stdname)
                         {
                             //   $"Add OLD Scan Std format no parents {sc.EventTimeUTC} `{sc.BodyName}` ownname `{ownname}`:{sc.BodyID} `{sc.StarType}{sc.PlanetClass}` sa:{sc.SystemAddress}  in `{sys.Name}` {sys.SystemAddress}".DO();
-                            sn.GetOrMakeStandardBodyNodeFromScanWithoutParents(sc, ownname, scansystem.Name);
+                            sn.GetOrMakeStandardBodyWithoutParents(sc, ownname, scansystem.Name);
                         }
                         else if (sc.IsStar)
                         {
@@ -294,7 +293,7 @@ namespace EliteDangerousCore.StarScan2
 
                             if (sc.BodyType == BodyDefinitions.BodyType.Planet)     // only adding planets here
                             {
-                                BodyNode bn = stdname ? sn.GetOrMakeStandardNamePlanet(sc.BodyName, ownname, sc.BodyID, scansystem.Name) : sn.GetOrMakeDiscretePlanet(ownname, sc.BodyID, scansystem.Name);
+                                BodyNode bn = stdname ? sn.GetOrMakeStandardPlanet(sc.BodyName, ownname, sc.BodyID, scansystem.Name) : sn.GetOrMakeDiscretePlanet(ownname, sc.BodyID, scansystem.Name);
                                 bn.SetScan(sc);
                             }
                         }
