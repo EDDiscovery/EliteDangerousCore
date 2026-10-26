@@ -50,9 +50,11 @@ namespace EliteDangerousCore.StarScan2
         public Font FontLarge { get; set; } = null;         // can be set if required.. if not Font is used
         public Color TextBackColor { get; set; } = Color.Transparent;
         public Color TextForeColor { get; set; } = Color.DarkOrange;
-        public Size StarSize { get { return starsize; } }
-        public Size PlanetSize { get { return planetsize; } }
-        public Size MoonSize { get { return moonsize; } }
+        public Size StarSize { get; private set; }
+        public Size PlanetSize { get; private set;}
+        public Size MoonSize { get; private set; }
+        public Size MaterialSize { get; private set; }
+        public int SignalSizeHeight { get; private set; }
         public bool ShowExpiredSignalIcons { get; set; } = true;        // if false don't count expired signals for displaying icons
 
         public SystemDisplay()
@@ -82,7 +84,6 @@ namespace EliteDangerousCore.StarScan2
         {
             System.Diagnostics.Debug.Assert(Font != null);
             System.Diagnostics.Debug.Assert(systemnode != null);
-            System.Diagnostics.Debug.Assert(!starsize.IsEmpty);
 
             Random rnd = new Random(systemnode.System.Name.GetHashCode());         // always start with same seed so points are in same places
 
@@ -97,7 +98,7 @@ namespace EliteDangerousCore.StarScan2
 
             ExtendedControls.ImageElement.List imageList = new ExtendedControls.ImageElement.List();    // final image list to report
  
-            int yoffset = starsize.Height * nodeheightratio / 2 / noderatiodivider;
+            int yoffset = StarSize.Height * nodeheightratio / 2 / noderatiodivider;
 
             if (titletext.HasChars())
             {
@@ -114,7 +115,7 @@ namespace EliteDangerousCore.StarScan2
             foreach (NodePtr starnode in toplevelbodiestodisplay)
             {
                 // draw at 0,0 the star node
-                var mainstar = DrawNode(starnode.BodyNode, historicmats, curmats, starsize, rnd, ContextMenuStripBodies, ContextMenuStripMats);//, backwash:Color.FromArgb(64,128,0,0));
+                var mainstar = DrawNode(starnode.BodyNode, historicmats, curmats, StarSize, rnd, ContextMenuStripBodies, ContextMenuStripMats);//, backwash:Color.FromArgb(64,128,0,0));
                 //System.Diagnostics.Debug.WriteLine($"Mainstar node {mainstar.Size} {mainstar.Min} .. {mainstar.Max}");
 
                 mainstar.Tag = 0;       // mark as main star
@@ -126,7 +127,7 @@ namespace EliteDangerousCore.StarScan2
                     var signalimage = DrawSignals(systemnode.FSSSignals,      // may be null
                                                    systemnode.CodexEntries,      // may be null
                                                    systemnode.OrbitingStations,      // may be null
-                                                   starsize.Height * 6 / 4, ContextMenuStripSignals);
+                                                   SignalSizeHeight, ContextMenuStripSignals);
 
                     imagesets.Add(signalimage);
                     drawnsignals = true;
@@ -145,7 +146,7 @@ namespace EliteDangerousCore.StarScan2
 
                 foreach(var toplevelnode in bodiestodisplay )
                 {
-                    var planetandtree = DrawTree(toplevelnode, new Point(0,0), 0, habzonestartls, habzoneendls, historicmats, curmats, bodytypefilters, rnd, ContextMenuStripBodies, ContextMenuStripMats);
+                    var planetandtree = DrawTree(toplevelnode, new Point(0,0), PlanetSize, 0, habzonestartls, habzoneendls, historicmats, curmats, bodytypefilters, rnd, ContextMenuStripBodies, ContextMenuStripMats);
                     imagesets.Add(planetandtree);
                 }
             }
@@ -154,13 +155,13 @@ namespace EliteDangerousCore.StarScan2
             if (!drawnsignals)
             {
                 var img = BodyDefinitions.GetImageNotScanned().CloneLocked();
-                var fakeplanet = CreateImageAndLabel(img, starsize, new string[] { "" }, "", ContextMenuStripSignals);
+                var fakeplanet = CreateImageAndLabel(img, StarSize, new string[] { "" }, "", ContextMenuStripSignals);
                 imagesets.Add(fakeplanet);
 
                 var signalimage = DrawSignals(systemnode.FSSSignals,      // may be null
                                                systemnode.CodexEntries,      // may be null
                                                systemnode.OrbitingStations,      // may be null
-                                               starsize.Height * 6 / 4, ContextMenuStripSignals);
+                                               SignalSizeHeight, ContextMenuStripSignals);
 
                 imagesets.Add(signalimage);
                 drawnsignals = true;
@@ -187,7 +188,7 @@ namespace EliteDangerousCore.StarScan2
                 // we shift down the cursor
                 if (leftpoint + entry.Size.Width > widthavailable || (toplevelstar && i > 0 && (NoPlanetStarsOnSameLine || i - curlinestart > 0)))
                 {
-                    cursorlm = new Point(startpoint.X, maxy + yoffset + starplanetgroupspacery);
+                    cursorlm = new Point(startpoint.X, maxy + yoffset + StarSize.Height/4);
                     leftpoint = cursorlm.X - entry.Min.X;
                     curlinestart = i;
                     firstbary = true;
@@ -198,7 +199,7 @@ namespace EliteDangerousCore.StarScan2
                 {
                     if (firstbary)
                     {
-                        int cursorshiftamount = nodesizeinfo.Item2 - planetsize.Height / 2;               // because of the icon, we can afford not to move down the whole shiftamount
+                        int cursorshiftamount = nodesizeinfo.Item2 - PlanetSize.Height / 2;               // because of the icon, we can afford not to move down the whole shiftamount
                         for (int j = curlinestart; j < i; j++)      // all on current line, shift down
                         {
                             imagesets[j].Shift(new Point(0, cursorshiftamount));
@@ -216,7 +217,7 @@ namespace EliteDangerousCore.StarScan2
                 entry.Shift(new Point(leftpoint, cursorlm.Y));          // move the centre of the planet image to leftpoint,cursorlm.Y
                 maxy = Math.Max(maxy, entry.Max.Y);                     // keep a record of max bottom for the carriage return above
 
-                cursorlm = new Point(cursorlm.X + entry.Size.Width + starplanetgroupspacery, cursorlm.Y);
+                cursorlm = new Point(cursorlm.X + entry.Size.Width + StarSize.Width/4, cursorlm.Y);
             }
 
             // accumulate and return image set
@@ -251,31 +252,20 @@ namespace EliteDangerousCore.StarScan2
             return il;
         }
 
-        public void SetSize(int stars)
+        public void SetSize(int size)
         {
-            starsize = new Size(stars, stars);
-            planetsize = new Size(starsize.Width * 3 / 4, starsize.Height * 3 / 4);
-            moonsize = new Size(starsize.Width * 2 / 4, starsize.Height * 2 / 4);
-            int matsize = stars >= 64 ? 18 : 12;
-            materialsize = new Size(matsize, matsize);
-
-            starplanetgroupspacery = 4;    
-            moonspacerx = Math.Max(stars / 8, 4);
-            moonspacery = Math.Max(stars / 8, 4);
-            materiallinespacerxy = 4;
+            StarSize = new Size(size, size);
+            PlanetSize = new Size(size * 3 / 4, size * 3 / 4);
+            MoonSize = new Size(size * 2 / 4, size * 2 / 4);
+            int matsize = size >= 64 ? 18 : 12;
+            MaterialSize = new Size(matsize, matsize);
+            SignalSizeHeight = size * 6 / 4;
         }
 
 
-#endregion
+        #endregion
 
         #region Implementation
-
-
-        private Size starsize,planetsize, moonsize, materialsize;
-        private int starplanetgroupspacery;        // distance between each star/planet grouping 
-        private int moonspacerx;        // distance to move moon across
-        private int moonspacery;        // distance to slide down moon vs planet
-        private int materiallinespacerxy;   // extra distance to add around material output
 
         const int noderatiodivider = 8;     // in eighth sizes
         const int nodeheightratio = 12;     // nominal size 12/8th of Size

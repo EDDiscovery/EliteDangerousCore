@@ -89,11 +89,11 @@ namespace EliteDangerousCore.StarScan2
 
                 if (++noperline == 4)
                 {
-                    matpos = new Point(0, matpos.Y + matsize.Height + materiallinespacerxy);
+                    matpos = new Point(0, matpos.Y + matsize.Height + MaterialSize.Height/4);
                     noperline = 0;
                 }
                 else
-                    matpos.X += matsize.Width + materiallinespacerxy;
+                    matpos.X += matsize.Width + MaterialSize.Width/4;
             }
 
             return images;

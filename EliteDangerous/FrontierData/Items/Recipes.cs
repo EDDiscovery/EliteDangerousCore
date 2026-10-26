@@ -52,7 +52,7 @@ namespace EliteDangerousCore
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine($"{name} has no ingredients");
+                //System.Diagnostics.Debug.WriteLine($"{name} has no ingredients");
                 Ingredients = new MaterialCommodityMicroResourceType[0];
             }
         }

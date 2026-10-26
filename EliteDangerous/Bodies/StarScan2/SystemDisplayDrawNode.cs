@@ -88,7 +88,7 @@ namespace EliteDangerousCore.StarScan2
                     }
                 }
 
-                Size bmpsize = new Size(size.Width, planetsize.Height * nodeheightratio / noderatiodivider);
+                Size bmpsize = new Size(size.Width, PlanetSize.Height * nodeheightratio / noderatiodivider);
 
                 string sma = bn.BeltData?.SemiMajorAxisLSKM ?? "";
                 var nodelabels = new string[] { presentationname.AppendPrePad(sma, Environment.NewLine) };
@@ -433,16 +433,18 @@ namespace EliteDangerousCore.StarScan2
 
                     // right aligned
 
-                    if (materialsicon)
+                    int righticonssize = iconsize;
+
+                    if (materialsicon )
                     {
                         var mm = BodyDefinitions.GetImageMoreMaterials();
-                        g.DrawImageLocked(mm, new Rectangle(bmp.Width - mm.Width, bmp.Height - mm.Height, mm.Width, mm.Height));
+                        g.DrawImageLocked(mm, new Rectangle(bmp.Width - righticonssize, bmp.Height - righticonssize, righticonssize, righticonssize));
                     }
 
-                    if (ringshavesignals)
+                    if (ringshavesignals )
                     {
                         var bis = BodyDefinitions.GetImageSignals();
-                        g.DrawImageLocked(bis, new Rectangle(bmp.Width - bis.Width, 0, iconsize, iconsize));
+                        g.DrawImageLocked(bis, new Rectangle(bmp.Width - righticonssize, 0, righticonssize, righticonssize));
                     }
 
                     if (imageoverlaytext.HasChars())
@@ -467,7 +469,7 @@ namespace EliteDangerousCore.StarScan2
 
                     if (bn.Scan?.HasMaterials == true && ShowMaterials)
                     {
-                        var matimages = CreateMaterialNodes(bn.Scan, historicmats, curmats, materialsize, rightclickmenumats);
+                        var matimages = CreateMaterialNodes(bn.Scan, historicmats, curmats, MaterialSize, rightclickmenumats);
 
                         if (il.Min.Y + matimages.Size.Height > il[0].Bounds.Bottom)       // too big
                             matimages.Shift(new Point(il.Max.X, il.Min.Y)); // shift to right completely, and move up to min Y
