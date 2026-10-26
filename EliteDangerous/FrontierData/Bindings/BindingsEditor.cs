@@ -50,7 +50,6 @@ namespace EliteDangerousCore.Bindings
             showFrontierNamesToolStripMenuItem.Click += new System.EventHandler(this.showFrontierNamesToolStripMenuItem_Click);
         }
 
-
         // folder and preferredbindfile (can be null)
         // give known devices and properties
         // give known device name mappings
@@ -59,46 +58,52 @@ namespace EliteDangerousCore.Bindings
             this.bindingfolder = folder;
             this.devicekeynames = keynames;
 
-            List<FileInfo> bindfiles = Directory.EnumerateFiles(folder, "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToList();
-
-            foreach (var x in bindfiles)
-                extComboBoxBindFiles.Items.Add(x.Name);
-
-            extComboBoxBindFiles.Tag = bindfiles.Select(x => x.FullName).ToList();
-
-            // load devices, physical, into bindings file they will be kept during the edit. We need a new BF because we are going to edit it
-            
-            bf = new BindingsFile(physicaldevices);         
-
-            if (preferredbindfile != null) // if preferred bind file
+            if (Directory.Exists(folder))       // if folder not there, inert the program. Else search and load
             {
-                bf.Read(preferredbindfile);
-                if (bf.IsLoaded)
+                List<FileInfo> bindfiles = Directory.EnumerateFiles(folder, "*.binds", SearchOption.TopDirectoryOnly).Select(f => new System.IO.FileInfo(f)).OrderByDescending(p => p.LastWriteTime).ToList();
+
+                foreach (var x in bindfiles)
+                    extComboBoxBindFiles.Items.Add(x.Name);
+
+                extComboBoxBindFiles.Tag = bindfiles.Select(x => x.FullName).ToList();
+
+                // load devices, physical, into bindings file they will be kept during the edit. We need a new BF because we are going to edit it
+
+                bf = new BindingsFile(physicaldevices);
+
+                if (preferredbindfile != null) // if preferred bind file
                 {
-                    System.Diagnostics.Debug.WriteLine($"Read file {bf.FileName} `{bf.KeyboardCulture}` `{bf.KeyboardLayout}`");
+                    bf.Read(preferredbindfile);
+                    if (bf.IsLoaded)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Read file {bf.FileName} `{bf.KeyboardCulture}` `{bf.KeyboardLayout}`");
+                    }
                 }
-            }
 
-            extComboBoxBindFiles.Tag = bindfiles.Select(x => x.FullName).ToList();
+                int index = bindfiles.FindIndex(x => x.FullName == preferredbindfile);
 
-            int index = bindfiles.FindIndex(x => x.FullName == preferredbindfile);
+                if (index >= 0)
+                {
+                    extComboBoxBindFiles.SelectedIndex = index;
+                    SetEnables(true, false);
+                }
+                else
+                {
+                    extComboBoxBindFiles.Text = "No Bindings loaded";
+                    SetEnables(false, false);
+                }
 
-            if (index >= 0) 
-            {
-                extComboBoxBindFiles.SelectedIndex = index;
-                SetEnables(true, false);
+                extComboBoxBindFiles.SelectedIndexChanged += ExtComboBoxBindFiles_SelectedIndexChanged;
+                // load stored key renames
+
+                ComboBoxFilterFill();
             }
             else
             {
-                extComboBoxBindFiles.Text = "No Bindings loaded";
-                SetEnables(false, false);
+                bf = new BindingsFile(physicaldevices);
+                extFlowLayoutPanelTop.Enabled = false;
+                //extComboBoxBindFiles.Enabled = false;
             }
-
-            extComboBoxBindFiles.SelectedIndexChanged += ExtComboBoxBindFiles_SelectedIndexChanged;
-
-            // load stored key renames
-
-            ComboBoxFilterFill();
 
             //System.Diagnostics.Debug.WriteLine($"Key list {keynames.Get()}");
 
@@ -139,7 +144,9 @@ namespace EliteDangerousCore.Bindings
 
             if (bf != null)
             {
-                if (!bf.IsLoaded)
+                if ( !extComboBoxBindFiles.Enabled)
+                    labelWarning.Text = $"No Binding folder found";
+                else if (!bf.IsLoaded)
                     labelWarning.Text = $"No Bindings file setup - Use Elite Controls to make one";
                 else if (!bf.IsEditable)
                     labelWarning.Text = $"Unsupported Keyboard Layout {bf.KeyboardCulture} {InputLanguage.CurrentInputLanguage.LayoutName} {InputLanguage.CurrentInputLanguage.Culture.Name}. File is not editable";
