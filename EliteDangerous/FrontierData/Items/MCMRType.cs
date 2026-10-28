@@ -220,6 +220,9 @@ namespace EliteDangerousCore
             // new Ascendency 1 3/11/24
             PowerPreparationSpyware, PowerSpyware, PowerResearchData, PowerEmployeeData, PowerFinancialRecords, PowerPropagandaData, PowerClassifiedData, PowerMegashipData,
 
+            // new Oct 26
+            VaultCodes,
+
             //---------------------------------------------------------- Consumable
             AMM_Grenade_EMP = 7000, AMM_Grenade_Frag, AMM_Grenade_Shield, Bypass, EnergyCell, HealthPack,
         }
@@ -1450,6 +1453,7 @@ namespace EliteDangerousCore
             Add(CatType.Data, MCMR.WeaponInventory, "Weapon Inventory", "MRDWI");
             Add(CatType.Data, MCMR.WeaponTestData, "Weapon Test Data", "MRWTD");
             Add(CatType.Data, MCMR.XenoDefenceProtocols, "Xeno-Defence Protocols", "MRDXDP");
+            Add(CatType.Data, MCMR.VaultCodes, "Vault Codes", "VCDE");
 
             // ascendency, 3/11/24
 
