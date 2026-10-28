@@ -45,6 +45,17 @@ namespace EliteDangerousCore.Bindings
                     ret.Add("Key_" + new string(new char[] { (char)(i + '0') }));
             }
 
+            // look at our translation table and add appropriate layout ids
+            System.Diagnostics.Debug.WriteLine($"Vtablelookup {layoutname}");
+            foreach (var kvp in vkeylookup)
+            {
+                if (kvp.Key.Item1 == layoutname)
+                {
+                    ret.Add(kvp.Key.Item2);
+                    // System.Diagnostics.Debug.WriteLine($"Add special key {kvp.Key.Item2}");
+                }
+            }
+
             foreach (var x in frontiertovkeyname)
                 ret.Add("Key_" + x.Key);
 
@@ -55,17 +66,6 @@ namespace EliteDangerousCore.Bindings
             {
                 for (int i = 0; i <= 24; i++)
                     ret.Add($"Key_F{i}");
-            }
-
-            // look at our translation table and add appropriate layout ids
-
-            foreach(var kvp in vkeylookup)
-            {
-                if ( kvp.Key.Item1 == layoutname)
-                {
-                    ret.Add(kvp.Key.Item2);
-                   // System.Diagnostics.Debug.WriteLine($"Add special key {kvp.Key.Item2}");
-                }
             }
 
             // default all
@@ -92,7 +92,7 @@ namespace EliteDangerousCore.Bindings
             else if (layoutname.EqualsIIC("Ukrainian (Enhanced)")) additional = new string[] { "Key_Minus", "Key_Equals", };
             else if (layoutname.EqualsIIC("Turkish Q")) additional = new string[] { "Key_Minus", "Key_Comma", "Key_Period", };
 
-            foreach( var x in additional.EmptyIfNull())
+            foreach ( var x in additional.EmptyIfNull())
                 ret.Add(x);
 
             CachedLayouts[layoutname] = ret;
@@ -102,7 +102,7 @@ namespace EliteDangerousCore.Bindings
 
         // Return list of standard frontier names for joystick axis, joystick buttons, mouse and keyboard
         // indicate if to list axis and buttons
-        // if its def not a keyboard, no need to include layoutname
+        // if its def not a keyboard, no need to include layoutname. Layoutname is null means no keys are supported
         static public HashSet<string> FrontierKeyNames(Device device, bool incaxis, bool incbuttons, string layoutname = null, bool inclalphanumbersfkeys = true)
         {
             HashSet<string> ret = new HashSet<string>();
@@ -155,7 +155,7 @@ namespace EliteDangerousCore.Bindings
                 ret.Add("Pos_Mouse_ZAxis");
             }
             
-            if ( device.Keyboard )
+            if ( device.Keyboard && layoutname != null)
             {
                 foreach (var x in FrontierKeyConversion.FrontierKeyNames(layoutname))
                     ret.Add(x);
@@ -256,21 +256,22 @@ namespace EliteDangerousCore.Bindings
             Tuple.Create("Portuguese","pt-PT"),Tuple.Create("US","en-AU"),Tuple.Create("Spanish","es-ES"),
             Tuple.Create("Belgium French","fr-BE"),
             Tuple.Create("Austria","de-AT"),
-            Tuple.Create("Canadian French","fr-CA")
+            Tuple.Create("Canadian French","fr-CA"),
+            Tuple.Create("Canadian English","en-CA"),
 
             // canada french legacy/new
             // dutch
             // estonian
             // hungarian
             // slovak
-            // de-AT
         };
 
 
         // special language handling of OEM keys, language/frontier name to vkey name
         // use the special bindings file in this folder which has UI* and others mapped to the OEM Keys
         // Operation:
-        // 1. Use this custom bindings file in the frontier bindings folder
+        // 1. copy the FrontierToVKey bindings file in the frontier bindings folder to the frontier bindings folder
+        // 1a. Use the binding editor to select this as the startpreset one
         // 2. Select language on language toolbar
         // 3. go into elite and edit controls - back out and the bindings file will have the updated key strokes and the updated keyboard culture - check - but with the same keys
         //      it seems dynamic and does not change the physical binding but does change the frontier key names in the file
@@ -520,6 +521,16 @@ namespace EliteDangerousCore.Bindings
             [Tuple.Create("Canadian French", "Key_à")] = "Pipe",
             [Tuple.Create("Canadian French", "Key_ù")] = "Backslash",
             [Tuple.Create("Canadian French", "Key_é")] = "Question",
+
+            [Tuple.Create("Canadian English", "Key_Hash")] = "Tilde",
+            [Tuple.Create("Canadian English", "Key_Circumflex")] = "OpenBrackets",
+            [Tuple.Create("Canadian English", "Key_¸")] = "CloseBrackets",
+            [Tuple.Create("Canadian English", "Key_SemiColon")] = "Semicolon",
+            [Tuple.Create("Canadian English", "Key_Grave")] = "Quotes",
+            [Tuple.Create("Canadian English", "Key_LessThan")] = "Pipe",
+            [Tuple.Create("Canadian English", "Key_«")] = "Backslash",
+            [Tuple.Create("Canadian English", "Key_é")] = "Question",
+
         };
 
         // standard key name conversion between frontier and vkey

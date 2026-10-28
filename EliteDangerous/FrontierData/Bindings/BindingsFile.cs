@@ -395,7 +395,7 @@ namespace EliteDangerousCore.Bindings
         // call to assign vkeys to all bindings and keys given the layout name of the file
         public bool AssignVKeys()
         {
-            if (KeyboardLayout != null)
+            if (KeyboardLayout != null)     // if we know about the keyboard layout
             {
                 foreach (var entry in elements.Values)
                 {
@@ -612,6 +612,7 @@ namespace EliteDangerousCore.Bindings
 
         private List<Device> devices;
 
+        // using FronterToVkey binding file which has these OEM keys assigned to these functions
         // This prints out the vkeys associated with the OEM codes and using the custom binds file with those OEMs
         // keys assigned to frontier functions listed below shows you and builds the translation entries for frontiertovkey
 
@@ -650,11 +651,14 @@ namespace EliteDangerousCore.Bindings
                  if (fname.Substring(4) != vkeyname )
                 {
                     //    System.Diagnostics.Debug.WriteLine($"Scan code {kvp.Key:X2} vkey {(int)vkey:X2} {vkeyname} = {entry.Name} = {entry.PrimaryKeys.Keys[0].FrontierKeyName}");
-                    System.Diagnostics.Debug.WriteLine($"[Tuple.Create(\"{KeyboardLayout}\", \"{fname}\")] = \"{vkeyname}\",");
+                    System.Diagnostics.Debug.WriteLine($"[Tuple.Create(\"{KeyboardCulture}\", \"{fname}\")] = \"{vkeyname}\",");
                 }
 
-                var vk = FrontierKeyConversion.FrontierToKeys(KeyboardLayout, fname);
-                if ( vk != vkeyname) System.Diagnostics.Debug.WriteLine($"Error with [Tuple.Create(\"{KeyboardLayout}\", \"{fname}\")] = \"{vkeyname}\" {kvp.Value} Back with {vk}");
+                if (KeyboardLayout != null)        // if we have coded it, then double check it. If not we can't do it
+                {
+                    var vk = FrontierKeyConversion.FrontierToKeys(KeyboardLayout, fname);
+                    if (vk != vkeyname) System.Diagnostics.Debug.WriteLine($"Error with [Tuple.Create(\"{KeyboardLayout}\", \"{fname}\")] = \"{vkeyname}\" {kvp.Value} Back with {vk}");
+                }
 
             }
         }

@@ -357,13 +357,15 @@ namespace EliteDangerousCore.Bindings
                     else
                     {
                         Device dev = (Device)o;
-                        if ( devicekeynames.Edit(this.FindForm(), bf.KeyboardLayout, dev) )
+                        if ( devicekeynames.Edit(this.FindForm(),dev) )
                             Display();      // refresh!
                     }
                     dropdown.Close();
 
                     Display();
                 };
+
+                dropdown.PositionBelow(extButtonDeviceKeys);
                 dropdown.Show(this);
             }
         }

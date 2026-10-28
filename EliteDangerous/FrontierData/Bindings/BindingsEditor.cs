@@ -77,6 +77,7 @@ namespace EliteDangerousCore.Bindings
                     if (bf.IsLoaded)
                     {
                         System.Diagnostics.Debug.WriteLine($"Read file {bf.FileName} `{bf.KeyboardCulture}` `{bf.KeyboardLayout}`");
+                        //bf.OemListKeys();   // debug
                     }
                 }
 
@@ -149,7 +150,7 @@ namespace EliteDangerousCore.Bindings
                 else if (!bf.IsLoaded)
                     labelWarning.Text = $"No Bindings file setup - Use Elite Controls to make one";
                 else if (!bf.IsEditable)
-                    labelWarning.Text = $"Unsupported Keyboard Layout {bf.KeyboardCulture} {InputLanguage.CurrentInputLanguage.LayoutName} {InputLanguage.CurrentInputLanguage.Culture.Name}. File is not editable";
+                    labelWarning.Text = $"Unsupported Keyboard Layout `{bf.KeyboardCulture}` `{InputLanguage.CurrentInputLanguage.LayoutName}` `{InputLanguage.CurrentInputLanguage.Culture.Name}`. File is not editable";
                 else if (bf.NonPhysicalDevicesInUse)
                 {
                     labelWarning.Text = "Devices Not Plugged In!";
@@ -363,8 +364,8 @@ namespace EliteDangerousCore.Bindings
         private void SetHint(DataGridViewRow row, int deviceindex, Device device = null, string frontierkeyname = null)
         {
             BindingEntry entry = row.Tag as BindingEntry;
-            row.Cells[2].ToolTipText = !showFrontierNamesToolStripMenuItem.Checked ? (entry.Name + Environment.NewLine) : "";
-            row.Cells[2].ToolTipText += entry.IsKeyOrBinding ? (entry.PrimaryKeys.KeyDescription() + (entry.IsKey ? " : " + entry.SecondaryKeys.KeyDescription() : "")) : "";
+            row.Cells[2].ToolTipText = !showFrontierNamesToolStripMenuItem.Checked ? (entry.Name + Environment.NewLine) : null;
+            row.Cells[2].ToolTipText += entry.IsKeyOrBinding ? (entry.PrimaryKeys.KeyDescription() + (entry.IsKey ? " : " + entry.SecondaryKeys.KeyDescription() : "")) : null;
 
             row.Cells[deviceindex].ToolTipText = row.Cells[deviceindex + 1].ToolTipText = null;
 
@@ -377,10 +378,11 @@ namespace EliteDangerousCore.Bindings
                 {
                     string bk = devicekeynames.GetRename(device.FrontierName, frontierkeyname);
                     string hint = devicekeynames.GetHint(device.FrontierName, frontierkeyname);
-                    row.Cells[deviceindex + 1].ToolTipText = bk != frontierkeyname ? (hint + nl + frontierkeyname) : null;
+                    row.Cells[deviceindex + 1].ToolTipText = bk != frontierkeyname ? (hint.HasChars() ? hint + nl : "") + frontierkeyname : null;
                 }
             }
-            //System.Diagnostics.Debug.WriteLine($"Changed Hint {row.Index} {deviceindex} : `{row.Cells[deviceindex].ToolTipText}` `{row.Cells[deviceindex + 1].ToolTipText}`");
+
+//            System.Diagnostics.Debug.WriteLine($"Changed Hint {entry.Name}: {deviceindex} `{row.Cells[deviceindex].ToolTipText}` `{row.Cells[deviceindex + 1].ToolTipText}`");
         }
 
         private void SetValue(DataGridViewCell cell, string value)
@@ -403,7 +405,8 @@ namespace EliteDangerousCore.Bindings
         // add options to key, based on binding and the device
         private void AddKeyOptions(bool isaxis, Device device, DataGridViewComboBoxCell c)
         {
-            // we are not going to use keynams to set joystick limits, just physical detected devices
+            // add options to combobox dependent on device type, if its axis or button for a joystock, and if we have keys.
+            // If keyboardLayout == null we don't know the setup so its null. Function can handle it
             var ret = FrontierKeyConversion.FrontierKeyNames(device, isaxis, !isaxis, bf.KeyboardLayout);
 
             c.Items.Clear();

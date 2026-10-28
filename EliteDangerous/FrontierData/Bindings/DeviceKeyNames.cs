@@ -226,7 +226,7 @@ namespace EliteDangerousCore.Bindings
             return $"<!--- {dev.Name} ({dev.Device}) -->" + Environment.NewLine + root.ToString();  
         }
 
-        public bool Edit(Form backcontrol, string layoutname, Device device)
+        public bool Edit(Form backcontrol, Device device)
         {
             // icons set, credit Frontier Elite Dangerous and Cmdr. Nutball
             // loadede at FrontierData.Bindings.KeyIcons.Name
