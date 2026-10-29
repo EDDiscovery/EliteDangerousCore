@@ -34,6 +34,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             public string Name;             // always non null 
             public string Name_Localised;   // always non null 
+
+            [JsonAlwaysCreate]              // Frontier may be missing this
             public VehicleActorSuitFDName Ship;             // always non null , may be actor as well as ship
             public RankDefinitions.CombatRank Rank;  // may be unknown
 
