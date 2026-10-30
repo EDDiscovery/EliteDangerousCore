@@ -34,6 +34,7 @@ namespace EliteDangerousCore.JournalEvents
 
         [JsonAlwaysCreate]
         public WeaponID SuitModuleID { get; set; }    // may be missing
+        [JsonAlwaysCreate]
         public HandItemFDName Name { get; set; }                    // always there, force always there
         public string FriendlyName { get; set; }
         public string Name_Localised { get; set; }

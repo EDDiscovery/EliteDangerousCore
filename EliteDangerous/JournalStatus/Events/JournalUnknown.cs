@@ -21,9 +21,9 @@ namespace EliteDangerousCore.JournalEvents
 {
     public class JournalUnimplemented: JournalEntry
     {
-        public JObject json;
-        public string eventname;
-        public bool withdrawn;
+        private JObject json;
+        private string eventname;
+        private bool withdrawn;
 
         public JournalUnimplemented(JObject evt, JournalTypeEnum e, bool withdrawn) : base(evt, e)
         {

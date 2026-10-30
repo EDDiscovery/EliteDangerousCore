@@ -265,9 +265,9 @@ namespace EliteDangerousCore.JournalEvents
         public Traded Received { get; set; } // may be null
 
         // Istats
-        public List<IStatsItemsInfo> ItemsList { get { return new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = Paid.Material, Count = -Paid.Quantity },
+        public List<IStatsItemsInfo> ItemsList { get { return Paid!=null && Received != null ? new List<IStatsItemsInfo>() { new IStatsItemsInfo() { FDName = Paid.Material, Count = -Paid.Quantity },
                                                                                             new IStatsItemsInfo() { FDName = Received.Material, Count = Received.Quantity }
-                                                                                            }; } }
+                                                                                            } : null; } }
         public class Traded
         {
             public MCFDName Material;     //fdname
