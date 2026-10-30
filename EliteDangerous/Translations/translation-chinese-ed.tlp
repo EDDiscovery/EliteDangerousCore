@@ -932,6 +932,12 @@ B217E98C3BF70F: "Ruby" @
 6206BF660FE9B5: "Operations Counter Attack Data" @
 528C2290F89AFD: "Unica Seed" @
 
+0699E02BB02A10: "Lavigny Strategic Reports" @
+EA6D434BC1E5D6: "Kaine Aid Supplies" @
+5DB14E9EEAF322: "Kaine Misinformation" @
+81320CA23D7CCE: "Kaine Lobbying Material" @
+62DCE2D4E6193E: "Vault Codes" @
+
 SECTION MaterialTypes
 
 38DFC233193C18: "Commodity" => "商品列表"
