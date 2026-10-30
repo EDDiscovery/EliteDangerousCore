@@ -43,7 +43,7 @@ namespace EliteDangerousCore.Bindings
         public string BetterName { get; set; }
         public bool PhysicalDevice { get; set; }                    // acutally plugged in
         public string[] Axis { get; set; }                          // not null, may be empty
-        public string AxisList => Axis.Length > 0 ? string.Join(",", Axis) : "";      // not null
+        public string AxisList => Axis?.Length > 0 ? string.Join(",", Axis) : "";      // not null
         public int Pov { get; set; }
         public int Buttons { get; set; }
         public bool Mouse => FrontierName == MouseDeviceName;

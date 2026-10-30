@@ -2514,6 +2514,7 @@ namespace EliteDangerousCore
                 {new ModFDName("decal_anacondamkiiownersclub_05"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Anaconda Mk II Owners Club 5") },
                 {new ModFDName("decal_anacondamkiiownersclub_06"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Anaconda Mk II Owners Club 6") },
                 {new ModFDName("decal_anti_thargoid"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Anti Thargoid") },
+                {new ModFDName("decal_bat1"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Bat 1") },
                 {new ModFDName("decal_bat2"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Bat 2") },
                 {new ModFDName("decal_beta_tester"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Beta Tester") },
                 {new ModFDName("decal_billionaires_treasure_hunts"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Billionaires Treasure Hunts") },
