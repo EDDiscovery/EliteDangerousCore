@@ -390,26 +390,26 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((js.CanBeTerraformable) ? @"Terraformable".Tx() + " " : null);
             information.Append((js.IsPlanet) ? Planets.PlanetNameTranslated(js.PlanetTypeID) + "." : null);
 
-            information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? prepad +  "Is tiny".Tx() + " (" + RadiusText + ")." : null);
-            information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? prepad +  "Is large".Tx() + " (" + RadiusText + ")." : null);
-            information.Append((js.IsLandable) ? prepad +  "Is landable".Tx() + "." : null);
-            information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? " (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g)." : null);
-            information.Append((js.HasAtmosphere && showAtmos) ? prepad +  "Atmosphere".Tx() + ": " + js.AtmosphereTranslated + ".": null);
-            information.Append((js.IsLandable && js.nSurfaceTemperature.HasValue && showTemp) ? prepad +  "Surface temperature".Tx() + ": " + Math.Round(js.nSurfaceTemperature.Value, 1, MidpointRounding.AwayFromZero) + "K." : null);
+            information.Append((js.nRadius < lowRadiusLimit && js.IsPlanet) ? prepad +  "Is tiny".Tx() + " (" + RadiusText + "). " : null);
+            information.Append((js.nRadius > largeRadiusLimit && js.IsPlanet && js.IsLandable) ? prepad +  "Is large".Tx() + " (" + RadiusText + "). " : null);
+            information.Append((js.IsLandable) ? prepad +  "Is landable".Tx() + ". " : null);
+            information.Append((js.IsLandable && showGravity && js.nSurfaceGravityG.HasValue) ? " (" + Math.Round(js.nSurfaceGravityG.Value, 2, MidpointRounding.AwayFromZero) + "g). " : null);
+            information.Append((js.HasAtmosphere && showAtmos) ? prepad +  "Atmosphere".Tx() + ": " + js.AtmosphereTranslated + ". ": null);
+            information.Append((js.IsLandable && js.nSurfaceTemperature.HasValue && showTemp) ? prepad +  "Surface temperature".Tx() + ": " + Math.Round(js.nSurfaceTemperature.Value, 1, MidpointRounding.AwayFromZero) + "K. " : null);
             information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? js.VolcanismTranslated: null);
-            information.Append((hasminingsignals) ? " " + "Has mining signals".Tx() + "." : null);
-            information.Append((hasplanetaryminingsignals) ? (prepad +  "Has planetary mining signals.".Tx()) : null);
+            information.Append((hasminingsignals) ? " " + "Has mining signals".Tx() + ". " : null);
+            information.Append((hasplanetaryminingsignals) ? (prepad +  "Has planetary mining signals. ".Tx()) : null);
 
-            information.Append((hasgeosignals) ? ("Geological signals".Tx() + ": "+ js.CountGeoSignals + ".") : null);
-            information.Append((hasbiosignals) ? ("Biological signals".Tx() + ": " + js.CountBioSignals + ".") : null);
-            information.Append((hasthargoidsignals) ? ("Thargoid signals".Tx() + ": " + js.CountThargoidSignals + ".") : null);
-            information.Append((hasguardiansignals) ? ("Guardian signals".Tx() + ": " + js.CountGuardianSignals + ".") : null);
-            information.Append((hashumansignals) ? ("Human signals".Tx() + ": " + js.CountHumanSignals + ".") : null);
-            information.Append((hasothersignals) ? ("Other signals".Tx() + ": " + js.CountOtherSignals + ".") : null);
+            information.Append((hasgeosignals) ? ("Geological signals".Tx() + ": "+ js.CountGeoSignals + ". ") : null);
+            information.Append((hasbiosignals) ? ("Biological signals".Tx() + ": " + js.CountBioSignals + ". ") : null);
+            information.Append((hasthargoidsignals) ? ("Thargoid signals".Tx() + ": " + js.CountThargoidSignals + ". ") : null);
+            information.Append((hasguardiansignals) ? ("Guardian signals".Tx() + ": " + js.CountGuardianSignals + ". ") : null);
+            information.Append((hashumansignals) ? ("Human signals".Tx() + ": " + js.CountHumanSignals + ". ") : null);
+            information.Append((hasothersignals) ? ("Other signals".Tx() + ": " + js.CountOtherSignals + ". ") : null);
 
-            information.Append((js.HasRingsOrBelts && showRings) ? prepad +  "Is ringed".Tx() + "." : null);
-            information.Append((js.nEccentricity >= eccentricityLimit) ? prepad +  "Has an high eccentricity of".Tx() + $" {js.nEccentricity:N3}." : null);
-            information.Append(hasscanorganics ? prepad +  "Has been scanned for organics".Tx() + "." : null);
+            information.Append((js.HasRingsOrBelts && showRings) ? prepad +  "Is ringed".Tx() + ". " : null);
+            information.Append((js.nEccentricity >= eccentricityLimit) ? prepad +  "Has an high eccentricity of".Tx() + $" {js.nEccentricity:N3}. " : null);
+            information.Append(hasscanorganics ? prepad +  "Has been scanned for organics".Tx() + ". " : null);
 
             var ev = js.GetEstimatedValues();
 
