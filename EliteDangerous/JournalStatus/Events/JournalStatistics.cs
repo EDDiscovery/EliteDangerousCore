@@ -389,10 +389,43 @@ namespace EliteDangerousCore.JournalEvents
         public class PassengerMissionsClass
         {
             public int Accepted { get; set; }
+            public int Refugeebulkdelivered { get; set; }
+            public int Refugeebulejected { get; set; }
+            public int AidWorkerbulkdelivered { get; set; }
+            public int AidWorkerbulkejected { get; set; } //just a guess, these new things don't show up when the value is zero, but all of the new seem to have ejected too
+            public int Touristvipdelivered { get; set; }
+            public int Touristvipejected { get; set; }
+            public int Touristbulkdelivered { get; set; }
+            public int Touristbulkejected { get; set; }
+            public int FreedomFightersvipdelivered { get; set; }
+            public int FreedomFightersvipejected { get; set; }
+            public int FreedomFightersbulkdelivered { get; set; }
+            public int FreedomFightersbulkejected { get; set; }  //just a guess, these new things don't show up when the value is zero, but all of the new seem to have delivered and ejected
+            public int Protestorsbulkdelivered { get; set; }
+            public int Protestorsbulkejected { get; set; }  //just a guess, these new things don't show up when the value is zero, but all of the new seem to have delivered and ejected
+            public int SecurityForcesbulkdelivered { get; set; }
+            public int SecurityForcesbulkejected { get; set; }  //just a guess, these new things don't show up when the value is zero, but all of the new seem to have delivered and ejected
             public int Disgruntled { get; set; }
+            public int Celebritiesvipdelivered { get; set; } //just a guess, these new things don't show up when the value is zero, but all of the new seem to have delivered and ejected
+            public int Celebritiesvipejected { get; set; }
+            public int Politiciansvipdelivered { get; set; } //just a guess, these new things don't show up when the value is zero, but all of the new seem to have delivered and ejected
+            public int Politiciansvipejected { get; set; }
+            public int Politiciansbulkdelivered { get; set; } 
+            public int Politiciansbulkejected { get; set; } //just a guess, these new things don't show up when the value is zero, but all of the new seem to have delivered and ejected
+            public int Medicalvipdelivered { get; set; }
+            public int Medicalvipejected { get; set; }  //just a guess, these new things don't show up when the value is zero, but all of the new seem to have delivered and ejected
+            public int Medicalbulkdelivered { get; set; }
+            public int Medicalbulkejected { get; set; }  //just a guess, these new things don't show up when the value is zero, but all of the new seem to have delivered and ejected
+            public int Soldiersvipdelivered { get; set; }
+            public int Soldiersvipejected { get; set; }  //just a guess, these new things don't show up when the value is zero, but all of the new seem to have delivered and ejected
+            public int ScienceTeamsvipdelivered { get; set; }
+            public int ScienceTeamsvipejected { get; set; }  //just a guess, these new things don't show up when the value is zero, but all of the new seem to have delivered and ejected
+            public int Criminalvipdelivered { get; set; }
+            public int Criminalvipejected { get; set; }  //just a guess, these new things don't show up when the value is zero, but all of the new seem to have delivered and ejected
+            public int HeadOfStatevipdelivered { get; set; }
+            public int HeadOfStatevipejected { get; set; }  //just a guess, these new things don't show up when the value is zero, but all of the new seem to have delivered and ejected
             public int Bulk { get; set; }
-            public int VIP { get; set; }
-            
+            public int VIP { get; set; }            
             public int Delivered { get; set; }
             public int Ejected { get; set; }
              
@@ -400,7 +433,41 @@ namespace EliteDangerousCore.JournalEvents
             {
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
                     "Accepted Passenger Missions".Tx() + ": ;;N0", Accepted,
+                    "Refugees bulk delivered".Tx() + ": ;;N0", Refugeebulkdelivered,
+                    "Refugees bulk ejected".Tx() + ": ;;N0", Refugeebulejected,
+                    "Aidworker bulk delivered".Tx() + ": ;;N0", AidWorkerbulkdelivered,
+                    "Aidworker bulk ejected".Tx() + ": ;;N0", AidWorkerbulkejected,
+                    "Tourist VIP delivered".Tx() + ": ;;N0", Touristvipdelivered,
+                    "Tourist VIP ejected".Tx() + ": ;;N0", Touristvipejected,
+                    "Tourist bulk delivered".Tx() + ": ;;N0", Touristbulkdelivered,
+                    "Tourist bulk ejected".Tx() + ": ;;N0", Touristbulkejected,
+                    "Freedom Fighters VIP delivered".Tx() + ": ;;N0", FreedomFightersvipdelivered,
+                    "Freedom Fighters VIP ejected".Tx() + ": ;;N0", FreedomFightersvipejected,
+                    "Freedom Fighter bulk delivered".Tx() + ": ;;N0", FreedomFightersbulkdelivered,
+                    "Freedom Fighter bulk ejected".Tx() + ": ;;N0", FreedomFightersbulkejected,
+                    "Protestors bulk delivered".Tx() + ": ;;N0", Protestorsbulkdelivered,
+                    "Protestors bulk ejected".Tx() + ": ;;N0", Protestorsbulkejected,
+                    "Security Forces bulk delivered".Tx() + ": ;;N0", SecurityForcesbulkdelivered,
+                    "Security Forces bulk ejected".Tx() + ": ;;N0", SecurityForcesbulkejected,
                     "Passengers Disgruntled".Tx() + ": ;;N0", Disgruntled,
+                    "Celebrities VIP delivered".Tx() + ": ;;N0", Celebritiesvipdelivered,
+                    "Celebrities VIP ejected".Tx() + ": ;;N0", Celebritiesvipejected,
+                    "Politicians VIP delivered".Tx() + ": ;;N0", Politiciansvipdelivered,
+                    "Politicians VIP ejected".Tx() + ": ;;N0", Politiciansvipejected,
+                    "Politicians bulk delivered".Tx() + ": ;;N0", Politiciansbulkdelivered,
+                    "Politicians bulk ejected".Tx() + ": ;;N0", Politiciansbulkejected,
+                    "Medical VIP delivered".Tx() + ": ;;N0", Medicalvipdelivered,
+                    "Medical VIP ejected".Tx() + ": ;;N0", Medicalvipejected,
+                    "Medical bulk delivered".Tx() + ": ;;N0", Medicalbulkdelivered,
+                    "Medical bulk ejected".Tx() + ": ;;N0", Medicalbulkejected,
+                    "Soldiers VIP delivered".Tx() + ": ;;N0", Soldiersvipdelivered,
+                    "Soldiers VIP ejected".Tx() + ": ;;N0", Soldiersvipejected,
+                    "Science Teams VIP delivered".Tx() + ": ;;N0", ScienceTeamsvipdelivered,
+                    "Science Teams VIP ejected".Tx() + ": ;;N0", ScienceTeamsvipejected,
+                    "Criminal VIP delivered".Tx() + ": ;;N0", Criminalvipdelivered,
+                    "Criminal VIP ejected".Tx() + ": ;;N0", Criminalvipejected,
+                    "Head of State VIP delivered".Tx() + ": ;;N0", HeadOfStatevipdelivered,
+                    "Head of State VIP ejected".Tx() + ": ;;N0", HeadOfStatevipejected,
                     "Total Bulk Passengers Delivered".Tx() + ": ;;N0", Bulk,
                     "Total VIPs Delivered".Tx() + ": ;;N0", VIP,
                     "Total Delivered".Tx() + ": ;;N0", Delivered,

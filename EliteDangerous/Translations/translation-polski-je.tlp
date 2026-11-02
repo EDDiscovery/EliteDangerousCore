@@ -628,7 +628,41 @@ ADAE0C398FD16E: "Planets walked on" @
 SECTION PassengerMissionsClass
 
 1547AE3B0EDFAD: "Accepted Passenger Missions" @
+209579433C3E1C: "Refugees bulk delivered" @
+36B0A681C9AA94: "Refugees bulk ejected" @
+C89A0B766827E9: "Aidworker bulk delivered" @
+FEA9E18BF4CFFA: "Aidworker bulk ejected" @
+5B1CE05A04A6BF: "Tourist VIP delivered" @
+8D8B427A53609C: "Tourist VIP ejected" @
+01DB3FB92F7CF3: "Tourist bulk delivered" @
+96943A73DF14F0: "Tourist bulk ejected" @
+3C2AECC241FA8B: "Freedom Fighters VIP delivered" @
+33D002DFD196B7: "Freedom Fighters VIP ejected" @
+21EAEFA79433C3: "Freedom Fighter bulk delivered" @
+38BD417DC01999: "Freedom Fighter bulk ejected" @
+05E04D4665E97F: "Protestors bulk delivered" @
+54ADEFA5E4CD6C: "Protestors bulk ejected" @
+BFEEE62B3B0A21: "Security Forces bulk delivered" @
+DD57659A90AA8D: "Security Forces bulk ejected" @
 EE4C3D724EA702: "Passengers Disgruntled" @
+5C47DF577A4202: "Celebrities VIP delivered" @
+22907B9501C61B: "Celebrities VIP ejected" @
+52A4F3688C7669: "Politicians VIP delivered" @
+A38F7B18D57EB8: "Politicians VIP ejected" @
+1B78408520ABFF: "Politicians bulk delivered" @
+30364F8D414AFB: "Politicians bulk ejected" @
+95B817EC4D68BD: "Medical VIP delivered" @
+0150267D4EB7D7: "Medical VIP ejected" @
+4781A22713904B: "Medical bulk delivered" @
+CCFE6761168FA3: "Medical bulk ejected" @
+96307DBADAF57F: "Soldiers VIP delivered" @
+1A586F3B7A8692: "Soldiers VIP ejected" @
+5CFF93329E7EAE: "Science Teams VIP delivered" @
+EADE07DD9EC1DB: "Science Teams VIP ejected" @
+CFA5F725B53EBA: "Criminal VIP delivered" @
+0E8C0CFEC5B55E: "Criminal VIP ejected" @
+CFD8DCDC202CCB: "Head of State VIP delivered" @
+1F792B34EE786B: "Head of State VIP ejected" @
 4321CCEECE5E6F: "Total Bulk Passengers Delivered" => "Pasażerowie Masowi"
 9599802D75489A: "Total VIPs Delivered" => "Pasażerowie VIP"
 A8DD51D45A8D5D: "Total Delivered" => "Dostarczono Pasażerów"
