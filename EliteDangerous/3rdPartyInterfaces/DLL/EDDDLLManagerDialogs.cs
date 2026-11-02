@@ -83,7 +83,7 @@ namespace EliteDangerousCore.DLL
             {
                 if (dll.HasConfig())
                 {
-                    f.Add(new ExtendedControls.ConfigurableEntryList.Entry(dll.Name, typeof(ExtendedControls.ExtButton), dll.Name, new Point(margin, vpos), new Size(width - margin - 20, 20), null) );
+                    f.Add(new ExtendedControls.ConfigurableEntryList.Entry("DLL:" + dll.Name, typeof(ExtendedControls.ExtButton), dll.Name, new Point(margin, vpos), new Size(width - margin - 20, 20), null) );
                     vpos += 30;
                     hasconfig = true;
                 }
@@ -108,11 +108,12 @@ namespace EliteDangerousCore.DLL
                 {
                     f.ReturnResult(DialogResult.Cancel);
                 }
-                else
+                else if ( controlname.StartsWith("DLL:") )      // any other ignored
                 {
-                    var dllcaller = FindCaller(controlname);
-                    string res = dllcaller.Config(UserDatabase.Instance.GetSetting("DLLConfig_" + controlname,""),true);     // edit config
-                    UserDatabase.Instance.PutSetting("DLLConfig_" + controlname, res);
+                    string dllname = controlname.Substring(4);
+                    var dllcaller = FindCaller(dllname);
+                    string res = dllcaller.Config(UserDatabase.Instance.GetSetting("DLLConfig_" + dllname,""),true);     // edit config
+                    UserDatabase.Instance.PutSetting("DLLConfig_" + dllname, res);
                     f.ReturnResult(DialogResult.Cancel);
                 }
             };
