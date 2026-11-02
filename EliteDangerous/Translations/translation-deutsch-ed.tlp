@@ -932,12 +932,12 @@ B217E98C3BF70F: "Ruby" => "Rubin"
 6206BF660FE9B5: "Operations Counter Attack Data" => "Einsatz Gegenangriffsdaten"
 528C2290F89AFD: "Unica Seed" => "Unicasamen"
 
-0699E02BB02A10: "Lavigny Strategic Reports" @
-EA6D434BC1E5D6: "Kaine Aid Supplies" @
-5DB14E9EEAF322: "Kaine Misinformation" @
-81320CA23D7CCE: "Kaine Lobbying Material" @
-62DCE2D4E6193E: "Vault Codes" @
-C3BFDD370DE4F3: "Classified Material" @
+0699E02BB02A10: "Lavigny Strategic Reports" => "Lavigny Strategieberichte"
+EA6D434BC1E5D6: "Kaine Aid Supplies" => "Kaine Hilfsvorräte"
+5DB14E9EEAF322: "Kaine Misinformation" => "Kaine Fehlinformationen"
+81320CA23D7CCE: "Kaine Lobbying Material" => "Kaine Lobbyingmaterial"
+62DCE2D4E6193E: "Vault Codes" => "Tresorcodes"
+C3BFDD370DE4F3: "Classified Material" => "Geheimmaterial"
 
 SECTION MaterialTypes
 
@@ -1585,13 +1585,13 @@ B94A658100919D: "Ship ID Right" => "Schiff-ID Rechts"
 1E5D7A96ED6F01: "Ship ID Left" => "Schiff-ID Links"
 986D947429065E: "Ship Kit Bumper" => "Schiffsbausatz Bumper"
 91DC0A268418F5: "Ship Kit Spoiler" => "Schiffsbausatz Spoiler"
-02D73E3B642B27: "Ship Kit Internal" @
+02D73E3B642B27: "Ship Kit Internal" => "Schiffsbausatz Intern"
 993E2B74B2EA99: "Ship Kit Tail" => "Schiffsbausatz Heck"
 9E0027E395B765: "Ship Kit Wings" => "Schiffsbausatz Flügel"
 BC9DE092B7E58D: "Nameplate Right" => "Namensschild Rechts"
 DC73070F29FAA0: "Nameplate Left" => "Namensschild Links"
-86B05A17A986F4: "Optional Slot 0 Class 6" @
-878184904938D1: "Optional Slot 0 Class 7" @
+86B05A17A986F4: "Optional Slot 0 Class 6" => "Optionaler Schacht 0 Klasse 6"
+878184904938D1: "Optional Slot 0 Class 7" => "Optionaler Schacht 0 Klasse 7"
 E7D24C92C73F25: "Optional Slot 0 Class 8" => "Optionaler Schacht 0 Klasse 8"
 885F2C9C4B7E8B: "Optional Slot 1 Class 2" => "Optionaler Schacht 1 Klasse 2"
 0B0A56C382EEA6: "Optional Slot 1 Class 3" => "Optionaler Schacht 1 Klasse 3"
