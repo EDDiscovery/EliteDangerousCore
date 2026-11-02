@@ -390,7 +390,7 @@ namespace EliteDangerousCore.JournalEvents
         {
             public int Accepted { get; set; }
             public int Refugeebulkdelivered { get; set; }
-            public int Refugeebulejected { get; set; }
+            public int Refugeebulkejected { get; set; }
             public int AidWorkerbulkdelivered { get; set; }
             public int AidWorkerbulkejected { get; set; } //just a guess, these new things don't show up when the value is zero, but all of the new seem to have ejected too
             public int Touristvipdelivered { get; set; }
@@ -434,7 +434,7 @@ namespace EliteDangerousCore.JournalEvents
                 return frontline + BaseUtils.FieldBuilder.BuildSetPad(Environment.NewLine + frontline,
                     "Accepted Passenger Missions".Tx() + ": ;;N0", Accepted,
                     "Refugees bulk delivered".Tx() + ": ;;N0", Refugeebulkdelivered,
-                    "Refugees bulk ejected".Tx() + ": ;;N0", Refugeebulejected,
+                    "Refugees bulk ejected".Tx() + ": ;;N0", Refugeebulkejected,
                     "Aidworker bulk delivered".Tx() + ": ;;N0", AidWorkerbulkdelivered,
                     "Aidworker bulk ejected".Tx() + ": ;;N0", AidWorkerbulkejected,
                     "Tourist VIP delivered".Tx() + ": ;;N0", Touristvipdelivered,
