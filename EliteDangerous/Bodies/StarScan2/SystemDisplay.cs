@@ -26,7 +26,8 @@ namespace EliteDangerousCore.StarScan2
         #region Public 
         public bool ShowWebBodies { get; set; }
         public bool ShowMoons { get; set; } = true;
-        public bool ShowOverlays { get; set; } = true;
+        public bool ShowLeftIcons { get; set; } = true;
+        public bool ShowRingSignal { get; set; } = true;
         public bool ShowMaterials { get; set; } = true;
         public bool ShowOnlyMaterialsRare { get; set; } = false;
         public bool HideFullMaterials { get; set; } = false;

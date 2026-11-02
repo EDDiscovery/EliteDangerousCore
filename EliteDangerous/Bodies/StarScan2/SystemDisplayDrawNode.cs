@@ -132,7 +132,7 @@ namespace EliteDangerousCore.StarScan2
                 bool valuable = false, isdiscovered = false, terraformable = false, volcanism = false, mapped = false, previouslymapped = false, materialsicon = false, 
                                         hasatmosphere = false, landable = false;
                 int ringcount = 0;
-                bool ringshavesignals = ShowOverlays && bn.HasSignalsOnRingsOrBelts();
+                bool ringshavesignals = ShowRingSignal && bn.HasSignalsOnRingsOrBelts();
                 Image nodeimage = BodyDefinitions.GetImageNotScanned();
 
                 StringBuilder tooltip = new StringBuilder(1024);
@@ -285,7 +285,7 @@ namespace EliteDangerousCore.StarScan2
                     tooltip.AppendCR();
                 }
 
-                int numlefticons = ShowOverlays ? (terraformable ? 1 : 0) + (volcanism ? 1 : 0) +
+                int numlefticons = ShowLeftIcons ? (terraformable ? 1 : 0) + (volcanism ? 1 : 0) +
                                     (valuable ? 1 : 0) + (mapped ? 1 : 0) + (isdiscovered ? 1 : 0) + (previouslymapped ? 1 : 0) +
                                     (bn.Signals!=null? 1:0) + (bn.Organics != null ? 1 : 0) + (bn.CodexEntries != null ? 1 : 0)
                                     : 0;
