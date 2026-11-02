@@ -59,7 +59,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = MCFDName.Normalise(Name.ID, out string engname, ev);
+                Name = MCFDName.Normalise(Name.ID, out string engname, ev, MaterialCommodityMicroResourceType.CatType.Commodity);
                 FriendlyName = engname;
             }
         }
@@ -124,7 +124,7 @@ namespace EliteDangerousCore.JournalEvents
             public int Amount { get; set; }
             public void Normalise(JournalEntry ev)
             {
-                Name = MCFDName.Normalise(Name.ID, out string engname, ev);
+                Name = MCFDName.Normalise(Name.ID, out string engname, ev, MaterialCommodityMicroResourceType.CatType.Commodity);
                 FriendlyName = engname;
             }
         }
@@ -191,6 +191,15 @@ namespace EliteDangerousCore.JournalEvents
 
         public string StarSystem { get; set; }
         public SystemAddress SystemAddress { get; set; }
+    }
+
+    // only seen briefly in time
+    [JournalEntryType(JournalTypeEnum.CompleteConstruction)]
+    public class JournalColonisationnCompleteConstruction : JournalEntry
+    {
+        public JournalColonisationnCompleteConstruction(JObject evt) : base(evt, JournalTypeEnum.ColonisationSystemClaimRelease)
+        {
+        }
     }
 
 

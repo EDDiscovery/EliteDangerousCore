@@ -64,14 +64,14 @@ namespace EliteDangerousCore.JournalEvents
                 ;
             }
 
-            Commodity = MCFDName.Normalise(evt["Commodity"].Str(), out string engname, this, true);
+            Commodity = MCFDName.Normalise(evt["Commodity"].Str(), out string engname, this, MaterialCommodityMicroResourceType.CatType.Commodity, true);
             if (Commodity != null)
             {
                 FriendlyCommodity = engname;
                 Commodity_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
             }
 
-            Material = MCFDName.Normalise(evt["Material"].Str(), out engname, this, true);
+            Material = MCFDName.Normalise(evt["Material"].Str(), out engname, this, null, true);
             if (Material != null)
             {
                 FriendlyMaterial = engname;
@@ -165,7 +165,7 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         foreach (var kvp in temp)
                         {
-                            var fdname = MCFDName.Normalise(kvp.Key, out engname, this, true);
+                            var fdname = MCFDName.Normalise(kvp.Key, out engname, this, null, true);
                             if (fdname != null)
                             {
                                 var i = new Ingrediant()
@@ -185,7 +185,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     foreach (JObject jo in (JArray)ingredients)
                     {
-                        var fdname = MCFDName.Normalise(jo["Name"].Str(), out engname, this, true);
+                        var fdname = MCFDName.Normalise(jo["Name"].Str(), out engname, this, null, true);
                         if (fdname != null)     // must be present and non null
                         {
                             var i = new Ingrediant()

@@ -47,7 +47,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalBuyDrones(JObject evt) : base(evt, JournalTypeEnum.BuyDrones)
         {
-            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this);
+            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this, MaterialCommodityMicroResourceType.CatType.Commodity);
             FriendlyType = engname;
             Count = evt["Count"].Int();
             BuyPrice = evt["BuyPrice"].Long();
@@ -97,7 +97,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSellDrones(JObject evt) : base(evt, JournalTypeEnum.SellDrones)
         {
-            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this);
+            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this, MaterialCommodityMicroResourceType.CatType.Commodity);
             FriendlyType = engname;
             Count = evt["Count"].Int();
             SellPrice = evt["SellPrice"].Long();

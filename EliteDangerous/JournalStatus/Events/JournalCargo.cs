@@ -35,7 +35,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = MCFDName.Normalise(Name.ID, out string engname, ev);
+                Name = MCFDName.Normalise(Name.ID, out string engname, ev, MaterialCommodityMicroResourceType.CatType.Commodity);
                 FriendlyName = engname;
                 FriendlyName = MaterialCommodityMicroResourceType.GetTranslatedNameByFDName(Name);
             }
@@ -159,7 +159,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalEjectCargo(JObject evt) : base(evt, JournalTypeEnum.EjectCargo)
         {
-            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this);
+            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this, MaterialCommodityMicroResourceType.CatType.Commodity);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
 
@@ -202,7 +202,7 @@ namespace EliteDangerousCore.JournalEvents
             UpdateType = evt["UpdateType"].Str();        // must be FD name
             System.Enum.TryParse<UpdateTypeEnum>(UpdateType, out UpdateTypeEnum u);
             UpdateEnum = u;
-            CargoType = MCFDName.Normalise(evt["CargoType"].Str(), out string engname, this, true);     // may be missing
+            CargoType = MCFDName.Normalise(evt["CargoType"].Str(), out string engname, this, MaterialCommodityMicroResourceType.CatType.Commodity, true);     // may be missing
             FriendlyCargoType = engname;
             Count = evt["Count"].Int(0);
             StartMarketID = new MarketID(evt["StartMarketID"]);
@@ -277,7 +277,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalCollectCargo(JObject evt) : base(evt, JournalTypeEnum.CollectCargo)
         {
-            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this);
+            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this, MaterialCommodityMicroResourceType.CatType.Commodity);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);         // always ensure we have one
             Stolen = evt["Stolen"].Bool();

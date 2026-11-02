@@ -23,7 +23,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMiningRefined(JObject evt) : base(evt, JournalTypeEnum.MiningRefined)
         {
-            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this);
+            Type = MCFDName.Normalise(evt["Type"].Str(), out string engname, this, MaterialCommodityMicroResourceType.CatType.Commodity);
             FriendlyType = engname;
             Type_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Type_Localised"].Str(), FriendlyType);
         }
@@ -83,7 +83,7 @@ namespace EliteDangerousCore.JournalEvents
             Content = evt["Content"].Enumeration<AsteroidContent>(AsteroidContent.Low, x=>x.Replace("$AsteroidMaterialContent_","").Replace(";",""));
             Content_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Content_Localised"].Str(), Content.ToString());
 
-            MotherlodeMaterial = MCFDName.Normalise(evt["MotherlodeMaterial"].Str(), out string engname, this, true);
+            MotherlodeMaterial = MCFDName.Normalise(evt["MotherlodeMaterial"].Str(), out string engname, this, MaterialCommodityMicroResourceType.CatType.Commodity, true);
             if (MotherlodeMaterial != null)
             {
                 FriendlyMotherlodeMaterial = engname;
@@ -97,7 +97,7 @@ namespace EliteDangerousCore.JournalEvents
             {
                 foreach (Material m in Materials)
                 {
-                    m.Name = MCFDName.Normalise(m.Name.ID, out engname, this);
+                    m.Name = MCFDName.Normalise(m.Name.ID, out engname, this, null);
                     m.FriendlyName = engname;
                 }
             }

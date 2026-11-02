@@ -193,48 +193,70 @@ namespace EliteDangerousCore
                     {
                         JournalLocation jloc = je as JournalLocation;
 
-                        // Location comes out on a Fleetcarrier when on foot with docked=false, on foot= true, detect it and reject using this location, keep with old
+                        // Location comes out on a Fleetcarrier when on foot with docked=false, on foot= true, detect it 
                         bool weareonafleetcarrieronfoot = FDStationType == StationDefinitions.StarportTypes.FleetCarrier && jloc.Docked == false && jloc.OnFoot == true;
 
-                        // if we are on foot at a plantary base, and we have a location, we have more info already
-                        bool weareonaplanterarybase = jloc.OnFoot == true && !jloc.Docked && (TravelState == TravelStateType.OnFootPlanetaryPort || TravelState == TravelStateType.OnFootPlanet);
-
-                        //if (je.EventTimeUTC == new System.DateTime(2022, 5, 13, 12, 25, 14))  { }
-
-                        // Location when we are onfoot or outside station just gives 'Station'. if we know the type CORRECT
-                        if ( CurrentLocation != null && jloc.FDStationType == StationDefinitions.StarportTypes.Station && CurrentLocation.FDStationType != StationDefinitions.StarportTypes.Unknown)
+                        // we are on a fleet carrier on foot
+                        if (weareonafleetcarrieronfoot)
                         {
-                            jloc.FDStationType = CurrentLocation.FDStationType;
-                            jloc.StationType = StationDefinitions.ToEnglish(jloc.FDStationType);
-                        }
+                            // new nov 26 we could have jumped while on foot, check if we are not at the same location..
+                            // if we are at the same location, keep the current location
 
-                        if (!weareonafleetcarrieronfoot && !weareonaplanterarybase)
-                        {
-                            bool locinstation = jloc.FDStationType != StationDefinitions.StarportTypes.Unknown;
-
-                            TravelStateType t =
-                                           hes.TravelState == TravelStateType.Lander || hes.TravelState == TravelStateType.LanderLanded ? hes.TravelState :
-                                            jloc.Docked ? (jloc.Multicrew == true ? TravelStateType.MulticrewDocked : TravelStateType.Docked) :
-                                                (jloc.InSRV == true) ? (jloc.Multicrew == true ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :
-                                                    jloc.Taxi == true ? TravelStateType.TaxiNormalSpace :          // can't be in dropship, must be in normal space.
-                                                        jloc.OnFoot == true ? (locinstation ? TravelStateType.OnFootStarPort : TravelState == TravelStateType.OnFootPlanetaryPort ? TravelState : TravelStateType.OnFootPlanet) :
-                                                            jloc.Latitude.HasValue ? (jloc.Multicrew == true ? TravelStateType.MulticrewLanded : TravelStateType.Landed) :
-                                                                jloc.Multicrew == true ? TravelStateType.MulticrewNormalSpace :
-                                                                    TravelStateType.NormalSpace;
-
-                            hes = new HistoryEntryStatus(this)     // Bodyapproach copy over we should be in the same state as last..
+                            if ( CurrentLocation == null || ( jloc.SystemAddress.IsValid && jloc.BodyID != null && (jloc.SystemAddress != CurrentLocation.SystemAddress || jloc.BodyID != CurrentLocation.BodyID )))
                             {
-                                TravelState = t,
-                                CurrentLocation = jloc,
-                                Wanted = jloc.Wanted,
-                                CurrentBoost = 1,
-                                JumpSequence = null,
-                                LastDockingGranted = null,
-                            };
+                                System.Diagnostics.Debug.WriteLine($"HES {jloc.EventTimeUTC} Location changed while on foot on carrier");
+
+                                hes = new HistoryEntryStatus(this)     // Bodyapproach copy over we should be in the same state as last..
+                                {
+                                    CurrentLocation = jloc,
+                                    Wanted = jloc.Wanted,
+                                    CurrentBoost = 1,
+                                    JumpSequence = null,
+                                    LastDockingGranted = null,
+                                };
+                            }
+
                         }
                         else
                         {
-                            ignored = true;
+                            // if we are on foot at a plantary base, and we have a location, we have more info already
+                            bool weareonaplanterarybase = jloc.OnFoot == true && !jloc.Docked && (TravelState == TravelStateType.OnFootPlanetaryPort || TravelState == TravelStateType.OnFootPlanet);
+
+                            // Location when we are onfoot or outside station just gives 'Station'. if we know the type CORRECT
+                            if (CurrentLocation != null && jloc.FDStationType == StationDefinitions.StarportTypes.Station && CurrentLocation.FDStationType != StationDefinitions.StarportTypes.Unknown)
+                            {
+                                jloc.FDStationType = CurrentLocation.FDStationType;
+                                jloc.StationType = StationDefinitions.ToEnglish(jloc.FDStationType);
+                            }
+
+                            if (!weareonaplanterarybase)
+                            {
+                                bool locinstation = jloc.FDStationType != StationDefinitions.StarportTypes.Unknown;
+
+                                TravelStateType t =
+                                               hes.TravelState == TravelStateType.Lander || hes.TravelState == TravelStateType.LanderLanded ? hes.TravelState :
+                                                jloc.Docked ? (jloc.Multicrew == true ? TravelStateType.MulticrewDocked : TravelStateType.Docked) :
+                                                    (jloc.InSRV == true) ? (jloc.Multicrew == true ? TravelStateType.MulticrewSRV : TravelStateType.SRV) :
+                                                        jloc.Taxi == true ? TravelStateType.TaxiNormalSpace :          // can't be in dropship, must be in normal space.
+                                                            jloc.OnFoot == true ? (locinstation ? TravelStateType.OnFootStarPort : TravelState == TravelStateType.OnFootPlanetaryPort ? TravelState : TravelStateType.OnFootPlanet) :
+                                                                jloc.Latitude.HasValue ? (jloc.Multicrew == true ? TravelStateType.MulticrewLanded : TravelStateType.Landed) :
+                                                                    jloc.Multicrew == true ? TravelStateType.MulticrewNormalSpace :
+                                                                        TravelStateType.NormalSpace;
+
+                                hes = new HistoryEntryStatus(this)     // Bodyapproach copy over we should be in the same state as last..
+                                {
+                                    TravelState = t,
+                                    CurrentLocation = jloc,
+                                    Wanted = jloc.Wanted,
+                                    CurrentBoost = 1,
+                                    JumpSequence = null,
+                                    LastDockingGranted = null,
+                                };
+                            }
+                            else
+                            {
+                                ignored = true;
+                            }
                         }
 
                         break;

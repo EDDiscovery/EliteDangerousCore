@@ -141,7 +141,7 @@ namespace EliteDangerousCore.JournalEvents
 
             MissionID = new MissionID(evt["MissionID"]);
 
-            Commodity = MCFDName.Normalise(evt["Commodity"].Str(), out engname, this, true);        // allow null
+            Commodity = MCFDName.Normalise(evt["Commodity"].Str(), out engname, this, MaterialCommodityMicroResourceType.CatType.Commodity, true);        // allow null
             FriendlyCommodity = engname;
             if (Commodity != null)
                 CommodityLocalised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
@@ -290,7 +290,7 @@ namespace EliteDangerousCore.JournalEvents
 
             Faction = evt["Faction"].Str();
 
-            Commodity = MCFDName.Normalise(evt["Commodity"].Str(), out engname, this, true);        // allow null
+            Commodity = MCFDName.Normalise(evt["Commodity"].Str(), out engname, this, MaterialCommodityMicroResourceType.CatType.Commodity, true);        // allow null
             if (Commodity != null)
             {
                 FriendlyCommodity = engname;
@@ -598,7 +598,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = MCFDName.Normalise(Name.ID, out string engname, ev);
+                Name = MCFDName.Normalise(Name.ID, out string engname, ev, null);
                 FriendlyName = engname;
                 Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(Name_Localised ?? "", FriendlyName);
 
@@ -619,7 +619,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Name = MCFDName.Normalise(Name.ID, out string engname, ev);
+                Name = MCFDName.Normalise(Name.ID, out string engname, ev, MaterialCommodityMicroResourceType.CatType.Commodity);
                 FriendlyName = engname;
                 Name_Localised = Name_Localised.Alt(FriendlyName);
             }

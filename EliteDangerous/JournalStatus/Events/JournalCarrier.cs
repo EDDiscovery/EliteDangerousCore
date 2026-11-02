@@ -750,7 +750,7 @@ namespace EliteDangerousCore.JournalEvents
             CancelTrade = evt["CancelTrade"].BoolNull();
 
             Order.BlackMarket = evt["BlackMarket"].Bool();
-            Order.Commodity = MCFDName.Normalise(evt["Commodity"].Str(), out string engname, this);
+            Order.Commodity = MCFDName.Normalise(evt["Commodity"].Str(), out string engname, this, MaterialCommodityMicroResourceType.CatType.Commodity);
             Order.Commodity_Localised =JournalFieldNaming.CheckLocalisation(evt["Commodity_Localised"].Str(), engname);
             Order.PurchaseOrder = evt["PurchaseOrder"].IntNull();
             Order.SaleOrder = evt["SaleOrder"].IntNull();

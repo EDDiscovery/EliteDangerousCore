@@ -147,7 +147,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalScientificResearch(JObject evt) : base(evt, JournalTypeEnum.ScientificResearch)
         {
-            Name = MCFDName.Normalise(evt["Name"].Str(), out string matname, this);
+            Name = MCFDName.Normalise(evt["Name"].Str(), out string matname, this, null);
             FriendlyName = matname;
             Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), matname);
             Count = evt["Count"].Int();
@@ -172,7 +172,7 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalSearchAndRescue(JObject evt) : base(evt, JournalTypeEnum.SearchAndRescue)
         {
-            FDName = MCFDName.Normalise(evt["Name"].Str(), out string engname, this);
+            FDName = MCFDName.Normalise(evt["Name"].Str(), out string engname, this,null);
             FriendlyName = engname;
             Name_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Name_Localised"].Str(), FriendlyName);         // always ensure we have one
             Count = evt["Count"].Int();

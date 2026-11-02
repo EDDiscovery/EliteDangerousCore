@@ -192,7 +192,7 @@ namespace EliteDangerousCore
 
             // new Oct 2026 noted
 
-            OperationsStrikeData, OperationsCounterAttackData, NM_Seed,
+            OperationsStrikeData, OperationsCounterAttackData, NM_Seed, AlienArtefact,
 
             //---------------------------------------------------------- Component/Assets
             Aerogel = 5000, CarbonFibrePlating, ChemicalCatalyst, ChemicalSuperbase, Circuitboard, CircuitSwitch, ElectricalFuse, ElectricalWiring,
@@ -1301,6 +1301,7 @@ namespace EliteDangerousCore
             Add(CatType.Item, MCMR.OperationsStrikeData, "Operations Strike Data", "OPRSD");
             Add(CatType.Item, MCMR.OperationsCounterAttackData, "Operations Counter Attack Data", "OPRCAD");
             Add(CatType.Item, MCMR.NM_Seed, "Unica Seed", "USEED");
+            Add(CatType.Item, MCMR.AlienArtefact, "Classified Material", "ALART");
 
             // Components
 

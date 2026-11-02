@@ -42,7 +42,7 @@ namespace EliteDangerousCore
             return base.CompareTo(other);
         }
 
-        public static MCFDName Normalise(string fdname, out string matname, JournalEntry ev, bool allownull = false)
+        public static MCFDName Normalise(string fdname, out string matname, JournalEntry ev, MaterialCommodityMicroResourceType.CatType? cat, bool allownull = false )
         {
             if (fdname.IsEmpty())
             {
@@ -76,7 +76,7 @@ namespace EliteDangerousCore
                 else
                 {
                     if (ev?.EventTimeUTC > EliteReleaseDates.ComplainTime)
-                        BaseUtils.Debugger.TraceBreak($"*** Unknown Mat/Commod `{fdname}` {ev?.EventTimeUTC.ToStringZulu()} {(ev?.IsBeta == true ? "BETA " : "")}{ev?.EventTypeStr}", true);
+                        BaseUtils.Debugger.TraceBreak($"*** Unknown Mat/Commod `{fdname}` {cat} {ev?.EventTimeUTC.ToStringZulu()} {(ev?.IsBeta == true ? "BETA " : "")}{ev?.EventTypeStr}", true);
 
                     matname = fdname.SplitCapsWordFull();
                 }

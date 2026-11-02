@@ -47,7 +47,7 @@ namespace EliteDangerousCore.JournalEvents
         // if cat is set, cat is forced to this value
         public void Normalise(MaterialCommodityMicroResourceType.CatType? cat, JournalEntry ev)
         {
-            Name = MCFDName.Normalise(Name.ID, out string engname, ev);
+            Name = MCFDName.Normalise(Name.ID, out string engname, ev, cat);
             if (Name_Localised.IsEmpty())
                 Name_Localised = engname;
             if (cat != null)
@@ -408,11 +408,12 @@ namespace EliteDangerousCore.JournalEvents
             Offered = evt["Offered"]?.ToObject<MicroResource[]>(false, process: MaterialCommodityMicroResourceType.ToCategory)?.ToArray();
             MicroResource.Normalise(Offered,null, this);
 
-            Received = MCFDName.Normalise(evt["Received"].Str(), out string engname, this);
+            Category = MaterialCommodityMicroResourceType.ToCategory(evt["Category"].Str());
+
+            Received = MCFDName.Normalise(evt["Received"].Str(), out string engname, this, Category);
             Received_FriendlyName = engname;
             Received_Localised = JournalFieldNaming.CheckLocalisation(evt["Received_Localised"].Str(), Received_FriendlyName);
 
-            Category = MaterialCommodityMicroResourceType.ToCategory(evt["Category"].Str());
             Count = evt["Count"].Int();
             MarketID = new MarketID(evt["MarketID"]);
         }
@@ -583,7 +584,7 @@ namespace EliteDangerousCore.JournalEvents
             //Collect Name, Name_Localised,  Type, OwnerId, Count. Enable custom attributes to allow type to alias to category
             evt.ToObjectProtected(Resource.GetType(), true, membersearchflags: System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly, 
                             initialobject: Resource, MaterialCommodityMicroResourceType.ToCategory);        // read fields named in this structure matching JSON names
-            Resource.Normalise(null,this);
+            Resource.Normalise(Resource.Category,this);
             Stolen = evt["Stolen"].Bool();
         }
 

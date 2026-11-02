@@ -34,9 +34,9 @@ namespace EliteDangerousCore.JournalEvents
             public string FriendlyName { get; set; }        //friendly
             public int Count { get; set; }
 
-            public void Normalise(JournalEntry ev)
+            public void Normalise(JournalEntry ev, MaterialCommodityMicroResourceType.CatType cat)
             {
-                Name = MCFDName.Normalise(Name.ID, out string engname, ev);
+                Name = MCFDName.Normalise(Name.ID, out string engname, ev, cat);
                 FriendlyName = engname;
             }
         }
@@ -44,25 +44,19 @@ namespace EliteDangerousCore.JournalEvents
         public JournalMaterials(JObject evt) : base(evt, JournalTypeEnum.Materials)
         {
             Raw = evt["Raw"]?.ToObjectQ<Material[]>()?.ToArray();
-            FixNames(Raw);
+            foreach (var x in Raw.EmptyIfNull())
+                x.Normalise(this, MaterialCommodityMicroResourceType.CatType.Raw);
             Manufactured = evt["Manufactured"]?.ToObjectQ<Material[]>()?.ToArray();
-            FixNames(Manufactured);
+            foreach (var x in Manufactured.EmptyIfNull())
+                x.Normalise(this, MaterialCommodityMicroResourceType.CatType.Manufactured);
             Encoded = evt["Encoded"]?.ToObjectQ<Material[]>()?.ToArray();
-            FixNames(Encoded);
+            foreach (var x in Encoded.EmptyIfNull())
+                x.Normalise(this, MaterialCommodityMicroResourceType.CatType.Encoded);
         }
 
         public Material[] Raw { get; set; }             //FDNAMES on purpose
         public Material[] Manufactured { get; set; }
         public Material[] Encoded { get; set; }
-
-        void FixNames(Material[] a)
-        {
-            if (a != null)
-            {
-                foreach (Material m in a)
-                    m.Normalise(this);
-            }
-        }
 
         public override string GetInfo()
         {
@@ -141,10 +135,10 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMaterialCollected(JObject evt) : base(evt, JournalTypeEnum.MaterialCollected)
         {
-            Name = MCFDName.Normalise(evt["Name"].Str(), out string engname, this);
+            Category = MaterialCommodityMicroResourceType.ToCategory(evt["Category"].Str());
+            Name = MCFDName.Normalise(evt["Name"].Str(), out string engname, this, Category);
             FriendlyName = engname;
             Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), FriendlyName);
-            Category = MaterialCommodityMicroResourceType.ToCategory(evt["Category"].Str());
             Count = evt["Count"].Int(1);
         }
         public MCFDName Name { get; set; }
@@ -177,7 +171,7 @@ namespace EliteDangerousCore.JournalEvents
         public JournalMaterialDiscarded(JObject evt) : base(evt, JournalTypeEnum.MaterialDiscarded)
         {
             Category = MaterialCommodityMicroResourceType.ToCategory(evt["Category"].Str());
-            Name = MCFDName.Normalise(evt["Name"].Str(), out string engname, this);
+            Name = MCFDName.Normalise(evt["Name"].Str(), out string engname, this, Category);
             Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), FriendlyName);
             FriendlyName = engname;
             Count = evt["Count"].Int();
@@ -212,10 +206,10 @@ namespace EliteDangerousCore.JournalEvents
     {
         public JournalMaterialDiscovered(JObject evt) : base(evt, JournalTypeEnum.MaterialDiscovered)
         {
-            Name = MCFDName.Normalise(evt["Name"].Str(), out string engname, this);
+            Category = MaterialCommodityMicroResourceType.ToCategory(evt["Category"].Str());
+            Name = MCFDName.Normalise(evt["Name"].Str(), out string engname, this, Category);
             FriendlyName = engname;
             Name_Localised = JournalFieldNaming.CheckLocalisation(evt["Name_Localised"].Str(), FriendlyName);
-            Category = MaterialCommodityMicroResourceType.ToCategory(evt["Category"].Str());
             DiscoveryNumber = evt["DiscoveryNumber"].Int();
         }
 
@@ -279,7 +273,7 @@ namespace EliteDangerousCore.JournalEvents
 
             public void Normalise(JournalEntry ev)
             {
-                Material = MCFDName.Normalise(Material.ID, out string engname,ev);
+                Material = MCFDName.Normalise(Material.ID, out string engname,ev, Category);
                 FriendlyMaterial = engname;
                 Material_Localised = JournalFieldNaming.CheckLocalisationTranslation(Material_Localised ?? "", FriendlyMaterial);       // ensure.
 
@@ -347,7 +341,7 @@ namespace EliteDangerousCore.JournalEvents
                     {
                         foreach (string key in temp.Keys)
                         {
-                            var fdname = MCFDName.Normalise(key, out string _, this);
+                            var fdname = MCFDName.Normalise(key, out string _, this, null);
                             Materials[fdname] = temp[key];
                         }
                     }
@@ -356,7 +350,7 @@ namespace EliteDangerousCore.JournalEvents
                 {
                     foreach (JObject ja in (JArray)mats)
                     {
-                        var fdname = MCFDName.Normalise(ja["Name"].Str(), out string _, this);
+                        var fdname = MCFDName.Normalise(ja["Name"].Str(), out string _, this, null);
                         Materials[fdname] = ja["Count"].Int();
                     }
                 }

@@ -70,6 +70,7 @@ namespace EliteDangerousCore
         ColonisationSystemClaim = 4102,
         ColonisationBeaconDeployed = 4103,
         ColonisationSystemClaimRelease = 4104,
+        CompleteConstruction = 4105,
         Commander = 95,
         CommitCrime = 100,
         CommunityGoal = 109,
