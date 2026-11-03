@@ -398,7 +398,7 @@ namespace EliteDangerousCore.JournalEvents
             information.Append((js.IsLandable && js.nSurfaceTemperature.HasValue && showTemp) ? prepad +  "Surface temperature".Tx() + ": " + Math.Round(js.nSurfaceTemperature.Value, 1, MidpointRounding.AwayFromZero) + "K. " : null);
             information.Append((js.HasMeaningfulVolcanism && showvolcanism) ? js.VolcanismTranslated: null);
             information.Append((hasminingsignals) ? " " + "Has mining signals".Tx() + ". " : null);
-            information.Append((hasplanetaryminingsignals) ? (prepad +  "Has planetary mining signals. ".Tx()) : null);
+            information.Append((hasplanetaryminingsignals) ? (prepad +  "Has planetary mining signals.".Tx() + " ") : null);
 
             information.Append((hasgeosignals) ? ("Geological signals".Tx() + ": "+ js.CountGeoSignals + ". ") : null);
             information.Append((hasbiosignals) ? ("Biological signals".Tx() + ": " + js.CountBioSignals + ". ") : null);

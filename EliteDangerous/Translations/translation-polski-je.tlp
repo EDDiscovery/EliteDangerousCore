@@ -1,9 +1,9 @@
 ﻿
 SECTION JournalTypeEnum
-DC7FCEE8298DF3: "Game Mode Change" @
-E3ACAEA10B7987: "Market ID" @
+DC7FCEE8298DF3: "Game Mode Change" => "Zmiana trybu gry"
+E3ACAEA10B7987: "Market ID" => "Identyfikator rynku"
 9EFC707F8ABFDB: "Launch Vessel" @
-C7EC98CED613F9: "EDD Destination Selected" @
+C7EC98CED613F9: "EDD Destination Selected" => "Wybrano cel w EDDiscovery"
 94A37CFA0C8992: "Afmu Repairs" => "Naprawa AFMU"
 D2F34790ECB3BA: "Approach Body" => "Podchodzenie do Ciała Niebieskiego"
 5FB514306EBAE2: "Approach Settlement" => "Podchodzenie do Osady"
@@ -25,15 +25,15 @@ D901282523F7E6: "Community Goal Join" => "Dołączenie do Celu Społeczności"
 D9DBF455284B6C: "Crew Assign" => "Przypisanie Załogi"
 9FCD1C303A28D0: "Crew Fire" => "Zwolnienie Załogi"
 F461D7CE106E43: "Crew Hire" => "Zatrudnienie Załogi"
-0DE99E6DD44B25: "Colonisation Construction Depot" @
-8B4C0F68F590D1: "Colonisation Contribution" @
-CAD2667B19FFD9: "Colonisation System Claim" @
-FDC7F8A4C985F5: "Colonisation Beacon Deployed" @
-87AD5FCA61B672: "Colonisation System Claim Release" @
-C1873A0AEF8AFA: "Complete Construction" @
+0DE99E6DD44B25: "Colonisation Construction Depot" => "Skład budowlany kolonizacji"
+8B4C0F68F590D1: "Colonisation Contribution" => "Wkład w kolonizację"
+CAD2667B19FFD9: "Colonisation System Claim" => "Zgłoszenie roszczenia do kolonizacji układu"
+FDC7F8A4C985F5: "Colonisation Beacon Deployed" => "Rozmieszczenie boi kolonizacyjnej"
+87AD5FCA61B672: "Colonisation System Claim Release" => "Zrzeczenie się roszczenia do kolonizacji układu"
+C1873A0AEF8AFA: "Complete Construction" => "Zakończenie budowy"
 D03AD030E9F093: "Clear Impound" @
 C82B7C89CBD30E: "Datalink Scan" => "Skan Łącza Danych"
-C681DDF728EF23: "Deliver Power Micro Resources" @
+C681DDF728EF23: "Deliver Power Micro Resources" => "Dostarczenie mikrozasobów potędze"
 7DA32347D585AC: "Discovery Scan" => "Skan Badawczy"
 9D8193CC2A2C4A: "Docked" => "Zadokowano"
 6D2D27037BA796: "Dock Fighter" => "Zadokowano Myśliwiec"
@@ -45,13 +45,13 @@ A45578BCD4D634: "Docking Denied" => "Odmówiono Dokowania"
 796895CEA9660E: "Dock SRV" => "Dokowanie SRV"
 E7E61DBEAF0D82: "Eject Cargo" => "Wyrzucenie Ładunku"
 8BA3287C64D3F8: "End Crew Session" => "Zakończono Sesję Załogi"
-C8A941A4EACDD9: "Engineer Apply" @
+C8A941A4EACDD9: "Engineer Apply" => "Zastosowanie ulepszenia inżynierskiego"
 772CD2D2953DAF: "Engineer Contribution" => "Datek dla Inżyniera"
 DCC8C35235D14B: "Engineer Craft" => "Ulepszenie Inżynierskie"
-2CD177C5449797: "Engineer Legacy Convert" @
+2CD177C5449797: "Engineer Legacy Convert" => "Konwersja starego ulepszenia inżynierskiego"
 D86077951EF998: "Engineer Progress" => "Postęp Inżynierów"
 DA8DFCD3EB91C7: "Escape Interdiction" => "Uniknięcie Przechwycenia"
-5B25DA29144CE3: "Bartender Materials" @
+5B25DA29144CE3: "Bartender Materials" => "Materiały barmana"
 C8DFA75D28023B: "FSD Jump" => "Skok FSD"
 E32CE0896F3456: "Fuel Scoop" => "Czerpanie Paliwa"
 25078CE898205E: "Fileheader" => "Nagłówek Pliku"
@@ -61,7 +61,7 @@ C11D5E1D35FB7E: "Friends" => "Znajomi"
 612F78C20036B3: "Heat Damage" => "Uszkodzenie od Przegrzania"
 2404C350585EFF: "Heat Warning" => "Ostrzeżenie o Przegrzaniu"
 8DCEF71583C289: "Hull Damage" => "Uszkodzenie Poszycia"
-AC6279DDA92ACD: "Holoscreen Hacked" @
+AC6279DDA92ACD: "Holoscreen Hacked" => "Włamanie do holoekranu"
 CFBCD7231691E7: "Jet Cone Damage" => "Uszkodzenia od Gwiazdy Neutronowej"
 6B9B8F3795C3FE: "Join A Crew" => "Dołączenie do Załogi"
 5E2C7463061466: "Kick Crew Member" => "Wyrzucenie Członka Załogi"
@@ -97,15 +97,15 @@ A9F7B6DA4CD9A2: "Npc Crew Paid Wage" => "Wypłata Załogi NPC"
 BA39C1516AABF2: "Npc Crew Rank" => "Ranga Załogi NPC"
 76A8964DFF1EA9: "Pay Bounties" => "Zapłacono Wyznaczoną Nagrodę"
 089888F828B2F4: "Pay Legacy Fines" => "Zapłacono Poprzednie Kary"
-5000616468FC32: "Powerplay Collect" @
-10B7247C88B0C7: "Powerplay Defect" @
-4CA45BD051B2D7: "Powerplay Deliver" @
-3104A57A10DED4: "Powerplay Fast Track" @
-21D40F054F6CD6: "Powerplay Join" @
-6EB11A5AE6507E: "Powerplay Leave" @
-5CC808A9CDDAFF: "Powerplay Salary" @
-40B15AA6265BDE: "Powerplay Vote" @
-1F671B74035C76: "Powerplay Voucher" @
+5000616468FC32: "Powerplay Collect" => "Powerplay — odbiór towarów"
+10B7247C88B0C7: "Powerplay Defect" => "Powerplay — przejście do innej potęgi"
+4CA45BD051B2D7: "Powerplay Deliver" => "Powerplay — dostarczenie towarów"
+3104A57A10DED4: "Powerplay Fast Track" => "Powerplay — przyspieszony odbiór towarów"
+21D40F054F6CD6: "Powerplay Join" => "Powerplay — dołączenie do potęgi"
+6EB11A5AE6507E: "Powerplay Leave" => "Powerplay — opuszczenie potęgi"
+5CC808A9CDDAFF: "Powerplay Salary" => "Powerplay — wynagrodzenie"
+40B15AA6265BDE: "Powerplay Vote" => "Powerplay — głosowanie"
+1F671B74035C76: "Powerplay Voucher" => "Powerplay — voucher"
 550AE25C2EEEB9: "Promotion" => "Awans"
 249F234E0ECB7D: "PVP Kill" => "Zabójstwo PvP"
 AEE2D9EEC50FC5: "Quit A Crew" => "Opuszczenie Załogi"
@@ -117,10 +117,10 @@ C362D4612F5C74: "Refuel All" => "Tankowanie do Pełna"
 C3F2BE0BE60597: "Repair All" => "Naprawa Całkowita"
 E8DB7AC16063A4: "Repair Drone" => "Dron Naprawczy"
 5F21606B3A35DE: "Reputation" => "Reputacja"
-C2D9E7B331A6A3: "Request Power Micro Resources" @
+C2D9E7B331A6A3: "Request Power Micro Resources" => "Żądanie mikrozasobów potęgi"
 615977F038158E: "Restock Vehicle" => "Uzupełnienie Pojazdów"
 53515D02D18F1B: "Resurrect" => "Wskrzeszenie"
-23B2A150243DBA: "SAA Signals Found" @
+23B2A150243DBA: "SAA Signals Found" => "Wykrycie sygnałów podczas skanowania powierzchni"
 78A22FBA11B38F: "Scanned" => "Skanowany"
 587EB8CC1361C3: "Scientific Research" => "Badania Naukowe"
 60C152D92DFFCE: "Screenshot" => "Zrzut Ekranu"
@@ -128,7 +128,7 @@ C2D9E7B331A6A3: "Request Power Micro Resources" @
 F06DB83784986C: "Self Destruct" => "Autodestrukcja"
 EBDA61F721E706: "Sell Drones" => "Sprzedaż Dronów"
 756A5F9211337F: "Sell Exploration Data" => "Sprzedaż Danych z Eksploracji"
-8C28B150645580: "Sell Ship On Rebuy" @
+8C28B150645580: "Sell Ship On Rebuy" => "Sprzedaż statku na ekranie odkupienia"
 A4F67D90F861BB: "Send Text" => "Wysłanie Wiadomości"
 ECE8DF43B4E578: "Set User Ship Name" => "Zmiana Nazwy Statku"
 0DA1A534B43399: "Shield State" => "Stan Osłon"
@@ -138,7 +138,7 @@ ECE8DF43B4E578: "Set User Ship Name" => "Zmiana Nazwy Statku"
 4E29C0CE3E9D61: "Shipyard Sell" => "Sprzedaż Statku"
 270AB9D553AFE5: "Shipyard Swap" => "Zamiana Statku"
 7E6D4BF9F2AA3F: "Shipyard Transfer" => "Przeniesienie Statku"
-86188917717CAE: "Shipyard Bank Deposit" @
+86188917717CAE: "Shipyard Bank Deposit" => "Przekazanie statku do banku eskadry"
 7908BD051ADB46: "Ship Targeted" => "Namierzenie Statku"
 7FDDB7D8D1D60B: "Shutdown" => "Wyjście z Gry"
 CAAACBDEADF1BF: "SRV Destroyed" => "SRV Zniszczony"
@@ -146,7 +146,7 @@ CAAACBDEADF1BF: "SRV Destroyed" => "SRV Zniszczony"
 F9BBEDF86004A2: "Stored Ships" => "Przechowywane Statki"
 20F68A6A1AF1CE: "Supercruise Entry" => "Wejście w Supercruise"
 D23F09253DF3FB: "Supercruise Exit" => "Wyjście z Supercruise"
-060A4DB27456BF: "Supercruise Destination Drop" @
+060A4DB27456BF: "Supercruise Destination Drop" => "Wyjście z supercruise w miejscu docelowym"
 572A527CEFEB60: "Systems Shutdown" => "Wyłączenie Systemów Statku"
 BC696A6FB39B1E: "Technology Broker" => "Pośrednik Technologii"
 A2B5B115CC601A: "Touchdown" => "Lądowanie"
@@ -154,10 +154,10 @@ A2B5B115CC601A: "Touchdown" => "Lądowanie"
 43F61E0660CF21: "Undocked" => "Oddokowanie"
 042FA91808F2A3: "USS Drop" => "Podchodzenie do Źródła Sygnału"
 90097AC4D99E06: "Vehicle Switch" => "Zamiana Pojazdów"
-1F5209DDDFC851: "Wing Add" @
-CE86409EC0526C: "Wing Invite" @
-037A5425B51D23: "Wing Join" @
-7CE073E07B941F: "Wing Leave" @
+1F5209DDDFC851: "Wing Add" => "Dodanie do skrzydła"
+CE86409EC0526C: "Wing Invite" => "Zaproszenie do skrzydła"
+037A5425B51D23: "Wing Join" => "Dołączenie do skrzydła"
+7CE073E07B941F: "Wing Leave" => "Opuszczenie skrzydła"
 3F13C520D21BF5: "Module Sell Remote" => "Zdalna Sprzedaż Modułu"
 324545E2943C03: "Fetch Remote Module" => "Przesyłka Modułu"
 E3EE9373B1B90F: "Mass Module Store" => "Przechowanie Wielu Modułów"
@@ -192,68 +192,68 @@ D337B3584D4A2C: "Squadron Demotion" => "Degradacja w Eskadrze"
 1C2A2D69647B4E: "Crime Victim" => "Ofiara Przestępstwa"
 AF9B07B2FEE316: "Prospected Asteroid" => "Zbadano Asteroidę"
 3D182E824C16BF: "Reservoir Replenished" => "Wypełniono Rezerwę"
-42F768126917CA: "Squadron Startup" @
-21F7E2CAA96984: "Carrier Bank Transfer" @
-A94BBBE9C56BBE: "Carrier Buy" @
-A23ED09D92F353: "Carrier Cancel Decommission" @
-66499C0A001316: "Carrier Crew Services" @
-3BE0BA36AF68CA: "Carrier Decommission" @
-F7A0147A3FB973: "Carrier Deposit Fuel" @
-4D7CC816A9CBDF: "Carrier Docking Permission" @
-7DF333A8096FC5: "Carrier Finance" @
-03702A530DD63A: "Carrier Jump Request" @
-1A91119760CE17: "Carrier Jump" @
-CFA1B9339C0699: "Carrier Module Pack" @
-2A84B48D0FEC3D: "Carrier Ship Pack" @
-037850588070C8: "Carrier Stats" @
-811BF0A043B9DD: "Carrier Trade Order" @
-7722B972B8042E: "Carrier Name Change" @
-86A932837E6ED0: "Carrier Jump Cancelled" @
-18FC2307338F5B: "Cargo Transfer" @
-A70E1E5D4FCF57: "Book Dropship" @
-6F0043CCCF4ACB: "Book Taxi" @
-EE2FD771832C88: "Buy Micro Resources" @
-AAABEAA3538323: "Buy Suit" @
-CE6C719AB9B430: "Buy Weapon" @
-1DBFBD01434228: "Cancel Dropship" @
-A1393E5E4FBF69: "Cancel Taxi" @
-31F8CBE66211D5: "Collect Items" @
-32D1411A67758F: "Create Suit Loadout" @
-4409C46E15CC61: "Delete Suit Loadout" @
-48846751537ACB: "Disembark" @
-7AA2403F734BF0: "Drop Items" @
-60944C2DB33AC3: "Embark" @
-AD9D9A51B80C51: "Loadout Equip Module" @
-A39C27356E914A: "Loadout Remove Module" @
-FEACDC101F3C71: "Rename Suit Loadout" @
-92CD330C7476AF: "Scan Organic" @
-E1364B2750FF51: "Sell Micro Resources" @
-1F1D1B09C4D2D1: "Sell Organic Data" @
-B69D39285E77BE: "Sell Suit" @
-F2D461F2B14E6D: "Sell Weapon" @
-89E3F435AC99AC: "Switch Suit Loadout" @
-D6CCA803E4CF15: "Trade Micro Resources" @
-35B057D454E371: "Upgrade Suit" @
-CC32AF210BB9F0: "Upgrade Weapon" @
-2D95A18F6424D0: "Use Consumable" @
-FAE5889CBC718C: "Suit Loadout" @
-AF4A72DDF4E93C: "Dropship Deploy" @
+42F768126917CA: "Squadron Startup" => "Wczytanie danych eskadry"
+21F7E2CAA96984: "Carrier Bank Transfer" => "Przelew środków lotniskowca"
+A94BBBE9C56BBE: "Carrier Buy" => "Zakup lotniskowca"
+A23ED09D92F353: "Carrier Cancel Decommission" => "Anulowanie wycofania lotniskowca z eksploatacji"
+66499C0A001316: "Carrier Crew Services" => "Usługi załogi lotniskowca"
+3BE0BA36AF68CA: "Carrier Decommission" => "Wycofanie lotniskowca z eksploatacji"
+F7A0147A3FB973: "Carrier Deposit Fuel" => "Uzupełnienie paliwa lotniskowca"
+4D7CC816A9CBDF: "Carrier Docking Permission" => "Uprawnienia do dokowania na lotniskowcu"
+7DF333A8096FC5: "Carrier Finance" => "Finanse lotniskowca"
+03702A530DD63A: "Carrier Jump Request" => "Zlecenie skoku lotniskowca"
+1A91119760CE17: "Carrier Jump" => "Skok lotniskowca"
+CFA1B9339C0699: "Carrier Module Pack" => "Pakiet modułów lotniskowca"
+2A84B48D0FEC3D: "Carrier Ship Pack" => "Pakiet statków lotniskowca"
+037850588070C8: "Carrier Stats" => "Statystyki lotniskowca"
+811BF0A043B9DD: "Carrier Trade Order" => "Zlecenie handlowe lotniskowca"
+7722B972B8042E: "Carrier Name Change" => "Zmiana nazwy lotniskowca"
+86A932837E6ED0: "Carrier Jump Cancelled" => "Anulowanie skoku lotniskowca"
+18FC2307338F5B: "Cargo Transfer" => "Przeniesienie ładunku"
+A70E1E5D4FCF57: "Book Dropship" => "Rezerwacja desantowca"
+6F0043CCCF4ACB: "Book Taxi" => "Rezerwacja wahadłowca"
+EE2FD771832C88: "Buy Micro Resources" => "Zakup mikrozasobów"
+AAABEAA3538323: "Buy Suit" => "Zakup skafandra"
+CE6C719AB9B430: "Buy Weapon" => "Zakup broni"
+1DBFBD01434228: "Cancel Dropship" => "Anulowanie desantowca"
+A1393E5E4FBF69: "Cancel Taxi" => "Anulowanie wahadłowca"
+31F8CBE66211D5: "Collect Items" => "Zebranie przedmiotów"
+32D1411A67758F: "Create Suit Loadout" => "Utworzenie zestawu wyposażenia skafandra"
+4409C46E15CC61: "Delete Suit Loadout" => "Usunięcie zestawu wyposażenia skafandra"
+48846751537ACB: "Disembark" => "Opuszczenie pojazdu"
+7AA2403F734BF0: "Drop Items" => "Porzucenie przedmiotów"
+60944C2DB33AC3: "Embark" => "Wejście na pokład"
+AD9D9A51B80C51: "Loadout Equip Module" => "Dodanie modułu do zestawu wyposażenia"
+A39C27356E914A: "Loadout Remove Module" => "Usunięcie modułu z zestawu wyposażenia"
+FEACDC101F3C71: "Rename Suit Loadout" => "Zmiana nazwy zestawu wyposażenia skafandra"
+92CD330C7476AF: "Scan Organic" => "Skanowanie organizmu"
+E1364B2750FF51: "Sell Micro Resources" => "Sprzedaż mikrozasobów"
+1F1D1B09C4D2D1: "Sell Organic Data" => "Sprzedaż danych biologicznych"
+B69D39285E77BE: "Sell Suit" => "Sprzedaż skafandra"
+F2D461F2B14E6D: "Sell Weapon" => "Sprzedaż broni"
+89E3F435AC99AC: "Switch Suit Loadout" => "Zmiana zestawu wyposażenia skafandra"
+D6CCA803E4CF15: "Trade Micro Resources" => "Wymiana mikrozasobów"
+35B057D454E371: "Upgrade Suit" => "Ulepszenie skafandra"
+CC32AF210BB9F0: "Upgrade Weapon" => "Ulepszenie broni"
+2D95A18F6424D0: "Use Consumable" => "Użycie przedmiotu zużywalnego"
+FAE5889CBC718C: "Suit Loadout" => "Zestaw wyposażenia skafandra"
+AF4A72DDF4E93C: "Dropship Deploy" => "Wysadzenie desantu"
 D65B880844BDA5: "Faction Kill Bond" => "Obligacja Wojenna Frakcji"
 BEE86D7B577ADD: "Capital Ship Bond" @
-C055CE660F5A68: "Backpack Change" @
-A3C03E444B54D1: "Resupply" @
-274B5ED5219994: "FSS Body Signals" @
-9EE301C4756544: "Module Buy And Store" @
-1583DD9013D4EF: "Scan Bary Centre" @
-DDDE2AEC826902: "Nav Route Clear" @
-762CAF00E77FCB: "Ship Redeemed" @
-3D1641D631C5B9: "Shipyard Redeem" @
-02374D50F6A18D: "Powerplay Merits" @
-8062068144644D: "Powerplay Rank" @
-5668ADC227F38B: "Carrier Location" @
-00D83C2DDC1290: "Cancelled Squadron Application" @
-61CAC65A66E653: "Squadron Application Approved" @
-33646EA5A80A0A: "Squadron Application Rejected" @
+C055CE660F5A68: "Backpack Change" => "Zmiana zawartości plecaka"
+A3C03E444B54D1: "Resupply" => "Uzupełnienie zaopatrzenia"
+274B5ED5219994: "FSS Body Signals" => "Sygnały ciała niebieskiego z FSS"
+9EE301C4756544: "Module Buy And Store" => "Zakup i przechowanie modułu"
+1583DD9013D4EF: "Scan Bary Centre" => "Skanowanie barycentrum"
+DDDE2AEC826902: "Nav Route Clear" => "Wyczyszczenie trasy nawigacyjnej"
+762CAF00E77FCB: "Ship Redeemed" => "Odebrano statek"
+3D1641D631C5B9: "Shipyard Redeem" => "Odbiór statku w stoczni"
+02374D50F6A18D: "Powerplay Merits" => "Powerplay — zasługi"
+8062068144644D: "Powerplay Rank" => "Powerplay — ranga"
+5668ADC227F38B: "Carrier Location" => "Położenie lotniskowca"
+00D83C2DDC1290: "Cancelled Squadron Application" => "Anulowanie wniosku o dołączenie do eskadry"
+61CAC65A66E653: "Squadron Application Approved" => "Zatwierdzenie wniosku o dołączenie do eskadry"
+33646EA5A80A0A: "Squadron Application Rejected" => "Odrzucenie wniosku o dołączenie do eskadry"
 
 SECTION JournalCargo
 
@@ -274,7 +274,7 @@ A99BE3DA0C9DA2: "Expires" => "Wygasa"
 D431FC74CD845B: "Num Contributors" => "Ilość Wkładców"
 E9BB68A65645DF: "Player % Band" => "Zakres % Gracza"
 7BBFBA05C8A45A: "Top Rank" => "Najwyższa Ranga"
-F944307E983058: "Not In Top Rank;In Top Rank" @
+F944307E983058: "Not In Top Rank;In Top Rank" => "Poza czołówką;W czołówce"
 B065C5EEE9CF43: "Tier Reached" => "Osiągnięty Poziom"
 4D963CFAB70D8C: "Bonus" => "Bonus"
 7654BB6A1342A8: "Top Tier Name" => "Nazwa Najw. Poziomu"
@@ -283,8 +283,8 @@ B065C5EEE9CF43: "Tier Reached" => "Osiągnięty Poziom"
 SECTION FSSSignal
 
 16D19F8245DA02: "Threat Level" => "Poziom Zagrożenia"
-C81B79DF3C6448: "Installation" @
-20C226FB3237BB: "Last Seen" @
+C81B79DF3C6448: "Installation" => "Instalacja"
+20C226FB3237BB: "Last Seen" => "Ostatnio widziany"
 
 SECTION JournalFSSDiscoveryScan
 
@@ -321,7 +321,7 @@ SECTION JournalLocOrJump
 
 182D37EC74BF3C: "Population" => "Populacja"
 20682CE886E023: "Pending State" => "Przewidywany Stan"
-A65110A78F3D51: "Recovering State" @
+A65110A78F3D51: "Recovering State" => "Stan odbudowy"
 
 SECTION JournalFuelScoop
 
@@ -345,7 +345,7 @@ SECTION JournalMissionAccepted
 
 BA8F571E0F93E1: "Expiry" => "Wygaśnięcie"
 03ECFA6479FA3A: "Influence" => "Wpływ"
-589CE3494A2AD6: "Wing" @
+589CE3494A2AD6: "Wing" => "Skrzydło"
 DCAC5D49C54C3C: "Deliver" => "Liefern"
 4266916B95C358: "Target Type" => "Typ Celu"
 594D59A3A18111: "Kill Count" => "Liczba Zabójstw"
@@ -381,8 +381,8 @@ SECTION JournalPromotion
 B0811E470D6BF4: "Trade" => "Handel"
 1F87C3714E9035: "Empire" => "Imperium"
 EC37C87C97E782: "Federation" => "Federacja"
-E443046C7DE75A: "Soldier" @
-19B26057DCFA5F: "ExoBiologist" @
+E443046C7DE75A: "Soldier" => "Żołnierz"
+19B26057DCFA5F: "ExoBiologist" => "Egzobiolog"
 
 SECTION JournalReceiveText
 
@@ -410,8 +410,8 @@ A1CF264F7F1E4F: "Rocky" => "Skalisty"
 
 SECTION JournalScan
 
-5EF9F3C41EF819: "Has planetary mining signals." @
-EDC652A19DA6D6: "First Discovered value" @
+5EF9F3C41EF819: "Has planetary mining signals." => "Wykryto planetarne sygnały górnicze."
+EDC652A19DA6D6: "First Discovered value" => "Wartość za pierwsze odkrycie"
 806017A33BCA90: "Detailed scan" => "Dokładny Skan"
 D19051CBF6DE8E: "Scan Auto" => "Skan Auto"
 5DBE81790BF519: "Scan Basic" => "Skan Podstawowy"
@@ -443,12 +443,12 @@ B57430D1DF11DD: "Mapped value" => "Kartographierter Wert"
 D8F3372588C7F1: "Planetary Composition" => "Skład Planety"
 94820B8DEE66A2: "Efficiently" => "Wydajnie"
 0A7BC2FBE6AE7B: "First Discovered+Mapped value" => "Wartość Pierwszego Odkrycia+Mapowania"
-92C786272052C1: "First Mapped value" @
+92C786272052C1: "First Mapped value" => "Wartość za pierwsze mapowanie"
 CBB0126B704028: "Scan Type" => "Typ Skanu"
 187199564DF54F: "Inferred Circumstellar zones" => "Obliczone Strefy Okołogwiazdowe"
-705A639481A462: "Ascending Node" @
-2992326FD1BADD: "Mean Anomaly" @
-2F670401770A29: "Already Footfalled" @
+705A639481A462: "Ascending Node" => "Długość węzła wstępującego"
+2992326FD1BADD: "Mean Anomaly" => "Anomalia średnia"
+2F670401770A29: "Already Footfalled" => "Już odwiedzona pieszo"
 
 SECTION HabZones
 
@@ -505,7 +505,7 @@ D3E1E961E72D83: "Charging FSD" => "Ładowanie FSD"
 
 SECTION JournalStatistics
 
-6916B9B5B958F3: "Multicrew" @
+6916B9B5B958F3: "Multicrew" => "Wieloosobowa załoga"
 97E9C7A4D75E7C: "Materials and Commodity Trading" => "Handel Materiałami i Towarami"
 
 SECTION BankAccountClass
@@ -518,19 +518,19 @@ FA52F146885859: "Spent on Ships" => "Wydano na Statki"
 B6D52E40689ED3: "Spent on Ammo" => "Wydano na Amunicję"
 AE4235969A026C: "Insurance Claims" => "Roszczenia Ubezpieczeniowe"
 627E17FB07067E: "Spent on Insurance" => "Wydano na Ubezpieczenia"
-0D9EB7CAD2FAEA: "Owned ships" @
-A853C383CD72BE: "Spent on Suits" @
-9B92C63EE0811C: "Spent on Weapons" @
-18EA8BF4BF7125: "Spent on Suit Consumables" @
-E55D4B2BB1A32D: "Suits Owned" @
-DEF87C9B027AB7: "Weapons Owned" @
-2FE0B970D17B11: "Spent on Premium Stock" @
-A07AA5B2C0AD22: "Premium Stock bought" @
-EF009C11D3DF87: "Current Merc Coins" @
-AF25FD6811F08F: "Total Merc Coins earned" @
-E1B05A801F1512: "Total Merc Coins spent" @
-3620D8E8B730A3: "Merc Coins spent on Merc Gear" @
-BDE2D5628C08FE: "Merc Coins spent on Engineering" @
+0D9EB7CAD2FAEA: "Owned ships" => "Posiadane statki"
+A853C383CD72BE: "Spent on Suits" => "Wydatki na skafandry"
+9B92C63EE0811C: "Spent on Weapons" => "Wydatki na broń"
+18EA8BF4BF7125: "Spent on Suit Consumables" => "Wydatki na przedmioty zużywalne do skafandrów"
+E55D4B2BB1A32D: "Suits Owned" => "Posiadane skafandry"
+DEF87C9B027AB7: "Weapons Owned" => "Posiadana broń"
+2FE0B970D17B11: "Spent on Premium Stock" => "Wydatki na ulepszone wyposażenie"
+A07AA5B2C0AD22: "Premium Stock bought" => "Zakupione ulepszone wyposażenie"
+EF009C11D3DF87: "Current Merc Coins" => "Saldo Merc Coins"
+AF25FD6811F08F: "Total Merc Coins earned" => "Łącznie zdobyte Merc Coins"
+E1B05A801F1512: "Total Merc Coins spent" => "Łącznie wydane Merc Coins"
+3620D8E8B730A3: "Merc Coins spent on Merc Gear" => "Merc Coins wydane na wyposażenie Merc Gear"
+BDE2D5628C08FE: "Merc Coins spent on Engineering" => "Merc Coins wydane na ulepszenia inżynierskie"
 
 SECTION CombatClass
 
@@ -541,25 +541,25 @@ SECTION CombatClass
 383B7750264D22: "Assassination Profits" => "Zyski z Zamachów"
 00FB4612106121: "Highest Reward" => "Najwyższa Nagroda"
 0053547838DA42: "Skimmers Killed" => "Zniszczone Drony Strażnicze"
-9AFC187DE558E3: "Surface Combat Bonds" @
-0AAFED8FFE2352: "Surface Combat Bonds Profits" @
-CA4D062721CEE9: "Vehicles Destroyed on Foot" @
-0739641B8ED76F: "Ships Destroyed on Foot" @
-5C94F0ADDA9971: "Dropships Taken" @
-6A3EAD6AB2EE6E: "Dropships Booked" @
-0254A12A67A8C3: "Dropships Cancelled" @
-C014B72ABC5F63: "High Intensity Conflict Zones fought" @
-1FF00916CC0EAF: "Medium Intensity Conflict Zones fought" @
-14208F470D699A: "Low Intensity Conflict Zones fought" @
-8404A33E4DBAAD: "Total Conflict Zones fought" @
-B3F0E973717EAE: "High Intensity Conflict Zones won" @
-9C2E29723F8E9B: "Medium Intensity Conflict Zones won" @
-7A1592DB4A63FA: "Low Intensity Conflict Zones won" @
-B9916B3231819E: "Total Conflict Zones won" @
-9FF79CC17748FE: "Settlements Defended" @
-167E88DB332354: "Settlements Conquered" @
-F1FADA1C1143E4: "Skimmers Killed on Foot" @
-C5F8BC49B06203: "Scavengers Killed on Foot" @
+9AFC187DE558E3: "Surface Combat Bonds" => "Vouchery bojowe za walkę na powierzchni"
+0AAFED8FFE2352: "Surface Combat Bonds Profits" => "Zyski z voucherów bojowych za walkę na powierzchni"
+CA4D062721CEE9: "Vehicles Destroyed on Foot" => "Pojazdy zniszczone pieszo"
+0739641B8ED76F: "Ships Destroyed on Foot" => "Statki zniszczone pieszo"
+5C94F0ADDA9971: "Dropships Taken" => "Odbyte przeloty desantowcem"
+6A3EAD6AB2EE6E: "Dropships Booked" => "Zarezerwowane przeloty desantowcem"
+0254A12A67A8C3: "Dropships Cancelled" => "Anulowane przeloty desantowcem"
+C014B72ABC5F63: "High Intensity Conflict Zones fought" => "Starcia w strefach konfliktu o wysokiej intensywności"
+1FF00916CC0EAF: "Medium Intensity Conflict Zones fought" => "Starcia w strefach konfliktu o średniej intensywności"
+14208F470D699A: "Low Intensity Conflict Zones fought" => "Starcia w strefach konfliktu o niskiej intensywności"
+8404A33E4DBAAD: "Total Conflict Zones fought" => "Łączna liczba starć w strefach konfliktu"
+B3F0E973717EAE: "High Intensity Conflict Zones won" => "Zwycięstwa w strefach konfliktu o wysokiej intensywności"
+9C2E29723F8E9B: "Medium Intensity Conflict Zones won" => "Zwycięstwa w strefach konfliktu o średniej intensywności"
+7A1592DB4A63FA: "Low Intensity Conflict Zones won" => "Zwycięstwa w strefach konfliktu o niskiej intensywności"
+B9916B3231819E: "Total Conflict Zones won" => "Łączna liczba zwycięstw w strefach konfliktu"
+9FF79CC17748FE: "Settlements Defended" => "Obronione osady"
+167E88DB332354: "Settlements Conquered" => "Zdobyte osady"
+F1FADA1C1143E4: "Skimmers Killed on Foot" => "Skimmery zniszczone pieszo"
+C5F8BC49B06203: "Scavengers Killed on Foot" => "Zlikwidowani szabrownicy podczas walki pieszo"
 
 SECTION CrimeClass
 
@@ -568,22 +568,22 @@ DE8CE29CA21997: "Fines" => "Kary Pieniężne"
 F56EAB0381876A: "Total Fines" => "Razem Kar Pieniężnych"
 2D645B371B8D26: "Total Bounties" => "Razem Wyzn. Nagród"
 AA8BFC15F7D73A: "Highest Bounty" => "Najwyższa Wyzn. Nagroda"
-324D916946F1A3: "Malware Uploaded" @
-5C1D97BAABE157: "Settlements shut down" @
-8CF2A4B7C62E3D: "Production Sabotaged" @
-9012BE9DEF07B1: "Production Thefts" @
-919712B415527F: "Total Murders" @
-8D481C42F64829: "Citizens Murdered" @
-DDE08CBFFFBD10: "Omnipol Murdered" @
-66B0CB5D730299: "Guards Murdered" @
-142857CAA3F351: "Data Stolen" @
-7D71F3F6A1360E: "Goods Stolen" @
-8C50113FC393A0: "Total Inventory Items Stolen" @
-E935D5EF0690FB: "Turrets Destroyed" @
-9CE124A39129DD: "Turrets Overloaded" @
-2E632B01D351DB: "Total Turrets shut down" @
-54C2AE36533ECA: "Stolen Items Value" @
-F923AB1A40BCF2: "Profiles Cloned" @
+324D916946F1A3: "Malware Uploaded" => "Wgrane złośliwe oprogramowanie"
+5C1D97BAABE157: "Settlements shut down" => "Wyłączone osady"
+8CF2A4B7C62E3D: "Production Sabotaged" => "Przypadki sabotażu produkcji"
+9012BE9DEF07B1: "Production Thefts" => "Kradzieże produktów"
+919712B415527F: "Total Murders" => "Łączna liczba zabójstw"
+8D481C42F64829: "Citizens Murdered" => "Zabici cywile"
+DDE08CBFFFBD10: "Omnipol Murdered" => "Zabici funkcjonariusze Omnipol"
+66B0CB5D730299: "Guards Murdered" => "Zabici strażnicy"
+142857CAA3F351: "Data Stolen" => "Skradzione dane"
+7D71F3F6A1360E: "Goods Stolen" => "Skradzione towary"
+8C50113FC393A0: "Total Inventory Items Stolen" => "Łączna liczba skradzionych przedmiotów"
+E935D5EF0690FB: "Turrets Destroyed" => "Zniszczone wieżyczki"
+9CE124A39129DD: "Turrets Overloaded" => "Przeciążone wieżyczki"
+2E632B01D351DB: "Total Turrets shut down" => "Łączna liczba wyłączonych wieżyczek"
+54C2AE36533ECA: "Stolen Items Value" => "Wartość skradzionych przedmiotów"
+F923AB1A40BCF2: "Profiles Cloned" => "Sklonowane profile"
 
 SECTION SmugglingClass
 
@@ -598,9 +598,9 @@ SECTION TradingClass
 1F1DDF7BF0C98D: "Markets Traded" => "Rynki Na Których Handlowano"
 E18498C3B2DDAB: "Profits" => "Zyski"
 CB3900C16B7DCF: "No. of Resources" => "Ilość Zasobów"
-C2789640C77B9E: "Data Sold" @
-4A9BE7DFAB7DEE: "Goods Sold" @
-55A5AD0B47B443: "Assets Sold" @
+C2789640C77B9E: "Data Sold" => "Sprzedane dane"
+4A9BE7DFAB7DEE: "Goods Sold" => "Sprzedane towary"
+55A5AD0B47B443: "Assets Sold" => "Sprzedane zasoby"
 
 SECTION MiningClass
 
@@ -616,53 +616,53 @@ E8260E1106DAA2: "Total Distance" => "Łączny Dystans"
 F4F756D76B1601: "No of Jumps" => "Ilość Skoków"
 E50149D407E75F: "Greatest Distance" => "Największy Dystans"
 25FA47C8047A82: "Time Played" => "Czas Gry"
-FDF9860CE3D816: "Distance Travelled on Foot" @
-63C9E1599C47BF: "Efficient Scans" @
-A1C690A90BBA86: "Shuttle Journeys" @
-309E1A19F2E8F5: "Shuttle Distance Travelled" @
-8D19BAD76EAAB4: "Credits Spent on Shuttles" @
-8F9B02B3D27584: "First Footfalls" @
-ADAE0C398FD16E: "Planets walked on" @
-3CD3D42DF5A01C: "Settlements docked at" @
+FDF9860CE3D816: "Distance Travelled on Foot" => "Dystans przebyty pieszo"
+63C9E1599C47BF: "Efficient Scans" => "Wydajne skany"
+A1C690A90BBA86: "Shuttle Journeys" => "Przeloty wahadłowcem"
+309E1A19F2E8F5: "Shuttle Distance Travelled" => "Dystans przebyty wahadłowcem"
+8D19BAD76EAAB4: "Credits Spent on Shuttles" => "Kredyty wydane na wahadłowce"
+8F9B02B3D27584: "First Footfalls" => "Pierwsze lądowania piesze"
+ADAE0C398FD16E: "Planets walked on" => "Planety odwiedzone pieszo"
+3CD3D42DF5A01C: "Settlements docked at" => "Osady, w których zadokowano"
 
 SECTION PassengerMissionsClass
 
-1547AE3B0EDFAD: "Accepted Passenger Missions" @
-209579433C3E1C: "Refugees bulk delivered" @
-36B0A681C9AA94: "Refugees bulk ejected" @
-C89A0B766827E9: "Aidworker bulk delivered" @
-FEA9E18BF4CFFA: "Aidworker bulk ejected" @
-5B1CE05A04A6BF: "Tourist VIP delivered" @
-8D8B427A53609C: "Tourist VIP ejected" @
-01DB3FB92F7CF3: "Tourist bulk delivered" @
-96943A73DF14F0: "Tourist bulk ejected" @
-3C2AECC241FA8B: "Freedom Fighters VIP delivered" @
-33D002DFD196B7: "Freedom Fighters VIP ejected" @
-21EAEFA79433C3: "Freedom Fighter bulk delivered" @
-38BD417DC01999: "Freedom Fighter bulk ejected" @
-05E04D4665E97F: "Protestors bulk delivered" @
-54ADEFA5E4CD6C: "Protestors bulk ejected" @
-BFEEE62B3B0A21: "Security Forces bulk delivered" @
-DD57659A90AA8D: "Security Forces bulk ejected" @
-EE4C3D724EA702: "Passengers Disgruntled" @
-5C47DF577A4202: "Celebrities VIP delivered" @
-22907B9501C61B: "Celebrities VIP ejected" @
-52A4F3688C7669: "Politicians VIP delivered" @
-A38F7B18D57EB8: "Politicians VIP ejected" @
-1B78408520ABFF: "Politicians bulk delivered" @
-30364F8D414AFB: "Politicians bulk ejected" @
+1547AE3B0EDFAD: "Accepted Passenger Missions" => "Przyjęte misje pasażerskie"
+209579433C3E1C: "Refugees bulk delivered" => "Przewiezieni pasażerowie w transporcie zbiorowym — uchodźcy"
+36B0A681C9AA94: "Refugees bulk ejected" => "Wyrzuceni pasażerowie w transporcie zbiorowym — uchodźcy"
+C89A0B766827E9: "Aidworker bulk delivered" => "Przewiezieni pasażerowie w transporcie zbiorowym — pracownicy organizacji pomocowych"
+FEA9E18BF4CFFA: "Aidworker bulk ejected" => "Wyrzuceni pasażerowie w transporcie zbiorowym — pracownicy organizacji pomocowych"
+5B1CE05A04A6BF: "Tourist VIP delivered" => "Przewiezieni pasażerowie VIP — turyści"
+8D8B427A53609C: "Tourist VIP ejected" => "Wyrzuceni pasażerowie VIP — turyści"
+01DB3FB92F7CF3: "Tourist bulk delivered" => "Przewiezieni pasażerowie w transporcie zbiorowym — turyści"
+96943A73DF14F0: "Tourist bulk ejected" => "Wyrzuceni pasażerowie w transporcie zbiorowym — turyści"
+3C2AECC241FA8B: "Freedom Fighters VIP delivered" => "Przewiezieni pasażerowie VIP — bojownicy o wolność"
+33D002DFD196B7: "Freedom Fighters VIP ejected" => "Wyrzuceni pasażerowie VIP — bojownicy o wolność"
+21EAEFA79433C3: "Freedom Fighter bulk delivered" => "Przewiezieni pasażerowie w transporcie zbiorowym — bojownicy o wolność"
+38BD417DC01999: "Freedom Fighter bulk ejected" => "Wyrzuceni pasażerowie w transporcie zbiorowym — bojownicy o wolność"
+05E04D4665E97F: "Protestors bulk delivered" => "Przewiezieni pasażerowie w transporcie zbiorowym — protestujący"
+54ADEFA5E4CD6C: "Protestors bulk ejected" => "Wyrzuceni pasażerowie w transporcie zbiorowym — protestujący"
+BFEEE62B3B0A21: "Security Forces bulk delivered" => "Przewiezieni pasażerowie w transporcie zbiorowym — siły bezpieczeństwa"
+DD57659A90AA8D: "Security Forces bulk ejected" => "Wyrzuceni pasażerowie w transporcie zbiorowym — siły bezpieczeństwa"
+EE4C3D724EA702: "Passengers Disgruntled" => "Niezadowoleni pasażerowie"
+5C47DF577A4202: "Celebrities VIP delivered" => "Przewiezieni pasażerowie VIP — celebryci"
+22907B9501C61B: "Celebrities VIP ejected" => "Wyrzuceni pasażerowie VIP — celebryci"
+52A4F3688C7669: "Politicians VIP delivered" => "Przewiezieni pasażerowie VIP — politycy"
+A38F7B18D57EB8: "Politicians VIP ejected" => "Wyrzuceni pasażerowie VIP — politycy"
+1B78408520ABFF: "Politicians bulk delivered" => "Przewiezieni pasażerowie w transporcie zbiorowym — politycy"
+30364F8D414AFB: "Politicians bulk ejected" => "Wyrzuceni pasażerowie w transporcie zbiorowym — politycy"
 95B817EC4D68BD: "Medical VIP delivered" @
 0150267D4EB7D7: "Medical VIP ejected" @
 4781A22713904B: "Medical bulk delivered" @
 CCFE6761168FA3: "Medical bulk ejected" @
-96307DBADAF57F: "Soldiers VIP delivered" @
-1A586F3B7A8692: "Soldiers VIP ejected" @
-5CFF93329E7EAE: "Science Teams VIP delivered" @
-EADE07DD9EC1DB: "Science Teams VIP ejected" @
-CFA5F725B53EBA: "Criminal VIP delivered" @
-0E8C0CFEC5B55E: "Criminal VIP ejected" @
-CFD8DCDC202CCB: "Head of State VIP delivered" @
-1F792B34EE786B: "Head of State VIP ejected" @
+96307DBADAF57F: "Soldiers VIP delivered" => "Przewiezieni pasażerowie VIP — żołnierze"
+1A586F3B7A8692: "Soldiers VIP ejected" => "Wyrzuceni pasażerowie VIP — żołnierze"
+5CFF93329E7EAE: "Science Teams VIP delivered" => "Przewiezieni pasażerowie VIP — zespoły naukowe"
+EADE07DD9EC1DB: "Science Teams VIP ejected" => "Wyrzuceni pasażerowie VIP — zespoły naukowe"
+CFA5F725B53EBA: "Criminal VIP delivered" => "Przewiezieni pasażerowie VIP — przestępcy"
+0E8C0CFEC5B55E: "Criminal VIP ejected" => "Wyrzuceni pasażerowie VIP — przestępcy"
+CFD8DCDC202CCB: "Head of State VIP delivered" => "Przewiezieni pasażerowie VIP — głowa państwa"
+1F792B34EE786B: "Head of State VIP ejected" => "Wyrzuceni pasażerowie VIP — głowa państwa"
 4321CCEECE5E6F: "Total Bulk Passengers Delivered" => "Pasażerowie Masowi"
 9599802D75489A: "Total VIPs Delivered" => "Pasażerowie VIP"
 A8DD51D45A8D5D: "Total Delivered" => "Dostarczono Pasażerów"
@@ -672,14 +672,14 @@ SECTION SearchAndRescueClass
 
 DCAA667E620D83: "Total Items Rescued" => "Razem Odzyskanych Przedmiotów"
 850F28DC235445: "Total Rescue Transactions" => "Razem Transakcji Ratunkowych"
-244BBE3573B782: "Legal Salvage Value - Surface" @
-C8DC3186BA6616: "Legal Salvage Value - Settlements" @
-75C521838AF38D: "Illegal Salvage Value - Surface" @
-E5BFE4EAC644A1: "Illegal Salvage Value - Settlements" @
-75D0DE1ED996EC: "Maglocks cut" @
-2440DF52CFA4C7: "Panels cut" @
-A4C99BC8F121D1: "Settlement Fires extinguished" @
-203EECDCD6004A: "Settlements rebooted" @
+244BBE3573B782: "Legal Salvage Value - Surface" => "Wartość legalnie odzyskanych przedmiotów — powierzchnia"
+C8DC3186BA6616: "Legal Salvage Value - Settlements" => "Wartość legalnie odzyskanych przedmiotów — osady"
+75C521838AF38D: "Illegal Salvage Value - Surface" => "Wartość nielegalnie odzyskanych przedmiotów — powierzchnia"
+E5BFE4EAC644A1: "Illegal Salvage Value - Settlements" => "Wartość nielegalnie odzyskanych przedmiotów — osady"
+75D0DE1ED996EC: "Maglocks cut" => "Przecięte zamki magnetyczne"
+2440DF52CFA4C7: "Panels cut" => "Przecięte panele"
+A4C99BC8F121D1: "Settlement Fires extinguished" => "Ugaszone pożary w osadach"
+203EECDCD6004A: "Settlements rebooted" => "Ponownie uruchomione osady"
 
 SECTION CraftingClass
 
@@ -690,19 +690,19 @@ F169A8BA960ADC: "Blueprints" => "Schematy"
 5470136E5FD56C: "At Level 3" => "Na Poziomie 3"
 FEE019881F64BE: "At Level 4" => "Na Poziomie 4"
 E04B15001A8913: "At Level 5" => "Na Poziomie 5"
-F3B761F0ED8F92: "Suit Modifications Applied" @
-5C37EE8DAD87A7: "Weapon Modifications Applied" @
-B783E7D9151FF4: "Suit Upgrades Applied" @
-85DF4C605F7A62: "Weapon Upgrades Applied" @
-54685F7FD4E3B3: "Suits fully Upgraded" @
-A92CED08A6B6C6: "Weapons fully Upgraded" @
-C7DD5E12E4315C: "Suits fully Modified" @
-98421491187378: "Weapons fully Modified" @
+F3B761F0ED8F92: "Suit Modifications Applied" => "Zastosowane modyfikacje skafandrów"
+5C37EE8DAD87A7: "Weapon Modifications Applied" => "Zastosowane modyfikacje broni"
+B783E7D9151FF4: "Suit Upgrades Applied" => "Zastosowane ulepszenia skafandrów"
+85DF4C605F7A62: "Weapon Upgrades Applied" => "Zastosowane ulepszenia broni"
+54685F7FD4E3B3: "Suits fully Upgraded" => "Skafandry w pełni ulepszone"
+A92CED08A6B6C6: "Weapons fully Upgraded" => "Broń w pełni ulepszona"
+C7DD5E12E4315C: "Suits fully Modified" => "Skafandry w pełni zmodyfikowane"
+98421491187378: "Weapons fully Modified" => "Broń w pełni zmodyfikowana"
 
 
 SECTION SuitsWeapons
 
-CC459F63A7AECD: "Mods" @
+CC459F63A7AECD: "Mods" => "Modyfikacje"
 9E7FD7DDAEE291: "Loadout" => "Konfiguration"
 
 SECTION CrewClass
@@ -722,94 +722,94 @@ SECTION MaterialTraderStatsClass
 
 4F3F40FB209CEA: "Material Trades Completed" => "Transakcje Handlu Towarami"
 4363FDBE63EFA5: "Material Traded" => "Ilość Przehandlowanych Materiałów"
-5C1D6A400D9CEF: "Encoded Materials traded" @
-E8C3E03715E7E3: "Raw Materials traded" @
-0DE44837239D01: "Grade 1 Materials Traded" @
-B5CDF5F87FB897: "Grade 2 Materials Traded" @
-7848A086027338: "Grade 3 Materials Traded" @
-D6B2DF7709085E: "Grade 4 Materials Traded" @
-6FD4EF00CD21B6: "Grade 5 Materials Traded" @
-800BFEB95D32C0: "Assets Gained in Trade" @
-0BC71D362E3571: "Assets Spent in Trade" @
+5C1D6A400D9CEF: "Encoded Materials traded" => "Wymienione dane"
+E8C3E03715E7E3: "Raw Materials traded" => "Wymienione surowce"
+0DE44837239D01: "Grade 1 Materials Traded" => "Wymienione materiały poziomu 1"
+B5CDF5F87FB897: "Grade 2 Materials Traded" => "Wymienione materiały poziomu 2"
+7848A086027338: "Grade 3 Materials Traded" => "Wymienione materiały poziomu 3"
+D6B2DF7709085E: "Grade 4 Materials Traded" => "Wymienione materiały poziomu 4"
+6FD4EF00CD21B6: "Grade 5 Materials Traded" => "Wymienione materiały poziomu 5"
+800BFEB95D32C0: "Assets Gained in Trade" => "Zasoby uzyskane w wymianie"
+0BC71D362E3571: "Assets Spent in Trade" => "Zasoby wydane na wymianę"
 
 SECTION CQCClass
 
-CC92212A3F27F2: "Profits from CQC" @
+CC92212A3F27F2: "Profits from CQC" => "Zyski z CQC"
 75D8C63318C0CD: "K/D Ratio" => "Stosunek Zabójstw/Śmierci"
 D5355B2E39208E: "Win/Loss Ratio" => "Wygrane/Przegrane"
 
 SECTION FLEETCARRIERClass
 
-19BC53F95E7001: "Total Commodities Exported" @
-01834AD00AF1A3: "Total Commodities Imported" @
-67E77FEA27AECB: "Credits earned from Commodities" @
-19599B44516113: "Credits spent on Commodities" @
-E11BC535356363: "Credits earned from Stolen Goods" @
-C1CD4A1188958B: "Credits spent on Stolen Goods" @
-B77A3F3BB14F1E: "Total Travel Distance" @
-6353B498F8F289: "Number of Carrier Jumps" @
-E2064BAEA1BB32: "Total Ships Sold" @
-361C6E79A093B1: "Credits earned from Shipyard" @
-A684EFCB422C23: "Total Modules Sold" @
-1224CE7162D545: "Credits earned from Outfitting" @
-490FB6CC1E7E91: "Total Ships Restocked" @
-07A2BC2B8E7D1A: "Total Ships Refuelled" @
-C6202A72930B30: "Credits earned from Refuelling" @
-EBD634ECEBE511: "Total Ships Repaired" @
-DFF25F6CD8C735: "Redemption Office Exchanges" @
-31D36097A41711: "Redemption Office Payouts" @
+19BC53F95E7001: "Total Commodities Exported" => "Łączna liczba wyeksportowanych towarów"
+01834AD00AF1A3: "Total Commodities Imported" => "Łączna liczba zaimportowanych towarów"
+67E77FEA27AECB: "Credits earned from Commodities" => "Kredyty uzyskane z handlu towarami"
+19599B44516113: "Credits spent on Commodities" => "Kredyty wydane na towary"
+E11BC535356363: "Credits earned from Stolen Goods" => "Kredyty uzyskane z handlu skradzionymi towarami"
+C1CD4A1188958B: "Credits spent on Stolen Goods" => "Kredyty wydane na skradzione towary"
+B77A3F3BB14F1E: "Total Travel Distance" => "Łączny przebyty dystans"
+6353B498F8F289: "Number of Carrier Jumps" => "Liczba skoków lotniskowca"
+E2064BAEA1BB32: "Total Ships Sold" => "Łączna liczba sprzedanych statków"
+361C6E79A093B1: "Credits earned from Shipyard" => "Kredyty uzyskane ze stoczni"
+A684EFCB422C23: "Total Modules Sold" => "Łączna liczba sprzedanych modułów"
+1224CE7162D545: "Credits earned from Outfitting" => "Kredyty uzyskane ze sprzedaży wyposażenia"
+490FB6CC1E7E91: "Total Ships Restocked" => "Łączna liczba statków z uzupełnionym zaopatrzeniem"
+07A2BC2B8E7D1A: "Total Ships Refuelled" => "Łączna liczba zatankowanych statków"
+C6202A72930B30: "Credits earned from Refuelling" => "Kredyty uzyskane z tankowania"
+EBD634ECEBE511: "Total Ships Repaired" => "Łączna liczba naprawionych statków"
+DFF25F6CD8C735: "Redemption Office Exchanges" => "Wymiany w biurze realizacji voucherów"
+31D36097A41711: "Redemption Office Payouts" => "Wypłaty z biura realizacji voucherów"
 
 SECTION ExobiologyClass
 
-BD58B4A8A5E3EC: "Unique Genus Encountered" @
-8F11BAC18D7AC1: "Unique Species Encountered" @
-00694E28B85C7E: "Unique Variants Encountered" @
-2E94FC82719982: "Profit from Organic Data" @
-AE1A3628A24D1E: "Organic Data Registered" @
-4BF2AEE6021E43: "Profit from First Logged" @
-26D3486CCFCD1F: "First Logged" @
-BA9A3119D6AED8: "Systems with Organic Life" @
-133A2126F9243D: "Planets with Organic Life" @
-0DC504F9B615B2: "Unique Genus Data Logged" @
-3877D6CDC8D492: "Unique Species Data Logged" @
+BD58B4A8A5E3EC: "Unique Genus Encountered" => "Liczba napotkanych unikalnych rodzajów biologicznych"
+8F11BAC18D7AC1: "Unique Species Encountered" => "Liczba napotkanych unikalnych gatunków"
+00694E28B85C7E: "Unique Variants Encountered" => "Liczba napotkanych unikalnych wariantów"
+2E94FC82719982: "Profit from Organic Data" => "Zyski z danych biologicznych"
+AE1A3628A24D1E: "Organic Data Registered" => "Zarejestrowane dane biologiczne"
+4BF2AEE6021E43: "Profit from First Logged" => "Zyski z premii za pierwszy wpis biologiczny"
+26D3486CCFCD1F: "First Logged" => "Pierwsze wpisy biologiczne"
+BA9A3119D6AED8: "Systems with Organic Life" => "Układy z życiem organicznym"
+133A2126F9243D: "Planets with Organic Life" => "Planety z życiem organicznym"
+0DC504F9B615B2: "Unique Genus Data Logged" => "Dane zarejestrowanych unikalnych rodzajów biologicznych"
+3877D6CDC8D492: "Unique Species Data Logged" => "Dane zarejestrowanych unikalnych gatunków"
 
 SECTION ThargoidsClass
 
-D1E19CA15B146D: "Thargoid wakes scanned" @
-1C837D4242A162: "Thargoids killed" @
-802CED56D78E4A: "Thargoid structures" @
-EA376CA94D128A: "Total encounters" @
-6BE262170622C0: "Last seen in" @
-7E967FB5DA23E0: "Last seen on" @
-24CD0F239B6A95: "Last ship involved" @
+D1E19CA15B146D: "Thargoid wakes scanned" => "Zeskanowane ślady Thargoidów"
+1C837D4242A162: "Thargoids killed" => "Zabici Thargoidzi"
+802CED56D78E4A: "Thargoid structures" => "Struktury Thargoidów"
+EA376CA94D128A: "Total encounters" => "Łączna liczba spotkań"
+6BE262170622C0: "Last seen in" => "Ostatnio widziany w"
+7E967FB5DA23E0: "Last seen on" => "Ostatnio widziany dnia"
+24CD0F239B6A95: "Last ship involved" => "Ostatnio użyty statek"
 
 SECTION SquadronClass
 
-ADC201E865809C: "Credits deposited in bank" @
-CCEE8FDC5C8803: "Credits withdrawn from bank" @
-A8934D0301AFA3: "Times commodities were deposited" @
-2C73B2FAB30A15: "Value of deposited commodities" @
-2B203E382C224C: "Times commodities were withdrawn" @
-B35FF109C4292F: "Value of withdrawn commodities" @
-E4DCD977FF8F83: "Times personal assets were deposited" @
-DD6921BC905F5B: "Value of deposited personal assets" @
-71CD543001A7C9: "Times personal assets were withdrawn" @
-5F4532314D8463: "Value of withdrawn personal assets" @
-F7C365BF254579: "Times ships were deposited" @
-80F18404BC82B2: "Value of deposited ships" @
-FC8168050E1872: "Highest contribution for Aegis leaderboard" @
-34473E055B9521: "Highest contribution for BGS leaderboard" @
-6252428FD70811: "Highest contribution for Bounty leaderboard" @
-CACE07E4DC41F0: "Highest contribution for Colonisation Contribution leaderboard" @
-0F920B83994980: "Highest contribution for Combat leaderboard" @
-AA0DDB3AE0905E: "Highest contribution for CQC leaderboard" @
-7349D6DDEAD4B5: "Highest contribution for Exploration leaderboard" @
-C2CD9242FA517E: "Highest contribution for Mining leaderboard" @
-39DFCFD5E6E429: "Highest contribution for Powerplay leaderboard" @
-CF4B201DC5DF9B: "Highest contribution for Trade leaderboard" @
-41706D1F584F74: "Highest contribution for Illicit Trade leaderboard" @
-134BE3AED0E132: "Highest contribution for Operations leaderboard" @
-BF7FD0D351E253: "Times squadron got a podium place" @
+ADC201E865809C: "Credits deposited in bank" => "Kredyty wpłacone do banku"
+CCEE8FDC5C8803: "Credits withdrawn from bank" => "Kredyty wypłacone z banku"
+A8934D0301AFA3: "Times commodities were deposited" => "Liczba wpłat towarów"
+2C73B2FAB30A15: "Value of deposited commodities" => "Wartość wpłaconych towarów"
+2B203E382C224C: "Times commodities were withdrawn" => "Liczba wypłat towarów"
+B35FF109C4292F: "Value of withdrawn commodities" => "Wartość wypłaconych towarów"
+E4DCD977FF8F83: "Times personal assets were deposited" => "Liczba wpłat zasobów osobistych"
+DD6921BC905F5B: "Value of deposited personal assets" => "Wartość wpłaconych zasobów osobistych"
+71CD543001A7C9: "Times personal assets were withdrawn" => "Liczba wypłat zasobów osobistych"
+5F4532314D8463: "Value of withdrawn personal assets" => "Wartość wypłaconych zasobów osobistych"
+F7C365BF254579: "Times ships were deposited" => "Liczba statków przekazanych do banku"
+80F18404BC82B2: "Value of deposited ships" => "Wartość statków przekazanych do banku"
+FC8168050E1872: "Highest contribution for Aegis leaderboard" => "Najwyższy wkład w rankingu Aegis"
+34473E055B9521: "Highest contribution for BGS leaderboard" => "Najwyższy wkład w rankingu BGS"
+6252428FD70811: "Highest contribution for Bounty leaderboard" => "Najwyższy wkład w rankingu nagród za poszukiwanych"
+CACE07E4DC41F0: "Highest contribution for Colonisation Contribution leaderboard" => "Najwyższy wkład w rankingu wkładu w kolonizację"
+0F920B83994980: "Highest contribution for Combat leaderboard" => "Najwyższy wkład w rankingu walki"
+AA0DDB3AE0905E: "Highest contribution for CQC leaderboard" => "Najwyższy wkład w rankingu CQC"
+7349D6DDEAD4B5: "Highest contribution for Exploration leaderboard" => "Najwyższy wkład w rankingu eksploracji"
+C2CD9242FA517E: "Highest contribution for Mining leaderboard" => "Najwyższy wkład w rankingu górnictwa"
+39DFCFD5E6E429: "Highest contribution for Powerplay leaderboard" => "Najwyższy wkład w rankingu Powerplay"
+CF4B201DC5DF9B: "Highest contribution for Trade leaderboard" => "Najwyższy wkład w rankingu handlu"
+41706D1F584F74: "Highest contribution for Illicit Trade leaderboard" => "Najwyższy wkład w rankingu nielegalnego handlu"
+134BE3AED0E132: "Highest contribution for Operations leaderboard" => "Najwyższy wkład w rankingu operacji"
+BF7FD0D351E253: "Times squadron got a podium place" => "Liczba miejsc na podium zdobytych przez eskadrę"
 
 SECTION JournalStoredModules
 
@@ -838,12 +838,12 @@ SECTION JournalApproachBody
 SECTION JournalEntry
 
 3DEBAFED05C80C: "{0} days {1} hours {2} minutes" => "{0} dni, {1} godzin, {2} minut"
-C427C71598A102: "Hyperspace" @
+C427C71598A102: "Hyperspace" => "Nadprzestrzeń"
 AA10128899005B: "Supercruise" => "Supercruise"
 ABC4DE9A615B76: "Victim faction" => "Frakcja Celu"
 926829075296E5: "Due to" => "z powodu"
 2D19E3D79157EE: "Against" => "Przeciwko"
-348E1B0E625A50: "Offender" @
+348E1B0E625A50: "Offender" => "Sprawca"
 A882CCA9D54FBC: "Broker" => "Pośrednik otrzymał"
 43DC8532F7E57B: "Amount" => "Kwota"
 9F9F5223C8298B: "No Cargo" => "Brak Ładunku"
@@ -854,8 +854,8 @@ EEA956CDE875F0: "Delivered" => "Dostarczono"
 0995BCD9E22E34: "To Go" => "Pozost."
 7AF178D8A66973: "Progress Left" => "Pozostały Postęp"
 7BE44386C602D7: "Starting Package" => "Pakiet Startowy"
-71DDA61ACB8157: "Telepresence" @
-CE978E2021C10C: "Due to Crime" @
+71DDA61ACB8157: "Telepresence" => "Teleobecność"
+CE978E2021C10C: "Due to Crime" => "Z powodu przestępstwa"
 C3F104D1365744: "Role" => "Rola"
 FA4417824B6B53: "Crew Member" => "Członek Załogi"
 0A98B391C30338: "Captain" => "Kapitan"
@@ -871,7 +871,7 @@ D8451D7C6C2912: "Active Fine" => "Niezapłacona Kara"
 B56631BC889045: "Cockpit" => "Kokpit"
 408DF9CD449307: "Corrosion" => "Korozja"
 B5D8DA40F3ED31: "Total Cost" => "Łączny Koszt"
-E9415863CFCC3D: "Total Sale" @
+E9415863CFCC3D: "Total Sale" => "Łączna wartość sprzedaży"
 3633746B067241: "Each" => "za sztukę"
 B90EBC91B3A742: "Drones" => "Drony"
 06992D2C6A4FD0: "Blueprint" => "Schemat"
@@ -888,12 +888,12 @@ BBD80CF7E2DED5: "Build" => "Bauart"
 45BD908DF490ED: "Capacity" => "Pojemność"
 7C7D492381C592: "Cash total differs, adjustment" => "Różna łączna ilość pieniędzy, wyrównywanie"
 50905F52C647BD: "Number of Statuses" => "Ilość Statusów"
-C3E839DF608469: "Online" @
-E01FA717BACCF9: "Offline" @
-2AA1CF3369C989: "Unfriended" @
-FF59B80FE424C3: "Declined" @
-7032F347790214: "Requested Friend" @
-D3FC1E3648741C: "Added Friend" @
+C3E839DF608469: "Online" => "Dostępny"
+E01FA717BACCF9: "Offline" => "Niedostępny"
+2AA1CF3369C989: "Unfriended" => "Usunięto ze znajomych"
+FF59B80FE424C3: "Declined" => "Odrzucono"
+7032F347790214: "Requested Friend" => "Wysłano zaproszenie do znajomych"
+D3FC1E3648741C: "Added Friend" => "Dodano do znajomych"
 564B6CEAE398EC: ";Submitted" => ";Poddanie się"
 F0CD420723AAE8: "NPC" => "NPC"
 E53407CFE1A515: "Player" => "Gracz"
@@ -930,9 +930,9 @@ AD277E4A02CD50: "Transfer Time" => "Czas Przesyłu"
 166D76AE76F567: "No Passengers" => "Brak Pasażerów"
 12473AE7FBD7A8: "Merits" => "Zasługi"
 B66C4B2775554E: "Votes" => "Głosy"
-8B6EFFD47EFDEC: "Pledged" @
-C65D5243E9C5E6: "From Power" @
-BF2C7EF9644B5F: "To Power" @
+8B6EFFD47EFDEC: "Pledged" => "Złożono przysięgę"
+C65D5243E9C5E6: "From Power" => "Z potęgi"
+BF2C7EF9644B5F: "To Power" => "Do potęgi"
 E26DFC1F8D9688: "Systems" => "Układy"
 FBA2A215328E6A: "Lost Target" => "Stracono Cel"
 11530A93A09C51: "Shields Down;Shields Up" => "Osłona Wyłączona;Osłona Włączona"
@@ -941,210 +941,210 @@ FDCDCA316D9694: "Longitude: ;°;F4" => "Dł.Geogr.: ;°;F4"
 8A24E40402207B: "Num" => "Ilość"
 B8A54799BE1F4D: "Ships" => "Statki/ów"
 8AA2DD0F5E9E76: "Threat" => "Zagrożenie"
-267537A7006640: "Remaining Jumps" @
+267537A7006640: "Remaining Jumps" => "Pozostałe skoki"
 76B1EBC80AA9A9: "Nearest" => "Näheste"
 FBB3C38F715793: "Old" => "Alt"
 6403F2B7EB2AAA: "New" => "Neu"
-D23A1C9FB35FE6: "Diff" @
+D23A1C9FB35FE6: "Diff" => "Różnica"
 FCC451567343E0: "Near" => "Bei"
-E89D65A6A18478: "On Foot at" @
-82E2B91027511A: "Taxi" @
+E89D65A6A18478: "On Foot at" => "Pieszo w"
+82E2B91027511A: "Taxi" => "Wahadłowiec"
 3C769675CD0F12: "Pilot" @
-C6BDFB2221032F: "Redeemed and deployed ship {0} at {1} into shipyard" @
-13E8B7503843F9: "Redeem ship {0} at {1}, available to deploy" @
+C6BDFB2221032F: "Redeemed and deployed ship {0} at {1} into shipyard" => "Odebrano statek {0} i umieszczono go w stoczni w {1}"
+13E8B7503843F9: "Redeem ship {0} at {1}, available to deploy" => "Odebrano statek {0} w {1}; jest dostępny do użycia"
 
 SECTION JournalCarrierJump
 
-306A80A9A08A8E: "Carrier jumped to" @
+306A80A9A08A8E: "Carrier jumped to" => "Lotniskowiec skoczył do"
 
 SECTION JournalCarrier
 
-808572574FD987: "Call Sign" @
-8359F3D1A48C34: "Carrier Type" @
-B6DF35DBE80033: "Carrier Balance" @
-BE5C7D808D15B4: "Reserve Balance" @
-396A220E3E6B36: "Available Balance" @
-1DBA9826D6F215: "Reserve Percent" @
-3C78B78D476A63: "Tax Rate Pioneersupplies" @
-162BA63324927B: "Tax Rate Shipyard" @
-D20A1DD9AD895A: "Tax Rate Rearm" @
-C25B3DB6BDD02A: "Tax Rate Outfitting" @
-94B20C35574451: "Tax Rate Refuel" @
-739AA04282D30E: "Tax Rate Repair" @
-7246FA5C1BB112: "Total Capacity" @
-2E330C845EDFD7: "Cargo Space Reserved" @
-8D639F579B9C33: "Ship Packs" @
-502849675D7247: "Module Packs" @
-C8E72CE20762EF: "Free Space" @
-E17C8AD0DC2E27: "Refund" @
-E7B0B317A6E8F7: "Deposit" @
-47E564194604F8: "Withdraw" @
+808572574FD987: "Call Sign" => "Znak wywoławczy"
+8359F3D1A48C34: "Carrier Type" => "Typ lotniskowca"
+B6DF35DBE80033: "Carrier Balance" => "Saldo lotniskowca"
+BE5C7D808D15B4: "Reserve Balance" => "Saldo rezerwy"
+396A220E3E6B36: "Available Balance" => "Dostępne saldo"
+1DBA9826D6F215: "Reserve Percent" => "Procent rezerwy"
+3C78B78D476A63: "Tax Rate Pioneersupplies" => "Stawka opłaty — Pioneer Supplies"
+162BA63324927B: "Tax Rate Shipyard" => "Stawka opłaty — stocznia"
+D20A1DD9AD895A: "Tax Rate Rearm" => "Stawka opłaty — uzupełnianie amunicji"
+C25B3DB6BDD02A: "Tax Rate Outfitting" => "Stawka opłaty — wyposażenie"
+94B20C35574451: "Tax Rate Refuel" => "Stawka opłaty — tankowanie"
+739AA04282D30E: "Tax Rate Repair" => "Stawka opłaty — naprawy"
+7246FA5C1BB112: "Total Capacity" => "Łączna pojemność"
+2E330C845EDFD7: "Cargo Space Reserved" => "Zarezerwowana przestrzeń ładunkowa"
+8D639F579B9C33: "Ship Packs" => "Pakiety statków"
+502849675D7247: "Module Packs" => "Pakiety modułów"
+C8E72CE20762EF: "Free Space" => "Wolna przestrzeń"
+E17C8AD0DC2E27: "Refund" => "Zwrot"
+E7B0B317A6E8F7: "Deposit" => "Wpłata"
+47E564194604F8: "Withdraw" => "Wypłata"
 430D32076EB256: "Operation" => "Betrieb"
 5BD44EBE63CD3B: "Tier" => "Ebene"
-BFF04E12429E0D: "Cancel Sell of" @
-2F81A22DE0AF5E: "Access" @
-DB5E11964705C3: ";Allow Notorious" @
+BFF04E12429E0D: "Cancel Sell of" => "Anuluj sprzedaż"
+2F81A22DE0AF5E: "Access" => "Dostęp"
+DB5E11964705C3: ";Allow Notorious" => ";Zezwalaj osobom o złej sławie"
 
 SECTION JournalMicroResources
 
 44D25B5D1B6D98: "Items" => "Gegenstände"
-9289473EEEDAEE: "Components" @
-4190D6D0F5DF6D: "Consumables" @
+9289473EEEDAEE: "Components" => "Komponenty"
+4190D6D0F5DF6D: "Consumables" => "Przedmioty zużywalne"
 
 SECTION JournalScanInfo
 
 794AD1AAD63C28: "is a" => "ist ein(e)"
 221026370F53E1: "Atmosphere" => "Atmosphäre"
-3D9E27EEB502A5: "Surface temperature" @
-65C132989A3982: "Is tiny" @
-9538FA9B132C61: "Is large" @
-82F3FD284D56A8: "Has mining signals" @
-44012680B4AA93: "Biological signals" @
-272D385F696052: "Geological signals" @
-DFE7B6F92EAFC7: "Thargoid signals" @
-FE28F41AF4A444: "Guardian signals" @
-C9FC56997F2C9D: "Human signals" @
-B21F6D1C4E7A48: "Other signals" @
-6E5D8362D37548: "Mapped & Discovered" @
-CE22096993313A: "Mapped & Discovered & Footfalled" @
-BEB183389084ED: "Discovered & Footfalled" @
-B710B364F8E0F6: "Mapped & Footfalled" @
-87BD92F82FDE9A: "Footfalled" @
-D6841AFCAD4973: "Is landable" @
+3D9E27EEB502A5: "Surface temperature" => "Temperatura powierzchni"
+65C132989A3982: "Is tiny" => "Jest bardzo małe"
+9538FA9B132C61: "Is large" => "Jest duże"
+82F3FD284D56A8: "Has mining signals" => "Wykryto sygnały górnicze"
+44012680B4AA93: "Biological signals" => "Sygnały biologiczne"
+272D385F696052: "Geological signals" => "Sygnały geologiczne"
+DFE7B6F92EAFC7: "Thargoid signals" => "Sygnały Thargoidów"
+FE28F41AF4A444: "Guardian signals" => "Sygnały Strażników"
+C9FC56997F2C9D: "Human signals" => "Sygnały ludzkie"
+B21F6D1C4E7A48: "Other signals" => "Inne sygnały"
+6E5D8362D37548: "Mapped & Discovered" => "Zmapowano i odkryto"
+CE22096993313A: "Mapped & Discovered & Footfalled" => "Zmapowano, odkryto i odwiedzono pieszo"
+BEB183389084ED: "Discovered & Footfalled" => "Odkryto i odwiedzono pieszo"
+B710B364F8E0F6: "Mapped & Footfalled" => "Zmapowano i odwiedzono pieszo"
+87BD92F82FDE9A: "Footfalled" => "Odwiedzono pieszo"
+D6841AFCAD4973: "Is landable" => "Można lądować"
 502FD1BD73C3D7: "Is ringed" => "Ma pierścień"
-A6C3E88F2D1C97: "Has an high eccentricity of" @
+A6C3E88F2D1C97: "Has an high eccentricity of" => "Ma dużą mimośrodowość orbity równą"
 AA2C96DACF00C4: "Basic" => "Podstawowy"
 6C2F2888C561E0: "Premium" => "Premium"
 82DA45C64A0D04: "{0} has {1} level elements." => "{0} zawiera składniki - poziom {1}"
-C154F6FA296D4B: "Has been scanned for organics" @
+C154F6FA296D4B: "Has been scanned for organics" => "Przeprowadzono skan biologiczny"
 
 SECTION Services
 
-F47FDB993838A7: "Bridge Crew" @
+F47FDB993838A7: "Bridge Crew" => "Załoga mostka"
 1BABA82CF3020D: "Commodity Trading" => "Warenhandel"
-C6230E81C93721: "Tritium Depot" @
-AA61104F28684E: "Refuel Station" @
-CA4B1A71D2F677: "Repair Crews" @
-6A53D52EB6662E: "Armoury" @
-7B2CA12E214447: "Redemption Office" @
-9BAD2DA74D2D7D: "Secure Warehouse" @
+C6230E81C93721: "Tritium Depot" => "Skład trytu"
+AA61104F28684E: "Refuel Station" => "Punkt tankowania"
+CA4B1A71D2F677: "Repair Crews" => "Ekipy naprawcze"
+6A53D52EB6662E: "Armoury" => "Zbrojownia"
+7B2CA12E214447: "Redemption Office" => "Biuro realizacji voucherów"
+9BAD2DA74D2D7D: "Secure Warehouse" => "Zabezpieczony magazyn"
 419A2D5301C0DA: "Universal Cartographics" @
-CF7C02B2B0079B: "Concourse Bar" @
+CF7C02B2B0079B: "Concourse Bar" => "Bar w hali pasażerskiej"
 F157DA72429B0A: "Vista Genomics" @
 AA5680B5B5B241: "Pioneer Supplies" @
-F1A87D41F026EE: "Squadron Bank" @
+F1A87D41F026EE: "Squadron Bank" => "Bank eskadry"
 
 SECTION JournalScanOrganics
 
-7C101242BCDD46: "Potential Value" @
-60B15E90591861: "Was logged" @
-FB0FEB4A33D00B: "Was not logged" @
+7C101242BCDD46: "Potential Value" => "Potencjalna wartość"
+60B15E90591861: "Was logged" => "Zarejestrowano"
+FB0FEB4A33D00B: "Was not logged" => "Nie zarejestrowano"
 
 SECTION AtmosphereTypes
 
-0A1DC5CE861C38: "Ammonia Atmosphere" @
+0A1DC5CE861C38: "Ammonia Atmosphere" => "Atmosfera amoniakalna"
 34E1E2662E5B20: "No Atmosphere" => "Brak Atmosfery"
-E36E2226CA24CD: "Hot Thick Ammonia Atmosphere" @
-F6022553670A62: "Hot Thick Ammonia Rich Atmosphere" @
-7559217BB156DC: "Ammonia Rich Atmosphere" @
-8D2251E1745895: "Thick Ammonia Atmosphere" @
-B1C527A623EB27: "Thick Ammonia Rich Atmosphere" @
-0480FF061EFDD1: "Thin Ammonia Atmosphere" @
-92B4C387CDCDD5: "Argon Atmosphere" @
-37D04A08DE9C71: "Hot Thick Argon Atmosphere" @
-1688398A1158C8: "Hot Thick Argon Rich Atmosphere" @
-E5A0FE014C9378: "Argon Rich Atmosphere" @
-015E4DDC3D94B3: "Thick Argon Atmosphere" @
-5EBA8187E1012B: "Thick Argon Rich Atmosphere" @
-8459BAEB557A3F: "Thin Argon Atmosphere" @
-E68F89BE004D27: "Thin Argon Rich Atmosphere" @
-3E00F7F985C690: "Carbon Dioxide Atmosphere" @
-70B1C829C32B0C: "Hot Carbon Dioxide Atmosphere" @
-205D687FE949F0: "Hot Carbon Dioxide Rich Atmosphere" @
-D1EAE58822D16F: "Hot Thick Carbon Dioxide Atmosphere" @
-36B2B7A1B6AC2A: "Hot Thick Carbon Dioxide Rich Atmosphere" @
-0A4F91AD30715C: "Hot Thin Carbon Dioxide Atmosphere" @
-71717A1A2637E3: "Carbon Dioxide Rich Atmosphere" @
-62DEC62FA197F7: "Thick Carbon Dioxide Atmosphere" @
-16500A64C176A0: "Thick Carbon Dioxide Rich Atmosphere" @
-6B0D3A69CA22BA: "Thin Carbon Dioxide Atmosphere" @
-113ED48B8FB781: "Thin Carbon Dioxide Rich Atmosphere" @
-0E3AF834913154: "Earth Like Atmosphere" @
-A19D190F7F7EDB: "Thick Earth Like Atmosphere" @
-683A2BE21F3496: "Helium Atmosphere" @
-66145BFE7F9599: "Thick Helium Atmosphere" @
-113FB552207696: "Thin Helium Atmosphere" @
-E6B08CF7C135CC: "Hot Thick Metallic Vapour Atmosphere" @
-C282B84D7F3421: "Methane Atmosphere" @
-5BA2B5C5725675: "Hot Thick Methane Atmosphere" @
-5CE5AAEEA3D075: "Hot Thick Methane Rich Atmosphere" @
-EBE890E133629D: "Methane Rich Atmosphere" @
-7FF344743E62BB: "Thick Methane Atmosphere" @
-DA9BF706279D64: "Thick Methane Rich Atmosphere" @
-DFF9092A2B7842: "Thin Methane Atmosphere" @
-2DBC0653044AB8: "Thin Methane Rich Atmosphere" @
-C8F858586EE5FE: "Neon Rich Atmosphere" @
-5B33B63CB4CE31: "Thin Neon Atmosphere" @
-73D224A0DE20B9: "Thin Neon Rich Atmosphere" @
-AE7CC4BBE7403A: "Nitrogen Atmosphere" @
-39998516995080: "Hot Thick Nitrogen Atmosphere" @
-AB0E166ED5A0E3: "Thick Nitrogen Atmosphere" @
-3FE79B30BAF813: "Thin Nitrogen Atmosphere" @
-F33298A7DC6E19: "Oxygen Atmosphere" @
-FAFA0A9F3AC3A9: "Thin Oxygen Atmosphere" @
-D5C198FC5CFFA5: "Hot Silicate Vapour Atmosphere" @
-A9A2C4F133C767: "Hot Thick Silicate Vapour Atmosphere" @
-017BFAA523D309: "Hot Thin Silicate Vapour Atmosphere" @
-5BEC71B86CD1D6: "Sulphur Dioxide Atmosphere" @
-AB2424E38DB56E: "Hot Sulphur Dioxide Atmosphere" @
-08CD6FFA7A88A4: "Hot Thick Sulphur Dioxide Atmosphere" @
-030D70E4A07CB2: "Hot Thin Sulphur Dioxide Atmosphere" @
-D292938F1D0303: "Thick Sulphur Dioxide Atmosphere" @
-01D4ABC6251573: "Thin Sulphur Dioxide Atmosphere" @
-8F08597CF3DE03: "Unknown Atmosphere" @
-E436FB98308A84: "Water Atmosphere" @
-928784ECF69018: "Hot Water Atmosphere" @
-1D06B7FAD73C42: "Hot Water Rich Atmosphere" @
-49B78D5AC54EE6: "Hot Thick Water Atmosphere" @
-0F20899F0F07AF: "Hot Thick Water Rich Atmosphere" @
-2A9DA46CD56035: "Water Rich Atmosphere" @
-90F545822826C4: "Thick Water Atmosphere" @
-9E22EAF6BC437B: "Thick Water Rich Atmosphere" @
-85E578C1152B35: "Thin Water Atmosphere" @
-4C623AF9C5D4BF: "Thin Water Rich Atmosphere" @
+E36E2226CA24CD: "Hot Thick Ammonia Atmosphere" => "Gorąca, gęsta atmosfera amoniakalna"
+F6022553670A62: "Hot Thick Ammonia Rich Atmosphere" => "Gorąca, gęsta atmosfera bogata w amoniak"
+7559217BB156DC: "Ammonia Rich Atmosphere" => "Atmosfera bogata w amoniak"
+8D2251E1745895: "Thick Ammonia Atmosphere" => "Gęsta atmosfera amoniakalna"
+B1C527A623EB27: "Thick Ammonia Rich Atmosphere" => "Gęsta atmosfera bogata w amoniak"
+0480FF061EFDD1: "Thin Ammonia Atmosphere" => "Rozrzedzona atmosfera amoniakalna"
+92B4C387CDCDD5: "Argon Atmosphere" => "Atmosfera argonowa"
+37D04A08DE9C71: "Hot Thick Argon Atmosphere" => "Gorąca, gęsta atmosfera argonowa"
+1688398A1158C8: "Hot Thick Argon Rich Atmosphere" => "Gorąca, gęsta atmosfera bogata w argon"
+E5A0FE014C9378: "Argon Rich Atmosphere" => "Atmosfera bogata w argon"
+015E4DDC3D94B3: "Thick Argon Atmosphere" => "Gęsta atmosfera argonowa"
+5EBA8187E1012B: "Thick Argon Rich Atmosphere" => "Gęsta atmosfera bogata w argon"
+8459BAEB557A3F: "Thin Argon Atmosphere" => "Rozrzedzona atmosfera argonowa"
+E68F89BE004D27: "Thin Argon Rich Atmosphere" => "Rozrzedzona atmosfera bogata w argon"
+3E00F7F985C690: "Carbon Dioxide Atmosphere" => "Atmosfera z dwutlenku węgla"
+70B1C829C32B0C: "Hot Carbon Dioxide Atmosphere" => "Gorąca, atmosfera z dwutlenku węgla"
+205D687FE949F0: "Hot Carbon Dioxide Rich Atmosphere" => "Gorąca, atmosfera bogata w dwutlenek węgla"
+D1EAE58822D16F: "Hot Thick Carbon Dioxide Atmosphere" => "Gorąca, gęsta atmosfera z dwutlenku węgla"
+36B2B7A1B6AC2A: "Hot Thick Carbon Dioxide Rich Atmosphere" => "Gorąca, gęsta atmosfera bogata w dwutlenek węgla"
+0A4F91AD30715C: "Hot Thin Carbon Dioxide Atmosphere" => "Gorąca, rozrzedzona atmosfera z dwutlenku węgla"
+71717A1A2637E3: "Carbon Dioxide Rich Atmosphere" => "Atmosfera bogata w dwutlenek węgla"
+62DEC62FA197F7: "Thick Carbon Dioxide Atmosphere" => "Gęsta atmosfera z dwutlenku węgla"
+16500A64C176A0: "Thick Carbon Dioxide Rich Atmosphere" => "Gęsta atmosfera bogata w dwutlenek węgla"
+6B0D3A69CA22BA: "Thin Carbon Dioxide Atmosphere" => "Rozrzedzona atmosfera z dwutlenku węgla"
+113ED48B8FB781: "Thin Carbon Dioxide Rich Atmosphere" => "Rozrzedzona atmosfera bogata w dwutlenek węgla"
+0E3AF834913154: "Earth Like Atmosphere" => "Atmosfera podobna do ziemskiej"
+A19D190F7F7EDB: "Thick Earth Like Atmosphere" => "Gęsta atmosfera podobna do ziemskiej"
+683A2BE21F3496: "Helium Atmosphere" => "Atmosfera helowa"
+66145BFE7F9599: "Thick Helium Atmosphere" => "Gęsta atmosfera helowa"
+113FB552207696: "Thin Helium Atmosphere" => "Rozrzedzona atmosfera helowa"
+E6B08CF7C135CC: "Hot Thick Metallic Vapour Atmosphere" => "Gorąca, gęsta atmosfera z par metali"
+C282B84D7F3421: "Methane Atmosphere" => "Atmosfera metanowa"
+5BA2B5C5725675: "Hot Thick Methane Atmosphere" => "Gorąca, gęsta atmosfera metanowa"
+5CE5AAEEA3D075: "Hot Thick Methane Rich Atmosphere" => "Gorąca, gęsta atmosfera bogata w metan"
+EBE890E133629D: "Methane Rich Atmosphere" => "Atmosfera bogata w metan"
+7FF344743E62BB: "Thick Methane Atmosphere" => "Gęsta atmosfera metanowa"
+DA9BF706279D64: "Thick Methane Rich Atmosphere" => "Gęsta atmosfera bogata w metan"
+DFF9092A2B7842: "Thin Methane Atmosphere" => "Rozrzedzona atmosfera metanowa"
+2DBC0653044AB8: "Thin Methane Rich Atmosphere" => "Rozrzedzona atmosfera bogata w metan"
+C8F858586EE5FE: "Neon Rich Atmosphere" => "Atmosfera bogata w neon"
+5B33B63CB4CE31: "Thin Neon Atmosphere" => "Rozrzedzona atmosfera neonowa"
+73D224A0DE20B9: "Thin Neon Rich Atmosphere" => "Rozrzedzona atmosfera bogata w neon"
+AE7CC4BBE7403A: "Nitrogen Atmosphere" => "Atmosfera azotowa"
+39998516995080: "Hot Thick Nitrogen Atmosphere" => "Gorąca, gęsta atmosfera azotowa"
+AB0E166ED5A0E3: "Thick Nitrogen Atmosphere" => "Gęsta atmosfera azotowa"
+3FE79B30BAF813: "Thin Nitrogen Atmosphere" => "Rozrzedzona atmosfera azotowa"
+F33298A7DC6E19: "Oxygen Atmosphere" => "Atmosfera tlenowa"
+FAFA0A9F3AC3A9: "Thin Oxygen Atmosphere" => "Rozrzedzona atmosfera tlenowa"
+D5C198FC5CFFA5: "Hot Silicate Vapour Atmosphere" => "Gorąca, atmosfera z par krzemianów"
+A9A2C4F133C767: "Hot Thick Silicate Vapour Atmosphere" => "Gorąca, gęsta atmosfera z par krzemianów"
+017BFAA523D309: "Hot Thin Silicate Vapour Atmosphere" => "Gorąca, rozrzedzona atmosfera z par krzemianów"
+5BEC71B86CD1D6: "Sulphur Dioxide Atmosphere" => "Atmosfera z dwutlenku siarki"
+AB2424E38DB56E: "Hot Sulphur Dioxide Atmosphere" => "Gorąca, atmosfera z dwutlenku siarki"
+08CD6FFA7A88A4: "Hot Thick Sulphur Dioxide Atmosphere" => "Gorąca, gęsta atmosfera z dwutlenku siarki"
+030D70E4A07CB2: "Hot Thin Sulphur Dioxide Atmosphere" => "Gorąca, rozrzedzona atmosfera z dwutlenku siarki"
+D292938F1D0303: "Thick Sulphur Dioxide Atmosphere" => "Gęsta atmosfera z dwutlenku siarki"
+01D4ABC6251573: "Thin Sulphur Dioxide Atmosphere" => "Rozrzedzona atmosfera z dwutlenku siarki"
+8F08597CF3DE03: "Unknown Atmosphere" => "Nieznana atmosfera"
+E436FB98308A84: "Water Atmosphere" => "Atmosfera z pary wodnej"
+928784ECF69018: "Hot Water Atmosphere" => "Gorąca, atmosfera z pary wodnej"
+1D06B7FAD73C42: "Hot Water Rich Atmosphere" => "Gorąca, atmosfera bogata w parę wodną"
+49B78D5AC54EE6: "Hot Thick Water Atmosphere" => "Gorąca, gęsta atmosfera z pary wodnej"
+0F20899F0F07AF: "Hot Thick Water Rich Atmosphere" => "Gorąca, gęsta atmosfera bogata w parę wodną"
+2A9DA46CD56035: "Water Rich Atmosphere" => "Atmosfera bogata w parę wodną"
+90F545822826C4: "Thick Water Atmosphere" => "Gęsta atmosfera z pary wodnej"
+9E22EAF6BC437B: "Thick Water Rich Atmosphere" => "Gęsta atmosfera bogata w parę wodną"
+85E578C1152B35: "Thin Water Atmosphere" => "Rozrzedzona atmosfera z pary wodnej"
+4C623AF9C5D4BF: "Thin Water Rich Atmosphere" => "Rozrzedzona atmosfera bogata w parę wodną"
 
 // added
 
-F1D71513E026A6: "Thin Ammonia Rich Atmosphere" @
-EC6DDB27FA16BC: "Hot Argon Atmosphere" @
-5289C59164BE44: "Hot Argon Rich Atmosphere" @
-7909C52AAE1A7B: "Hot Metallic Vapour Atmosphere" @
-C1C9D393CAD88B: "Hot Thin Metallic Vapour Atmosphere" @
+F1D71513E026A6: "Thin Ammonia Rich Atmosphere" => "Rozrzedzona atmosfera bogata w amoniak"
+EC6DDB27FA16BC: "Hot Argon Atmosphere" => "Gorąca, atmosfera argonowa"
+5289C59164BE44: "Hot Argon Rich Atmosphere" => "Gorąca, atmosfera bogata w argon"
+7909C52AAE1A7B: "Hot Metallic Vapour Atmosphere" => "Gorąca, atmosfera z par metali"
+C1C9D393CAD88B: "Hot Thin Metallic Vapour Atmosphere" => "Gorąca, rozrzedzona atmosfera z par metali"
 
 SECTION VolcanismTypes
 
-C7C212A78D8056: "Minor Ammonia Magma Volcanism" @
-64C83D51991EE6: "Carbon Dioxide Geysers Volcanism" @
-EC9BA750D20663: "Minor Carbon Dioxide Geysers Volcanism" @
-CE1372BD34FE4B: "Metallic Magma Volcanism" @
-A2D1C2CB863ADE: "Major Metallic Magma Volcanism" @
-67770CE6C800D3: "Minor Metallic Magma Volcanism" @
-EA076638B48974: "Minor Methane Magma Volcanism" @
-8F05ED17DCD392: "Minor Nitrogen Magma Volcanism" @
-B7CCDEFACC4D5B: "Rocky Magma Volcanism" @
-017364055B4FB6: "Major Rocky Magma Volcanism" @
-DDE943B43B148C: "Minor Rocky Magma Volcanism" @
-4C3BBC3889C172: "Silicate Vapour Geysers Volcanism" @
-A1F7196AC91711: "Major Silicate Vapour Geysers Volcanism" @
-E12C5172C71943: "Minor Silicate Vapour Geysers Volcanism" @
-E5523B05164496: "Water Geysers Volcanism" @
-256B10A358431A: "Major Water Geysers Volcanism" @
-3689BBDEB38CE4: "Minor Water Geysers Volcanism" @
-061B430E3860A3: "Water Magma Volcanism" @
-DEA987C0845103: "Major Water Magma Volcanism" @
-B6AEF3724D1973: "Minor Water Magma Volcanism" @
+C7C212A78D8056: "Minor Ammonia Magma Volcanism" => "Wulkanizm z magmą amoniakalną — niewielka aktywność"
+64C83D51991EE6: "Carbon Dioxide Geysers Volcanism" => "Gejzery dwutlenku węgla"
+EC9BA750D20663: "Minor Carbon Dioxide Geysers Volcanism" => "Gejzery dwutlenku węgla — niewielka aktywność"
+CE1372BD34FE4B: "Metallic Magma Volcanism" => "Wulkanizm z magmą metaliczną"
+A2D1C2CB863ADE: "Major Metallic Magma Volcanism" => "Wulkanizm z magmą metaliczną — duża aktywność"
+67770CE6C800D3: "Minor Metallic Magma Volcanism" => "Wulkanizm z magmą metaliczną — niewielka aktywność"
+EA076638B48974: "Minor Methane Magma Volcanism" => "Wulkanizm z magmą metanową — niewielka aktywność"
+8F05ED17DCD392: "Minor Nitrogen Magma Volcanism" => "Wulkanizm z magmą azotową — niewielka aktywność"
+B7CCDEFACC4D5B: "Rocky Magma Volcanism" => "Wulkanizm z magmą skalną"
+017364055B4FB6: "Major Rocky Magma Volcanism" => "Wulkanizm z magmą skalną — duża aktywność"
+DDE943B43B148C: "Minor Rocky Magma Volcanism" => "Wulkanizm z magmą skalną — niewielka aktywność"
+4C3BBC3889C172: "Silicate Vapour Geysers Volcanism" => "Gejzery par krzemianów"
+A1F7196AC91711: "Major Silicate Vapour Geysers Volcanism" => "Gejzery par krzemianów — duża aktywność"
+E12C5172C71943: "Minor Silicate Vapour Geysers Volcanism" => "Gejzery par krzemianów — niewielka aktywność"
+E5523B05164496: "Water Geysers Volcanism" => "Gejzery wodne"
+256B10A358431A: "Major Water Geysers Volcanism" => "Gejzery wodne — duża aktywność"
+3689BBDEB38CE4: "Minor Water Geysers Volcanism" => "Gejzery wodne — niewielka aktywność"
+061B430E3860A3: "Water Magma Volcanism" => "Wulkanizm z magmą wodną"
+DEA987C0845103: "Major Water Magma Volcanism" => "Wulkanizm z magmą wodną — duża aktywność"
+B6AEF3724D1973: "Minor Water Magma Volcanism" => "Wulkanizm z magmą wodną — niewielka aktywność"
 
 // added
 
-03966C34CFE140: "Unknown Volcanism" @
+03966C34CFE140: "Unknown Volcanism" => "Nieznany typ wulkanizmu"
 
