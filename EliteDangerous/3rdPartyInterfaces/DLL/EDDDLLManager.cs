@@ -14,6 +14,7 @@
  * EDDiscovery is not affiliated with Frontier Developments plc.
  */
 
+#define USEDB
 
 using System;
 using System.Collections.Generic;
@@ -32,12 +33,14 @@ namespace EliteDangerousCore.DLL
         public EDDDLLManager()
         {
             DLLPermissions = new Dictionary<string, bool>();
+#if USEDB
             var stringlist = DB.UserDatabase.Instance.GetSetting("DLLAllowed", "").Split(',');
-            foreach( var x in stringlist)
+            foreach (var x in stringlist)
             {
                 if (x.Length > 2 && (x.StartsWith("+") || x.StartsWith("-")))       // check before set in case broken save
                     DLLPermissions[x.Substring(1)] = x[0] == '+';
             }
+#endif
         }
 
         public void SetDLLPermission(string dll, bool on)
@@ -55,7 +58,10 @@ namespace EliteDangerousCore.DLL
         public void RemoveAllDLLPermissions()
         {
             DLLPermissions.Clear();
+#if USEDB
             DB.UserDatabase.Instance.PutSetting("DLLAllowed", "");
+#endif
+
         }
 
         // search directory for *.dll, 
@@ -279,10 +285,13 @@ namespace EliteDangerousCore.DLL
             else
                 return new Tuple<bool, string, string>(false, caller.Name, r.Mid(1));
         }
+
         private void Save()
         {
+#if USEDB
             var x = string.Join(",", DLLPermissions.Select(kvp => (kvp.Value ? "+" : "-") + kvp.Key));
             DB.UserDatabase.Instance.PutSetting("DLLAllowed", string.Join(",", x));
+#endif
         }
 
     }

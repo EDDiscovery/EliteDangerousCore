@@ -519,12 +519,17 @@ namespace EliteDangerousCore.DB
             return DBRead(db =>
             {
                 string rwsystime = db.RegisterClass.GetSetting("EDSMLastSystems", "2000-01-01 00:00:00"); // Latest time from RW file. Use old name
-                DateTime edsmdate;
+                DateTime lastsystementrydate;
 
-                if (!DateTime.TryParse(rwsystime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out edsmdate))
-                    edsmdate = EliteReleaseDates.GammaStart;
+                if (!DateTime.TryParse(rwsystime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out lastsystementrydate))
+                    lastsystementrydate = EliteReleaseDates.GammaStart;
 
-                return edsmdate;
+                if ( lastsystementrydate >= DateTime.UtcNow)
+                {
+                    System.Diagnostics.Debug.WriteLine("System Database Time beyond now - you've been Spanshed!");
+                    lastsystementrydate = DateTime.UtcNow;
+                }
+                return lastsystementrydate;
             });
         }
 

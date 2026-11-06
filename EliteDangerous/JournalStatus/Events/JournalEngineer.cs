@@ -61,9 +61,9 @@ namespace EliteDangerousCore.JournalEvents
             if (Type == ContributionType.Unknown)
             {
                 BaseUtils.Debugger.TraceBreak($"*** Unknown engineer type {evt["Type"].Str()}");
-                ;
             }
 
+            // may be null
             Commodity = MCFDName.Normalise(evt["Commodity"].Str(), out string engname, this, MaterialCommodityMicroResourceType.CatType.Commodity, true);
             if (Commodity != null)
             {
@@ -71,6 +71,7 @@ namespace EliteDangerousCore.JournalEvents
                 Commodity_Localised = JournalFieldNaming.CheckLocalisationTranslation(evt["Commodity_Localised"].Str(), FriendlyCommodity);
             }
 
+            // may be null
             Material = MCFDName.Normalise(evt["Material"].Str(), out engname, this, null, true);
             if (Material != null)
             {
@@ -104,27 +105,27 @@ namespace EliteDangerousCore.JournalEvents
 
         public void UpdateMaterials(MaterialCommoditiesMicroResourceList mc)
         {
-            if (Type.Equals("Materials"))
+            if (Material!=null)
                 mc.ChangeMat(EventTimeUTC, MaterialCommodityMicroResourceType.CatType.Raw, Material, -Quantity);
         }
 
         public void UpdateCommodities(MaterialCommoditiesMicroResourceList mc, bool unusedinsrv)
         {
-            if (Type.Equals("Commodity"))
+            if (Commodity!=null)
                 mc.ChangeCommd(EventTimeUTC, Commodity, -Quantity, 0);
         }
 
         public void UpdateStats(Stats stats, ISystem system, string unusedstationfaction)
         {
-            if (Type.Equals("Materials"))
+            if (Material!=null)
                 stats.UpdateEngineerMaterial(system, Engineer, Material, Quantity);
-            if (Type.Equals("Commodity"))
+            if (Commodity!=null)
                 stats.UpdateEngineerCommodity(system, Engineer, Commodity, Quantity);
         }
 
         public void Ledger(Ledger mcl)
         {
-            if (Type.Equals("Credits"))
+            if (Type == ContributionType.Credits)
                 mcl.AddEvent(Id, EventTimeUTC, EventTypeID, "Engineer Contribution Credits", -Quantity);
         }
 

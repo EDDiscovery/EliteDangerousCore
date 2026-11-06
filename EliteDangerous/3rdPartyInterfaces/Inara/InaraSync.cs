@@ -472,12 +472,12 @@ namespace EliteDangerousCore.Inara
                 case JournalTypeEnum.EngineerContribution: //VERIFIED 16/5/18
                     {
                         var je = he.journalEntry as JournalEngineerContribution;
-                        if (je.Commodity.IsValid)
+                        if (je.Commodity?.IsValid == true)
                         {
                             if (mcmr.TryGetValue(je.Commodity, out MaterialCommodityMicroResource item))
                                 eventstosend.Add(InaraClass.setCommanderInventoryItem(item, heutc));
                         }
-                        if (je.Material.IsValid)
+                        if (je.Material?.IsValid == true)
                         {
                             if (mcmr.TryGetValue(je.Material, out MaterialCommodityMicroResource item))
                                 eventstosend.Add(InaraClass.setCommanderInventoryItem(item, heutc));
