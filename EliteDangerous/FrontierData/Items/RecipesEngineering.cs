@@ -1266,6 +1266,28 @@ namespace EliteDangerousCore
 
             #endregion
 
+            #region Old withdrawn
+
+            // withdrawn
+            new EngineeringRecipe("Wide Angle Scanner","sensor_wideangle","",ItemData.ShipModule.ModuleTypes.SurfaceScanner,1,""),
+            new EngineeringRecipe("Wide Angle Scanner","sensor_wideangle","",ItemData.ShipModule.ModuleTypes.SurfaceScanner,2,""),
+            new EngineeringRecipe("Wide Angle Scanner","sensor_wideangle","",ItemData.ShipModule.ModuleTypes.SurfaceScanner,3,""),
+            new EngineeringRecipe("Wide Angle Scanner","sensor_wideangle","",ItemData.ShipModule.ModuleTypes.SurfaceScanner,4,""),
+            new EngineeringRecipe("Wide Angle Scanner","sensor_wideangle","",ItemData.ShipModule.ModuleTypes.SurfaceScanner,5,""),
+            new EngineeringRecipe("Long Range Scanner","sensor_longrange","",ItemData.ShipModule.ModuleTypes.SurfaceScanner,1,""),
+            new EngineeringRecipe("Long Range Scanner","sensor_longrange","",ItemData.ShipModule.ModuleTypes.SurfaceScanner,2,""),
+            new EngineeringRecipe("Long Range Scanner","sensor_longrange","",ItemData.ShipModule.ModuleTypes.SurfaceScanner,3,""),
+            new EngineeringRecipe("Long Range Scanner","sensor_longrange","",ItemData.ShipModule.ModuleTypes.SurfaceScanner,4,""),
+            new EngineeringRecipe("Long Range Scanner","sensor_longrange","",ItemData.ShipModule.ModuleTypes.SurfaceScanner,5,""),
+
+            new EngineeringRecipe("Lightweight", "fueltransferlimpet_lightweight", "", ItemData.ShipModule.ModuleTypes.FuelTransferLimpetController, 1, "" ),
+            new EngineeringRecipe("Lightweight", "fueltransferlimpet_lightweight", "", ItemData.ShipModule.ModuleTypes.FuelTransferLimpetController, 2, "" ),
+            new EngineeringRecipe("Lightweight", "fueltransferlimpet_lightweight", "", ItemData.ShipModule.ModuleTypes.FuelTransferLimpetController, 3, "" ),
+            new EngineeringRecipe("Lightweight", "fueltransferlimpet_lightweight", "", ItemData.ShipModule.ModuleTypes.FuelTransferLimpetController, 4, "" ),
+            new EngineeringRecipe("Lightweight", "fueltransferlimpet_lightweight", "", ItemData.ShipModule.ModuleTypes.FuelTransferLimpetController, 5, "" ),
+
+            #endregion
+
             #region Tech broker - some of these have unknown IDs
 
             // inara, https://inara.cz/elite/techbroker/#tab_techbrokerslot1 left column august 2024
