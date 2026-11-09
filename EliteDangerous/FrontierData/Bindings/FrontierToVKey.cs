@@ -242,28 +242,35 @@ namespace EliteDangerousCore.Bindings
             return null;
         }
         
-        // list of layouts vs frontier culture name in the bindings file
+        // list of our layout names vs frontier culture name in the bindings file
 
         static public Tuple<string, string>[] SupportedLayoutCultures = new Tuple<string, string>[]
         {
-            Tuple.Create("United Kingdom","en-GB"),Tuple.Create("Czech","cs-CZ"),Tuple.Create("Danish","da-DK"),
-            Tuple.Create("German","de-DE"),Tuple.Create("Greek","el-GR"),
-            Tuple.Create("US","en-US"),Tuple.Create("Finnish","fi-FI"),Tuple.Create("French (Legacy, AZERTY)","fr-FR"),
-            Tuple.Create("Italian","it-IT"),Tuple.Create("Polish (Programmers)","pl-PL"),Tuple.Create("Portuguese (Brazil ABNT)","pt-BR"),
-            Tuple.Create("Romanian (Standard)","ro-RO"),Tuple.Create("Slovak","sk-SK"),Tuple.Create("Swedish","sv-SE"),
-            Tuple.Create("Turkish Q","tr-TR"),Tuple.Create("Ukrainian (Enhanced)","uk-UA"),Tuple.Create("Slovenian","sl-SI"),
-            Tuple.Create("Lithuanian","lt-LT"),Tuple.Create("Norwegian","nn-NO"),
-            Tuple.Create("Portuguese","pt-PT"),Tuple.Create("US","en-AU"),Tuple.Create("Spanish","es-ES"),
-            Tuple.Create("Belgium French","fr-BE"),
             Tuple.Create("Austria","de-AT"),
-            Tuple.Create("Canadian French","fr-CA"),
+            Tuple.Create("Belgium French","fr-BE"),
             Tuple.Create("Canadian English","en-CA"),
-
-            // canada french legacy/new
-            // dutch
-            // estonian
-            // hungarian
-            // slovak
+            Tuple.Create("Canadian French","fr-CA"),
+            Tuple.Create("Czech","cs-CZ"),
+            Tuple.Create("Danish","da-DK"),
+            Tuple.Create("Finnish","fi-FI"),
+            Tuple.Create("French (Legacy, AZERTY)","fr-FR"),
+            Tuple.Create("German","de-DE"),
+            Tuple.Create("Greek","el-GR"),
+            Tuple.Create("Italian","it-IT"),
+            Tuple.Create("Lithuanian","lt-LT"),
+            Tuple.Create("Norwegian","nn-NO"),
+            Tuple.Create("Polish (Programmers)","pl-PL"),
+            Tuple.Create("Portuguese (Brazil ABNT)","pt-BR"),
+            Tuple.Create("Portuguese","pt-PT"),
+            Tuple.Create("Romanian (Standard)","ro-RO"),
+            Tuple.Create("Slovak","sk-SK"),
+            Tuple.Create("Slovenian","sl-SI"),
+            Tuple.Create("Spanish","es-ES"),
+            Tuple.Create("Swedish","sv-SE"),
+            Tuple.Create("Turkish Q","tr-TR"),
+            Tuple.Create("Ukrainian (Enhanced)","uk-UA"),
+            Tuple.Create("United Kingdom","en-GB"),
+            Tuple.Create("US","en-US"), Tuple.Create("US","en-AU"),
         };
 
 
@@ -317,6 +324,17 @@ namespace EliteDangerousCore.Bindings
             [Tuple.Create("German", "Key_ä")] = "Quotes",
             [Tuple.Create("German", "Key_Hash")] = "Question",
             [Tuple.Create("German", "Key_LessThan")] = "Backslash",
+
+            [Tuple.Create("Austria", "Key_Grave")] = "Pipe",            // added, note frontier has a problem with scan code 28/2B and calls them the same
+            [Tuple.Create("Austria", "Key_Minus")] = "OpenBrackets",
+            [Tuple.Create("Austria", "Key_Equals")] = "CloseBrackets",
+            [Tuple.Create("Austria", "Key_LeftBracket")] = "Semicolon",
+            [Tuple.Create("Austria", "Key_RightBracket")] = "Equals",
+            [Tuple.Create("Austria", "Key_SemiColon")] = "Tilde",
+            [Tuple.Create("Austria", "Key_Apostrophe")] = "Quotes",
+            [Tuple.Create("Austria", "Key_BackSlash")] = "Question",
+            //[Tuple.Create("Austria", "Key_BackSlash")] = "Backslash",
+            [Tuple.Create("Austria", "Key_Slash")] = "Minus",
 
 
             [Tuple.Create("Greek", "Key_Grave")] = "Tilde",  //30/8/26
@@ -502,16 +520,6 @@ namespace EliteDangerousCore.Bindings
             [Tuple.Create("Spanish", "Key_BackSlash")] = "Backslash",
             [Tuple.Create("Spanish", "Key_Slash")] = "Minus",
 
-            [Tuple.Create("Austria", "Key_Grave")] = "Pipe",            // added, note frontier has a problem with scan code 28/2B and calls them the same
-            [Tuple.Create("Austria", "Key_Minus")] = "OpenBrackets",
-            [Tuple.Create("Austria", "Key_Equals")] = "CloseBrackets",
-            [Tuple.Create("Austria", "Key_LeftBracket")] = "Semicolon",
-            [Tuple.Create("Austria", "Key_RightBracket")] = "Equals",
-            [Tuple.Create("Austria", "Key_SemiColon")] = "Tilde",
-            [Tuple.Create("Austria", "Key_Apostrophe")] = "Quotes",
-            [Tuple.Create("Austria", "Key_BackSlash")] = "Question",
-            //[Tuple.Create("Austria", "Key_BackSlash")] = "Backslash",
-            [Tuple.Create("Austria", "Key_Slash")] = "Minus",
 
             [Tuple.Create("Canadian French", "Key_Ring")] = "Quotes",
             [Tuple.Create("Canadian French", "Key_Circumflex")] = "OpenBrackets",

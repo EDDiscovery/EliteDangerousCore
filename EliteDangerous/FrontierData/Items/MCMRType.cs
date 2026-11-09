@@ -142,7 +142,10 @@ namespace EliteDangerousCore
 
             // found oct 26
 
-            LavignyStrategicReports, KaineAidSupplies, KaineMisinformation, KaineLobbyingMaterial,
+            LavignyStrategicReports, KaineAidSupplies, KaineMisinformation, KaineLobbyingMaterial, 
+            
+            // some logs have this, lets just cover it up, but its not in the current game
+            Fertiliser,
 
             //---------------------------------------------------------- Raw
             Carbon = 1000, Iron, Lead, Nickel, Phosphorus, Rhenium, Sulphur, Arsenic,
@@ -605,6 +608,7 @@ namespace EliteDangerousCore
             Add(CatType.Commodity, ItemType.Chemicals, MCMR.Water, "Water");
             Add(CatType.Commodity, ItemType.Chemicals, MCMR.helium, "Helium");
             Add(CatType.Commodity, ItemType.Chemicals, MCMR.helium3, "Helium-3");
+            Add(CatType.Commodity, ItemType.Chemicals, MCMR.Fertiliser, "Fertiliser", true);
             Add(CatType.Commodity, ItemType.Drones, MCMR.Drones, "Drones");
             Add(CatType.Commodity, ItemType.Foods, MCMR.Algae, "Algae");
             Add(CatType.Commodity, ItemType.Foods, MCMR.AnimalMeat, "Animal Meat");

@@ -149,7 +149,7 @@ namespace EliteDangerousCore.JournalEvents
             FDOption = Enum.TryParse(evt["Option"].Str(), true, out ResurrectTypes s) ? s : ResurrectTypes.Unknown;
             if (FDOption == ResurrectTypes.Unknown) 
             { 
-                BaseUtils.Debugger.TraceBreak($"*** Unknown Resurrect {(evt["Option"].Str())}");
+                BaseUtils.Debugger.TraceBreak($"*** Unknown Resurrect Type {(evt["Option"].Str())}");
                 ;  
             }
             Option = FDOption.ToString().SplitCapsWordFull();
@@ -159,7 +159,7 @@ namespace EliteDangerousCore.JournalEvents
 
         public string Option { get; set; }      // Friendly, not FDName
 
-        public enum ResurrectTypes { Free, Rebuy, Recover, HandIn, Rejoin, Escape, Unknown };
+        public enum ResurrectTypes { Free, Rebuy, Recover, HandIn, Rejoin, Escape, Unknown, Bundle };
         public ResurrectTypes FDOption { get; set; }
         public long Cost { get; set; }
         public bool Bankrupt { get; set; }
