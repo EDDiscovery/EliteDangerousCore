@@ -140,12 +140,13 @@ namespace EliteDangerousCore.Bindings
         // check and warn.  Note public since we may need to restablish it after themeing
         public void SetWarning()
         {
-            labelWarning.ForeColor = Theme.Current.TextBlockHighlightColor;
             toolTip.SetToolTip(labelWarning, null);
 
             if (bf != null)
             {
-                if ( !extComboBoxBindFiles.Enabled)
+                labelWarning.ForeColor = Theme.Current.TextBlockHighlightColor;
+
+                if (!extComboBoxBindFiles.Enabled)
                     labelWarning.Text = $"No Binding folder found";
                 else if (!bf.IsLoaded)
                     labelWarning.Text = $"No Bindings file setup - Use Elite Controls to make one";
@@ -157,7 +158,10 @@ namespace EliteDangerousCore.Bindings
                     toolTip.SetToolTip(labelWarning, string.Join(Environment.NewLine, bf.DeviceList.Where(x => x.PhysicalDevice == false).Select(x => x.FrontierName)));
                 }
                 else
-                    labelWarning.Text = "";
+                {
+                    labelWarning.ForeColor = Theme.Current.TextBlockForeColor;
+                    labelWarning.Text = bf.KeyboardCulture;
+                }
             }
             else
                 labelWarning.Text = "";

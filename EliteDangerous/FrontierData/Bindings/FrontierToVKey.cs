@@ -25,7 +25,7 @@ namespace EliteDangerousCore.Bindings
         // will return null if not supported
         public static string GetSupportedLayout(string cultureid)
         {
-            return Array.Find(SupportedLayoutCultures, x => x.Item2.EqualsIIC(cultureid))?.Item1 ?? null;
+            return Array.Find(SupportedLayoutCultures, x => x.Item2.ContainsIn(cultureid, StringComparison.InvariantCultureIgnoreCase)>=0)?.Item1 ?? null;
         }
 
         private static Dictionary<string,HashSet<string>> CachedLayouts = new Dictionary<string, HashSet<string>>();
@@ -244,33 +244,34 @@ namespace EliteDangerousCore.Bindings
         
         // list of our layout names vs frontier culture name in the bindings file
 
-        static public Tuple<string, string>[] SupportedLayoutCultures = new Tuple<string, string>[]
+        static public Tuple<string, string[]>[] SupportedLayoutCultures = new Tuple<string, string[]>[]
         {
-            Tuple.Create("Austria","de-AT"),
-            Tuple.Create("Belgium French","fr-BE"),
-            Tuple.Create("Canadian English","en-CA"),
-            Tuple.Create("Canadian French","fr-CA"),
-            Tuple.Create("Czech","cs-CZ"),
-            Tuple.Create("Danish","da-DK"),
-            Tuple.Create("Finnish","fi-FI"),
-            Tuple.Create("French (Legacy, AZERTY)","fr-FR"),
-            Tuple.Create("German","de-DE"),
-            Tuple.Create("Greek","el-GR"),
-            Tuple.Create("Italian","it-IT"),
-            Tuple.Create("Lithuanian","lt-LT"),
-            Tuple.Create("Norwegian","nn-NO"),
-            Tuple.Create("Polish (Programmers)","pl-PL"),
-            Tuple.Create("Portuguese (Brazil ABNT)","pt-BR"),
-            Tuple.Create("Portuguese","pt-PT"),
-            Tuple.Create("Romanian (Standard)","ro-RO"),
-            Tuple.Create("Slovak","sk-SK"),
-            Tuple.Create("Slovenian","sl-SI"),
-            Tuple.Create("Spanish","es-ES"),
-            Tuple.Create("Swedish","sv-SE"),
-            Tuple.Create("Turkish Q","tr-TR"),
-            Tuple.Create("Ukrainian (Enhanced)","uk-UA"),
-            Tuple.Create("United Kingdom","en-GB"),
-            Tuple.Create("US","en-US"), Tuple.Create("US","en-AU"),
+            Tuple.Create("Austria",new string[] {"de-AT"}),
+            Tuple.Create("Belgium French",new string[] {"fr-BE"}),
+            Tuple.Create("Canadian English",new string[] {"en-CA"}),
+            Tuple.Create("Canadian French",new string[] {"fr-CA"}),
+            Tuple.Create("Czech",new string[] {"cs-CZ"}),
+            Tuple.Create("Danish",new string[] {"da-DK"}),
+            Tuple.Create("Finnish",new string[] {"fi-FI"}),
+            Tuple.Create("French (Legacy, AZERTY)",new string[] {"fr-FR"}),
+            Tuple.Create("German",new string[] {"de-DE"}),
+            Tuple.Create("Greek",new string[] {"el-GR"}),
+            Tuple.Create("Italian",new string[] {"it-IT"}),
+            Tuple.Create("Lithuanian",new string[] {"lt-LT"}),
+            Tuple.Create("Norwegian",new string[] {"nn-NO"}),
+            Tuple.Create("Polish (Programmers)",new string[] {"pl-PL"}),
+            Tuple.Create("Portuguese (Brazil ABNT)",new string[] {"pt-BR"}),
+            Tuple.Create("Portuguese",new string[] {"pt-PT"}),
+            Tuple.Create("Romanian (Standard)",new string[] {"ro-RO"}),
+            Tuple.Create("Slovak",new string[] {"sk-SK"}),
+            Tuple.Create("Slovenian",new string[] {"sl-SI"}),
+            Tuple.Create("Spanish",new string[] {"es-ES"}),
+            Tuple.Create("Swedish",new string[] {"sv-SE"}),
+            Tuple.Create("Turkish Q",new string[] {"tr-TR"}),
+            Tuple.Create("Ukrainian (Enhanced)",new string[] {"uk-UA"}),
+            Tuple.Create("United Kingdom",new string[] {"en-GB"}),
+            Tuple.Create("US",new string[] {"en-US","en-AU","en-PH","en-SG","en-ZA","en-TT","en-ZW","af-ZA","en-BZ","en-HK","en-JM","en-MY","fil-PH",
+                                "id-ID","en-RW","sw-KE","ms-MY","ms-BN","moh-CA","st-ZA","so-SO","ts-ZA","xh-ZA","zu-ZA"}),
         };
 
 
