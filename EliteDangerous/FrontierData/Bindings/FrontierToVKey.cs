@@ -287,23 +287,23 @@ namespace EliteDangerousCore.Bindings
 
         static Dictionary<Tuple<string, string>, string> vkeylookup = new Dictionary<Tuple<string, string>, string>
         {
-            [Tuple.Create("United Kingdom", "Key_Grave")] = "Backquote",                //30/8/26
-            [Tuple.Create("United Kingdom", "Key_LeftBracket")] = "OpenBrackets",
-            [Tuple.Create("United Kingdom", "Key_RightBracket")] = "CloseBrackets",
-            [Tuple.Create("United Kingdom", "Key_SemiColon")] = "Semicolon",
-            [Tuple.Create("United Kingdom", "Key_Apostrophe")] = "Tilde",
-            [Tuple.Create("United Kingdom", "Key_Hash")] = "Quotes",
-            [Tuple.Create("United Kingdom", "Key_BackSlash")] = "Pipe",
-            [Tuple.Create("United Kingdom", "Key_Slash")] = "Question",
+            [Tuple.Create("United Kingdom", "Key_Grave")] = "Backquote",                                     // SC 0x029 (UI_Up)
+            [Tuple.Create("United Kingdom", "Key_LeftBracket")] = "OpenBrackets",                            // SC 0x01A (UI_Right)
+            [Tuple.Create("United Kingdom", "Key_RightBracket")] = "CloseBrackets",                          // SC 0x01B (UI_Select)
+            [Tuple.Create("United Kingdom", "Key_SemiColon")] = "Semicolon",                                 // SC 0x027 (UI_Toggle)
+            [Tuple.Create("United Kingdom", "Key_Apostrophe")] = "Tilde",                                    // SC 0x028 (CycleNextPanel)
+            [Tuple.Create("United Kingdom", "Key_Hash")] = "Quotes",                                         // SC 0x02B (CyclePreviousPanel)
+            [Tuple.Create("United Kingdom", "Key_BackSlash")] = "Pipe",                                      // SC 0x056 (CycleNextPage)
+            [Tuple.Create("United Kingdom", "Key_Slash")] = "Question",                                      // SC 0x035 (CamYawLeft)
 
-            [Tuple.Create("Czech", "Key_SemiColon")] = "Tilde",     //30/8/26
-            [Tuple.Create("Czech", "Key_Acute")] = "Question",
-            [Tuple.Create("Czech", "Key_ú")] = "OpenBrackets",
-            [Tuple.Create("Czech", "Key_RightParenthesis")] = "CloseBrackets",
-            [Tuple.Create("Czech", "Key_ů")] = "Semicolon",
-            [Tuple.Create("Czech", "Key_§")] = "Quotes",
-            [Tuple.Create("Czech", "Key_Umlaut")] = "Pipe",
-            [Tuple.Create("Czech", "Key_BackSlash")] = "Backslash",
+            [Tuple.Create("Czech", "Key_SemiColon")] = "Tilde",                                              // SC 0x029 (UI_Up)
+            [Tuple.Create("Czech", "Key_Acute")] = "Question",                                               // SC 0x00D (UI_Left)
+            [Tuple.Create("Czech", "Key_ú")] = "OpenBrackets",                                               // SC 0x01A (UI_Right)
+            [Tuple.Create("Czech", "Key_RightParenthesis")] = "CloseBrackets",                               // SC 0x01B (UI_Select)
+            [Tuple.Create("Czech", "Key_ů")] = "Semicolon",                                                  // SC 0x027 (UI_Toggle)
+            [Tuple.Create("Czech", "Key_§")] = "Quotes",                                                     // SC 0x028 (CycleNextPanel)
+            [Tuple.Create("Czech", "Key_Umlaut")] = "Pipe",                                                  // SC 0x02B (CyclePreviousPanel)
+            [Tuple.Create("Czech", "Key_BackSlash")] = "Backslash",                                          // SC 0x056 (CycleNextPage)
 
             [Tuple.Create("Danish", "Key_Half")] = "Pipe",                  //30/8/26
             [Tuple.Create("Danish", "Key_Plus")] = "Equals",
@@ -406,6 +406,7 @@ namespace EliteDangerousCore.Bindings
             [Tuple.Create("Polish (Programmers)", "Key_Hash")] = "Pipe",
             [Tuple.Create("Polish (Programmers)", "Key_BackSlash")] = "Backslash",
             [Tuple.Create("Polish (Programmers)", "Key_Slash")] = "Question",
+
             [Tuple.Create("Portuguese (Brazil ABNT)", "Key_Apostrophe")] = "Tilde",
             [Tuple.Create("Portuguese (Brazil ABNT)", "Key_Acute")] = "OpenBrackets",
             [Tuple.Create("Portuguese (Brazil ABNT)", "Key_LeftBracket")] = "CloseBrackets",

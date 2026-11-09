@@ -122,7 +122,7 @@ namespace EliteDangerousCore.DLL
                 bodyname = he.Status.WhereAmI,
                 bodytype = he.Status.BodyType.ToString(),
                 stationname = he.Status.StationName_Localised ?? "Unknown",
-                stationtype = he.Status.FDStationType.ToString(),
+                stationtype = he.Status.FDStationType?.ToString() ?? null,
                 stationfaction = he.Status.StationFaction ?? "Unknown",
                 shiptypefd = he.Status.ShipTypeFD?.ID ?? "Unknown",
                 oncrewwithcaptain = he.Status.OnCrewWithCaptain ?? "",

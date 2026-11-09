@@ -124,6 +124,7 @@ namespace EliteDangerousCore
             candidatename = candidatename.Replace("Pp Liyongrui", "Pp Li Yongrui");
             candidatename = candidatename.Replace("Pp Pranavantal", "Pp Prana Vantal");
             candidatename = candidatename.Replace("Pp Yurigrom", "Pp Yuri Grom");
+            candidatename = candidatename.Replace("Ppedmund", "Pp Edmund");
             candidatename = candidatename.Replace("Ppnakato", "Pp Nakato");
             candidatename = candidatename.Replace("Ppdenton", "Pp Denton");
             candidatename = candidatename.Replace("Explorer Nx", "Caspian Explorer");

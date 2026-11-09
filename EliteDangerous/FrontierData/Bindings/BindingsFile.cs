@@ -650,8 +650,10 @@ namespace EliteDangerousCore.Bindings
 
                  if (fname.Substring(4) != vkeyname )
                 {
+                    string output = $"[Tuple.Create(\"{KeyboardCulture}\", \"{fname}\")] = \"{vkeyname}\",";
+
                     //    System.Diagnostics.Debug.WriteLine($"Scan code {kvp.Key:X2} vkey {(int)vkey:X2} {vkeyname} = {entry.Name} = {entry.PrimaryKeys.Keys[0].FrontierKeyName}");
-                    System.Diagnostics.Debug.WriteLine($"[Tuple.Create(\"{KeyboardCulture}\", \"{fname}\")] = \"{vkeyname}\",");
+                    System.Diagnostics.Debug.WriteLine($"{output,-96} // SC 0x{kvp.Key:X3} ({kvp.Value})");
                 }
 
                 if (KeyboardLayout != null)        // if we have coded it, then double check it. If not we can't do it
