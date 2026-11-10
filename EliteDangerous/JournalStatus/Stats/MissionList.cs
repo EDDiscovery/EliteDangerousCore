@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace EliteDangerousCore
 {
-    [System.Diagnostics.DebuggerDisplay("Mission {Mission.EventTimeUTC} {Mission.Name} {State} {DestinationSystemStationSettlement()}")]
+    [System.Diagnostics.DebuggerDisplay("Mission {Mission.MissionID} {Mission.EventTimeUTC} {Mission.Name} {State} {DestinationSystemStationSettlement()}")]
     public class MissionState
     {
         public enum StateTypes { InProgress, Completed, Abandoned, Failed, Died };    
@@ -168,35 +168,26 @@ namespace EliteDangerousCore
         {
             return history.GetValues(generation).ToList();
         }
-
-        public List<MissionState> GetAllCurrentMissions(uint generation, DateTime utc)  // ones current at this time in a generation. Always return array
+        public List<MissionState> GetMissionListInProgress(uint generation)   // missions marked in progress at a generation. Always return array
         {
-            return history.GetValues(generation, x => x.InProgressDateTime(utc)).OrderByDescending(y => y.Mission.EventTimeUTC).ToList();
+            return history.GetValues(generation).Where(x => x.InProgress).ToList();
         }
-
-        public MissionState GetMission(string key) // null if not present
+        public List<MissionState> GetMissionListOrdered(uint generation)   // missions at a generation in date order, latest first. Always return array
         {
-            return history.GetLast(key);
+            return history.GetValues(generation).OrderByDescending(y => y.Mission.EventTimeUTC).ToList();
         }
-
-        public MissionState GetMission(uint generation, string key) // null if not present at that generation
+        public List<MissionState> GetMissionListOrderedInProgress(uint generation)   // missions at a generation in date order, latest first. Always return array
         {
-            return history.Get(key, generation);
+            return history.GetValues(generation).Where(x => x.InProgress).OrderByDescending(y => y.Mission.EventTimeUTC).ToList();
         }
-
         static public List<MissionState> GetAllCombatMissionsLatestFirst(List<MissionState> ms)
         {
             return ms.Where(x => x.Mission.TargetType > MissionDefinitions.TargetType.NotGiven && x.Mission.ExpiryValid).OrderByDescending(y => y.Mission.EventTimeUTC).ToList();
         }
 
-        static public List<MissionState> GetAllCurrentMissions(List<MissionState> ms, DateTime curtime)
+        public MissionState GetMission(string key) // null if not present
         {
-            return ms.Where(x => x.InProgressDateTime(curtime)).OrderByDescending(y => y.Mission.EventTimeUTC).ToList();
-        }
-
-        static public List<MissionState> GetAllExpiredMissions(List<MissionState> ms, DateTime curtime)
-        {
-            return ms.Where(x => !x.InProgressDateTime(curtime)).OrderByDescending(y => y.Mission.EventTimeUTC).ToList();
+            return history.GetLast(key);
         }
 
         public MissionListAccumulator()
@@ -211,20 +202,18 @@ namespace EliteDangerousCore
 
         public void Accepted(JournalMissionAccepted m, ISystem sys, string body)
         {
-            string key = Key(m);
             history.NextGeneration();
-            history[key] = new MissionState(m, sys, body);
+            history[m.Key] = new MissionState(m, sys, body);
         }
 
         public void Completed(JournalMissionCompleted c)
         {
-            string key = Key(c);
-            MissionState m = history.GetLast(key);       // we must have a last entry to add
+            MissionState m = history.GetLast(c.Key);       // we must have a last entry to add
             if (m != null)
             {
                 c.LocalisedName = m.Mission.LocalisedName;      // copy localised name from Mission to this for display purposes
                 history.NextGeneration();
-                history[key] = new MissionState(m, c);
+                history[c.Key] = new MissionState(m, c);
             }
             else
             {
@@ -257,13 +246,13 @@ namespace EliteDangerousCore
 
         public void Abandoned(JournalMissionAbandoned a)
         {
-            string key = Key(a);
-            MissionState m = history.GetLast(key);       // we must have a last entry to add
+            MissionState m = history.GetLast(a.Key);       // we must have a last entry to add
             if (m != null)
             {
                 a.LocalisedName = m.Mission.LocalisedName;      // copy localised name from Mission to this for display purposes
                 history.NextGeneration();
-                history[key] = new MissionState(m, MissionState.StateTypes.Abandoned, a.EventTimeUTC);
+                history[a.Key] = new MissionState(m, MissionState.StateTypes.Abandoned, a.EventTimeUTC);
+                //System.Diagnostics.Debug.WriteLine($"MissionList {a.Key} Abandoned at {a.EventTimeUTC}");
             }
             else
             {
@@ -273,13 +262,12 @@ namespace EliteDangerousCore
 
         public void Failed(JournalMissionFailed f)
         {
-            string key = Key(f);
-            MissionState m = history.GetLast(key);       // we must have a last entry to add
+            MissionState m = history.GetLast(f.Key);       // we must have a last entry to add
             if (m != null)
             {
                 f.LocalisedName = m.Mission.LocalisedName;      // copy localised name from Mission to this for display purposes
                 history.NextGeneration();
-                history[key] = new MissionState(m, MissionState.StateTypes.Failed, f.EventTimeUTC);
+                history[f.Key] = new MissionState(m, MissionState.StateTypes.Failed, f.EventTimeUTC);
             }
             else
             {
@@ -289,13 +277,12 @@ namespace EliteDangerousCore
 
         public void Redirected(JournalMissionRedirected r)
         {
-            string key = Key(r);
-            MissionState m = history.GetLast(key);       // we must have a last entry to add
+            MissionState m = history.GetLast(r.Key);       // we must have a last entry to add
             if (m != null)
             {
                 r.LocalisedName = m.Mission.LocalisedName;      // copy localised name from Mission to this for display purposes
                 history.NextGeneration();
-                history[key] = new MissionState(m, r);
+                history[r.Key] = new MissionState(m, r);
             }
             else
             {
@@ -305,22 +292,25 @@ namespace EliteDangerousCore
 
         public void Died(DateTime diedtimeutc)
         {
-            List<MissionState> affected = new List<MissionState>();
-            foreach (var m in history.GetLast())
-            {
-                if (m.Value.InProgressDateTime(diedtimeutc))
-                    affected.Add(m.Value);
-            }
+            // so it appears we missed the change in ELITE. Missions now do not disappear on death
 
-            if (affected.Count > 0)
-            {
-                history.NextGeneration();
-                foreach (var m in affected)
-                {
-                    string key = Key(m.Mission);
-                    history[key] = new MissionState(history.GetLast(key), MissionState.StateTypes.Died, diedtimeutc);
-                }
-            }
+
+            //List<MissionState> affected = new List<MissionState>();
+
+            //foreach (var m in history.GetLast())
+            //{
+            //    if (m.Value.InProgressDateTime(diedtimeutc))
+            //        affected.Add(m.Value);
+            //}
+
+            //if (affected.Count > 0)
+            //{
+            //    history.NextGeneration();
+            //    foreach (var m in affected)
+            //    {
+            //        history[m.Mission.Key] = new MissionState(history.GetLast(m.Mission.Key), MissionState.StateTypes.Died, diedtimeutc);
+            //    }
+            //}
         }
 
         public void Resurrect(List<string> keys)
@@ -367,26 +357,24 @@ namespace EliteDangerousCore
 
         public void Missions(JournalMissions m)
         {
+            //System.Diagnostics.Debug.WriteLine($"MissionList {history.Generation} {m.EventTimeUTC.ToStringZulu()} Process");
+
             List<string> toresurrect = new List<string>();
             HashSet<string> active = new HashSet<string>();
-            List<string> failed = new List<string>();
-            List<string> completed = new List<string>();
-            List<string> disappeared = new List<string>();
 
             foreach (var mi in m.ActiveMissions)
             {
-                string kn = Key(mi.MissionID, mi.Name.ID);
-                active.Add(kn);
-                //System.Diagnostics.Debug.WriteLine(m.EventTimeUTC.ToStringZulu() + " Mission " + kn + " is active");
+                active.Add(mi.Key);
+                //System.Diagnostics.Debug.WriteLine($"  MissionList Mission Active {mi.Key}");
 
-                if (history.ContainsKey(kn))
+                if (history.ContainsKey(mi.Key))
                 {
-                    MissionState ms = history.GetLast(kn);
+                    MissionState ms = history.GetLast(mi.Key);
 
                     if (ms.State == MissionState.StateTypes.Died)  // if marked died... 
                     {
-                        //System.Diagnostics.Debug.WriteLine("Missions in active list but marked died:" + kn);
-                        toresurrect.Add(kn);
+                        //System.Diagnostics.Debug.WriteLine($".. MissionList in active list but marked died {mi.Key}");
+                        toresurrect.Add(mi.Key);
                     }
                 }
                 else
@@ -395,23 +383,27 @@ namespace EliteDangerousCore
                 }
             }
 
+            List<string> failed = new List<string>();
             foreach (var mi in m.FailedMissions)
             {
-                string kn = Key(mi.MissionID, mi.Name.ID);
-                failed.Add(kn);
+                //System.Diagnostics.Debug.WriteLine($"  MissionList Mission Failed {mi.Key}");
+                failed.Add(mi.Key);
             }
 
+            List<string> completed = new List<string>();
             foreach (var mi in m.CompletedMissions)
             {
-                string kn = Key(mi.MissionID, mi.Name.ID);
-                completed.Add(kn);
+                //System.Diagnostics.Debug.WriteLine($"  MissionList Mission Completed {mi.Key}");
+                completed.Add(mi.Key);
             }
+
+            List<string> disappeared = new List<string>();
 
             foreach (var kvp in history.GetLast())
             {
                 if (!active.Contains(kvp.Key) && !failed.Contains(kvp.Key) && !completed.Contains(kvp.Key) && kvp.Value.State == MissionState.StateTypes.InProgress)
                 {
-                   // System.Diagnostics.Debug.WriteLine(m.EventTimeUTC.ToStringZulu() + " Mission " + kvp.Value.Mission.EventTimeUTC.ToStringZulu() + " " + kvp.Key + " disappeared ****");
+                    //System.Diagnostics.Debug.WriteLine($"  MissionList Mission Disappeared from history {kvp.Key} {kvp.Value.State}");
                     disappeared.Add(kvp.Key);
                 }
             }
@@ -435,6 +427,10 @@ namespace EliteDangerousCore
             {
                 ChangeStateIfInProgress(failed, MissionState.StateTypes.Completed, m.EventTimeUTC);
             }
+
+            //foreach (var kvp in history.GetLast()) System.Diagnostics.Debug.WriteLine($"  MissionList Current State {kvp.Value.State} : {kvp.Key}"); }
+
+            //System.Diagnostics.Debug.WriteLine($"< MissionList Finish {history.Generation} : ACT {history.GetLast().Where(x=>x.Value.State==MissionState.StateTypes.InProgress).Count()} RES {toresurrect.Count} DIS {disappeared.Count} FAIL {failed.Count} COMP {completed.Count}");
         }
 
         public string GetExistingKeyFromID(MissionID id)       // some only have mission ID, generated after accept. Find on key, may return null
@@ -463,12 +459,6 @@ namespace EliteDangerousCore
             return history.Generation;
         }
 
-        public static string Key(JournalMissionFailed m) { return m.MissionID.ToString() + ":" + m.Name; }
-        public static string Key(JournalMissionCompleted m) { return m.MissionID.ToString() + ":" + m.Name; }
-        public static string Key(JournalMissionAccepted m) { return m.MissionID.ToString() + ":" + m.Name; }
-        public static string Key(JournalMissionRedirected m) { return m.MissionID.ToString() + ":" + m.Name; }
-        public static string Key(JournalMissionAbandoned m) { return m.MissionID.ToString() + ":" + m.Name; }
-        public static string Key(MissionID id, string name) { return id.ToString() + ":" + name; }
 
         private GenerationalDictionary<string, MissionState> history;
     }

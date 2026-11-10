@@ -171,6 +171,9 @@ namespace EliteDangerousCore.Forms
         private void buttonExtBrowse_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
+            if (Directory.Exists(textBoxBorderJournal.Text))
+                fbd.SelectedPath = textBoxBorderJournal.Text;
+
             fbd.Description = "Select folder where Journal*.log files are stored by Frontier in".Tx();
 
             if (fbd.ShowDialog(this) == DialogResult.OK)

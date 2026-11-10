@@ -27,5 +27,6 @@ namespace EliteDangerousCore
         string ScanCachePath { get; }
         bool ScanCacheEnabled { get; }
         bool SetEDDNforNewCommanders { get; }
+        bool VerboseOutput { get; }     
     }
 }

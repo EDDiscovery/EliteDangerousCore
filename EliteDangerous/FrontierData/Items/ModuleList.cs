@@ -2645,6 +2645,7 @@ namespace EliteDangerousCore
                 {new ModFDName("decal_falcondelacy_05"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Falcon De Lacy 5") },
                 {new ModFDName("decal_falcondelacy_06"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Falcon De Lacy 6") },
                 {new ModFDName("decal_faulcon_delacy_01"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Faulcon Delacy 1") },
+                {new ModFDName("decal_faulcon_delacy_01_gold"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Faulcon Delacy 1 Gold") },
                 {new ModFDName("decal_faulcon_delacy_02"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Faulcon Delacy 2") },
                 {new ModFDName("decal_faulcon_delacy_03"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Faulcon Delacy 3") },
                 {new ModFDName("decal_faulcon_delacy_04"), new ShipModule(-1,ShipModule.ModuleTypes.VanityType,"Decal Faulcon Delacy 4") },

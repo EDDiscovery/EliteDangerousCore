@@ -84,11 +84,15 @@ namespace EliteDangerousCore.JournalEvents
 
         public class MissionItem
         {
+
+            [JsonName("Name")]                              // called Name
             [JsonAlwaysCreate]
-            public MissionID MissionID { get; set; }
+            public MissionFDName FDName { get; set; }
 
             [JsonAlwaysCreate]
-            public MissionFDName Name { get; set; }                 
+            public MissionID MissionID { get; set; }
+            public string Key => MissionID.ToString() + ":" + FDName;
+
             public string Name_Localised { get; set; }       // new '25
             public bool PassengerMission { get; set; }
             public int Expires { get; set; }
@@ -98,13 +102,14 @@ namespace EliteDangerousCore.JournalEvents
             public void Normalise(DateTime utcnow)
             {
                 ExpiryTimeUTC = utcnow.AddSeconds(Expires);
-                Name = MissionFDName.Normalise(Name.ID, out string engname, null);
+                FDName = MissionFDName.Normalise(FDName.ID, out string engname, null);
                 Name_Localised = Name_Localised ?? engname;
             }
 
             public string Format()
             {
-                return BaseUtils.FieldBuilder.Build("", Name_Localised, "<;(" + "Passenger".Tx() + ")", PassengerMission, " " + "Expires".Tx()+": ", ExpiryTimeUTC.ToLocalTime());
+                return BaseUtils.FieldBuilder.Build("", EliteConfigInstance.InstanceOptions.VerboseOutput ? MissionID : null, 
+                                                    "", Name_Localised, "<;(" + "Passenger".Tx() + ")", PassengerMission, " " + "Expires".Tx()+": ", ExpiryTimeUTC.ToLocalTime());
             }
         }
     }
@@ -161,9 +166,9 @@ namespace EliteDangerousCore.JournalEvents
 
         }
 
-        public MissionID MissionID { get; private set; }
-
-        public MissionFDName FDName { get; private set; }                  // original
+        public MissionFDName FDName { get; set; }
+        public MissionID MissionID { get; set; }
+        public string Key => MissionID.ToString() + ":" + FDName;
         public string Name { get; private set; }                    // english
         public string LocalisedName { get; private set; }           // always set
 
@@ -215,7 +220,8 @@ namespace EliteDangerousCore.JournalEvents
         {
             DateTime? exp = Expiry > DateTime.MinValue ? EliteConfigInstance.InstanceConfig.ConvertTimeToSelectedFromUTC(Expiry) : default(DateTime?);
 
-            return BaseUtils.FieldBuilder.Build("", LocalisedName,
+            return BaseUtils.FieldBuilder.Build("", EliteConfigInstance.InstanceOptions.VerboseOutput ? MissionID : null,
+                                      "", LocalisedName,
                                       "< " + "From".TxCond(translate) + " ", Faction,
                                       "System".TxCond(translate)+": ", DestinationSystem,
                                       "Station".TxCond(translate)+": ", DestinationStation,
@@ -366,7 +372,9 @@ namespace EliteDangerousCore.JournalEvents
             }
         }
 
-        public MissionFDName FDName { get; set; }      
+        public MissionFDName FDName { get; set; }
+        public MissionID MissionID { get; set; }
+        public string Key => MissionID.ToString() + ":" + FDName;
         public string Name { get; set; }
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public string Faction { get; set; }
@@ -390,7 +398,6 @@ namespace EliteDangerousCore.JournalEvents
         public long? Reward { get; set; }
         public long? Donation { get; set; }
         public string[] PermitsAwarded { get; set; }
-        public MissionID MissionID { get; set; }
 
         public CommodityRewards[] CommodityReward { get; set; }
         public MaterialRewards[] MaterialsReward { get; set; }
@@ -443,7 +450,8 @@ namespace EliteDangerousCore.JournalEvents
         public override string GetInfo()
         {
 
-            return BaseUtils.FieldBuilder.Build("", LocalisedName,
+            return BaseUtils.FieldBuilder.Build("", EliteConfigInstance.InstanceOptions.VerboseOutput ? MissionID : null,
+                                        "", LocalisedName,
                                         "< " + "From".Tx() + " ", Faction,
                                         "Reward".Tx() + ": ; cr;N0", Reward,
                                         "Donation".Tx()+": ", Donation,
@@ -662,14 +670,17 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public MissionFDName FDName { get; set; }
-        public string Name { get; set; }
-        public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public MissionID MissionID { get; set; }
+        public string Key => MissionID.ToString() + ":" + FDName;
+        public string Name { get; set; }
+
+        public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public long? Fine { get; set; }
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine".Tx()+": ", Fine);
+            return BaseUtils.FieldBuilder.Build("", EliteConfigInstance.InstanceOptions.VerboseOutput ? MissionID : null,
+                                                "", LocalisedName, "Fine".Tx()+": ", Fine);
         }
 
         public void Ledger(Ledger mcl)
@@ -703,6 +714,8 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public MissionFDName FDName { get; set; }
+        public MissionID MissionID { get; set; }
+        public string Key => MissionID.ToString() + ":" + FDName;
         public string Name { get; set; }
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
         public string NewDestinationStation { get; set; }
@@ -710,10 +723,10 @@ namespace EliteDangerousCore.JournalEvents
         public string NewDestinationSystem { get; set; }
         public string OldDestinationSystem { get; set; }
 
-        public MissionID MissionID { get; set; }
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("Mission name".Tx()+": ", LocalisedName,
+            return BaseUtils.FieldBuilder.Build("", EliteConfigInstance.InstanceOptions.VerboseOutput ? MissionID : null,
+                                      "Mission name".Tx()+": ", LocalisedName,
                                       "From".Tx()+": ", OldDestinationSystem,
                                       "", OldDestinationStation,
                                       "To".Tx()+": ", NewDestinationSystem,
@@ -741,15 +754,17 @@ namespace EliteDangerousCore.JournalEvents
         }
 
         public MissionFDName FDName { get; set; }
+        public MissionID MissionID { get; set; }
+        public string Key => MissionID.ToString() + ":" + FDName;
         public string Name { get; set; }
         public string LocalisedName { get; set; } = "Unknown Name";         // filled in by mission system - not in journal
-        public MissionID MissionID { get; set; }
         public long? Fine { get; set; }
 
 
         public override string GetInfo()
         {
-            return BaseUtils.FieldBuilder.Build("", LocalisedName, "Fine".Tx()+": ", Fine);
+            return BaseUtils.FieldBuilder.Build("", EliteConfigInstance.InstanceOptions.VerboseOutput ? MissionID : null,
+                                                "", LocalisedName, "Fine".Tx()+": ", Fine);
         }
 
         public void UpdateMissions(MissionListAccumulator mlist, EliteDangerousCore.ISystem sys, string body)

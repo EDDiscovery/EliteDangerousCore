@@ -39,7 +39,8 @@ namespace EliteDangerousCore
         {
             if (fdname.HasChars())
             {
-                engname = fdname.Replace("_name", "").SplitCapsWordFull();
+                fdname = fdname.Replace("_name", "");           // sometimes it comes with _name (missionlist) sometimes not (MissionAccepted). Bug #3931
+                engname = fdname.SplitCapsWordFull();
                 return new MissionFDName(fdname);
             }
             else

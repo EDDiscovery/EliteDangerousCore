@@ -32,7 +32,7 @@ namespace EliteDangerousCore.DLL
                 return CreateFromHistoryEntry(he, hl.MaterialCommoditiesMicroResources.GetMaterialsSorted(he.MaterialCommodity),
                                               hl.MaterialCommoditiesMicroResources.GetCommoditiesSorted(he.MaterialCommodity),
                                               hl.MaterialCommoditiesMicroResources.GetMicroResourcesSorted(he.MaterialCommodity),
-                                              hl.MissionListAccumulator.GetAllCurrentMissions(he.MissionList, he.EventTimeUTC),
+                                              hl.MissionListAccumulator.GetMissionListOrderedInProgress(he.MissionList),
                                               hl.Count,
                                               storedflag);
         }
