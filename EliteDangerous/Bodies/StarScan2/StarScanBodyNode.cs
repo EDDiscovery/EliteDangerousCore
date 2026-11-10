@@ -759,94 +759,120 @@ namespace EliteDangerousCore.StarScan2
         {
             BodyNode left = this;
 
-            string lt = left.OwnName;
-            string rt = right.OwnName;
-            bool bcleft = false;
-            bool bcright = false;
-
-            // remove the BC of.. prefix to find the first name in the BC list - used for sort
-
-            if (lt.StartsWith(BCNamingPrefix))
-            {
-                lt = lt.Substring(BCNamingPrefix.Length);
-                int i = lt.IndexOf(',');
-                if (i >= 0)
-                    lt = lt.Substring(0, i).Trim();
-                bcleft = true;
-            }
-
-            if (rt.StartsWith(BCNamingPrefix))
-            {
-                rt = rt.Substring(BCNamingPrefix.Length);
-                int i = rt.IndexOf(',');
-                if (i >= 0)
-                    rt = rt.Substring(0, i).Trim();
-                bcright = true;
-            }
-
-            // $"Sort Compare `{lt}` with `{rt}`".DO(lvl);
-
             double? smal = left.SMA;         // grab SMA from anything we have
             double? smar = right.SMA;
 
-            //if (ignoresma)
-            //{
-            //    System.Diagnostics.Debug.WriteLine($"Compare {lt} {left.CanonicalName} with {rt} {right.CanonicalName}");
-            //}
+            int res = -1;
 
             if (smal.HasValue && smar.HasValue && !ignoresma)
             {
-                //$"Body Compare SMA {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
-                return smal.Value.CompareTo(smar.Value);
-            }
-            else
-            if (lt.Length == 1 && rt.Length == 1)      // 1-2-3 or a b c sort direct just comparing value
-            {
-                //$"Body Compare 1Char {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
-                return lt.CompareTo(rt);
+               res = smal.Value.CompareTo(smar.Value);
             }
             else
             {
-                int? lv = lt.InvariantParseIntNull();
-                int? rv = rt.InvariantParseIntNull();
+                string lt = left.OwnName;
+                string rt = right.OwnName;
 
-                if (lv.HasValue && rv.HasValue)
+                //if (ignoresma)  System.Diagnostics.Debug.WriteLine($"Body Compare {left.OwnName} vs {right.OwnName} ");
+
+                if (rt.StartsWith(BCNamingPrefix))
                 {
-                    //$"Body Compare Number {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} ".DO();
-                    return lv.Value.CompareTo(rv.Value);
+                    if (lt.StartsWith(BCNamingPrefix))
+                    {
+                        res =lt.CompareTo(rt);        // straight compare
+                    }
+                    else
+                    {
+                        // BC on right, body on left.
+                        string[] rightsubparts = rt.Substring(BCNamingPrefix.Length).Split(',');     // split back into parts, need to trim off spaces
+                        int pos = Array.FindIndex(rightsubparts, x => x.Trim().EqualsIIC(lt));
+                        if (pos < 0)
+                            res = -1;
+                        else if (pos < rightsubparts.Length - 1)
+                            res = -1;
+                        else
+                            res = 1;
+                    }
+                }
+                else if (lt.StartsWith(BCNamingPrefix))
+                {
+                    string[] leftsubparts = lt.Substring(BCNamingPrefix.Length).Split(',');     // split back into parts, need to trim off spaces
+                    int pos = Array.FindIndex(leftsubparts, x => x.Trim().EqualsIIC(rt));
+                    if (pos < 0)
+                        res = 1;
+                    else if (pos < leftsubparts.Length - 1)
+                        res = 1;
+                    else
+                        res = -1;
+                }
+                else if (lt.Length == 1 && rt.Length == 1)      // 1-2-3 or a b c sort direct just comparing value
+                {
+                    //if (ignoresma) System.Diagnostics.Debug.WriteLine($"Body Compare 1Char {lt} vs {rt}");
+                    res = lt.CompareTo(rt);
                 }
                 else
                 {
-                    //double? ldl = left.DistLS;
-                    //double? rdl = right.DistLS;
+                    int? lv = lt.InvariantParseIntNull();
+                    int? rv = rt.InvariantParseIntNull();
 
-                    //if (ldl.HasValue && rdl.HasValue)
-                    //{
-                    //    return ldl.Value.CompareTo(rdl.Value);
-                    //}
-                    //else 
-                    if (lt.Contains("Belt Cluster"))        // clusters first
+                    if (lv.HasValue && rv.HasValue)
                     {
-                        if (rt.Contains("Belt Cluster"))
-                            return lt.CompareTo(rt);
-                        else
-                            return -1;
+                        res = lv.Value.CompareTo(rv.Value);
                     }
-                    else if (rt.Contains("Belt Cluster"))
-                        return 1;
-                    else if (bcleft)                        // bc's to the end if they don't have SMAs
-                    {
-                        if (bcright)
-                            return lt.CompareTo(rt);            // default alpha
-                        else
-                            return 1;
-                    }
-                    else if (bcright)
-                        return -1;
                     else
-                        return lt.CompareTo(rt);            // default alpha
+                    {
+                        // removed this logic but leave for now
+
+                        //bool bcleft = false;
+                        //bool bcright = false;
+
+                        //// remove the BC of.. prefix to find the first name in the BC list - used for sort
+
+                        //if (lt.StartsWith(BCNamingPrefix))
+                        //{
+                        //    lt = lt.Substring(BCNamingPrefix.Length);
+                        //    int i = lt.IndexOf(',');
+                        //    if (i >= 0)
+                        //        lt = lt.Substring(0, i).Trim();
+                        //    bcleft = true;
+                        //}
+
+                        //if (rt.StartsWith(BCNamingPrefix))
+                        //{
+                        //    rt = rt.Substring(BCNamingPrefix.Length);
+                        //    int i = rt.IndexOf(',');
+                        //    if (i >= 0)
+                        //        rt = rt.Substring(0, i).Trim();
+                        //    bcright = true;
+                        //}
+
+                       // if (ignoresma) System.Diagnostics.Debug.WriteLine($"Body Compare Number {lt} {bcleft} vs {rt} {bcright}");
+
+                        if (lt.Contains("Belt Cluster"))        // clusters first
+                        {
+                            if (rt.Contains("Belt Cluster"))
+                                res = lt.CompareTo(rt);
+                            else
+                                res = -1;
+                        }
+                        else if (rt.Contains("Belt Cluster"))
+                            res = 1;
+                        //else if (bcleft)                        // bc's to the end if they don't have SMAs
+                        //{
+                        //    if (bcright)
+                        //        return lt.CompareTo(rt);            // default alpha
+                        //    else
+                        //        return 1;
+                        //}
+                        //else if (bcright)
+                        //    return -1;
+                        res =  lt.CompareTo(rt);            // default alpha
+                    }
                 }
             }
+
+            //if (ignoresma)  System.Diagnostics.Debug.WriteLine($"Body Compare {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} : Result {res} ");
+            return res;
         }
 
         public void PrintTree(System.Text.StringBuilder sp, string bid, int level)
