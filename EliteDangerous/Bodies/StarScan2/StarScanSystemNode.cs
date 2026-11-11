@@ -158,12 +158,28 @@ namespace EliteDangerousCore.StarScan2
                 }
 
                 NodePtr.Move(movelist);
+                movelist.Clear();
+
+                // move any barycentre-barycentre to the top so we remove the single point barycentre
+
+                foreach (var np in topnode.ChildBodies)     
+                {
+                    if (np.BodyNode.IsBarycentre)
+                    {
+                        if (np.ChildBodies.Count == 1 && np.ChildBodies[0].BodyNode.IsBarycentre)
+                        {
+                            movelist.Add(new Tuple<NodePtr, NodePtr>(np.ChildBodies[0], topnode));
+                        }
+                    }
+                }
+
+                NodePtr.Move(movelist);
 
                 topnode.ChildBodies.RemoveAll(y => y.ChildBodies.Count == 0 && y.BodyNode.IsBarycentre);        // empty barycentre clean up
 
-                NodePtr.Sort(topnode, true);
+                NodePtr.Sort(topnode);
 
-                //nodelist.Dump("", 0);
+                //topnode.DumpTree();
             }
 
             return topnode;

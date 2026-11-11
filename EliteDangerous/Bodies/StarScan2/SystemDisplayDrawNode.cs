@@ -47,9 +47,9 @@ namespace EliteDangerousCore.StarScan2
             string presentationname = bn.Name();
 #if DEBUG
             if ( bn.CanonicalNameDepth>=0)
-                presentationname += $" ({bn.BodyID} L{bn.CanonicalNameDepth})";
+                presentationname += $" ({bn.BodyID}:{bn.ParentNumbers} L{bn.CanonicalNameDepth})";
             else
-                presentationname += $" ({bn.BodyID})";
+                presentationname += $" ({bn.BodyID}:{bn.ParentNumbers})";
 #endif
 
             if (bn.BodyType == BodyDefinitions.BodyType.Barycentre)

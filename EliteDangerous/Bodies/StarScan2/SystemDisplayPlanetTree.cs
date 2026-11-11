@@ -47,7 +47,7 @@ namespace EliteDangerousCore.StarScan2
                                         backwash: habzone ? Color.FromArgb(64, 0, 128, 0) : default(Color?));
 
             // all nodes below drawn in moonsize..
-            nodesize = MoonSize;
+            nodesize = node.BodyNode.IsBarycentre ? nodesize: MoonSize;     // step down in size if not barycentre..
             
             int spacerx = Math.Max(nodesize.Width / 2, 4);          // based on node size now
             int spacery = Math.Max(nodesize.Height / 2, 4);

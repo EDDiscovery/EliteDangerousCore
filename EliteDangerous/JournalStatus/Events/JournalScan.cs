@@ -102,6 +102,7 @@ namespace EliteDangerousCore.JournalEvents
         [PropertyNameAttribute("Parent body information. First is nearest body")]
         public List<BodyParent> Parents { get; private set; }               // NOTE Augmented by StarScan setting Parents[i].Barycentre
         public string ParentList() { return Parents != null ? string.Join(",", Parents.Select(x => x.Type + ":" + x.BodyID)) : ""; }     // not get on purpose
+        public string ParentNumbers() { return Parents != null ? string.Join(",", Parents.Select(x => x.BodyID)) : ""; }     // not get on purpose
 
         [PropertyNameAttribute("Orbiting a barycentre")]
         public bool IsOrbitingBarycentre { get { return Parents?.FirstOrDefault()?.Type == BodyParent.ParentBodyType.Null; } }

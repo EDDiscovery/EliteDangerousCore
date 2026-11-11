@@ -235,7 +235,7 @@ namespace EliteDangerousCore.StarScan2
         private static void Sort(BodyNode cur)
         {
            // $"Sort tree for {cur.OwnName}:{cur.BodyID}".DO();
-            cur.ChildBodies.Sort(delegate (BodyNode left, BodyNode right) { return left.CompareTo(right,false); });
+            cur.ChildBodies.Sort(delegate (BodyNode left, BodyNode right) { return left.CompareTo(right); });
         }
 
         #endregion
@@ -327,7 +327,7 @@ namespace EliteDangerousCore.StarScan2
         }
 
         // output the image to a file (or just create it if path=null)
-        public bool DrawSystemToFile(string path, int width = 1920,  bool materials = true, bool showwebbodies = true)
+        public bool DrawSystemToFile(string path, int width = 1920,  bool materials = true, bool showwebbodies = true, bool simplify = true)
         {
             StarScan2.SystemDisplay sd = new StarScan2.SystemDisplay();
             sd.Font = new System.Drawing.Font("Arial", 10);
@@ -335,6 +335,7 @@ namespace EliteDangerousCore.StarScan2
             sd.ShowMaterials = materials;
             sd.TextBackColor = Color.Transparent;
             sd.ShowWebBodies = showwebbodies;
+            sd.SimplifyDiagram = simplify;
             ExtendedControls.ExtPictureBox imagebox = new ExtendedControls.ExtPictureBox();
             imagebox.FillColor = Color.AliceBlue;
             sd.DrawSystemRender(imagebox, width, this);

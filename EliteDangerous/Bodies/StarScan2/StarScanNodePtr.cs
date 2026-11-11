@@ -15,6 +15,8 @@
 using BaseUtils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace EliteDangerousCore.StarScan2
 {
@@ -89,9 +91,32 @@ namespace EliteDangerousCore.StarScan2
             return x;
         }
 
+        public static void Move(IEnumerable<Tuple<NodePtr,NodePtr>> movelist)
+        {
+            foreach( var kvp in movelist)
+            {
+              //  $"Move `{kvp.Item1.BodyNode.Name()}`:{kvp.Item1.BodyNode.BodyID} -> `{kvp.Item2.BodyNode.Name()}`:{kvp.Item2.BodyNode.BodyID}".DO();
+                kvp.Item2.ChildBodies.Add(kvp.Item1);
+                kvp.Item1.Parent.ChildBodies.Remove(kvp.Item1);
+            }
+        }
+
+        public static void Sort(NodePtr np)
+        {
+            List<string> sortnames = np.ChildBodies.Select(x => x.BodyNode.OwnName).ToList();
+            np.ChildBodies.Sort(delegate (NodePtr left, NodePtr right) { return left.BodyNode.CompareToWithInfo(right.BodyNode, sortnames); });
+        }
+
+        public void DumpTree()
+        {
+            StringBuilder sb = new StringBuilder();
+            Dump(sb, "S", 0);
+            System.Diagnostics.Debug.WriteLine(sb.ToString());
+        }
+
         public void Dump(System.Text.StringBuilder sp, string bid, int level = 0)
         {
-            if ( level > 0)
+            if (level > 0)
             {
                 if (BodyNode.BodyID < 0)
                     bid += ".??";
@@ -100,26 +125,10 @@ namespace EliteDangerousCore.StarScan2
 
             }
 
-            BodyNode.ToString(sp,bid, level);
+            BodyNode.ToString(sp, bid, level);
 
             foreach (var x in ChildBodies)
-                x.Dump(sp,bid, level + 1);
-        }
-
-        public static void Move(IEnumerable<Tuple<NodePtr,NodePtr>> movelist)
-        {
-            foreach( var kvp in movelist)
-            {
-              //  $"Move `{kvp.Item1.BodyNode.Name()}`:{kvp.Item1.BodyNode.BodyID} -> `{kvp.Item2.BodyNode.Name()}`:{kvp.Item2.BodyNode.BodyID}".DO();
-                kvp.Item2.ChildBodies.Add(kvp.Item1);
-                kvp.Item1.Parent.ChildBodies.Remove(kvp.Item1);
-                Sort(kvp.Item2,true);
-            }
-        }
-
-        public static void Sort(NodePtr np, bool ignoresma)
-        {
-            np.ChildBodies.Sort(delegate (NodePtr left, NodePtr right) { return left.BodyNode.CompareTo(right.BodyNode,ignoresma); });
+                x.Dump(sp, bid, level + 1);
         }
 
 

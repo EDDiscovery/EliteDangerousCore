@@ -75,6 +75,7 @@ namespace EliteDangerousCore.StarScan2
 
         public double? SMA { get { return Scan != null ? Scan.nSemiMajorAxis : BarycentreScan != null ? BarycentreScan.SemiMajorAxis : BeltData != null ? BeltData.InnerRad : default(double?); } }
         public double? DistLS { get { return Scan != null ? Scan.DistanceFromArrivalLS : default(double?); } }
+        public string ParentNumbers { get { return Scan != null ? Scan.ParentNumbers() : null; } }
 
         public List<SAASignal> Signals { get; private set; } = null;
         public List<SAAGenus> Genuses { get; private set; } = null;
@@ -754,127 +755,6 @@ namespace EliteDangerousCore.StarScan2
             IsMapped = true; WasMappedEfficiently = efficently;
         }
 
-        // tell me what the sort order of this vs the right one is.
-        public int CompareTo(BodyNode right, bool ignoresma)
-        {
-            BodyNode left = this;
-
-            double? smal = left.SMA;         // grab SMA from anything we have
-            double? smar = right.SMA;
-
-            int res = -1;
-
-            if (smal.HasValue && smar.HasValue && !ignoresma)
-            {
-               res = smal.Value.CompareTo(smar.Value);
-            }
-            else
-            {
-                string lt = left.OwnName;
-                string rt = right.OwnName;
-
-                //if (ignoresma)  System.Diagnostics.Debug.WriteLine($"Body Compare {left.OwnName} vs {right.OwnName} ");
-
-                if (rt.StartsWith(BCNamingPrefix))
-                {
-                    if (lt.StartsWith(BCNamingPrefix))
-                    {
-                        res =lt.CompareTo(rt);        // straight compare
-                    }
-                    else
-                    {
-                        // BC on right, body on left.
-                        string[] rightsubparts = rt.Substring(BCNamingPrefix.Length).Split(',');     // split back into parts, need to trim off spaces
-                        int pos = Array.FindIndex(rightsubparts, x => x.Trim().EqualsIIC(lt));
-                        if (pos < 0)
-                            res = -1;
-                        else if (pos < rightsubparts.Length - 1)
-                            res = -1;
-                        else
-                            res = 1;
-                    }
-                }
-                else if (lt.StartsWith(BCNamingPrefix))
-                {
-                    string[] leftsubparts = lt.Substring(BCNamingPrefix.Length).Split(',');     // split back into parts, need to trim off spaces
-                    int pos = Array.FindIndex(leftsubparts, x => x.Trim().EqualsIIC(rt));
-                    if (pos < 0)
-                        res = 1;
-                    else if (pos < leftsubparts.Length - 1)
-                        res = 1;
-                    else
-                        res = -1;
-                }
-                else if (lt.Length == 1 && rt.Length == 1)      // 1-2-3 or a b c sort direct just comparing value
-                {
-                    //if (ignoresma) System.Diagnostics.Debug.WriteLine($"Body Compare 1Char {lt} vs {rt}");
-                    res = lt.CompareTo(rt);
-                }
-                else
-                {
-                    int? lv = lt.InvariantParseIntNull();
-                    int? rv = rt.InvariantParseIntNull();
-
-                    if (lv.HasValue && rv.HasValue)
-                    {
-                        res = lv.Value.CompareTo(rv.Value);
-                    }
-                    else
-                    {
-                        // removed this logic but leave for now
-
-                        //bool bcleft = false;
-                        //bool bcright = false;
-
-                        //// remove the BC of.. prefix to find the first name in the BC list - used for sort
-
-                        //if (lt.StartsWith(BCNamingPrefix))
-                        //{
-                        //    lt = lt.Substring(BCNamingPrefix.Length);
-                        //    int i = lt.IndexOf(',');
-                        //    if (i >= 0)
-                        //        lt = lt.Substring(0, i).Trim();
-                        //    bcleft = true;
-                        //}
-
-                        //if (rt.StartsWith(BCNamingPrefix))
-                        //{
-                        //    rt = rt.Substring(BCNamingPrefix.Length);
-                        //    int i = rt.IndexOf(',');
-                        //    if (i >= 0)
-                        //        rt = rt.Substring(0, i).Trim();
-                        //    bcright = true;
-                        //}
-
-                       // if (ignoresma) System.Diagnostics.Debug.WriteLine($"Body Compare Number {lt} {bcleft} vs {rt} {bcright}");
-
-                        if (lt.Contains("Belt Cluster"))        // clusters first
-                        {
-                            if (rt.Contains("Belt Cluster"))
-                                res = lt.CompareTo(rt);
-                            else
-                                res = -1;
-                        }
-                        else if (rt.Contains("Belt Cluster"))
-                            res = 1;
-                        //else if (bcleft)                        // bc's to the end if they don't have SMAs
-                        //{
-                        //    if (bcright)
-                        //        return lt.CompareTo(rt);            // default alpha
-                        //    else
-                        //        return 1;
-                        //}
-                        //else if (bcright)
-                        //    return -1;
-                        res =  lt.CompareTo(rt);            // default alpha
-                    }
-                }
-            }
-
-            //if (ignoresma)  System.Diagnostics.Debug.WriteLine($"Body Compare {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} : Result {res} ");
-            return res;
-        }
-
         public void PrintTree(System.Text.StringBuilder sp, string bid, int level)
         {
             if (level > 0)      // 0 is system level dump
@@ -971,6 +851,146 @@ namespace EliteDangerousCore.StarScan2
                     }
                 }
             }
+        }
+
+        // tell me what the sort order of this vs the right one is.
+        // used at the body level, SMAs are preferred. BCs are moved right.
+        public int CompareTo(BodyNode right)
+        {
+            BodyNode left = this;
+
+            double? smal = left.SMA;         // grab SMA from anything we have
+            double? smar = right.SMA;
+
+            int res = -1;
+
+            if (smal.HasValue && smar.HasValue)
+            {
+                res = smal.Value.CompareTo(smar.Value);
+            }
+            else
+            {
+                string lt = left.OwnName;
+                string rt = right.OwnName;
+
+                if (rt.StartsWith(BCNamingPrefix))      // BCs always go right at this sort
+                {
+                    if (lt.StartsWith(BCNamingPrefix))
+                    {
+                        res = lt.CompareTo(rt);        // straight compare
+                    }
+                    else
+                    {
+                        res = -1;       // body goes left, BC goes right
+                    }
+                }
+                else if (lt.StartsWith(BCNamingPrefix))
+                {
+                    res = 1;            // BC goes right
+                }
+                else if (lt.Length == 1 && rt.Length == 1)      // 1-2-3 or a b c sort direct just comparing value
+                {
+                    res = lt.CompareTo(rt);
+                }
+                else
+                {
+                    int? lv = lt.InvariantParseIntNull();
+                    int? rv = rt.InvariantParseIntNull();
+
+                    if (lv.HasValue && rv.HasValue)         // long number, 10 etc
+                    {
+                        res = lv.Value.CompareTo(rv.Value);
+                    }
+                    else
+                    {
+                        if (lt.Contains("Belt Cluster"))        // clusters go left
+                        {
+                            if (rt.Contains("Belt Cluster"))
+                                res = lt.CompareTo(rt);
+                            else
+                                res = -1;
+                        }
+                        else if (rt.Contains("Belt Cluster"))
+                        {
+                            res = 1;
+                        }
+                        else
+                            res = lt.CompareTo(rt);            // default alpha
+                    }
+                }
+            }
+
+            // System.Diagnostics.Debug.WriteLine($"Body Compare {left.OwnName} vs {right.OwnName} : {left.SMA} vs {right.SMA} : Result {res} ");
+            return res;
+        }
+
+
+        // Used at the top level node after simplification to move BCs into the right places
+
+        public int CompareToWithInfo(BodyNode right, List<string> nodenames)
+        {
+            BodyNode left = this;
+
+            int res = -1;
+
+            string lt = left.OwnName;
+            string rt = right.OwnName;
+
+            string[] rsubparts = null;
+            string[] lsubparts = null;
+
+            if (rt.StartsWith(BCNamingPrefix))
+                rsubparts = rt.Substring(BCNamingPrefix.Length).SplitTrim(',').Where(x => nodenames.Contains(x)).ToArray();     // split back into parts, need to trim off spaces, only consider other sorted items
+
+            if (lt.StartsWith(BCNamingPrefix))
+                lsubparts = lt.Substring(BCNamingPrefix.Length).SplitTrim(',').Where(x => nodenames.Contains(x)).ToArray();     // split back into parts, need to trim off spaces, only consider other sorted items
+
+            if (rsubparts?.Length > 0)      // protect against not having a nodenames in the BC list
+            {
+                if (lsubparts?.Length > 0)
+                    res = lsubparts[0].CompareTo(rsubparts[0]);
+                else
+                    res = lt == rsubparts[0] ? -1 : lt.CompareTo(rsubparts[0]);
+            }
+            else if (lsubparts?.Length > 0)
+            {
+                res = lsubparts[0] == rt ? 1 : lsubparts[0].CompareTo(rt);
+            }
+            else if (lt.Length == 1 && rt.Length == 1)      // 1-2-3 or a b c sort direct just comparing value
+            {
+                res = lt.CompareTo(rt);
+            }
+            else
+            {
+                int? lv = lt.InvariantParseIntNull();
+                int? rv = rt.InvariantParseIntNull();
+
+                if (lv.HasValue && rv.HasValue)
+                {
+                    res = lv.Value.CompareTo(rv.Value);
+                }
+                else
+                {
+                    if (lt.Contains("Belt Cluster"))        // clusters first
+                    {
+                        if (rt.Contains("Belt Cluster"))
+                            res = lt.CompareTo(rt);
+                        else
+                            res = -1;
+                    }
+                    else if (rt.Contains("Belt Cluster"))
+                    {
+                        res = 1;
+                    }
+                    else
+                    {
+                        res = lt.CompareTo(rt);            // default alpha
+                    }
+                }
+            }
+
+            //System.Diagnostics.Debug.WriteLine($"Body Compare {left.OwnName} vs {right.OwnName} : Result {res} ");
+            return res;
         }
 
         #endregion
