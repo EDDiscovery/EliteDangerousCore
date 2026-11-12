@@ -213,7 +213,7 @@ namespace EliteDangerousCore
         static private HistoryListQueries instance = null;
         private string DbUserQueries { get { return "UCSearchScansUserQuery"; } }  // not keyed to profile or to panel, global
 
-        private HistoryListQueries()
+        public HistoryListQueries()
         {
             JArray json = JArray.Parse(DB.UserDatabase.Instance.GetSetting(DbUserQueries, ""));
             if (json != null)
