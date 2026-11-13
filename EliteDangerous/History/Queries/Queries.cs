@@ -541,7 +541,7 @@ namespace EliteDangerousCore
                 //foreach (var v in varsstar) System.Diagnostics.Debug.WriteLine($"Search Star Var {v}");
                 //foreach (var v in varsstarstar) System.Diagnostics.Debug.WriteLine($"Search Star Star Var {v}");
                 //foreach (var v in varsparent) System.Diagnostics.Debug.WriteLine($"Search Parent Var {v}");
-                //foreach (var v in varsparentparent) System.Diagnostics.Debug.WriteLine($"Search Parent Parent Var {v}");
+                //foreach (var v in varsgrandparent) System.Diagnostics.Debug.WriteLine($"Search Parent Parent Var {v}");
                 //foreach (var v in varssiblings) System.Diagnostics.Debug.WriteLine($"Search Sibling Var {v}");
                 //foreach (var v in varschildren) System.Diagnostics.Debug.WriteLine($"Search Child Var {v}");
                 //foreach (var v in varsbodies) System.Diagnostics.Debug.WriteLine($"Search Bodies Var {v}");
@@ -552,8 +552,11 @@ namespace EliteDangerousCore
                 //foreach (var he in helist.GetRange(helist.Count-100,100))
                 foreach (var he in helist)
                 {
-                    //if (he.System.Name != "Byeia Euq WU-O d6-26")
-                    //    continue;
+                    //if (he.journalEntry is JournalScan jss && jss.BodyName == "Hypao Brai QT-Q e5-11 C 1")
+                    //{
+                    //    System.Diagnostics.Debug.WriteLine($"Star {he.System.Name}");
+                    //    //foreach (var v in scandatavars.NameEnumuerable) System.Diagnostics.Debug.WriteLine($"Search scandata var {v} = {scandatavars[v]}");
+                    //}
 
                     BaseUtils.Variables scandatavars = defaultvars != null ? new BaseUtils.Variables(defaultvars) : new BaseUtils.Variables();
 
@@ -675,13 +678,14 @@ namespace EliteDangerousCore
 
                             if (siblings != null && varssiblings.Count > 0)        // if want sibling[
                             {
-                                int cno = 1;
+                                int itercount = 1;      // The Iter starts at 1 (see ConditionListsCheckEval) , and counts until it does not find the variable and errors
+
                                 foreach (var bn in siblings)
                                 {
                                     if (bn != he.BodyNode && bn.Scan != null)        // if not ours and has a scan
                                     {
-                                        scandatavars.AddPropertiesFieldsOfClass(bn.Scan, $"Sibling[{cno}].", ignoretypes, 5, varssiblings, ensuredoublerep: true, classsepar: ".");
-                                        cno++;
+                                        scandatavars.AddPropertiesFieldsOfClass(bn.Scan, $"Sibling[{itercount}].", ignoretypes, 5, varssiblings, ensuredoublerep: true, classsepar: ".");
+                                        itercount++;
                                     }
                                 }
                             }
@@ -695,53 +699,53 @@ namespace EliteDangerousCore
 
                             if (children != null && varschildren.Count > 0)        // if want children[
                             {
-                                int cno = 1;
+                                int itercount = 1;      // The Iter starts at 1 (see ConditionListsCheckEval) , and counts until it does not find the variable and errors
+
                                 foreach (var sn in children)
                                 {
                                     if (sn.Scan != null)        // if not ours and has a scan
                                     {
-                                        int cc = scandatavars.Count;
-
-                                        scandatavars.AddPropertiesFieldsOfClass(sn.Scan, $"Child[{cno}].", ignoretypes, 5, varschildren, ensuredoublerep: true, classsepar: ".");
-
-                                        cno++;
+                                        scandatavars.AddPropertiesFieldsOfClass(sn.Scan, $"Child[{itercount}].", ignoretypes, 5, varschildren, ensuredoublerep: true, classsepar: ".");
+                                        itercount++;
                                     }
                                 }
                             }
 
                             if (wantbodiescount || varsbodies.Count > 0)
                             {
-                                int count = 0;
+                                int bodycount = 0, itercount = 1;           // count bodies and iterations seperately, bug fix Nov 26
+
                                 foreach (var sn in he.BodyNode.SystemNode.Bodies())
                                 {
                                     if (varsbodies.Count > 0 && sn.Scan != null)
                                     {
-                                        scandatavars.AddPropertiesFieldsOfClass(sn.Scan, $"Bodies[{count + 1}].", ignoretypes, 5, varsbodies, ensuredoublerep: true, classsepar: ".");
-
+                                        scandatavars.AddPropertiesFieldsOfClass(sn.Scan, $"Bodies[{itercount}].", ignoretypes, 5, varsbodies, ensuredoublerep: true, classsepar: ".");
+                                        itercount++;
                                     }
-                                    count++;
+                                    bodycount++;
                                 }
 
                                 if (wantbodiescount)
-                                    scandatavars["Bodies.Count"] = count.ToStringInvariant();
+                                    scandatavars["Bodies.Count"] = bodycount.ToStringInvariant();
                             }
 
 
                             if (wantstarbodiescount || varsstarbodies.Count > 0)
                             {
-                                int count = 0;
+                                int bodycount = 0, itercount = 1;           // count bodies and iterations seperately, bug fix Nov 26
+
                                 foreach (var sn in he.BodyNode.SystemNode.GetStarsScanned())     
                                 {
                                     if (varsstarbodies.Count >0)
                                     {
-                                        scandatavars.AddPropertiesFieldsOfClass(sn.Scan, $"StarBodies[{count + 1}].", ignoretypes, 5, varsstarbodies, ensuredoublerep: true, classsepar: ".");
-
+                                        scandatavars.AddPropertiesFieldsOfClass(sn.Scan, $"StarBodies[{itercount}].", ignoretypes, 5, varsstarbodies, ensuredoublerep: true, classsepar: ".");
+                                        itercount++;
                                     }
-                                    count++;
+                                    bodycount++;
                                 }
 
                                 if (wantstarbodiescount)
-                                    scandatavars["StarBodies.Count"] = count.ToStringInvariant();
+                                    scandatavars["StarBodies.Count"] = bodycount.ToStringInvariant();
                             }
                         }
                     }       // end check of he.BodyNode
@@ -749,9 +753,6 @@ namespace EliteDangerousCore
                     List<BaseUtils.ConditionEntry> testspassed = wantreport ? new List<BaseUtils.ConditionEntry>() : null;
 
                     //JournalScan jsc = he.journalEntry as JournalScan; if (jsc?.BodyName == "Blue Euq WA-E d12-32 7 a") debugit = true;
-
-                    //System.Diagnostics.Debug.WriteLine($"Star {he.System.Name}");
-                    //foreach (var v in scandatavars.NameEnumuerable) System.Diagnostics.Debug.WriteLine($"Search scandata var {v} = {scandatavars[v]}");
 
                     evl.ReturnSymbolValue = scandatavars;                   // point the eval at our scan data variables for this particular instance
                     func.SystemNode = he.BodyNode?.SystemNode;              // point the functions at system node, if it exists
@@ -770,6 +771,9 @@ namespace EliteDangerousCore
 
                     if (res.Item1.Value == true)    // if passed
                     {
+                        //System.Diagnostics.Debug.WriteLine($"Star {he.System.Name}");
+                        //foreach (var v in scandatavars.NameEnumuerable) System.Diagnostics.Debug.WriteLine($"Search scandata var {v} = {scandatavars[v]}");
+
                         //if we have a je with a body name, use that to set the ret, else just use a incrementing decimal count name
 
                         string key = null;
